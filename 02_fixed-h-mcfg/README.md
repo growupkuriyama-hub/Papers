@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v51; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v52; this is the current source of truth.
+- `revision/v51_to_v52_revision_note.md` — targeted prose-compression pass in the quantitative characteristic-data section.
+- `revision/v51_to_v52.diff` — compact diff summary for the v51 → v52 revision.
 - `revision/v50_to_v51_revision_note.md` — abstract scope precision for the higher-rank characteristic-data theorem.
 - `revision/v50_to_v51.diff` — unified diff for the v50 → v51 revision.
 - `revision/v49_to_v50_revision_note.md` — explicit Kato dimension/rank ↔ fan-out/rule-rank notation bridge.
