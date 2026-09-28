@@ -7,9 +7,10 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v47; this is the current source of truth.
-- `revision/v46_to_v47_revision_note.md` — summary of the v46 → v47 prior-work/positioning revision.
-- `revision/v46_to_v47.diff` — unified diff for the v46 → v47 revision.
+- `main.tex` — English working manuscript, internal v48; this is the current source of truth.
+- `revision/v47_to_v48_revision_note.md` — summary of the v47 → v48 genuine-rank-two witness revision.
+- `revision/v47_to_v48.diff` — unified diff for the v47 → v48 revision.
+- `revision/v46_to_v47_revision_note.md` / `revision/v46_to_v47.diff` — retained history for the preceding revision.
 - `revision/v45_to_v46_revision_note.md` / `revision/v45_to_v46.diff` — retained history for the preceding revision.
 - `revision/v44_to_v45_revision_note.md` / `revision/v44_to_v45.diff` — earlier retained history.
 
