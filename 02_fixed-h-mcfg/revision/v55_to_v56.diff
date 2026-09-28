@@ -1,0 +1,520 @@
+diff --git a/02_fixed-h-mcfg/main.tex b/02_fixed-h-mcfg/main.tex
+index 670d1f4..4422c70 100644
+--- a/02_fixed-h-mcfg/main.tex
++++ b/02_fixed-h-mcfg/main.tex
+@@ -77,21 +77,21 @@
+ 
+ The main quantitative distinction is by rule rank.  For every fixed finite
+ typing, rule-rank-one targets admit characteristic data of total length
+-polynomial in grammar size alone.  At arbitrary fixed rank, for reduced good presentations, typings determined
+-by fixed-length prefixes and suffixes admit characteristic data polynomial in
+-grammar size and rule thickness.  A concrete fan-out-two target in the $(1,1)$ boundary
+-typing has minimum rule rank two and lies outside Yoshinaka's class, showing
+-that this higher-rank theorem reaches language territory not covered by the
+-rank-one result.  Full yield-type refinement and empty-component elimination
+-can each increase rule thickness exponentially.
++polynomial in grammar size alone.  At arbitrary fixed rank, for reduced good
++presentations, typings determined by fixed-length prefixes and suffixes admit
++characteristic data polynomial in grammar size and rule thickness.  This
++higher-rank result is presentation-sensitive: it does not by itself establish
++a language-class separation from the rank-one regime when fan-out is allowed
++to vary.  Full yield-type refinement and empty-component elimination can each
++increase rule thickness exponentially, explaining why presentation-sensitive
++parameters arise in the higher-rank analysis.
+ 
+ We also show that finite typing is not merely regular post-filtering and that
+ fan-out is part of the learning bias.  At every level $m\ge2$ there is a
+ rank-one target of minimum fan-out $m$ in a class typed by fixed first/last
+ symbol information but outside Yoshinaka's class, and at fan-out two another
+-finitely typed target
+-cannot be represented as a Yoshinaka-substitutable language intersected with
+-any target-dependent regular language.
++finitely typed target cannot be represented as a Yoshinaka-substitutable
++language intersected with any target-dependent regular language.
+ \end{abstract}
+ 
+ \medskip
+@@ -161,7 +161,7 @@ \section{Introduction}
+ different information and representation assumptions.
+ 
+ \paragraph{Contributions.}
+-The paper has three main contributions.
++The paper has four main contributions.
+ \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
+ \item \emph{A finite-typed form of Yoshinaka's positive-data learner.}
+ Yoshinaka's finite-sample grammar is recovered exactly under trivial typing
+@@ -172,18 +172,24 @@ \section{Introduction}
+ a finite positive sample.  No rule-rank cap is needed for this qualitative
+ identification result; for each fixed cap $r_{\max}$, the corresponding
+ learner has polynomial-time updates in the accumulated positive sample.
+-\item \emph{Characteristic-data bounds and genuine higher rank.}
++
++\item \emph{A grammar-size polynomial at rule rank one.}
+ For arbitrary fixed $h$, rule-rank-one targets have characteristic data of
+-total length polynomial in grammar size.  At arbitrary fixed rank, typings
+-that factor through a fixed prefix--suffix summary admit a polynomial bound in
+-grammar size and rule thickness.  A fan-out-two $(1,1)$-typed witness of
+-minimum rule rank two shows that this higher-rank result is not merely a
+-uniform reformulation of the rank-one theorem.  The proof simultaneously
+-preserves bounded boundary information in several tuple components.  Two
+-finite refinements can obstruct a direct transfer from an arbitrary
+-presentation: full yield-type refinement can increase rule thickness
+-exponentially, and Appendix~\ref{app:normalization-details} shows the same
+-phenomenon for empty-component elimination.
++total length polynomial in grammar size alone.  The proof uses unary
++derivation chains and applies to discontinuous tuples of arbitrary fixed
++fan-out; no thickness parameter is needed.
++
++\item \emph{A thickness-sensitive higher-rank transfer.}
++At arbitrary fixed rank, typings that factor through a fixed prefix--suffix
++summary admit a polynomial characteristic-data bound for reduced good
++presentations in grammar size and rule thickness.  The proof simultaneously
++preserves bounded boundary information in several tuple components.  This is a
++presentation-level quantitative extension, not a claimed strict enlargement
++of the language territory covered by rank one when fan-out may vary.  Full
++yield-type refinement can increase rule thickness exponentially, and
++Appendix~\ref{app:normalization-details} shows the same phenomenon for
++empty-component elimination.
++
+ \item \emph{Multiple-context expressiveness and fan-out sensitivity.}
+ For every $m\ge2$, a rank-one language of minimum fan-out $m$ belongs to the
+ $(1,1)$-typed class while lying outside Yoshinaka's class and the regular-filter
+@@ -201,20 +207,23 @@ \section{Introduction}
+ identification without a fixed rank bound
+ \cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}.  The present
+ reconstruction is therefore not claimed as a new grammar architecture.
++Proposition~\ref{prop:yoshinaka-type-guard} records the exact rule
++correspondence: (Const) and (Comp) are Type~I, (Link) is Type~II with the
++additional type guard, and (Start) is Type~III, apart from the separate
++$\eps$ convention.
+ 
+ Second, finite-monoid yield typing and typed refinement have a fan-out-one
+ antecedent in the revised companion CFG manuscript~\cite{kuriyamaCFG}.  All
+ definitions and arguments required in the present paper are nevertheless
+-given here independently; in particular, no version-dependent theorem of the
+-companion manuscript is used in a proof.
++given here independently.
+ 
+ Third, the new questions addressed here are what happens when the finite type
+ guard is applied componentwise to MCFG tuples, how characteristic-data bounds
+ depend on rule rank and rule thickness, and how finite typing interacts with
+ fan-out and regular filtering.  The rank-one size-only theorem, the
+-higher-rank boundary-typing transfer together with a minimum-rank-two witness,
+-the two exponential refinement obstructions, and the fan-out/separation
+-results are the main quantitative and language-theoretic contributions.
++presentation-sensitive higher-rank boundary transfer, the two exponential
++refinement obstructions, and the fan-out/separation results are the main
++quantitative and language-theoretic contributions.
+ 
+ Polynomial-time statements below treat the displayed fan-out, rank cap, and
+ finite typing as fixed.  The distinction between characteristic data for the
+@@ -340,9 +349,7 @@ \subsection{Finite-Monoid Typing}
+ 
+ We call $h$ a \emph{finite-monoid typing} and $h^{(d)}(\tuple w)$ the
+ \emph{yield type} of the tuple.  At fan-out one the definitions below reduce
+-to ordinary two-sided fixed-$h$ substitutability on nonempty factors.  The
+-revised companion CFG manuscript studies an analogous fan-out-one framework
+-\cite{kuriyamaCFG}, but no result from that manuscript is used below.
++to ordinary two-sided fixed-$h$ substitutability on nonempty factors.
+ The prefix--suffix morphism $h_\Sigma^{k,\ell}$ below is the boundary typing
+ used for the fixed-window special case.
+ 
+@@ -497,9 +504,10 @@ \subsection{Multiple Context-Free Grammars}
+ $\lambda$-freeness implies by induction that every component of every terminal tuple derived from a
+ nonterminal is nonempty.
+ 
+-The normalization used below combines the standard rank-preserving nondeleting
+-conversion of Seki et al. and Kanazawa with component permutation, explicit
+-empty-component removal, and Yoshinaka's nonmerging conversion
++The normalization used below combines the nondeleting/information-lossless
++normalization step underlying the proof of Seki et al.'s Lemma~2.2, in the
++rank-preserving form recorded by Kanazawa, with component permutation,
++explicit empty-component removal, and Yoshinaka's nonmerging conversion
+ \cite[proof of Lemma~2.2]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  Yoshinaka also notes immediately after that
+ lemma that, for fixed dimension and rule rank, these standard conversions yield
+ an equivalent good grammar of size $O(\|G\|)$~\cite[Section~2.3]{Yoshinaka2011}.
+@@ -538,7 +546,8 @@ \subsection{Normalization}
+ 
+ \begin{proof}
+ First delete unreachable or unproductive nonterminals, then apply the
+-rank-preserving nondeleting normalization of Seki et al., in the form recorded by
++nondeleting normalization underlying the proof of Seki et al.'s Lemma~2.2, in
++the rank-preserving form recorded by
+ Kanazawa~\cite[proof of Lemma~2.2]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}.
+ Decorating nonterminals by component permutations makes the grammar
+ nonpermuting.  Next decorate by nonempty-component patterns realizable by terminal
+@@ -1864,15 +1873,14 @@ \subsection{Rule Rank One: Grammar-Size Polynomial Data}
+ \label{subsec:rankone-polydata}
+ 
+ The preceding cardinality bound can be strengthened for arbitrary finite
+-typings when the target presentation has rule rank at most one.  After yield-type refinement, every terminal derivation below a non-start
+-typed nonterminal is a single chain ending in a rank-zero rule, and every
+-derivation from the start to that nonterminal is again a single chain.  An
+-analogous unary-chain bound for linear CFG targets appears in the revised
+-companion manuscript~\cite{kuriyamaCFG}; the result below treats
+-discontinuous tuples of arbitrary fixed fan-out.  No thickness parameter is needed because a unary
+-linear nondeleting rule preserves the total length already present in its child
+-tuple and can increase it only by the terminals written explicitly in the rule
+-template.
++typings when the target presentation has rule rank at most one.  After
++yield-type refinement, every terminal derivation below a non-start typed
++nonterminal is a single chain ending in a rank-zero rule, and every derivation
++from the start to that nonterminal is again a single chain.  The result below
++treats discontinuous tuples of arbitrary fixed fan-out.  No thickness parameter
++is needed because a unary linear nondeleting rule preserves the total length
++already present in its child tuple and can increase it only by the terminals
++written explicitly in the rule template.
+ 
+ Fix a finite typing $h:\Sigma^*\to M$ and a reduced good MCFG
+ $G=(V,\Sigma,P,S,\fan)$ of fan-out at most $f$ and maximum rule rank at most
+@@ -1962,8 +1970,7 @@ \subsection{Rule Rank One: Grammar-Size Polynomial Data}
+ polynomial update time by Corollary~\ref{cor:capped-gold-poly}.
+ 
+ At $f=1$ the same unary-chain argument specializes to the linear CFG
+-setting.  We record this only as a compatibility observation; no result from
+-the companion manuscript is used in the proof above.
++setting; this is only a compatibility observation.
+ 
+ The standard doubling family also shows why grammar size alone cannot control
+ data length once rank two is allowed.  Over $\{\mathtt c\}$, the grammar
+@@ -2149,11 +2156,14 @@ \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
+ capped conservative learner TxtEx-identifies these targets with polynomial
+ time per processed datum.
+ 
+-The theorem is a uniform arbitrary-fixed-rank transfer result for
+-boundary-determined typings.  Theorem~\ref{thm:genuine-ranktwo-witness} below
+-gives a concrete $(1,1)$-typed fan-out-two target of minimum rule rank two to
+-which this theorem applies, so the higher-rank statement is genuinely stronger
+-at the language level than the rank-one theorem.
++\paragraph{Scope of the higher-rank bound.}
++The theorem is a quantitative statement relative to a given reduced good
++presentation of bounded rule rank.  It should not be interpreted as a
++language-level separation from Theorem~\ref{thm:rankone-polydata}: a language
++with a higher-rank presentation may also admit a rank-one presentation at a
++different fan-out or with substantially different presentation size.  Whether
++the present typed classes contain languages of intrinsically higher rule rank,
++even when fan-out is allowed to vary, remains open.
+ 
+ \section{Comparison with Multidimensional Substitutability}
+ \label{sec:comparison}
+@@ -2179,11 +2189,9 @@ \section{Comparison with Multidimensional Substitutability}
+ $\Cmcf{1}{h}$ remains excluded from $\Cmcf{f}{h}$ for every larger tested
+ fan-out as well.  We then show that one
+ non-prefix--suffix typing supports an infinite rank-one non-context-free
+-family outside every prefix--suffix class, a minimum-rank-two target in the
+-$(1,1)$-typed class outside Yoshinaka's baseline, and a family showing that the
+-$(1,1)$ typing strictly enlarges Yoshinaka's class at the same fan-out and
+-rule-rank bounds, even beyond regular filtering recognized by that same typing
+-morphism.
++family outside every prefix--suffix class, and that the $(1,1)$ typing
++strictly enlarges Yoshinaka's class at the same fan-out and rule-rank bounds,
++even beyond regular filtering recognized by that same typing morphism.
+ 
+ \subsection{Yoshinaka's Baseline and Prefix--Suffix Specialization}
+ 
+@@ -2332,192 +2340,6 @@ \subsection{Yoshinaka's Baseline and Prefix--Suffix Specialization}
+ after Theorem~\ref{thm:every-fanout-strictness}.
+ 
+ 
+-\subsection{A Genuine Minimum-Rank-Two Boundary-Typed Target}
+-\label{subsec:genuine-ranktwo}
+-
+-The higher-rank characteristic-data theorem is not only a uniform statement
+-over presentations.  The following target has minimum rule rank two already at
+-fan-out two, belongs to the simplest nontrivial boundary-typed class, and lies
+-outside Yoshinaka's trivial-typing baseline.
+-
+-Let
+-\[
+- \Sigma_{\mathrm{r2}}
+- :=\{\mathtt a_i,\mathtt b_i:1\le i\le4\}
+-   \cup\{\mathtt c_1\}
+-   \cup\{\mathtt{\#}_0,\mathtt{\#}_1,\mathtt{\#}_2,
+-          \mathtt{\#}_3,\mathtt{\#}_4\},
+-\]
+-where the five separator symbols are distinct, and define
+-\[
+-\begin{aligned}
+- L_{\mathrm{r2}}
+- :=\bigl\{\, &
+- \mathtt{\#}_0
+- \mathtt a_1^{n_1}\mathtt b_1^{n_1}\mathtt c_1^{n_1}\mathtt{\#}_1
+- \mathtt a_2^{n_2}\mathtt b_2^{n_2}\mathtt{\#}_2\\
+- &{}\mathtt a_3^{n_3}\mathtt b_3^{n_3}\mathtt{\#}_3
+- \mathtt a_4^{n_4}\mathtt b_4^{n_4}\mathtt{\#}_4
+- :n_1,n_2,n_3,n_4\ge1
+- \,\bigr\}.
+-\end{aligned}
+-\]
+-
+-\begin{theorem}[A genuinely rank-two typed witness]
+-\label{thm:genuine-ranktwo-witness}
+-The language $L_{\mathrm{r2}}$ satisfies
+-\[
+- L_{\mathrm{r2}}
+- \in
+- \Cmcf{2}{h_{\Sigma_{\mathrm{r2}}}^{1,1}}
+- \cap\mathsf{MCFL}(2,2),
+- \qquad
+- L_{\mathrm{r2}}\notin\mathsf{MCFL}(2,1),
+- \qquad
+- L_{\mathrm{r2}}\notin\YSub{2}.
+-\]
+-Consequently, its minimum rule rank among fan-out-two MCFG presentations is
+-exactly two.  In particular,
+-Theorem~\ref{thm:boundary-polydata} applies to a language that cannot be
+-covered by Theorem~\ref{thm:rankone-polydata}.
+-\end{theorem}
+-
+-\begin{proof}
+-First, $L_{\mathrm{r2}}\in\mathsf{MCFL}(2,2)$.  Use fan-out-two
+-nonterminals $A_1,\ldots,A_4$, fan-out-one nonterminals
+-$B_1,\ldots,B_4$, and a fan-out-one start symbol $S$.  Put
+-\[
+-\begin{aligned}
+- A_1&\to(\mathtt a_1\mathtt b_1,\mathtt c_1\mathtt{\#}_1)
+-   \mid
+-   (\mathtt a_1\xi_1^1\mathtt b_1,
+-    \mathtt c_1\xi_1^2)(A_1),\\
+- A_i&\to(\mathtt a_i,\mathtt b_i\mathtt{\#}_i)
+-   \mid
+-   (\mathtt a_i\xi_1^1,\mathtt b_i\xi_1^2)(A_i)
+-   \qquad(2\le i\le4),\\
+- B_4&\to(\xi_1^1\xi_1^2)(A_4),\\
+- B_i&\to(\xi_1^1\xi_1^2\xi_2^1)(A_i,B_{i+1})
+-   \qquad(1\le i\le3),\\
+- S&\to(\mathtt{\#}_0\xi_1^1)(B_1).
+-\end{aligned}
+-\]
+-The $A_1$-component derives
+-$(\mathtt a_1^n\mathtt b_1^n,
+-  \mathtt c_1^n\mathtt{\#}_1)$, while for $i\ge2$,
+-$A_i$ derives
+-$(\mathtt a_i^n,\mathtt b_i^n\mathtt{\#}_i)$.
+-The $B_i$ rules concatenate these blocks from right to left.  Thus the grammar
+-generates exactly $L_{\mathrm{r2}}$, has fan-out at most two, and has maximum
+-rule rank two.
+-
+-Next consider the regular skeleton
+-\[
+-\begin{aligned}
+- Q_{\mathrm{r2}}
+- :={}&
+- \mathtt{\#}_0\mathtt a_1^+\mathtt b_1^+\mathtt c_1^+\mathtt{\#}_1
+- \mathtt a_2^+\mathtt b_2^+\mathtt{\#}_2\\
+- &{}\mathtt a_3^+\mathtt b_3^+\mathtt{\#}_3
+- \mathtt a_4^+\mathtt b_4^+\mathtt{\#}_4.
+-\end{aligned}
+-\]
+-Because the block alphabets and separator symbols are distinct and occur in a
+-fixed order, $Q_{\mathrm{r2}}$ is strictly $2$-local: its permitted adjacent
+-pairs together with the two end-marker pairs determine exactly the displayed
+-skeleton.  Define a homomorphism
+-$\varphi:\Sigma_{\mathrm{r2}}^*\to\mathbb Z^5$ by
+-\[
+- \varphi(w)=
+- \bigl(
+- |w|_{\mathtt a_1}-|w|_{\mathtt b_1},
+- |w|_{\mathtt b_1}-|w|_{\mathtt c_1},
+- |w|_{\mathtt a_2}-|w|_{\mathtt b_2},
+- |w|_{\mathtt a_3}-|w|_{\mathtt b_3},
+- |w|_{\mathtt a_4}-|w|_{\mathtt b_4}
+- \bigr).
+-\]
+-Then
+-\[
+- L_{\mathrm{r2}}=Q_{\mathrm{r2}}\cap\varphi^{-1}(0).
+-\]
+-Lemma~\ref{lem:sl2-boundary-control} and
+-Proposition~\ref{prop:abelian-coset-filter}(ii) therefore give
+-\[
+- L_{\mathrm{r2}}\in\Cmcf{2}{h_{\Sigma_{\mathrm{r2}}}^{1,1}}.
+-\]
+-
+-For the rank lower bound, let $\pi$ erase $\mathtt c_1$, send each distinct
+-separator $\mathtt{\#}_j$ to a single symbol $\mathtt{\#}$, and fix all
+-$\mathtt a_i,\mathtt b_i$.  Then
+-\[
+-\begin{aligned}
+- \pi(L_{\mathrm{r2}})
+- =K_2:=\bigl\{\, &
+- \mathtt{\#}\mathtt a_1^{n_1}\mathtt b_1^{n_1}
+- \mathtt{\#}\mathtt a_2^{n_2}\mathtt b_2^{n_2}
+- \mathtt{\#}\mathtt a_3^{n_3}\mathtt b_3^{n_3}\\
+- &{}\mathtt{\#}\mathtt a_4^{n_4}\mathtt b_4^{n_4}\mathtt{\#}
+- :n_1,n_2,n_3,n_4\ge1
+- \,\bigr\}.
+-\end{aligned}
+-\]
+-Up to renaming the common separator, $K_2$ is exactly the language $L_2$
+-recorded by Kato, Seki, and Kasami as a member of
+-$\mathrm{CFL}\setminus\mathrm{SL\mbox{-}TAL}$; they explicitly attribute
+-the underlying separation to Uemura, Hasegawa, Kobayashi, and Yokomori
+-\cite[\S2.1, Eq.~(*2)]{KatoSekiKasami2004}.  In the original source,
+-Uemura et al.\ prove that the corresponding four-paired-block language is
+-not generated by any SLTAG
+-\cite[Proposition~1]{UemuraEtAl1999}.  Kato subsequently proved
+-\[
+- \mathrm{SL\mbox{-}TAL}=\mathsf{MCFL}(2,1)
+-\]
+-\cite[Theorem~18]{Kato2005Thesis}.  In Kato's MCFG terminology,
+-the \emph{dimension} is the maximum nonterminal tuple dimension and the
+-\emph{rank} is the maximum number of arguments of a rule function
+-\cite[\S2.2]{KatoSekiKasami2004}; these are exactly our fan-out and rule
+-rank, respectively.  Thus Kato's $(2,1)$-MCFL is precisely
+-$\mathsf{MCFL}(2,1)$ in the notation used here.  If $L_{\mathrm{r2}}$ had a fan-out-two
+-rank-one MCFG presentation, applying $\pi$ to every terminal occurrence in
+-its rule templates would preserve fan-out and rule rank and would yield a
+-fan-out-two rank-one presentation of $K_2$, a contradiction.  Hence
+-$L_{\mathrm{r2}}\notin\mathsf{MCFL}(2,1)$.
+-
+-Finally, $L_{\mathrm{r2}}$ is not Yoshinaka-substitutable already at arity
+-one.  Put
+-\[
+- T:=
+- \mathtt{\#}_1\mathtt a_2\mathtt b_2\mathtt{\#}_2
+- \mathtt a_3\mathtt b_3\mathtt{\#}_3
+- \mathtt a_4\mathtt b_4\mathtt{\#}_4,
+-\]
+-and take
+-\[
+- x:=\mathtt b_1,\qquad
+- y:=\mathtt a_1\mathtt b_1^2\mathtt c_1,
+-\]
+-with one-hole sentence contexts
+-\[
+- E:=\mathtt{\#}_0\mathtt a_1\blank_1\mathtt c_1T,
+- \qquad
+- F:=\mathtt{\#}_0\mathtt a_1^2\mathtt b_1
+-       \blank_1\mathtt c_1^2T.
+-\]
+-Then $E[x],E[y],F[x]\in L_{\mathrm{r2}}$, corresponding respectively to
+-$n_1=1,2,2$, whereas
+-$F[y]\notin L_{\mathrm{r2}}$ because an $\mathtt a_1$ occurs after the
+-$\mathtt b_1$ block has begun.  This violates the substitution implication,
+-so $L_{\mathrm{r2}}\notin\YSub{2}$.
+-\end{proof}
+-
+-The role of the typing in the last argument is visible directly:
+-$h_{\Sigma_{\mathrm{r2}}}^{1,1}(x)$ records the one-letter word
+-$\mathtt b_1$, whereas
+-$h_{\Sigma_{\mathrm{r2}}}^{1,1}(y)$ records first letter $\mathtt a_1$ and
+-last letter $\mathtt c_1$.  The typed learner therefore does not license the
+-substitution that defeats Yoshinaka's trivial-typing condition.
+-
+ \subsection{Finite Typings beyond the Trivial Baseline}
+ \label{subsec:finite-typing-separations}
+ 
+@@ -3169,11 +2991,13 @@ \subsection{Strictness and Typings beyond Prefix--Suffix Windows}
+ 
+ The strictness witnesses $H_m$ above all have rule rank one, so for those
+ languages Theorem~\ref{thm:rankone-polydata} gives the stronger
+-grammar-size-only characteristic-data bound.  By contrast,
+-Theorem~\ref{thm:genuine-ranktwo-witness} supplies a $(1,1)$-typed target
+-outside Yoshinaka's class whose minimum fan-out-two rule rank is exactly two.
+-Thus the higher-rank boundary theorem covers genuine language-level territory
+-beyond the rank-one result.
++grammar-size-only characteristic-data bound.  The higher-rank boundary theorem
++should therefore be read as a quantitative result relative to a bounded-rank
++presentation, not as a demonstrated strict extension of the rank-one language
++territory.  A language presented at higher rank may admit a different
++rank-one presentation after changing fan-out or presentation structure.
++Intrinsic rule-rank requirements inside the typed substitutability classes
++remain open.
+ 
+ 
+ \section{Conclusion}
+@@ -3192,21 +3016,19 @@ \section{Conclusion}
+ same-typing regular-filter fragment.  The language $L_\star$ strengthens this
+ at fan-out two by excluding arbitrary target-dependent regular filtering.
+ 
+-For characteristic-data length, two main positive regimes are established.
+-Rule rank one gives a grammar-size polynomial for every fixed $h$, while
+-typings factoring through a bounded prefix--suffix window give a
+-grammar-size-and-rule-thickness polynomial at arbitrary fixed rank.
+-Theorem~\ref{thm:genuine-ranktwo-witness} shows that the latter regime
+-contains a $(1,1)$-typed language of minimum rule rank two outside Yoshinaka's
+-class, so the higher-rank theorem is needed at the language level rather than
+-only for presentation uniformity.  An auxiliary no-splitting corollary records
+-a simple sufficient condition under which full refinement preserves rule
+-thickness exactly.  Full yield-type refinement can nevertheless increase rule
+-thickness exponentially already at fan-out one and rank two.
+-Appendix~\ref{app:normalization-details} shows a parallel exponential
+-obstruction for eliminating empty tuple components, while reduced
+-$\lambda$-free inputs---even with deleting rules---admit polynomial thickness
+-transfer.
++For characteristic-data length, two positive regimes are established.  Rule
++rank one gives a grammar-size polynomial for every fixed $h$, while typings
++factoring through a bounded prefix--suffix window give a
++grammar-size-and-rule-thickness polynomial at arbitrary fixed rank.  The latter
++is a presentation-sensitive quantitative theorem; no strict language-level
++separation from the rank-one regime is claimed when fan-out is allowed to
++vary.  An auxiliary no-splitting corollary gives a simple sufficient condition
++under which full refinement preserves rule thickness exactly.  Full yield-type
++refinement can nevertheless increase rule thickness exponentially already at
++fan-out one and rank two.  Appendix~\ref{app:normalization-details} shows a
++parallel exponential obstruction for eliminating empty tuple components,
++while reduced $\lambda$-free inputs---even with deleting rules---admit
++polynomial thickness transfer.
+ 
+ \begin{openproblem}[Original-thickness bound for arbitrary finite typing]
+ Fix $f,r_{\max}$ and a finite typing $h$.  Does every reduced good
+@@ -3225,10 +3047,25 @@ \section{Conclusion}
+ sufficient, but neither is known to be necessary.
+ \end{openproblem}
+ 
+-Other directions include adaptive learning over several fan-out biases, learning
+-useful typings without an a priori codomain bound, understanding the relation
+-with full-multicontext congruential MCFGs, and extending the reconstruction to
+-PMCFG-style copying.
++\begin{openproblem}[Intrinsic rule rank under finite typing]
++Does there exist a finite typing $h$, a fan-out bound $f$, and a language
++$L\in\Cmcf{f}{h}$ such that
++\[
++  L\notin\mathsf{MCFL}(f',1)
++  \qquad\text{for every finite }f'?
++\]
++The same question is of particular interest for boundary typings
++$h_\Sigma^{k,\ell}$.  More generally, what tradeoffs are possible among
++fan-out, rule rank, and the size of typed presentations?  The bounded-block
++separation examples in this paper do not settle this question, because their
++displayed higher-dimensional structure can coexist with rank-one
++presentations.
++\end{openproblem}
++
++Other directions include adaptive learning over several fan-out biases,
++learning useful typings without an a priori codomain bound, understanding the
++relation with full-multicontext congruential MCFGs, and extending the
++reconstruction to PMCFG-style copying.
+ 
+ \section*{Acknowledgments}
+ The author thanks Makoto Kanazawa and Ryo Yoshinaka for valuable discussions
+@@ -3567,28 +3404,6 @@ \subsection*{Thickness transfer for $\lambda$-free presentations}
+ \newblock Extending distributional learning from positive data and membership queries.
+ \newblock In {\em Proceedings of the 16th International Conference on Grammatical Inference},
+ Proceedings of Machine Learning Research 217, pp.~8--22, 2023.
+-\bibitem{UemuraEtAl1999}
+-Y.~Uemura, A.~Hasegawa, S.~Kobayashi, and T.~Yokomori.
+-\newblock Tree adjoining grammars for RNA structure prediction.
+-\newblock {\em Theoretical Computer Science}, 210(2):277--303, 1999.
+-\newblock doi:10.1016/S0304-3975(98)00090-5.
+-
+-\bibitem{KatoSekiKasami2004}
+-Y.~Kato, H.~Seki, and T.~Kasami.
+-\newblock Subclasses of tree adjoining grammar for RNA secondary structure.
+-\newblock In {\em Proceedings of the 7th International Workshop on Tree
+-Adjoining Grammar and Related Formalisms}, pp.~48--55. Simon Fraser University,
+-2004.
+-\newblock \url{https://aclanthology.org/W04-3307/}.
+-
+-\bibitem{Kato2005Thesis}
+-Y.~Kato.
+-\newblock {\em Studies on the Generative Power of Grammars for Describing RNA
+-Secondary Structure}.
+-\newblock Master's thesis, Graduate School of Information Science, Nara
+-Institute of Science and Technology, 2005.
+-\newblock \url{https://naist.repo.nii.ac.jp/record/5821/files/R003380.pdf}.
+-
+ \bibitem{RambowSatta1999}
+ O.~Rambow and G.~Satta.
+ \newblock Independent parallelism in finite copying parallel rewriting systems.
