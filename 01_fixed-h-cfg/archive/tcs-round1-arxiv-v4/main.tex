@@ -1,0 +1,999 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{booktabs}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, fit, backgrounds,automata}
+\tikzset{
+  state/.style={circle, draw, minimum size=1.2cm, inner sep=2pt, font=\small, thick},
+  bad/.style={circle, draw=red!80!black, fill=red!20, minimum size=1.2cm, inner sep=2pt, font=\small, thick},
+  arrow/.style={-Stealth, thick},
+  every picture/.style={line width=0.8pt}
+}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\CS}{\mathrm{CS}}
+\newcommand{\cf}{\mathrm{cf}}
+\newcommand{\lin}{\mathrm{lin}}
+\newcommand{\Ccf}[1]{\mathcal C_{#1}^{\cf}}
+\newcommand{\Clin}[1]{\mathcal C_{#1}^{\lin}}
+\newcommand{\pref}{\mathrm{pref}}
+\newcommand{\suf}{\mathrm{suf}}
+\newcommand{\keywords}[1]{\smallskip\noindent{\bfseries keywords:} #1}
+\usepackage{appendix}
+\usepackage{titlesec}
+\newcommand{\setupappendix}{
+    \titleformat{\section}
+    {\normalfont\Large\bfseries}
+    {Appendix \thesection: }
+    {0em}
+    {}
+}
+\title{Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing}
+\author{Takayuki Kuriyama\\
+Independent Researcher\\
+\texttt{growup.kuriyama@gmail.com}}
+\date{\today}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study distributional learning of context-free languages under a fixed recognizable congruence $\sim_h$ given as the kernel of an explicit finite monoid homomorphism $h:\Sigma^*\to M$. For this fixed-$h$ setting, we develop a finite typed reconstruction theory for context-free $\sim_h$-substitutable languages. Starting from a reduced context-free grammar, we introduce a typed refinement that records both yield types and outer context types, show that the relevant structure is concentrated in a finite typed reconstruction basis, and prove that this basis is exposed by a finite observation set. Occurrences of the same nonterminal symbol may therefore have to be separated when their outer $h$-contexts differ.
+
+We then prove exact reconstruction from positive data. From any finite sample $K\subseteq\Sigma^*$, we construct a canonical hypothesis grammar $\hat G(K)$, and we show that once $K$ contains the finite observation set associated with the target typed grammar, $\hat G(K)$ generates the target language exactly. Consequently, for every explicit finite monoid homomorphism $h$, the class $\mathcal C_h^{\mathrm{cf}}$ of context-free $\sim_h$-substitutable languages is identifiable in the limit from positive data, with polynomial-time hypothesis construction and update.
+
+For the linear subclass $\mathcal C_h^{\mathrm{lin}}$, we further prove polynomial upper bounds on characteristic-sample size and word length. Thus the same learner gives a full polynomial time-and-data result for linear targets.
+
+\keywords{grammatical inference, distributional learning, context-free languages, recognizable congruences, finite monoid homomorphisms, identification in the limit, exact reconstruction}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Background and motivation}
+
+Gold~\cite{gold1967} showed that no language class containing all finite
+languages and at least one infinite language is identifiable in the limit
+from positive data alone. This negative result motivated a broad line of
+research in grammatical inference; see, for example,
+de~la~Higuera~\cite{higuera2010} and
+Heinz, de~la~Higuera, and van~Zaanen~\cite{heinz-higuera-zaanen2011}
+for general background. For context-free languages, one standard way to
+recover positive learning results is the \emph{distributional} approach,
+in which learnability is obtained by restricting which substrings may be
+compared across contexts. Classical examples include Clark--Eyraud
+substitutability~\cite{clark-eyraud2007} and Yoshinaka's
+$(k,\ell)$-substitutability~\cite{yoshinaka2008}. More generally,
+positive-data learnability has also been established for other grammar
+classes under suitable finite control assumptions; see, for example,
+Kanazawa~\cite{kanazawa1998} for restricted categorial grammars.
+
+The present paper studies a recognizable-congruence version of this
+distributional program. Let $h:\Sigma^*\to M$ be a homomorphism into a
+finite monoid, and write $\sim_h:=\ker h$. A language $L\subseteq\Sigma^*$
+is \emph{$\sim_h$-substitutable} if $h(x)=h(y)$ and
+$\D_L(x)\cap\D_L(y)\neq\emptyset$ imply $\D_L(x)=\D_L(y)$ for all
+$x,y\in\Sigma^*$. Thus full equality of distributions is required only
+for strings that already agree under a fixed finite algebraic summary.
+
+Recognizable congruences are a natural comparison mechanism here. If
+$L=h^{-1}(F)$ for some finite monoid homomorphism $h:\Sigma^*\to M$ and
+some $F\subseteq M$, then any two strings with the same $h$-value
+automatically have the same continuation behavior, and hence the same
+distribution. In particular, every regular language belongs to the broader
+class $\mathsf{RS}$ of languages that are $\sim_h$-substitutable for
+\emph{some} finite monoid homomorphism. This observation shows that finite
+monoid typings are not an ad hoc generalization of bounded contexts, but a
+canonical algebraic source of finite distributional control.
+
+Our focus is the \emph{fixed-$h$} regime: an explicit finite monoid
+homomorphism $h:\Sigma^*\to M$ is given in advance, and the learner is
+required to learn under that fixed comparison mechanism. In other words,
+we separate two problems: determining from data which finite congruence
+should govern comparison, and learning once that congruence has already
+been specified. This separation is natural. Clark--Eyraud substitutability
+and Yoshinaka's $(k,\ell)$-substitutability also fix in advance a finite
+comparison mechanism; the present framework replaces bounded context
+windows by an arbitrary recognizable congruence.
+
+\paragraph{Relation to prior learners.}
+At the level of surface rule schemata, the learner constructed here still
+belongs to the distributional tradition: it builds a grammar from local
+factorizations $uxv\in K$ extracted from a finite positive sample $K$.
+The novelty is not this surface format, but the fixed-$h$ structural
+theory behind it. An explicit homomorphism $h:\Sigma^*\to M$ induces a
+typed refinement, a finite reconstruction basis, and a finite observation
+set sufficient for exact recovery. Clark--Eyraud substitutability appears
+as the trivial-monoid case. In the genuinely nontrivial fixed-$h$ setting,
+by contrast, one must simultaneously control yield types and external
+context types, and the correctness proof proceeds via typed transport and
+typed substitution rather than the untyped Clark--Eyraud argument.
+
+
+\subsection{Contributions and main results}
+
+We do not address the fully adaptive problem of inferring a suitable
+congruence from positive data alone. Instead, we isolate the learning
+problem that remains once an explicit finite monoid homomorphism
+$h:\Sigma^*\to M$ has been fixed. The resulting theory has two distinct
+layers. For the general context-free class $\Ccf{h}$, we prove exact
+reconstruction, identification in the limit from positive data, and
+polynomial-time hypothesis construction and update, but we do \emph{not}
+claim a polynomial upper bound on the size of a characteristic sample.
+For the linear subclass $\Clin{h}$, we additionally prove polynomial upper
+bounds on characteristic-sample size and word length, yielding a full
+polynomial time-and-data result.
+
+More precisely, the contributions of the paper are as follows.
+
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
+\item We introduce a \emph{typed refinement} $\widetilde G$ of a reduced
+context-free grammar under the fixed homomorphism $h:\Sigma^*\to M$.
+This refinement separates occurrences of the same untyped nonterminal
+according to both the $h$-type of the generated yield and the $h$-types
+of the surrounding left and right contexts.
+
+\item We define a \emph{finite typed reconstruction basis}
+$\mathcal B(\widetilde G)$ consisting of the reachable productive typed
+nonterminals, the realized typed rule instances, and the associated
+canonical terminal and context data. This basis isolates the finite typed
+local information needed for exact recovery of the target language.
+
+\item We show that the typed reconstruction basis is \emph{exposed by a
+finite observation set} $\CS(\widetilde G)$. Thus the hidden typed
+structure is not merely postulated abstractly: it is forced by finitely
+many observable words of the target language.
+
+\item From a finite positive sample $K$, we construct a \emph{canonical
+hypothesis grammar} $\hat G(K)$ and prove an \emph{exact reconstruction
+theorem}: once $K$ contains $\CS(\widetilde G)$, the grammar $\hat G(K)$
+generates the target language exactly.
+
+\item As a learning-theoretic consequence, for every explicit finite
+monoid homomorphism $h:\Sigma^*\to M$, the class $\Ccf{h}$ is
+\emph{identifiable in the limit from positive data}. Moreover, for every
+finite sample, the current hypothesis can be constructed and updated in
+polynomial time in the current sample size and total input length.
+
+\item For the linear subclass $\Clin{h}$, we prove polynomial upper
+bounds on the size of a characteristic sample and on the lengths of its
+words. Hence the same learner achieves a full \emph{polynomial
+time-and-data} result on linear targets.
+\end{enumerate}
+
+We further situate the fixed-$h$ framework within the broader landscape of distributional learning. Writing $\mathsf{KL}$ for the union of Yoshinaka's fixed $(k,\ell)$-substitutable classes, we show that the capped counter family $\mathrm{CCL}_p$ already yields the strict inclusion $\mathsf{KL}\subsetneq\mathsf{RS}$ at the regular level. By contrast, several natural deterministic context-free languages lie outside $\mathsf{RS}$; examples include the uncapped counter language $\mathrm{CCL}$, the one-bracket Dyck language $D_1$, and Yoshinaka's classical language $L(S\to aSS\mid b)$.
+
+We also give a positive answer to the question of whether $\mathsf{RS}\setminus\mathsf{KL}$ contains any non-regular context-free language. Concretely, we show that $L^*=\{a^n b^n:n\geq 0\}^*$ is a non-regular deterministic context-free language in $\mathsf{RS}\setminus\mathsf{KL}$, thereby establishing that the strict inclusion $\mathsf{KL}\subsetneq\mathsf{RS}$ extends beyond the regular level to the non-regular context-free level. These boundary results are secondary to the main positive results, but they clarify the scope of recognizable-congruence control. From this perspective, a structural characterization of $\mathsf{RS}\cap\mathrm{CFL}$ remains a natural problem for future work.
+
+Taken together, these results show that the fixed-$h$ setting carves out a mathematically robust and structurally transparent subtheory within distributional context-free learning.
+
+\subsection{Organization of the paper}
+Section~\ref{sec:prelim} recalls the basic notions and positions the
+classical substitutability frameworks inside the recognizable-congruence
+setting. Section~\ref{sec:framework} formulates the fixed-$h$ model and
+states the main theorem. Section~\ref{sec:typing} develops the typed
+refinement and the finite typed reconstruction basis, and
+Section~\ref{sec:algo} proves exact reconstruction and identification in
+the limit. Section~\ref{sec:complexity} establishes polynomial-time upper
+bounds for hypothesis construction and update, while Section~\ref{sec:linear}
+proves polynomial time and data for the linear subclass.
+Section~\ref{sec:ccl} and Section~\ref{sec:non-sub} provide the
+structural separation and boundary results. Section~\ref{sec:lstar} resolves
+the open question left by those boundary results by showing that
+$L^*=\{a^nb^n:n\geq 0\}^*$ is a non-regular deterministic context-free
+language in $\mathsf{RS}\setminus\mathsf{KL}$, establishing that the strict
+inclusion $\mathsf{KL}\subsetneq\mathsf{RS}$ extends beyond the regular
+level. Appendix~\ref{sec:properties} records additional closure properties
+and counterexamples, and Appendix~\ref{app:ccl1} treats the exceptional
+case of $\mathrm{CCL}_1$.
+
+\section{Preliminaries}
+\label{sec:prelim}
+
+Let $\Sigma^*$ denote the free monoid over a finite alphabet $\Sigma$,
+and let $\lambda$ denote its identity element. For a word
+$w\in\Sigma^*$, we write $|w|$ for its length. For a language
+$L\subseteq\Sigma^*$ and $x\in\Sigma^*$, the \emph{distribution} of $x$
+in $L$ is defined by
+$\D_L(x):=\{(u,v)\in\Sigma^*\times\Sigma^*:uxv\in L\}$.
+We use standard asymptotic notation, and all claims about polynomial
+time are understood with respect to the natural finite input size
+specified locally at the relevant point.
+
+\subsection{Learning from positive data}
+
+Throughout the paper, we work in Gold's model of identification in the
+limit~\cite{gold1967}. A \emph{text} for a language $L\subseteq\Sigma^*$
+is an infinite sequence $T=(w_1,w_2,\dots)$ of words from $L$ such that
+every word in $L$ appears at least once in $T$. For $n\ge 1$, we write
+$T[n]:=(w_1,\dots,w_n)$ for the prefix of $T$ of length $n$.
+
+A \emph{learner} is a computable mapping that assigns to each finite
+text prefix a hypothesis grammar, or equivalently the language generated
+by that grammar. A learner $\mathcal A$ \emph{identifies in the limit
+from positive data} a language class $\mathcal C$ if for every
+$L\in\mathcal C$ and every text $T$ for $L$, there exists $n_0$ such
+that for all $n\ge n_0$, we have $L(\mathcal A(T[n]))=L$.
+
+Since the learners considered in this paper produce their output
+independently of the order in which positive examples are observed, we
+freely identify a finite text prefix $(w_1,\dots,w_n)$ with the
+corresponding finite sample $K=\{w_1,\dots,w_n\}\subseteq\Sigma^*$.
+
+\subsection{Characteristic samples}
+
+We adopt the standard characteristic-sample viewpoint in grammatical
+inference~\cite{higuera1997,higuera2010}. Let $\mathcal C$ be a language
+class and $\mathcal A$ a learner.
+
+\begin{definition}[Characteristic sample]
+Let $L\in\mathcal C$. A finite set $S\subseteq L$ is called a
+\emph{characteristic sample} of $L$ with respect to $\mathcal A$ if
+$L(\mathcal A(K))=L$ holds for every finite sample $K$ satisfying
+$S\subseteq K\subseteq L$.
+\end{definition}
+
+\begin{definition}[Polynomial time-and-data, in the standard sense of de la Higuera]
+Let $\mathcal{R}$ be a representation class for a language class $\mathcal{C}$, and let $L(r)$ denote the language represented by $r \in \mathcal{R}$. We say that a learner $\mathcal{A}$ \emph{identifies $\mathcal{R}$ from positive data in polynomial time and data} if there exist polynomials $p_{\mathcal{A}}$ and $q_{\mathcal{A}}$ such that the following hold:
+
+(i) for every finite positive sample $K$, the hypothesis $\mathcal{A}(K)$ is computable in time at most $p_{\mathcal{A}}(\|K\|)$, where $\|K\| := \sum_{w \in K} |w|$;
+
+(ii) for every target representation $r \in \mathcal{R}$, there exists a finite set $\CS(r) \subseteq L(r)$ such that $\|\CS(r)\| \le q_{\mathcal{A}}(|r|)$, and for every finite sample $K$ satisfying $\CS(r) \subseteq K \subseteq L(r)$, the hypothesis $\mathcal{A}(K)$ exactly reconstructs $L(r)$.
+\end{definition}
+
+\subsection{Recognizable congruences and fixed homomorphisms}
+
+A congruence on $\Sigma^*$ is an equivalence relation compatible with
+concatenation. Such a congruence is called \emph{recognizable} if it has
+finite index, and this is equivalent to being the kernel of a monoid
+homomorphism into a finite monoid~\cite{eilenberg1974}.
+
+Let $M$ be a finite monoid and let $h:\Sigma^*\to M$ be a monoid
+homomorphism. We write
+$\sim_h:=\ker h=\{(x,y)\in\Sigma^*\times\Sigma^*:h(x)=h(y)\}$.
+
+Throughout the paper, we assume that $h$ is given \emph{explicitly} to
+the learner designer: the multiplication table of $M$ and the values
+$h(a)\in M$ for all $a\in\Sigma$ are given as fixed prior data. Since
+$M$ is fixed in the main theorem, the time required to compute $h(w)$
+for $w\in\Sigma^*$ is linear in $|w|$.
+
+\begin{definition}[\texorpdfstring{$\sim_h$}{sim\_h}-substitutability]
+A language $L\subseteq\Sigma^*$ is said to be
+\emph{$\sim_h$-substitutable} if for all $x,y\in\Sigma^*$,
+\[
+h(x)=h(y)\ \text{and}\ \D_L(x)\cap\D_L(y)\neq\emptyset
+\Longrightarrow \D_L(x)=\D_L(y)
+\]
+holds.
+\end{definition}
+
+As noted above, we write $\Ccf{h}$ for the class of context-free
+$\sim_h$-substitutable languages, and $\Clin{h}$ for its linear
+subclass.
+
+\section{The Framework of Fixed Finite-Monoid Typing}
+\label{sec:framework}
+
+Fix a finite monoid $M$ and a homomorphism $h:\Sigma^*\to M$. The aim
+of this section is to place the fixed-$h$ setting in its proper
+structural context. We first explain why recognizable congruences
+provide a natural finite control on distributions, then show that the
+classical frameworks of Clark--Eyraud and Yoshinaka arise as special
+cases, and finally state the main fixed-$h$ theorem used throughout the
+paper.
+
+\subsection{Recognizable congruences as distributional control}
+\label{subsec:recognizable-control}
+
+Every homomorphism $h:\Sigma^*\to M$ induces an equivalence relation
+$\sim_h$ on $\Sigma^*$ by $x\sim_h y \iff h(x)=h(y)$. Since
+$h(uxv)=h(u)h(x)h(v)$ holds for all $u,x,v\in\Sigma^*$, the relation
+$\sim_h$ is a monoid congruence of finite index. Such congruences are
+precisely the recognizable congruences: conversely, every recognizable
+congruence arises as the kernel of a homomorphism into a finite
+monoid~\cite{eilenberg1974}.
+
+The fixed-$h$ setting used below assumes that the homomorphism is given
+\emph{explicitly}. Concretely, the multiplication table of $M$ and the
+values $h(a)\in M$ for all $a\in\Sigma$ are included as part of the
+prior data. Thus the learner is not required to infer the algebraic
+typing from examples, but instead receives its finite control mechanism
+in operational form.
+
+Recall that $L\subseteq\Sigma^*$ is $\sim_h$-substitutable if
+$h(x)=h(y)$ and $\D_L(x)\cap\D_L(y)\neq\emptyset$ together imply
+$\D_L(x)=\D_L(y)$ for all $x,y\in\Sigma^*$.
+
+In other words, two strings are required to have exactly the same full
+distribution only when they are already equivalent under the fixed
+finite algebraic summary given by $h$ and already share at least one
+common context. This is the basic principle of distributional control in
+the present paper.
+
+For later reference, define
+\[\mathsf{RS}:=\{L\subseteq\Sigma^*\mid\text{$L$ is $\sim_h$-substitutable
+for some finite monoid homomorphism $h$}\},\]
+the class of relation-substitutable languages.
+
+\begin{proposition}\label{prop:regular-auto}
+Let $h:\Sigma^*\to M$ be a finite monoid homomorphism, and let
+$F\subseteq M$. If $L=h^{-1}(F)$, then $L$ is
+$\sim_h$-substitutable. In particular, every regular language belongs to
+$\mathsf{RS}$.
+\end{proposition}
+
+\begin{proof}
+Let $x,y\in\Sigma^*$ satisfy $h(x)=h(y)$ and
+$\D_L(x)\cap\D_L(y)\neq\emptyset$. Take any $(u,v)\in\D_L(x)$. Then
+$uxv\in L=h^{-1}(F)$, so $h(u)h(x)h(v)\in F$. Since $h(x)=h(y)$, we
+also have $h(u)h(y)h(v)\in F$, hence $uyv\in L$ and
+$(u,v)\in\D_L(y)$. Therefore $\D_L(x)\subseteq\D_L(y)$, and the reverse
+inclusion follows symmetrically.
+\end{proof}
+
+\subsection{Classical substitutability as special cases}
+\label{subsec:classical-subst}
+
+Clark--Eyraud substitutability corresponds to the trivial monoid case,
+and each fixed $(k,\ell)$-substitutable class embeds into the present
+framework via a canonical finite monoid quotient. We record this for
+completeness.
+
+\begin{definition}[Clark--Eyraud substitutability]
+A language $L\subseteq\Sigma^*$ is \emph{substitutable} if for all
+$x,y\in\Sigma^*$, $\D_L(x)\cap\D_L(y)\neq\emptyset$ implies
+$\D_L(x)=\D_L(y)$.
+\end{definition}
+
+\begin{definition}[Yoshinaka's \texorpdfstring{$(k,\ell)$}{(k,l)}-substitutability]
+A language $L\subseteq\Sigma^*$ is \emph{$(k,\ell)$-substitutable} if
+for all $x_1,y_1,z_1,x_2,y_2,z_2\in\Sigma^*$, all $v\in\Sigma^k$, and
+all $u\in\Sigma^\ell$, the conditions $vy_1u,vy_2u\neq\lambda$,
+$x_1vy_1uz_1\in L$, $x_1vy_2uz_1\in L$, and $x_2vy_1uz_2\in L$ together
+imply $x_2vy_2uz_2\in L$.
+\end{definition}
+
+In other words, $(k,\ell)$-substitutability requires a bounded-boundary
+replacement principle: if two nonempty substrings $y_1$ and $y_2$ are both
+admissible inside one common boundary pair $v\in\Sigma^k$, $u\in\Sigma^\ell$,
+and if $y_1$ is admissible in another ambient context, then $y_2$ must also be
+admissible in that second context\footnote{In particular, Yoshinaka's
+$(0,0)$-substitutability may be written as: if $x,y\neq\lambda$ and
+$\D_L(x)\cap\D_L(y)\neq\emptyset$, then $\D_L(x)=\D_L(y)$. Thus the
+quantification is restricted to nonempty strings, so this condition is weaker
+than Clark--Eyraud substitutability, which requires
+$\D_L(x)\cap\D_L(y)\neq\emptyset \Rightarrow \D_L(x)=\D_L(y)$ for all
+$x,y\in\Sigma^*$.}. We write
+$\mathsf{KL}:=\bigcup_{k,\ell\ge0}\{L\subseteq\Sigma^*\mid\text{$L$ is
+$(k,\ell)$-substitutable}\}$.
+
+\begin{proposition}\label{prop:ce-special}
+If $L$ is Clark--Eyraud substitutable, then there exists a finite monoid
+homomorphism $h:\Sigma^*\to M$ such that $L$ is
+$\sim_h$-substitutable. In particular, every Clark--Eyraud
+substitutable language belongs to $\mathsf{RS}$.
+\end{proposition}
+
+\begin{proof}
+Take the trivial monoid $M=\{1\}$ and let $h:\Sigma^*\to M$ be the
+unique homomorphism. Then $h(x)=h(y)$ holds for all
+$x,y\in\Sigma^*$, so $\sim_h$-substitutability reduces exactly to
+Clark--Eyraud substitutability.
+\end{proof}
+
+\begin{proposition}\label{prop:yl-special}
+For each fixed $k,\ell\ge0$, there exists a finite monoid homomorphism
+$h_{k,\ell}:\Sigma^*\to M_{k,\ell}$ such that every
+$(k,\ell)$-substitutable language is
+$\sim_{h_{k,\ell}}$-substitutable. In particular, each fixed
+$(k,\ell)$-substitutable class is contained in $\mathsf{RS}$.
+\end{proposition}
+
+\begin{proof}
+Fix $k,\ell\ge0$, and write $N:=\max\{1,k+\ell\}$. Also adopt the
+convention $\pref_0(w)=\suf_0(w)=\lambda$. Define
+\[
+T:=\Sigma^{<N}\sqcup(\Sigma^k\times\Sigma^\ell),
+\]
+and let $\tau:\Sigma^*\to T$ be given by
+\[
+\tau(w):=\begin{cases}
+w & \text{if $|w|<N$,}\\
+(\pref_k(w),\suf_\ell(w)) & \text{if $|w|\ge N$.}
+\end{cases}
+\]
+Since $\Sigma$ is finite and $k,\ell$ are fixed, the set $T$ is finite.
+
+Define a relation $\equiv$ on $\Sigma^*$ by
+$x\equiv y \iff \tau(x)=\tau(y)$. We first show that $\equiv$ is a
+congruence. Suppose that $\tau(x)=\tau(x')$ and $\tau(y)=\tau(y')$.
+It suffices to prove that $\tau(xy)=\tau(x'y')$.
+
+First consider the case $|xy|<N$. Then $|x|,|y|<N$, so
+$\tau(x)=x$ and $\tau(y)=y$. Since $T$ is defined as the disjoint union
+$\Sigma^{<N}\sqcup(\Sigma^k\times\Sigma^\ell)$, the equality
+$\tau(x)=\tau(x')$ implies $x'=x$, and similarly $\tau(y)=\tau(y')$
+implies $y'=y$. Hence $\tau(xy)=\tau(x'y')$.
+
+We may therefore assume that $|xy|\ge N$. In this case $\tau(xy)$ is
+determined by $(\pref_k(xy),\suf_\ell(xy))$, so it is enough to show
+that both $\pref_k(xy)$ and $\suf_\ell(xy)$ are determined solely by
+$\tau(x)$ and $\tau(y)$.
+
+First consider the prefix. If $|x|\ge k$, then $\pref_k(xy)=\pref_k(x)$,
+which is determined by $\tau(x)$. If $|x|<k$, then
+$\pref_k(xy)=x\,\pref_{k-|x|}(y)$. In this case $|x|<k\le k+\ell\le N$,
+so $\tau(x)=x$. Moreover, if $|y|<N$, then $\tau(y)=y$, and hence
+$\pref_{k-|x|}(y)$ is clearly determined by $\tau(y)$. If $|y|\ge N$,
+then $\tau(y)=(\pref_k(y),\suf_\ell(y))$, and since $k-|x|\le k$, the
+word $\pref_{k-|x|}(y)$ is determined by $\pref_k(y)$, hence by
+$\tau(y)$. Thus $\pref_k(xy)$ is always determined by $\tau(x)$ and
+$\tau(y)$.
+
+Next consider the suffix. If $|y|\ge\ell$, then $\suf_\ell(xy)=\suf_\ell(y)$,
+which is determined by $\tau(y)$. If $|y|<\ell$, then
+$\suf_\ell(xy)=\suf_{\ell-|y|}(x)\,y$. In this case
+$|y|<\ell\le k+\ell\le N$, so $\tau(y)=y$. Moreover, if $|x|<N$, then
+$\tau(x)=x$, so $\suf_{\ell-|y|}(x)$ is determined by $\tau(x)$. If
+$|x|\ge N$, then $\tau(x)=(\pref_k(x),\suf_\ell(x))$, and since
+$\ell-|y|\le\ell$, the word $\suf_{\ell-|y|}(x)$ is determined by
+$\suf_\ell(x)$, hence by $\tau(x)$. Therefore $\suf_\ell(xy)$ is also
+determined by $\tau(x)$ and $\tau(y)$.
+
+It follows that $\tau(xy)$ is determined solely by $\tau(x)$ and
+$\tau(y)$. Hence from $\tau(x)=\tau(x')$ and $\tau(y)=\tau(y')$ we
+obtain $\tau(xy)=\tau(x'y')$. Thus $\equiv$ is a finite-index
+congruence. Therefore the quotient
+$M_{k,\ell}:=\Sigma^*/{\equiv}$ is a finite monoid, and the quotient map
+$h_{k,\ell}:\Sigma^*\to M_{k,\ell}$ is a finite monoid homomorphism.
+By construction, $h_{k,\ell}(s)=h_{k,\ell}(t)$ is equivalent to
+$\tau(s)=\tau(t)$.
+
+Now let $L\subseteq\Sigma^*$ be $(k,\ell)$-substitutable, and suppose
+that $h_{k,\ell}(s)=h_{k,\ell}(t)$ and
+$\D_L(s)\cap\D_L(t)\neq\emptyset$. We show that
+$\D_L(s)=\D_L(t)$.
+
+First consider the case $|s|<N$. Then $\tau(s)=s$, which lies in the
+first component of the disjoint union $T$. Since $\tau(s)=\tau(t)$ and
+$T$ is a disjoint union, it follows that $|t|<N$ and $t=s$. Hence
+$\D_L(s)=\D_L(t)$ trivially.
+
+We may therefore assume that $|s|,|t|\ge N$. Since $\tau(s)=\tau(t)$,
+we have $\pref_k(s)=\pref_k(t)=:v$ and $\suf_\ell(s)=\suf_\ell(t)=:u$.
+Thus we may write $s=vy_1u$ and $t=vy_2u$. Moreover,
+$|s|,|t|\ge N\ge1$, so $vy_1u=s\neq\lambda$ and $vy_2u=t\neq\lambda$.
+
+Take $(x_1,z_1)\in\D_L(s)\cap\D_L(t)$. Then
+$x_1vy_1uz_1\in L$ and $x_1vy_2uz_1\in L$. Now let
+$(x_2,z_2)\in\D_L(s)$ be arbitrary. Then $x_2vy_1uz_2\in L$. Applying
+the definition of $(k,\ell)$-substitutability to
+$x_1,y_1,z_1,x_2,y_2,z_2,v,u$, we obtain $x_2vy_2uz_2\in L$. Hence
+$(x_2,z_2)\in\D_L(t)$. Therefore $\D_L(s)\subseteq\D_L(t)$.
+The reverse inclusion follows symmetrically by exchanging $s$ and $t$.
+Thus $\D_L(s)=\D_L(t)$.
+
+Therefore $L$ is $\sim_{h_{k,\ell}}$-substitutable. In particular, the
+fixed $(k,\ell)$-substitutable class is contained in $\mathsf{RS}$.
+\end{proof}
+
+\begin{corollary}\label{cor:framework-special-cases}
+Clark--Eyraud substitutability and each fixed
+$(k,\ell)$-substitutable class are special cases of the framework of
+fixed recognizable congruences.
+\end{corollary}
+
+\begin{proof}
+This follows by combining Proposition~\ref{prop:ce-special} and
+Proposition~\ref{prop:yl-special}.
+\end{proof}
+
+\subsection{The main fixed-\texorpdfstring{$h$}{h} theorem}
+\label{subsec:main-fixed-h}
+
+Throughout the paper, we work under the fixed-$h$ framework: a specific
+finite monoid homomorphism $h:\Sigma^*\to M$ is given explicitly as part
+of the prior data and remains fixed throughout the entire learning
+process. Equivalently, the learner is given the finite algebraic typing
+in operational form and is not required to infer it from data.
+
+Fix a finite monoid homomorphism $h:\Sigma^*\to M$. As recalled above,
+we write
+\[
+\begin{aligned}
+\Ccf{h}
+&:=\bigl\{
+L\subseteq\Sigma^*
+\;\bigm|\;
+\text{$L$ is context-free and $\sim_h$-substitutable}
+\bigr\},\\
+\Clin{h}
+&:=\bigl\{
+L\subseteq\Sigma^*
+\;\bigm|\;
+\text{$L$ is linear context-free and $\sim_h$-substitutable}
+\bigr\}.
+\end{aligned}
+\]
+Clearly, $\Clin{h}\subseteq\Ccf{h}$. The learnability of these classes
+is the content of our main theorem below.
+
+\begin{theorem}[Fixed-\texorpdfstring{$h$}{h} learning theorem]
+\label{thm:main}
+For every explicit finite monoid homomorphism $h:\Sigma^*\to M$, there
+exists a learner $\mathcal A_h$ such that: \textup{(i)} $\mathcal A_h$
+identifies in the limit from positive data every language in
+$\Ccf{h}$; \textup{(ii)} for every finite sample, the hypothesis
+constructed by $\mathcal A_h$ can be computed and updated in polynomial
+time in the current sample size and total input length.
+\end{theorem}
+
+The proof for fixed $h$ is organized as a finite typed reconstruction
+theory. Section~\ref{sec:typing} develops the typed local structure and
+the associated finite reconstruction data, Section~\ref{sec:algo}
+proves complete reconstruction from finite observations and derives
+identification in the limit, and Section~\ref{sec:complexity}
+establishes polynomial-time upper bounds for hypothesis construction and
+update.
+
+\begin{corollary}\label{cor:ce-yoshinaka}
+Theorem~\ref{thm:main} specializes both to Clark--Eyraud substitutable
+languages and to Yoshinaka's $(k,\ell)$-substitutable languages for each
+fixed $k,\ell$.
+\end{corollary}
+
+\begin{proof}
+This follows by combining Theorem~\ref{thm:main} with
+Proposition~\ref{prop:ce-special} and
+Proposition~\ref{prop:yl-special}.
+\end{proof}
+
+\begin{remark}\label{rem:main-poly-caveat}
+Theorem~\ref{thm:main}\textup{(ii)} does \emph{not} claim a polynomial
+upper bound on the size of a characteristic sample. Intuitively, beyond
+the linear subclass, shortest distinguishing contexts may depend on
+branching derivations or nested structural dependencies, so there is no
+a priori reason to expect uniformly small samples. By contrast, when one
+restricts to the linear subclass $\Clin{h}$, the constrained shape of
+derivations makes it possible to prove that both the size of a
+characteristic sample and the lengths of its words are bounded by a
+polynomial in the grammar size (Theorem~\ref{thm:linear-poly}).
+\end{remark}
+
+The notation specific to typed reconstruction is summarized at the
+beginning of Section~\ref{sec:typing}.
+
+\section{Finite Typed Reconstruction under a Fixed Recognizable Congruence}
+\label{sec:typing}
+
+Under a fixed recognizable congruence, the relevant syntactic
+information of a $\sim_h$-substitutable language can be compressed into
+finitely many typed local configurations. The goal of this section is to
+make this finite control explicit and to show that complete recovery of
+the target language follows by reconstructing this finite typed
+structure from positive data.
+
+The notation in Table~\ref{tab:notation-typed} will be used throughout the remainder of this paper.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\linewidth} >{\raggedright\arraybackslash}p{0.70\linewidth}}
+\toprule
+Notation & Meaning \\
+\midrule
+$G=(V,\Sigma,P,S_0)$ & a reduced SSBNF grammar for the target language $L$ (Definition~\ref{def:SSBNF}) \\
+$\widetilde G$ & the trimmed typed refinement of $G$ under the fixed homomorphism $h$ (Section~\ref{subsec:typed-refinement}) \\
+$A_p^{m,n}$ & the typed copy of the nonterminal $A$, with yield $h$-type $p$ and surrounding-context $h$-type $(m,n)$ \\
+$\omega(X)$ & the lexicographically least terminal yield derivable from the productive symbol $X$ \\
+$\chi(X)=\langle u_X,v_X\rangle$ & the lexicographically least context pair satisfying $\widetilde S\Rightarrow_{\widetilde G}^* u_X X v_X$ \\
+$\CS(\widetilde G)$ & a finite observation set exposing the typed reconstruction basis of $\widetilde G$ (Section~\ref{subsec:typed-local-control}) \\
+$\mathcal B(\widetilde G)$ & the finite typed reconstruction basis of $\widetilde G$ (Definition~\ref{def:typed-basis}) \\
+$\hat V(K)$ & the set of observed nonterminals $[x:u,v]$ extracted from factorizations $uxv\in K$ \\
+$\hat G(K)$ & the canonical hypothesis grammar constructed from the finite sample $K$ (Section~\ref{subsec:learner}) \\
+$\mathcal A_h$ & the learner defined by $\mathcal A_h(w_1,\dots,w_n)=\hat G(\{w_1,\dots,w_n\})$ \\
+\bottomrule
+\end{tabular}
+\caption{Notation specific to typed reconstruction and learner construction.}
+\label{tab:notation-typed}
+\end{table}
+
+This section proceeds in the order
+$\text{typed local control}\to\text{finite typed basis}$. We first
+introduce the typed refinement $\widetilde G$ of the target grammar and
+show that there are only finitely many reachable productive typed
+nonterminals and finitely many realized typed rule instances. We then
+collect these into the finite typed reconstruction basis
+$\mathcal B(\widetilde G)$ and show that this basis is exposed by a
+finite observation set $\CS(\widetilde G)$.
+
+\begin{definition}[start-separated binary normal form]\label{def:SSBNF}
+A context-free grammar $G=(V,\Sigma,P,S_0)$ is in
+\emph{start-separated binary normal form} (SSBNF) if the following
+conditions hold: \textup{(i)} $S_0$ does not occur on the right-hand
+side of any production; \textup{(ii)} every production with left-hand
+side $S_0$ has the form $S_0\to A$ for some
+$A\in V\setminus\{S_0\}$ or $S_0\to\lambda$; \textup{(iii)} every
+production with left-hand side $A\in V\setminus\{S_0\}$ has the form
+$A\to a$ for some $a\in\Sigma$ or $A\to BC$ for some
+$B,C\in V\setminus\{S_0\}$.
+\end{definition}
+
+\begin{definition}[reduced grammar]\label{def:reduced}
+A context-free grammar is \emph{reduced} if every nonterminal is
+reachable from the start symbol and productive.
+\end{definition}
+
+Throughout the paper, we work with a reduced SSBNF grammar for the
+target language. An equivalent reduced SSBNF grammar can be obtained
+from any context-free grammar by the standard procedures of
+start-symbol separation, elimination of useless symbols, and
+binarization.
+
+\subsection{Typed refinement}\label{subsec:typed-refinement}
+
+Even when the underlying nonterminal symbol is the same, different
+occurrences must be treated as different typed copies if the $h$-type of
+the generated yield or the $h$-types of the surrounding left and right
+contexts differ. In the fixed-$h$ setting, exact reconstruction depends
+not only on what a nonterminal can generate, but also on where it can
+appear with respect to the ambient recognizable congruence. Thus a
+nonterminal must carry both an internal yield type and an external
+left--right context type. Example~\ref{ex:typing-motivation} illustrates
+this distinction concretely.
+
+\begin{example}[why typing is needed]\label{ex:typing-motivation}
+Let $G=(\{S,A,B\},\{a,b\},P,S)$ have productions
+$S\to AB\mid BA$, $A\to a$, and $B\to b$. Then $L(G)=\{ab,ba\}$, but
+the same nonterminal $A$ appears in two reachable sentential forms with
+different context $h$-types. Thus, if we take the monoid
+$M=(\mathbb{Z}/2\mathbb{Z},+,0)$ and define the homomorphism
+$h:\{a,b\}^*\to M$ by $h(a)=0$ and $h(b)=1$, then the types distinguish
+the contexts:
+\[
+\begin{array}{c|c|c}
+\text{sentential form} & \text{context of $A$} &
+(h(\text{left context}),\,h(\text{right context}))\\\hline
+S\Rightarrow_G AB & (\lambda,b) & (0,1)\\
+S\Rightarrow_G BA & (b,\lambda) & (1,0).
+\end{array}
+\]
+The typing construction therefore separates these two occurrences of
+$A$ into distinct typed copies, namely $A_0^{0,1}$ and $A_0^{1,0}$, so
+that each typed nonterminal carries a globally consistent yield type and
+outer context type.
+\end{example}
+
+We now define the typed refinement of the target grammar. Let
+$L\in\Ccf{h}$, and let $G=(V,\Sigma,P,S_0)$ be any reduced SSBNF grammar
+(see Definition~\ref{def:SSBNF}) such that $L(G)=L$. Write $e_M$ for the
+identity element of $M$.
+
+It is useful to distinguish two grammars. We first define the
+\emph{full typed refinement} of $G$, denoted
+\[
+  \widetilde G^{\mathrm{full}}
+  =
+  (\widetilde V^{\mathrm{full}},\Sigma,
+   \widetilde P^{\mathrm{full}},\widetilde S).
+\]
+Its start symbol is $\widetilde S$, and its non-start typed
+nonterminals are the symbols $A_p^{m,n}$, where
+$A\in V\setminus\{S_0\}$ and $m,n,p\in M$. The intended meaning is that
+$A_p^{m,n}$ is a copy of $A$ whose generated yield has $h$-type $p$ and
+whose surrounding left and right contexts have $h$-types $m$ and $n$,
+respectively. The rules of $\widetilde G^{\mathrm{full}}$ are as
+follows.
+\begin{itemize}[nosep,leftmargin=2.2em]
+\item If $S_0\to A\in P$, then include
+$\widetilde S\to A_p^{e_M,e_M}$ for every $p\in M$.
+\item If $S_0\to\lambda\in P$, then include
+$\widetilde S\to\lambda$.
+\item If $A\to a\in P$ and $h(a)=p$, then include
+$A_p^{m,n}\to a$ for every $m,n\in M$.
+\item If $A\to BC\in P$, then include
+\[
+  A_p^{m,n}\to B_q^{m,rn}\,C_r^{mq,n}
+\]
+for all $m,n,q,r\in M$ satisfying $qr=p$.
+\end{itemize}
+
+The superscripts in the binary rule express the propagation of outer
+context types. If an occurrence of $A$ has left context type $m$ and
+right context type $n$, and if the left child has yield type $q$ while
+the right child has yield type $r$, then the left child sees right
+context type $rn$, and the right child sees left context type $mq$.
+The condition $qr=p$ records that the parent yield is the concatenation
+of the two child yields.
+
+The \emph{trimmed typed refinement} of $G$, denoted
+\[
+  \widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S),
+\]
+is obtained from $\widetilde G^{\mathrm{full}}$ by deleting all
+unreachable symbols, all nonproductive symbols, and all rules incident
+with such symbols. Unless explicitly stated otherwise,
+$\widetilde G$ denotes this trimmed refinement.
+
+The distinction between
+$\widetilde G^{\mathrm{full}}$ and $\widetilde G$ is important. The full
+refinement contains a typed copy $A_p^{m,n}$ for every
+$A\in V\setminus\{S_0\}$ and every $m,n,p\in M$, regardless of whether
+that copy can actually occur in a successful derivation. The trimmed
+refinement keeps only the reachable and productive typed copies and
+their realized rules. Thus derivations in
+$\widetilde G^{\mathrm{full}}$ may mention typed copies that are later
+removed, whereas all reconstruction data used below are taken only from
+the trimmed grammar $\widetilde G$. In particular, the canonical yield
+$\omega(X)$, the canonical context $\chi(X)$, the observation set
+$\CS(\widetilde G)$, and the finite reconstruction basis
+$\mathcal B(\widetilde G)$ are defined only for reachable and productive
+symbols of $\widetilde G$. This convention avoids making any claim about
+typed copies that do not exist after trimming.
+
+\subsection{Canonical typed data}
+
+Fix a total order on $\Sigma$, let $\le_{\mathrm{slex}}$ be the induced
+shortlex order on $\Sigma^*$, and extend it lexicographically to
+$(\Sigma^*)^2$. For each productive symbol
+$\alpha\in(\Sigma\cup\widetilde V)^*$ of $\widetilde G$\footnote{That
+is, a string of nonterminals from which one can eventually derive a
+terminal string.}, let $\omega(\alpha)$ denote the shortlex-minimal
+terminal string satisfying
+$\alpha\Rightarrow_{\widetilde G}^*\omega(\alpha)$. In particular, if
+$X\to YZ$, then $\omega(YZ)=\omega(Y)\omega(Z)$, and if $X\to a$, then
+$\omega(a)=a$. Also, for each reachable non-start symbol
+$X\in\widetilde V\setminus\{\widetilde S\}$, let
+$\chi(X)=\langle u_X,v_X\rangle$ denote the shortlex-minimal pair
+satisfying $\widetilde S\Rightarrow_{\widetilde G}^* u_X\,X\,v_X$.
+
+The following typing invariants are immediate from the construction.
+
+\begin{lemma}[full typing derivability]
+\label{lem:typed-full}
+In the full typed refinement $\widetilde G^{\mathrm{full}}$, if
+$A\Rightarrow_G^* w\in\Sigma^+$ and $p=h(w)$, then for all
+$m,n\in M$ we have
+\[
+  A_p^{m,n}\Rightarrow_{\widetilde G^{\mathrm{full}}}^* w .
+\]
+\end{lemma}
+
+\begin{proof}
+We argue by induction on the height of the derivation
+$A\Rightarrow_G^* w$ in the untyped grammar. If the first rule is
+$A\to a$, then $w=a$ and $p=h(a)$, so the rule
+$A_p^{m,n}\to a$ belongs to $\widetilde G^{\mathrm{full}}$ for every
+$m,n\in M$.
+
+If the first rule is $A\to BC$ and $w=xy$ with
+$B\Rightarrow_G^* x$ and $C\Rightarrow_G^* y$, put
+$q:=h(x)$ and $r:=h(y)$. Then $qr=h(xy)=p$. By the induction hypothesis,
+\[
+  B_q^{m,rn}\Rightarrow_{\widetilde G^{\mathrm{full}}}^* x
+  \quad\text{and}\quad
+  C_r^{mq,n}\Rightarrow_{\widetilde G^{\mathrm{full}}}^* y .
+\]
+The full typed refinement contains the rule
+\[
+  A_p^{m,n}\to B_q^{m,rn}\,C_r^{mq,n},
+\]
+and hence $A_p^{m,n}\Rightarrow_{\widetilde G^{\mathrm{full}}}^*xy=w$.
+\end{proof}
+
+\begin{lemma}[typing invariants]
+\label{lem:typed}
+For the trimmed typed refinement $\widetilde G$, the following hold:
+\textup{(i)} if $A_p^{m,n}\Rightarrow_{\widetilde G}^* w\in\Sigma^+$,
+then $h(w)=p$;
+\textup{(ii)} if $\widetilde S\Rightarrow_{\widetilde G}^* uA_p^{m,n}v$,
+then $h(u)=m$ and $h(v)=n$;
+\textup{(iii)} $L(\widetilde G)=L(G)=L$.
+\end{lemma}
+
+\begin{proof}
+For \textup{(i)} and \textup{(ii)}, argue by induction on the height of
+the derivation in the trimmed typed grammar. Since every rule of
+$\widetilde G$ is a rule of $\widetilde G^{\mathrm{full}}$, the local
+typing equations are exactly those specified in the full refinement.
+
+For \textup{(i)}, the terminal case follows from rules
+$A_p^{m,n}\to a$ with $p=h(a)$. In the binary case, if
+\[
+  A_p^{m,n}\to B_q^{m,rn}\,C_r^{mq,n}
+\]
+and the two children derive strings of $h$-types $q$ and $r$, then the
+whole yield has $h$-type $qr=p$.
+
+For \textup{(ii)}, the start case has outer context types
+$(e_M,e_M)$ by construction. In the binary rule above, if the parent
+occurs with left and right context types $(m,n)$, then the left child
+has left context type $m$ and right context type $rn$, while the right
+child has left context type $mq$ and right context type $n$, exactly as
+prescribed by the rule. The claim follows by induction along the
+derivation from $\widetilde S$.
+
+For \textup{(iii)}, every derivation in $\widetilde G$ erases typed
+annotations and gives a derivation in $G$, so
+$L(\widetilde G)\subseteq L(G)$.
+
+Conversely, let $w\in L(G)$. If $w=\lambda$, then $S_0\to\lambda$ is a
+rule of $G$, so $\widetilde S\to\lambda$ is a rule of
+$\widetilde G^{\mathrm{full}}$. Since this rule is reachable and
+productive, it remains in the trimmed grammar $\widetilde G$, and hence
+$\lambda\in L(\widetilde G)$.
+
+Now suppose $w\neq\lambda$. Choose a derivation
+$S_0\Rightarrow_G A\Rightarrow_G^* w$ and put $p:=h(w)$. In
+$\widetilde G^{\mathrm{full}}$ the rule
+$\widetilde S\to A_p^{e_M,e_M}$ exists, and by
+Lemma~\ref{lem:typed-full} we have
+$A_p^{e_M,e_M}\Rightarrow_{\widetilde G^{\mathrm{full}}}^* w$.
+Therefore the symbol $A_p^{e_M,e_M}$ is reachable from $\widetilde S$
+and productive in $\widetilde G^{\mathrm{full}}$. Moreover, the rules
+appearing in one such successful derivation from $\widetilde S$ to $w$
+are all incident only with reachable and productive symbols. Hence they
+survive the trimming step, and the same derivation exists in
+$\widetilde G$. Thus $w\in L(\widetilde G)$.
+\end{proof}
+
+
+\begin{lemma}\label{lem:typed-data}
+If $X=A_p^{m,n}$ is reachable and productive in $\widetilde G$, then
+$h(u_X)=m$, $h(\omega(X))=p$, and $h(v_X)=n$.
+\end{lemma}
+
+\begin{proof}
+Since $\widetilde S\Rightarrow_{\widetilde G}^*u_XA_p^{m,n}v_X$,
+Lemma~\ref{lem:typed}\textup{(ii)} gives $h(u_X)=m$ and $h(v_X)=n$.
+Since $X\Rightarrow_{\widetilde G}^*\omega(X)$,
+Lemma~\ref{lem:typed}\textup{(i)} gives $h(\omega(X))=p$.
+\end{proof}
+
+\subsection{Typed local control}\label{subsec:typed-local-control}
+
+We extract the finite local typed information that will later be used for reconstruction. Define the characteristic sample by
+\[
+\CS(\widetilde G):=\{u_X\,\omega(\beta)v_X\mid X\to\beta\in\widetilde P\text{ and }X\in\mathrm{NT}(\widetilde G),\ X\neq\widetilde S\}\cup(\{\lambda\}\text{ if }\widetilde S\to\lambda\in\widetilde P),
+\]
+where $\mathrm{NT}(\widetilde G)$ denotes the set of reachable and productive typed nonterminals of $\widetilde G$.
+
+\begin{lemma}[observation words are positive examples]
+\label{lem:cs-contained-in-language}
+We have $\CS(\widetilde G)\subseteq L(\widetilde G)=L$.
+\end{lemma}
+
+\begin{proof}
+Let $z\in\CS(\widetilde G)$. If $z=\lambda$, then
+$\widetilde S\to\lambda$ is a rule of $\widetilde G$, and hence
+$\lambda\in L(\widetilde G)$.
+
+Otherwise, by the definition of $\CS(\widetilde G)$, there is a
+realizable non-start rule $X\to\beta$ of $\widetilde G$ such that
+$z=u_X\omega(\beta)v_X$. Since $X$ is reachable, the definition of
+$\chi(X)=\langle u_X,v_X\rangle$ gives
+\[
+  \widetilde S\Rightarrow_{\widetilde G}^* u_X X v_X .
+\]
+Since \(X\to\beta\) is a rule of the trimmed grammar and its right-hand
+side is productive, we have
+\[
+  \beta\Rightarrow_{\widetilde G}^*\omega(\beta).
+\]
+Therefore
+\[
+  \widetilde S
+  \Rightarrow_{\widetilde G}^* u_X X v_X
+  \Rightarrow_{\widetilde G} u_X\beta v_X
+  \Rightarrow_{\widetilde G}^* u_X\omega(\beta)v_X=z .
+\]
+Thus $z\in L(\widetilde G)$. By Lemma~\ref{lem:typed}\textup{(iii)},
+$L(\widetilde G)=L$, so $z\in L$.
+\end{proof}
+
+
+\begin{lemma}\label{lem:typed-cs}
+If $X$ is reachable and productive in $\widetilde G$, then $u_X\omega(X)v_X\in\CS(\widetilde G)$.
+\end{lemma}
+
+\begin{proof}
+Choose a derivation $X\Rightarrow_{\widetilde G}^*\omega(X)$, and let $X\to\beta$ be the first rule used in this derivation. By definition, $\omega(X)=\omega(\beta)$. Hence $u_X\omega(X)v_X=u_X\omega(\beta)v_X\in\CS(\widetilde G)$.
+\end{proof}
+
+\begin{theorem}[Typed local control]\label{thm:typed-local-control}
+$\CS(\widetilde G)$ is well defined and satisfies $|\CS(\widetilde G)|<\infty$. In other words, all local derivational information relevant to reconstruction is carried by finitely many typed local configurations.
+\end{theorem}
+\begin{proof}
+The full typed refinement already has the finite nonterminal set
+\[
+  \{\widetilde S\}\cup
+  \{A_p^{m,n}\mid A\in V\setminus\{S_0\},\ m,n,p\in M\}.
+\]
+The trimmed grammar $\widetilde G$ is obtained by deleting symbols and
+rules from this finite grammar, so it is finite.
+
+For each productive symbol $X$ of $\widetilde G$, the set
+$\{w\in\Sigma^*\mid X\Rightarrow_{\widetilde G}^* w\}$ is nonempty, so
+the shortlex least element $\omega(X)$ is well defined. Similarly, for
+each reachable non-start symbol $X$ of $\widetilde G$, the set
+\[
+  \{\langle u,v\rangle\in(\Sigma^*)^2
+    \mid \widetilde S\Rightarrow_{\widetilde G}^* uXv\}
+\]
+is nonempty, so the shortlex least pair
+$\chi(X)=\langle u_X,v_X\rangle$ is well defined. Since $\widetilde G$
+has only finitely many reachable and productive symbols and rules, the
+set of observation words $u_X\omega(\beta)v_X$ appearing in the
+definition of $\CS(\widetilde G)$ is finite. Therefore
+$\CS(\widetilde G)$ is well defined and finite.
+\end{proof}
+
+\begin{remark}
+The point of Theorem~\ref{thm:typed-local-control} is that, after typing, the information about the local behavioral conditions that the target grammar must satisfy for reconstruction is compressed into finitely many typed objects.
+\end{remark}
+
+
+\subsection{Finite typed reconstruction basis}
+
+We now gather the finite typed local information of $\widetilde G$ into
+a single reconstruction object.
+
+\begin{definition}[finite typed reconstruction basis]\label{def:typed-basis}
+Define the finite typed reconstruction basis of $\widetilde G$ by
+\[
+\mathcal B(\widetilde G):=\bigl(\mathrm{NT}(\widetilde G),\mathrm{Rule}(\widetilde G),\omega,\chi,\CS(\widetilde G)\bigr).
+\]
+Here, $\mathrm{NT}(\widetilde G)$ is the set of reachable and productive
+typed nonterminals of $\widetilde G$, and
+$\mathrm{Rule}(\widetilde G)$ is the set of rules whose symbols are all
+reachable and productive typed nonterminals of $\widetilde G$ (we call
+these the ``realizable rules'').
+\end{definition}
+
+\begin{theorem}[existence of a finite typed reconstruction basis]\label{thm:finite-typed-basis}
+The basis $\mathcal B(\widetilde G)$ is well-defined and finite.
+Moreover, each reachable and productive typed nonterminal is exhibited
+by its anchor word $u_X\omega(X)v_X\in\CS(\widetilde G)$, and each
+realizable rule $X\to\beta$ is exhibited by its canonical observation
+word $u_X\omega(\beta)v_X\in\CS(\widetilde G)$.
+\end{theorem}
+
+\begin{proof}
+Finiteness follows from Theorem~\ref{thm:typed-local-control}. By
+Lemma~\ref{lem:typed-cs}, each reachable and productive typed
+nonterminal $X$ is exhibited by its anchor word
+$u_X\omega(X)v_X$. Also, by the definition of $\CS(\widetilde G)$, each
+realized non-start rule $X\to\beta$ is exhibited by the corresponding
+canonical observation word $u_X\omega(\beta)v_X$.
+\end{proof}
+
+\begin{remark}
+In this notation, the characteristic sample $\CS(\widetilde G)$ is the
+terminal observation set that exhibits the finite typed reconstruction
+basis $\mathcal B(\widetilde G)$; that is, it serves as an observation
+window through which the hidden typed structure is made visible. Thus
+the characteristic sample is by no means merely an auxiliary set added
+later only for the convergence proof. Rather, it is precisely the
+working space, or finite observational interface, on which the fixed-$h$
+reconstruction theory operates.
+\end{remark}
