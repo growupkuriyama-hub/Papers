@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v54; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v55; this is the current source of truth.
+- `revision/v54_to_v55_revision_note.md` — stable ACL Anthology locator for Kato--Seki--Kasami (2004).
+- `revision/v54_to_v55.diff` — unified diff for the v54 → v55 revision.
 - `revision/v53_to_v54_revision_note.md` — explicit empty-word clause in the rank-one characteristic-data theorem.
 - `revision/v53_to_v54.diff` — unified diff for the v53 → v54 revision.
 - `revision/v52_to_v53_revision_note.md` — primary-PDF citation audit and locator tightening for Yoshinaka/Seki sources.
