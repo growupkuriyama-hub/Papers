@@ -10,3 +10,7 @@ Public source repository for Takayuki Kuriyama's research papers.
 - `04_relative-factorization/` — *Relative Prime Factorization and Finite-State Presentations under Fixed Finite-Monoid Observation*
 - `05_jalc-occurrence-descriptors/` — *Finite Occurrence Descriptors for Context-Free Grammar Presentations under Monoid Typing* (JALC manuscript)
 - `06_ofet/` — *Observer--Fragmentation--Exposure Tradeoffs: From rectangular CFG exposure to ordered MCFG scheduling*
+
+## Other papers
+
+- `misc/primitive-dyck/` — *Additive Bases from Primitive Dyck Words: Regular Underapproximations, Motzkin Coding, and Digit Lifting* (IJFCS manuscript; under review; outside the doctoral-dissertation project)
