@@ -7,10 +7,11 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v46; this is the current source of truth.
-- `revision/v45_to_v46_revision_note.md` — summary of the v45 → v46 submission-preparation revision.
-- `revision/v45_to_v46.diff` — unified diff for the v45 → v46 revision.
-- `revision/v44_to_v45_revision_note.md` / `revision/v44_to_v45.diff` — retained history for the preceding revision.
+- `main.tex` — English working manuscript, internal v47; this is the current source of truth.
+- `revision/v46_to_v47_revision_note.md` — summary of the v46 → v47 prior-work/positioning revision.
+- `revision/v46_to_v47.diff` — unified diff for the v46 → v47 revision.
+- `revision/v45_to_v46_revision_note.md` / `revision/v45_to_v46.diff` — retained history for the preceding revision.
+- `revision/v44_to_v45_revision_note.md` / `revision/v44_to_v45.diff` — earlier retained history.
 
 The public arXiv record currently corresponds to an earlier manuscript baseline; the working source in this directory has advanced substantially beyond that version.
 
