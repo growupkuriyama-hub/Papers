@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v48; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v49; this is the current source of truth.
+- `revision/v48_to_v49_revision_note.md` — citation-provenance precision pass for the minimum-rank-two lower-bound chain.
+- `revision/v48_to_v49.diff` — unified diff for the v48 → v49 revision.
 - `revision/v47_to_v48_revision_note.md` — summary of the v47 → v48 genuine-rank-two witness revision.
 - `revision/v47_to_v48.diff` — unified diff for the v47 → v48 revision.
 - `revision/v46_to_v47_revision_note.md` / `revision/v46_to_v47.diff` — retained history for the preceding revision.
