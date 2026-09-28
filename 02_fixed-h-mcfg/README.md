@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v59; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v60; this is the current source of truth.
+- `revision/v59_to_v60_revision_note.md` — safe pre-submission compression pass: trims repeated exposition and one unused secondary example while preserving theorem/proposition/lemma counts and the mathematical core.
+- `revision/v59_to_v60.diff` — sequential unified patches for the v59 → v60 compression revision.
 - `revision/v58_to_v59_revision_note.md` — pre-submission citation and positioning hardening after independent review; corrects the COPY attribution, strengthens the Gallot/Bishop source bridge, clarifies the modular intrinsic witness, and removes an unused bibliography entry.
 - `revision/v58_to_v59.diff` — unified diff for the v58 → v59 revision.
 - `revision/v57_to_v58_revision_note.md` — strengthens the intrinsic-rank-two witness to a non-context-free minimum-fan-out-two target while retaining the all-finite-fan-out rank lower bound.
