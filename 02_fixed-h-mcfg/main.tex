@@ -65,26 +65,33 @@ Independent Researcher, Tokyo, Japan\\
 
 \begin{abstract}
 Fix a fan-out bound $f$ and a homomorphism $h:\Sigma^*\to M$ into a finite
-monoid.  We study positive-data learning of multiple context-free languages in
-which tuples are compared only when corresponding components have equal
-$h$-values, a finite-typed relaxation of Yoshinaka's multidimensional
-substitutability.  We give a set-driven grammar reconstruction that becomes
-exact after finitely many target-dependent positive observations and a
-conservative learner that identifies every target in the limit; under a fixed
-rule-rank bound, each update is polynomial in the accumulated sample.
-For every fixed finite typing, rule-rank-one targets admit characteristic data
-of total length polynomial in grammar size.  At arbitrary fixed rank, a
-polynomial bound in grammar size and rule thickness is obtained whenever the
-typing factors through a fixed prefix--suffix summary.  At every fan-out level
-$m\ge2$, the $(1,1)$ boundary typing yields a rank-one target of minimum
-fan-out $m$ outside Yoshinaka's class and outside the same-typing regular-filter
-fragment.  At fan-out two, a separate finitely typed target lies outside
-Yoshinaka's class even after arbitrary target-dependent regular filtering.
-The thickness-sensitive bounds are stated for good presentations and transfer
-polynomially from reduced $\lambda$-free presentations, even when deleting
-rules are present; empty tuple components can cause exponential blow-up along
-the standard normalization route.  For general higher-rank typings, an
-original-thickness characteristic-data bound remains open.
+monoid.  We study positive-data learning of multiple context-free languages
+under the bias that tuple components may be identified only when their
+corresponding $h$-values agree.  This gives a finite-typed extension of
+Yoshinaka's multidimensional substitutability.
+
+We construct a set-driven grammar from each finite positive sample and show
+that it reconstructs every target exactly once a finite target-dependent
+characteristic sample has been observed.  An uncapped conservative learner
+therefore identifies the full fixed-$(f,h)$ class in the limit.  Separately,
+for every fixed rule-rank cap $r_{\max}$, the corresponding capped learner
+identifies the rank-$\le r_{\max}$ subclass with polynomial-time updates in
+the accumulated sample.
+
+Quantitatively, for every fixed finite typing, rule-rank-one targets admit
+characteristic data of total length polynomial in grammar size.  At arbitrary
+fixed rank, a polynomial bound in grammar size and rule thickness is obtained
+when the typing factors through a fixed prefix--suffix summary.
+
+We also establish structural separations.  At every fan-out level $m\ge2$,
+the $(1,1)$ boundary typing contains a rank-one target of minimum fan-out $m$
+outside Yoshinaka's class and outside the regular-filter fragment recognized
+by the same typing.  At fan-out two, another finitely typed target cannot be
+represented as a Yoshinaka-substitutable language intersected with any
+target-dependent regular language.  Full yield-type refinement and
+empty-component elimination can increase rule thickness exponentially, and
+for general higher-rank finite typings an original-thickness
+characteristic-data bound remains open.
 \end{abstract}
 
 \medskip
@@ -119,10 +126,10 @@ finite automata provide another.  The fan-out bound is part of the same bias:
 it controls not only representational power but also which tuple arities are
 tested for substitution, so choosing a larger $f$ is not automatically safer.
 If the typing itself is unknown but a bound on the size of its finite codomain
-is fixed, taking the product of all homomorphisms into monoids up to that size
-reduces the bounded union to one fixed typing.  Without a
-codomain-size bound, the union contains all regular languages and is not
-TxtEx-identifiable from positive data.  A useful way to read the fixed typing
+is fixed, the bounded union is contained in a single fixed-typing class: one
+may take the product of all homomorphisms into monoids up to that size.
+Without a codomain-size bound, the union contains all regular languages and is
+not TxtEx-identifiable from positive data.  A useful way to read the fixed typing
 is as bounded finite-state information that selects among finitely many
 structural regimes while the MCFG carries the unbounded dependency itself.
 The framework does not attempt to encode an unbounded copied feature sequence;
@@ -139,11 +146,16 @@ neighborhoods may license a comparison even when the outer sentence contexts
 differ \cite{CosteGaretNicolas2012}; see also the polynomial reduction
 approach of Coste and Nicolas~\cite{CosteNicolas2019}.  Here the evidence remains a common full
 sentence context, while the finite typing records a compositional summary of
-the compared factor or tuple component itself.  For MCFGs and related
-formalisms, richer-information settings include learning from positive data
-together with membership queries \cite{Yoshinaka2010} and distributional
-learning of parallel MCFGs \cite{ClarkYoshinaka2014}.  These comparisons
-motivate the fixed-typing bias but are not used in the proofs.
+the compared factor or tuple component itself.  For MCFGs and related formalisms, richer-information settings include
+Yoshinaka's learning from positive data together with membership queries
+\cite{Yoshinaka2010} and Clark--Yoshinaka's distributional learning of
+parallel MCFGs~\cite{ClarkYoshinaka2014}.  The latter works in an active
+setting and uses a dual representation in which nonterminals are indexed by
+sets of generalized contexts, partly in order to accommodate copying.  The
+present paper instead stays in the positive-data-only setting, uses
+sample-local tuple values as the primal objects, and treats finite-monoid
+typing as a fixed distributional bias.  These results therefore address
+different information and representation assumptions.
 
 \paragraph{Contributions.}
 The paper has three main contributions.
@@ -152,9 +164,11 @@ The paper has three main contributions.
 For every fixed fan-out bound and finite typing, observed tuple values,
 sample-local MCFG compositions, and equal-type links yield a set-driven
 reconstruction that is exact after a finite target-dependent positive sample.
-No rule-rank cap is needed for this qualitative theorem.  A conservative
-sequential wrapper gives TxtEx identification; when rule rank is fixed, every
-reconstruction step is polynomial in the accumulated positive sample.
+No rule-rank cap is needed for this qualitative theorem.  The uncapped
+conservative learner identifies the full fixed-$(f,h)$ class in the limit.
+Separately, for each fixed rule-rank cap $r_{\max}$, the capped reconstruction
+and its conservative wrapper identify the rank-$\le r_{\max}$ subclass with
+polynomial-time updates in the accumulated positive sample.
 \item \emph{Characteristic-data bounds.}
 For arbitrary fixed $h$, rule-rank-one targets have characteristic data of
 total length polynomial in grammar size.  At arbitrary fixed rank, typings
@@ -177,22 +191,29 @@ this loss need not be repairable by \emph{any} finite typing.
 \paragraph{Relation to prior work and scope.}
 With trivial typing, the semantic baseline is Yoshinaka's multidimensional
 substitutability~\cite{Yoshinaka2011}.  Yoshinaka also removes the rule-rank
-bound for qualitative identification~\cite[Corollary~2]{Yoshinaka2011}; the
-qualitative contribution here extends that rank-unbounded setting from trivial
-typing to a fixed finite typing and uses a sample-local tuple constructor whose
-relation to Yoshinaka's finite-sample grammar is made explicit in
-Section~\ref{sec:learner}.  At fan-out one, the semantic target class is exactly
-the fixed-$h$ CFG class of the companion paper~\cite{kuriyamaCFG}.  The
-qualitative theorem, the rank-one/linear-CFG data bound, and the fixed-window
-compatibility are the specific fan-out-one specializations already established
-there; Proposition~\ref{prop:fanout-one-operator} below relates the two
-finite-sample reconstruction operators themselves.  Polynomial-time statements
-below treat the displayed fan-out, rank cap, and finite typing as fixed.
-Characteristic-data bounds concern the set-driven reconstruction; the
-conservative learner is used separately for syntactic stabilization.  The
-higher-rank thickness obstructions concern the displayed normalization and
-refinement routes, not lower bounds on all possible learners or characteristic
-samples.
+bound for qualitative identification~\cite[Corollary~2]{Yoshinaka2011}.
+Accordingly, the observed-tuple viewpoint, good MCFG templates, and
+shared-context substitution are inherited from that framework.  The new
+qualitative work here is the extension to componentwise finite typing together
+with a sample-local reconstruction: composition witnesses must materialize
+inside observed parent occurrences, and completeness must be recovered after
+typed refinement without assuming a rule-rank cap.
+
+At fan-out one, the semantic target class agrees with the fixed-$h$ CFG class
+of the revised companion paper~\cite{kuriyamaCFG}.
+Proposition~\ref{prop:fanout-one-operator} makes the relation between the two
+finite-sample constructions explicit.  The genuinely multidimensional
+phenomena then appear in the simultaneous treatment of several tuple
+components, the higher-rank boundary-typing argument, the fan-out-sensitive
+separations of Section~\ref{sec:comparison}, and the empty-component
+normalization obstruction.
+
+Polynomial-time statements below treat the displayed fan-out, rank cap, and
+finite typing as fixed.  Characteristic-data bounds concern the set-driven
+reconstruction; the conservative learner is used separately for syntactic
+stabilization.  The higher-rank thickness obstructions concern the displayed
+normalization and refinement routes, not lower bounds on all possible learners
+or characteristic samples.
 
 Section~\ref{sec:prelim} fixes notation and the learning model.
 Section~\ref{sec:learner} gives the reconstruction and convergence proofs.
@@ -526,13 +547,13 @@ empty-component construction are recorded in
 Appendix~\ref{app:normalization-details}.
 \end{proof}
 
-This proposition controls size, fan-out, and rule rank, but it does not identify
-the rule thickness of an arbitrary deleting presentation with the thickness
-after that nondeleting normalization.  Thickness-sensitive statements are
-therefore first proved for good presentations.  For already $\lambda$-free,
-nondeleting presentations, the structural permutation and nonmerging steps do
-admit a polynomial thickness transfer; Proposition~\ref{prop:structural-good-thickness}
-records it explicitly.
+This proposition controls size, fan-out, and rule rank, but it does not
+identify the rule thickness of an arbitrary presentation with the thickness
+after normalization.  Thickness-sensitive statements are therefore first
+proved for good presentations.  For reduced $\lambda$-free input
+presentations, including presentations with deleting rules,
+Proposition~\ref{prop:structural-good-thickness} gives a polynomial
+grammar-size-and-thickness transfer to the structural good form used below.
 
 \subsection{Tuple Contexts and Substitutability}
 
@@ -734,16 +755,21 @@ occurrence, and the induced template $\rho$ is good.
 
 \begin{proof}
 Because the parent is an observed tuple occurrence, the components of each
-$\tuple u_j$ remain separated in the same sample word.  Components lying in one
-parent component are separated by the terminal material forced by the
-nonmerging condition, while components lying in different parent components
-are separated by the nonempty internal material of the parent sentence
-context.  Thus each $\tuple u_j$ is an observed tuple occurrence.  Every
-variable occurs exactly once, the components of each child occur in order, and
-the definition excludes adjacent consecutive components of one child; hence
-$\rho$ is linear, nondeleting, nonpermuting, and nonmerging.  Finally every
-parent component is nonempty, so every output component of $\rho$ is nonempty.
-Thus $\rho$ is good.
+$\tuple u_j$ occur in their original left-to-right order in the same sample
+word.  If two consecutive components of the same child lie in one parent
+component, the definition of a composition witness excludes their direct
+adjacency.  They are therefore separated either by nonempty terminal material
+or by one or more nonempty labelled intervals belonging to other children.
+If they lie in different parent components, they are separated by the
+nonempty internal material of the parent sentence context.  Hence the
+components of each $\tuple u_j$ satisfy the separation condition for an
+observed tuple occurrence.
+
+Every variable occurs exactly once, the components of each child occur in
+order, and adjacent consecutive components of one child are excluded.
+Therefore $\rho$ is linear, nondeleting, nonpermuting, and nonmerging.
+Finally every parent component is nonempty, so every output component of
+$\rho$ is nonempty.  Thus $\rho$ is good.
 \end{proof}
 
 \begin{lemma}[Enumeration and sample-bounded rank]
@@ -833,6 +859,19 @@ be materialized inside one observed parent occurrence.  This stricter
 sample-local constructor still becomes exact after the characteristic sample
 constructed below; for general $h$, Lemma~\ref{lem:type-guarded-subgrammar}
 then isolates the additional finite-typing restriction.
+
+For self-containment, the companion CFG reconstruction uses observed
+factor--context states $[x:u,v]$ and the following rules:
+\[
+\begin{array}{rll}
+(R1)&[xy:u,v]\to[x:u,yv][y:ux,v],&x,y\in\Sigma^+,\\[1mm]
+(R2)&[x:u,v]\to[x:u',v'],&uxv,u'xv'\in K,\\[1mm]
+(R3)&[x:u,v]\to[x':u,v],&h(x)=h(x'),\\[1mm]
+(R4)&[a:u,v]\to a,&a\in\Sigma,\\[1mm]
+(R5)&\widehat S\to[w:\lambda,\lambda],&w\in K\cap\Sigma^+.
+\end{array}
+\]
+If $\lambda\in K$, Rule~(R5) also contains $\widehat S\to\lambda$.
 
 \begin{proposition}[Fan-out-one operator equivalence]
 \label{prop:fanout-one-operator}
@@ -1623,9 +1662,16 @@ maximizing over rules proves the second inequality.
 \end{proof}
 
 Thus the two thickness parameters are polynomially equivalent for the reduced
-good presentations used here.  In Yoshinaka's notation our $\theta_G$ and
-$\tau_G$ are his $\tau_G$ and $t_G$, respectively
-\cite[Section~4.3]{Yoshinaka2011}.
+good presentations used here.  To avoid a notation clash with Yoshinaka, the
+correspondence is
+\[
+\begin{array}{c|cc}
+ & \text{rule thickness} & \text{nonterminal thickness}\\
+\hline
+\text{this paper} & \theta_G & \tau_G\\
+\text{Yoshinaka~\cite[Section~4.3]{Yoshinaka2011}} & \tau_G & t_G
+\end{array}
+\]
 
 Yoshinaka's Definition~1 asks for polynomial-time hypothesis construction,
 polynomial characteristic-set cardinality in target size, and total positive
@@ -1959,7 +2005,17 @@ conservative TxtEx updates.
 Thus, for fixed $f$ and $h$, the capped set-driven
 operator $\mathcal B_{f,h}^{\le1}$ is polynomial-time and has characteristic
 data of polynomial cardinality and total length; the conservative learner has
-polynomial update time by Corollary~\ref{cor:capped-gold-poly}.  At $f=1$ this specializes to the linear fixed-$h$ CFG case.
+polynomial update time by Corollary~\ref{cor:capped-gold-poly}.
+
+At $f=1$ this also gives a direct route to the linear fixed-$h$ CFG
+characteristic-data result.  Indeed,
+$\mathcal B_{1,h}^{\le1}(K)$ is a subgrammar of
+$\mathcal B_{1,h}(K)$, while
+Proposition~\ref{prop:fanout-one-operator} identifies the language of the
+latter with that of the companion CFG reconstruction.  Soundness then shows
+that a characteristic sample for the rank-one MCFG reconstruction is also
+characteristic for the CFG reconstruction.  Thus the MCFG template argument
+recovers the linear CFG bound without a separate spine-normalization argument.
 
 The standard doubling family also shows why grammar size alone cannot control
 data length once rank two is allowed.  Over $\{\mathtt c\}$, the grammar
@@ -2558,9 +2614,16 @@ $(2,h_{\Sigma_Q}^{k,\ell})$ condition already fails at arity one.
 \end{proof}
 
 Hence the arbitrary-$h$ rank-one theorem applies to an entire non-context-free
-fan-out-two family outside every fixed prefix--suffix typing.  This example
-shows the reach of non-boundary finite typings; unlike $L_\star$ below, it is
-not intended to separate finite typing from arbitrary regular post-filtering.
+fan-out-two family outside every fixed prefix--suffix typing.  In fact this
+example remains inside the same-typing regular-filter fragment.  Indeed,
+\[
+  J_s=\varphi_s^{-1}(0,0)\cap h_Q^{-1}(\mathsf{Acc}_Q),
+\]
+and $\varphi_s^{-1}(0,0)$ is trivially typed multidimensionally substitutable
+by Proposition~\ref{prop:abelian-coset-filter}(ii).  Hence
+$J_s\in\Ffrag{2}{h_Q}$.  Its purpose is therefore to show that non-boundary
+finite typings can go beyond every fixed prefix--suffix typing, not to
+separate finite typing from regular post-filtering.
 
 We next show that the $(1,1)$ prefix--suffix class strictly extends
 Yoshinaka's class at every level of the MCFG fan-out hierarchy.
@@ -2635,8 +2698,8 @@ $(\mathtt a_1^n\mathtt a_2^{n-1},\ldots,
 Seki et al.'s Lemma~3.3, applied with their parameter $m-1$,
 shows that
 $\{\mathtt a_1^n\cdots\mathtt a_{2m-1}^n:n\ge1\}$ is not an
-$(m-1)$-MCFL~\cite[Lemma~3.3]{SekiEtAl1991}.  Since MCFLs are closed under
-homomorphism~\cite[Theorem~3.9]{SekiEtAl1991}, erasing
+$(m-1)$-MCFL~\cite[Lemma~3.3]{SekiEtAl1991}.  Since MCFLs are closed under homomorphism as a consequence of their
+substitution closure~\cite[Theorem~3.9]{SekiEtAl1991}, erasing
 $\mathtt a_{2m}$ proves that $L_m$ is not an $(m-1)$-MCFL.
 
 For membership, put
@@ -2651,17 +2714,34 @@ Proposition~\ref{prop:abelian-coset-filter}(ii) therefore give
 $L_m\in\Cmcf{f}{h_{\Sigma_m}^{1,1}}$ for every $f\ge m$.
 
 It remains to exclude Yoshinaka's substitution implication.  Put
-$d:=\lceil m/2\rceil$.  Since
-$d\le 2m-2d\le2d$, choose
-$\ell_1,\ldots,\ell_d\in\{1,2\}$ with
-$\sum_i\ell_i=2m-2d$ and factor
+$d:=\lceil m/2\rceil$.  If $m=2k$, then $d=k$ and
+$2m-2d=2k$; if $m=2k+1$, then $d=k+1$ and $2m-2d=2k$.
+Since $m\ge2$, in both cases
+\[
+  d\le 2m-2d\le2d.
+\]
+Hence choose $\ell_1,\ldots,\ell_d\in\{1,2\}$ with
+$\sum_i\ell_i=2m-2d$.  For $1\le i\le d$, put
+\[
+ q_i:=2+2(i-1)+\sum_{j<i}\ell_j.
+\]
+Set
+\[
+ x_i:=\mathtt a_{q_i}\cdots\mathtt a_{q_i+\ell_i-1},
+ \qquad
+ v_0:=\mathtt a_1,\qquad
+ v_d:=\mathtt a_{2m},
+\]
+and, for $1\le i<d$,
+\[
+ v_i:=\mathtt a_{q_i+\ell_i}\mathtt a_{q_i+\ell_i+1}.
+\]
+Then
 \[
   w_1:=\mathtt a_1\mathtt a_2\cdots\mathtt a_{2m}
-      =v_0x_1v_1\cdots x_dv_d,
+      =v_0x_1v_1\cdots x_dv_d.
 \]
-where $|v_0|=|v_d|=1$, $|v_i|=2$ for $0<i<d$, and
-$|x_i|=\ell_i$.  Let
-$E:=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$, so
+Let $E:=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$, so
 $E[\tuple x]=w_1$.
 
 In
@@ -2731,9 +2811,12 @@ $\varphi_m^{-1}(0)$ is in $\YSub{f}$ for every $f$, and
   L_m=\varphi_m^{-1}(0)\cap
        \mathtt a_1^+\mathtt a_2^+\cdots\mathtt a_{2m}^+.
 \]
-The next example shows that arbitrary target-dependent regular filtering does
-not account for finite typing in general, even at fan-out two and rule rank
-one.
+Proposition~\ref{prop:strong-fanout-separation} already shows that finite
+typing can go beyond arbitrary regular post-filtering at fan-out one.
+However, the same language $L_{\mathrm{cd}}$ leaves every finitely typed
+class once arity two is tested.  The next example shows that the stronger
+regular-filter separation can persist while the target itself remains in a
+finitely typed fan-out-two class, even at rule rank one.
 
 \begin{theorem}[A fan-out-two typed language beyond arbitrary regular filtering]
 \label{thm:arbitrary-filter-separation}
@@ -2892,11 +2975,14 @@ Yoshinaka languages followed by filters recognized by $h'$: the single target
 $L_\star$ already has no such representation with any regular filter.
 
 
-Combining Theorem~\ref{thm:every-fanout-strictness} with
-Theorem~\ref{thm:boundary-polydata} shows that these strict extensions at every
-fan-out level retain polynomial hypothesis construction and characteristic
-data polynomial in grammar size and rule thickness under any fixed rank cap
-$r\ge1$.
+The strictness witnesses $L_m$ above all have rule rank one, so for these
+particular languages Theorem~\ref{thm:rankone-polydata} gives the stronger
+grammar-size-only characteristic-data bound.  The role of
+Theorem~\ref{thm:boundary-polydata} is instead to provide a uniform
+grammar-size-and-rule-thickness bound for boundary-determined typings at
+arbitrary fixed rule rank.  The present paper does not exhibit a strictness
+witness outside Yoshinaka's class whose minimum rule rank exceeds one;
+isolating such a genuinely higher-rank witness is left open.
 
 
 \section{Conclusion}
