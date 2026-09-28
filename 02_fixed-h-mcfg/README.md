@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v56; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v57; this is the current source of truth.
+- `revision/v56_to_v57_revision_note.md` — adds a corrected intrinsic-rank-two boundary-typed witness based on the non-branching lower bound for MIX2.
+- `revision/v56_to_v57.diff` — unified diff for the v56 → v57 revision.
 - `revision/v55_to_v56_revision_note.md` — withdraws the invalid minimum-rank-two witness, reframes the higher-rank theorem as presentation-sensitive, and records intrinsic rule rank as an open problem.
 - `revision/v55_to_v56.diff` — unified diff for the v55 → v56 correction.
 - `revision/v54_to_v55_revision_note.md` — stable ACL Anthology locator for Kato--Seki--Kasami (2004).
