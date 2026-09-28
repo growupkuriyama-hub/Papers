@@ -1,0 +1,539 @@
+%\documentclass[oribibl,envcountsame,runningheads]{llncs}
+%\documentclass[citeauthoryear,envcountsame,runningheads]{llncs}
+\documentclass{jsbook}
+
+%\usepackage[comma,sectionbib]{natbib}
+%\renewcommand\bibsection{\section*{\refname}}
+
+\usepackage{amsmath,amsfonts,amssymb%,amsthm}
+}
+\usepackage{bm}
+
+\usepackage{proof}
+
+\newcommand{\pow}{\mathscr{P}}
+\newcommand{\kleene}{^{\ast}}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\colonminus}{\mathrel{{:}{-}}}
+\newcommand{\subst}[2]{#1 := #2}
+\newcommand{\Nat}{\mathbb{N}}
+
+\DeclareMathSymbol{\col}{\mathbin}{operators}{"3A}
+
+\newcommand{\hash}{\texttt{\upshape\#}}
+\newcommand{\dollar}{\texttt{\upshape\$}}
+\DeclareMathAccent{\vecarrow}{\mathord}{letters}{"7E}
+% \renewcommand{\vec}{\vecarrow}
+\newcommand{\bfactor}[1]{(#1)}
+
+ \newtheorem{theorem}{定理}
+ \newtheorem{lemma}[theorem]{補題}
+ \newtheorem{corollary}[theorem]{系}
+ \newtheorem{definition}{定義}
+ \newtheorem{remark}{Remark}
+% \theoremstyle{definition}
+ \newtheorem{claim}{主張}
+ \newtheorem{fact}{事実}
+\newenvironment{proof}{証明}
+% \spnewtheorem{claim}{Claim}{\bfseries}{\upshape}
+
+% \renewcommand{\theclaim}{\Alph{claim}}
+
+\settowidth{\leftmargini}{(iii)}
+\addtolength{\leftmargini}{\labelsep}
+
+\title{認識可能な同値関係によって規定される代入について閉じた文脈自由言語のクラスに対する正の例からの学習アルゴリズムの提示と収束性}
+\author{栗山貴之}
+
+
+
+
+\newlength{\zw}
+\setlength{\zw}{1.5em}
+
+\begin{document}
+
+\sloppy
+
+\maketitle
+\tableofcontents
+
+\begin{abstract}
+我々は，分布同値性が \(\Sigma^*\) 上の認識可能な合同関係，すなわち有限モノイドへの準同型写像の核によって制御される文脈自由言語を研究する。このアプローチにより，Clark--Eyraud 置換可能言語と吉仲の \((k,\ell)\)-置換可能言語の両方を包含する共通の枠組みが得られる。固定された合同関係に対して，我々は一様な文法型付け構成とそれに伴う正例からの学習器を提示し，その健全性，完全性，および計算コストを分析する。また，この有限モノイド枠組みが，正則レベルにおいて接頭辞--接尾辞階層よりも厳密に表現力が高いことを，キャップ付きカウンタ言語 (CCLs) を明示的な証拠として用いて示す。一方，我々は，一括弧 Dyck 言語や吉仲の古典的な例を含むいくつかの決定性文脈自由言語が，任意の有限モノイド合同関係に対して関係置換可能ではないことを証明する。これらの結果は，以下の精密な未解決問題を浮き彫りにする：すなわち，ある認識可能な合同関係に対して関係置換可能であるが，任意の \(k,\ell\) に対して \((k,\ell)\)-置換可能ではない非正則文脈自由言語が存在するか否かである。
+\end{abstract}
+
+
+\chapter{この論文の概要}
+ClarkとEyraud\cite{Clark-and-Eyraud:2007}は{\bf 代入可能な文脈自由言語}の正の例からのアルゴリズム的学習の可能性を証明した。ある言語が代入可能であるとは$\{x_0y_0z_0,x_0y_1z_0,x_1y_0z_1\}\subseteq L$ならば常に$x_1y_1z_1\in L$であることと定義される。Yoshinaka\cite{Yoshinaka:2008}仮定部の代入に条件を課すことによってそのクラスを拡大させた。ある言語が{\bf $k,l$-代入可能}であるとは $u\in\Sigma^k$, $v\in\Sigma^l$, $\{x_0uy_0vz_0,x_0uy_1vz_0,x_1uy_0vz_1\}\subseteq L$ならば常に$x_1uy_1vz_1\in L$であることで定義される。本論文は $x\sim_{k,l}y:\Leftrightarrow x=y\lor(\exists u\in\Sigma^k\exists v\in\Sigma^l, x,y\in u\Sigma^*v)$と定義することによって、定義が一般化・書き換えが可能であることを指摘する。一般に$\sim$を認識可能\footnote{ある$\Sigma^*$上の二項関係$\sim${\bf 認識可能}であるとは、ある有限モノイド$M$と部分集合$F\subseteq M^2$、準同形写像$\Sigma^*\to M$が存在して$\forall xy\in\Sigma^*$, $x\sim y$ iff $(h(x),h(y))\in F$であることと定義する。}な同値関係としたとき、ある言語が{\bf $\sim$-代入可能}であることを$\{x_0y_0z_0,x_0y_1z_0,x_1y_0z_1\}\subseteq L\land y_0\sim y_1$ならば常に$x_1y_1z_1\in L$であると定義する。それがYoshinakaの$k,l$-代入可能性のの幅広い拡張になっていて、新しい言語のクラスをとらえうることを示す。このクラスに対する学習アルゴリズムはYoshinaka\cite{Yoshinaka:2008}のものにいくらかの一般化の修正を加えたものが役割を果たす。正の例からのアルゴリズム的学習のパラダイムではそのクラスの言語はその部分集合として「特徴的有限集合」を必ず持ち、それをすべて含んだ正の例を与えられたとき必ず目的言語は復元可能であると仮定する。副次的な結果としてこの論文では``代入可能言語がより強く圧縮できること''を示した。つまり、先行研究より小さなサイズの特徴的有限集合でわれわれのアルゴリズムは正しく機能することを証明した。
+
+
+\chapter{前提となる内容}
+
+有限集合$\Sigma$上で、連結を演算として自由生成されたモノイドを$\Sigma^*$と表記する。その元を語とか文と呼ぶ。言語とは$\Sigma^*$の部分集合のこととする。
+
+直感的には言語に対して秩序構造をもたらす動的な機構を文法と呼ぶ。数理として文法とはいかにあるべきかの議論はこの論文ではせず、専ら{\bf \emph{文脈自由文法（context-free grammar, CFG）}}のみを扱うことにする。それとは組$G=\langle V,\Sigma,P,S\rangle$で、(i) $V$は\emph{非終端記号}からなる有限集合、(ii)$P$は\emph{導出規則}からなる有限集合（但し導出規則とは$A\in V$、$\beta\in(V\cup\Sigma)^*$の条件の下での形式$A\to\beta$をいう） (iii)$S\in V$であること、を満たすもののことをいう。文脈自由文法により生成される言語を、(1)$\alpha,\gamma\in(V\cup\Sigma)^*$に対して$A\to\beta\in P$であるとき、$\alpha A\gamma\Rightarrow_G\alpha\beta\gamma$とし、(2)$\Rightarrow^*$を 二項関係$\Rightarrow$の反射推移的閉包だとし、(3)$\mathcal{L}(\alpha):=\{w\in\Sigma^* | \alpha\Rightarrow^*_Gw\}$として、$\mathcal{L}(S)$で定義する。これは$\mathcal{L}(G)$とも表記し、{\bf 文脈自由言語context-free language (CFL)}であるという。異なる二つの文脈自由文法 $G,G'$が$\mathcal{L}(G)=\mathcal{L}(G')$のとき\emph{同値}であると定義し、記号$G\approx G'$で書く。
+任意の文脈自由文法には{\bf \emph{Chomsky標準形(Chomsky normal form, CNF)}}なる同値な標準形が存在することが知られている。それは導出規則の形が$S\to\lambda$、$A\to BC$、ないし$A\to a$であること（$A,B,C\in V$、$a\in\Sigma$として）と規定される。
+
+\,\,\,\,この論文ではGold\cite{Gold:1967}による古典的なアルゴリズム的学習の定義を採択する。このパラダイムは{\bf \emph{Identification in the Limit(IIL)}}と言われる。 $\mathcal{X}$を文法をメンバとする帰納的可算集合（たとえば文脈自由文法のサブクラス）だとする。この集合上の演算子$\mathcal{L}(\cdot)$は$\mathcal{X}$から$\mathcal{P}(\Sigma^*)$への写像と理解する。つまり文法$G\in\mathcal{X}$に対し、$\mathcal{L}(G)$はその文法の生成する$\Sigma^*$の部分集合（言語）である。 \emph{学習アルゴリズム}$\mathcal{A}$とは$\mathcal{P}_F(\Sigma^*)$から$\mathcal{X}$への計算可能な写像であると定義する（但し$\mathcal{P}_F(\Sigma^*):=\{L\subseteq\Sigma^*\mid \# L<\omega\}$）。学習の目的とする言語 $L_*\subseteq\Sigma^*$に対し、その{\bf \emph{正の枚挙（positive presentation）}}とは$L_*=\{w_i\mid i<\omega\}$となる列$w_0,w_1,...$とする。{\bf 第$n$-推定文法}を$G_n=\mathcal{A}(\{w_0,...,w_{n-1}\})$で定義する。これが「収束」すること、つまり$L=\mathcal{L}(G_N)\land\forall n\geq N, \mathcal{L}(G_n)=\mathcal{L}(G_N)$となることを学習達成の定義とする。略記としてこの論文では正の例の系列$(w_0,...,w_{n-1})$に対し、学習文法$\mathcal{A}(w_0,...,w_{n-1})$を$\hat{G}(K)$という書き方をすることにする。但しここに$K=\{w_i\}_{i<n}$である。
+
+以下では更に学習の「有限性」、ないし「有効性」を要請する。これはCollin de la Higuera\cite{Higuera:1997}の提示による規範を採択する。つまり、
+
+任意の目的文法$G_*\in\mathcal{X}$に対応する言語$L_*=\mathcal{L}(G_*)$の任意の有限サンプル集合$S\subseteq L_*$に対し、学習アルゴリズムは$S$の大きさの多項式時間で出力し停止することを要請する。さらに
+
+任意の目的文法$G_*\in\mathcal{X}$に対し、ある{\bf  \emph{特徴的有限部分集合（characteristic set）}}である${\rm CS}(G_*)$が存在し、${\rm CS}(G_*)$の大きさは文法$G$の多項式量であり、かつ任意の正のサンプル$S\supset{\rm CS}(G_*)$を与えられたときアルゴリズムは目的文法$G_*$と外延的に等しい出力$\hat{G}(S)$を返し、停止する（すなわち$\mathcal{L}(G_*)=\mathcal{L}(\hat{G}(S))$である）。ここに、語からなる有限集合$S$に対する大きさの定義は$||S||:=\Sigma_{w\in S}{\rm Len}(w)$であり、文脈自由文法$G=\langle\Sigma, V, P, S\rangle$の大きさは$||G||:=\Sigma_{A\to\beta\in P}{\rm Len}(A\beta)$で定義されるものであるとする。
+
+
+文脈自由言語に対する具体的な形式についてはClarkとEyraudの定式化を採択することとする。
+\begin{flushleft}
+\emph{\bf{CFGに対する特徴的集合の定義(ClarkおよびEyraud, 2007).}} 文脈自由文法$G=(V,\Sigma,P,S), \alpha\in(V\cup\Sigma)^*,A\in V$に対して$\omega(\alpha):=\min\{w\in\Sigma^*|\alpha\Rightarrow^*_Gw\}$, $\chi(A):=\min\{\langle x,z\rangle\in(\Sigma^*)^2|S\Rightarrow^*_GxAz\}$とし\footnote{ここで``${\rm min}$'は$\Sigma^*$、ないし$(\Sigma^*)^2$上の辞書式順序に関して最少のものを返すものとする。}、$\beta\in(V\cup\Sigma)^*$に対して、$A\to\beta\in P$のとき$\chi(\beta):=\min\{\chi(A)|A\to\beta\in P\}$であるとする。このとき特徴的有限部分集合を ${\rm CS}(G):=\{\omega(\beta)\odot\chi(A)|A\to\beta\in P\}$で定める。但し $y\odot\langle x,z\rangle :=xyz$と定める。
+\end{flushleft}
+
+\begin{remark}
+任意の$A\in V$に対して、$\omega(A)\odot\chi(A)\in CS(L_*)$である。
+\end{remark}
+
+
+この論文の出発点となる、先行研究によりアルゴリズム的で有効な学習の可能性が証明された言語のクラスで、基本的なものを2つ確認する。
+
+\begin{flushleft}
+\emph{\bf{代入可能言語(ClarkおよびEyraud, 2007).}} $L\subseteq\Sigma^*$が{\bf 代入可能}であるとは$\forall x,y\in\Sigma^*, D_L(x)\cap D_L(y)\neq\emptyset\Rightarrow D_L(x)=D_L(y)$となること。但し$D_L(x):=\{(u,v)\in(\Sigma^*)^2\mid uxv\in L\}$とする。
+\end{flushleft}
+
+\begin{flushleft}
+\emph{\bf{$k,l$-代入可能言語(Yoshinaka, 2008).}}
+$L\subseteq\Sigma^*$ が$k,l$-代入可能であるとは$\forall x,y\in\Sigma^*,u\in\Sigma^k,v\in\Sigma^l,D_L(uxv)\cap D_L(uyv)\neq\emptyset\Rightarrow D_L(uxv)=D_L(uyv)$となること。
+\end{flushleft}
+
+このうち文脈自由言語であるものにクラスを制限したものがアルゴリズム的学習の対象として研究された。これらのクラスを以降の章で拡張・一般化することを議論する。
+
+
+\chapter{クラスの定義とYoshinakaの$k,l$-代入可能クラスとの関係性}
+
+この章ではYoshinaka\cite{Yoshinaka:2008}のクラスの一般化の定式化を行う。以下では関係$\sim$は任意に与えられた$\Sigma^*$上の認識可能な同値関係であるとする。
+
+\begin{definition}
+$L\subseteq\Sigma^*$が{\bf $\sim$-代入可能}であるとは$\forall x,y\in\Sigma^*,D_L(x)\cap D_L(y)\neq\emptyset\land x\sim y\Rightarrow D_L(x)=D_L(y)$であることと定義する。
+\end{definition}
+
+議論を明確に行うために以下の表記を与える；
+
+\begin{definition}
+$\mathcal{C}_{k,l}:=\{L\subseteq\Sigma^*\mid L \mbox{は} k,l\mbox{-代入可能}\}$, $\mathcal{C}_{\sim}:=\{L\subseteq\Sigma^*\mid  L \mbox{は} \sim\mbox{-代入可能}\}$.
+\end{definition}
+
+
+$\sim_{k,l}$が認識可能な同値関係になることから以下の命題が成り立つ。
+
+\begin{claim}
+$\forall k,l\in\mathbb{N}$, $\exists\sim$, \ $\mathcal{C}_{k,l}=\mathcal{C}_{\sim}$.
+\end{claim}
+
+
+以下では我々のクラスがYoshinakaのクラスの真の拡大となっていることを示したい。まず、具体的な別の認識可能な同値関係を以下で与える；
+
+\emph{\bf{記号の数の代入}} $a\in\Sigma,d\in\mathbb{N}$に対して、$x,y\in\Sigma^*$, $x\sim_{\#a,d}y:\Leftrightarrow \#(a,x)=\#(a,y)\leq d\lor (\#(a,x)>d\land \#(a,y)>d)$とする\footnote{$a\in\Sigma$, $w\in\Sigma^*$に対して、$\#(a,w)$はストリング$w$中の文字$a$の出現回数を自然数値で返す関数とする。}。
+
+\begin{fact}
+$\sim_{\#a,d}$は認識可能な同値関係となる\footnote{$\Sigma^*/\sim_{\#a,d}$の各同値類が正規言語となることに因る。}。
+\end{fact}
+
+\,\,\,その上で以下で$k,l$-代入可能でない言語の例を与える；
+\begin{claim}
+$b^*\cup b^*ab^*$は$d\geq 1$のとき$\sim_{\#a,d}$-代入可能であるが、どんな$k,l$に対しても$k,l$-代入可能にはなりえない。
+\end{claim}
+
+\begin{proof}
+$L=b^*\cup b^*ab^*$は任意の$d\geq 1$に対して$\sim_{\#a,d}$-代入可能言語となっている。任意の$k,l\in\mathbb{N}$に対して、$L\ni b^kbb^l,b^kab^l$であるから$b^kbb^l\sim_{k,l}b^kab^l$となる。また$D_L(b^kab^l)\cap D_L(b^kbb^l)\ni(b^i,b^j)$である。しかし
+$D_L(b^kbb^l)\setminus D_L(b^kab^l)\ni(b^i,ab^j)$である。
+\end{proof}
+
+集合和に関する補題を示す。以下では$h(x,y):=(h(x),h(y))$という表記を用いる。
+
+\begin{lemma}\label{cap-recognizable-lemma}
+$\forall\sim_1,\sim_2 \exists\sim$ ,\ $\mathcal{C}_{\sim_1}\cup\mathcal{C}_{\sim_2}\subseteq\mathcal{C}_{\sim}$.
+\end{lemma}
+
+\begin{proof}
+$x\sim y:\Leftrightarrow x\sim_1y\land x\sim_2y$と仮定する。$\sim$は認識可能な同値関係となっている\footnote{$\sim$が同値関係となるのは自明。$h_i:\Sigma^*\to M_i$が準同形写像で$x\sim_iy\Leftrightarrow h_i(x,y)\in F_i (i=1,2)$であるとする。このとき$M_1\times M_2$は有限モノイドとなり、$h(x):=(h_1(x),h_2(x))$、$F:=F_1\times F_2$とすると、$h$は準同形写像であり、$x\sim y\Leftrightarrow x\sim_1y\land x\sim_2y\Leftrightarrow h_1(x,y)\in F_1\land h_2(x,y)\in F_2\Leftrightarrow h(x,y)\in F_1\times F_2$となる。}。言語$L$が$\sim_i$-代入可能$(i=1,2)$のとき$L$は$\sim$-代入可能である。
+\end{proof}
+
+
+以上により、我々のクラスが真のYoshinakaの拡大となっていることが示された；
+
+\begin{claim}
+$\forall k,l\in\mathbb{N}$, $\exists\sim$, \ $\mathcal{C}_{k,l}\subseteq\mathcal{C}_{\sim}$かつ$\exists\sim$, $\forall k,l$, $\mathcal{C}_{\sim}\not\subseteq\mathcal{C}_{k,l}$である。
+\end{claim}
+
+各$k,l$-代入可能言語のクラスでは、$\forall k,l\in\mathbb{N}$について、$k\leq k'\land l\leq l'$ならば$\mathcal{C}_{k,l}\subseteq\mathcal{C}_{k',l'}$が成り立つ。以下はこのクラス間の「階層性構造」の一般化である。
+
+\begin{fact}
+$\sim\subseteq\sim'$ ならば $\mathcal{C}_{\sim'}\subseteq\mathcal{C}_{\sim}$
+\end{fact}
+
+
+\chapter{有限モノイドによる文脈自由文法の型付け補題}
+
+
+以降の節で与える学習アルゴリズムの収束性を保証する補題を与える。
+
+\begin{lemma}\label{typinglemma}
+$\sim$を認識可能な同値関係とする。このとき任意の文脈自由文法$G$に対して、同値な文脈自由文法$G'=(V',\Sigma',P',S')$ が存在して$\forall A\in V'\setminus\{S'\}$, $A\Rightarrow^*_{G'}w,w'$ならば$w\sim w'$となる。
+\end{lemma}
+
+\begin{proof}
+以降でより一般的な形で示す。
+\end{proof}
+
+\chapter{学習のアルゴリズム}
+
+$k,l$-代入可能文脈自由言語のクラスに対しては、\cite{Yoshinaka:2008}では以下のような学習アルゴリズムが与えられている。$L_*$が学習の目的となる言語、$K$をその正の例の有限部分集合としたとき（$K\subseteq L_*\land \# K<\infty$）、
+\begin{align*}
+\hat{V}(K) & = \{\, [x] \mid \exists uv\in\Sigma^*, uxv \in K\land x\neq\lambda \,\}\cup\{\hat{S}\},\\
+\hat{P}(K) & =
+\begin{aligned}[t]
+& \{\, [xy] \to [x][y] \mid [xy], [x], [y] \in \hat{V}(K) \,\}  \cup {}\\
+& \{\, [uxv] \to [ux'v] \mid zw\in\Sigma^*\land u\in\Sigma^k\land v\in\Sigma^l\land[uxv], [ux'v] \in \hat{V}(K)\land D_K(x)\cap D_K(x')\neq\emptyset \,\} \cup {}\\
+& \{\, [a] \to a \mid [a] \in \hat{V}(K)\land a\in\Sigma \,\} \cup {}\\
+& \{\, \hat{S}\to [w]  \mid w\in K\},
+\end{aligned}
+\end{align*}
+でこのクラスに対する学習アルゴリズムが与えられている。
+
+これをもとに$\sim$-代入可能文脈自由言語のクラスに対する学習アルゴリズムを以下に与える。$\sim$が既知の二項関係でそれが準拠している準同形写像が学習者にとって使用可能なリソースであるとする。$L_*$がこのクラスに属する目的言語であり、$K$をその正の例の有限部分集合としたとき、（$K\subseteq L_*\land \# K<\infty$）、
+\begin{align*}
+\hat{V}(K) & = \{\, [x] \mid \exists uv\in\Sigma^*, uxv \in K\land x\neq\lambda \,\}\cup\{\hat{S}\},\\
+\hat{P}(K) & =
+\begin{aligned}[t]
+& \{\, [xy] \to [x][y] \mid [xy], [x], [y] \in \hat{V}(K) \,\}  \cup {}\\
+& \{\, [x] \to [x'] \mid x\sim x' \land [x], [x'] \in \hat{V}(K)\land D_K(x)\cap D_K(x')\neq\emptyset \,\} \cup {}\\
+& \{\, [a] \to a \mid [a] \in \hat{V}(K)\land a\in\Sigma \,\} \cup {}\\
+& \{\, \hat{S}\to [w]  \mid w\in K\},
+\end{aligned}
+\end{align*}
+として推定文法を定義すればよい。この学習の正当性はLemma \ref{typinglemma}に因るが、より以降でより一般的な形で証明は後述する。
+
+\,\,\,\,以上が最初の結果であるが、その後の研究でCoste et. al.\cite{Coste:2012}を包含する形で、文脈を拾う学習アルゴリズムを新たに定式化した。今度は文脈間の代入にも閉じた言語のクラスまで学習の対象を一般化する。
+
+
+\chapter{代入可能な言語のクラス（２）}
+
+以下では前節までで与えたクラスを包含するさらに一般化させた文脈自由言語のクラスを与える。今度は「文脈の代入」について一般化している。以下では、$h$は$\Sigma^*$からある有限モノイドへの準同形写像とし、また$\sim$、$R$をそれぞれ$\Sigma^*$、$(\Sigma^*)^2$上の認識可能な同値関係とする。\\
+
+\begin{definition}\label{most1}
+$L\subseteq\Sigma^*$が$h$-代入可能であるとは$\forall uvxu'v'x'\in\Sigma^*, uxv,ux'v\in L\land h(u,x,v)=h(u',x',v')$ならば$(u'xv'\in L\Leftrightarrow u'x'v'\in L)$となること。
+\end{definition}
+
+このクラスは別の表現がなされる；
+
+\begin{definition}\label{most2}
+$L\subseteq\Sigma^*$が$(R,\sim)$-代入可能であるとは$\forall uvxu'v'x'\in\Sigma^*, uxv,ux'v\in L\land(u,v)R(u',v')\land x\sim y\Rightarrow(u'xv'\in L\Leftrightarrow u'x'v'\in L)$となること。
+\end{definition}
+
+言語のクラスを以下の表記で総括する。
+
+\begin{definition}
+$\mathcal{C}_{\sim}:=\{L\subseteq\Sigma^*\mid L\mbox{は}\sim\mbox{-代入可能}\}$, $\mathcal{C}_{h}:=\{L\subseteq\Sigma^*\mid L\mbox{は}h\mbox{-代入可能}\}$, $\mathcal{C}_{R,\sim}:=\{L\subseteq\Sigma^*\mid L\mbox{は}R,\sim\mbox{-代入可能}\}$
+\end{definition}
+
+$k,l$クラス間の「階層性構造」の一般化は以下になる。
+
+\begin{fact}
+$\sim\subseteq\sim'\land R\subseteq R'$ ならば $\mathcal{C}_{\sim}\subseteq\mathcal{C}_{R,\sim}$、また$\mathcal{C}_{R',\sim'}\subseteq\mathcal{C}_{R,\sim}$
+\end{fact}
+
+また$h$-代入可能クラスと$R,\sim$-代入可能クラスの関係は以下となる。
+
+\begin{fact}
+$\forall R,\sim$ ,$\exists h$, $\mathcal{C}_{R,\sim}\subseteq\mathcal{C}_{h}$であり、また
+$\forall h$ ,$\exists R,\sim$, $\mathcal{C}_{h}\subseteq\mathcal{C}_{R,\sim}$である。
+\end{fact}
+
+\chapter{モノイドによる文脈自由文法の型付け補題（２）}
+
+本節は以前の節の目的文脈自由文法の型付け補題を文脈の型付けも同時に行う形で一般化して証明する。
+
+\begin{lemma}\label{typinglemma2}
+$M$を有限モノイドとし、$h:\Sigma^*\to M$を準同形写像とする。任意の文脈自由文法$G$に対してある同値な文脈自由文法$G'=(V',\Sigma,P',S')$が存在し、
+
+\emph{\bf{i)}} $\forall A\in V'\setminus\{S'\}, S'\Rightarrow^*_Gy_1Az_1\land S'\Rightarrow^*_Gy_2Az_2$ならば$h(y_1)=h(y_2)\land h(z_1)=h(z_2)$.
+
+\emph{\bf{ii)}} $\forall A\in V'\setminus\{S'\}, A\Rightarrow^*_Gy_1\land A\Rightarrow^*_Gy_2$ならば$h(y_1)=h(y_2)$.
+
+\emph{\bf{iii)}} $\forall B,C\in V'\setminus\{S'\}, S'\Rightarrow^*_Gy_1BCz_1\land S'\Rightarrow^*_Gy_2BCz_2$ならば $h(y_1)=h(y_2)\land h(z_1)=h(z_2)$
+
+が成立する。
+\end{lemma}
+
+\begin{proof}
+Chomsky標準形であるCFG $(V,\Sigma,P,S)$に対して、$G'=(V',\Sigma,P',S')$を以下で定義する。$V':=\{A^{m,n}_p\mid A\in V\land m,n,p\in M\}\cup\{S'\}$、
+$P':=\{A^{m,n}_{pq}\to B^{m,qn}_{p}C^{mp,n}_q\mid A\to BC\in P\}\cup\{A^{m,n}_p\to a|A\to a\in P\land p=h(a)\}\cup\{S'\to X\mid X\in\mathcal{S}\}$（但し$\mathcal{S}:=\{S^{1,1}_p\mid S\in V\land p\in M\}$）とする。このとき
+
+\emph{\bf{(1)}} $\forall A^{m,n}_p\in V'\setminus\{S'\}, A^{m,n}_p\Rightarrow^*_{G'}w$ ならば $p=h(w)$が成り立つことは容易に示せる。また、
+
+\emph{\bf{(2)}} $\forall A^{m,n}_p,B^{s,t}_{q}\in V'\setminus\{S'\}, A^{m,n}_{p}\Rightarrow^*_{G'}yB^{s,t}_{q}z$ ならば $s=mh(y)\land t=h(z)n$である。なぜなら、$A^{m,n}_{p'q'}\Rightarrow {C}^{m,q'n}_{p'}{D}^{mp',n}_{q'}\Rightarrow^*yB^{s,t}_{q}z$だと仮定する。左右の対称性より${C}^{m,q'n}_{p'}\Rightarrow^*yB^{s,t}_{q}z_1\land {D}^{mp',n}_{q'}\Rightarrow^*z_2\land z=z_1z_2$だと仮定してよい。${C}^{m,q'n}_{p'}\Rightarrow^*yB^{s,t}_{q}z_1$に帰納法の仮定を用いて$s=mh(y)$、$t=h(z_1)q'n$となる。${D}^{mp',n}_{q'}\Rightarrow^*z_2$に\emph{\bf{(1)}}を用いて$q'=h(z_2)$となり、$t=h(z_1)h(z_2)n=h(z)n$となる。最短である$A^{m,n}_{p'q'}=B^{s,t}_{q}\land y=z=\lambda$の場合は明らか。
+
+\emph{\bf{(3)}} $\forall A^{m,n}_p,B^{s,t'}_{q_1},C^{s',t}_{q_2}\in V'\setminus\{S'\}, A^{m,n}_{p}\Rightarrow^*_{G'}yB^{s,t'}_{q_1}C^{s',t}_{q_2}z$ ならば $s=mh(y)\land t=h(z)n$である。なぜなら$A^{m,n}_{p'q'}\Rightarrow {C}^{m,q'n}_{p'}{D}^{mp',n}_{q'}\Rightarrow^*yB^{s,t'}_{q_1}C^{s',t}_{q_2}z$であると仮定する。${C}^{m,q'n}_{p'}\Rightarrow^*yB^{s,t'}_{q_1}\land {D}^{mp',n}_{q'}\Rightarrow^*C^{s',t}_{q_2}z$の場合、\emph{\bf{(2)}}より明らか。${C}^{m,q'n}_{p'}\Rightarrow^*yB^{s,t'}_{q_1}C^{s',t}_{q_2}z_1\land{D}^{mp',n}_{q'}\Rightarrow^*z_1\land z=z_1z_2$の場合、${C}^{m,q'n}_{p'}\Rightarrow^*yB^{s,t'}_{q_1}C^{s',t}_{q_2}z_1$に帰納法の仮定を適用し$s=mh(y)\land t=h(z_1)q'n$となる。${D}^{mp',n}_{q'}\Rightarrow^*z_1$に\emph{\bf{(1)}}を適用し$q'=h(z_2)$となるので、$t=h(z_1)h(z_2)n=h(z)n$となる。最短である$A^{m,n}_{p'q'}\Rightarrow B^{s,t'}_{q_1}C^{s',t}_{q_2}$の場合は、明らか。
+
+\emph{\bf{(1)}}より$\forall A^{m,n}_p\in V'\setminus\{S'\}, \mathcal{L}(A^{m,n}_p)\subseteq\mathcal{L}(A)\cap h^{-1}(p)$である。逆に$\mathcal{L}(A)\cap h^{-1}(p)\ni w$ならば$A^{m,n}_p\Rightarrow^*w$であることを示す。$p=h(w)$である。$A\Rightarrow_G BC\land B\Rightarrow^*_{G}w_1\land C\Rightarrow^*_{G}w_2\land w=w_1w_2$であるが、帰納法の仮定より$B^{m,qn}_{h(w_1)}\Rightarrow^*_{G'}w_1\land C^{mp,n}_{h(w_2)}\Rightarrow^*_{G'}w_2$である。また$A^{m,n}_{h(w_1)h(w_2)}\to B^{m,qn}_{h(w_1)}C^{mp,n}_{h(w_2)}\in P'$である。$A\Rightarrow_Gw\land p=h(w)$の場合は$P'$の定義より$A^{m,n}_p\Rightarrow_{G'}w$となる。以上より$\mathcal{L}(A^{m,n}_p)\supseteq\mathcal{L}(A)\cap h^{-1}(p)$となり、$\mathcal{L}(G)=\mathcal{L}(G')$となる。
+\end{proof}
+
+
+
+\chapter{最大包含クラスに対する学習アルゴリズム}
+
+本節では最も包含的なクラス（Definition \ref{most1}およびDefinition \ref{most2}）に対する学習アルゴリズムを与える。以下では表記$h(x,y):=(h(x),h(y))$を用いる。
+
+\begin{align*}
+\hat{V}(K) & = \{\, [x; u,v] \mid uxv \in K \,\},\\
+\hat{P}(K) & =
+\begin{aligned}[t]
+& \{\, [xy; u,v] \to [x; u,yv][y; ux,v] \mid [xy; u,v], [x; u,yv], [y; ux,v] \in \hat{V}(K) \,\}  \cup {}\\
+& \{\, [x; u,v] \to [x; u',v'] \mid h(u,v)=h(u',v') \land [x; u,v], [x; u',v'] \in \hat{V}(K) \,\} \cup {}\\
+& \{\, [x; u,v] \to [x'; u,v] \mid h(x)=h(x') \land [x; u,v], [x'; u,v] \in \hat{V}(K) \,\} \cup {}\\
+& \{\, [a; u,v] \to a \mid [a; u,v] \in \hat{V}(K)\land a\in\Sigma \,\} \cup {}\\
+& \{\, \hat{S} \to [w,\lambda,\lambda]  \mid w\in K\},
+\end{aligned}
+\end{align*}
+------
+
+以上の下で学習アルゴリズムは以下となる；
+
+\emph{\bf{Data:}} A sequence of strings $w_1,w_2,...$
+
+\emph{\bf{Result:}} A sequence of CFGs $G_1,G_2,...$
+
+\hspace{1\zw}Let $\hat{G}$ be a CFG generating empty language;
+
+\hspace{1\zw}\emph{\bf{For}} $n=1,2,...$ \emph{\bf{do}}
+
+\hspace{2\zw}Read the next string $w_n$;
+
+\hspace{2\zw}\emph{\bf{If}} $w_n\notin\mathcal{L}(\hat{G})$ then
+
+\,\,\hspace{3\zw}let $\hat{G}=\langle\Sigma,\hat{V}(K),\hat{P}(K),\hat{S}\rangle$ where $K=\{w_1,w_2,...,w_n\}$
+
+\hspace{2\zw}\emph{\bf{end if}}
+
+\hspace{1\zw}output $\hat{G}$
+
+\hspace{1\zw}\emph{\bf{End For}}
+
+------
+
+以下でこのアルゴリズムの正当性を証明する。$L_*=\{w_i\mid i<\omega\}$を$h$-代入可能なCFLであると仮定する。まず不正な学習を行わないこと、つまり$\mathcal{L}(\hat{G}(K))\subseteq L_*$を示す。そのための補題を証明する。
+
+\begin{lemma}\label{termlemma:a}
+$[x; u,v]\Rightarrow^*w$ ならば $uwv\in L_*\land h(x)=h(w)$.
+\end{lemma}
+
+\begin{proof}
+{\bf (1)} $[x;u,v]\Rightarrow a$の場合、$a=x$であり、また$uav=uxv\in L_*$である。
+
+{\bf (2)} $[x;u,v]\Rightarrow[x;u',v']\Rightarrow^*w$の場合、$\{uxv,u'xv',u'wv'\}\subseteq L_*$かつ$h(u,v)=h(u',v')$、帰納法の仮定より$h(x)=h(w)$であるから$L_*$の$h$-代入可能性より$uwv\in L_*$となる。
+
+{\bf (3)} $[x;u,v]\Rightarrow[x';u,v]\Rightarrow^*w$の場合、$h(x)=h(x')$であり、また帰納法の仮定より$h(x')=h(w)\land uwv\in L_*$となる。
+
+{\bf (4)}$[xy;u,v]\Rightarrow[x;u,yv][y;ux,v]\land[x;u,yv]\Rightarrow^*w_1\land[y;ux,v]\Rightarrow^*w_2\land w=w_1w_2$の場合、帰納法の仮定より$\{uw_1yv,uxw_2v,uxyv\}\subseteq L_*\land h(w_1)=h(x)\land h(w_2)=h(y)$であり、それゆえ$h(uw_1,v)=h(ux,v)$となる。よって$L_*$の$h$-代入可能性より$uw_1w_2v\in L_*$となる。
+\end{proof}
+
+\begin{remark}
+ちなみにルールを$[x;u,v]\to[x';u',v']$ if $h(u,x,v)=h(u',x',v')$としてしまうと言語の獲得の段階で支障が出てしまう。これは$u'xv'\in K$という``証拠''が不足してしまう為である。
+\end{remark}
+
+\begin{theorem}
+$\forall K\in\mathcal{P}_F(\Sigma^*)$, $\mathcal{L}(\hat{G}(K))\subseteq L_*$.
+\end{theorem}
+
+\begin{proof}
+$\hat{S}\Rightarrow^*w$ ならば、ある$x\in K$が存在して$\hat{S}\Rightarrow^*[x; \lambda,\lambda]\Rightarrow^*w$である。Lemma \ref{termlemma:a}より$w\odot\langle\lambda,\lambda\rangle\in L_*$である。
+\end{proof}
+
+\begin{flushleft}
+以下で学習が成功すること；$\mathcal{L}(\hat{G}(K))\supseteq L_*$を示す。以下の\emph{学習の仮定}を要請する；
+
+\,\,\,\,{\bf $L_*$を学習の目的の$h$-substitutable文脈自由言語とし、\emph{lemma}\ref{typinglemma2}で保障されている文脈自由文法の形に変形された$G_*=\langle\Sigma,V,P,S\rangle$で生成されているものとする。さらに$K\supseteq {\rm CS}(G_*)$を正の例の条件として仮定する。また言語は空語を含まないと仮定しておく。すなわち$\lambda\notin L_*$とする。}
+\end{flushleft}
+
+\begin{remark}
+任意の\emph{presentation}は${\rm CS}(G_*)$を必ず何らかの段階で含みうる。
+\end{remark}
+
+\begin{lemma}\label{chi-omega-lemma}
+\begin{flushleft}
+学習の仮定の下で、$A\to B_1B_2\in P$
+
+ ならば  $[\omega(B_1)\omega(B_2);\chi(B_1B_2)]\Rightarrow^*_{\hat{G}(K)}[\omega(B_1); \chi(B_1)][\omega(B_2); \chi(B_2)]$となる。
+\end{flushleft}
+\end{lemma}
+
+\begin{proof}
+\begin{flushleft}
+\emph{Lemma}\ref{typinglemma2}より$h(\omega(A))=h(\omega(B_1)\omega(B_2))$である。同様に $h(\langle u,\omega(B_2)v\rangle)=h(\chi(B_1))$、
+ $h(\langle u\omega(B_1),v\rangle)=h(\chi(B_2))$となる（但し $\langle u,v \rangle :=\chi(B_1B_2)$、$h(\langle x,y\rangle):=\langle h(x),h(y)\rangle$としている。）
+然るに$\omega(B_1B_2)=\omega(B_1)\omega(B_2)$、
+$\omega(B_1)\odot\chi(B_1),\omega(B_2)\odot\chi(B_2)$、
+$\omega(B_1B_2)\odot\chi(B_1B_2)\in {\rm CS}(G_*)$となり、学習アルゴリズムの定義より
+ $[\omega(B_1)\omega(B_2);u,v]\Rightarrow_{\hat{G}(K)}[\omega(B_1); u,\omega(B_2)v][\omega(B_2); u\omega(B_1),v]$、$[\omega(B_1); u,\omega(B_2)v]\Rightarrow_{\hat{G}(K)}[\omega(B_1); \chi(B_1)]$、 $[\omega(B_2); u\omega(B_1),v]\Rightarrow_{\hat{G}(K)}[\omega(B_2); \chi(B_2)]$が導かれる。
+\end{flushleft}
+\end{proof}
+
+\begin{lemma}\label{termlemma:b}
+学習の仮定の下で、$\forall A\in V$ $\forall w\in\Sigma^*$, $A\Rightarrow^*_{G_*}w\\$ ならば $[\omega(A); \chi(A)]\Rightarrow^*_{\hat{G}(K)}w$となる。
+\end{lemma}
+
+\begin{proof}
+Lemma\ref{chi-omega-lemma}を使う。更に、$A\to B_1B_2\in P$ならば$[\omega(A); \chi(A)]\Rightarrow^*[\omega(B_1)\omega(B_2); \chi(B_1B_2)]$である。なぜなら$h(\omega(A))=h(\omega(B_1B_2))\land h(\chi(A))=h(\chi(B_1B_2))\land\omega(A)\odot\chi(A), \omega(B_1B_2)\odot\chi(A),\omega(B_1B_2)\odot\chi(B_1B_2)\in{\rm CS}(G_*)\land \omega(B_1B_2)=\omega(B_1)\omega(B_2)$であるため$[\omega(A); \chi(A)]\Rightarrow[\omega(B_1)\omega(B_2); \chi(A)]\Rightarrow[\omega(B_1)\omega(B_2); \chi(B_1B_2)]$であるから。
+\end{proof}
+
+\begin{theorem}
+学習の仮定の下で、$\mathcal{L}(\hat{G}(K))\supseteq L_*$.
+\end{theorem}
+
+\begin{proof}
+\emph{Lemma} \ref{termlemma:b}より$S\Rightarrow^*_{G_*}w$ならば$[\omega(S); \chi(S)]\Rightarrow^*_{\hat{G}(K)}w$となる。ところで$\chi(S)=\langle\lambda,\lambda\rangle$であるから$[\omega(S); \chi(S)]=[\omega(S); \lambda,\lambda]$となりまた$\omega(S)\odot\chi(S)\in {\rm CS}(G_*)$であるから$S\to[\omega(S);\chi(S)]\in P'$となる。
+\end{proof}
+
+\chapter{正しい学習に必要な特徴的有限集合の大きさについて}
+
+本節では先行研究よりいくらか特徴的有限集合が圧縮できたことを主張する。
+
+
+Yoshinaka\cite{Yoshinaka:2008}の論文では目的文法を$G_*=\langle\Sigma, V_*, P_*, S_*\rangle$とした言語$L_*=\mathcal{L}(G_*)$の学習に必要な特徴的有限集合を
+$K_{G_*}:=\{y\odot\chi(A)\in\Sigma^*\mid y\in K_A\land A\in V_*\}$ （但し、各$A\in V_*$に対し $K_A:=\{u\omega(\beta_0)...\omega (\beta_{n-1})v\in\Sigma^*\mid n\geq 2\land A\to uB_0...B_{n-1}v\land\forall i<n (B_i\to\beta_i)\}\cup\{w\in\Sigma^*\mid A\to w\in P_*\}$）
+で定義している。但し、目的文法$G_*$は$k,l$-グライバッハ標準形のかたちになっているものとする（ある文脈自由文法$G=\langle\Sigma, V, P, S\rangle$が$k,l$-グライバッハ標準形であるとは全ての$P_*$のメンバがある$w\in\Sigma^{\leq k+l}$$A\to w$またはある$x\in\Sigma^k$, $z\in\Sigma^l$について$A\to x\alpha z$のかたちであるものと定義される。）。
+
+
+この論文の学習アルゴリズムでは学習に必要な特徴的有限集合の定義${\rm CS}(G_*):=\{\omega(\beta)\odot\chi(A)|A\to\beta\in P_*\}$は$K_{G_*}$に包含される集合である。これは$A\to\beta\in P_*$ならば$\omega(\beta)\in K_A$となることから明らかである。
+
+
+\chapter{クラスの性質と言語の具体例}
+この節では言語の具体例を与えつつ導入したクラス間の集合的、代数的性質などを議論する。
+
+\begin{claim}
+ある準同形写像$h$に対して$h$-代入可能であり、かつそのKleene閉包がどんな準同形$h'$に対しても$h'$-代入可能にならない言語が存在する。
+\end{claim}
+
+\begin{proof}
+$L:=\{a^nba^n|n\geq 0\}$とする。$L$は$0,0$-代入可能言語である。$M$を有限モノイドとし、$h':\Sigma^*\to M$を準同形写像とする。鳩ノ巣論法より
+$\exists k,l\in\mathbb{N},h'(a^k)=h'(a^l)\land k<l$であるから、 $h'(ba^kba^kb)=h'(ba^lba^lb)$、$D_{L^*}(ba^kba^kb)\cap D_{L^*}(ba^lba^lb)\ni\langle a^k,a^k\rangle$となる。しかし$\langle a^l,a^l\rangle\in D_{L^*}(ba^lba^lb)\setminus D_{L^*}(ba^kba^kb)$である。
+\end{proof}
+
+以下の命題が成り立つ；
+
+\begin{claim}
+任意の正規言語$L$に対しある準同形写像$h$が存在し、$L$は$h$-代入可能である。
+\end{claim}
+
+\begin{proof}
+正規言語$L\subseteq \Sigma^*$に対して有限モノイド$M$と準同形写像$h:\Sigma^*\to M$、部分集合$F\subseteq M$が存在して$L=h^{-1}(F)$であるとする。このとき、$L$は$h$-代入可能である。つまり、$\{uxv,ux'v,u'xv'\}\subseteq L$かつ$h(u,x,v)=h(u',x',v')$ならば$u'x'v'\in L$となる。
+\end{proof}
+
+言語の共通部分に関しては以下が成り立つ；
+
+\begin{claim}
+$L_i$が$h_i$-代入可能$(i=1,2)$ならば、ある準同形写像$h$が存在し$L_1\cap L_2$は$h$-代入可能である。
+\end{claim}
+
+\begin{proof}
+準同形写像を$h_i:\Sigma^*\to M_i$とする。$h(x):=(h_1(x),h_2(x))$とすれば、$h:\Sigma^*\to M_1\times M_2$は準同形写像となり$h(x)=h(y)$ iff $h_1(x)=h_1(y)\land h_2(x)=h_2(y)$となる。$\{uxv,ux'v,u'xv'\}\subseteq L_1\cap L_2$かつ$h(u,x,v)=h(u',x',v')$ならば$\{uxv,ux'v,u'xv'\}\subseteq L_i$かつ$h_i(u,x,v)=h_i(u',x',v')$ $(i=1,2)$となり$u'x'v'\in L_i$ $(i=1,2)$となる。つまり$u'x'v'\in L_1\cap L_2$となる。
+\end{proof}
+
+
+言語の連結に関しては以下の命題が成り立つ。
+
+\begin{claim}
+$L_i$が$h_i$-代入可能$(i=1,2)$であっても$L_1\cdot L_2$がどんな準同形写像$h$に対しても$h$-代入可能とならない場合がある。
+\end{claim}
+
+\begin{proof}
+そうでないと仮定する。$L_0:=\{a^nba^n|n\geq 0\}$. $L_0$は$0,0$-代入可能であるので、$L:=L_0\cdot L_0\cdot L_0$はある準同形写像$h$に対して$h$-代入可能とならねばならない。$M$を有限モノイドとし、$h:\Sigma^*\to M$を準同形写像とする。鳩ノ巣論法より、
+$\exists k,l\in\mathbb{N},h(a^k)=h(a^l)\land k<l$であるから、$h(ba^kba^kb)=h(ba^lba^lb)$および$D_{L}(ba^kba^kb)\cap D_{L}(ba^lba^lb)\ni\langle a^k,a^k\rangle$となる。しかし、$\langle a^l,a^l\rangle\in D_{L}(ba^lba^lb)\setminus D_{L}(ba^kba^kb)$であり矛盾する。
+\end{proof}
+
+言語の準同形写像の逆像に関しては以下の事実が成立する。
+
+\begin{fact}
+ $L\subseteq\Sigma^*$が$h$-代入可能言語であり、$g:T^*\to\Sigma^*$を別のアルファベット$T$への準同形写像とする。 このとき$g^{-1}(L)\subseteq T^*$は$h\circ g$-代入可能言語となる。
+\end{fact}
+
+
+\if0
+以下の命題は言語の``逆''に関する命題である。
+
+\begin{claim}
+$h:\Sigma^*\to M$を有限モノイドへの準同形写像だとして、$L$が$h$-代入可能言語だとする。このとき$L$の逆、$L^R$はある準同形写像$h^R$に対して$h^R$ -代入可能となる。
+\end{claim}
+
+\begin{proof}
+$h$は全射だと仮定してよい。$M^R=(M^R,\circ^R,1)$は$M$の演算規則をすべて逆にしたものとする。つまり$h^R(x):=h(x^R)$と定義し、$M^R$の台集合を$h^R(\Sigma^*)$にとし、モノイド上の演算$\circ^R$を$h^R(x)\circ^Rh^R(y):=h^R(xy)$と定義するとする\footnote{この定義で$\circ^R$が結合則を満たすことは、$(h^R(x)\circ^Rh^R(y))\circ^Rh^R(z)
+=(h^R(xy))\circ^Rh^R(z)
+=h^R(xyz)
+=h^R(x\cdot yz)
+=h^R(x)\circ^Rh^R(yz)
+=h^R(x)\circ^R(h^R(y)\circ^Rh^R(z))$となることから。}。
+この定義では写像$h^R:\Sigma^*\to M^R$は準同形写像となる。$\{uxv,ux'v,u'xv'\}\subseteq L^R\land h^R(u,x,v)=h^R(u',x',v')$ならば$\{v^Rx^Ru^R,v^R{x'}^Ru^R,{v'}^Rx^R{u'}^R\}\subseteq L$かつ$h(u^R,x^R,v^R)=h({u'}^R,{x'}^R,{v'}^R)$であるから${v'}^R{x'}^R{u'}^R\in L$となる。それゆえ$u'x'v'\in L^R$となる。
+\end{proof}
+\fi
+
+
+
+以下の言語はどんな$k,l$に対しても$\mathcal{C}_{k,l}$に属さないことがYoshinaka(2008)で示されているが、これはどんな準同形写像$h$に対しても$\mathcal{C}_h$に属さないことを示す。
+
+\begin{claim}
+CFG $G=\{S\to aSS,S\to b\}$に対して$L:=\mathcal{L}(G)$とする。$L$はどんな準同形写像$h$に対しても$h$-代入可能ではない。
+\end{claim}
+
+\begin{proof}
+\begin{flushleft}
+$M$を有限モノイドとし、$h:\Sigma^*\to M$を準同形写像とする。仮に$L$が$h$-代入可能であるとする。有限集合$M^2$上で$\{\langle h(a^n),h(b^n)\rangle\}_{n<\omega}$を動かす鳩ノ巣論法より、
+$\exists N,k\in\mathbb{N}$、$h(a^N)=h(a^{N+k})\land h(b^N)=h(b^{N+k})$となる。また$h(b^{N+1})=h(b^{N+k+1})$であり、さらに$a^{N+k}(b^Na^N)b^{N+k+1}=a^k(a(a^{N-1}b^N)(a^Nb^{N+1}))b^k\in L$、$a^{N+k}(b^{N+k}a^{N+k})b^{N+k+1}=a(a^{N+k-1}b^{N+k})(a^{N+k}b^{N+k+1})\in L$、そして$a^N(b^Na^N)b^{N+1}=a(a^{N-1}b^N)(a^Nb^{N+1})\in L$であるが、然るに $a^N(b^{N+k}a^{N+k})b^{N+1}\notin L$となり矛盾する。最後の部分は$a^N(b^{N+k}a^{N+k})b^{N+1}=aSS$の形にならねばならないが、これは補題；$a^nb^m\in L\Rightarrow m=n+1$を示せば$a^N(b^{N+k}a^{N+k})b^{N+1}$を後ろから読むとありえないことがわかる。補題の証明は$\mathcal{L}(G)$を短い順に出力してゆくと$n=0,1$の場合は正しい事がわかり、一般には$aSS\Rightarrow^*a^nb^m$とすると後ろから読むことにより$S\Rightarrow^*aSb\land S\Rightarrow^*a^{n-1}b^{m-1}$という場合しかありえないことから帰納的に示される。
+\end{flushleft}
+\end{proof}
+
+\if0
+\chapter{多重文脈自由言語への応用}
+
+この節では$\sim$-代入可能性の多重文脈自由言語への一般化を行うが、具体例は議論せず骨格となる基本的な数学構造を指摘するにとどめる。以下では、 $(\Sigma^*)^{\langle k\rangle}:=\{\langle w_0,...,w_{k-1}\rangle\mid \forall i<k, w_i\in\Sigma^*\}$, $\Sigma^{[k]}_\Box:=\Sigma^*(\Box\Sigma^+)^{k-1}\Box\Sigma^*$（但し $\Box$を\emph{空白}のシンボルとする）とし、また $\vec{x}=\langle x_0,...,x_{k-1}\rangle\in(\Sigma^*)^{\langle k\rangle}$に対し $\hat{y}=y_0\Box y_2...y_{k-1}\Box y_{k}\in\Sigma^{[k]}_\Box$, $\vec{x}\odot\hat{y}:=(\prod_{i<k}y_ix_i)\cdot y_{k}$であると定める。
+
+\begin{flushleft}
+\emph{\bf{p次代入可能言語 (Yoshinaka, 2011) }}言語$L\subset\Sigma^*$が{\bf $p$次代入可能}であるとは、$\forall k\leq p$, $\forall\vec{x_0},\vec{x_1}\in(\Sigma^*)^{\langle k\rangle}$,$\forall \hat{y}_0, \hat{y}_1\in\Sigma^{[k]}_\Box$, $\vec{x_0}\odot\hat{y}_0,\vec{x_0}\odot\hat{y}_1,\vec{x_1}\odot\hat{y}_0\in L$ ならば $\vec{x_1}\odot\hat{y}_1\in L$であることとする。
+\end{flushleft}
+
+$M$を有限モノイドとし、$h:\Sigma^*\to M$を準同形写像とする。上記のクラスは以下に一般化される；
+
+\begin{definition}
+$\vec{x}\in(\Sigma^*)^{\langle k\rangle}$に対し$D_L^k(\vec{x}):=\{\hat{y}\in\Sigma^{\langle k\rangle}_\Box\mid\vec{x}\odot\hat{y}\in L\}$とする。 $L\subset\Sigma^*$が{\bf $h$-$p$次代入可能}であるとは、$\forall k\leq p$, $\forall \vec{x}_0, \vec{y}_1\in(\Sigma^*)^{\langle k\rangle}$, $D_L^k(\vec{x}_0)\cap D_L^k(\vec{x}_1)\neq\emptyset\land h(\vec{x}_0)=h(\vec{x}_1)$ ならば $D_L^k(\vec{x}_0)=D_L^k(\vec{x}_1)$となること（但し $h(x_0,...,x_{k-1}):=(h(x_0),...,h(x_{k-1}))$とする）で定義する。
+\end{definition}
+
+正の例 $K$ に対する学習アルゴリズムを以下で定義する；
+\begin{flushleft}
+$V(K)=\{[\vec{x}]\mid\exists k\leq p, \vec{x}\in(\Sigma^+)^{\langle k\rangle}\land\hat{y}\in\Sigma^{[k]}_\Box\land\vec{x}\odot\hat{y}\in K\}\cup\{S\}$,
+$P=\{S\to[w]\mid w\in K\}\cup\{[\vec{x}]\to\vec{x}\mid[\vec{x}]\in V(K)\}\cup\{[f(\vec{x})]\to f([\vec{x}])\mid f\in F(K)\}\cup\{[\vec{x}]\to[\vec{x'}]\mid[\vec{x}],[\vec{x'}]\in V(K)\land D_L^k(\vec{x})\cap D_L^k(\vec{x}')\neq\emptyset\land h(\vec{x})=h(\vec{x}')\}$、ここで$ F(K)$はある意味で``good''なランク$r$以下の写像の集合で、\emph{\bf{(1)}}ある$i<k$, $a\in\Sigma$に対して、$f_a(\langle z_0,...,z_{i-1}\rangle)=\langle a,z_0,...,z_{i-1}\rangle$である。または\emph{\bf{(2)}}ある$i,j<k$に対して、$f(\langle x_0,...,x_{i-1}\rangle,\langle y_0,...,y_{j-1}\rangle)=\langle x_0,...,x_{i-1},y_0,...,y_{j-1}\rangle$の形のものとする。
+\end{flushleft}
+
+このクラスの特徴的有限集合は Yoshinaka \cite{Yoshinaka:2011}のものを取ればよい。
+
+理論的な根拠としてはlemma\ref{typinglemma2}が多重文脈自由文法でも成立することによる；
+
+\begin{lemma}
+任意の有限モノイド$M$と準同形写像$h:\Sigma^*\to M$、任意のMCFG $G$に対し、あるMCFG $G'=\langle\Sigma,V',F',P',\mathcal{S}\rangle$が存在して、$G\approx G'$かつ$\forall A\in V'$, $\vec{x},\vec{x}'\in\mathcal{L}(A)$ならば$h(\vec{x})=h(\vec{x}')$となる。
+\end{lemma}
+
+\begin{proof}
+$G=\langle\Sigma,V,F,P,S\rangle$とする。$\mathcal{S}:=\{S^{\langle m\rangle}\mid m\in M\}$、$V':=\{A^{\vec{m}}\mid A\in V\land\vec{m}\in M^{dim(A)}\}$、$F':=F$、$P':=\{A^{\vec{m}}\to f(X_0^{\vec{n(0)}}, ..., X_{k-1}^{\vec{n}(k-1)})\mid f\in F\land A\to f(X_0,...,X_{k-1})\in P\land\exists f_h\in F_h, f_h(\vec{n}(0),...,\vec{n}(k-1))=\vec{m}\}
+\cup\{A^{\vec{m}}\to\vec{w}\mid A\to\vec{w}\in P\land  h(\vec{w})=\vec{m}\}$（但し $F_h:=\{f_h\mid f\in F,  f_h\circ h(w_0,...,w_{k-1})=h\circ f(w_0,...,w_{k-1})\}$と定義する。$F$の元は線形なので明らかにwell-definedとなる。）として$G':=\langle\Sigma,V',F',P',\mathcal{S}\rangle$と定義する。このとき$\mathcal{L}(G', A^{\vec{m}})
+=\{\vec{w}\mid A^{\vec{m}}\to f(X_0^{\vec{n(0)}}, ..., X_{k-1}^{\vec{n}(k-1)})\land\vec{w}=f(\vec{w}_0,...,\vec{w}_{k-1})\land\forall i<k, \vec{w}_i\in\mathcal{L}(X_i^{\vec{n}(i)})\land\exists f_h\in F_h, f_h(\vec{n}(0),...,\vec{n}(k-1))=\vec{m}\}
+=\{\vec{w}\mid\vec{w}\in\mathcal{L}(A)\land h(\vec{w})=f_h(\vec{n}(0),...,\vec{n}(k-1))=\vec{m}\}\subseteq\mathcal{L}(G, A)\cap h^{-1}(\vec{m})$であるから、$\mathcal{L}(G',A^{\vec{m}})\subseteq\mathcal{L}(A)\cap h^{-1}(\vec{m})$である。また逆に$\mathcal{L}(A)\cap h^{-1}(\vec{m})\ni\vec{w}$ならば$\vec{m}=h(\vec{w})\land A\to f(X_0,...,X_{k-1})\in P\land \vec{w}=f(\vec{w}_0,...,\vec{w}_{k-1})\land \vec{w}_i\in \mathcal{L}(G', X_{i})$であるが帰納法の仮定より$\vec{w}_i\in \mathcal{L}(G', X_{i}^{h(\vec{w}_i)})$となり、それゆえ$\vec{w}\in\mathcal{L}(G', A^{\vec{m}})$となる。それゆえ$G\approx G'$が示された。
+\end{proof}
+
+\fi
+
+
+%\bibliographystyle{cslipubs-natbib}
+\bibliographystyle{splncs03}
+%\bibliographystyle{splncs}
+
+%\footnotesize
+\bibliography{refs}
+
+\end{document}
