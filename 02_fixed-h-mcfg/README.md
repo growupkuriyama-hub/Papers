@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v52; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v53; this is the current source of truth.
+- `revision/v52_to_v53_revision_note.md` — primary-PDF citation audit and locator tightening for Yoshinaka/Seki sources.
+- `revision/v52_to_v53.diff` — unified diff for the v52 → v53 citation-audit revision.
 - `revision/v51_to_v52_revision_note.md` — targeted prose-compression pass in the quantitative characteristic-data section.
 - `revision/v51_to_v52.diff` — compact diff summary for the v51 → v52 revision.
 - `revision/v50_to_v51_revision_note.md` — abstract scope precision for the higher-rank characteristic-data theorem.
