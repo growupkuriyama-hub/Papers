@@ -1,0 +1,518 @@
+# v59 -> v60 sequential unified patches
+# Patch 1: introduction/preliminaries compression
+@@ -116,50 +116,28 @@ \section{Introduction}
+ \cite{SekiEtAl1991,Kallmeyer2010}.
+ 
+ This paper fixes, as part of the learnable class, a homomorphism
+-$h:\Sigma^*\to M$ into a finite monoid.  Two observed tuples are compared only
+-when their corresponding components have the same $h$-values.  The typing is
+-compositional because $h(uv)=h(u)h(v)$, and it is fixed before the positive
+-text is seen.  This separates the problem of choosing a useful finite bias from
+-the problem of learning under that bias, in the same spirit as typing or domain
+-bias in automata inference \cite{CosteTyping2004}.  Prefix--suffix morphisms
+-provide one systematic family of such biases, while transition morphisms of
+-finite automata provide another.  The fan-out bound is part of the same bias:
+-it controls not only representational power but also which tuple arities are
+-tested for substitution, so choosing a larger $f$ is not automatically safer.
+-If the typing itself is unknown but a bound on the size of its finite codomain
+-is fixed, the bounded union is contained in a single fixed-typing class: one
+-may take the product of all homomorphisms into monoids up to that size.
+-Without a codomain-size bound, the union contains all regular languages and is
+-not TxtEx-identifiable from positive data.  A useful way to read the fixed typing
+-is as bounded finite-state information that selects among finitely many
+-structural regimes while the MCFG carries the unbounded dependency itself.
+-The framework does not attempt to encode an unbounded copied feature sequence;
+-the separation examples later make both the usefulness and this limitation
+-explicit.
+-
+-Other learning biases organize the inference problem differently.  Takada's
+-control-set approach represents even linear context-free languages by a fixed grammar whose
+-derivations are selected by a regular control language
+-\cite{Takada1988,Takada1995}; here the fixed object instead acts on terminal
+-yields and gates distributional substitutions.  Coste, Garet, and Nicolas
+-localize the evidence used to infer substitutability: bounded immediate
+-neighborhoods may license a comparison even when the outer sentence contexts
+-differ \cite{CosteGaretNicolas2012}; see also the polynomial reduction
+-approach of Coste and Nicolas~\cite{CosteNicolas2019}.  Here the evidence remains a common full
+-sentence context, while the finite typing records a compositional summary of
+-the compared factor or tuple component itself.  Positive-data learning of
+-other mildly context-sensitive families includes work on simple external
+-contextual languages~\cite{OatesEtAl2006}; these use a different
+-representational bias.  Richer-information settings for MCFGs and related
+-formalisms include Yoshinaka's learning from positive data together with
+-membership queries~\cite{Yoshinaka2010}, Clark--Yoshinaka's distributional
+-learning of parallel MCFGs~\cite{ClarkYoshinaka2014}, and more recent
+-extensions of distributional learning with membership queries
+-\cite{KanazawaYoshinaka2023}.  Clark--Yoshinaka use an active setting and a
+-dual representation based on sets of generalized contexts, whereas the
+-present paper remains in the positive-data-only setting and uses observed
+-tuple values as the primal objects.  These results therefore address
+-different information and representation assumptions.
++$h:\Sigma^*\to M$ into a finite monoid and compares observed tuples only
++when corresponding components have equal $h$-values.  The compositional type
++guard is fixed before the positive text is seen, separating the choice of a
++finite bias from learning under that bias~\cite{CosteTyping2004}.
++Prefix--suffix and DFA transition morphisms provide two useful families.
++Fan-out is part of the same bias because it determines which tuple arities are
++tested for substitution.  A fixed bound on the unknown codomain size can be
++absorbed into one product typing, whereas without such a bound the union
++contains all regular languages and is not TxtEx-identifiable.  Thus the typing
++supplies bounded finite-state information while the MCFG carries the
++unbounded dependency.
++
++Other learning biases make different choices.  Takada uses regular control
++languages over derivations~\cite{Takada1988,Takada1995}, while local
++substitutability restricts the evidence used to compare factors
++\cite{CosteGaretNicolas2012,CosteNicolas2019}.  Positive-data learning has
++also been studied for other mildly context-sensitive formalisms
++\cite{OatesEtAl2006}.  MCFG learning with richer information includes
++membership-query and dual context-set approaches
++\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  The present
++paper instead remains positive-data-only, uses observed tuple values as primal
++objects, and lets a fixed finite typing guard substitutions.
+ 
+ \paragraph{Contributions.}
+ The paper has four main contributions.
+@@ -205,45 +183,33 @@ \section{Introduction}
+ \end{enumerate}
+ 
+ \paragraph{Relation to prior work and scope.}
+-Three layers should be distinguished.  First, Yoshinaka supplies the semantic
+-baseline, the observed-tuple grammar with Type~I--III rules, the conservative
+-update policy, the rule-witness completeness argument, and qualitative
+-identification without a fixed rank bound
+-\cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}.  The present
++Yoshinaka supplies the semantic baseline, the observed-tuple grammar with
++Type~I--III rules, the conservative update policy, rule-witness completeness,
++and qualitative identification without a fixed rank bound
++\cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}; the present
+ reconstruction is therefore not claimed as a new grammar architecture.
+-Proposition~\ref{prop:yoshinaka-type-guard} records the exact rule
+-correspondence: (Const) and (Comp) are Type~I, (Link) is Type~II with the
+-additional type guard, and (Start) is Type~III, apart from the separate
+-$\eps$ convention.
+-
+-Second, finite-monoid yield typing and typed refinement have a fan-out-one
+-antecedent in the revised companion CFG manuscript~\cite{kuriyamaCFG}.  All
+-definitions and arguments required in the present paper are nevertheless
+-given here independently.
+-
+-Third, the new questions addressed here are what happens when the finite type
+-guard is applied componentwise to MCFG tuples, how characteristic-data bounds
+-depend on rule rank and rule thickness, and how finite typing interacts with
+-fan-out and regular filtering.  The rank-one size-only theorem, the
+-higher-rank boundary transfer together with an intrinsic-rank-two witness, the
+-two exponential refinement obstructions, and the fan-out/separation results
+-are the main quantitative and language-theoretic contributions.  The
+-non-branching lower bound used for the intrinsic-rank witness is prior work;
+-the contribution here is the boundary-typed wrapper, its typed membership and
+-Yoshinaka separation, and its connection to the quantitative theorem.
+-
+-Polynomial-time statements below treat the displayed fan-out, rank cap, and
+-finite typing as fixed.  The distinction between characteristic data for the
+-set-driven reconstruction and syntactic stabilization of the conservative
+-learner is fixed here and not repeated after every theorem.  Likewise, the
+-refinement obstructions are limitations of the displayed proof routes, not
+-lower bounds on all possible learners or characteristic samples.
+-
+-Section~\ref{sec:prelim} fixes notation and the learning model.
+-Section~\ref{sec:learner} gives the reconstruction and convergence proofs.
+-Section~\ref{sec:char-data} develops the quantitative bounds and their
+-limitations.  Section~\ref{sec:comparison} compares the framework with
+-Yoshinaka's classes and gives the separation examples.
++Proposition~\ref{prop:yoshinaka-type-guard} gives the exact correspondence:
++(Const) and (Comp) are Type~I, (Link) is Type~II with the type guard, and
++(Start) is Type~III, apart from the separate $\eps$ convention.
++
++Finite-monoid yield typing has a fan-out-one antecedent in the revised
++companion CFG manuscript~\cite{kuriyamaCFG}, but all definitions and proofs
++needed here are self-contained.  The MCFG-specific questions are componentwise
++typing of tuples, rule-rank/thickness dependence of characteristic data, and
++interaction with fan-out and regular filtering.  The non-branching lower bound
++used for the intrinsic-rank witness is prior work; the contribution is its
++boundary-typed wrapper, typed membership and Yoshinaka separation, and its
++connection to the quantitative theorem.
++
++Throughout the polynomial statements, fan-out, rank cap, and finite typing are
++fixed.  Characteristic data for the set-driven reconstruction are not claimed
++to imply syntactic stabilization of that reconstruction, and the refinement
++obstructions concern the displayed proof routes rather than lower bounds on
++all learners or characteristic samples.
++
++Sections~\ref{sec:prelim}--\ref{sec:char-data} develop the model,
++reconstruction, convergence, and quantitative bounds; Section~\ref{sec:comparison}
++gives the comparison with Yoshinaka's classes and the separation results.
+ 
+ \section{Preliminaries}
+ \label{sec:prelim}
+@@ -346,19 +312,11 @@ \subsection{Finite-Monoid Typing}
+ satisfies $\ker(h,g)=\ker h\cap\ker g$.
+ 
+ Finite-monoid homomorphisms serve here as finite-state typings.  Let
+-$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ denote the unique homomorphism into the
+-one-element monoid.
+-For example, the transition morphism of a deterministic finite automaton (DFA) for a regular language
+-$L_{\mathrm{reg}}\supseteq L$ supplies such an $h:\Sigma^*\to M$, where $h(w)$ records the
+-state transformation induced by $w$ \cite{Pin1986}.  The reconstruction uses
+-only this finite summary, not $L_{\mathrm{reg}}$ as a membership oracle for $L$.
+-
+-
+-We call $h$ a \emph{finite-monoid typing} and $h^{(d)}(\tuple w)$ the
+-\emph{yield type} of the tuple.  At fan-out one the definitions below reduce
+-to ordinary two-sided fixed-$h$ substitutability on nonempty factors.
+-The prefix--suffix morphism $h_\Sigma^{k,\ell}$ below is the boundary typing
+-used for the fixed-window special case.
++$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ be the trivial typing.  A DFA
++transition morphism for a regular superset of the target is another example
++\cite{Pin1986}; only the induced finite summary is used, not a membership
++oracle.  We call $h^{(d)}(\tuple w)$ the \emph{yield type}.  The
++prefix--suffix morphism below supplies the boundary typing used later.
+ 
+ \begin{definition}[Prefix--suffix typing]
+ \label{def:prefix-suffix-typing}
+
+# Patch 2: comparison/conclusion compression and locator cleanup
+@@ -2114,52 +2114,34 @@ \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
+ \end{proof}
+ 
+ The input-presentation clause follows from
+-Proposition~\ref{prop:structural-good-thickness}.  It is stated using
+-nonterminal thickness $\tau_{G_{\mathrm{in}}}$ because deleting source rules
+-may erase material before the nondeleting good-form conversion, so the
+-good-grammar comparison $\tau_G\le\theta_G$ cannot simply be imposed on the
+-input presentation.  By Corollary~\ref{cor:capped-gold-poly}, the corresponding
+-capped conservative learner TxtEx-identifies these targets with polynomial
+-time per processed datum.
+-
+-\paragraph{Scope of the higher-rank bound.}
+-The theorem is quantitative relative to a given reduced good presentation of
+-bounded rule rank.  The distinction from Theorem~\ref{thm:rankone-polydata}
+-is nevertheless genuine at the language level:
+-Theorem~\ref{thm:intrinsic-ranktwo-witness} below gives a
+-non-context-free $(1,1)$-boundary-typed target of minimum fan-out two whose
+-minimum rule rank is two even when the fan-out of competing presentations is
+-allowed to vary.
++Proposition~\ref{prop:structural-good-thickness}; nonterminal thickness is
++used because deleting source rules may erase material before good-form
++conversion.  Corollary~\ref{cor:capped-gold-poly} then gives polynomial time
++per processed datum for the corresponding capped conservative learner.
++
++The bound is relative to a reduced good bounded-rank presentation.
++Theorem~\ref{thm:intrinsic-ranktwo-witness} below shows that this higher-rank
++regime is needed at the language level: it gives a non-context-free
++$(1,1)$-typed target of minimum fan-out two and minimum rule rank two even
++when competing presentations may use arbitrary finite fan-out.
+ 
+ \section{Comparison with Multidimensional Substitutability}
+ \label{sec:comparison}
+ 
+-Yoshinaka's multidimensional substitutability is the most direct
+-positive-data comparator used here \cite{Yoshinaka2009,Yoshinaka2011}.  When
+-the typing is trivial, the present reconstruction specializes to
+-the same basic positive-data reconstruction pattern: observed tuples serve as nonterminals, good composition rules decompose
+-them, and shared sentence contexts license substitution.  Thus trivial typing reproduces Yoshinaka's semantic baseline rather than a separate contribution.  The new role of finite typing is to
+-refine which tuple nonterminals may be identified while preserving compositional rule
+-witnesses.  In the
+-multidimensional proofs this requires yield-type propagation, sentence contexts induced through nonmerging rules, and, for the quantitative prefix--suffix result, simultaneous
+-marking of several tuple components.  By
+-Proposition~\ref{prop:semantic-specializations}(i), Yoshinaka's semantic class is
+-exactly the trivial-typing member of the present family inside $f$-MCFL.  Yoshinaka's 2011 MCFG formulation varies dimension and rule rank, while its
+-discussion of $(k,\ell)$ refers to the separate CFG hierarchy
+-\cite{Yoshinaka2008}.  Here $h_\Sigma^{k,\ell}$ lifts that boundary comparison
+-to multidimensional tuple components.  Also,
+-\[
+-  \Cmcf{f}{h}\cap\mathrm{CFL}\subseteq\Cmcf{1}{h},
+-\]
+-because every $(f,h)$ condition includes arity one.  Consequently any CFL excluded from the fan-out-one class
+-$\Cmcf{1}{h}$ remains excluded from $\Cmcf{f}{h}$ for every larger tested
+-fan-out as well.  We then give a non-context-free intrinsic-rank-two $(1,1)$-typed target of
+-minimum fan-out two outside Yoshinaka's trivial-typing class, show that one
+-non-prefix--suffix typing supports an infinite rank-one non-context-free
+-family outside every prefix--suffix class,
+-and prove that the $(1,1)$ typing strictly enlarges Yoshinaka's class at the
+-same fan-out and rule-rank bounds, even beyond regular filtering recognized
+-by that same typing morphism.
++Yoshinaka's multidimensional substitutability is the direct positive-data
++baseline~\cite{Yoshinaka2009,Yoshinaka2011}.  Under trivial typing the present
++framework reproduces that semantic class; finite typing refines which observed
++tuples may be identified while preserving compositional rule witnesses.
++The MCFG proofs additionally require componentwise type propagation and, for
++the quantitative boundary theorem, simultaneous control of several tuple
++components.  Yoshinaka's $(k,\ell)$ hierarchy is a separate CFG result
++\cite{Yoshinaka2008}; $h_\Sigma^{k,\ell}$ lifts the same boundary
++information componentwise.  Since every $(f,h)$ condition includes arity one,
++\[
++  \Cmcf{f}{h}\cap\mathrm{CFL}\subseteq\Cmcf{1}{h}.
++\]
++The examples below separate finite typing from the trivial baseline,
++prefix--suffix typings, and regular-filter explanations.
+ 
+ \subsection{Yoshinaka's Baseline and Prefix--Suffix Specialization}
+ 
+@@ -2291,15 +2273,12 @@ \subsection{Yoshinaka's Baseline and Prefix--Suffix Specialization}
+ \end{proposition}
+ 
+ \begin{proof}
+-Let $L=L_0\cap h^{-1}(\mathsf{Acc})$ with $L_0\in \YSub{f}$.  Suppose equal-$h$-type
+-$d$-tuples $\tuple x,\tuple y$ share an accepting sentence context $E_0$ in
+-$L$, and let another context $E$ satisfy $E[\tuple x]\in L$.  Since
+-$L\subseteq L_0$, the $f$D-substitutability of $L_0$ gives
+-$E[\tuple y]\in L_0$.  Componentwise equality of the $h$-types implies
+-$h(E[\tuple x])=h(E[\tuple y])$ because the fixed context material is
+-multiplied in the same positions.  Hence $E[\tuple y]\in h^{-1}(\mathsf{Acc})$ as well.
+-The reverse implication is symmetric, so the tuple distributions in $L$ are
+-equal.
++Let $L=L_0\cap h^{-1}(\mathsf{Acc})$.  For equal-$h$-type tuples sharing an
++accepting context, $f$D-substitutability of $L_0$ transfers acceptance in
++$L_0$ to every other context.  Componentwise equality of $h$-types also gives
++equal whole-word $h$-values after insertion into the same context, so the
++regular filter transfers as well.  Symmetry gives equality of the tuple
++distributions.
+ \end{proof}
+ 
+ The qualifier ``same-typing'' is essential: the fragment above does not
+@@ -2702,24 +2681,13 @@ \subsection{Finite Typings beyond the Trivial Baseline}
+ Hence two-dimensional tuple substitutability fails for every finite $g$.
+ \end{proof}
+ 
+-Thus $L_{\mathrm{cd}}$ is a linear context-free target beyond every
+-prefix--suffix typing and beyond arbitrary regular post-filtering of the
+-trivial-typing class, while the same target belongs to no finitely typed
+-fan-out-two class.  The fact that one-dimensional substitutability may fail at
+-arity two is already present in Yoshinaka's trivial-typing baseline
+-\cite[Example~5]{Yoshinaka2011}; the stronger point here is that no finite
+-componentwise typing repairs the failure for this target.
+-
+-The failure has a simple information-flow interpretation.  At fan-out one the
+-center symbol $\mathtt c$ or $\mathtt d$ lies inside the compared fragment, so
+-$h_{\mathrm{cd}}$ can retain the branch information.  At fan-out two the natural
+-comparison isolates the two outer blocks as tuple components, while the
+-branch-discriminating center symbol moves into the sentence context
+-$\blank_1\mathtt c\blank_2$ or $\blank_1\mathtt d\blank_2$.  Componentwise
+-typing does not inspect that intervening context, so no refinement or
+-replacement by any finite typing can recover the lost distinction.  One may
+-instead ask whether a learner can adapt over the finitely many biases
+-$\Cmcf{f'}{h}$ with $f'\le f$; we leave this adaptive-fan-out variant open.
++Thus $L_{\mathrm{cd}}$ is linear, lies beyond every prefix--suffix typing
++and arbitrary regular post-filtering at fan-out one, yet belongs to no
++finitely typed fan-out-two class.  The reason is that the center symbol
++$\mathtt c$ or $\mathtt d$ is visible inside a compared factor at fan-out
++one but moves into the sentence context when the two outer blocks are compared
++as a tuple.  Componentwise typing cannot recover that contextual distinction.
++Adaptive learning over several fan-out biases is left open.
+ 
+ \begin{proposition}[The copy language has no finite typing]
+ \label{prop:copy-infinite-typing}
+@@ -2759,26 +2727,6 @@ \subsection{Finite Typings beyond the Trivial Baseline}
+ for any $f\ge1$.
+ \end{proof}
+ 
+-The same arity-one obstruction applies to a renamed copy language
+-\[
+- L_\varphi:=\{w\varphi(w):w\in\Sigma^+\},
+-\]
+-where $\varphi$ is a letter-to-letter bijection into a disjoint alphabet.
+-Indeed, for a finite typing $h$ on the combined alphabet choose $n$ with
+-$2^n>|M|^2$.  Then distinct $u,v\in\Sigma^n$ satisfy
+-\[
+- (h(u),h(\varphi(u)))=(h(v),h(\varphi(v))).
+-\]
+-Thus $x:=u\varphi(u)$ and $y:=v\varphi(v)$ have equal $h$-type and are both
+-accepted by the empty one-hole context.  The context
+-$E:=u\blank_1\varphi(u)$ accepts $x$, producing
+-$(uu)\varphi(uu)$.  If it also accepted $y$, then
+-$uv\,\varphi(v)\varphi(u)$ would equal
+-$(uv)\varphi(uv)=uv\,\varphi(u)\varphi(v)$; injectivity of $\varphi$ and
+-$|u|=|v|$ would force $u=v$, a contradiction.  Thus finite typing can learn
+-many discontinuous MCFG dependencies, but it does not make unrestricted
+-copying agreement substitutable.
+-
+ \subsection{Strictness and Typings beyond Prefix--Suffix Windows}
+ \label{subsec:comparison-separations}
+ 
+@@ -2819,18 +2767,11 @@ \subsection{Strictness and Typings beyond Prefix--Suffix Windows}
+  S&\to(\xi_1^1\mathtt\#\xi_1^2)(A).
+ \end{aligned}
+ \]
+-It generates $J_s$.  Its intersection with
+-$\mathtt 1^*\mathtt\#\mathtt a^*\mathtt b^*$ is
+-\[
+- \{\mathtt 1^n\mathtt\#\mathtt a^{sn}\mathtt b^n:n\ge2\},
+-\]
+-which is not context-free.  Indeed, if it were context-free, then under the
+-homomorphism
+-$\psi(\mathtt x)=\mathtt 1$, $\psi(\mathtt y)=\mathtt a^s$,
+-$\psi(\mathtt z)=\mathtt b$, and $\psi(\mathtt\#)=\mathtt\#$, its inverse
+-image intersected with the regular language
+-$\mathtt x^*\mathtt\#\mathtt y^*\mathtt z^*$ would be the non-context-free
+-language
++It generates $J_s$.  Intersecting with
++$\mathtt 1^*\mathtt\#\mathtt a^*\mathtt b^*$ gives
++$\{\mathtt 1^n\mathtt\#\mathtt a^{sn}\mathtt b^n:n\ge2\}$, which is
++not context-free: otherwise the indicated block homomorphism, inverse image,
++and regular intersection would yield
+ $\{\mathtt x^n\mathtt\#\mathtt y^n\mathtt z^n:n\ge2\}$.
+ 
+ Moreover $J_s=Q\cap\varphi_s^{-1}(0,0)$ for the abelian map
+@@ -2852,31 +2793,17 @@ \subsection{Strictness and Typings beyond Prefix--Suffix Windows}
+ $(2,h_{\Sigma_Q}^{k,\ell})$ condition already fails at arity one.
+ \end{proof}
+ 
+-Hence the arbitrary-$h$ rank-one theorem applies to an entire non-context-free
+-fan-out-two family outside every fixed prefix--suffix typing.  In fact this
+-example remains inside the same-typing regular-filter fragment.  Indeed,
+-\[
+-  J_s=\varphi_s^{-1}(0,0)\cap h_Q^{-1}(\mathsf{Acc}_Q),
+-\]
+-and $\varphi_s^{-1}(0,0)$ is trivially typed multidimensionally substitutable
+-by Proposition~\ref{prop:abelian-coset-filter}(ii).  Hence
+-$J_s\in\Ffrag{2}{h_Q}$.  Its purpose is therefore to show that non-boundary
+-finite typings can go beyond every fixed prefix--suffix typing, not to
+-separate finite typing from regular post-filtering.
++Thus the arbitrary-$h$ rank-one theorem applies outside every fixed
++prefix--suffix typing.  This example still lies in the same-typing
++regular-filter fragment, since
++$J_s=\varphi_s^{-1}(0,0)\cap h_Q^{-1}(\mathsf{Acc}_Q)$ and the abelian
++kernel is trivially typed substitutable.  Its role is therefore the
++non-boundary nature of the typing, not regular-filter separation.
+ 
+-We next show that the $(1,1)$ prefix--suffix class strictly extends
+-Yoshinaka's class at every level of the MCFG fan-out hierarchy.  The witness is
+-deliberately written without separator symbols.  Yoshinaka's Example~3 uses
+-the separator-marked family
+-\[
+- L_m^{\mathrm Y}
+- =\{\mathtt a_1^n\mathtt\#_1\mathtt a_2^n\cdots
+-      \mathtt\#_{2m-1}\mathtt a_{2m}^n:n\ge0\}
+-\]
+-to expose the relevant block boundaries~\cite[Example~3]{Yoshinaka2011}.
+-Our family $H_m$ below removes those separators; the fixed $(1,1)$ typing
+-supplies finite boundary information instead.  This contrast is one concrete
+-reason finite typing is useful in the multidimensional setting.
++We next show strict extension at every fan-out level using a separator-free
++witness.  Yoshinaka's Example~3 instead uses separator-marked equal-block
++languages~\cite[Example~3]{Yoshinaka2011}; here fixed $(1,1)$ typing supplies
++the boundary information.
+ 
+ Following the standard local-testability terminology~\cite{McNaughtonPapert1971}, call
+ $L_{\mathrm{sl}}\subseteq\Sigma^*$ \emph{strictly 2-local} if there is a set
+@@ -3048,44 +2975,28 @@ \subsection{Strictness and Typings beyond Prefix--Suffix Windows}
+ This is exactly the union of the same-typing fragments over all finite
+ homomorphisms on the alphabet:
+ \[
+-  \mathcal F_f^{\mathrm{arb}}=\bigcup_h\Ffrag{f}{h}.
++  \mathcal F_f^{\mathrm{arb}}=\bigcup_h\Ffrag{f}{h},
+ \]
+-Indeed, every $\Ffrag{f}{h}$ uses a regular language $h^{-1}(\mathsf{Acc})$,
+-while every regular $R$ is recognized by some finite transition morphism.
+-Since $\Sigma^*\in\YSub{f}$, the class $\mathcal F_f^{\mathrm{arb}}$ contains
+-every regular language.  Hence, as a single positive-data target class, it is
+-not TxtEx-identifiable by Gold's obstruction for a class containing all finite
+-languages together with an infinite language.  This is why the
+-fixed-typing comparison above is the learning-theoretic one: allowing the
+-regular filter to vary freely with the target destroys the fixed finite bias.
++because every regular language is recognized by a finite transition morphism.
++Since $\Sigma^*\in\YSub{f}$, this union contains all regular languages and,
++as one positive-data target class, is not TxtEx-identifiable by Gold's
++obstruction.  This is why the fixed-typing fragment is the
++learning-theoretically relevant comparison.
+ 
+-The strictness witnesses $H_m$ above still belong to this larger filter
+-family.  Indeed, the abelian kernel
+-$\varphi_m^{-1}(0)$ is in $\YSub{f}$ for every $f$, and
++Both $H_m$ and $L_{\mathrm{intr}}$ still belong to
++$\mathcal F_f^{\mathrm{arb}}$: respectively,
+ \[
+   H_m=\varphi_m^{-1}(0)\cap
+-       \mathtt a_1^+\mathtt a_2^+\cdots\mathtt a_{2m}^+.
++       \mathtt a_1^+\cdots\mathtt a_{2m}^+,
++  \qquad
++  L_{\mathrm{intr}}=\Phi_{\mathrm{intr}}^{-1}(0)\cap Q_{\mathrm{intr}},
+ \]
+-The intrinsic-rank witness also lies in this larger filter family.  With
+-$Q_{\mathrm{intr}}$ and $\Phi_{\mathrm{intr}}$ from the proof of
+-Theorem~\ref{thm:intrinsic-ranktwo-witness},
+-\[
+- L_{\mathrm{intr}}
+- =\Phi_{\mathrm{intr}}^{-1}(0)\cap Q_{\mathrm{intr}},
+-\]
+-where $\Phi_{\mathrm{intr}}^{-1}(0)\in\YSub{f}$ by
+-Proposition~\ref{prop:abelian-coset-filter}(ii), applied to $\Sigma^*$, and
+-$Q_{\mathrm{intr}}$ is regular.  Hence
+-$L_{\mathrm{intr}}\in\mathcal F_f^{\mathrm{arb}}$ for every $f\ge2$.  Its
+-role is intrinsic fan-out/rule-rank separation, not arbitrary regular-filter
+-separation.
+-
+-Proposition~\ref{prop:strong-fanout-separation} already shows that finite
+-typing can go beyond arbitrary regular post-filtering at fan-out one.
+-However, the same language $L_{\mathrm{cd}}$ leaves every finitely typed
+-class once arity two is tested.  The next example shows that the stronger
+-regular-filter separation can persist while the target itself remains in a
+-finitely typed fan-out-two class, even at rule rank one.
++with the kernels in $\YSub{f}$ and the second factors regular.  Thus their
++roles are fan-out/rank and same-typing separation, not arbitrary-filter
++separation.  Proposition~\ref{prop:strong-fanout-separation} gives arbitrary
++regular-filter separation at fan-out one but leaves every finitely typed class
++once arity two is tested.  The next theorem shows that such separation can
++persist for a finitely typed fan-out-two, rank-one target.
+ 
+ \begin{theorem}[A fan-out-two typed language beyond arbitrary regular filtering]
+ \label{thm:arbitrary-filter-separation}
+@@ -3259,33 +3170,22 @@ \section{Conclusion}
+ \label{sec:conclusion}
+ 
+ Finite-monoid typing gives a compositional bias for positive-data MCFG
+-learning: exact reconstruction and TxtEx identification hold for every chosen
+-pair $(f,h)$, while bounded rule rank yields polynomial-time updates.  The
+-fan-out parameter is part of the bias rather than a harmless representational
+-upper bound.  Loss of substitutability at larger tested arity already occurs
+-in Yoshinaka's trivial-typing setting, while $L_{\mathrm{cd}}$ shows the
+-stronger fact that such a fan-out-two failure need not be repairable by any
+-finite typing.  Conversely, at every hierarchy level $m\ge2$,
+-Theorem~\ref{thm:every-fanout-strictness} gives a rank-one language of minimum
+-fan-out $m$ in the $(1,1)$-typed class but outside Yoshinaka's class and its
+-same-typing regular-filter fragment.  The language $L_\star$ strengthens this
+-at fan-out two by excluding arbitrary target-dependent regular filtering.
+-
+-For characteristic-data length, two positive regimes are established.  Rule
+-rank one gives a grammar-size polynomial for every fixed $h$, while typings
+-factoring through a bounded prefix--suffix window give a
++learning: every fixed $(f,h)$ admits exact reconstruction and TxtEx
++identification, with polynomial-time updates under a fixed rule-rank cap.
++Fan-out is part of the bias: $L_{\mathrm{cd}}$ shows that increasing tested
++arity can destroy substitutability beyond repair by any finite typing, while
++Theorem~\ref{thm:every-fanout-strictness} gives typed rank-one witnesses of
++minimum fan-out $m$ outside Yoshinaka's class.  The language $L_\star$
++additionally excludes arbitrary target-dependent regular filtering.
++
++For characteristic data, arbitrary fixed typing has a grammar-size polynomial
++at rule rank one, while prefix--suffix-determined typing has a
+ grammar-size-and-rule-thickness polynomial at arbitrary fixed rank.
+-Theorem~\ref{thm:intrinsic-ranktwo-witness} supplies a single boundary-typed
+-non-context-free target that has minimum fan-out two and remains outside the
+-rank-one regime even when competing presentations may use arbitrary finite
+-fan-out; it is already outside Yoshinaka's trivial-typing class at arity one.  An auxiliary no-splitting corollary gives a
+-simple sufficient condition under which full refinement preserves rule
+-thickness exactly.  Full yield-type refinement can nevertheless increase rule
+-thickness exponentially already at fan-out one and rank two.
+-Appendix~\ref{app:normalization-details} shows a parallel exponential
+-obstruction for eliminating empty tuple components, while reduced
+-$\lambda$-free inputs---even with deleting rules---admit polynomial thickness
+-transfer.
++Theorem~\ref{thm:intrinsic-ranktwo-witness} supplies a boundary-typed
++non-context-free target of minimum fan-out and rule rank two.  Full yield-type
++refinement and empty-component elimination can nevertheless cause exponential
++thickness growth; Appendix~\ref{app:normalization-details} records the latter
++normalization details.
+ 
+ \begin{openproblem}[Original-thickness bound for arbitrary finite typing]
+ Fix $f,r_{\max}$ and a finite typing $h$.  Does every reduced good
+@@ -3408,7 +3308,7 @@ \section{Details of the Good Normalization}
+ a subset of that image.  The conversion preserves fan-out and rule rank.  Yoshinaka explicitly notes,
+ after combining the standard good-form conversions with Lemma~1, that for
+ fixed fan-out and rank the equivalent good grammar has size
+-$O(\|G\|)$~\cite[Section~2.3, immediately after Lemma~1]{Yoshinaka2011}.
++$O(\|G\|)$~\cite[Section~2.3, after Example~2]{Yoshinaka2011}.
+ The merge operation only concatenates adjacent components and introduces no
+ empty component or variable reordering, so the preceding $\lambda$-free and
+ nonpermuting properties are preserved.  Trimming can only decrease size and
