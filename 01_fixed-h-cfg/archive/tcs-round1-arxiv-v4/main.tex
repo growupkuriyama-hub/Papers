@@ -997,3 +997,2267 @@ later only for the convergence proof. Rather, it is precisely the
 working space, or finite observational interface, on which the fixed-$h$
 reconstruction theory operates.
 \end{remark}
+\section{Exact Reconstruction and Its Learning-Theoretic Consequences}
+\label{sec:algo}
+
+Let $L\in\Ccf{h}$, let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar for $L$, and let $\widetilde G$ be the typed grammar obtained in Section~\ref{sec:typing}. By Theorem~\ref{thm:finite-typed-basis}, the finite typed local structure of $\widetilde G$ is exposed by the finite observation set $\CS(\widetilde G)$. In this section, we show that whenever a finite sample contains that observation set, the canonical learner grammar exactly recovers the target language. Identification in the limit then follows as an immediate consequence.
+
+The proof of exact reconstruction proceeds in two stages. First, Lemmas~\ref{lem:local-rule-realization}, \ref{lem:transport}, and~\ref{lem:substitution} establish three local facts: that the typed reconstruction basis is visible in $\hat G(K)$ whenever $K$ contains $\CS(\widetilde G)$; that typed nonterminals can be transported between outer contexts; and that internal strings with equal $h$-type can be substituted within a fixed outer context. Next, Theorem~\ref{thm:complete} combines these facts by induction on derivation height to prove $L\subseteq L(\hat G(K))$, and Theorem~\ref{thm:soundness} proves $L(\hat G(K))\subseteq L$ by induction on derivation height in $\hat G(K)$.
+
+\subsection{The learner}\label{subsec:learner}
+
+For a finite set $K\subseteq\Sigma^*$, define $\hat V(K):=\{[x:u,v]\mid uxv\in K\}$, and let $\hat G(K)=(\hat V(K)\cup\{\hat S\},\Sigma,\hat P(K),\hat S)$ be the grammar with the following rule families.
+\begin{enumerate}[label=\textup{(\arabic*)},nosep,leftmargin=2.2em]
+\item If all three nonterminals belong to $\hat V(K)$, then $[xy:u,v]\to[x:u,yv]\,[y:ux,v]$;
+\item if $[x:u,v],[x:u',v']\in\hat V(K)$, then $[x:u,v]\to[x:u',v']$;
+\item if $[x:u,v],[x':u,v]\in\hat V(K)$ and $h(x)=h(x')$, then $[x:u,v]\to[x':u,v]$;
+\item for $a\in\Sigma$, $[a:u,v]\to a$;
+\item for $w\in K$, $\hat S\to[w:\lambda,\lambda]$, and if $\lambda\in K$, then also $\hat S\to\lambda$.
+\end{enumerate}
+For a finite text prefix $(w_1,\dots,w_n)$, define the learner by $\mathcal A_h(w_1,\dots,w_n):=\hat G(\{w_1,\dots,w_n\})$.
+
+\begin{remark}
+The soundness of Rule~\textup{(2)} is established in the proof of
+Theorem~\ref{thm:soundness} below. Concretely, if
+$[x:u,v]\to[x:u',v']$ and then $[x:u',v']\Rightarrow^* y$, the induction in
+Theorem~\ref{thm:soundness} yields $u'yv'\in L$ and $h(y)=h(x)$, while
+$u'xv',uxv\in K\subseteq L$ give $(u',v')\in\D_L(x)$ and $(u,v)\in\D_L(x)$.
+Hence $(u',v')\in\D_L(x)\cap\D_L(y)$, so by $\sim_h$-substitutability we obtain
+$\D_L(x)=\D_L(y)$, and therefore $(u,v)\in\D_L(y)$, that is, $uyv\in L$.
+
+Rule~\textup{(3)} performs substitution within a fixed outer context: it replaces the internal fragment by another string with the same $h$-value while leaving the surrounding context unchanged. A rule $[x:u,v]\to[x':u,v]$ exists only when $[x:u,v],[x':u,v]\in\hat V(K)$, that is, only when $uxv,ux'v\in K\subseteq L$. Hence $(u,v)\in\D_L(x)\cap\D_L(x')$. Combining this with $h(x)=h(x')$ and the $\sim_h$-substitutability of $L$, we obtain $\D_L(x)=\D_L(x')$.
+\end{remark}
+
+For the remainder of this section, fix a finite sample $K$ satisfying $\CS(\widetilde G)\subseteq K\subseteq L$.
+
+\subsection{Local realization, transport, and substitution}
+
+We isolate the local facts needed to lift derivations of $\widetilde G$ to derivations of $\hat G(K)$.
+
+\begin{lemma}[Local rule realization]
+\label{lem:local-rule-realization}
+Let $X\to\beta$ be a realized non-start rule of $\widetilde G$. Then its canonical observation word $u_X\,\omega(\beta)\,v_X$ belongs to $K$, and the corresponding local configuration is visible in $\hat G(K)$. More precisely, \textup{(i)} if $X\to a$, then $[\omega(X):u_X,v_X]\to a$ is a rule of $\hat G(K)$, and \textup{(ii)} if $X\to YZ$, then $[\omega(X):u_X,v_X]$, $[\omega(Y)\omega(Z):u_X,v_X]$, $[\omega(Y):u_X,\omega(Z)v_X]$, and $[\omega(Z):u_X\omega(Y),v_X]$ all belong to $\hat V(K)$.
+\end{lemma}
+
+\begin{proof}
+Since $X\to\beta$ is a realized non-start rule of $\widetilde G$, its canonical observation word $u_X\omega(\beta)v_X$ belongs by definition to $\CS(\widetilde G)$, and hence to $K$.
+
+If $X\to a$, then $\omega(X)=a$, so $u_Xav_X\in K$, and therefore $[a:u_X,v_X]\in\hat V(K)$. Hence, by Rule~\textup{(4)}, $[\omega(X):u_X,v_X]\to a$ is a rule of $\hat G(K)$.
+
+Now suppose $X\to YZ$. Then
+$u_X\,\omega(Y)\omega(Z)\,v_X=u_X\,\omega(\beta)\,v_X\in K$\footnote{Here $\beta=YZ$. Moreover, since $\omega$ is defined as the canonical terminal yield of a productive string of symbols, we have $\omega(\beta)=\omega(YZ)=\omega(Y)\omega(Z)$.}.
+Therefore, from the three factorizations
+$u_X\cdot\omega(Y)\omega(Z)\cdot v_X$,
+$u_X\cdot\omega(Y)\cdot\omega(Z)v_X$,
+and
+$u_X\omega(Y)\cdot\omega(Z)\cdot v_X$,
+it follows that
+$[\omega(Y)\omega(Z):u_X,v_X]$,
+$[\omega(Y):u_X,\omega(Z)v_X]$,
+and
+$[\omega(Z):u_X\omega(Y),v_X]$
+all belong to $\hat V(K)$.
+Furthermore, by Lemma~\ref{lem:typed-cs},
+$u_X\omega(X)v_X\in\CS(\widetilde G)\subseteq K$,
+and hence
+$[\omega(X):u_X,v_X]\in\hat V(K)$
+as well.
+\end{proof}
+
+\begin{lemma}[Transport]
+\label{lem:transport}
+If $[x:u,v],[x:u',v']\in\hat V(K)$, then $[x:u,v]\Rightarrow_{\hat G(K)}[x:u',v']$.
+\end{lemma}
+
+\begin{proof}
+This is exactly Rule~\textup{(2)}.
+\end{proof}
+
+\begin{lemma}[Substitution]
+\label{lem:substitution}
+If $[x:u,v],[x':u,v]\in\hat V(K)$ and $h(x)=h(x')$, then $[x:u,v]\Rightarrow_{\hat G(K)}[x':u,v]$.
+\end{lemma}
+
+\begin{proof}
+This is exactly Rule~\textup{(3)}.
+\end{proof}
+
+\subsection{Exact reconstruction}
+
+\begin{theorem}
+\label{thm:complete}
+If $K$ is finite and satisfies $\CS(\widetilde G)\subseteq K\subseteq L$, then $L\subseteq L(\hat G(K))$.
+\end{theorem}
+
+\begin{proof}
+We prove the following claim by induction on the height of a fixed derivation $X\Rightarrow_{\widetilde G}^* w$.
+
+\smallskip\noindent\emph{Claim.} If $X$ is a reachable and productive non-start symbol of $\widetilde G$, $\chi(X)=\langle u_X,v_X\rangle$, and $X\Rightarrow_{\widetilde G}^* w$, then $[\omega(X):u_X,v_X]\Rightarrow_{\hat G(K)}^* w$.
+
+\smallskip If the derivation height in $\widetilde G$ is $1$, then $X\to a$ and $\omega(X)=a$. By Lemma~\ref{lem:local-rule-realization}, the rule $[\omega(X):u_X,v_X]\to a=w$ belongs to $\hat G(K)$.
+
+Now consider the case where the derivation height is greater than $1$. Since $G$ is in SSBNF, the first non-start rule is binary, so let $X\to YZ$, $Y\Rightarrow_{\widetilde G}^* w_1$, $Z\Rightarrow_{\widetilde G}^* w_2$, and $w=w_1w_2$. Since $X$ is reachable and productive, and the fixed derivation
+$X\Rightarrow_{\widetilde G}^* w$ begins with $X\to YZ$ and continues with
+$Y\Rightarrow_{\widetilde G}^* w_1$ and $Z\Rightarrow_{\widetilde G}^* w_2$,
+both $Y$ and $Z$ are reachable and productive as well. Hence
+$X\to YZ$ is a realised non-start rule of $\widetilde G$. By Lemma~\ref{lem:local-rule-realization}, we have
+$[\omega(X):u_X,v_X]$,
+$[\omega(Y)\omega(Z):u_X,v_X]$,
+$[\omega(Y):u_X,\omega(Z)v_X]$,
+and
+$[\omega(Z):u_X\omega(Y),v_X]\in\hat V(K)$,
+and by Rule~\textup{(1)},
+$[\omega(Y)\omega(Z):u_X,v_X]\to[\omega(Y):u_X,\omega(Z)v_X]\,[\omega(Z):u_X\omega(Y),v_X]$.
+Moreover, by Lemma~\ref{lem:typed-data}, $h(\omega(X))=h(\omega(Y)\omega(Z))$\footnote{Here $X\to YZ$ is a typed rule, so there exist $m,n,p,q,r\in M$ such that
+$X=A_p^{m,n}$, $Y=B_q^{m,rn}$, and $Z=C_r^{mq,n}$,
+with $qr=p$.
+On the other hand, by Lemma~\ref{lem:typed-data}, we have $h(\omega(X))=p$, $h(\omega(Y))=q$, and $h(\omega(Z))=r$.
+Therefore
+$h(\omega(X))=p=qr=h(\omega(Y))h(\omega(Z))=h(\omega(Y)\omega(Z))$.},
+so by Lemma~\ref{lem:substitution},
+$[\omega(X):u_X,v_X]\Rightarrow_{\hat G(K)}[\omega(Y)\omega(Z):u_X,v_X]$.
+
+By Lemma~\ref{lem:typed-cs}, we have
+$u_Y\omega(Y)v_Y,u_Z\omega(Z)v_Z\in\CS(\widetilde G)\subseteq K$,
+and hence
+$[\omega(Y):u_Y,v_Y],[\omega(Z):u_Z,v_Z]\in\hat V(K)$.
+The source nonterminals
+$[\omega(Y):u_X,\omega(Z)v_X]$ and
+$[\omega(Z):u_X\omega(Y),v_X]$ belong to $\hat V(K)$ by
+Lemma~\ref{lem:local-rule-realization} applied to the realised rule
+$X\to YZ$, while the target nonterminals
+$[\omega(Y):u_Y,v_Y]$ and $[\omega(Z):u_Z,v_Z]$ belong to
+$\hat V(K)$ by the preceding application of Lemma~\ref{lem:typed-cs}.
+Therefore Lemma~\ref{lem:transport}, which is just Rule~\textup{(2)}, gives
+\[
+[\omega(Y):u_X,\omega(Z)v_X]
+\Rightarrow_{\hat G(K)}
+[\omega(Y):u_Y,v_Y]
+\]
+and
+\[
+[\omega(Z):u_X\omega(Y),v_X]
+\Rightarrow_{\hat G(K)}
+[\omega(Z):u_Z,v_Z].
+\]
+By the induction hypothesis,
+$[\omega(Y):u_Y,v_Y]\Rightarrow_{\hat G(K)}^* w_1$
+and
+$[\omega(Z):u_Z,v_Z]\Rightarrow_{\hat G(K)}^* w_2$.
+Combining these derivations, we obtain
+$[\omega(X):u_X,v_X]\Rightarrow_{\hat G(K)}^* w_1w_2=w$,
+proving the claim.
+
+Now let $w\in L$. If $w=\lambda$, then
+$\lambda\in\CS(\widetilde G)\subseteq K$, so by Rule~\textup{(5)} we
+have $\hat S\to\lambda$. Suppose next that $w\neq\lambda$. Choose
+$S_0\to A\in P$ such that $A\Rightarrow_G^* w$, and put $p:=h(w)$. As
+in the proof of Lemma~\ref{lem:typed}\textup{(iii)}, the full typed
+refinement has the rule $\widetilde S\to A_p^{e_M,e_M}$ and a derivation
+$A_p^{e_M,e_M}\Rightarrow_{\widetilde G^{\mathrm{full}}}^* w$; hence
+the typed symbol $X:=A_p^{e_M,e_M}$ is reachable and productive and
+survives in the trimmed grammar $\widetilde G$, with
+$X\Rightarrow_{\widetilde G}^* w$. Since $\widetilde S\to X$ is a rule
+of $\widetilde G$, we have $\chi(X)=\langle\lambda,\lambda\rangle$.
+By Lemma~\ref{lem:typed-cs}, $\omega(X)\in\CS(\widetilde G)\subseteq K$,
+and therefore Rule~\textup{(5)} gives
+$\hat S\to[\omega(X):\lambda,\lambda]$. Applying the claim, we obtain
+$[\omega(X):\lambda,\lambda]\Rightarrow_{\hat G(K)}^* w$, and hence
+$w\in L(\hat G(K))$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:soundness}
+If $K\subseteq L$ is finite, then $L(\hat G(K))\subseteq L$.
+\end{theorem}
+
+\begin{proof}
+We prove the following claim by induction on the derivation height in $\hat G(K)$.
+
+\smallskip\noindent\emph{Claim.} If $[x:u,v]\Rightarrow_{\hat G(K)}^* w$, then $uwv\in L$ and $h(w)=h(x)$.
+
+\smallskip If the first rule is Rule~\textup{(4)}, then the whole derivation consists of that single step, so $x=a=w$. Therefore $uwv=uav\in K\subseteq L$ and $h(w)=h(x)$.
+
+If the first rule is Rule~\textup{(2)}, then
+$[x:u,v]\to[x:u',v']\Rightarrow_{\hat G(K)}^* w$.
+By the induction hypothesis, $u'wv'\in L$ and $h(w)=h(x)$.
+Also, since $u'xv',uxv\in K\subseteq L$, we have $(u',v')\in\D_L(x)\cap\D_L(w)$.
+By $h(x)=h(w)$ and the $\sim_h$-substitutability of $L$, it follows that $\D_L(x)=\D_L(w)$.
+Hence $(u,v)\in\D_L(w)$, that is, $uwv\in L$.
+
+If the first rule is Rule~\textup{(3)}, then
+$[x:u,v]\to[x':u,v]\Rightarrow_{\hat G(K)}^* w$
+with $h(x)=h(x')$.
+By the induction hypothesis, $uwv\in L$ and $h(w)=h(x')=h(x)$.
+
+If the first rule is Rule~\textup{(1)}, then
+$[xy:u,v]\to[x:u,yv]\,[y:ux,v]\Rightarrow_{\hat G(K)}^* w_1w_2=w$
+with
+$[x:u,yv]\Rightarrow_{\hat G(K)}^* w_1$
+and
+$[y:ux,v]\Rightarrow_{\hat G(K)}^* w_2$.
+By the induction hypothesis,
+$uw_1yv\in L$,
+$uxw_2v\in L$,
+$h(w_1)=h(x)$,
+and
+$h(w_2)=h(y)$,
+so
+$h(w)=h(w_1)h(w_2)=h(x)h(y)=h(xy)$.
+Also, since $uxyv\in K\subseteq L$, we have $(u,yv)\in\D_L(x)\cap\D_L(w_1)$.
+By $h(x)=h(w_1)$ and $\sim_h$-substitutability, it follows that $\D_L(x)=\D_L(w_1)$.
+Hence $(u,w_2v)\in\D_L(x)=\D_L(w_1)$, and therefore $uw_1w_2v\in L$.
+This proves the claim.
+
+Now let $w\in L(\hat G(K))$. If $w=\lambda$, then $\lambda\in K\subseteq L$. Otherwise, by Rule~\textup{(5)}, there exists $x\in K$ such that
+$\hat S\to[x:\lambda,\lambda]\Rightarrow_{\hat G(K)}^* w$.
+Applying the claim with $u=v=\lambda$, we obtain $w\in L$.
+\end{proof}
+
+\begin{theorem}[Exact reconstruction from finite typed data]
+\label{thm:reconstruction-fixed-h}
+If $K$ is finite and satisfies $\CS(\widetilde G)\subseteq K\subseteq L$, then $L(\hat G(K))=L$. Equivalently, whenever a finite sample exposes the finite typed reconstruction basis of $\widetilde G$, the canonical learner grammar $\hat G(K)$ exactly reconstructs the target language.
+\end{theorem}
+
+\begin{proof}
+This follows by combining Theorem~\ref{thm:complete} and Theorem~\ref{thm:soundness}.
+\end{proof}
+
+\subsection{Identification in the limit}
+
+\begin{corollary}
+\label{cor:ilt}
+Every language in $\Ccf{h}$ is identifiable in the limit from positive data by $\mathcal A_h$.
+\end{corollary}
+
+\begin{proof}
+Let $L\in\Ccf{h}$, and let $\widetilde G$ be the typed grammar of a reduced SSBNF grammar for $L$. By Theorem~\ref{thm:reconstruction-fixed-h}, we have $L(\hat G(K))=L$ for every finite sample $K$ satisfying $\CS(\widetilde G)\subseteq K\subseteq L$. Every text for $L$ eventually contains every word in the finite set $\CS(\widetilde G)$, and therefore the learner $\mathcal A_h$ eventually stabilizes to a correct hypothesis for $L$.
+\end{proof}
+
+
+
+\section{Computational Consequences of Fixed-\texorpdfstring{$h$}{h} Reconstruction}
+\label{sec:complexity}
+
+In this section we establish the computational part of Theorem~\ref{thm:main}. The main result is that $\hat G(K)$ can be constructed and updated in time polynomial in $\|K\|$. As noted in Remark~\ref{rem:main-poly-caveat}, this does not imply a polynomial upper bound on the size of characteristic samples for the general class $\Ccf{h}$; that stronger result is obtained only for the linear subclass in Section~\ref{sec:linear}.
+
+\subsection{Polynomial-time construction of the canonical hypothesis}
+
+Recall that for a finite set $K\subseteq\Sigma^*$, the learner outputs the grammar $\hat G(K)=(\hat V(K)\cup\{\hat S\},\Sigma,\hat P(K),\hat S)$ determined by $\hat V(K):=\{[x:u,v]\mid uxv\in K\}$. As above, we measure the size of a finite sample by $\|K\|:=\sum_{w\in K}|w|$, and write $\ell_{\max}:=\max\{|w|\mid w\in K\}$.
+
+\begin{theorem}\label{thm:poly-build}
+For fixed $h$, the grammar $\hat G(K)$ can be constructed from a finite sample $K$ in time $O(\|K\|^5)$.
+\end{theorem}
+
+\begin{proof}
+Since $h$ is fixed, the finite monoid $M$, its multiplication table, and the values $h(a)$ for $a\in\Sigma$ are given as part of the background data. Hence for any $w\in\Sigma^*$, the value $h(w)$ can be computed in time linear in $|w|$.
+
+To make the construction precise, we first specify how elements of $\hat V(K)$ are represented. For each component string $u$, $x$, and $v$ appearing in a factorization $uxv=w$ with $w\in K$, we maintain a dictionary $\mathsf{Comp}$ keyed by the string itself, and assign a unique integer identifier $\mathrm{id}(z)$ to each distinct registered string $z$. If $\mathsf{Comp}$ is implemented as a trie over the finite alphabet $\Sigma$, then lookup and insertion for a string $z$ take time $O(|z|)$. Thereafter, each nonterminal $[x:u,v]$ is stored as the integer triple $(\mathrm{id}(x),\mathrm{id}(u),\mathrm{id}(v))$. Consequently, once identifiers have been assigned, equality of two components can be tested in constant time by comparing their identifiers.
+
+We first construct $\hat V(K)$. For each $w\in K$, we enumerate all factorizations $uxv=w$, and for each such factorization append the candidate triple $(\mathrm{id}(x),\mathrm{id}(u),\mathrm{id}(v))$ to a list $\mathcal L$. A word of length $m$ has at most $(m+1)(m+2)/2=O(m^2)$ factorizations, so the total number of candidates satisfies $|\mathcal L|=O(\sum_{w\in K}|w|^2)=O(\|K\|^2)$. For each factorization, we perform three trie lookups or insertions, and the sum of the component lengths is $|u|+|x|+|v|=|w|$. Therefore the total cost over all factorizations arising from a word of length $m$ is $O(m^3)$. It follows that the total time needed to generate $\mathcal L$ and build the component dictionary $\mathsf{Comp}$ is $O(\sum_{w\in K}|w|^3)\le O(\|K\|^3)$.
+
+Next, we sort $\mathcal L$ in lexicographic order on integer triples and remove duplicates to obtain $\hat V(K)$. Since each coordinate is an integer of magnitude at most $|\mathcal L|$, this sorting\footnote{
+Each candidate is represented by an integer triple $(i,j,k)$.
+A standard comparison-based sort would require
+$O(|\mathcal L|\log |\mathcal L|)$ time,
+but since the range of each coordinate consists of at most $|\mathcal L|$ identifiers,
+the triples can instead be sorted in linear time by radix sort using counting sort.
+More precisely, one applies a stable counting sort three times, first on the third coordinate, then on the second, and finally on the first.
+Because stability preserves the relative order of elements with equal key values,
+the order established at earlier stages is preserved at later stages.
+Hence the final result is the lexicographic order on the full triples $(i,j,k)$.
+Since each counting sort runs in $O(|\mathcal L|)$ time,
+the total sorting time is also $O(|\mathcal L|)$.
+} can be carried out in time $O(|\mathcal L|)$. Thus the entire construction of $\hat V(K)$ is completed in time $O(\|K\|^3)$. In particular, $|\hat V(K)|=O(|\mathcal L|)=O(\|K\|^2)$.
+
+We now estimate the five rule families in turn.
+
+\smallskip\noindent\emph{Rule family \textup{(1)}.}
+A rule $[xy:u,v]\to [x:u,yv]\,[y:ux,v]$ is uniquely determined by an ordered pair of children $[x:u,s],[y:t,v]\in\hat V(K)$ satisfying $s=yv$ and $t=ux$. Since the component strings themselves are stored in $\mathsf{Comp}$, the equalities $s=yv$ and $t=ux$ can be checked naively by reading the stored strings, each in time $O(\ell_{\max})$. Hence the test for a single ordered pair costs $O(\ell_{\max})$. Moreover, if these equalities hold, then $[x:u,s]\in\hat V(K)$ implies $uxs\in K$, and since $s=yv$, it follows that $uxyv\in K$; therefore the parent $[xy:u,v]$ automatically belongs to $\hat V(K)$. Thus no separate membership test for the parent is needed. It follows that rule family \textup{(1)} can be generated in time $O(|\hat V(K)|^2\ell_{\max})$ by scanning all ordered pairs in $\hat V(K)$.
+
+\smallskip\noindent\emph{Rule family \textup{(2)}.}
+A rule $[x:u,v]\to [x:u',v']$ corresponds exactly to an ordered pair of nonterminals having the same first component $x$. We therefore radix-sort $\hat V(K)$ by the first coordinate $\mathrm{id}(x)$ and group together consecutive elements with the same first coordinate. The sort itself takes time $O(|\hat V(K)|)$. If the block sizes are $m_1,\dots,m_r$, then the number of rules generated from the $i$th block is $m_i^2$. Hence the total time to generate rule family \textup{(2)} is $O(|\hat V(K)|+\sum_{i=1}^r m_i^2)\le O(|\hat V(K)|^2)$. Here equality of first components is tested in constant time by comparing identifiers.
+
+\smallskip\noindent\emph{Rule family \textup{(3)}.}
+First, for each distinct string $x$ that actually occurs as a first component of some element of $\hat V(K)$, we compute $h(x)$ once and cache the value under the corresponding identifier. There are at most $|\hat V(K)|$ such strings, and each satisfies $|x|\le \ell_{\max}$, so this preprocessing takes time $O(|\hat V(K)|\ell_{\max})$.
+
+Next, we radix-sort $\hat V(K)$ by the second and third coordinates, that is, by $(\mathrm{id}(u),\mathrm{id}(v))$, and group together the elements having the same outer context pair $(u,v)$. This sort takes time $O(|\hat V(K)|)$. Within each block, we further partition by the cached value $h(x)$ of the first component $x$. Since the monoid $M$ is a fixed finite set, this further partitioning can be done in time linear in the size of each block. If, within all $(u,v)$-blocks, the sizes of the subblocks with equal $h(x)$ are $n_1,\dots,n_s$, then the number of rules generated from the $j$th subblock is $n_j^2$. Hence the total time to generate rule family \textup{(3)} is $O(|\hat V(K)|\ell_{\max}+|\hat V(K)|+\sum_{j=1}^s n_j^2)\le O(|\hat V(K)|\ell_{\max}+|\hat V(K)|^2)$.
+
+\smallskip\noindent\emph{Rule family \textup{(4)}.}
+For each $[a:u,v]\in\hat V(K)$, we insert the terminal rule $[a:u,v]\to a$. It suffices to arrange that the stored string data in $\mathsf{Comp}$ allow us to read in constant time whether the first component has length $1$, and if so, which $a\in\Sigma$ it is. Thus rule family \textup{(4)} can be generated in time $O(|\hat V(K)|)$.
+
+\smallskip\noindent\emph{Rule family \textup{(5)}.}
+For each $w\in K$, we insert the start rule $\hat S\to [w:\lambda,\lambda]$, and if $\lambda\in K$, we also insert $\hat S\to\lambda$. Therefore rule family \textup{(5)} can be generated in time $O(|K|)$.
+
+Combining these bounds, the total construction time for $\hat G(K)$ is $O(\|K\|^3+|\hat V(K)|^2\ell_{\max}+|\hat V(K)|\ell_{\max}+|\hat V(K)|^2+|K|)$. Since $|\hat V(K)|=O(\|K\|^2)$ and $\ell_{\max}\le \|K\|$, the right-hand side is absorbed into $O(\|K\|^5)$. This proves the theorem.
+\end{proof}
+
+\begin{corollary}\label{cor:poly-update}
+When a new sample word $z$ is added, the updated hypothesis $\hat G(K\cup\{z\})$ can be computed in time $O((\|K\|+|z|)^5)$.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:poly-build} to the finite sample $K\cup\{z\}$.
+\end{proof}
+
+\subsection{The computational part of the fixed-\texorpdfstring{$h$}{h} theorem}
+
+\begin{corollary}\label{cor:main-complexity}
+For fixed $h$, the learner $\mathcal A_h$ constructs and updates the current hypothesis in time polynomial in the size of the observed sample.
+\end{corollary}
+
+\begin{proof}
+By definition, on a finite text prefix $(w_1,\dots,w_n)$ the learner outputs $\mathcal A_h(w_1,\dots,w_n)=\hat G(\{w_1,\dots,w_n\})$. The construction bound is given by Theorem~\ref{thm:poly-build}, and the update bound by Corollary~\ref{cor:poly-update}.
+\end{proof}
+
+Combining Corollary~\ref{cor:main-complexity} with Corollary~\ref{cor:ilt} yields Theorem~\ref{thm:main}. Thus the positive result for the general fixed-$h$ context-free setting has a two-layer structure: exact recoverability from any finite sample exposing $\CS(\widetilde G)$, and polynomial-time construction and update of the corresponding hypothesis grammar.
+
+\begin{remark}
+The upper bound in Theorem~\ref{thm:poly-build} is a safe polynomial upper bound and is not intended to be optimal. In particular, the enumeration of rule family~\textup{(1)} could likely be organized more efficiently than in the coarse worst-case analysis used here. Since the purpose of this section is to establish polynomial-time constructibility of fixed-$h$ hypotheses, we do not pursue sharper bounds.
+\end{remark}
+
+\section{The Linear Subclass: A Full Polynomial Time-and-Data Theorem}
+\label{sec:linear}
+
+For the linear subclass $\Clin{h}$, the obstacle identified in
+Remark~\ref{rem:main-poly-caveat} disappears.
+The constrained spine structure of linear derivations permits polynomial control
+over both the size of the characteristic sample and the lengths of its words.
+This section proves a full polynomial time-and-data theorem for $\Clin{h}$.
+The organisation is as follows.
+Section~\ref{subsec:sslnf} introduces the standard normal form for linear grammars (SSLNF).
+Section~\ref{subsec:linear-typed} introduces the typed linear refinement $H$ and
+establishes length bounds on the characteristic sample.
+Section~\ref{subsec:linear-recon} proves the exact reconstruction lemma for the linear case.
+Section~\ref{subsec:linear-poly} derives the polynomial time-and-data theorem.
+
+\subsection{Start-Symbol-Separated Strict Linear Normal Form}
+\label{subsec:sslnf}
+
+We use the following standard normal form for linear grammars.
+
+\begin{definition}[SSLNF]
+\label{def:sslnf}
+A context-free grammar $G=(V,\Sigma,P,S_0)$ is in
+\emph{start-symbol-separated strict linear normal form} (SSLNF) if every production
+has one of the forms $A\to aB$, $A\to Ba$, $A\to a$, $S_0\to A$, or $S_0\to\lambda$
+(with $A,B\in V\setminus\{S_0\}$ and $a\in\Sigma$), and $S_0$ does not appear
+in the right-hand side of any production.
+\end{definition}
+
+\begin{proposition}
+\label{prop:sslnf}
+Every nonempty linear\footnote{A context-free grammar $G=(V,\Sigma,P,S)$ is \emph{linear} if every rule in $P$ is of the form $A\to uBv$ or $A\to w$, where $A,B\in V$ and $u,v,w\in\Sigma^*$.} context-free language has an equivalent reduced\footnote{A context-free grammar is \emph{reduced} if every nonterminal is reachable from the start symbol and productive; see Definition~\ref{def:reduced}.} SSLNF grammar, and such a grammar can be computed in polynomial time.
+\end{proposition}
+
+\begin{proof}
+Let $L$ be a nonempty linear context-free language. Start with any linear grammar generating $L$, and remove all unreachable and unproductive symbols to obtain a reduced linear grammar $G_1=(V_1,\Sigma,P_1,S_1)$ generating the same language.
+
+Next, introduce a fresh start symbol $S_0\notin V_1$ and add the rule $S_0\to S_1$. If necessary, we will later also allow $S_0\to\lambda$, but we add no other start rules. At this point, the start symbol $S_0$ does not appear on any right-hand side.
+
+After that, eliminate $\varepsilon$-rules for non-start symbols by the standard construction, and then eliminate unit rules $A\to B$ between non-start symbols, again by the standard construction. The crucial point here is that originally each right-hand side contains at most one nonterminal, so after performing these standard transformations, every non-start rule still has at most one nonterminal on its right-hand side. Hence linearity is preserved. Moreover, since the eliminations are restricted to non-start symbols, start-symbol separation is not destroyed. As a result, in polynomial time we obtain a grammar $G_2=(V_2,\Sigma,P_2,S_0)$ generating the same language $L$, such that every non-start rule is of one of the following forms:
+\begin{enumerate}[label=\textup{(\arabic*)},nosep,leftmargin=2.2em]
+\item $A\to uBv$, where $B\in V_2\setminus\{S_0\}$ and $|u|+|v|\ge 1$;
+\item $A\to w$, where $w\in\Sigma^+$.
+\end{enumerate}
+We now refine each non-start rule of $G_2$ into SSLNF form.
+
+\smallskip\noindent\emph{Step 1: refining a rule $A\to uBv$.}
+Write $u=a_1\cdots a_k$ and $v=b_1\cdots b_\ell$. By assumption, $k+\ell\ge 1$. We replace this rule by a sequence of SSLNF rules, according to cases.
+
+\smallskip\noindent\underline{Case $k=0$.}
+Then $\ell\ge 1$, and the right-hand side is $Bv=Bb_1\cdots b_\ell$.
+
+If $\ell=1$, then the rule is already of the form $A\to Bb_1$, which is an allowed SSLNF rule of type $X\to Ya$, so nothing needs to be done.
+
+Now suppose $\ell\ge 2$. Introduce fresh nonterminals $D_1,\dots,D_{\ell-1}$, and replace the original rule $A\to Bb_1\cdots b_\ell$ by the chain
+\[
+A\to D_{\ell-1}b_\ell,\quad
+D_{\ell-1}\to D_{\ell-2}b_{\ell-1},\quad
+\dots,\quad
+D_2\to D_1b_2,\quad
+D_1\to Bb_1.
+\]
+All of these are of type $X\to Ya$. Moreover, for each $i=1,\dots,\ell-1$, one proves by induction on $i$ that $D_i\Rightarrow^* Bb_1\cdots b_i$. Indeed, for $i=1$ this is exactly the rule $D_1\to Bb_1$. If $i\ge 2$, then from $D_i\to D_{i-1}b_i$ and the induction hypothesis we obtain $D_i\Rightarrow^* Bb_1\cdots b_{i-1}b_i=Bb_1\cdots b_i$. Therefore
+$A\Rightarrow D_{\ell-1}b_\ell \Rightarrow^* Bb_1\cdots b_{\ell-1}b_\ell=Bv$,
+so this replacement has exactly the same local effect as the original rule.
+
+\smallskip\noindent\underline{Case $k\ge 1$.}
+Then the right-hand side is $uBv=a_1\cdots a_kBb_1\cdots b_\ell$. We first build a local chain representing the part $Bv$, that is, the nonterminal $B$ followed by the right suffix $v$.
+
+If $\ell=0$, define simply $D_0:=B$. This is not the introduction of a new symbol; it is merely a notational convention reflecting the fact that in this case $Bv=B$.
+
+If $\ell\ge 1$, introduce fresh nonterminals $D_1,\dots,D_\ell$ and define
+\[
+D_1\to Bb_1,\quad
+D_2\to D_1b_2,\quad
+\dots,\quad
+D_\ell\to D_{\ell-1}b_\ell.
+\]
+Then for each $i=1,\dots,\ell$, one proves by induction on $i$ that $D_i\Rightarrow^* Bb_1\cdots b_i$. Hence $D_\ell\Rightarrow^* Bv$. In the case $\ell=0$, we have by definition $D_0=B=Bv$. Thus in every case, the symbol $D_\ell$ (with the understanding that $D_0=B$ when $\ell=0$) represents exactly $Bv$.
+
+We now prepend the left prefix $u=a_1\cdots a_k$ one symbol at a time.
+
+If $k=1$, replace the original rule by the single rule $A\to a_1D_\ell$. This is an allowed SSLNF rule of type $X\to aY$. Since $D_\ell\Rightarrow^* Bv$, we obtain $A\Rightarrow a_1D_\ell\Rightarrow^* a_1Bv=uBv$.
+
+Now suppose $k\ge 2$. Introduce fresh nonterminals $C_1,\dots,C_{k-1}$, and replace the rule by
+\[
+A\to a_1C_1,\quad
+C_1\to a_2C_2,\quad
+\dots,\quad
+C_{k-2}\to a_{k-1}C_{k-1},\quad
+C_{k-1}\to a_kD_\ell.
+\]
+All of these are of type $X\to aY$. Moreover, for each $i=1,\dots,k-1$, one proves by backward induction that
+$C_i\Rightarrow^* a_{i+1}\cdots a_kD_\ell$.
+Indeed, $C_{k-1}\to a_kD_\ell$ is the defining rule, and for $i\le k-2$ one uses $C_i\to a_{i+1}C_{i+1}$ together with the induction hypothesis. Therefore
+$A\Rightarrow a_1C_1\Rightarrow^* a_1\cdots a_kD_\ell\Rightarrow^* a_1\cdots a_kBv=uBv$.
+So in this case as well, the replacement has exactly the same local effect as the original rule.
+
+We have thus shown that every rule $A\to uBv$ can be replaced by a chain of SSLNF rules whose local derivational effect is exactly the original right-hand side $uBv$.
+
+\smallskip\noindent\emph{Step 2: refining a rule $A\to w$.}
+Now consider a rule $A\to w$, and write $w=a_1\cdots a_m\in\Sigma^+$.
+
+If $m=1$, then the rule is already of the form $A\to a_1$, which is an allowed SSLNF terminal rule, so nothing needs to be done.
+
+If $m\ge 2$, introduce fresh nonterminals $E_1,\dots,E_{m-1}$ and replace the original rule by
+\[
+A\to a_1E_1,\quad
+E_1\to a_2E_2,\quad
+\dots,\quad
+E_{m-2}\to a_{m-1}E_{m-1},\quad
+E_{m-1}\to a_m.
+\]
+Here the initial rules are all of type $X\to aY$, and the final rule is of type $X\to a$. Also, for each $i=1,\dots,m-1$, one proves by backward induction that
+$E_i\Rightarrow^* a_{i+1}\cdots a_m$.
+Hence
+$A\Rightarrow a_1E_1\Rightarrow^* a_1\cdots a_m=w$,
+so this replacement again has exactly the same local effect as the original rule.
+
+\smallskip\noindent\emph{Step 3: verification that the language is preserved.}
+In all of the above replacements, the auxiliary nonterminals introduced for a given original rule $\rho$ are used only in the local chain replacing that rule. In other words, an auxiliary nonterminal introduced for one rule never appears in the replacement of any other rule. Therefore, each use of an original rule corresponds exactly to a finite local derivation along the associated replacement chain in the transformed grammar. Conversely, any derivation segment involving auxiliary nonterminals in the transformed grammar must remain inside the replacement chain to which those auxiliary symbols belong, and thus contracts uniquely to a single use of the corresponding original rule.
+
+Applying this correspondence node by node to derivation trees, any derivation tree of the original grammar $G_2$ can be expanded into a derivation tree of the transformed grammar, and conversely any derivation tree of the transformed grammar can be folded back into a derivation tree of $G_2$ by collapsing each local chain into the original rule it replaces. Hence the transformed grammar generates the same language as $G_2$.
+
+\smallskip\noindent\emph{Step 4: verification that the resulting grammar is in SSLNF.}
+In the transformed grammar, every non-start rule is of one of the forms $X\to aY$, $X\to Ya$, or $X\to a$. On the other hand, the start rules are only of the form $S_0\to A$, together with $S_0\to\lambda$ if needed, as arranged in the initial preprocessing stage. Also, the start symbol $S_0$ never appears on a right-hand side. Therefore the resulting grammar is in SSLNF.
+
+\smallskip\noindent\emph{Step 5: reduction.}
+Finally, remove unreachable and unproductive symbols once again. This operation only deletes unnecessary symbols and rules and does not change the form of the remaining rules, so the SSLNF property is preserved. The resulting grammar is therefore a reduced SSLNF grammar generating $L$.
+
+\smallskip\noindent\emph{Complexity.}
+The initial reduction, start-symbol separation, elimination of non-start $\varepsilon$-rules, and elimination of non-start unit rules are all standard polynomial-time procedures. In the final refinement stage, for each rule $A\to uBv$, the number of auxiliary symbols and rules added is linear in $|u|+|v|$, and for each rule $A\to w$, the number added is linear in $|w|$. Hence the total number of added symbols and rules is linear in the total right-hand-side length of the rules of $P_2$. Therefore the refinement stage as a whole is polynomial in the size of the grammar. Combining all steps, the required reduced SSLNF grammar can be computed in polynomial time.
+
+This proves the proposition.
+\end{proof}
+\subsection{Typed Reconstruction Data for the Linear Case}
+\label{subsec:linear-typed}
+
+Fix a reduced SSLNF grammar $G_0=(V_0,\Sigma,P_0,S_0)$ for some $L\in\Clin{h}$.
+In this section we work with a typed refinement $H$ that specialises the general
+construction of Section~\ref{sec:typing} to the linear setting.
+Concretely, $H$ is obtained by applying the typed-refinement construction
+($\widetilde G$ in Section~\ref{sec:typing}) directly to $G_0$;
+since $G_0$ is in SSLNF, the non-start productions take restricted forms
+and only the following typed rule instances appear:
+
+\begin{itemize}[nosep,leftmargin=2.2em]
+  \item If $A\to aB\in P_0$ with $h(a)=s$ and $s\cdot q=p$, then for all $m,n,q\in M$:
+        $A_p^{m,n}\to a\,B_q^{ms,n}$;
+  \item If $A\to Ba\in P_0$ with $h(a)=s$ and $q\cdot s=p$, then for all $m,n,q\in M$:
+        $A_p^{m,n}\to B_q^{m,sn}\,a$
+        (here $B_q^{m,sn}$ carries the linear spine and $a$ is the trailing terminal);
+  \item If $A\to a\in P_0$ with $h(a)=p$, then for all $m,n\in M$:
+        $A_p^{m,n}\to a$;
+  \item If $S_0\to A\in P_0$, then for all $p\in M$: $S_H\to A_p^{e_M,e_M}$;
+  \item If $S_0\to\lambda\in P_0$, then $S_H\to\lambda$.
+\end{itemize}
+
+Finally, remove all unreachable and unproductive symbols and rules to reduce $H$.
+This removal preserves linearity and the SSLNF rule forms.
+(The rule shape $A\to Ba$ is the mirror image of $A\to aB$;
+the arguments below treat both cases symmetrically.)
+
+To avoid notational conflict with $\widetilde G$ from Section~\ref{sec:typing},
+we write $H$ for the typed linear grammar throughout this section.
+Let $W$ denote the set of reachable and productive typed nonterminals of $H$,
+and let $R$ denote the set of realised non-start productions of $H$.
+
+All non-start productions of $H$ have the form $X\to aY$, $X\to Ya$, or $X\to a$.
+Hence every derivation has a unique \emph{spine}, i.e., a unique chain of nonterminals
+carrying the recursive unfolding.
+
+For each $X\in W$ let $\omega(X)$ denote the shortlex-minimal terminal string
+derivable from $X$, and let $\chi(X)=\langle u_X,v_X\rangle$ denote the
+shortlex-minimal context pair such that $S_H\Rightarrow_H^* u_XXv_X$.
+These are defined exactly as $\omega$ and $\chi$ in Section~\ref{sec:typing}
+and are well-defined and finite under the linear structure of $H$
+(cf.\ Theorem~\ref{thm:typed-local-control}).
+
+The following lemma isolates the only non-trivial point needed for the linear length bounds.
+
+\begin{lemma}[Cycle deletion along a strict linear spine]
+\label{lem:linear-cycle-delete}
+Let $Z_0\Rightarrow Z_1\Rightarrow\cdots\Rightarrow Z_t$ be the spine of a strict linear
+derivation in $H$.
+If $Z_i=Z_j$ for some $i<j$, then the segment from $Z_i$ to $Z_j$ can be deleted
+to obtain another strict linear derivation whose spine is shorter by $j-i$ steps.
+However, since the terminal string carried by the deleted segment is omitted,
+the yield of the resulting derivation is a proper subword of the original yield
+and is in general different.
+\end{lemma}
+
+\begin{remark}
+This lemma does not claim yield-equivalence.
+In Lemmas~\ref{lem:linear-shortyield} and~\ref{lem:linear-shortcontext} we apply
+cycle deletion to a derivation chosen to minimise the yield length or context length;
+the deletion then produces a shorter derivation, contradicting minimality.
+The role of this lemma is to make explicit how such a contradiction is constructed.
+\end{remark}
+
+\begin{proof}
+Suppose $Z_i=Z_j$ with $i<j$.
+Since $H$ is in strict linear normal form, each spine step $Z_k\Rightarrow Z_{k+1}$
+is induced by a rule of the form $Z_k\to aZ_{k+1}$ or $Z_k\to Z_{k+1}a$
+($a\in\Sigma$), so each step introduces exactly one terminal into the external context.
+Thus the segment $Z_i\Rightarrow\cdots\Rightarrow Z_j$ carries a nonempty terminal
+string $s\in\Sigma^+$ with $|s|=j-i$.
+
+Since $Z_i=Z_j$, the suffix derivation starting at $Z_j$ can equally well start at $Z_i$.
+Hence
+\[
+  Z_0\Rightarrow\cdots\Rightarrow Z_i\Rightarrow Z_{j+1}\Rightarrow\cdots\Rightarrow Z_t
+\]
+is a valid strict linear derivation in $H$ whose spine is shorter by exactly $j-i$ steps.
+The terminal string $s$ carried by the deleted segment $[i,j)$ does not appear in the
+new derivation, so the yield of the new derivation is obtained from the original yield
+by removing $s$.
+\end{proof}
+
+\begin{lemma}
+\label{lem:linear-shortyield}
+For every $X\in W$ there exists a derivation from $X$ to $\omega(X)$ whose spine
+visits no typed nonterminal twice.
+Consequently $|\omega(X)|\le |W|$.
+\end{lemma}
+
+\begin{proof}
+Choose a terminal derivation $X\Rightarrow_H^* w$ minimising $|w|$; by definition
+$w=\omega(X)$.
+Since $H$ is strictly linear, the derivation has a unique spine
+$X=X_0\Rightarrow X_1\Rightarrow\cdots\Rightarrow X_{t-1}\Rightarrow a_t$,
+with each non-base step contributing exactly one terminal symbol, so $|w|=t$.
+If some typed nonterminal is repeated, say $X_i=X_j$ with $0\le i<j\le t-1$,
+then by Lemma~\ref{lem:linear-cycle-delete} we can delete the segment $[i,j)$
+and obtain a shorter terminal derivation from $X_i$, hence from $X$,
+contradicting the minimality of $|w|$.
+Therefore the spine is simple and $t\le|W|$, giving $|\omega(X)|=t\le|W|$.
+\end{proof}
+
+\begin{lemma}
+\label{lem:linear-shortcontext}
+For every $X\in W$ there exists a derivation witnessing $\chi(X)=\langle u_X,v_X\rangle$
+whose spine visits no typed nonterminal twice before reaching $X$.
+Consequently $|u_X|+|v_X|\le|W|-1$.
+\end{lemma}
+
+\begin{proof}
+Choose a derivation $S_H\Rightarrow_H^* uXv$ minimising $|u|+|v|$; by definition
+$\langle u,v\rangle=\chi(X)$.
+Consider the typed spine $Y_0\Rightarrow Y_1\Rightarrow\cdots\Rightarrow Y_m=X$
+below the start production.
+Since $H$ is strictly linear, each step $Y_i\Rightarrow Y_{i+1}$ adds exactly one
+terminal to the external context (on the left or right), so $|u|+|v|=m$.
+If $Y_i=Y_j$ for some $0\le i<j\le m$, then by Lemma~\ref{lem:linear-cycle-delete}
+we can delete the segment from $Y_i$ to $Y_j$, obtaining another derivation of the
+same form with strictly smaller $|u|+|v|$, contradicting minimality.
+Hence the spine is simple.
+The simple spine $Y_0,Y_1,\dots,Y_m$ consists of pairwise distinct elements of $W$,
+so $m+1\le|W|$, i.e., $m\le|W|-1$.
+Therefore $|u_X|+|v_X|=m\le|W|-1$.
+\end{proof}
+
+We now define a characteristic sample that is more compact than in the general
+context-free case.
+For each $X\in W$ set $\alpha_X:=u_X\omega(X)v_X$.
+For each realised rule $r\in R$ choose one \emph{rule-witness word} $\rho_r$ as follows:
+if $r$ is $X\to a$ set $\rho_r:=u_Xav_X$;
+if $r$ is $X\to aY$ set $\rho_r:=u_Xa\omega(Y)v_X$;
+if $r$ is $X\to Ya$ set $\rho_r:=u_X\omega(Y)av_X$.
+Include $\lambda$ if the start production $S_H\to\lambda$ exists, and define
+\[
+\CS_{\lin}(H):=\{\alpha_X:X\in W\}\cup\{\rho_r:r\in R\}
+\cup\bigl(\{\lambda\}\text{ if }S_H\to\lambda\in P_H\bigr).
+\]
+
+\begin{proposition}
+\label{prop:linear}
+Let $H$ be the typed linear grammar obtained from a reduced SSLNF grammar under
+fixed $h$.  Then:
+\textup{(i)} $|W|=O(|V_0||M|^3)$;
+\textup{(ii)} $|R|=O(|P_0||M|^3)$;
+\textup{(iii)} $|\CS_{\lin}(H)|\le|W|+|R|+1$;
+\textup{(iv)} every word in $\CS_{\lin}(H)$ has length at most $2|W|$.
+In particular, $|\CS_{\lin}(H)|$ and $\max\{|w|:w\in\CS_{\lin}(H)\}$ are both
+polynomial in the size of the original linear grammar, for fixed $h$.
+\end{proposition}
+
+\begin{proof}
+\textup{(i)}:
+Each typed symbol has the form $A_p^{m,n}$ with $A\in V_0\setminus\{S_0\}$ and
+$m,n,p\in M$, so the number of possible typed symbols is at most $|V_0||M|^3$;
+reduction can only decrease this count.
+The rules remaining after reduction all have the form $X\to aY$, $X\to Ya$, or
+$X\to a$, and $S_H$ does not appear on any right-hand side, so $H$ remains in SSLNF
+and is reduced.
+
+\textup{(ii)}:
+Each non-start SSLNF production $A\to aB$, $A\to Ba$, or $A\to a$ generates
+$O(|M|^3)$ typed copies (over $m,n,p\in M$ with the appropriate $q$ determined by
+$h(a)$), so $|R|=O(|P_0||M|^3)$.
+
+\textup{(iii)}:
+By definition $\CS_{\lin}(H)$ contains at most one anchor $\alpha_X$ per $X\in W$,
+at most one rule-witness $\rho_r$ per $r\in R$, and at most one additional word
+$\lambda$, giving $|\CS_{\lin}(H)|\le|W|+|R|+1$.
+
+\textup{(iv)}:
+By Lemmas~\ref{lem:linear-shortyield} and~\ref{lem:linear-shortcontext},
+$|\omega(X)|\le|W|$ and $|u_X|+|v_X|\le|W|-1$, so
+$|\alpha_X|=|u_X|+|\omega(X)|+|v_X|\le(|W|-1)+|W|=2|W|-1$.
+If $r$ is $X\to a$ then $|\rho_r|=|u_X|+1+|v_X|\le|W|$.
+If $r$ is $X\to aY$ or $X\to Ya$ then
+$|\rho_r|=|u_X|+|v_X|+1+|\omega(Y)|\le(|W|-1)+1+|W|=2|W|$.
+Hence every word in $\CS_{\lin}(H)$ has length at most $2|W|$.
+The final claim follows immediately from \textup{(i)}--\textup{(iv)}.
+\end{proof}
+
+\subsection{Exact Reconstruction for the Linear Case}
+\label{subsec:linear-recon}
+
+The sample $\CS_{\lin}(H)$ plays exactly the same role for the typed linear grammar $H$
+as $\CS(\widetilde G)$ (Section~\ref{sec:typing}) plays in the general context-free case.
+To make the correspondence precise:
+whereas in the general case each word in $\CS(\widetilde G)$ records the canonical
+observation $u_X\omega(Y)\omega(Z)v_X$ for a binary rule $X\to YZ$,
+the rule-witness word $\rho_r$ in $\CS_{\lin}(H)$ corresponds to a unary-style rule
+$X\to aY$ or $X\to Ya$ and contains only a single terminal symbol together with one
+child spine ($\omega(Y)$).
+The absence of binary branching is what enables polynomial control over word lengths,
+and the exact reconstruction lemma below exploits this structural simplification.
+
+\begin{lemma}
+\label{lem:linear-complete}
+Let $H$ be the typed linear grammar obtained from a reduced SSLNF grammar.
+If $K$ is finite and $\CS_{\lin}(H)\subseteq K\subseteq L(H)$, then $L(\hat G(K))=L(H)$.
+\end{lemma}
+
+\begin{proof}
+\noindent\emph{Soundness $L(\hat G(K))\subseteq L(H)$.}
+
+We prove the following claim by induction on the derivation height in $\hat G(K)$:
+\begin{quote}
+\emph{Claim.}
+If $[x:u,v]\Rightarrow_{\hat G(K)}^* w$, then $uwv\in L(H)$ and $h(w)=h(x)$.
+\end{quote}
+Here $H$ is the typed refinement of $L$, and by
+Lemma~\ref{lem:typed}\textup{(iii)} we have $L(H)=L$.
+We also use that $K\subseteq L(H)$.
+
+If the first rule is Rule~\textup{(4)}, then $x=a=w$.
+Since $uav\in K\subseteq L(H)$, we obtain $uwv\in L(H)$.
+Also, $h(w)=h(a)=h(x)$.
+
+If the first rule is Rule~\textup{(2)}, then
+$[x:u,v]\to[x:u',v']\Rightarrow_{\hat G(K)}^* w$.
+By the induction hypothesis, $u'wv'\in L(H)$ and $h(w)=h(x)$.
+Also, since $u'xv',uxv\in K\subseteq L(H)$, we have
+$(u',v')\in \D_{L(H)}(x)$ and $(u,v)\in \D_{L(H)}(x)$,
+and since $u'wv'\in L(H)$, we also have
+$(u',v')\in \D_{L(H)}(w)$.
+Hence $(u',v')\in \D_{L(H)}(x)\cap \D_{L(H)}(w)$, and by
+$h(x)=h(w)$ and the $\sim_h$-substitutability of $L(H)$, it follows that
+$\D_{L(H)}(x)=\D_{L(H)}(w)$.
+Therefore $(u,v)\in \D_{L(H)}(w)$, that is, $uwv\in L(H)$.
+
+If the first rule is Rule~\textup{(3)}, then
+$[x:u,v]\to[x':u,v]\Rightarrow_{\hat G(K)}^* w$, with $h(x)=h(x')$.
+By the induction hypothesis, $uwv\in L(H)$ and $h(w)=h(x')$.
+Hence $h(w)=h(x)$ as well.
+
+If the first rule is Rule~\textup{(1)}, then
+\[
+[xy:u,v]\to[x:u,yv]\,[y:ux,v]\Rightarrow_{\hat G(K)}^* w_1w_2=w.
+\]
+By the induction hypothesis, we have
+$uw_1yv\in L(H)$, $uxw_2v\in L(H)$,
+$h(w_1)=h(x)$, and $h(w_2)=h(y)$.
+Therefore
+$h(w)=h(w_1)h(w_2)=h(x)h(y)=h(xy)$.
+Moreover, since $uxyv\in K\subseteq L(H)$, we have
+$(u,yv)\in \D_{L(H)}(x)$,
+while $uw_1yv\in L(H)$ gives
+$(u,yv)\in \D_{L(H)}(w_1)$.
+Hence $(u,yv)\in \D_{L(H)}(x)\cap \D_{L(H)}(w_1)$, and by
+$h(x)=h(w_1)$ and $\sim_h$-substitutability, we obtain
+$\D_{L(H)}(x)=\D_{L(H)}(w_1)$.
+Since $uxw_2v\in L(H)$, we also have
+$(u,w_2v)\in \D_{L(H)}(x)$.
+Therefore $(u,w_2v)\in \D_{L(H)}(w_1)$, and thus
+$uw_1w_2v=uwv\in L(H)$.
+
+This proves the claim.
+Now let $w\in L(\hat G(K))$.
+If $w=\lambda$, then Rule~\textup{(5)} gives
+$\lambda\in K\subseteq L(H)$.
+If $w\neq\lambda$, then by Rule~\textup{(5)} there exists $x\in K$ such that
+\[
+\hat S\to[x:\lambda,\lambda]\Rightarrow_{\hat G(K)}^* w.
+\]
+Applying the claim with $u=v=\lambda$, we obtain $w\in L(H)$.
+Hence $L(\hat G(K))\subseteq L(H)$.
+
+\medskip
+\noindent\emph{Completeness $L(H)\subseteq L(\hat G(K))$.}
+
+For each $X\in W$, write $\widehat X:=[\omega(X):u_X,v_X]$.
+Since $\alpha_X=u_X\omega(X)v_X\in \CS_{\lin}(H)\subseteq K$,
+we have $\widehat X\in \hat V(K)$.
+We show that for every $X\in W$ and every terminal word $z$ with
+$X\Rightarrow_H^* z$, we have
+$\widehat X\Rightarrow_{\hat G(K)}^* z$.
+We prove this by induction on the length of the fixed unique spine in the
+strictly linear derivation in $H$.
+
+If the spine length is $0$, then the realised rule at the root is
+$X\to a$, and hence $z=a$.
+From the corresponding rule-evidence word $\rho_r=u_Xav_X\in K$,
+we obtain $[a:u_X,v_X]\in \hat V(K)$.
+Also, since $a$ is a terminal yield of $X$ via the rule $X\to a$,
+Lemma~\ref{lem:typed-data} gives $h(\omega(X))=h(a)$.
+Therefore Rule~\textup{(3)} yields
+$\widehat X\to[a:u_X,v_X]$,
+and Rule~\textup{(4)} yields
+$[a:u_X,v_X]\to a$.
+Hence $\widehat X\Rightarrow_{\hat G(K)}^* a=z$.
+
+Now assume that the claim has been proved for all derivations whose spine
+length is at most $m$, and consider a derivation of spine length $m+1$.
+
+Suppose first that the first realised rule is $r:X\to aY$.
+Then we may write $z=aw$, where $Y\Rightarrow_H^* w$.
+By the construction of the typed refinement, the typed instance of $r$ has
+the form
+$X=A_p^{m_0,n_0}\to a\,B_q^{m_0s,n_0}$,
+where $s=h(a)$ and $sq=p$.
+From the rule-evidence word
+$\rho_r=u_Xa\omega(Y)v_X\in K$, we obtain
+\[
+[a\omega(Y):u_X,v_X],\quad
+[a:u_X,\omega(Y)v_X],\quad
+[\omega(Y):u_Xa,v_X]
+\]
+all in $\hat V(K)$.
+Hence Rule~\textup{(1)} gives
+\[
+[a\omega(Y):u_X,v_X]\to
+[a:u_X,\omega(Y)v_X]\,[\omega(Y):u_Xa,v_X],
+\]
+and Rule~\textup{(4)} gives
+$[a:u_X,\omega(Y)v_X]\to a$.
+Moreover, since $a\omega(Y)$ is also a terminal yield of $X$ obtained by
+starting with the rule $r$, Lemma~\ref{lem:typed-data} gives
+$h(\omega(X))=h(a\omega(Y))$.
+Therefore Rule~\textup{(3)} yields
+$\widehat X\to[a\omega(Y):u_X,v_X]$.
+
+Now set $\widehat Y:=[\omega(Y):u_Y,v_Y]$.
+Since $\alpha_Y=u_Y\omega(Y)v_Y\in \CS_{\lin}(H)\subseteq K$,
+we have $\widehat Y\in \hat V(K)$,
+and since $\rho_r=u_Xa\omega(Y)v_X\in K$, we also have
+$[\omega(Y):u_Xa,v_X]\in \hat V(K)$.
+Thus Rule~\textup{(2)} also gives
+\[
+[\omega(Y):u_Xa,v_X]
+\Rightarrow_{\hat G(K)}
+\widehat Y .
+\]
+By the induction hypothesis,
+\[
+\widehat Y\Rightarrow_{\hat G(K)}^* w .
+\]
+Combining these derivations, we obtain
+\[
+\widehat X
+\Rightarrow[a\omega(Y):u_X,v_X]
+\Rightarrow[a:u_X,\omega(Y)v_X]\,[\omega(Y):u_Xa,v_X]
+\Rightarrow a\,\widehat Y
+\Rightarrow_{\hat G(K)}^* a\,w=z.
+\]
+
+Suppose next that the first realised rule is $r:X\to Ya$.
+Then we may write $z=wa$, where $Y\Rightarrow_H^* w$.
+From the rule-evidence word
+$\rho_r=u_X\omega(Y)av_X\in K$, we obtain
+\[
+[\omega(Y)a:u_X,v_X],\quad
+[\omega(Y):u_X,av_X],\quad
+[a:u_X\omega(Y),v_X]
+\]
+all in $\hat V(K)$.
+Hence Rule~\textup{(1)} gives
+\[
+[\omega(Y)a:u_X,v_X]\to
+[\omega(Y):u_X,av_X]\,[a:u_X\omega(Y),v_X],
+\]
+and Rule~\textup{(4)} gives
+$[a:u_X\omega(Y),v_X]\to a$.
+Moreover, since $\omega(Y)a$ is also a terminal yield of $X$ obtained by
+starting with the rule $r$, Lemma~\ref{lem:typed-data} gives
+$h(\omega(X))=h(\omega(Y)a)$.
+Therefore Rule~\textup{(3)} yields
+$\widehat X\to[\omega(Y)a:u_X,v_X]$.
+
+Since $\alpha_Y=u_Y\omega(Y)v_Y\in \CS_{\lin}(H)\subseteq K$,
+we have $\widehat Y=[\omega(Y):u_Y,v_Y]\in \hat V(K)$,
+and since $\rho_r\in K$, we also have
+$[\omega(Y):u_X,av_X]\in \hat V(K)$.
+Thus Rule~\textup{(2)} also gives
+\[
+[\omega(Y):u_X,av_X]
+\Rightarrow_{\hat G(K)}
+\widehat Y .
+\]
+By the induction hypothesis,
+\[
+\widehat Y\Rightarrow_{\hat G(K)}^* w .
+\]
+Combining these derivations, we obtain
+\[
+\widehat X
+\Rightarrow[\omega(Y)a:u_X,v_X]
+\Rightarrow[\omega(Y):u_X,av_X]\,[a:u_X\omega(Y),v_X]
+\Rightarrow \widehat Y\,a
+\Rightarrow_{\hat G(K)}^* w\,a=z.
+\]
+
+We have therefore shown that for every $X\in W$ and every terminal word $z$
+with $X\Rightarrow_H^* z$, we have
+$\widehat X\Rightarrow_{\hat G(K)}^* z$.
+
+Finally, let $z\in L(H)$.
+If $z=\lambda$, then $\lambda\in \CS_{\lin}(H)\subseteq K$,
+so Rule~\textup{(5)} gives $\hat S\to\lambda$.
+If $z\neq\lambda$, choose a child $X$ of a start rule such that
+$\chi(X)=\langle\lambda,\lambda\rangle$.
+Then $\widehat X=[\omega(X):\lambda,\lambda]$, and since
+$\alpha_X=\omega(X)\in K$, Rule~\textup{(5)} gives
+$\hat S\to\widehat X$.
+By the claim proved above,
+$\widehat X\Rightarrow_{\hat G(K)}^* z$, and hence
+$z\in L(\hat G(K))$.
+Therefore $L(H)\subseteq L(\hat G(K))$.
+
+Hence $L(\hat G(K))=L(H)$.
+\end{proof}
+
+\subsection{Full Polynomial Time-and-Data Theorem}
+\label{subsec:linear-poly}
+
+We now obtain the final strengthening of the fixed-$h$ theory.
+
+\begin{theorem}
+\label{thm:linear-poly}
+For every explicit finite monoid homomorphism $h:\Sigma^*\to M$, the learner
+$\mathcal A_h$ identifies every language in $\Clin{h}$ from positive data
+in polynomial time and data.
+\end{theorem}
+
+\begin{proof}
+Let $L\in\Clin{h}$, choose a reduced SSLNF grammar for $L$, and let $H$ be its
+typed linear refinement.
+
+We first verify $\CS_{\lin}(H)\subseteq L(H)$.
+We show that each word in $\CS_{\lin}(H)$ belongs to $L(H)$, by type of word.
+\begin{itemize}[nosep,leftmargin=2.2em]
+  \item \emph{Anchor words $\alpha_X=u_X\omega(X)v_X$ ($X\in W$).}
+    Since $X$ is reachable and productive in $H$,
+    $S_H\Rightarrow_H^* u_XXv_X$ and $X\Rightarrow_H^*\omega(X)$.
+    Concatenating, $S_H\Rightarrow_H^* u_X\omega(X)v_X$, so $\alpha_X\in L(H)$.
+  \item \emph{Rule-witness words $\rho_r$ ($r\in R$, $r:X\to a$).}
+    Since $X$ is reachable and productive and $X\Rightarrow_H^* a$ via $r$,
+    we have $S_H\Rightarrow_H^* u_Xav_X$, so $\rho_r\in L(H)$.
+  \item \emph{Rule-witness words $\rho_r$ ($r:X\to aY$).}
+    Since $Y\in W$ is productive, $Y\Rightarrow_H^*\omega(Y)$; rule $r$ gives
+    $X\Rightarrow_H^* a\omega(Y)$; since $X$ is reachable,
+    $S_H\Rightarrow_H^* u_Xa\omega(Y)v_X$, so $\rho_r\in L(H)$.
+    The case $r:X\to Ya$ is symmetric.
+  \item \emph{The word $\lambda$ (when $S_H\to\lambda\in\widetilde P$).}
+    By definition $\lambda\in L(H)$.
+\end{itemize}
+Hence $\CS_{\lin}(H)\subseteq L(H)=L$.
+
+By Lemma~\ref{lem:linear-complete}, $L(\hat G(K))=L$ for every finite sample $K$
+with $\CS_{\lin}(H)\subseteq K\subseteq L(H)=L$.
+Thus $\CS_{\lin}(H)$ is a characteristic sample for $L$ with respect to $\mathcal A_h$.
+
+By Proposition~\ref{prop:linear}, $|\CS_{\lin}(H)|$ and the length of each word in
+$\CS_{\lin}(H)$ are both polynomial in the size
+$\|G_0\|:=|V_0|+|P_0|+|\Sigma|$ of the original linear grammar $G_0$, for fixed $h$
+(in Proposition~\ref{prop:linear}(i)--(iv), 
+
+$|V|=|V_0|$, $|P|=|P_0|$, and $|M|$ is
+a fixed constant).
+Hence $\|\CS_{\lin}(H)\|:=\sum_{w\in\CS_{\lin}(H)}|w|$ is also polynomially bounded.
+By Theorem~\ref{thm:poly-build}, the hypothesis grammar $\hat G(K)=\mathcal A_h(K)$
+can be constructed from any finite sample $K$ in time polynomial in
+$\|K\|:=\sum_{w\in K}|w|$.
+Therefore, once the learner has seen a sample containing $\CS_{\lin}(H)$, it computes
+the correct hypothesis in time polynomial in the sample size, and the sample itself is
+polynomially bounded.
+Hence $\mathcal A_h$ identifies every language in $\Clin{h}$ in polynomial time and data.
+\end{proof}
+
+\begin{remark}
+The fixed-$h$ theory has two levels.
+For the full context-free class $\Ccf{h}$ it yields exact reconstruction from finite
+typed observations, identification in the limit, and polynomial-time hypothesis
+construction from data.
+For the linear subclass $\Clin{h}$ it additionally provides polynomial bounds on
+both the size of the characteristic sample and the lengths of its words,
+establishing a full polynomial time-and-data theorem.
+\end{remark}
+
+
+
+
+
+
+\section{The Strict Inclusion \texorpdfstring{$\mathsf{KL}\subsetneq\mathsf{RS}$}{KL subsetneq RS} at the Regular Level}
+\label{sec:ccl}
+
+The main positive theory of the paper is complete. This section and the next provide structural boundary results that locate the fixed-$h$ framework within the broader landscape of distributional learning. These results are secondary to the main theory but clarify its scope.
+
+We next consider the capped-counter family $\mathrm{CCL}_p$. This family provides the main regular-level evidence for the strict inclusion $\mathsf{KL}\subsetneq\mathsf{RS}$. It makes completely explicit both the recognizing finite monoid and the automata-theoretic structure, and also prepares a sharp contrast with the uncapped language $\mathrm{CCL}$ considered later.
+
+\begin{example}[$\mathrm{CCL}_2$]\label{ex:ccl2-intro}
+Let $\Sigma=\{d,u,;\}$, and consider a pushdown automaton that pushes on $d$, pops on $u$ (rejecting if the stack is empty), and clears the entire stack on $;$. A finite automaton monitors the stack depth and rejects whenever the depth exceeds $2$:
+\[
+  0 \xrightarrow{d} 1 \xrightarrow{d} 2 \xrightarrow{d} \mathit{sink},\qquad
+  2 \xrightarrow{u} 1 \xrightarrow{u} 0,\qquad
+  0 \xrightarrow{u} \mathit{sink},\qquad
+  \{0,1,2\} \xrightarrow{;} 0.
+\]
+A string is accepted iff the run from state $0$ never reaches $\mathit{bad}$. For example, $du,dduu,dd;du\in\mathrm{CCL}_2$, whereas $ddduuu,u\notin\mathrm{CCL}_2$.
+
+Because $\mathrm{CCL}_2$ controls the stack by means of a finite-memory monitor, it collapses to a regular language. A DFA accepting $\mathrm{CCL}_2$ is as follows.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,shorten >=1pt,node distance=26mm,on grid,auto]
+  \node[state,initial,accepting] (q0) {$0$};
+  \node[state,accepting,right=of q0] (q1) {$1$};
+  \node[state,accepting,right=of q1] (q2) {$2$};
+  \node[state,below=of q1] (sink) {$\mathit{sink}$};
+  \path[arrow]
+    (q0) edge[bend left=15] node[above] {$d$} (q1)
+    (q0) edge[loop below] node {$;$} ()
+    (q0) edge[bend right=18] node[left] {$u$} (sink)
+    (q1) edge[bend left=15] node[below] {$u,;$} (q0)
+    (q1) edge[bend left=15] node[above] {$d$} (q2)
+    (q2) edge[bend left=15] node[below] {$u$} (q1)
+    (q2) edge[bend left=32] node[below] {$;$} (q0)
+    (q2) edge[bend left=18] node[right] {$d$} (sink)
+    (sink) edge[loop below] node {$d,u,;$} ();
+\end{tikzpicture}
+\caption{Finite-state depth monitor for $\mathrm{CCL}_2$, corresponding to the formal definition below with $Q_2=\{0,1,2,\mathit{sink}\}$. Here $d$ increases the depth, $u$ decreases it, and $;$ resets the depth to $0$. Underflow and overflow move to the absorbing state $\mathit{sink}$. Hence $\mathrm{CCL}_2=\{\,w\in\Sigma^*\mid \delta_2^*(0,w)\neq\mathit{sink}\,\}$.}
+\label{fig:ccl2-dfa}
+\end{figure}
+
+This language is not $(k,\ell)$-substitutable for any $k,\ell\ge0$; see Theorem~\ref{thm:cclp-non-kl}. However, the monitoring finite automaton induces exactly the algebraic information needed for $\sim$-substitutability, namely a recognizable congruence.
+\end{example}
+
+\begin{remark}
+Since $\mathrm{CCL}_2$ is regular, it can be written as $\mathrm{CCL}_2=(B_2;)^*B_2$, where $B_2:=\bigl(d(du)^*u\bigr)^*\bigl(\varepsilon \cup d(du)^*(\varepsilon \cup d)\bigr)$. Equivalently, $\mathrm{CCL}_2$ is generated by a \emph{right-linear grammar} with nonterminals $S,A,B$, start symbol $S$, and rules $S\to \varepsilon \mid dA \mid ;S$, $A\to \varepsilon \mid uS \mid dB \mid ;S$, and $B\to \varepsilon \mid uA \mid ;S$.
+\end{remark}
+
+\subsection{The capped-counter family}
+
+Fix the alphabet $\Sigma:=\{d,u,;\}$. For a word $w\in\Sigma^*$, define the \emph{current depth} by reading $w$ from left to right: $d$ changes the depth by $+1$, $u$ changes it by $-1$, and $;$ resets the depth to $0$. A run is said to be \emph{safe up to height $p$} if it never lets the depth become negative and never exceeds $p$.
+
+\begin{definition}[Capped-counter language \texorpdfstring{$\mathrm{CCL}_p$}{CCLp}]\label{def:cclp}
+For $p\ge1$, let $\mathrm{CCL}_p\subseteq\Sigma^*$ be the set of all words whose left-to-right run is safe up to height $p$. Equivalently, $\mathrm{CCL}_p$ is accepted by the DFA with state set $Q_p:=\{0,1,\dots,p,\mathit{sink}\}$, initial state $0$, accepting set $\{0,1,\dots,p\}$, and transition function $\delta_p$
+\[
+\begin{aligned}
+\delta_p(i,d)&=
+\begin{cases}
+i+1 & (0\le i<p),\\
+\mathit{sink} & (i=p \text{ or } i=\mathit{sink}),
+\end{cases}\\[0.4ex]
+\delta_p(i,u)&=
+\begin{cases}i-1 & (1\le i\le p),\\
+\mathit{sink} & (i=0 \text{ or } i=\mathit{sink}),
+\end{cases}\\[0.4ex]
+\delta_p(i,;)&=
+\begin{cases}
+0 & (0\le i\le p),\\
+\mathit{sink} & (i=\mathit{sink}).
+\end{cases}
+\end{aligned}
+\]
+\end{definition}
+
+Thus $\mathrm{CCL}_p$ consists of exactly those words whose semicolon-delimited blocks behave as counter paths staying between depth $0$ and depth $p$.
+
+\begin{proposition}\label{prop:cclp-regular}
+For every $p\ge1$, the language $\mathrm{CCL}_p$ is regular.
+\end{proposition}
+
+\begin{proof}
+This is immediate from Definition~\ref{def:cclp}, since $\mathrm{CCL}_p$ is accepted by the finite automaton $(Q_p,\Sigma,\delta_p,0,\{0,1,\dots,p\})$.
+\end{proof}
+
+\subsection{An explicit recognizable-congruence witness}
+
+The regularity of $\mathrm{CCL}_p$ already places it within the
+recognizable-congruence framework, but it is useful to make the witness
+explicit. Let $A_p=(Q_p,\Sigma,\delta_p,0,F_p)$ be the DFA of
+Definition~\ref{def:cclp}, with $F_p:=\{0,1,\dots,p\}$. For a word
+$w\in\Sigma^*$, let $\tau_w:Q_p\to Q_p$ be the state transformation
+induced by $w$, namely $\tau_w(q):=\delta_p(q,w)$. Define the transition
+monoid $M_p$ of $A_p$ by
+\[
+  M_p:=\{\tau_w\mid w\in\Sigma^*\}.
+\]
+For transformations $\tau,\sigma\in M_p$, we write
+\[
+  \tau\cdot\sigma:=\sigma\circ\tau .
+\]
+With this convention, the identity element is
+$\tau_\lambda=\mathrm{id}_{Q_p}$, and the map
+$h_p:\Sigma^*\to M_p$ defined by $h_p(w):=\tau_w$ is a monoid
+homomorphism. Indeed, for all $w,w'\in\Sigma^*$ and all $q\in Q_p$, we
+have
+\[
+  h_p(ww')(q)
+  =\tau_{ww'}(q)
+  =\delta_p(q,ww')
+  =\delta_p(\delta_p(q,w),w')
+  =(\tau_{w'}\circ\tau_w)(q)
+  =(\tau_w\cdot\tau_{w'})(q),
+\]
+and hence
+\[
+  h_p(ww')=h_p(w)\cdot h_p(w').
+\]
+Thus a word $w$ is finitely summarized not only by the state it reaches
+from the initial state, but by the full state transformation it induces
+on all states.
+
+\begin{proposition}\label{prop:cclp-rs}
+For every $p\ge1$, the language $\mathrm{CCL}_p$ is $\sim_{h_p}$-substitutable; in particular, $\mathrm{CCL}_p\in\mathsf{RS}$.
+\end{proposition}
+
+\begin{proof}
+Since the finite monoid $M_p$ recognizes $\mathrm{CCL}_p$, if we let $F_p':=\{\tau\in M_p\mid \tau(0)\in F_p\}$, then $\mathrm{CCL}_p=h_p^{-1}(F_p')$. Indeed, a word $w$ is accepted iff the transformation induced by $w$ sends $0$ to a non-sink state. Hence $\mathrm{CCL}_p$ is recognized by $h_p:\Sigma^*\to M_p$, and Proposition~\ref{prop:regular-auto} implies that $\mathrm{CCL}_p$ is $\sim_{h_p}$-substitutable.
+\end{proof}
+
+
+\subsection{Failure of \texorpdfstring{$(k,\ell)$}{(k,l)}-substitutability}
+
+We now show that the bounded prefix-suffix hierarchy cannot capture the capped-counter family once the cap exceeds the trivial bound $1$.
+
+\begin{theorem}\label{thm:cclp-non-kl}
+For every fixed $p\ge2$, the language $\mathrm{CCL}_p$ is not $(k,\ell)$-substitutable for any $k,\ell\ge0$. By contrast, $\mathrm{CCL}_1$ is exceptionally $(1,1)$-substitutable; see Appendix~\ref{app:ccl1}.
+\end{theorem}
+
+\begin{proof}
+Fix $p \ge 2$. To show that $\mathrm{CCL}_p$ is not $(k,\ell)$-substitutable for any $k,\ell \ge 0$, let $k,\ell \ge 0$ be arbitrary and construct witnesses contradicting Yoshinaka's definition.
+
+Set $m := \lfloor k/2 \rfloor$ and $q := k-2m \in \{0,1\}$, and define $\xi := (du)^m d^q$ and $\eta := ;^\ell$. Then $|\xi| = 2m+q = k$ and $|\eta| = \ell$. In particular, if $k=0$, then $m=q=0$, so $\xi = \lambda$.
+
+We first record the basic behavior of $\xi$. The word $(du)^m$ is a repetition of blocks that temporarily increase the depth by $1$ and then immediately return it to its previous value. Hence, when read from depth $0$, every prefix of $(du)^m$ stays within $\{0,1\}$, and the final depth is $0$. Appending $d^q$ then leaves the depth unchanged if $q=0$, and increases it by $1$ if $q=1$. Thus reading $\xi$ from depth $0$ is safe and ends at depth exactly $q$. Likewise, reading $\xi$ from depth $1$ never causes underflow and ends at depth $1+q$.
+
+Next set $a_1 := p-q-1$ and $a_2 := p-q$, and define $y_1 := d^{a_1}u^{a_1}$ and $y_2 := d^{a_2}u^{a_2}$. Since $p \ge 2$ and $q \in \{0,1\}$, we have $a_1 \ge 0$ and $a_2 \ge 1$. Thus $y_1$ and $y_2$ are well defined, and in particular $y_2 \neq \lambda$.
+
+We now verify the nonemptiness conditions required in Yoshinaka's definition. First, $\xi y_2 \eta \neq \lambda$ follows immediately from $y_2 \neq \lambda$. Next consider $\xi y_1 \eta$. If $y_1 \neq \lambda$, there is nothing to prove. If $y_1 = \lambda$, then $a_1=0$, so $p-q-1=0$. Since $p \ge 2$, this forces $q=1$. Hence $k=2m+1 \ge 1$, so $|\xi|=k \ge 1$ and therefore $\xi \neq \lambda$. Thus in this case as well, $\xi y_1 \eta = \xi \eta \neq \lambda$.
+
+Now take $v := \xi \in \Sigma^k$ and $u := \eta \in \Sigma^\ell$ in Yoshinaka's definition; when $k=0$, this simply means $v=\xi=\lambda \in \Sigma^0$. Also set $x_1 := \lambda$, $z_1 := \lambda$, $x_2 := d$, and $z_2 := \lambda$. We examine the four words $x_1 v y_1 u z_1$, $x_1 v y_2 u z_1$, $x_2 v y_1 u z_2$, and $x_2 v y_2 u z_2$, that is, $\xi y_1 \eta$, $\xi y_2 \eta$, $d \xi y_1 \eta$, and $d \xi y_2 \eta$. As shown above, both $\xi y_1 \eta$ and $\xi y_2 \eta$ are nonempty.
+
+\smallskip\noindent\emph{$\xi y_1 \eta \in \mathrm{CCL}_p$.}
+Reading $\xi$ from depth $0$ is safe and ends at depth $q$. Then reading $y_1 = d^{a_1}u^{a_1}$ raises the depth, during the initial block $d^{a_1}$, to at most $q+a_1 = q+(p-q-1)=p-1$, which does not exceed the bound $p$. The subsequent block $u^{a_1}$ returns the depth to $q$. Finally, $\eta = ;^\ell$ merely resets the depth to $0$ at each symbol $;$, so the computation remains safe throughout. Hence $\xi y_1 \eta \in \mathrm{CCL}_p$.
+
+\smallskip\noindent\emph{$\xi y_2 \eta \in \mathrm{CCL}_p$.}
+Similarly, reading $\xi$ from depth $0$ ends at depth $q$. Then reading $y_2 = d^{a_2}u^{a_2}$ raises the depth, during the initial block $d^{a_2}$, to at most $q+a_2 = q+(p-q)=p$, which is still within the allowed range. The subsequent block $u^{a_2}$ returns the depth to $q$, and finally $\eta$ resets the depth to $0$. Therefore $\xi y_2 \eta \in \mathrm{CCL}_p$.
+
+\smallskip\noindent\emph{$d \xi y_1 \eta \in \mathrm{CCL}_p$.}
+After the initial $d$, the depth is $1$. Reading $\xi$ from depth $1$ is safe, as noted above, and ends at depth $1+q$. Then reading $y_1 = d^{a_1}u^{a_1}$ raises the depth, during the initial block $d^{a_1}$, to at most $1+q+a_1 = 1+q+(p-q-1)=p$, which is again allowed. The subsequent block $u^{a_1}$ returns the depth to $1+q$, and finally $\eta$ resets the depth to $0$. Hence $d \xi y_1 \eta \in \mathrm{CCL}_p$.
+
+\smallskip\noindent\emph{$d \xi y_2 \eta \notin \mathrm{CCL}_p$.}
+After reading the initial $d$ and then $\xi$, the current depth is $1+q$. Now the initial block $d^{a_2} = d^{p-q}$ of $y_2$ raises the depth to $1+q+(p-q)=p+1$. This exceeds the bound $p$, so the safety condition fails at that point. Therefore $d \xi y_2 \eta \notin \mathrm{CCL}_p$.
+
+We have thus found $v=\xi \in \Sigma^k$ and $u=\eta \in \Sigma^\ell$ such that $v y_1 u \neq \lambda$ and $v y_2 u \neq \lambda$, with $x_1 v y_1 u z_1$, $x_1 v y_2 u z_1$, and $x_2 v y_1 u z_2$ in $\mathrm{CCL}_p$, but $x_2 v y_2 u z_2 \notin \mathrm{CCL}_p$. This contradicts the assumption that $\mathrm{CCL}_p$ is $(k,\ell)$-substitutable. Since $k,\ell \ge 0$ were arbitrary, $\mathrm{CCL}_p$ is not $(k,\ell)$-substitutable for any $k,\ell \ge 0$.
+\end{proof}
+
+\subsection{Consequence}
+
+\begin{corollary}\label{cor:ccl-family-witness}
+For every $p\ge2$, $\mathrm{CCL}_p\in\mathsf{RS}\setminus\mathsf{KL}$. Therefore $\mathsf{KL}\subsetneq\mathsf{RS}$.
+\end{corollary}
+
+\begin{proof}
+By Proposition~\ref{prop:cclp-rs}, we have $\mathrm{CCL}_p\in\mathsf{RS}$ for every $p\ge1$. By Theorem~\ref{thm:cclp-non-kl}, we have $\mathrm{CCL}_p\notin\mathsf{KL}$ whenever $p\ge2$. Hence $\mathrm{CCL}_p\in\mathsf{RS}\setminus\mathsf{KL}$ for every $p\ge2$, and in particular $\mathsf{KL}\subsetneq\mathsf{RS}$.
+\end{proof}
+
+\begin{remark}
+The strict inclusion witnessed here is already visible at the regular level. Thus the extra expressive power of recognizable-congruence control over bounded prefix-suffix control does not first appear only in some pathological nonregular example; it is already present in a very simple finite-state counter family.
+\end{remark}
+
+\section{Boundary Results Beyond the Capped-Counter Family}
+\label{sec:non-sub}
+
+In Section~\ref{sec:ccl}, we showed that recognizable-congruence control is already strictly stronger than bounded prefix--suffix control at the regular level. We now turn in the opposite direction. Although $\mathsf{RS}$ strictly contains $\mathsf{KL}$, it still does not cover all deterministic context-free languages. We show this rigorously by means of three boundary examples: the uncapped counter language $\mathrm{CCL}$, the one-bracket Dyck language $D_1$, and Yoshinaka's classical language $L_{\mathrm{Y}}=L(S\to aSS\mid b)$.
+
+We use the standard model of deterministic pushdown automata (DPDAs)~\cite{HopcroftMotwaniUllman2006}: a DPDA is a pushdown automaton in which, for every state $q$ and stack symbol $A$, (i)~$|\delta(q,x,A)|\le 1$ for all $x\in\Sigma\cup\{\varepsilon\}$, and (ii)~if $\delta(q,\varepsilon,A)\ne\emptyset$ then $\delta(q,a,A)=\emptyset$ for all $a\in\Sigma$. Acceptance is by final state throughout. Throughout, we place a distinguished symbol $Z_0$ at the bottom of the stack; $Z_0$ serves as a permanent bottom-of-stack marker that is never removed by any transition.
+
+
+Intuitively, we write $\mathrm{CCL}$ for the cap-free limit $\lim_{p\to\infty}\mathrm{CCL}_p$. A deterministic pushdown automaton recognizes $\mathrm{CCL}$ as follows.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,shorten >=1pt,node distance=42mm,on grid,auto]
+  \node[state] (q) {$q$};
+  \node[state,right=of q] (r) {$r$};
+
+  % Change the initial arrow to a short arrow from above
+  \draw[arrow] ([yshift=8mm]q.north) -- (q.north);
+
+  \draw ($(q.center)$) circle [radius=0.72cm];
+  \path[arrow]
+    (q) edge[loop left]
+      node[align=left] {$d,\;Z_0 \to XZ_0$\\$d,\;X \to XX$}
+      ()
+    (q) edge[loop below]
+      node[align=left] {$u,\;X \to \varepsilon$}
+      ()
+    (q) edge[bend left=15]
+      node[above,align=left] {$;\;Z_0 \to Z_0$\\$;\;X \to X$}
+      (r)
+    (r) edge[loop right]
+      node {$\varepsilon,\;X \to \varepsilon$}
+      ()
+    (r) edge[bend left=15]
+      node[below] {$\varepsilon,\;Z_0 \to Z_0$}
+      (q);
+\end{tikzpicture}
+\caption{A DPDA for $\mathrm{CCL}$. The transition $\delta(q,u,Z_0)$ is undefined, so if an underflow occurs, the computation halts and the input is rejected.}
+\label{fig:ccl-dpda}
+\end{figure}
+
+\subsection{The uncapped limit \texorpdfstring{$\mathrm{CCL}$}{CCL}}
+\label{ssec:ccl-infty}
+
+We begin with the uncapped limit of the capped-counter family from Section~\ref{sec:ccl}. It preserves the same local mechanism as $\mathrm{CCL}_p$, but removes only the finite-height restriction. We note that a \emph{block} of a word in $\mathrm{CCL}$ refers to each of the subwords delimited by the separator symbol~$;$.
+
+\begin{definition}[The uncapped-counter language \texorpdfstring{$\mathrm{CCL}$}{CCL}]
+\label{def:ccl}
+\[
+\mathrm{CCL} := \bigl\{\, w\in\{d,u,;\}^* \;\bigm|\; \forall\text{ block } B,\ \forall\text{ prefix } p\text{ of }B\colon \#_u(p)\le \#_d(p) \,\bigr\}
+\]
+Equivalently, $\mathrm{CCL}$ consists of all words such that, in the left-to-right run where $d$ increases the depth by $1$, $u$ decreases it by $1$, and $;$ resets it to $0$, the depth never drops below $0$.
+\end{definition}
+
+\begin{proposition}\label{prop:ccl-dcfl}
+The language $\mathrm{CCL}$ is deterministic context-free.
+\end{proposition}
+
+\begin{proof}
+We verify that the DPDA $M$ of Figure~\ref{fig:ccl-dpda} recognises
+$\mathrm{CCL}$. Formally, $M=(Q,\Sigma,\Gamma,\delta,q,Z_0,F)$, where
+\[
+  Q = \{q, r\},\quad
+  \Sigma = \{d, u, ;\},\quad
+  \Gamma = \{Z_0, X\},\quad
+  F = \{q\},
+\]
+and the transition function $\delta$ is defined by
+\[
+\begin{aligned}
+  \delta(q, d, Z_0) &= (q, XZ_0), &\quad \delta(q, d, X) &= (q, XX),\\
+  \delta(q, u, X)   &= (q, \varepsilon),\\
+  \delta(q, ;, Z_0) &= (r, Z_0),  &\quad \delta(q, ;, X) &= (r, X),\\
+  \delta(r, \varepsilon, X)   &= (r, \varepsilon), &\quad
+  \delta(r, \varepsilon, Z_0) &= (q, Z_0).
+\end{aligned}
+\]
+All other transitions are undefined.
+
+Informally, $q$ is the normal scanning state; the number of $X$-symbols on
+the stack tracks the current depth within the active block.
+Reading $d$ pushes one $X$; reading $u$ pops one $X$; reading $;$ enters
+state $r$, which empties all $X$-symbols via $\varepsilon$-transitions and
+returns to $q$ with stack $Z_0$, thereby resetting the depth to~$0$.
+
+\smallskip
+\noindent\textit{Determinism.}
+In state $q$, every transition consumes an input symbol, and for each pair
+(input symbol, top-of-stack symbol) at most one transition is defined; no
+$\varepsilon$-transition is available.
+In state $r$, only the two $\varepsilon$-transitions are defined---one for
+top symbol $X$ and one for $Z_0$---and no input-consuming transition is
+available.
+Hence at every configuration there is at most one applicable move, so $M$
+is deterministic.
+
+\smallskip
+\noindent\textit{Correctness.}
+For a word $w\in\{d,u,;\}^{*}$ and a prefix $p$ of $w$, let
+$\mathrm{depth}(p)$ denote the counter value obtained by reading $p$
+left-to-right under the rules: $d$ increments, $u$ decrements, $;$ resets
+to $0$---provided the value never goes negative.
+We establish the following invariant by induction on $|p|$.
+
+\begin{quote}
+\textbf{Invariant.}
+After reading any prefix $p$ of the input and completing all subsequent
+$\varepsilon$-transitions, exactly one of the following holds:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+  \item the run has halted because some $u$ was read while the stack
+        contained only $Z_0$; or
+  \item $M$ is in state $q$ with stack $X^{\mathrm{depth}(p)}Z_0$.
+\end{enumerate}
+\end{quote}
+
+\noindent\textit{Base case.}
+For $p=\varepsilon$, the machine starts in state $q$ with stack $Z_0$,
+matching case~(ii) with $\mathrm{depth}(\varepsilon)=0$.
+
+\noindent\textit{Inductive step.}
+Assume the invariant holds for $p$, with case~(ii) in force (otherwise
+there is nothing to prove).
+Let $a$ be the next input symbol.
+\begin{itemize}
+  \item If $a=d$: from state $q$, one $X$ is pushed, yielding stack
+        $X^{\mathrm{depth}(p)+1}Z_0$ and state $q$.
+        Since $\mathrm{depth}(pa)=\mathrm{depth}(p)+1$, case~(ii) holds.
+
+  \item If $a=u$: if $\mathrm{depth}(p)\ge 1$, the transition
+        $\delta(q,u,X)=(q,\varepsilon)$ applies, yielding stack
+        $X^{\mathrm{depth}(p)-1}Z_0$ and state $q$, consistent with
+        case~(ii).
+        If $\mathrm{depth}(p)=0$, the stack is $Z_0$ and
+        $\delta(q,u,Z_0)$ is undefined, so the run halts; this is exactly
+        case~(i).
+
+  \item If $a={;}$: the machine moves to state $r$ (stack unchanged),
+        then applies $\delta(r,\varepsilon,X)=(r,\varepsilon)$ repeatedly
+        until all $X$-symbols are removed, and finally applies
+        $\delta(r,\varepsilon,Z_0)=(q,Z_0)$.
+        The result is state $q$ with stack $Z_0$, matching case~(ii) since
+        $\mathrm{depth}(p\,{;})=0$.
+\end{itemize}
+This completes the induction.
+
+\smallskip
+\noindent$(\supseteq)$
+Let $w\in\mathrm{CCL}$.
+By definition, the depth never becomes negative during the left-to-right
+scan of $w$.
+Hence case~(i) of the invariant never occurs, the entire run on $w$ is
+defined, and after the last symbol and all $\varepsilon$-transitions,
+case~(ii) places $M$ in state $q\in F$.
+Thus $w\in L(M)$.
+
+\smallskip
+\noindent$(\subseteq)$
+Let $w\notin\mathrm{CCL}$.
+Then some block of $w$ has a prefix $p'$ with $\#_u(p')>\#_d(p')$.
+Consider the first position at which the depth would go negative;
+immediately before reading the corresponding $u$, the depth is $0$.
+By the invariant, $M$ is in state $q$ with stack $Z_0$.
+Since $\delta(q,u,Z_0)$ is undefined, the run halts before the input is
+exhausted, so $w\notin L(M)$.
+
+We conclude $L(M)=\mathrm{CCL}$.
+Since $M$ is a DPDA, $\mathrm{CCL}$ is deterministic context-free.
+\end{proof}
+
+\begin{theorem}\label{thm:ccl-not-rs}
+$\mathrm{CCL}\notin\mathsf{RS}$.
+\end{theorem}
+
+\begin{proof}
+We use a pigeonhole argument. Suppose that $\mathrm{CCL}$ is $\sim_h$-substitutable for some finite monoid homomorphism $h:\{d,u,;\}^*\to M$. Since $M$ is finite, there exist $1\le i<j$ such that $h(d^i)=h(d^j)$. Let $x:=d^i$ and $y:=d^j$.
+
+We first show that $\D_{\mathrm{CCL}}(x)\cap\D_{\mathrm{CCL}}(y)\neq\emptyset$. Since $xu^i=d^iu^i\in\mathrm{CCL}$ and $yu^i=d^ju^i\in\mathrm{CCL}$, because in both words the running depth never becomes negative, we have $(\lambda,u^i)\in\D_{\mathrm{CCL}}(x)\cap\D_{\mathrm{CCL}}(y)$.
+
+On the other hand, $yu^j=d^ju^j\in\mathrm{CCL}$, but $xu^j=d^iu^j\notin\mathrm{CCL}$. Indeed, after the first $i$ occurrences of $u$ the depth becomes $0$, and the remaining $j-i>0$ occurrences of $u$ cause underflow. Hence $(\lambda,u^j)\in\D_{\mathrm{CCL}}(y)\setminus\D_{\mathrm{CCL}}(x)$, so $\D_{\mathrm{CCL}}(x)\ne\D_{\mathrm{CCL}}(y)$. This contradicts $\sim_h$-substitutability.
+\end{proof}
+
+\begin{remark}
+The contrast with Section~\ref{sec:ccl} is sharp: each capped language $\mathrm{CCL}_p$ belongs to $\mathsf{RS}$, whereas its uncapped limit $\mathrm{CCL}$ does not, even though it is deterministic context-free.
+\end{remark}
+
+
+
+
+\subsection{The one-bracket Dyck language}
+\label{ssec:dyck1}
+
+Next we consider the standard one-bracket Dyck language over $\{a,b\}$, where $a$ is an opening bracket and $b$ is a closing bracket.
+
+\begin{definition}[The one-bracket Dyck language]\label{def:dyck1}
+\[
+D_1
+:=\Bigl\{
+w\in\{a,b\}^*
+\;\Bigm|\;
+\text{for every prefix } p \text{ of } w,\ \#(a,p)\ge \#(b,p),
+\text{ and } \#(a,w)=\#(b,w)
+\Bigr\}.
+\]
+\end{definition}
+
+\begin{proposition}\label{prop:dyck1-dcfl}
+$D_1$ is deterministic context-free.
+\end{proposition}
+
+\begin{proof}
+For completeness, we include a proof.
+Since a language $L$ is a DCFL if and only if $L\$$ is a DCFL
+\cite{HopcroftMotwaniUllman2006}, it suffices to construct a DPDA for
+$\{\,w\$\mid w\in D_1\,\}$, where $\$\notin\{a,b\}$ is a right endmarker.
+Let $M=(Q,\{a,b,\$\},\Gamma,\delta,q,Z_0,F)$ with
+$Q=\{q,q_f\}$, $\Gamma=\{Z_0,X\}$, and $F=\{q_f\}$.
+The transition function $\delta$ is defined by
+\[
+  \delta(q, a, Z_0) = (q, XZ_0),\quad
+  \delta(q, a, X)   = (q, XX),\quad
+  \delta(q, b, X)   = (q, \varepsilon),\quad
+  \delta(q, \$, Z_0) = (q_f, Z_0),
+\]
+with all other transitions undefined.
+Since every defined transition consumes an input symbol, there are no
+$\varepsilon$-moves, and for each triple (state, input symbol, top-of-stack
+symbol) at most one transition is defined, $M$ is deterministic.
+
+\smallskip
+\noindent\textit{Invariant.}
+We claim that if the run of $M$ on a prefix $p$ does not halt before $p$ is
+exhausted, then upon finishing $p$ the stack content is
+$X^{\,\#(a,p)-\#(b,p)}\,Z_0$.
+The proof is by induction on $|p|$.
+For $p = \varepsilon$ the stack is $Z_0$ and $\#(a,\varepsilon)-\#(b,\varepsilon)=0$,
+so the base case holds.
+For the inductive step, assume the stack is $X^k Z_0$ where
+$k = \#(a,p)-\#(b,p)$.
+\begin{itemize}
+  \item If the next symbol is $a$, then $\delta(q,a,\,\cdot\,)$ pushes one
+        $X$ regardless of the top symbol, so the stack becomes
+        $X^{k+1}Z_0$, matching the updated difference $k+1$.
+  \item If the next symbol is $b$ and $k \ge 1$, then the top is $X$ and
+        $\delta(q,b,X)=(q,\varepsilon)$ pops it, yielding stack $X^{k-1}Z_0$,
+        matching $k-1$.
+  \item If the next symbol is $b$ and $k = 0$, then the top is $Z_0$ and
+        $\delta(q,b,Z_0)$ is undefined, so the run halts.
+\end{itemize}
+This completes the induction.
+
+\smallskip
+\noindent$(\supseteq)$
+Let $w \in D_1$.
+Since every prefix $p$ of $w$ satisfies $\#(a,p) \ge \#(b,p)$, the third
+case above never arises while reading $w$, so the run does not halt
+prematurely.
+After all of $w$ is read the stack is
+$X^{\,\#(a,w)-\#(b,w)}\,Z_0 = Z_0$,
+using $\#(a,w)=\#(b,w)$.
+Hence $\delta(q,\$,Z_0)=(q_f,Z_0)$ applies, and $M$ accepts $w\,\$$.
+
+\smallskip
+\noindent$(\subseteq)$
+Suppose $M$ accepts $w\,\$$. 
+The only transition on $\$$ is $\delta(q,\$,Z_0)=(q_f,Z_0)$, so
+immediately before reading $\$$ the machine must be in state $q$ with top
+symbol $Z_0$.
+By the invariant, $\#(a,w)-\#(b,w)=0$, i.e.\ $\#(a,w)=\#(b,w)$.
+Moreover, since $\delta(q,b,Z_0)$ is undefined, the run cannot survive any
+prefix $p$ with $\#(b,p)>\#(a,p)$; hence every prefix of $w$ satisfies
+$\#(a,p)\ge\#(b,p)$.
+Therefore $w \in D_1$.
+
+We conclude that $L(M) = \{\,w\$ \mid w\in D_1\,\}$, so $D_1$ is
+deterministic context-free.
+\end{proof}
+
+
+\begin{theorem}\label{thm:dyck-not-rs}
+$D_1\notin\mathsf{RS}$.
+\end{theorem}
+
+\begin{proof}
+Again we use a pigeonhole argument. Suppose that $D_1$ is
+$\sim_h$-substitutable for some finite monoid homomorphism
+$h:\{a,b\}^*\to M$. Since $M$ is finite, choose $1\le i<j$ such that
+$h(b^ia^i)=h(b^ja^j)$, and set $x:=b^ia^i$ and $y:=b^ja^j$.
+
+We show $\D_{D_1}(x)\cap\D_{D_1}(y)\neq\emptyset$ using the common
+context $(a^j,b^j)$. Indeed, $a^jb^ia^ib^j\in D_1$, because the initial
+$a^j$ creates depth $j$, then $b^i$ lowers it to $j-i\ge1$ (since $i<j$),
+the following $a^i$ raises it back to $j$, and the final $b^j$ returns it
+to $0$. Similarly, $a^jb^ja^jb^j\in D_1$. Hence
+$(a^j,b^j)\in\D_{D_1}(x)\cap\D_{D_1}(y)$.
+
+Now consider the context $(a^i,b^i)$. We have $a^ib^ia^ib^i\in D_1$,
+but $a^ib^ja^jb^i\notin D_1$, because the prefix $a^ib^j$ reaches
+depth $i-j<0$. Hence $(a^i,b^i)\in\D_{D_1}(x)\setminus\D_{D_1}(y)$,
+so $\D_{D_1}(x)\ne\D_{D_1}(y)$. This contradicts $\sim_h$-substitutability.
+\end{proof}
+
+\subsection{Yoshinaka's classical language}
+
+Finally, consider Yoshinaka's classical language $L_{\mathrm{Y}}:=L(S\to aSS\mid b)$.
+
+\begin{lemma}\label{lem:y-dyck-factorization}
+$L_{\mathrm{Y}}=D_1\,b$.
+\end{lemma}
+
+\begin{proof}
+We show that $w\in L_{\mathrm{Y}}$ iff $w=zb$ with $z\in D_1$.
+
+We first record a structural fact about $D_1$ that follows directly from
+Definition~\ref{def:dyck1}: every $z\in D_1$ is either $\lambda$, or can
+be written as $z=az_1bz_2$ with $z_1,z_2\in D_1$, obtained by splitting
+at the first position at which the running depth returns to $0$.
+
+\smallskip
+\noindent$(\subseteq)$
+We prove $L_{\mathrm{Y}}\subseteq D_1b$ by induction on the height of the
+derivation tree from $S$.
+\begin{itemize}
+  \item If $S\Rightarrow b$, then $w=b=\lambda b$ and $\lambda\in D_1$.
+  \item If $S\Rightarrow aSS\Rightarrow^* ax_1x_2$, then by the induction
+        hypothesis $x_1=z_1b$ and $x_2=z_2b$ with $z_1,z_2\in D_1$.
+        Hence $w=az_1bz_2b$.  The running depth of $az_1bz_2$ never goes
+        negative (since $z_1,z_2\in D_1$) and returns to $0$ at the end,
+        so $az_1bz_2\in D_1$, giving $w\in D_1b$.
+\end{itemize}
+
+\smallskip
+\noindent$(\supseteq)$
+We prove $D_1b\subseteq L_{\mathrm{Y}}$ by induction on $|z|$ for $z\in D_1$.
+\begin{itemize}
+  \item If $z=\lambda$, then $zb=b$ and $S\Rightarrow b$.
+  \item If $z=az_1bz_2$ with $z_1,z_2\in D_1$, then by the induction
+        hypothesis $z_1b,z_2b\in L_{\mathrm{Y}}$, so
+        $S\Rightarrow aSS\Rightarrow^* a(z_1b)(z_2b)=az_1bz_2b=zb$.
+\end{itemize}
+Hence $D_1b\subseteq L_{\mathrm{Y}}$.
+\end{proof}
+
+\begin{proposition}\label{prop:y-cfl}
+$L_{\mathrm{Y}}$ is deterministic context-free.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:y-dyck-factorization}, $L_{\mathrm{Y}}=D_1b$.
+Let $M=(Q,\{a,b,\$\},\Gamma,\delta,q,Z_0,F)$ be the DPDA for $D_1\$$
+constructed in Proposition~\ref{prop:dyck1-dcfl}, which accepts
+$\{\,w\$\mid w\in D_1\,\}$ by entering $q_f\in F$ on reading $\$$ from
+configuration $(q,Z_0)$.
+Define $M'=(Q,\{a,b\},\Gamma,\delta',q,Z_0,F)$ by replacing the transition
+$\delta(q,\$,Z_0)=(q_f,Z_0)$ with
+\[
+  \delta'(q,b,Z_0)=(q_f,Z_0),
+\]
+leaving all other transitions unchanged and keeping $F=\{q_f\}$.
+Then $M'$ accepts $\{\,wb\mid w\in D_1\,\}=L_{\mathrm{Y}}$, and
+determinism is preserved since the modified transition still consumes an
+input symbol and no conflict is introduced.
+Hence $L_{\mathrm{Y}}$ is deterministic context-free.
+\end{proof}
+
+\begin{theorem}\label{thm:y-not-rs}
+$L_{\mathrm{Y}}\notin\mathsf{RS}$.
+\end{theorem}
+
+\begin{proof}
+Suppose toward a contradiction that $L_{\mathrm{Y}}\in\mathsf{RS}$. By Lemma~\ref{lem:y-dyck-factorization}, we have $L_{\mathrm{Y}}=D_1b$, hence $D_1=L_{\mathrm{Y}}/b$. By Lemma~\ref{lem:rs-fixed-quotient} below, the class $\mathsf{RS}$ is closed under right quotient by a fixed word, so $D_1\in\mathsf{RS}$. This contradicts Theorem~\ref{thm:dyck-not-rs}. Therefore $L_{\mathrm{Y}}\notin\mathsf{RS}$.
+\end{proof}
+
+\begin{lemma}[Closure under left and right quotient by a fixed word]
+\label{lem:rs-fixed-quotient}
+Let $L\subseteq\Sigma^*$ and let $r\in\Sigma^*$. Define the right quotient $L/r:=\{\,w\in\Sigma^*\mid wr\in L\,\}$ and the left quotient $r\backslash L:=\{\,w\in\Sigma^*\mid rw\in L\,\}$. If $L$ is $\sim_h$-substitutable for some finite monoid homomorphism $h:\Sigma^*\to M$, then $L/r$ and $r\backslash L$ are also $\sim_h$-substitutable with respect to the same $h$. Therefore $\mathsf{RS}$ is closed under left and right quotient by a fixed word.
+\end{lemma}
+
+\begin{proof}
+We prove the right quotient case; the left quotient is analogous.
+
+Assume that $L$ is $\sim_h$-substitutable. Let $x,y\in\Sigma^*$ satisfy $h(x)=h(y)$ and $D_{L/r}(x)\cap D_{L/r}(y)\neq\emptyset$. Choose $(u,v)\in D_{L/r}(x)\cap D_{L/r}(y)$. Then $uxv,uyv\in L/r$, hence $uxvr,uyvr\in L$. Therefore $(u,vr)\in D_L(x)\cap D_L(y)$. Since $L$ is $\sim_h$-substitutable and $h(x)=h(y)$, we obtain $D_L(x)=D_L(y)$.
+
+Now let $(s,t)\in D_{L/r}(x)$ be arbitrary. Then $sxt\in L/r$, i.e.\ $sxtr\in L$. Hence $(s,tr)\in D_L(x)=D_L(y)$, so $sytr\in L$. Therefore $syt\in L/r$, i.e.\ $(s,t)\in D_{L/r}(y)$. Thus $D_{L/r}(x)\subseteq D_{L/r}(y)$. The reverse inclusion follows symmetrically, so $D_{L/r}(x)=D_{L/r}(y)$. Therefore $L/r$ is $\sim_h$-substitutable.
+\end{proof}
+
+\subsection{Consequence}
+
+The examples above show that recognizable-congruence control, although genuinely stronger than bounded prefix--suffix control, still misses important deterministic context-free benchmark languages.
+
+\begin{corollary}\label{cor:dcfl-not-rs}
+The class $\mathsf{RS}$ does not contain all deterministic context-free languages.
+\end{corollary}
+
+\begin{proof}
+By Proposition~\ref{prop:ccl-dcfl} and Theorem~\ref{thm:ccl-not-rs}, the deterministic context-free language $\mathrm{CCL}$ does not belong to $\mathsf{RS}$. Likewise, combining Propositions~\ref{prop:dyck1-dcfl} and~\ref{prop:y-cfl} with Theorems~\ref{thm:dyck-not-rs} and~\ref{thm:y-not-rs}, we obtain two further deterministic context-free languages lying outside $\mathsf{RS}$.
+\end{proof}
+
+\begin{remark}
+The overall picture is therefore clear. On the positive side, Section~\ref{sec:ccl} provided regular witnesses for $\mathsf{KL}\subsetneq\mathsf{RS}$. On the negative side, the present section showed that even natural deterministic context-free languages such as $\mathrm{CCL}$, $D_1$, and $L_{\mathrm{Y}}$ lie outside $\mathsf{RS}$.
+\end{remark}
+
+The boundary results above raised the question of whether the gap
+$\mathsf{RS} \setminus \mathsf{KL}$ contains any non-regular context-free
+language: the witnesses for $\mathsf{KL} \subsetneq \mathsf{RS}$ established
+in Section~\ref{sec:ccl} are all regular, while every non-regular
+context-free benchmark considered in this section falls outside $\mathsf{RS}$.
+Section~\ref{sec:lstar} answers this question positively by showing that
+$L^* = \{a^n b^n : n \geq 0\}^*$ is a non-regular deterministic
+context-free language in $\mathsf{RS} \setminus \mathsf{KL}$, demonstrating
+that the extra expressive power of recognizable-congruence control over
+bounded prefix--suffix control persists strictly beyond the regular level.
+
+
+\section{A Non-Regular Context-Free Language in
+  \texorpdfstring{$\mathsf{RS}\setminus\mathsf{KL}$}{RS minus KL}}
+\label{sec:lstar}
+
+We show that $L^*:=\{a^nb^n:n\ge 0\}^*$ is a non-regular
+deterministic context-free language belonging to
+$\mathsf{RS}\setminus\mathsf{KL}$.
+
+\begin{theorem}\label{thm:lstar-rs-not-kl}
+For the language $L^*=\{a^nb^n:n\ge 0\}^*$ over $\Sigma=\{a,b\}$,
+we have $L^*\in\mathsf{RS}\setminus\mathsf{KL}$.
+In particular, $L^*$ is non-regular and deterministic context-free.
+\end{theorem}
+
+For $w\in\{a,b\}^*$ and $0\le i\le|w|$, define
+$\beta_w(i):=|w[1..i]|_a-|w[1..i]|_b$.
+
+\medskip
+\begin{lemma}\label{lem:lstar-char}
+A word $w\in\{a,b\}^*$ belongs to $L^*$ if and only if both of the
+following conditions hold.
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $\beta_w(i)\ge 0$ for all $0\le i\le|w|$, and $\beta_w(|w|)=0$.
+\item Whenever $w_i=b$ and $w_{i+1}=a$, we have $\beta_w(i)=0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $w\in L^*$ and write $w=a^{n_1}b^{n_1}\cdots a^{n_m}b^{n_m}$.
+Each block starts at height $0$, never goes negative, and returns to
+height $0$, so \textup{(i)} holds.
+Every occurrence of $ba$ is at a boundary between consecutive blocks,
+where the height is $0$, so \textup{(ii)} holds.
+
+Conversely, assume \textup{(i)} and \textup{(ii)}.
+Let $0=i_0<i_1<\cdots<i_m=|w|$ be the complete list of indices with
+$\beta_w(i_j)=0$, and set $w^{(j)}:=w[i_{j-1}+1..i_j]$.
+By \textup{(i)}, each $w^{(j)}$ has positive relative height at every
+proper prefix and total relative height $0$.
+If $w^{(j)}$ contained $ba$ at some index $r$ with $i_{j-1}<r<i_j$,
+then $\beta_w(r)>0$, contradicting \textup{(ii)}.
+Hence $w^{(j)}\in a^*b^*$, and since its height is non-negative and
+total height is $0$, we get $w^{(j)}=a^{n_j}b^{n_j}$ for some
+$n_j\ge 0$.
+Therefore $w=w^{(1)}\cdots w^{(m)}\in L^*$.
+\end{proof}
+
+\begin{proposition}\label{prop:lstar-basic}
+$L^*$ is non-regular and deterministic context-free.
+\end{proposition}
+
+\begin{proof}
+Since $L^*\cap a^*b^*=\{a^nb^n:n\ge 0\}$ is non-regular by the Pumping
+Lemma, $L^*$ is non-regular.
+
+For deterministic context-freeness, consider the DPDA $M$ shown in
+Figure~\ref{fig:lstar-dpda}, with state set $Q=\{q_G,q_U,q_D\}$,
+input alphabet $\Sigma=\{a,b\}$, stack alphabet $\Gamma=\{Z_0,Y,X\}$,
+initial state $q_G$, initial stack symbol $Z_0$, and accepting state set
+$F=\{q_G\}$.
+Every transition consumes an input symbol and there are no
+$\varepsilon$-transitions.
+Moreover, no transition is defined for any (state, input symbol, stack
+top) triple not shown in the figure; any computation reaching such a
+configuration is immediately rejected.
+Hence the machine is deterministic.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  >=Stealth, shorten >=1pt, node distance=28mm, on grid, auto, semithick,
+  every state/.style={circle, draw, minimum size=12mm, inner sep=1.5pt,
+                      font=\small}]
+  \node[state, initial, accepting] (qG) {$q_G$};
+  \node[state, right=of qG]        (qU) {$q_U$};
+  \node[state, below=of qU]        (qD) {$q_D$};
+  \path[->]
+    (qG) edge[bend left=15]
+         node[above, font=\small] {$a,\,Z_0/YZ_0$} (qU)
+    (qU) edge[loop right]
+         node[font=\small, align=center]
+              {$a,\,Y/XY$\\$a,\,X/XX$} ()
+    (qU) edge[bend left=20]
+         node[above, font=\small, pos=0.45] {$b,\,Y/\varepsilon$} (qG)
+    (qU) edge
+         node[right, font=\small] {$b,\,X/\varepsilon$} (qD)
+    (qD) edge[loop right]
+         node[font=\small] {$b,\,X/\varepsilon$} ()
+    (qD) edge[bend left=10]
+         node[above, xshift=10pt, font=\small] {$b,\,Y/\varepsilon$} (qG);
+\end{tikzpicture}
+\caption{DPDA accepting $L^*=\{a^nb^n:n\ge 0\}^*$.
+The notation $\sigma,\,A/\gamma$ means ``read input $\sigma$, pop $A$,
+push $\gamma$''.
+State $q_G$ is the inter-block boundary state, $q_U$ reads the ascending
+part of the current block, and $q_D$ reads the descending part.
+Transitions not shown are undefined; any computation reaching an
+undefined configuration is rejected.}
+\label{fig:lstar-dpda}
+\end{figure}
+
+The following invariant is proved by induction on the length of the
+input prefix.
+After reading prefix $p$ (provided the machine has not yet rejected):
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item If the current state is $q_G$, then $p\in L^*$ and the stack is
+      $Z_0$.
+\item If the current state is $q_U$, then there exist $z\in L^*$ and
+      $r\ge 1$ such that $p=za^r$ and the stack is $X^{r-1}YZ_0$.
+\item If the current state is $q_D$, then there exist $z\in L^*$,
+      $n\ge 2$, and $1\le j<n$ such that $p=za^nb^j$ and the stack is
+      $X^{n-j-1}YZ_0$.
+\end{enumerate}
+
+\emph{Base case ($p=\lambda$).}
+The initial state is $q_G$, the stack is $Z_0$, and $\lambda\in L^*$,
+so \textup{(i)} holds.
+
+\emph{Inductive step.}
+Assume the invariant holds for every prefix of length $\ell$, and let
+$\sigma$ be the next input symbol.
+There are seven defined transitions.
+
+\smallskip
+\noindent\textbf{Transition T1: $(q_G,\,a,\,Z_0)\to(q_U,\,YZ_0)$.}
+By the inductive hypothesis, the state is $q_G$, the stack is $Z_0$,
+and $p\in L^*$.
+Reading $\sigma=a$ gives state $q_U$ and stack $YZ_0=X^0YZ_0$.
+Set $z:=p\in L^*$ and $r:=1$; then $p'=pa=za$ and
+$X^{r-1}YZ_0=X^0YZ_0$.
+Thus \textup{(ii)} holds.
+
+\smallskip
+\noindent\textbf{Transition T2: $(q_U,\,a,\,Y)\to(q_U,\,XY)$.}
+By the inductive hypothesis, the state is $q_U$, the stack is
+$X^{r-1}YZ_0$ with stack top $Y$, i.e.\ $r=1$, and $p=za$
+($z\in L^*$).
+Reading $\sigma=a$ gives state $q_U$ and stack $XYZ_0=X^1YZ_0$.
+Set $r':=2$; then $p'=za^2$ and $X^{r'-1}YZ_0=X^1YZ_0$.
+Thus \textup{(ii)} holds.
+
+\smallskip
+\noindent\textbf{Transition T3: $(q_U,\,a,\,X)\to(q_U,\,XX)$.}
+By the inductive hypothesis, the state is $q_U$, the stack is
+$X^{r-1}YZ_0$ ($r\ge 2$), and $p=za^r$ ($z\in L^*$).
+Reading $\sigma=a$ gives state $q_U$ and stack $X^rYZ_0$.
+Set $r':=r+1\ge 2$; then $p'=za^{r+1}$ and $X^{r'-1}YZ_0=X^rYZ_0$.
+Thus \textup{(ii)} holds.
+
+\smallskip
+\noindent\textbf{Transition T4: $(q_U,\,b,\,Y)\to(q_G,\,\varepsilon)$.}
+By the inductive hypothesis, the state is $q_U$, the stack is
+$X^{r-1}YZ_0$ with stack top $Y$, i.e.\ $r=1$, and $p=za$
+($z\in L^*$).
+Reading $\sigma=b$ gives state $q_G$ and stack $Z_0$.
+Then $p'=z(ab)$; since $z\in L^*$ and $ab=a^1b^1\in L^*$, we have
+$p'\in L^*$.
+Thus \textup{(i)} holds.
+
+\smallskip
+\noindent\textbf{Transition T5: $(q_U,\,b,\,X)\to(q_D,\,\varepsilon)$.}
+By the inductive hypothesis, the state is $q_U$, the stack is
+$X^{r-1}YZ_0$ ($r\ge 2$), and $p=za^r$ ($z\in L^*$).
+Reading $\sigma=b$ gives state $q_D$ and stack $X^{r-2}YZ_0$.
+Set $n:=r\ge 2$ and $j:=1$; then $1\le j<n$, $p'=za^rb$, and
+$X^{n-j-1}YZ_0=X^{r-2}YZ_0$.
+Thus \textup{(iii)} holds.
+
+\smallskip
+\noindent\textbf{Transition T6: $(q_D,\,b,\,X)\to(q_D,\,\varepsilon)$.}
+By the inductive hypothesis, the state is $q_D$, $p=za^nb^j$
+($n\ge 2$, $1\le j<n$), and the stack is $X^{n-j-1}YZ_0$ with stack
+top $X$, i.e.\ $n-j-1\ge 1$, i.e.\ $j<n-1$.
+Reading $\sigma=b$ gives state $q_D$ and stack $X^{n-j-2}YZ_0$.
+Set $j':=j+1$; then $1\le j'<n$, $p'=za^nb^{j+1}$, and
+$X^{n-j'-1}YZ_0=X^{n-j-2}YZ_0$.
+Thus \textup{(iii)} holds.
+
+\smallskip
+\noindent\textbf{Transition T7: $(q_D,\,b,\,Y)\to(q_G,\,\varepsilon)$.}
+By the inductive hypothesis, the state is $q_D$, $p=za^nb^j$
+($n\ge 2$, $1\le j<n$), and the stack is $X^{n-j-1}YZ_0$ with stack
+top $Y$, i.e.\ $n-j-1=0$, i.e.\ $j=n-1$.
+Reading $\sigma=b$ gives state $q_G$ and stack $Z_0$.
+Then $p'=za^nb^n$; since $z\in L^*$ and $a^nb^n\in L^*$, we have
+$p'\in L^*$.
+Thus \textup{(i)} holds.
+
+\medskip
+\noindent\emph{Deriving $L(M)=L^*$.}
+The invariant shows that the machine reaches the accepting state $q_G$
+(without rejecting) after reading a complete input $w$ if and only if
+$w\in L^*$.
+Hence $w\in L(M)\iff w\in L^*$, so $L(M)=L^*$ and $L^*$ is
+deterministic context-free.
+\end{proof}
+
+\begin{proposition}\label{prop:lstar-rs}
+$L^*\in\mathsf{RS}$.
+\end{proposition}
+
+\begin{proof}
+Set $L:=L^*$.
+For $w\in\{a,b\}^*$, let
+$\operatorname{fst}(w),\operatorname{lst}(w)\in\{\bot,a,b\}$ denote the
+first and last symbols of $w$ (with
+$\operatorname{fst}(\lambda)=\operatorname{lst}(\lambda)=\bot$), and let
+$\operatorname{ba}(w)\in\{0,1\}$ indicate whether $w$ contains the factor
+$ba$.
+Set $M:=\{\bot,a,b\}\times\{\bot,a,b\}\times\{0,1\}$ and define
+$h:\{a,b\}^*\to M$ by
+\[
+  h(w):=\bigl(\operatorname{fst}(w),\operatorname{lst}(w),\operatorname{ba}(w)\bigr).
+\]
+We make $M$ a monoid by declaring the product of $(f,\ell,c)$ and
+$(f',\ell',c')$ to be $(\widetilde{f},\widetilde{\ell},\widetilde{c})$,
+where:
+$\widetilde{f}:=f$ if $f\ne\bot$, else $\widetilde{f}:=f'$;
+$\widetilde{\ell}:=\ell'$ if $\ell'\ne\bot$, else $\widetilde{\ell}:=\ell$;
+$\widetilde{c}:=c\vee c'\vee[\ell=b\wedge f'=a]$.
+The identity element is $(\bot,\bot,0)$.
+We verify that $h$ is a monoid homomorphism by checking
+$h(ww')=h(w)\cdot h(w')$ componentwise for all $w,w'\in\{a,b\}^*$.
+
+\emph{First component ($\operatorname{fst}$).}
+The first symbol of $ww'$ is the first symbol of $w$ if $w\ne\lambda$,
+and the first symbol of $w'$ if $w=\lambda$.
+By definition $\widetilde{f}=f$ when $f\ne\bot$ (i.e.\ $w\ne\lambda$)
+and $\widetilde{f}=f'$ when $f=\bot$ (i.e.\ $w=\lambda$), so
+$\widetilde{f}=\operatorname{fst}(ww')$.
+
+\emph{Second component ($\operatorname{lst}$).}
+The last symbol of $ww'$ is the last symbol of $w'$ if $w'\ne\lambda$,
+and the last symbol of $w$ if $w'=\lambda$.
+By definition $\widetilde{\ell}=\ell'$ when $\ell'\ne\bot$
+(i.e.\ $w'\ne\lambda$) and $\widetilde{\ell}=\ell$ when $\ell'=\bot$
+(i.e.\ $w'=\lambda$), so $\widetilde{\ell}=\operatorname{lst}(ww')$.
+
+\emph{Third component ($\operatorname{ba}$).}
+The concatenation $ww'$ contains the factor $ba$ if and only if at least
+one of the following holds: (a) $w$ contains $ba$ internally; (b) $w'$
+contains $ba$ internally; (c) the last symbol of $w$ is $b$ and the
+first symbol of $w'$ is $a$.
+By definition $\widetilde{c}=c\vee c'\vee[\ell=b\wedge f'=a]$ is
+exactly the disjunction of these three conditions, so
+$\widetilde{c}=\operatorname{ba}(ww')$.
+
+Hence $h(ww')=(\widetilde{f},\widetilde{\ell},\widetilde{c})=h(w)\cdot h(w')$,
+confirming that $h$ is a homomorphism into the finite monoid $M$.
+
+We now show that $L$ is $\sim_h$-substitutable.
+Let $x,y\in\{a,b\}^*$ satisfy $h(x)=h(y)$ and
+$\mathcal{D}_L(x)\cap\mathcal{D}_L(y)\ne\emptyset$.
+Pick $(u,v)\in\mathcal{D}_L(x)\cap\mathcal{D}_L(y)$, so
+$uxv,uyv\in L$.
+By symmetry it suffices to show
+$\mathcal{D}_L(x)\subseteq\mathcal{D}_L(y)$.
+Fix $(s,t)\in\mathcal{D}_L(x)$ with $sxt\in L$; we verify conditions
+\textup{(i)} and \textup{(ii)} of Lemma~\ref{lem:lstar-char} for $syt$
+to conclude $syt\in L$.
+
+Set $c:=\beta_u(|u|)$, $k:=\beta_s(|s|)$, and $d:=\beta_x(|x|)$.
+Applying Lemma~\ref{lem:lstar-char}\textup{(i)} to $uxv\in L$ gives
+$c\ge 0$, and to $sxt\in L$ gives $k\ge 0$.
+From $uxv,uyv\in L$ and $\beta_{uxv}(|uxv|)=\beta_{uyv}(|uyv|)=0$ we
+obtain $\beta_y(|y|)=\beta_x(|x|)=d$.
+
+\smallskip
+\noindent\emph{Case 1: $x$ contains $ba$.}
+Since $h(x)=h(y)$, $y$ also contains $ba$.
+Let $i$ be any index with $x_i=b$ and $x_{i+1}=a$.
+Applying Lemma~\ref{lem:lstar-char}\textup{(ii)} to $uxv\in L$ gives
+$c+\beta_x(i)=0$, while applying it to $sxt\in L$ gives
+$k+\beta_x(i)=0$.
+Since $c,k\ge 0$, we obtain $\beta_x(i)=-c=-k$, and hence $k=c$.
+Because $i$ was arbitrary, every internal occurrence of $ba$ in $x$
+has height $-c=-k$.
+
+\emph{Condition \textup{(i)} for $syt$.}
+Heights of prefixes ending inside $s$ are non-negative, same as in
+$sxt\in L$.
+The height at position $j$ inside $y$ is
+$k+\beta_y(j)=c+\beta_y(j)\ge 0$ (since $uyv\in L$).
+The height at prefix $t'$ of $t$ is $k+d+\beta_{t'}(|t'|)$, which is
+non-negative since the corresponding prefix of $sxt$ is non-negative.
+Also $\beta_{syt}(|syt|)=k+d+\beta_t(|t|)=\beta_{sxt}(|sxt|)=0$.
+
+\emph{Condition \textup{(ii)} for $syt$.}
+Occurrences of $ba$ internal to $s$ or $t$ have height $0$ in
+$sxt\in L$.
+The occurrence of $ba$ at the $s$-$y$ boundary, if present, corresponds
+(via $\operatorname{fst}(x)=\operatorname{fst}(y)$) to the $s$-$x$
+boundary in $sxt$, where the height is $k=0$.
+Similarly, the occurrence of $ba$ at the $y$-$t$ boundary corresponds
+(via $\operatorname{lst}(x)=\operatorname{lst}(y)$) to the $x$-$t$
+boundary in $sxt$, where the height is $k+d=0$.
+For an internal index $j$ of $y$ with $y_j=b$ and $y_{j+1}=a$,
+applying Lemma~\ref{lem:lstar-char}\textup{(ii)} to $uyv\in L$ gives
+$c+\beta_y(j)=0$; since $k=c$, the height in $syt$ is
+$k+\beta_y(j)=0$.
+
+Hence $syt\in L$.
+
+\smallskip
+\noindent\emph{Case 2: $x$ does not contain $ba$.}
+Since $h(x)=h(y)$, $y$ also does not contain $ba$, so
+$x,y\in a^*b^*$.
+For $z\in a^*b^*$, set $\mu(z):=\min_{0\le j\le|z|}\beta_z(j)$.
+When $z\in a^*b^*$, this minimum depends only on $\beta_z(|z|)$ and
+$\operatorname{fst}(z)$:
+\begin{itemize}[nosep]
+\item If $z=\lambda$ or $z\in a^+$, then $\mu(z)=0$.
+\item If $z\in b^+$, then $\mu(z)=\beta_z(|z|)\le 0$.
+\item If $z\in a^+b^+$, then $\beta_z(j)$ attains its maximum $|z|_a$
+      at $j=|z|_a$ and decreases monotonically thereafter, so
+      $\mu(z)=\beta_z(|z|)$.
+\end{itemize}
+In all cases $\mu(z)=\min(0,\beta_z(|z|))$.
+From $h(x)=h(y)$ and $\beta_x(|x|)=\beta_y(|y|)=d$ we get
+$\mu(x)=\mu(y)$.
+
+\emph{Condition \textup{(i)} for $syt$.}
+Heights of prefixes ending inside $s$ are unchanged.
+The height at position $j$ inside $y$ is
+$k+\beta_y(j)\ge k+\mu(y)=k+\mu(x)\ge 0$ (since $sxt\in L$).
+Prefixes extending into $t$, starting from height $k+d$ after
+completing $y$, are handled exactly as in Case~1.
+The total height is $0$.
+
+\emph{Condition \textup{(ii)} for $syt$.}
+There are no occurrences of $ba$ internal to $y$.
+Occurrences of $ba$ internal to $s$ or $t$ have height $0$ in
+$sxt\in L$ (same argument as Case~1).
+
+For the $s$-$y$ boundary: $ba$ appears there only when
+$\operatorname{lst}(s)=b$ and $\operatorname{fst}(y)=a$.
+Since $\operatorname{fst}(x)=\operatorname{fst}(y)=a$, the $s$-$x$
+boundary in $sxt$ also carries $ba$.
+Applying Lemma~\ref{lem:lstar-char}\textup{(ii)} to $sxt\in L$ at that
+boundary gives height $k=0$, so the height at the $s$-$y$ boundary in
+$syt$ is also $k=0$.
+
+For the $y$-$t$ boundary: $ba$ appears there only when
+$\operatorname{lst}(y)=b$ and $\operatorname{fst}(t)=a$.
+Since $\operatorname{lst}(x)=\operatorname{lst}(y)=b$, the $x$-$t$
+boundary in $sxt$ also carries $ba$.
+Applying Lemma~\ref{lem:lstar-char}\textup{(ii)} to $sxt\in L$ at that
+boundary gives height $k+d=0$, so the height at the $y$-$t$ boundary
+in $syt$ is also $k+d=0$.
+
+Hence $syt\in L$ in Case~2 as well.
+
+In both cases we obtain $(s,t)\in\mathcal{D}_L(y)$.
+Therefore $\mathcal{D}_L(x)\subseteq\mathcal{D}_L(y)$, and by symmetry
+$\mathcal{D}_L(x)=\mathcal{D}_L(y)$.
+Hence $L$ is $\sim_h$-substitutable, so $L^*\in\mathsf{RS}$.
+\end{proof}
+
+\begin{proposition}\label{prop:lstar-not-kl}
+$L^*\notin\mathsf{KL}$.
+\end{proposition}
+
+\begin{proof}
+Since $\mathsf{KL}=\bigcup_{k,\ell\ge 0}\{L\mid L\text{ is
+}(k,\ell)\text{-substitutable}\}$, it suffices to show that for every
+$k,\ell\ge 0$ the language $L^*$ is not $(k,\ell)$-substitutable.
+Fix $k,\ell\ge 0$ arbitrarily and choose $n>\max(k,\ell)$.
+Set $\xi:=a^k$, $\eta:=b^\ell$,
+$y_1:=a^{n-k}b^{n-\ell}$,
+$y_2:=a^{n-k}b^na^nb^{n-\ell}$,
+$x_1:=\lambda$, $z_1:=\lambda$,
+$x_2:=a^n$, $z_2:=b^n$.
+Note $\xi y_1\eta=a^nb^n\ne\lambda$ and
+$\xi y_2\eta=a^nb^na^nb^n\ne\lambda$.
+
+The three words
+$x_1\xi y_1\eta z_1=a^nb^n$,
+$x_1\xi y_2\eta z_1=a^nb^na^nb^n$, and
+$x_2\xi y_1\eta z_2=a^{2n}b^{2n}$
+all belong to $L^*$.
+On the other hand,
+\[
+  x_2\xi y_2\eta z_2=a^{2n}b^na^nb^{2n}
+\]
+contains a central occurrence of $ba$ immediately after the prefix
+$a^{2n}b^n$, at which point the height is $n>0$.
+This violates Lemma~\ref{lem:lstar-char}\textup{(ii)}, so
+$x_2\xi y_2\eta z_2\notin L^*$.
+
+Hence $L^*$ is not $(k,\ell)$-substitutable for this fixed $(k,\ell)$.
+Since $k,\ell\ge 0$ were arbitrary, $L^*$ belongs to no
+$(k,\ell)$-substitutable class, and therefore $L^*\notin\mathsf{KL}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:lstar-rs-not-kl}]
+Combine Propositions~\ref{prop:lstar-basic}, \ref{prop:lstar-rs},
+and~\ref{prop:lstar-not-kl}.
+\end{proof}
+
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have established a finite typed reconstruction theory for distributional
+learning under a fixed recognizable congruence $\sim_h$ given by a finite
+monoid homomorphism $h:\Sigma^*\to M$. After passing to the typed refinement
+of a reduced grammar, the relevant syntactic information concentrates into
+finitely many typed local configurations exposed by a finite observation set
+$\CS(\widetilde G)$, from which $\hat G(K)$ exactly reconstructs the target
+language. For every explicit $h$, the class $\Ccf{h}$ is identifiable in the
+limit from positive data with polynomial-time hypothesis construction and
+update; for the linear subclass $\Clin{h}$ we additionally obtain a complete
+polynomial time-and-data theorem.
+
+We also situated the framework structurally. The capped counter family
+$\mathrm{CCL}_p$ witnesses $\mathsf{KL}\subsetneq\mathsf{RS}$ at the regular
+level, while $\mathrm{CCL}$, $D_1$, and $L_Y=L(S\to aSS\mid b)$ all lie
+outside $\mathsf{RS}$. We further showed that
+$L^*=\{a^nb^n:n\geq 0\}^*\in\mathsf{RS}\setminus\mathsf{KL}$ is non-regular
+and deterministic context-free, establishing that
+$\mathsf{KL}\subsetneq\mathsf{RS}$ extends beyond the regular level.
+
+The $L^*$ result settles existence but not structure: a complete
+characterisation of $\mathsf{RS}\cap\mathrm{CFL}$ remains open and we regard
+it as the central problem left by this work. Beyond this, natural directions
+include the \emph{unknown-$h$} setting in which the congruence must be
+inferred from data, and extensions to richer formalisms such as the MCFG
+settings~\cite{yoshinaka2011mcf,clark-yoshinaka2014}, reduction-based
+approaches~\cite{coste-nicolas2019}, and substitutability over infinite
+alphabets~\cite{numaya2023}.
+
+\appendix
+\setupappendix
+
+\section{Closure Properties and Counterexamples}
+\label{sec:properties}
+
+In this appendix, we record several small structural facts concerning the classes studied in this paper.
+
+\subsection{Compatibility with inverse homomorphisms}
+
+\begin{proposition}\label{prop:invhom-fixed}
+Let $\varphi:\Gamma^*\to\Sigma^*$ be a homomorphism. If $L\subseteq\Sigma^*$ is $\sim_h$-substitutable, then $\varphi^{-1}(L)$ is $\sim_{h\circ\varphi}$-substitutable.
+\end{proposition}
+
+\begin{proof}
+Assume that $(h\circ\varphi)(x)=(h\circ\varphi)(y)$ and $\D_{\varphi^{-1}(L)}(x)\cap\D_{\varphi^{-1}(L)}(y)\neq\emptyset$. Then there exists $(u,v)\in(\Gamma^*)^2$ such that $uxv,uyv\in\varphi^{-1}(L)$. Equivalently, $\varphi(u)\varphi(x)\varphi(v),\varphi(u)\varphi(y)\varphi(v)\in L$, so $\D_L(\varphi(x))\cap\D_L(\varphi(y))\neq\emptyset$. Since $h(\varphi(x))=h(\varphi(y))$ and $L$ is $\sim_h$-substitutable, we obtain $\D_L(\varphi(x))=\D_L(\varphi(y))$.
+
+Now for arbitrary $(u,v)\in(\Gamma^*)^2$, we have $uxv\in\varphi^{-1}(L) \iff \varphi(u)\varphi(x)\varphi(v)\in L \iff \varphi(u)\varphi(y)\varphi(v)\in L \iff uyv\in\varphi^{-1}(L)$, and therefore $\D_{\varphi^{-1}(L)}(x)=\D_{\varphi^{-1}(L)}(y)$.
+\end{proof}
+
+\begin{corollary}\label{cor:rs-invhom}
+The class $\mathsf{RS}$ is closed under inverse homomorphisms.
+\end{corollary}
+
+\begin{proof}
+Let $L\in\mathsf{RS}$. Then there exists a finite monoid homomorphism $h:\Sigma^*\to M$ such that $L$ is $\sim_h$-substitutable. By Proposition~\ref{prop:invhom-fixed}, for every $\varphi:\Gamma^*\to\Sigma^*$, the inverse image $\varphi^{-1}(L)$ is $\sim_{h\circ\varphi}$-substitutable. Since $h\circ\varphi$ is again a finite monoid homomorphism, it follows that $\varphi^{-1}(L)\in\mathsf{RS}$.
+\end{proof}
+
+\subsection{Compatibility with intersection}
+
+\begin{proposition}
+\label{prop:rs-intersection}
+The class $\mathsf{RS}$ is closed under finite intersection.
+\end{proposition}
+
+\begin{proof}
+Let $L_1,L_2\in\mathsf{RS}$. Then there exist finite monoid homomorphisms $h_1:\Sigma^*\to M_1$ and $h_2:\Sigma^*\to M_2$ such that $L_1$ is $\sim_{h_1}$-substitutable and $L_2$ is $\sim_{h_2}$-substitutable.
+Define the product homomorphism $h:\Sigma^*\to M_1\times M_2$ by $h(w):=(h_1(w),h_2(w))$. It suffices to show that $L_1\cap L_2$ is $\sim_h$-substitutable.
+
+First, for every $z\in\Sigma^*$, we have $D_{L_1\cap L_2}(z)=D_{L_1}(z)\cap D_{L_2}(z)$. Indeed, $(u,v)\in D_{L_1\cap L_2}(z)$ is equivalent to $uzv\in L_1\cap L_2$, which is equivalent to $uzv\in L_1$ and $uzv\in L_2$, and hence to $(u,v)\in D_{L_1}(z)\cap D_{L_2}(z)$.
+
+Now let $x,y\in\Sigma^*$ satisfy $h(x)=h(y)$ and $D_{L_1\cap L_2}(x)\cap D_{L_1\cap L_2}(y)\neq\emptyset$. Then some $(u,v)$ belongs to $D_{L_1\cap L_2}(x)\cap D_{L_1\cap L_2}(y)$, so by the above equality we have $(u,v)\in D_{L_1}(x)\cap D_{L_1}(y)$ and $(u,v)\in D_{L_2}(x)\cap D_{L_2}(y)$. Moreover, $h(x)=h(y)$ implies $h_1(x)=h_1(y)$ and $h_2(x)=h_2(y)$. Therefore, by the $\sim_{h_1}$-substitutability of $L_1$ and the $\sim_{h_2}$-substitutability of $L_2$, we obtain $D_{L_1}(x)=D_{L_1}(y)$ and $D_{L_2}(x)=D_{L_2}(y)$. Hence $D_{L_1\cap L_2}(x)=D_{L_1}(x)\cap D_{L_2}(x)=D_{L_1}(y)\cap D_{L_2}(y)=D_{L_1\cap L_2}(y)$. Thus $L_1\cap L_2$ is $\sim_h$-substitutable.
+
+Therefore $L_1\cap L_2\in\mathsf{RS}$.
+\end{proof}
+
+\begin{corollary}
+\label{cor:non-rs-via-regular-intersection}
+Let $L\subseteq\Sigma^*$ and let $R\subseteq\Sigma^*$ be regular. If $L\cap R\notin\mathsf{RS}$, then $L\notin\mathsf{RS}$.
+\end{corollary}
+
+\begin{proof}
+Suppose toward a contradiction that $L\in\mathsf{RS}$. Since every regular language belongs to $\mathsf{RS}$, we have $R\in\mathsf{RS}$. Therefore Proposition~\ref{prop:rs-intersection} yields $L\cap R\in\mathsf{RS}$, contradicting the assumption $L\cap R\notin\mathsf{RS}$. Hence $L\notin\mathsf{RS}$.
+\end{proof}
+
+\begin{remark}
+The converse of Proposition~\ref{prop:rs-intersection} does not hold in general. Indeed, it may happen that $L\notin\mathsf{RS}$ but $L\cap R\in\mathsf{RS}$ for some nonempty regular language $R$. For example, let $L:=D_1$ and $R:=\{ab\}$. By Theorem~\ref{thm:dyck-not-rs}, we have $D_1\notin\mathsf{RS}$. On the other hand, $\{ab\}$ is finite, hence regular, and therefore belongs to $\mathsf{RS}$. Moreover, since $ab\in D_1$, we have $D_1\cap\{ab\}=\{ab\}\in\mathsf{RS}$.
+\end{remark}
+
+\subsection{Counterexample: failure under Kleene star}
+
+\begin{proposition}
+\label{prop:kstar-not-rs}
+There exists a language that is $\sim_h$-substitutable for some homomorphism $h$, but whose Kleene closure is not $\sim_{h'}$-substitutable for any finite monoid homomorphism $h'$.
+\end{proposition}
+
+\begin{proof}
+Let $L:=\{a^n b a^n\mid n\ge0\}$. We first show that $L$ is substitutable in the sense of Clark--Eyraud\footnote{Recall that Yoshinaka's $(0,0)$-substitutability can be written in the form: if $x,y\neq\lambda$ and $\D_L(x)\cap\D_L(y)\neq\emptyset$, then $\D_L(x)=\D_L(y)$. Since the quantification is restricted to nonempty strings, this is weaker than Clark--Eyraud substitutability, which requires $\D_L(x)\cap\D_L(y)\neq\emptyset \Rightarrow \D_L(x)=\D_L(y)$ for all $x,y\in\Sigma^*$.}. It is enough to prove that for all $x,y\in\Sigma^*$, if $\D_L(x)\cap\D_L(y)\neq\emptyset$, then $\D_L(x)=\D_L(y)$. Take $(u,v)\in\D_L(x)\cap\D_L(y)$. Since $uxv,uyv\in L$, and every word in $L$ contains exactly one occurrence of $b$, either both $x$ and $y$ contain $b$, or neither does.
+
+Suppose first that neither $x$ nor $y$ contains $b$. Then we may write $x=a^r$ and $y=a^s$. Exactly one of $u,v$ contains the unique occurrence of $b$. For example, if $u=u_1 b u_2$ and $v\in a^*$, then $uxv\in L$ is equivalent to $u_1,u_2,v\in a^*$ and $|u_1|=|u_2|+r+|v|$, while $uyv\in L$ is equivalent to $|u_1|=|u_2|+s+|v|$. Hence $r=s$, so $x=y$, and trivially $\D_L(x)=\D_L(y)$.
+
+Suppose next that both $x$ and $y$ contain $b$. Then we may write $x=a^i b a^j$ and $y=a^{i'} b a^{j'}$. Since $uxv,uyv\in L$, we have $u,v\in a^*$. Writing $u=a^p$ and $v=a^q$, we get $a^{p+i} b a^{q+j},a^{p+i'} b a^{q+j'}\in L$, hence $p+i=q+j$ and $p+i'=q+j'$, so $i-j=i'-j'$. On the other hand, for any $\alpha,\beta\ge0$, the condition $(a^\alpha,a^\beta)\in\D_L(a^i b a^j)$ is equivalent to $\alpha+i=\beta+j$. Therefore $\D_L(a^i b a^j)=\{(a^\alpha,a^\beta)\mid \alpha+i=\beta+j\}$, and similarly $\D_L(a^{i'} b a^{j'})=\{(a^\alpha,a^\beta)\mid \alpha+i'=\beta+j'\}$. Since $i-j=i'-j'$, these two sets are equal. Thus $L$ is substitutable in the sense of Clark--Eyraud. In particular, by Proposition~\ref{prop:ce-special}, $L$ is $\sim_h$-substitutable for some finite monoid homomorphism $h$.
+
+We next show that $L^*$ is not $\sim_{h'}$-substitutable for any finite monoid homomorphism $h'$. Let $M$ be an arbitrary finite monoid and let $h':\Sigma^*\to M$ be an arbitrary homomorphism. By the pigeonhole principle, there exist $1\le k<\ell$ such that $h'(a^k)=h'(a^\ell)$. Put $x:=ba^kba^kb$ and $y:=ba^\ell ba^\ell b$. Then $h'(x)=h'(b)h'(a^k)h'(b)h'(a^k)h'(b)=h'(b)h'(a^\ell)h'(b)h'(a^\ell)h'(b)=h'(y)$.
+
+Moreover, $(a^k,a^k)$ is a common context of $x$ and $y$. Indeed, $a^kxa^k=a^kba^kba^kba^k\in L^*$, corresponding to the factorization $(a^kba^k)(b)(a^kba^k)$, that is, to the parameters $n_1=k$, $n_2=0$, and $n_3=k$. Also, $a^kya^k=a^kba^\ell ba^\ell ba^k\in L^*$, corresponding to the factorization $(a^kba^k)(a^{\ell-k}ba^{\ell-k})(a^kba^k)$, that is, to the parameters $n_1=k$, $n_2=\ell-k$, and $n_3=k$. Hence $(a^k,a^k)\in\D_{L^*}(x)\cap\D_{L^*}(y)$.
+
+On the other hand, $(a^\ell,a^\ell)\in\D_{L^*}(y)$, since $a^\ell y a^\ell=a^\ell ba^\ell ba^\ell ba^\ell\in L^*$, corresponding to the parameters $n_1=\ell$, $n_2=0$, and $n_3=\ell$. However, $(a^\ell,a^\ell)\notin\D_{L^*}(x)$. Indeed, if $a^\ell x a^\ell=a^\ell ba^kba^kba^\ell$ belonged to $L^*$, then, because this word contains exactly three occurrences of $b$, there would exist $n_1,n_2,n_3\ge0$ such that $a^\ell ba^kba^kba^\ell=(a^{n_1}ba^{n_1})(a^{n_2}ba^{n_2})(a^{n_3}ba^{n_3})$. Expanding the right-hand side yields $a^{n_1}ba^{n_1+n_2}ba^{n_2+n_3}ba^{n_3}$, so comparing exponents gives $n_1=\ell$, $n_1+n_2=k$, $n_2+n_3=k$, and $n_3=\ell$. Hence $n_2=k-\ell<0$, a contradiction. Therefore $(a^\ell,a^\ell)\notin\D_{L^*}(x)$, and so $\D_{L^*}(x)\neq\D_{L^*}(y)$.
+
+Thus we have found $x,y$ such that $h'(x)=h'(y)$, $\D_{L^*}(x)\cap\D_{L^*}(y)\neq\emptyset$, and $\D_{L^*}(x)\neq\D_{L^*}(y)$. Therefore $L^*$ is not $\sim_{h'}$-substitutable. Since $h'$ was arbitrary, $L^*$ is not $\sim_{h'}$-substitutable for any finite monoid homomorphism $h'$.
+\end{proof}
+
+\section{The Exceptional Status of \texorpdfstring{$\mathrm{CCL}_1$}{CCL1}}
+\label{app:ccl1}
+
+In Section~\ref{sec:ccl}, we showed that for each fixed $p\ge2$, the capped-counter language $\mathrm{CCL}_p$ is not $(k,\ell)$-substitutable for any $k,\ell\ge0$. The case $p=1$ is exceptional. In this appendix, we show that $\mathrm{CCL}_1$ belongs to Yoshinaka's hierarchy and lies exactly at the threshold $k,\ell\ge1$.
+
+Recall that $\mathrm{CCL}_1\subseteq\{d,u,;\}^*$ consists of all words such that, in the left-to-right run where $d$ changes the depth by $+1$, $u$ changes it by $-1$, and $;$ resets the depth to $0$, the depth never drops below $0$ and never exceeds $1$.
+
+\begin{lemma}\label{lem:ccl1-local}
+For $w\in\{d,u,;\}^*$, the following are equivalent: $w\in\mathrm{CCL}_1$; \textup{(i)} $w$ does not begin with $u$; and \textup{(ii)} $w$ contains none of the factors $dd$, $uu$, and $;u$.
+\end{lemma}
+
+\begin{proof}
+Assume $w\in\mathrm{CCL}_1$. Then the run cannot begin with $u$, since that would cause immediate underflow. The factor $dd$ is impossible, because after the first $d$ the depth is already $1$. The factor $uu$ is also impossible, because after the first $u$ the depth is $0$. Finally, $;u$ is impossible, because $;$ resets the depth to $0$.
+
+Conversely, assume that $w$ does not begin with $u$ and contains none of $dd$, $uu$, and $;u$. At depth $0$, the next symbol must be either $d$ or $;$, so the depth either becomes $1$ or stays $0$. At depth $1$, the next symbol cannot be $d$, since $dd$ is forbidden, and therefore it must be either $u$ or $;$, both of which return the depth to $0$. Hence the run always remains inside $\{0,1\}$, so $w\in\mathrm{CCL}_1$.
+\end{proof}
+
+\begin{lemma}\label{lem:11-implies-kl}
+If $L$ is $(1,1)$-substitutable, then $L$ is $(k,\ell)$-substitutable for all $k,\ell\ge1$.
+\end{lemma}
+
+\begin{proof}
+Fix $k,\ell\ge1$, and assume that $|v|=k$, $|u|=\ell$, and $x_1vy_1uz_1$, $x_1vy_2uz_1$, $x_2vy_1uz_2\in L$. Write $v=v'a$ and $u=bu'$. Let $x_i':=x_iv'$ and $z_i':=u'z_i$. Then the three premises become $x_1'ay_1bz_1'$, $x_1'ay_2bz_1'$, $x_2'ay_1bz_2'\in L$. Applying $(1,1)$-substitutability, we obtain $x_2'ay_2bz_2'=x_2vy_2uz_2\in L$.
+\end{proof}
+
+\begin{proposition}\label{prop:ccl1-11}
+$\mathrm{CCL}_1$ is $(1,1)$-substitutable.
+\end{proposition}
+
+\begin{proof}
+Take $x_1vy_1uz_1$, $x_1vy_2uz_1$, $x_2vy_1uz_2\in\mathrm{CCL}_1$ with $v,u\in\Sigma$ and $vy_1u,vy_2u\ne\lambda$. We show $x_2vy_2uz_2\in\mathrm{CCL}_1$ using Lemma~\ref{lem:ccl1-local}.
+
+The first symbol of $x_2vy_2uz_2$ coincides with the first symbol of $x_2vy_1uz_2$; if $x_2\ne\lambda$, both begin with the first symbol of $x_2$, and if $x_2=\lambda$, both begin with $v$. Since $x_2vy_1uz_2\in\mathrm{CCL}_1$, this first symbol is not $u$.
+
+Assume toward a contradiction that some forbidden factor $t\in\{dd,uu,;u\}$ occurs in $x_2vy_2uz_2$.
+\begin{itemize}[nosep]
+  \item \emph{If it occurs inside $x_2$ or $z_2$:} then the same factor occurs in $x_2vy_1uz_2$, a contradiction.
+  \item \emph{If it crosses the $x_2$--$v$ boundary or the $u$--$z_2$ boundary:} then the same boundary letters also occur in $x_2vy_1uz_2$, again a contradiction.
+  \item \emph{If it occurs inside $vy_2u$, or crosses one of its internal boundaries:} then the same factor also occurs in $x_1vy_2uz_1$, a contradiction.
+\end{itemize}
+Every case leads to a contradiction, so $x_2vy_2uz_2\in\mathrm{CCL}_1$.
+\end{proof}
+
+\begin{corollary}\label{cor:ccl1-positive}
+If $k,\ell\ge1$, then $\mathrm{CCL}_1$ is $(k,\ell)$-substitutable.
+\end{corollary}
+
+\begin{proof}
+This is immediate from Proposition~\ref{prop:ccl1-11} and Lemma~\ref{lem:11-implies-kl}.
+\end{proof}
+
+\begin{proposition}\label{prop:ccl1-negative}
+If $k=0$ or $\ell=0$, then $\mathrm{CCL}_1$ is not $(k,\ell)$-substitutable.
+\end{proposition}
+\begin{proof}
+To avoid confusion with the terminal symbol $u$ of $\mathrm{CCL}_1$,
+we write the length-constraint blocks appearing in the definition of
+$(k,\ell)$-substitutability as $p\in\Sigma^k$ and $q\in\Sigma^\ell$.
+In each case below we exhibit strings $x_1,y_1,z_1,x_2,y_2,z_2$
+such that $x_1py_1qz_1$, $x_1py_2qz_1$, $x_2py_1qz_2\in\mathrm{CCL}_1$
+yet $x_2py_2qz_2\notin\mathrm{CCL}_1$,
+thereby witnessing a failure of $(k,\ell)$-substitutability.
+All membership and non-membership claims follow immediately from
+Lemma~\ref{lem:ccl1-local}.
+
+\smallskip\noindent\emph{Case~1: $(k,\ell)=(0,0)$.}
+Set $p=q=x_1=z_1=x_2=\lambda$, $z_2=u$, $y_1=d$, and $y_2=du$.
+Then $\lambda\lambda d\lambda\lambda=d$,
+$\lambda\lambda du\lambda\lambda=du$,
+and $\lambda\lambda d\lambda u=du$
+all belong to $\mathrm{CCL}_1$,
+whereas $\lambda\lambda du\lambda u=duu$
+contains the forbidden factor $uu$ and hence does not.
+
+\smallskip\noindent\emph{Case~2: $k=0$, $\ell\ge1$.}
+Set $p=\lambda$, $q=;^\ell$, $x_1=d$, $z_1=x_2=z_2=\lambda$,
+$y_1=\lambda$, and $y_2=u$.
+Then $d\lambda\lambda q\lambda=dq=d;^\ell$,
+$d\lambda uq\lambda=du;^\ell$,
+and $\lambda\lambda\lambda q\lambda=q=;^\ell$
+all belong to $\mathrm{CCL}_1$,
+whereas $\lambda\lambda u q\lambda=uq=u;^\ell$
+begins with $u$ and hence does not.
+
+\smallskip\noindent\emph{Case~3: $k\ge1$, $\ell=0$.}
+Set $p=;^k$, $q=\lambda$, $x_1=z_1=x_2=\lambda$, $z_2=u$,
+$y_1=d$, and $y_2=\lambda$.
+Then $\lambda pd\lambda\lambda=pd=;^kd$,
+$\lambda p\lambda\lambda\lambda=p=;^k$,
+and $\lambda pd\lambda u=pdu=;^kdu$
+all belong to $\mathrm{CCL}_1$,
+whereas $\lambda p\lambda\lambda u=pu=;^ku$
+contains the forbidden factor $;u$ and hence does not.
+
+\smallskip
+In all three cases $(k,\ell)$-substitutability fails,
+so $\mathrm{CCL}_1$ is not $(k,\ell)$-substitutable
+whenever $k=0$ or $\ell=0$.
+\end{proof}
+\begin{proposition}\label{prop:ccl1-kl}
+$\mathrm{CCL}_1$ is $(k,\ell)$-substitutable if and only if $k,\ell\ge1$.
+\end{proposition}
+
+\begin{proof}
+This is immediate from Proposition~\ref{prop:ccl1-negative} and Corollary~\ref{cor:ccl1-positive}.
+\end{proof}
+
+\begin{remark}
+Thus $\mathrm{CCL}_1$ is exceptional within the capped-counter family: for each $p\ge2$, Theorem~\ref{thm:cclp-non-kl} shows that $\mathrm{CCL}_p$ lies outside the whole Yoshinaka hierarchy, whereas $\mathrm{CCL}_1$ already belongs to the smallest nontrivial level $(1,1)$, and hence to every level $(k,\ell)$ with $k,\ell\ge1$.
+\end{remark}
+
+
+\section*{Data availability}
+No data were used for the research described in this article.
+
+\section*{Declaration of competing interest}
+The author declares no known competing financial interests or personal
+relationships that could have influenced the work reported in this paper.
+
+\section*{Funding}
+This research received no specific grant from any funding agency in the
+public, commercial, or not-for-profit sectors.
+
+\section*{Acknowledgments}
+The author thanks Professor Makoto Kanazawa (Hosei University) for
+longstanding guidance, encouragement, and valuable comments on this
+research. Any remaining errors are solely the author's responsibility.
+
+\begin{thebibliography}{99}
+
+\bibitem{kanazawa1998}
+M.~Kanazawa.
+\newblock \emph{Learnable Classes of Categorial Grammars}.
+\newblock CSLI Publications, Stanford, CA, 1998.
+
+
+\bibitem{gold1967}
+E.\,M.~Gold.
+Language identification in the limit.
+\textit{Information and Control}, 10(5):447--474, 1967.
+
+\bibitem{eilenberg1974}
+S.~Eilenberg.
+\textit{Automata, Languages, and Machines}, volume~A.
+Academic Press, 1974.
+
+\bibitem{higuera2010}
+C.~de la Higuera.
+\textit{Grammatical Inference: Learning Automata and Grammars}.
+Cambridge University Press, 2010.
+
+\bibitem{higuera1997}
+C.~de la Higuera.
+Characteristic sets for polynomial grammatical inference.
+\textit{Machine Learning}, 27:125--138, 1997.
+
+\bibitem{heinz-higuera-zaanen2011}
+J.~Heinz, C.~de~la~Higuera, and M.~van~Zaanen.
+\newblock Formal and empirical grammatical inference.
+\newblock In \emph{Proceedings of the 49th Annual Meeting of the Association
+for Computational Linguistics: Tutorial Abstracts}, pages 1--83, 2011.
+
+\bibitem{angluin1982}
+D.~Angluin.
+Inference of reversible languages.
+\textit{Journal of the ACM}, 29(3):741--765, 1982.
+
+\bibitem{clark-eyraud2007}
+A.~Clark and R.~Eyraud.
+Polynomial identification in the limit of substitutable
+context-free languages.
+\textit{Journal of Machine Learning Research},
+8:1725--1745, 2007.
+
+\bibitem{yoshinaka2008}
+R.~Yoshinaka.
+Identification in the limit of $k, l$-substitutable
+context-free languages.
+In \textit{Proceedings of ICGI}, 2008.
+
+\bibitem{yoshinaka2011mcf}
+R.~Yoshinaka.
+Efficient learning of multiple context-free languages with
+multidimensional substitutability from positive data.
+\textit{Theoretical Computer Science},
+412(19):1821--1831, 2011.
+doi:10.1016/j.tcs.2010.12.058.
+
+\bibitem{clark-yoshinaka2014}
+A.~Clark and R.~Yoshinaka.
+Distributional learning of parallel multiple context-free
+grammars.
+\textit{Machine Learning}, 96(1--2):5--31, 2014.
+
+\bibitem{coste-nicolas2019}
+F.~Coste and J.~Nicolas.
+Learning local substitutable context-free languages from positive
+examples in polynomial time and data by reduction.
+In \textit{Proceedings of the 14th International Conference on
+Grammatical Inference 2018},
+\textit{Proceedings of Machine Learning Research},
+93:155--168, 2019.
+
+\bibitem{numaya2023}
+Y.~Numaya, D.~Hendrian, R.~Yoshinaka, and A.~Shinohara.
+Identification of substitutable context-free languages over infinite
+alphabets from positive data.
+In \textit{Proceedings of the 16th International Conference on
+Grammatical Inference},
+\textit{Proceedings of Machine Learning Research},
+217:23--34, 2023.
+
+\bibitem{HopcroftMotwaniUllman2006}
+J.~E. Hopcroft, R.~Motwani, and J.~D. Ullman,
+\textit{Introduction to Automata Theory, Languages, and Computation},
+3rd~ed., Addison-Wesley, 2006.
+
+
+\end{thebibliography}
+\end{document}
