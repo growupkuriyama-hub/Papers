@@ -15,6 +15,13 @@ This manuscript is kept as a separate research paper and is **not part of the do
 - `ws-ijfcs.cls` — World Scientific IJFCS class supplied with the bundle.
 - `ws-ijfcs.bst` — bibliography style supplied with the bundle.
 
+## Journal submission PDF
+
+- `IJFCS-S-26-01176.pdf` — journal submission-system PDF associated with manuscript ID `IJFCS-S-26-01176`.
+- SHA-256: `caf94903447a410e7ff1a530aeb6a1b56049d8e7516314a6e2ec2da8b0c23db0`
+
+This PDF is retained as the archival submitted artifact, distinct from a locally regenerated PDF.
+
 ### SHA-256
 
 - `main.tex`: `8eb830dcffcfdae923ee526b02ee77306e24860ea510a986f76f0aacfffd4ae4`
