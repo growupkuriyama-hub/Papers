@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v50; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v51; this is the current source of truth.
+- `revision/v50_to_v51_revision_note.md` — abstract scope precision for the higher-rank characteristic-data theorem.
+- `revision/v50_to_v51.diff` — unified diff for the v50 → v51 revision.
 - `revision/v49_to_v50_revision_note.md` — explicit Kato dimension/rank ↔ fan-out/rule-rank notation bridge.
 - `revision/v49_to_v50.diff` — unified diff for the v49 → v50 revision.
 - `revision/v48_to_v49_revision_note.md` — citation-provenance precision pass for the minimum-rank-two lower-bound chain.
