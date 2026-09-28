@@ -1,0 +1,1461 @@
+\documentclass[sub]{jalc}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{url}
+
+\newenvironment{xmpl}{\begin{example}}{\end{example}}
+
+\newcommand{\yt}{\operatorname{yt}}
+\newcommand{\lt}{\operatorname{lt}}
+\newcommand{\rt}{\operatorname{rt}}
+\newcommand{\eM}{1_M}
+\newcommand{\slex}{\leq_{\mathrm{slex}}}
+\newcommand{\Prod}{\operatorname{Prod}}
+\newcommand{\Reach}{\operatorname{Reach}}
+\newcommand{\Ctx}{\operatorname{Ctx}}
+\newcommand{\D}{\mathcal D}
+\newcommand{\A}{\mathcal A}
+\newcommand{\Gfull}{\widetilde G^{\mathrm{full}}}
+\newcommand{\Gtrim}{\widetilde G}
+
+\newcounter{algbox}
+\newenvironment{algobox}[1]{%
+\refstepcounter{algbox}%
+\begin{center}%
+\begin{minipage}{0.96\linewidth}%
+\hrule\vspace{0.5em}%
+\noindent\textbf{Algorithm \thealgbox. #1}\par\smallskip%
+}{%
+\vspace{0.3em}\hrule%
+\end{minipage}%
+\end{center}%
+}
+
+
+\title{Finite Occurrence Descriptors for Context-Free Grammar Presentations under Monoid Typing}
+\author{Takayuki Kuriyama}
+\address{GrowUp-Prep School, Tokyo\withinline Formerly affiliated with the National Institute of Informatics, Japan\\\email{growup.kuriyama@gmail.com}}
+\runningtitle{Finite Occurrence Descriptors under Monoid Typing}
+\runningauthors{T. Kuriyama}
+
+\begin{document}
+
+\emergencystretch=3em
+\maketitle
+
+
+\begin{abstract}
+We study a finite occurrence-level descriptor associated with a context-free
+grammar presentation and a fixed morphism
+\(h:\Sigma^*\to M\) into a finite monoid.  A nonterminal occurrence is
+annotated by the \(h\)-value of the word it derives and by the \(h\)-values of
+the terminal material occurring to its left and to its right in a complete
+derivation.  Thus an occurrence has type \(A_p^{m,n}\), and a binary rule
+transports frames according to
+\[
+  A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\qquad(qr=p).
+\]
+
+We define finite two-sided monoid-typed occurrence descriptors as finite
+relational structures satisfying typed-rule, start-frame, productivity, and
+reachability closure axioms, with auxiliary yield and context witness data
+canonically chosen in extracted structures.  The main result characterizes
+exactly the finite structures obtained from reduced start-separated binary CFG
+presentations by full two-sided typed refinement followed by productive-first
+trimming.  Conversely, every such finite descriptor is realized by a
+state-separated CFG presentation whose productive-first trimmed refinement
+recovers the original descriptor up to the evident state isomorphism.
+
+The full refinement is made explicit as a two-sided Bar-Hillel-style product:
+forward and backward word controls provide the inherited left and right context
+components, while a bottom-up tree control provides the synthesized yield
+component.  The contribution is not the product construction itself, but the
+finite image theorem for its productive-first occurrence descriptors.  The key
+point is not the state-separated encoding itself, but the pruning of unintended
+typed copies created by the full refinement.  Productive-first trimming is
+essential in the branching case: a wrong-yield copy can otherwise transport a
+wrong inherited frame to a productive child.  We isolate this obstruction and
+show that it disappears for linear presentations.  We also show that the
+descriptor is not a language invariant: different presentations of the same
+terminal language may yield non-isomorphic occurrence descriptors.
+
+An accompanying Lean 4 development checks theorem-facing kernels of the finite
+typed infrastructure, orientation-sensitive frame transport over arbitrary
+monoids, intended-copy and full-kept arguments, productive-first trimming
+kernels, and the agreement of a certified Algorithm~1 predicate with the
+abstract \texttt{FullKept} predicate for the full all-copy rule data.  The paper
+proofs remain self-contained, and the artifact is not claimed to be a complete
+extracted implementation of the full extraction algorithm.
+
+\keywords context-free grammar; finite monoid; recognizable congruence; typed refinement; two-sided context; grammar presentation
+\end{abstract}
+
+
+\noindent\textbf{2020 Mathematics Subject Classification.}
+68Q45, 68Q70, 68Q42, 20M35.
+
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Occurrence descriptors under a fixed monoid observation}
+\label{subsec:presentation-level}
+
+A context-free grammar presentation contains more information than the terminal
+language it generates.  A nonterminal occurrence in a derivation tree has a
+subtree yield, but it also has terminal material to its left and to its right in
+the complete derived word.  The terminal language alone forgets how such
+occurrences were organized inside the presentation.
+
+Fix a finite monoid morphism \(h:\Sigma^*\to M\).  This gives a finite
+interface both for generated words and for external contexts.  We type an
+occurrence of a nonterminal by a triple \((p,m,n)\in M^3\), where \(p\) is the
+\(h\)-value of its yield and \(m,n\) are the \(h\)-values of its left and right
+external contexts.  We write such an occurrence as \(A_p^{m,n}\).  If
+\(A_p^{m,n}\) expands to a left child of yield type \(q\) and a right child of
+yield type \(r\), then \(qr=p\); the left child sees the right child's yield
+before the parent's right context, and the right child sees the left child's
+yield after the parent's left context.  Hence every typed binary rule has the
+form
+\[
+  A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\qquad(qr=p).
+\]
+This frame-transport equation is the local rule studied in the paper.
+
+For example, let \(M=\mathbb Z/2\mathbb Z\), let \(\Sigma=\{a,b\}\), and let
+\(h(a)=0\), \(h(b)=1\).  In the grammar \(S_0\to S\),
+\(S\to AB\mid BA\), \(A\to a\), \(B\to b\), the two occurrences of \(A\) have
+the same yield type \(0\), but different external frames: \((0,1)\) in the
+branch \(AB\) and \((1,0)\) in the branch \(BA\).  The two-sided refinement
+therefore separates them as \(A_0^{0,1}\) and \(A_0^{1,0}\).
+
+The object studied here is the finite occurrence descriptor induced by a chosen
+presentation under the fixed recognizable congruence \(\ker(h)\).  It is not a
+normal form for context-free languages.  Rather, it records the finite
+monoid-visible part of the presentation's occurrence structure.
+
+\subsection{Main theorem and nontrivial point}
+\label{subsec:main-results}
+
+We consider reduced start-separated binary CFG presentations.  Starting from
+such a grammar, the full two-sided typed refinement creates all copies
+\(A_p^{m,n}\) for all \((p,m,n)\in M^3\), and then applies productive-first
+trimming: nonproductive typed copies are deleted before reachability from the
+start interface is computed.  The output is a finite typed rule descriptor.
+
+The main theorem says that the finite descriptors produced in this way are
+exactly the finite relational structures satisfying the corresponding typed
+rule, start-frame, productivity, and reachability axioms, up to the harmless
+state separation in which each abstract state is represented by its own grammar
+nonterminal.
+
+\begin{quote}
+\emph{Image theorem} (Theorem~\ref{thm:characterization}).  For fixed
+\(h:\Sigma^*\to M\), a finite typed occurrence descriptor with at least one
+state satisfies the descriptor axioms if and only if, up to state separation, it
+is extracted from a reduced start-separated binary CFG presentation by
+productive-first trimmed two-sided typed refinement.
+\end{quote}
+
+The converse direction deliberately uses state separation.  Thus encoding the
+finite rule graph as a CFG is not the difficult part.  The nontrivial point is
+that the full typed refinement of this state-separated grammar creates all
+\(|M|^3\) typed copies of every state, most of which are unintended.  The proof
+shows that the axioms are exactly strong enough for productive-first trimming
+to keep precisely the intended copy
+\((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\) and to delete the rest.
+
+The order of trimming matters.  If reachability is computed in the full
+refinement before deleting nonproductive copies, a wrong-yield parent may
+transport a wrong inherited frame to a productive child.  We give an explicit
+example of this phenomenon.  We also show that it disappears for linear
+presentations, where there is no productive sibling whose yield type can be
+used by a nonproductive branching parent to corrupt an inherited frame.
+
+The descriptor is effective: extraction is computed by finite fixed-point
+calculations, the number of non-start typed states is at most
+\((|V|-1)|M|^3\), and structural isomorphism of descriptors over the same fixed
+\(h\) is decidable.  We also give a non-rigidity example showing that two
+reduced presentations of the same terminal language can yield non-isomorphic
+occurrence descriptors.  Thus the descriptor is a presentation-level object,
+not a language invariant.
+
+\subsection{Relation to finite-control refinements and attribute grammars}
+\label{subsec:related-work}
+
+Finite monoids and recognizable congruences are standard finite interfaces for
+words; see, for example, Eilenberg~\cite{eilenberg1974}, Pin~\cite{pin1986},
+and Sakarovitch~\cite{sakarovitch2009}.  Classical Bar-Hillel-style
+intersection constructions annotate nonterminals by finite automaton states or
+paths; see Bar-Hillel--Perles--Shamir~\cite{bar-hillel-perles-shamir1961},
+Harrison~\cite{harrison1978}, and Hopcroft--Ullman~\cite{hopcroft-ullman1979}.
+For a recent account of such refinements by automaton paths, see Pasti et
+al.~\cite{pasti-et-al2023}.
+
+In the present paper the relationship is made explicit rather than left at the
+level of analogy.  The full typed refinement is the product of the original CFG
+presentation with a finite two-sided control determined by \(h\): a forward word
+control supplies the inherited left context, a backward word control supplies
+the inherited right context, and a bottom-up tree control supplies the
+synthesized yield.  Section~\ref{subsec:barhillel-product} proves that this
+product coincides rule-for-rule with the full typed refinement.  Equivalently,
+\(p\) is a finite synthesized attribute of a subtree, while \((m,n)\) are finite
+inherited attributes propagated from the root in the sense of
+Knuth~\cite{knuth1968}; see also the tree-automata viewpoints in
+\cite{gecseg-steinby1984,comon-et-al2007}.
+
+Thus the novelty claimed here is not the existence of the finite-control product
+itself.  The contribution is the image theorem for the finite occurrence
+descriptors produced by this particular two-sided monoid typing: the paper
+axiomatizes the finite productive-first image, proves the state-separated
+inverse, isolates the branching obstruction responsible for the order of
+trimming, and separates this presentation-level descriptor from language
+equivalence.
+
+Two-sided contexts are also central in distributional grammatical inference,
+especially in learning context-free languages from substitutability conditions;
+see Clark and Eyraud~\cite{clark-eyraud2007}, Yoshinaka~\cite{yoshinaka2008},
+de la Higuera~\cite{higuera2010}, and the survey by Clark and
+Yoshinaka~\cite{clark-yoshinaka2016}.  The present paper is representation-
+theoretic rather than algorithmic: it constructs no learner and proves no
+identification theorem.  It supplies a finite target descriptor that may be used
+in later learning-theoretic questions under a fixed recognizable interface.
+
+\subsection{Organization}
+\label{subsec:organization}
+
+Section~\ref{sec:prelim} fixes the grammar conventions, defines full two-sided
+typed refinement, identifies it as an explicit two-sided Bar-Hillel product, and
+records productive-first trimming.  Section~\ref{sec:algebras} defines finite
+occurrence descriptors and their auxiliary witness enrichment.  Sections~\ref{sec:extraction}
+and~\ref{sec:inverse-representation} prove extraction and state-separated
+realization.  Section~\ref{sec:characterization} combines them into the image
+theorem and records effectivity.  Sections~\ref{sec:linear-case} and~\ref{sec:non-rigidity}
+isolate the linear boundary and the presentation/language boundary.
+Section~\ref{sec:lean-artifact} summarizes the accompanying Lean artifact, and
+Section~\ref{sec:conclusion-open-problems} concludes.
+
+
+\section{Preliminaries and two-sided typed refinement}
+\label{sec:prelim}
+
+\subsection{Words, monoids, and recognizable congruences}
+
+Let \(\Sigma\) be a finite alphabet and let \(\Sigma^*\) be the free monoid over \(\Sigma\), with unit \(\lambda\). Let \(M\) be a finite monoid with unit \(\eM\), and fix a monoid morphism \(h:\Sigma^*\to M\). The kernel \(\sim_h:=\ker(h)=\{(x,y)\in\Sigma^*\times\Sigma^*\mid h(x)=h(y)\}\) is a finite-index congruence on \(\Sigma^*\). Conversely, every finite-index congruence on a free monoid is the kernel of a morphism into a finite monoid. These are the recognizable congruences. Throughout the paper the morphism \(h\) is fixed and is regarded as part of the finite interface, not as an object to be inferred.
+
+\subsection{Start-separated binary grammars}
+
+We write a context-free grammar as \(G=(V,\Sigma,P,S_0)\), where \(V\) is a finite set of nonterminals, \(\Sigma\) is the terminal alphabet, \(P\) is a finite set of productions, and \(S_0\in V\) is the start symbol.
+
+\begin{definition}[Start-separated binary normal form]
+\label{def:ssbnf}
+A grammar \(G=(V,\Sigma,P,S_0)\) is in start-separated binary normal form, abbreviated SSBNF, if the following conditions hold.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item \(S_0\) occurs in no right-hand side.
+\item Every production with left-hand side \(S_0\) has the form \(S_0\to A\), where \(A\in V\setminus\{S_0\}\), or the form \(S_0\to\lambda\).
+\item Every production with left-hand side \(A\in V\setminus\{S_0\}\) has the form \(A\to a\), where \(a\in\Sigma\), or the form \(A\to BC\), where \(B,C\in V\setminus\{S_0\}\).
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Reduced grammar]
+\label{def:reduced}
+A grammar is reduced if every nonterminal is reachable from the start symbol and productive. That is, every nonterminal occurs in some sentential form reachable from \(S_0\) and derives at least one terminal word.
+\end{definition}
+
+The start-separated condition is used only to separate the start frame from ordinary typed states. All non-start structure is binary or terminal.
+
+\subsection{Full typed refinement}
+\label{subsec:full-refinement}
+
+Fix a reduced SSBNF grammar \(G=(V,\Sigma,P,S_0)\) and a morphism \(h:\Sigma^*\to M\). The full typed refinement \(\Gfull\) has a new start symbol \(\widetilde S\). For every \(A\in V\setminus\{S_0\}\) and every \(p,m,n\in M\), it has a typed copy \(A_p^{m,n}\). The intended reading is that \(p\) records the \(h\)-type of the word generated by \(A\), while \((m,n)\) records the \(h\)-types of the left and right surrounding contexts.
+
+The rules of \(\Gfull\) are as follows.
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.2em]
+\item If \(S_0\to A\in P\), include \(\widetilde S\to A_p^{\eM,\eM}\) for every \(p\in M\).
+\item If \(S_0\to\lambda\in P\), include \(\widetilde S\to\lambda\).
+\item If \(A\to a\in P\) and \(h(a)=p\), include \(A_p^{m,n}\to a\) for all \(m,n\in M\).
+\item If \(A\to BC\in P\), include \(A_p^{m,n}\to B_q^{m,rn}\,C_r^{mq,n}\) for all \(m,n,q,r\in M\) such that \(qr=p\).
+\end{enumerate}
+
+The frame equation in a binary rule expresses how the two-sided context of the parent is transported to the children. If the left child has yield type \(q\) and the right child has yield type \(r\), then the left child sees the right yield type \(r\) before the parent's right frame \(n\), while the right child sees the left yield type \(q\) after the parent's left frame \(m\).
+
+\begin{proposition}[Effectivity and size of the full refinement]
+\label{prop:effective-size}
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, and fix \(h:\Sigma^*\to M\). The full typed refinement \(\Gfull\) can be constructed effectively. The number of non-start typed nonterminals is at most \((|V|-1)|M|^3\), the number of start rules is at most \(|P_{\mathrm{start}}||M|+1\), the number of typed terminal rules is at most \(|P_{\mathrm{term}}||M|^2\), and the number of typed binary rules is at most \(|P_{\mathrm{bin}}||M|^4\), where \(P_{\mathrm{start}}\), \(P_{\mathrm{term}}\), and \(P_{\mathrm{bin}}\) denote respectively the start, terminal, and binary productions of \(G\). Consequently, the productive-first trimmed refinement \(\Gtrim\) is computable by finite fixed-point calculations.
+\end{proposition}
+
+\begin{proof}
+Non-start typed copies are indexed by \((A,p,m,n)\in (V\setminus\{S_0\})\times M^3\), giving the stated state bound. The bounds for start, terminal, and binary rules follow immediately from the four clauses defining \(\Gfull\). For a binary production \(A\to BC\), a choice of \(m,n,q,r\in M\) determines \(p=qr\). Productivity and reachability are least fixed points over a finite set of typed nonterminals, so both trimming stages terminate and are effective.
+\end{proof}
+
+
+\subsection{The typed refinement as a two-sided Bar-Hillel product}
+\label{subsec:barhillel-product}
+
+The previous definition can be placed exactly in the classical finite-control
+lineage.  Fix \(h:\Sigma^*\to M\).  Define three finite controls over the state
+set \(M\).  The forward word control \(\mathcal A^{\rightarrow}\) has transition
+\(\delta^{\rightarrow}(m,a)=m h(a)\); after reading a prefix \(u\) from state
+\(m\), it is in state \(m h(u)\).  The backward word control
+\(\mathcal A^{\leftarrow}\) has transition
+\(\delta^{\leftarrow}(n,a)=h(a)n\), processed right-to-left; after consuming a
+suffix \(v\), it is in state \(h(v)n\).  Finally, the bottom-up yield control
+\(\mathcal A^{\uparrow}\) assigns \(h(a)\) to a terminal leaf \(a\), and assigns
+\(qr\) to a binary node whose left and right child states are \(q\) and \(r\).
+Let \(\mathcal D=(\mathcal A^{\rightarrow},\mathcal A^{\leftarrow},
+\mathcal A^{\uparrow})\).
+
+A decorated nonterminal is a tuple \((A;p,m,n)\), with \(A\in V\setminus\{S_0\}\)
+and \(p,m,n\in M\).  It is read as an occurrence of \(A\) whose synthesized
+yield state is \(p\), inherited left-context state is \(m\), and inherited
+right-context state is \(n\).  The product grammar \(G\otimes\mathcal D\) is
+obtained by decorating every rule of \(G\) with all locally consistent control
+values: start rules have inherited pair \((\eM,\eM)\), terminal rules require
+\(p=h(a)\), and binary rules thread the three controls through the two children.
+
+\begin{proposition}[Two-sided Bar-Hillel form]
+\label{prop:barhillel-product}
+Under the identification \((A;p,m,n)\leftrightarrow A_p^{m,n}\), the product
+\(G\otimes\mathcal D\) and the full typed refinement \(\Gfull\) have identical
+start, terminal, and binary rule sets.  In particular, the binary product rule
+is precisely
+\[
+  A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\qquad(qr=p).
+\]
+Moreover, the decorations are semantically correct: in every complete
+derivation, an occurrence \(A_p^{m,n}\) has yield \(h\)-image \(p\), left-context
+\(h\)-image \(m\), and right-context \(h\)-image \(n\).
+\end{proposition}
+
+\begin{proof}
+The start and terminal clauses coincide directly with the definition of
+\(\Gfull\).  For a binary rule \(A\to BC\), suppose the parent has inherited
+pair \((m,n)\), the left child has synthesized yield state \(q\), and the right
+child has synthesized yield state \(r\).  The bottom-up control gives the parent
+yield state \(p=qr\).  The left child has the same left context as the parent,
+so its inherited left state is \(m\); it is followed by the right child's yield
+and then the parent's right context, so its inherited right state is \(rn\).  The
+right child has inherited right state \(n\); it is preceded by the parent's left
+context and then the left child's yield, so its inherited left state is \(mq\).
+Thus the decorated binary rule is exactly
+\(A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\) with \(qr=p\), which is the binary clause
+of the full typed refinement.  The semantic correctness assertion is precisely
+Lemmas~\ref{lem:yield-typing-invariant} and~\ref{lem:context-typing-invariant},
+proved below by induction on derivation height and on the root-to-occurrence
+spine.
+\end{proof}
+
+\begin{remark}[Not just a one-sided word intersection]
+\label{rem:not-one-sided-intersection}
+Proposition~\ref{prop:barhillel-product} says that the full refinement is a
+finite-control product, but it is not merely a one-sided intersection of the
+generated word language with a regular language.  A forward Bar-Hillel triple
+records an endpoint pair \((m,mp)\), and hence does not see the right context
+\(n\) at all.  Moreover, over a general finite monoid, \((m,mp)\) need not
+determine the yield type \(p\).  For example, in the multiplicative monoid
+\(M=\{0,1\}\), with \(0\) absorbing and \(1\) the unit, if \(h(a)=1\) and
+\(h(b)=0\), then every occurrence with inherited left state \(m=0\) has forward
+exit state \(0p=0\), independently of whether the yield type is \(p=0\) or
+\(p=1\).  The bottom-up component \(\mathcal A^{\uparrow}\) is therefore an
+independent component in non-cancellative monoids.
+
+If \(M\) is left-cancellative, in particular if \(M\) is a group, then the yield
+component is recoverable from forward endpoint data: \(mp=mp'\) implies
+\(p=p'\).  This removes the need for an independent synthesized-yield component
+as information, but it does not turn the construction into a one-sided word
+intersection, since the inherited right context still requires the backward
+control.  The productive-first trimming obstruction is a separate phenomenon:
+it comes from branching and inherited-frame transport in the full all-copy
+refinement, and it already occurs over the cancellative monoid
+\(\mathbb Z/2\mathbb Z\) in Example~\ref{ex:productive-first-needed}.
+\end{remark}
+
+The novelty of the paper is therefore not the product \(G\otimes\mathcal D\)
+itself.  It lies in the intrinsic axiomatization of the finite productive-first
+image of this product, in the proof that productive-first trimming is necessary
+in the branching case, and in the observation that the resulting finite object
+is a descriptor of a presentation rather than an invariant of the generated
+language.
+
+
+\subsection{Productive-first trimming}
+\label{subsec:productive-first}
+
+\begin{definition}[Productive-first trimmed typed refinement]
+\label{def:productive-first-trimming}
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, and let \(\Gfull\) be its full typed refinement under \(h:\Sigma^*\to M\). The productive-first trimmed typed refinement of \(G\), denoted \(\Gtrim\), is obtained in two stages.
+
+First, remove from \(\Gfull\) every non-start typed nonterminal \(X\) that derives no word of \(\Sigma^+\), and remove every rule incident with a removed nonterminal. If the start rule \(\widetilde S\to\lambda\) exists, it is retained at the start interface.
+
+Second, in the resulting productive subgrammar, keep only the non-start typed nonterminals reachable from \(\widetilde S\), and again remove every rule incident with a discarded nonterminal. The resulting grammar is called the productive-first trimmed typed refinement.
+\end{definition}
+
+This order is part of the construction. It is not equivalent to taking the intersection of the copies productive in \(\Gfull\) and the copies reachable in \(\Gfull\). A parent copy with a wrong yield type may be reachable from the start symbol and, even though it is itself nonproductive, transport a wrong context frame to a productive child. Such a child is reachable in the full refinement but is not reachable through productive typed copies. Thus all extraction, language-preservation, and representation statements use the productive-first convention.
+
+\begin{xmpl}[Why productivity must be tested before reachability]
+\label{ex:productive-first-needed}
+Let \(M=\mathbb Z/2\mathbb Z=\{0,1\}\), written additively. Let \(\Sigma=\{a\}\) and let \(h(a)=0\). Consider abstract states \(X=A_0^{0,0}\), \(Y=B_0^{0,0}\), and \(Z=C_0^{0,0}\), with \(X\) as a start state and rules \(X\to YZ\), \(Y\to a\), and \(Z\to a\). The corresponding state-separated grammar has productions \(S_0\to N_X\), \(N_X\to N_YN_Z\), \(N_Y\to a\), and \(N_Z\to a\).
+
+In the full typed refinement of this grammar, the rules immediately below the start symbol include \(\widetilde S\to (N_X)_p^{0,0}\) for \(p\in\{0,1\}\). Thus the copy \((N_X)_1^{0,0}\), having the wrong yield type, is also reachable from \(\widetilde S\). This copy is nonproductive, but before it is deleted it has the typed binary rule \((N_X)_1^{0,0}\to (N_Y)_0^{0,1}(N_Z)_1^{0,0}\). Hence \((N_Y)_0^{0,1}\) is reachable in the full refinement. Since the rule \(N_Y\to a\) yields a terminal rule \((N_Y)_0^{0,1}\to a\), this copy is also productive. Therefore, a naive procedure that keeps copies that are reachable in the full refinement and productive in the full refinement would keep \((N_Y)_0^{0,1}\). However, the intended copy of \(Y\) in the state-separated representation is \((N_Y)_0^{0,0}\), not \((N_Y)_0^{0,1}\).
+
+Productive-first trimming removes this extra copy. Indeed, the word generated from \(N_X\) here is \(aa\), whose \(h\)-value is \(0\). Thus \((N_X)_1^{0,0}\) is nonproductive and is deleted before reachability is computed. Consequently, \((N_Y)_0^{0,1}\) is no longer reachable inside the productive subgrammar. This is why productivity must be tested before reachability.
+\end{xmpl}
+
+
+\subsection{Algorithmic extraction}
+\label{subsec:algorithmic-extraction}
+
+The extraction used in the sequel is constructive. We record it explicitly as
+Algorithm~\ref{alg:productive-first-extraction}. The algorithm is deliberately
+split into two finite fixed-point computations: productivity is computed first,
+and reachability is then computed only inside the productive subgrammar. This
+order is essential, as Example~\ref{ex:productive-first-needed} shows.
+
+The Lean development suggests a useful certificate-level reading of this
+algorithm.  A fixed-point computation can be certified by a finite height at
+which the next iterate agrees with the current iterate over a complete finite
+support list.  Such a list-stability witness gives a \texttt{StableAt}
+certificate and hence the closure certificate used by the certified
+Algorithm~1 package.  Therefore the executable boundary can be factored into
+three finite pieces: finite rule-decision data, finite support/list-stability
+certificates for the productive and reachable stages, and a final bridge from
+those certificates to the abstract \texttt{FullKept} predicate.  The present
+paper still proves termination of Algorithm~\ref{alg:productive-first-extraction}
+mathematically by finite monotone iteration; the Lean artifact records the
+corresponding certificate interface rather than claiming a fully extracted
+implementation.
+
+\begin{algobox}{Productive-first extraction of the finite two-sided typed descriptor}
+\label{alg:productive-first-extraction}
+\noindent\textbf{Input.} A reduced SSBNF grammar \(G=(V,\Sigma,P,S_0)\) and a finite monoid morphism \(h:\Sigma^*\to M\).
+
+\smallskip
+\noindent\textbf{Output.} A finite \(M\)-typed two-sided occurrence descriptor \(\mathcal A(G)=(W,R,\omega,\chi,S)\).
+
+\begin{enumerate}[label=\textup{\arabic*.},leftmargin=2.2em]
+\item Construct the full typed refinement \(\Gfull\).
+\item Let \(U\) be the finite set of all non-start typed copies \(A_p^{m,n}\) of \(\Gfull\).
+\item Initialize \(P_0:=\varnothing\). Iterate
+\[
+\begin{aligned}
+P_{i+1}:={}&P_i
+\cup\{X\in U\mid X\to a\text{ is a rule of }\Gfull\}\\
+&\cup\{X\in U\mid X\to YZ\text{ is a rule of }\Gfull,\ Y,Z\in P_i\}.
+\end{aligned}
+\]
+until \(P_{i+1}=P_i\). Let the stable value be \(P_\infty\).
+\item Restrict \(\Gfull\) to rules whose non-start typed symbols all lie in \(P_\infty\).
+\item Initialize \(Q_0:=\{X\in P_\infty\mid \widetilde S\to X\text{ is a start rule of the restricted grammar}\}\). Iterate
+\[
+\begin{aligned}
+Q_{j+1}:={}&Q_j
+\cup\{Y\in P_\infty\mid X\in Q_j,\ X\to YZ\text{ is a restricted binary rule}\}\\
+&\cup\{Z\in P_\infty\mid X\in Q_j,\ X\to YZ\text{ is a restricted binary rule}\}.
+\end{aligned}
+\]
+until \(Q_{j+1}=Q_j\). Let \(W:=Q_j\).
+\item Let \(R\) be the terminal and binary rules of the restricted grammar whose non-start typed symbols all lie in \(W\).
+\item Let \(S:=\{X\in W\mid \widetilde S\to X\text{ is a retained start rule}\}\).
+\item For each \(X\in W\), let \(\omega(X)\) be the shortlex-minimal word in \(Y_R(X)\), and let \(\chi(X)\) be the lexicographic shortlex-minimal pair in \(C_R(X)\).
+\item Return \((W,R,\omega,\chi,S)\).
+\end{enumerate}
+\end{algobox}
+
+\begin{proposition}[Termination and correctness of Algorithm~\ref{alg:productive-first-extraction}]
+\label{prop:algorithmic-extraction-correct}
+Algorithm~\ref{alg:productive-first-extraction} terminates. Its output is
+exactly the shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor
+\(\mathcal A(G)\) extracted from the productive-first trimmed typed refinement
+of \(G\).
+\end{proposition}
+
+\begin{proof}
+The full typed refinement has at most \((|V|-1)|M|^3\) non-start typed states.
+Both loops are monotone fixed-point iterations over subsets of this finite set:
+the first loop computes the least productivity fixed point, and the second loop
+computes the least reachability fixed point inside the productive subgrammar.
+Therefore both loops terminate after at most \((|V|-1)|M|^3\) strict insertions.
+
+After the first loop, precisely the productive non-start typed states remain.
+After restricting to the productive subgrammar, the second loop keeps precisely
+the states reachable from the start interface inside that productive subgrammar.
+Thus the surviving state set and rule set are exactly those of the
+productive-first trimmed typed refinement. The definitions of \(S\), \(\omega\),
+and \(\chi\) agree with the extraction setup: \(S\) records the retained start
+states, while \(\omega\) and \(\chi\) choose the shortlex-minimal yield and
+context witnesses from \(Y_R(X)\) and \(C_R(X)\). Hence the output is precisely
+\(\mathcal A(G)\). The fact that this output satisfies the axioms of a
+shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor is
+Theorem~\ref{thm:extraction}.
+\end{proof}
+
+\subsection{Typing invariants}
+\label{subsec:typing-invariants}
+
+\begin{lemma}[Yield-type invariant for typed refinement]
+\label{lem:yield-typing-invariant}
+Let \(G\) be a reduced SSBNF grammar and let \(\Gfull\) be its full typed refinement under \(h:\Sigma^*\to M\). If \(A_p^{m,n}\Rightarrow_{\Gfull}^* w\) for some \(w\in\Sigma^+\), then \(h(w)=p\). The same statement holds in every subgrammar of \(\Gfull\), in particular in \(\Gtrim\).
+\end{lemma}
+
+\begin{proof}
+Proceed by induction on the height of the derivation from \(A_p^{m,n}\). If the height is \(1\), the derivation uses a terminal rule \(A_p^{m,n}\to a\). By definition of the full typed refinement, such a rule exists only when \(h(a)=p\), and the claim follows.
+
+If the first step is binary, the rule has the form \(A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\) with \(qr=p\). The derivation decomposes as \(B_q^{m,rn}\Rightarrow_{\Gfull}^* u\), \(C_r^{mq,n}\Rightarrow_{\Gfull}^* v\), and \(w=uv\). By induction, \(h(u)=q\) and \(h(v)=r\). Hence \(h(w)=h(uv)=h(u)h(v)=qr=p\). The same proof applies to every subgrammar, since each of its rules is still a rule of \(\Gfull\).
+\end{proof}
+
+\begin{lemma}[Context-type invariant for typed refinement]
+\label{lem:context-typing-invariant}
+Let \(G\) be a reduced SSBNF grammar and let \(\Gfull\) be its full typed refinement under \(h:\Sigma^*\to M\). If \(\widetilde S\Rightarrow_{\Gfull}^* u\,A_p^{m,n}\,v\) for \(u,v\in\Sigma^*\), then \(h(u)=m\) and \(h(v)=n\). The same statement holds in every subgrammar of \(\Gfull\), in particular in \(\Gtrim\).
+\end{lemma}
+
+\begin{proof}
+Choose a derivation tree witnessing \(\widetilde S\Rightarrow_{\Gfull}^* u\,A_p^{m,n}\,v\), and consider the spine from the root to the occurrence of \(A_p^{m,n}\) under consideration. We argue by induction on the length of this spine.
+
+If the spine has length \(1\), the occurrence is reached by a start rule \(\widetilde S\to A_p^{\eM,\eM}\). Thus \(u=v=\lambda\), and \(h(u)=h(v)=\eM\).
+
+For the induction step, suppose that the occurrence under consideration lies below a typed binary rule \(X_s^{\ell,r}\to Y_q^{\ell,tr}\,Z_t^{\ell q,r}\). Applying the induction hypothesis to the parent occurrence \(X_s^{\ell,r}\), the left and right terminal contexts of the parent have types \(\ell\) and \(r\). If the occurrence lies in the left child, then by Lemma~\ref{lem:yield-typing-invariant} the right sibling derives some word \(z\) with \(h(z)=t\). The right context of the child is therefore \(z\) followed by the parent's right context, and has type \(tr\), while the left context type remains \(\ell\). This agrees with the annotation \(Y_q^{\ell,tr}\). The case of the right child is symmetric: the left sibling derives some word \(y\) with \(h(y)=q\), so the child's left context type is \(\ell q\) and its right context type remains \(r\), agreeing with \(Z_t^{\ell q,r}\). The claim follows.
+
+The proof uses only rules of the full typed refinement and therefore applies to every subgrammar.
+\end{proof}
+
+\begin{remark}[Empty state sets and the empty word]
+\label{rem:edge-cases}
+The non-start typed states considered in this paper generate words of \(\Sigma^+\). This is compatible with SSBNF. If the empty word is generated, it is generated only by the start rule \(S_0\to\lambda\), and is therefore represented at the start interface rather than as a state of \(W\).
+
+If a reduced SSBNF grammar generates only \(\lambda\), then its trimmed typed refinement has no non-start typed state, so \(W=\varnothing\), while the start rule \(\widetilde S\to\lambda\) remains. This purely start-only case is harmless but degenerate. The inverse representation theorem below is stated for \(W\neq\varnothing\) in order to avoid treating this start-only case inside the state-separated construction. A grammar generating both \(\lambda\) and nonempty words is handled as usual: the rule \(\widetilde S\to\lambda\) is retained at the start interface, and the nonempty part is represented by non-start typed states.
+\end{remark}
+
+\section{Finite two-sided occurrence descriptors}
+\label{sec:algebras}
+
+\subsection{Motivation}
+
+Typed refinement separates not only yield behavior but also the surrounding two-sided frame in which a symbol occurs. The following elementary example shows why context frames cannot be suppressed.
+
+\begin{example}[Two occurrences of the same nonterminal with different frames]
+\label{ex:two-frames}
+Let \(M=\mathbb Z/2\mathbb Z\), written additively, let \(\Sigma=\{a,b\}\), and let \(h(a)=0\), \(h(b)=1\). Consider the grammar \(S_0\to S\), \(S\to AB\mid BA\), \(A\to a\), and \(B\to b\). The symbol \(A\) occurs once in the left position of \(AB\) and once in the right position of \(BA\). In the derivation \(S\Rightarrow AB\), the context of the occurrence of \(A\) is \((\lambda,b)\), hence its context type is \((0,1)\). In the derivation \(S\Rightarrow BA\), the context of the occurrence of \(A\) is \((b,\lambda)\), hence its context type is \((1,0)\). Both occurrences generate the same terminal symbol \(a\), and hence have the same yield type \(0\), but they must be distinguished as \(A_0^{0,1}\) and \(A_0^{1,0}\). This is the basic reason for treating \(A_p^{m,n}\), not just \(A\), as a relational state.
+\end{example}
+
+The abstract definition below takes such typed states and frame-update equations as primitive objects. The aim is to describe the finite structure carried by typed refinement without mentioning an underlying untyped grammar.
+
+\subsection{Pre-structures and axioms}
+
+The core object is the finite typed rule descriptor \(W,R,S\): a finite set of typed states, a finite set of terminal and binary clauses, and a finite start-state set.  The witness maps introduced below are auxiliary certificate data.  They make it possible to speak canonically about one representative yield and one representative two-sided context for each state, and they are uniquely determined once shortlex normalization is imposed.  The state-rule part \(W,R,S\) is the primary descriptor in the image theorem.
+
+In the abstract setting, it is useful to regard a typed state as an element \(X\) of a finite set equipped with three type components \(\yt(X),\lt(X),\rt(X)\in M\), and, when needed, a state label. If the label is written \(A\) and the type components are written \(p,m,n\), we use the suggestive notation \(X=A_p^{m,n}\). Thus \(\yt(X)=p\), \(\lt(X)=m\), and \(\rt(X)=n\). In extracted structures, the label records the nonterminal of the original presentation. In the inverse representation theorem, the actual grammar nonterminal will be the state-separated symbol \(N_X\).
+
+\begin{definition}[Witness-enriched pre-\(M\)-typed occurrence descriptor]
+\label{def:pre-structure}
+A witness-enriched pre-\(M\)-typed occurrence descriptor over \(h:\Sigma^*\to M\) is a tuple \(\A=(W,R,\omega,\chi,S)\) satisfying the following conditions.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item \(W\) is a finite set of abstract typed states, and every \(X\in W\) has type components \(\yt(X),\lt(X),\rt(X)\in M\) and, when needed, a state label.
+\item \(R\subseteq W\times(\Sigma\sqcup W\times W)\) is a finite set of terminal and binary rules, written \(X\to a\) and \(X\to YZ\).
+\item \(S\subseteq W\) is the set of start states.
+\item \(\omega:W\to\Sigma^+\) is the yield-witness map.
+\item \(\chi:W\to\Sigma^*\times\Sigma^*\) is the context-witness map.
+\end{enumerate}
+\end{definition}
+
+The maps \(\omega\) and \(\chi\) are included deliberately as witness data: for each state, they provide one generated word and one global two-sided context. They are not additional grammar operations. In extracted structures, once the finite state and rule structure has been fixed, these witnesses are chosen to be shortlex-minimal.
+
+Below we mostly use the word ``structure''. We also call the state and rule object a finite relational presentation structure. Its carrier is a finite set of typed states, and its terminal and binary rules are relational clauses constrained by multiplication in \(M\). We are not introducing total operations in the sense of universal algebra.
+
+The following axioms turn a pre-structure into the finite occurrence descriptor needed below.
+
+\begin{definition}[Axiom T: typed rule equations]
+\label{def:axiom-T}
+The rule set \(R\) satisfies axiom T if the following conditions hold.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item If \(X\to a\in R\), then \(h(a)=\yt(X)\).
+\item If \(X\to YZ\in R\), and if \(X=A_p^{m,n}\), \(Y=B_q^{m_Y,n_Y}\), and \(Z=C_r^{m_Z,n_Z}\), then \(qr=p\), \(m_Y=m\), \(n_Y=rn\), \(m_Z=mq\), and \(n_Z=n\). Equivalently, every binary rule has the form \(A_p^{m,n}\to B_q^{m,rn}\,C_r^{mq,n}\).
+\end{enumerate}
+\end{definition}
+
+Axiom T is the algebraic form of two-sided frame update. It says that the yield type of the parent is the product of the yield types of the children, and that the external frame of the parent is transported to each child after inserting the other child's yield type.
+
+\begin{definition}[Axiom S: start-frame condition]
+\label{def:axiom-S}
+The start set \(S\) satisfies axiom S if \(\lt(X)=\eM\) and \(\rt(X)=\eM\) for every \(X\in S\).
+\end{definition}
+
+Axiom S says that a state appearing immediately below the start symbol has empty left and right contexts.
+
+\begin{definition}[Productivity fixed point]
+\label{def:productivity-fixed-point}
+For \(P\subseteq W\), define \(\Phi_R(P):=\{X\in W\mid \exists a\in\Sigma\ (X\to a\in R)\}\cup\{X\in W\mid \exists Y,Z\in P\ (X\to YZ\in R)\}\). The productivity set is the least fixed point \(\Prod(W,R):=\mu P.\,\Phi_R(P)\). A pre-structure satisfies axiom P if \(W=\Prod(W,R)\).
+\end{definition}
+
+Axiom P excludes typed states that generate no terminal word.
+
+\begin{definition}[Reachability fixed point]
+\label{def:reachability-fixed-point}
+For \(Q\subseteq W\), let \(\Psi_R(Q)\) be the union of \(S\), all left children \(Y\) such that \(X\in Q\) and \(X\to YZ\in R\), and all right children \(Z\) such that \(X\in Q\) and \(X\to YZ\in R\). The reachability set is the least fixed point \(\Reach(W,R,S):=\mu Q.\,\Psi_R(Q)\). A pre-structure satisfies axiom Rch if \(W=\Reach(W,R,S)\).
+\end{definition}
+
+Axiom Rch excludes typed states that cannot be reached from the start interface.
+
+It remains to specify what the witness maps \(\omega\) and \(\chi\) must prove. Define the yield language \(Y_R(X)\subseteq\Sigma^+\) generated from a state \(X\) by \(R\) as the least family satisfying the following clauses.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item If \(X\to a\in R\), then \(a\in Y_R(X)\).
+\item If \(X\to YZ\in R\), \(u\in Y_R(Y)\), and \(v\in Y_R(Z)\), then \(uv\in Y_R(X)\).
+\end{enumerate}
+
+\begin{definition}[Axiom \(\Omega\): consistency of yield witnesses]
+\label{def:axiom-Omega}
+The map \(\omega:W\to\Sigma^+\) satisfies axiom \(\Omega\) if, for every \(X\in W\), \(\omega(X)\in Y_R(X)\) and \(h(\omega(X))=\yt(X)\).
+\end{definition}
+
+Define the context relation \(C_R(X)\subseteq\Sigma^*\times\Sigma^*\) generated by \(R\) as the least family satisfying the following clauses.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item If \(X\in S\), then \((\lambda,\lambda)\in C_R(X)\).
+\item If \((u,v)\in C_R(X)\), \(X\to YZ\in R\), and \(z\in Y_R(Z)\), then \((u,zv)\in C_R(Y)\).
+\item If \((u,v)\in C_R(X)\), \(X\to YZ\in R\), and \(y\in Y_R(Y)\), then \((uy,v)\in C_R(Z)\).
+\end{enumerate}
+
+\begin{definition}[Axiom C: consistency of context witnesses]
+\label{def:axiom-C}
+The map \(\chi:W\to\Sigma^*\times\Sigma^*\) satisfies axiom C if, for every \(X\in W\), writing \(\chi(X)=(u_X,v_X)\), one has \((u_X,v_X)\in C_R(X)\), \(h(u_X)=\lt(X)\), and \(h(v_X)=\rt(X)\).
+\end{definition}
+
+Context witnesses are intentionally global. They are required to belong to the context closure \(C_R(X)\), not to be obtained from one-step local combinations of canonical witnesses. This distinction matters: a shortlex-minimal context is not generally computed from local minima of the parent and sibling.
+
+\begin{definition}[Finite \(M\)-typed two-sided occurrence descriptor]
+\label{def:typed-context-structure}
+A finite \(M\)-typed two-sided occurrence descriptor is a witness-enriched pre-\(M\)-typed occurrence descriptor \(\A=(W,R,\omega,\chi,S)\) satisfying axioms T, S, P, Rch, \(\Omega\), and C.
+\end{definition}
+
+The witness maps \(\omega\) and \(\chi\) are auxiliary witness data, not additional generation operations. The rule structure itself is \((W,R,S)\); the witnesses choose concrete yield and context representatives from the inductively generated families \(Y_R(X)\) and \(C_R(X)\). They are included so that extracted structures can be shortlex-normalized, and so that witness data can be compared in the inverse theorem when such normalization is imposed. In extracted structures, the type equations in axioms \(\Omega\) and C follow from the typing invariants.
+
+
+\subsection{Auxiliary witness enrichment and shortlex-normalized witnesses}
+
+Fix a total order on \(\Sigma\), and let \(\slex\) denote the induced shortlex order on \(\Sigma^*\). On \(\Sigma^*\times\Sigma^*\), use the lexicographic shortlex order induced by this order.
+
+\begin{definition}[Shortlex-normalized witness maps]
+\label{def:shortlex-normalized-witnesses}
+A finite \(M\)-typed two-sided occurrence descriptor is shortlex-normalized if, for every \(X\in W\), one has \(\omega(X)=\min_{\slex}Y_R(X)\) and \(\chi(X)=\min_{\slex}C_R(X)\), where \(C_R(X)\subseteq\Sigma^*\times\Sigma^*\) is ordered by lexicographic shortlex order on pairs.
+\end{definition}
+
+Normalization is applied only after the finite state and rule structure has been fixed. It selects canonical witnesses inside a fixed structure; it does not assert that the structure itself is canonical for the generated language. The non-rigidity theorem below shows that different presentations of the same language can yield non-isomorphic finite typed structures even after shortlex normalization.
+
+The distinction between arbitrary witness maps and shortlex-normalized witness maps is essential for the representation theorem. State-separated representation preserves the finite state and rule structure under the basic axioms. It preserves \(\omega\) and \(\chi\) literally only when they are selected by the shortlex-minimality condition above.
+
+\begin{definition}[Isomorphism of finite typed occurrence descriptors]
+\label{def:descriptor-isomorphism}
+Let \(\mathcal A_i=(W_i,R_i,\omega_i,\chi_i,S_i)\), for \(i=1,2\), be two
+witness-enriched finite \(M\)-typed occurrence descriptors over the same fixed
+morphism \(h:\Sigma^*\to M\). An isomorphism
+\(\varphi:\mathcal A_1\cong\mathcal A_2\) is a bijection \(\varphi:W_1\to W_2\)
+satisfying the following conditions for all \(X,Y,Z\in W_1\) and all
+\(a\in\Sigma\).
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item \emph{Type preservation:}
+\(\yt(\varphi(X))=\yt(X)\), \(\lt(\varphi(X))=\lt(X)\), and
+\(\rt(\varphi(X))=\rt(X)\).
+\item \emph{Start states:} \(X\in S_1\) if and only if \(\varphi(X)\in S_2\).
+\item \emph{Terminal rules:} \(X\to a\in R_1\) if and only if
+\(\varphi(X)\to a\in R_2\).
+\item \emph{Binary rules:} \(X\to YZ\in R_1\) if and only if
+\(\varphi(X)\to\varphi(Y)\varphi(Z)\in R_2\).
+\end{enumerate}
+Such a \(\varphi\) is called an isomorphism of finite typed rule structures
+\((W_1,R_1,S_1)\cong(W_2,R_2,S_2)\).
+
+For shortlex-normalized witness-enriched descriptors, the witness maps are
+preserved automatically once the state-rule structure is preserved, since
+\(\omega\) and \(\chi\) are determined by \((W,R,S)\). For arbitrary
+witness-enriched descriptors, when one speaks of an isomorphism preserving the
+chosen witnesses literally, one requires in addition
+\[
+  \omega_2(\varphi(X))=\omega_1(X),\qquad
+  \chi_2(\varphi(X))=\chi_1(X)
+\]
+for every \(X\in W_1\).
+\end{definition}
+
+
+\section{Extraction from CFG presentations}
+\label{sec:extraction}
+
+\subsection{Setup}
+\label{subsec:extraction-setup}
+
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, and fix a finite monoid morphism \(h:\Sigma^*\to M\). Let \(\Gfull\) be the full typed refinement of \(G\) under \(h\), and let \(\Gtrim\) be the productive-first trimmed typed refinement in the sense of Definition~\ref{def:productive-first-trimming}.
+
+Let \(W\) be the set of non-start typed nonterminals of \(\Gtrim\). Thus each element of \(W\) has the form \(A_p^{m,n}\) for \(A\in V\setminus\{S_0\}\) and \(p,m,n\in M\). Let \(R\) be the set of rules of \(\Gtrim\) whose left-hand side is a non-start typed nonterminal in \(W\). Equivalently, \(R\) consists of all terminal rules \(A_p^{m,n}\to a\) and all binary rules \(A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\) realized in \(\Gtrim\). Rules whose left-hand side is \(\widetilde S\) are excluded and treated separately through the start-state set. Put \(S:=\{X\in W\mid \widetilde S\to X\text{ is a realized start rule of }\Gtrim\}\). If the start rule \(\widetilde S\to\lambda\) exists, it is included in neither \(R\) nor \(S\). It belongs to the start interface and is irrelevant to the non-start typed occurrence descriptor extracted here.
+
+For each \(X\in W\), define \(\omega(X)\) to be the shortlex-minimal terminal word \(w\in\Sigma^+\) such that \(X\Rightarrow_{\Gtrim}^* w\). Similarly, define \(\chi(X)=(u_X,v_X)\) to be the lexicographic shortlex-minimal pair in \(\Sigma^*\times\Sigma^*\) such that \(\widetilde S\Rightarrow_{\Gtrim}^* u_X X v_X\).
+
+Let \(\mathcal A(G):=(W,R,\omega,\chi,S)\) be the tuple extracted from the productive-first trimmed typed refinement.
+
+\subsection{Closure-coincidence lemmas}
+\label{subsec:auxiliary-lemmas}
+
+\begin{lemma}[Coincidence of yield closures]
+\label{lem:yield-closure-coincidence}
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, fix \(h:\Sigma^*\to M\), and let \(\Gtrim\) be the trimmed typed refinement of \(G\). Let \(W\) and \(R\) be the typed state set and the realized non-start typed rule set extracted from \(\Gtrim\). Then, for every \(X\in W\), \(Y_R(X)=\{w\in\Sigma^+\mid X\Rightarrow_{\Gtrim}^* w\}\).
+\end{lemma}
+
+\begin{proof}
+Write \(L_{\Gtrim}(X):=\{w\in\Sigma^+\mid X\Rightarrow_{\Gtrim}^*w\}\). We prove both inclusions.
+
+First, \(Y_R(X)\subseteq L_{\Gtrim}(X)\) for all \(X\in W\). This is shown by induction on the closure rank by which \(w\in Y_R(X)\) is generated. If \(w\) is introduced by a terminal rule, then there is a rule \(X\to a\in R\) and \(w=a\). Since \(R\) is the realized rule set of \(\Gtrim\), the same rule belongs to \(\Gtrim\), so \(X\Rightarrow_{\Gtrim} a=w\). If \(w\) is introduced by a binary rule, then there are \(Y,Z\in W\), a rule \(X\to YZ\in R\), and words \(u\in Y_R(Y)\), \(v\in Y_R(Z)\) such that \(w=uv\). By induction, \(Y\Rightarrow_{\Gtrim}^*u\) and \(Z\Rightarrow_{\Gtrim}^*v\). Since \(X\to YZ\) is realized in \(\Gtrim\), we get \(X\Rightarrow_{\Gtrim}YZ\Rightarrow_{\Gtrim}^*uv=w\).
+
+Conversely, \(L_{\Gtrim}(X)\subseteq Y_R(X)\) for all \(X\in W\). We argue by induction on the height of a derivation \(X\Rightarrow_{\Gtrim}^* w\). If the height is \(1\), the derivation uses a terminal rule \(X\to a\) of \(\Gtrim\), with \(w=a\). Since \(X\in W\) and the rule is realized, \(X\to a\in R\), so \(a\in Y_R(X)\). If the derivation has positive binary height, its first step has the form \(X\Rightarrow_{\Gtrim}YZ\). Since \(\Gtrim\) is in SSBNF and \(X\in W\) is non-start, rules with left-hand side \(X\) are only terminal or binary rules; no unary rules occur. Hence the first step is by a realized rule \(X\to YZ\in R\), followed by \(Y\Rightarrow_{\Gtrim}^*u\), \(Z\Rightarrow_{\Gtrim}^*v\), and \(w=uv\). By induction, \(u\in Y_R(Y)\) and \(v\in Y_R(Z)\). The closure rule for \(Y_R\) gives \(uv=w\in Y_R(X)\).
+
+The two inclusions yield equality.
+\end{proof}
+
+Before the next lemma, we use standard terminology. A one-hole derivation tree with root \(U\) and distinguished leaf \(X\) is a derivation tree whose frontier has the form \(\alpha X\beta\), with \(\alpha,\beta\in\Sigma^*\), and whose distinguished occurrence of \(X\) is the only nonterminal leaf.
+
+The next lemma identifies the abstract global context witnesses with the actual two-sided derivation contexts in the trimmed typed refinement.
+
+\begin{lemma}[Coincidence of context closures]
+\label{lem:context-closure-coincidence}
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, fix \(h:\Sigma^*\to M\), and let \(\Gtrim\) be its trimmed typed refinement. Let \(W,R,S\) be the typed state set, realized non-start rule set, and realized start-state set extracted from \(\Gtrim\). For \(X\in W\), put \(\mathrm{Ctx}_{\Gtrim}(X):=\{(u,v)\in\Sigma^*\times\Sigma^*\mid \widetilde S\Rightarrow_{\Gtrim}^*uXv\}\). Then \(C_R(X)=\mathrm{Ctx}_{\Gtrim}(X)\) for every \(X\in W\).
+\end{lemma}
+
+\begin{proof}
+We prove both inclusions.
+
+First, \(C_R(X)\subseteq\mathrm{Ctx}_{\Gtrim}(X)\). We argue by induction on the closure rank by which a pair enters the least family \(C_R\). If \(X\in S\), the initial clause gives \((\lambda,\lambda)\in C_R(X)\). By definition of \(S\), the start rule \(\widetilde S\to X\) is realized in \(\Gtrim\). Hence \(\widetilde S\Rightarrow_{\Gtrim}X\), so \((\lambda,\lambda)\in\mathrm{Ctx}_{\Gtrim}(X)\).
+
+Suppose next that \((u,zv)\in C_R(Y)\) is introduced from \((u,v)\in C_R(X)\), \(X\to YZ\in R\), and \(z\in Y_R(Z)\). By induction, \((u,v)\in\mathrm{Ctx}_{\Gtrim}(X)\), so \(\widetilde S\Rightarrow_{\Gtrim}^*uXv\). The rule \(X\to YZ\) is realized in \(\Gtrim\), and Lemma~\ref{lem:yield-closure-coincidence} gives \(Z\Rightarrow_{\Gtrim}^*z\). Therefore \(\widetilde S\Rightarrow_{\Gtrim}^*uXv\Rightarrow_{\Gtrim}uYZv\Rightarrow_{\Gtrim}^*uYzv\), so \((u,zv)\in\mathrm{Ctx}_{\Gtrim}(Y)\). The third closure clause is symmetric: if \((uy,v)\in C_R(Z)\) is introduced from \((u,v)\in C_R(X)\), \(X\to YZ\in R\), and \(y\in Y_R(Y)\), then the induction hypothesis and Lemma~\ref{lem:yield-closure-coincidence} yield \(\widetilde S\Rightarrow_{\Gtrim}^*uXv\Rightarrow_{\Gtrim}uYZv\Rightarrow_{\Gtrim}^*uyZv\), so \((uy,v)\in\mathrm{Ctx}_{\Gtrim}(Z)\).
+
+This proves \(C_R(X)\subseteq\mathrm{Ctx}_{\Gtrim}(X)\) for every \(X\).
+
+For the reverse inclusion \(\mathrm{Ctx}_{\Gtrim}(X)\subseteq C_R(X)\), it is clearer to reason with derivation trees than with a chosen leftmost derivation. A derivation witnessing \(\widetilde S\Rightarrow_{\Gtrim}^*uXv\) can be represented by a finite tree with root \(\widetilde S\), frontier \(uXv\), and the distinguished occurrence of \(X\) as its only nonterminal leaf. We call the unique path from the root to this distinguished leaf the spine.
+
+We prove the following stronger claim. Let \(U,X\in W\). Suppose that \((s,t)\in C_R(U)\) and that, in \(\Gtrim\), there is a one-hole derivation tree with root \(U\), frontier \(\alpha X\beta\), and \(X\) as its only nonterminal leaf, where \(\alpha,\beta\in\Sigma^*\). Then \((s\alpha,\beta t)\in C_R(X)\).
+
+The claim is proved by induction on the length of the spine from \(U\) to the distinguished occurrence of \(X\). If the length is \(0\), then the distinguished occurrence is the root itself. Thus \(U=X\) and \(\alpha=\beta=\lambda\), and the conclusion is exactly the assumption \((s,t)\in C_R(X)\).
+
+Suppose that the spine has positive length. The first rule on the spine is a realized binary rule \(U\to YZ\in R\). There are two cases. If the distinguished occurrence of \(X\) lies in the \(Y\)-subtree, then the one-hole derivation has the form \(U\Rightarrow YZ\), \(Y\Rightarrow_{\Gtrim}^*\alpha X\beta\), and \(Z\Rightarrow_{\Gtrim}^* z\) for some \(z\in\Sigma^+\); the frontier below \(U\) is \(\alpha X\beta z\). By Lemma~\ref{lem:yield-closure-coincidence}, \(z\in Y_R(Z)\). Since \((s,t)\in C_R(U)\), the definition of \(C_R\) gives \((s,zt)\in C_R(Y)\). Applying the induction hypothesis to the \(Y\)-subtree with surrounding pair \((s,zt)\), we obtain \((s\alpha,\beta zt)\in C_R(X)\), which is exactly the desired conclusion for the whole frontier \(\alpha X(\beta z)\). If the distinguished occurrence lies in the \(Z\)-subtree, then for some \(y\in\Sigma^+\) we have \(U\Rightarrow YZ\), \(Y\Rightarrow_{\Gtrim}^*y\), and \(Z\Rightarrow_{\Gtrim}^*\alpha X\beta\), so the frontier below \(U\) is \(y\alpha X\beta\). Lemma~\ref{lem:yield-closure-coincidence} gives \(y\in Y_R(Y)\). From \((s,t)\in C_R(U)\), the third closure clause gives \((sy,t)\in C_R(Z)\). Applying the induction hypothesis to the \(Z\)-subtree yields \((sy\alpha,\beta t)\in C_R(X)\), as required.
+
+Now take any \((u,v)\in\mathrm{Ctx}_{\Gtrim}(X)\). Choose a derivation tree witnessing \(\widetilde S\Rightarrow_{\Gtrim}^*uXv\). Its first step is a realized start rule \(\widetilde S\to U\) for some \(U\in S\). Hence \((\lambda,\lambda)\in C_R(U)\). The rest of the tree is a one-hole derivation with root \(U\) and frontier \(uXv\). Applying the claim with \(s=t=\lambda\), \(\alpha=u\), and \(\beta=v\), we get \((u,v)\in C_R(X)\). Thus \(\mathrm{Ctx}_{\Gtrim}(X)\subseteq C_R(X)\).
+
+Combining the two inclusions gives \(C_R(X)=\mathrm{Ctx}_{\Gtrim}(X)\) for every \(X\in W\).
+\end{proof}
+
+\subsection{The extraction theorem}
+\label{subsec:extraction-theorem}
+
+\begin{theorem}[Extraction theorem]
+\label{thm:extraction}
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, and let \(\Gtrim\) be its productive-first trimmed typed refinement under the fixed morphism \(h:\Sigma^*\to M\). Then \(\mathcal A(G):=(W,R,\omega,\chi,S)\) is a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor.
+\end{theorem}
+
+\begin{proof}
+We verify the axioms in order.
+
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
+\item \emph{Finiteness.} The typed nonterminals of the full typed refinement have the form \(A_p^{m,n}\), where \(A\in V\setminus\{S_0\}\) and \(p,m,n\in M\). Since \(V\) and \(M\) are finite, this set is finite. The trimmed typed refinement \(\Gtrim\) is obtained from \(\Gfull\) by deleting symbols and rules, so \(W\) and \(R\) are finite.
+
+\item \emph{Axiom T.} Every rule of \(\Gtrim\) is a rule of \(\Gfull\). By construction of the full typed refinement, every terminal rule with left-hand side \(A_p^{m,n}\) has the form \(A_p^{m,n}\to a\) with \(h(a)=p\). Likewise, every binary rule has the form \(A_p^{m,n}\to B_q^{m,rn}\,C_r^{mq,n}\) with \(qr=p\). Thus the realized rule set \(R\) satisfies the typed rule equations.
+
+\item \emph{Axiom S.} If \(X\in S\), then \(\widetilde S\to X\) is a realized start rule of \(\Gtrim\). Such a rule comes from a start production \(S_0\to A\) of \(G\). By construction of the full typed refinement, the corresponding typed start rule has the form \(\widetilde S\to A_p^{\eM,\eM}\). Hence \(X=A_p^{\eM,\eM}\) for some \(A,p\), and \(\lt(X)=\eM\), \(\rt(X)=\eM\).
+
+\item \emph{Axiom P.} By the trimming convention, every typed nonterminal left in \(\Gtrim\) is productive. Thus, for every \(X\in W\), there exists \(w\in\Sigma^+\) with \(X\Rightarrow_{\Gtrim}^*w\). Since \(R\) is exactly the realized non-start rule set of \(\Gtrim\), this is equivalent to \(X\in\Prod(W,R)\). Thus \(W\subseteq\Prod(W,R)\). The reverse inclusion is immediate because \(\Prod(W,R)\) is defined as a subset of \(W\). Hence \(W=\Prod(W,R)\).
+
+\item \emph{Axiom Rch.} Again by the trimming convention, every typed nonterminal of \(W\) is reachable from the start symbol inside the productive subgrammar. Since \(R\) contains exactly the realized non-start rules between surviving symbols, this reachability is precisely the least-fixed-point reachability condition defining \(\Reach(W,R,S)\). Hence every \(X\in W\) lies in \(\Reach(W,R,S)\), and the reverse inclusion is again trivial. Thus \(W=\Reach(W,R,S)\).
+
+\item \emph{Axiom \(\Omega\) and shortlex normalization.} For \(X\in W\), the set of terminal words derived from \(X\) inside \(\Gtrim\) is nonempty by productivity. By Lemma~\ref{lem:yield-closure-coincidence}, the abstractly defined set \(Y_R(X)\) is exactly this terminal yield set. Therefore, by definition of \(\omega\), \(\omega(X)=\min_{\slex}Y_R(X)\).
+
+For the type equation, Lemma~\ref{lem:yield-typing-invariant} gives \(h(w)=p\) whenever \(A_p^{m,n}\Rightarrow_{\Gtrim}^*w\). Thus \(h(\omega(X))=\yt(X)\) for every \(X\in W\). The shortlex-normalized yield condition, and hence axiom \(\Omega\), holds.
+
+\item \emph{Axiom C and shortlex normalization.} For \(X\in W\), the set of context pairs \((u,v)\) satisfying \(\widetilde S\Rightarrow_{\Gtrim}^*uXv\) is nonempty by the trimming convention. By Lemma~\ref{lem:context-closure-coincidence}, this set is exactly the abstract context family \(C_R(X)\) defined from \(R\) and \(S\). Since \(\chi(X)=(u_X,v_X)\) is defined as the shortlex-minimal pair satisfying \(\widetilde S\Rightarrow_{\Gtrim}^*u_XXv_X\), we have \(\chi(X)=\min_{\slex}C_R(X)\).
+
+For the type equation, Lemma~\ref{lem:context-typing-invariant} gives \(h(u)=m\) and \(h(v)=n\) whenever \(\widetilde S\Rightarrow_{\Gtrim}^*u\,A_p^{m,n}\,v\). Thus, writing \(X=A_p^{m,n}\), we get \(h(u_X)=\lt(X)\) and \(h(v_X)=\rt(X)\). The shortlex-normalized context condition, and hence axiom C, holds.
+\end{enumerate}
+
+All axioms of a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor are satisfied.
+\end{proof}
+
+\begin{remark}
+The proof uses neither minimality nor determinism of the original grammar. The only structural assumptions are SSBNF, the fixed morphism \(h\), and the productive-first trimming convention.
+\end{remark}
+
+The extraction theorem is the soundness direction of the representation result. Completeness is proved in Theorem~\ref{thm:state-separated-inverse} of Section~\ref{sec:inverse-representation}. The two directions are combined in Section~\ref{sec:characterization} as the characterization theorem.
+
+\section{State-separated realization and the image theorem}
+\label{sec:inverse-representation}
+
+\subsection{State-separated grammars}
+\label{subsec:state-separated-grammar}
+
+The extraction theorem shows that productive-first trimmed typed refinement yields a finite \(M\)-typed two-sided occurrence descriptor. We now prove the converse. The statement is most naturally expressed using a state-separated grammar, in which each typed state is represented by its own nonterminal.
+
+\begin{definition}[State-separated grammar]
+\label{def:state-separated-grammar}
+Let \(\mathcal A=(W,R,\omega,\chi,S)\) be a finite \(M\)-typed two-sided occurrence descriptor. The state-separated grammar represented by \(\mathcal A\), denoted \(G_{\mathrm{st}}(\mathcal A)=(V_{\mathcal A},\Sigma,P_{\mathcal A},S_0)\), is defined as follows. Let \(V_{\mathcal A}:=\{S_0\}\cup\{N_X\mid X\in W\}\), where \(N_X\) is a fresh nonterminal uniquely associated with \(X\). The productions are:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item \(S_0\to N_X\) for every \(X\in S\);
+\item \(N_X\to a\) for every terminal rule \(X\to a\in R\);
+\item \(N_X\to N_YN_Z\) for every binary rule \(X\to YZ\in R\).
+\end{enumerate}
+\end{definition}
+
+The grammar \(G_{\mathrm{st}}(\mathcal A)\) is in SSBNF. By construction, \(S_0\) occurs in no right-hand side, every rule with left-hand side \(S_0\) has the form \(S_0\to N_X\), and every other rule is either terminal or binary with right-hand-side symbols in \(V_{\mathcal A}\setminus\{S_0\}\). For completeness this is checked again in the proof of Theorem~\ref{thm:state-separated-inverse}.
+
+A notational distinction is important in this section. An abstract typed state \(X=A_p^{m,n}\) of \(W\) is an element of the abstract structure \(\mathcal A\), and its annotation \((p,m,n)\) is part of its identity as an abstract object. By contrast, a typed grammar nonterminal \((N_X)_{p'}^{m',n'}\) is a symbol of the full typed refinement of \(G_{\mathrm{st}}\), and its annotation \((p',m',n')\) ranges independently over all of \(M^3\). The representation theorem below says that, after productive-first trimming, only the correct copy \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\) remains.
+
+When the structure is clear from context, write \(G_{\mathrm{st}}\) for \(G_{\mathrm{st}}(\mathcal A)\). Let \(G_{\mathrm{st}}^{\mathrm{full}}\) be its full typed refinement, and let \(\widetilde{G_{\mathrm{st}}}\) be the productive-first trimmed typed refinement according to Definition~\ref{def:productive-first-trimming}. Its typed nonterminals have the form \((N_X)_{p'}^{m',n'}\), where \(X\in W\) and \(p',m',n'\in M\).
+
+The point of completeness is not merely that a finite rule graph can be encoded as a grammar. In the full typed refinement of \(G_{\mathrm{st}}(\mathcal A)\), every abstract state \(X\) gives rise to all copies \((N_X)_{p'}^{m',n'}\). Most of these are not the intended copy representing \(X\). The theorem says that productive-first trimming removes exactly the wrong-yield and wrong-frame copies. The only reachable productive copy corresponding to \(X\) is \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\). This is the nontrivial part of the inverse direction, and it uses both global context witnesses and the productive-first order.
+
+\subsection{Key lemmas}
+\label{subsec:key-lemmas}
+
+\begin{lemma}[State yield-type invariant]
+\label{lem:state-yield-invariant}
+For \(X\in W\) and \(w\in\Sigma^+\), if \(N_X\Rightarrow_{G_{\mathrm{st}}}^* w\), then \(h(w)=\yt(X)\).
+\end{lemma}
+
+\begin{proof}
+Proceed by induction on the height of the derivation \(N_X\Rightarrow_{G_{\mathrm{st}}}^* w\). If the height is \(1\), the applied rule is \(N_X\to a\), with \(w=a\). This rule comes from a terminal rule \(X\to a\in R\). By axiom T, \(h(a)=\yt(X)\), so \(h(w)=\yt(X)\).
+
+If the derivation has positive binary height, its first rule has the form \(N_X\to N_YN_Z\), coming from some \(X\to YZ\in R\). Write \(N_Y\Rightarrow_{G_{\mathrm{st}}}^*u\), \(N_Z\Rightarrow_{G_{\mathrm{st}}}^*v\), and \(w=uv\). By induction, \(h(u)=\yt(Y)\) and \(h(v)=\yt(Z)\). Axiom T for \(X\to YZ\) gives \(\yt(Y)\yt(Z)=\yt(X)\). Hence \(h(w)=h(uv)=h(u)h(v)=\yt(Y)\yt(Z)=\yt(X)\).
+\end{proof}
+
+\begin{lemma}[Productive copies have the correct yield type]
+\label{lem:productive-copy-correct-yield}
+Let \(X\in W\). If \((N_X)_{p'}^{m',n'}\) is productive in \(G_{\mathrm{st}}^{\mathrm{full}}\), then \(p'=\yt(X)\).
+\end{lemma}
+
+\begin{proof}
+Since \((N_X)_{p'}^{m',n'}\) is productive, there is some \(w\in\Sigma^+\) with \((N_X)_{p'}^{m',n'}\Rightarrow_{G_{\mathrm{st}}^{\mathrm{full}}}^* w\). The typing invariant for the full typed refinement gives \(h(w)=p'\). Forgetting the type annotations in the same derivation gives \(N_X\Rightarrow_{G_{\mathrm{st}}}^* w\). Lemma~\ref{lem:state-yield-invariant} gives \(h(w)=\yt(X)\). Hence \(p'=\yt(X)\).
+\end{proof}
+
+\begin{lemma}[Correct copies are productive]
+\label{lem:correct-copy-productive}
+For every \(X\in W\), the typed copy \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\) is productive in \(G_{\mathrm{st}}^{\mathrm{full}}\).
+\end{lemma}
+
+\begin{proof}
+By axiom P, \(X\in\Prod(W,R)\). Let \(P_0=\varnothing\) and \(P_{i+1}=\Phi_R(P_i)\) be the finite approximation sequence defining \(\Prod(W,R)\), and let \(\rho(X)\) be the first stage at which \(X\) enters this sequence. We argue by induction on \(\rho(X)\).
+
+If \(\rho(X)=1\), then there is a terminal rule \(X\to a\in R\). Axiom T gives \(h(a)=\yt(X)\). The state-separated grammar contains \(N_X\to a\), and its full typed refinement contains \((N_X)_{\yt(X)}^{m,n}\to a\) for all \(m,n\in M\). Taking \(m=\lt(X)\) and \(n=\rt(X)\), we obtain \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\to a\), so the correct copy is productive.
+
+Suppose \(\rho(X)>1\). Then there is a rule \(X\to YZ\in R\) with \(\rho(Y)<\rho(X)\) and \(\rho(Z)<\rho(X)\). By induction, \((N_Y)_{\yt(Y)}^{\lt(Y),\rt(Y)}\) and \((N_Z)_{\yt(Z)}^{\lt(Z),\rt(Z)}\) are productive in \(G_{\mathrm{st}}^{\mathrm{full}}\). Axiom T for \(X\to YZ\), writing \(p=\yt(X)\), \(q=\yt(Y)\), \(r=\yt(Z)\), \(m=\lt(X)\), and \(n=\rt(X)\), gives \(qr=p\), \(\lt(Y)=m\), \(\rt(Y)=rn\), \(\lt(Z)=mq\), and \(\rt(Z)=n\). Therefore the full typed refinement of \(N_X\to N_YN_Z\) contains \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\to (N_Y)_{\yt(Y)}^{\lt(Y),\rt(Y)}(N_Z)_{\yt(Z)}^{\lt(Z),\rt(Z)}\). The right-hand side is productive by induction, so the left-hand side is productive.
+\end{proof}
+
+The next lemma is where productive-first trimming is used essentially. Reachability is not computed in the full typed refinement, but inside the subgrammar obtained after deleting nonproductive typed copies. Thus, when a reachable typed binary rule on such a path is used, both children of that rule are productive typed copies. The previous correct-yield lemma can be applied to both children. This prevents a nonproductive wrong-yield sibling from transporting a wrong context frame to a surviving child.
+
+\begin{lemma}[Uniqueness of context types in the productive subgrammar]
+\label{lem:context-type-uniqueness}
+Let \((N_X)_{p'}^{m',n'}\) be a typed nonterminal reachable from \(\widetilde S\) by a path entirely contained in the productive subgrammar of \(G_{\mathrm{st}}^{\mathrm{full}}\). Then \((p',m',n')=(\yt(X),\lt(X),\rt(X))\).
+\end{lemma}
+
+\begin{proof}
+We argue by induction on the length of a reachability path inside the productive subgrammar. This point is essential: reachability in the full typed refinement alone is not enough, because wrong-context copies may become reachable through nonproductive parents; see Definition~\ref{def:productive-first-trimming}.
+
+In the base case, the typed nonterminal is reached directly by a start rule. Thus the first step is \(\widetilde S\to (N_X)_{p'}^{\eM,\eM}\) for some \(X\in S\). This copy belongs to the productive subgrammar, so it is productive. By Lemma~\ref{lem:productive-copy-correct-yield}, \(p'=\yt(X)\). By axiom S, \(\lt(X)=\eM\) and \(\rt(X)=\eM\). Hence \((p',\eM,\eM)=(\yt(X),\lt(X),\rt(X))\).
+
+For the induction step, assume the claim for a productive reachable parent copy and consider one typed binary step inside the productive subgrammar. By the induction hypothesis, the parent has the form \((N_U)_{\yt(U)}^{\lt(U),\rt(U)}\). Let the underlying state rule be \(U\to YZ\in R\). A typed binary rule in the full refinement has the form \((N_U)_{q'r'}^{m,n}\to (N_Y)_{q'}^{m,r'n}(N_Z)_{r'}^{mq',n}\). Since the parent is the correctly typed copy, \(q'r'=\yt(U)\), \(m=\lt(U)\), and \(n=\rt(U)\).
+
+The reachability path lies in the productive subgrammar, so the typed binary rule currently used belongs to that productive subgrammar. Thus both children, not only the parent, are productive typed copies. This is the essential point. If reachability were computed in the full refinement, a nonproductive wrong-yield parent could transport a wrong context frame to a productive child. Here that cannot happen. Applying Lemma~\ref{lem:productive-copy-correct-yield} separately to the two productive children gives \(q'=\yt(Y)\) and \(r'=\yt(Z)\). Hence the sibling yield types used in the frame equation are the true yield types of the corresponding abstract states.
+
+Axiom T for \(U\to YZ\) gives \(\lt(Y)=\lt(U)\), \(\rt(Y)=\yt(Z)\rt(U)\), \(\lt(Z)=\lt(U)\yt(Y)\), and \(\rt(Z)=\rt(U)\). Substituting \(m=\lt(U)\), \(n=\rt(U)\), \(q'=\yt(Y)\), and \(r'=\yt(Z)\), the left child is \((N_Y)_{\yt(Y)}^{\lt(Y),\rt(Y)}\) and the right child is \((N_Z)_{\yt(Z)}^{\lt(Z),\rt(Z)}\). Thus the claim is preserved along the path. By induction, every typed nonterminal reachable inside the productive subgrammar has the asserted unique type triple.
+\end{proof}
+
+\subsection{The state-separated representation theorem}
+\label{subsec:inverse-representation-theorem}
+
+The reverse theorem is a representation theorem for abstract typed occurrence descriptors; it is not a theorem reconstructing an original untyped grammar. The abstract typed states need not have prescribed untyped ancestors. Hence each abstract state \(X\in W\) is represented by its own nonterminal \(N_X\). The theorem says that, after this harmless separation, productive-first trimmed typed refinement recovers exactly the original finite typed state and rule structure.
+
+\begin{theorem}[State-separated representation theorem]
+\label{thm:state-separated-inverse}
+Let \(\mathcal A=(W,R,\omega,\chi,S)\) be a finite \(M\)-typed two-sided occurrence descriptor with \(W\neq\varnothing\). Let \(G_{\mathrm{st}}(\mathcal A)\) be the associated state-separated grammar, and let \(\widetilde{G_{\mathrm{st}}}\) be its productive-first trimmed typed refinement. Let \(W'\), \(R'\), and \(S'\) be the typed state set, realized non-start rule set, and realized start-state set extracted from \(\widetilde{G_{\mathrm{st}}}\). Then \(\varphi:W\to W'\), \(\varphi(X)=(N_X)_{\yt(X)}^{\lt(X),\rt(X)}\), is a bijection. Moreover, \(\varphi\) preserves and reflects terminal rules, binary rules, and start states. Thus it induces an isomorphism of finite typed rule structures \((W,R,S)\cong (W',R',S')\). The grammar \(G_{\mathrm{st}}(\mathcal A)\) is reduced and in SSBNF.
+\end{theorem}
+
+\begin{proof}
+We prove the assertions in steps.
+
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
+\item \emph{SSBNF.} By construction, \(S_0\) never occurs on the right-hand side of a rule. The rules with left-hand side \(S_0\) are exactly \(S_0\to N_X\) for \(X\in S\). All other rules have the form \(N_X\to a\) or \(N_X\to N_YN_Z\). Hence \(G_{\mathrm{st}}(\mathcal A)\) is in SSBNF.
+
+\item \emph{Reducedness.} By axiom P, every \(X\in W\) belongs to \(\Prod(W,R)\). Induction on productivity rank gives a terminal derivation \(N_X\Rightarrow_{G_{\mathrm{st}}}^* w\) for some \(w\in\Sigma^+\). Thus every \(N_X\) is productive.
+
+By axiom Rch, every \(X\in W\) belongs to \(\Reach(W,R,S)\). Induction on reachability rank gives a path from some start state \(Y\in S\) to \(X\) through child positions of rules in \(R\). Translating these rules into the corresponding rules of \(G_{\mathrm{st}}\) gives reachability of \(N_X\) from \(S_0\). Since \(W\neq\varnothing\), axiom Rch implies \(S\neq\varnothing\), and hence \(S_0\) is productive. Thus the grammar is reduced.
+
+\item \emph{The map \(\varphi\) is well-defined.} We show that, for every \(X\in W\), the typed copy \(\varphi(X)=(N_X)_{\yt(X)}^{\lt(X),\rt(X)}\) belongs to \(W'\). Equivalently, it is reachable from \(\widetilde S\) by a path entirely contained in the productive subgrammar of \(G_{\mathrm{st}}^{\mathrm{full}}\).
+
+Let \(Q_0=S\) and \(Q_{i+1}=\Psi_R(Q_i)\). For \(X\in W\), let \(\sigma(X)\) be the first stage at which \(X\) enters this fixed-point sequence. We argue by induction on \(\sigma(X)\). If \(\sigma(X)=0\), then \(X\in S\). Axiom S gives \(\lt(X)=\rt(X)=\eM\). The state-separated grammar contains \(S_0\to N_X\), and its full typed refinement contains \(\widetilde S\to (N_X)_p^{\eM,\eM}\) for all \(p\in M\), in particular \(\widetilde S\to\varphi(X)\). By Lemma~\ref{lem:correct-copy-productive}, \(\varphi(X)\) is productive, so this start rule belongs to the productive subgrammar. Thus \(\varphi(X)\) is reachable from \(\widetilde S\) inside that subgrammar.
+
+If \(\sigma(X)=k>0\), then, since \(X\in\Reach(W,R,S)\) and \(X\notin S\), there are \(U\in W\) with \(\sigma(U)<k\) and a rule \(U\to YZ\in R\) such that \(X=Y\) or \(X=Z\). By induction, \(\varphi(U)\) is reachable from \(\widetilde S\) inside the productive subgrammar. The state-separated grammar contains \(N_U\to N_YN_Z\), and axiom T for \(U\to YZ\) gives \(\yt(Y)\yt(Z)=\yt(U)\), \(\lt(Y)=\lt(U)\), \(\rt(Y)=\yt(Z)\rt(U)\), \(\lt(Z)=\lt(U)\yt(Y)\), and \(\rt(Z)=\rt(U)\). Thus the full typed refinement contains the typed binary rule \(\varphi(U)\to\varphi(Y)\varphi(Z)\). By Lemma~\ref{lem:correct-copy-productive}, both \(\varphi(Y)\) and \(\varphi(Z)\) are productive. Hence this binary rule belongs to the productive subgrammar. Since \(\varphi(U)\) is reachable there, both \(\varphi(Y)\) and \(\varphi(Z)\) are reachable there. In particular, the one equal to \(\varphi(X)\) is reachable in the productive subgrammar.
+
+Thus \(\varphi(X)\in W'\) for every \(X\in W\).
+
+\item \emph{Injectivity.} If \(X\neq Y\), then the state-separated nonterminals \(N_X\) and \(N_Y\) are distinct. Hence \(\varphi(X)\neq\varphi(Y)\). Thus \(\varphi\) is injective.
+
+\item \emph{Surjectivity.} Let \(T\in W'\). Then \(T=(N_X)_{p'}^{m',n'}\) for some \(X\in W\). Since \(T\) belongs to the productive-first trimmed typed refinement, it is reachable from the start symbol inside the productive subgrammar. By Lemma~\ref{lem:context-type-uniqueness}, \((p',m',n')=(\yt(X),\lt(X),\rt(X))\). Hence \(T=\varphi(X)\), and \(\varphi\) is surjective.
+
+\item \emph{Bijection on rules.} For every terminal rule \(X\to a\in R\), the grammar \(G_{\mathrm{st}}\) contains \(N_X\to a\). Axiom T gives \(h(a)=\yt(X)\), so the full typed refinement contains \(\varphi(X)\to a\). Since \(\varphi(X)\in W'\), this is a realized rule of \(R'\). Conversely, if \(\varphi(X)\to a\in R'\), then the rule comes from the untyped rule \(N_X\to a\) of \(G_{\mathrm{st}}\), and therefore from the unique rule \(X\to a\in R\).
+
+Similarly, for every binary rule \(X\to YZ\in R\), axiom T ensures that the typed refinement of \(N_X\to N_YN_Z\) contains the displayed rule \(\varphi(X)\to\varphi(Y)\varphi(Z)\). All three states lie in \(W'\), so this rule is realized. Conversely, any realized binary rule \(\varphi(X)\to\varphi(Y)\varphi(Z)\) comes from the untyped rule \(N_X\to N_YN_Z\), and hence from the unique rule \(X\to YZ\in R\). Therefore the correspondence \(X\to a\mapsto\varphi(X)\to a\), \(X\to YZ\mapsto\varphi(X)\to\varphi(Y)\varphi(Z)\), is a bijection from \(R\) to \(R'\).
+
+\item \emph{Start states.} If \(X\in S\), then \(G_{\mathrm{st}}\) contains \(S_0\to N_X\), and the typed refinement contains the realized start rule \(\widetilde S\to\varphi(X)\). Conversely, if \(\widetilde S\to (N_X)_{p'}^{\eM,\eM}\) is a realized start rule in the productive-first trimmed typed refinement, then it comes from \(S_0\to N_X\), so \(X\in S\). Lemma~\ref{lem:context-type-uniqueness} identifies its target with \(\varphi(X)\). Hence \(\varphi\) maps \(S\) bijectively onto \(S'\).
+
+Together, the correspondences on states, rules, and start states give the claimed isomorphism of finite typed rule structures.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Context closure under state-separated representation]
+\label{lem:context-closure-state-separated}
+Let \(\mathcal A=(W,R,\omega,\chi,S)\) be a finite \(M\)-typed two-sided occurrence descriptor, and let \(G_{\mathrm{st}}(\mathcal A)\) be its state-separated grammar. Let \(W',R',S'\) be the typed state set, realized typed rule set, and realized start-state set extracted from the productive-first trimmed typed refinement of \(G_{\mathrm{st}}(\mathcal A)\). Let \(\varphi:W\to W'\) be the bijection of Theorem~\ref{thm:state-separated-inverse}. Then \(C_{R'}(\varphi(X))=C_R(X)\) for every \(X\in W\).
+\end{lemma}
+
+\begin{proof}
+First record the equality of corresponding yield families. For every \(X\in W\), \(Y_{R'}(\varphi(X))=Y_R(X)\). This follows immediately from the rule bijection induced by \(\varphi\): \(X\to a\in R\) if and only if \(\varphi(X)\to a\in R'\), and \(X\to YZ\in R\) if and only if \(\varphi(X)\to\varphi(Y)\varphi(Z)\in R'\). Induction on the closure rank in the definition of \(Y_R\) gives one inclusion, and the inverse rule correspondence gives the other.
+
+We prove the equality of context families by both inclusions. First, \(C_R(X)\subseteq C_{R'}(\varphi(X))\). We induct on the closure rank of a pair entering \(C_R\). If \(X\in S\), then \(\varphi(X)\in S'\) by the start-state bijection, so \((\lambda,\lambda)\in C_{R'}(\varphi(X))\). For a left-child closure step, suppose \((u,v)\in C_R(X)\), \(X\to YZ\in R\), \(z\in Y_R(Z)\), and consequently \((u,zv)\in C_R(Y)\). By induction, \((u,v)\in C_{R'}(\varphi(X))\). By the rule bijection, \(\varphi(X)\to\varphi(Y)\varphi(Z)\in R'\), and by equality of yield families, \(z\in Y_{R'}(\varphi(Z))\). Thus the closure rule defining \(C_{R'}\) gives \((u,zv)\in C_{R'}(\varphi(Y))\). The right-child step is identical: from \((u,v)\in C_R(X)\), \(X\to YZ\in R\), and \(y\in Y_R(Y)\), the induction hypothesis, the rule bijection, and \(y\in Y_{R'}(\varphi(Y))\) give \((uy,v)\in C_{R'}(\varphi(Z))\).
+
+The reverse inclusion \(C_{R'}(\varphi(X))\subseteq C_R(X)\) is proved in the same way using the inverse bijection. If \(\varphi(X)\in S'\), then \(X\in S\). If a closure step in \(C_{R'}\) uses a rule \(\varphi(X)\to\varphi(Y)\varphi(Z)\in R'\), the inverse rule correspondence gives \(X\to YZ\in R\). Finally, equality of yield families transfers membership in \(Y_{R'}(\varphi(Y))\) or \(Y_{R'}(\varphi(Z))\) back to membership in \(Y_R(Y)\) or \(Y_R(Z)\). Induction on closure rank gives the reverse inclusion.
+
+Thus \(C_{R'}(\varphi(X))=C_R(X)\) for every \(X\in W\).
+\end{proof}
+
+\begin{corollary}[Shortlex-normalized re-extraction]
+\label{cor:shortlex-normalized-reextraction}
+Assume the hypotheses of Theorem~\ref{thm:state-separated-inverse}, and assume in addition that \(\mathcal A\) is shortlex-normalized in the sense of Definition~\ref{def:shortlex-normalized-witnesses}. Let \(\omega'\) and \(\chi'\) be the corresponding shortlex-normalized yield and context maps of the productive-first trimmed typed refinement \(\widetilde{G_{\mathrm{st}}}\). Then, for every \(X\in W\), \(\omega'(\varphi(X))=\omega(X)\) and \(\chi'(\varphi(X))=\chi(X)\). Hence \((W,R,\omega,\chi,S)\cong(W',R',\omega',\chi',S')\) as shortlex-normalized finite \(M\)-typed two-sided occurrence descriptors.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:state-separated-inverse}, \(\varphi\) gives a bijection on states, realized rules, and start states. Therefore induction using the closure definitions and the rule bijection in both directions gives \(Y_{R'}(\varphi(X))=Y_R(X)\) for every \(X\in W\). Since \(\omega\) and \(\omega'\) are defined as shortlex minima of these equal sets, \(\omega'(\varphi(X))=\omega(X)\).
+
+For contexts, Lemma~\ref{lem:context-closure-state-separated} gives \(C_{R'}(\varphi(X))=C_R(X)\). Since \(\chi\) and \(\chi'\) are defined as shortlex minima of these equal context families, \(\chi'(\varphi(X))=\chi(X)\).
+
+Thus \(\varphi\) preserves \(\omega\) and \(\chi\), and gives an isomorphism of shortlex-normalized finite \(M\)-typed two-sided occurrence descriptors.
+\end{proof}
+
+\begin{remark}
+Even without the shortlex-minimality assumption for \(\omega\) and \(\chi\), Theorem~\ref{thm:state-separated-inverse} gives an isomorphism of \((W,R,S)\)-structures. Arbitrary witness maps, however, need not be preserved literally. After representation and re-extraction, shortlex minimization may select witnesses different from the non-minimal witnesses that were present in the original structure.
+\end{remark}
+
+\section{The image theorem and effectivity}
+\label{sec:characterization}
+
+Sections~\ref{sec:extraction} and~\ref{sec:inverse-representation} prove the two directions of a single representation result. We now state them as one equivalence.
+
+\subsection{Characterization}
+\label{subsec:characterization}
+
+\begin{theorem}[Characterization]
+\label{thm:characterization}
+Fix a finite monoid morphism \(h:\Sigma^*\to M\). Up to isomorphism of finite typed rule structures, the finite \(M\)-typed two-sided occurrence descriptors with \(W\neq\varnothing\) are exactly the structures with \(W\neq\varnothing\) extracted by productive-first trimmed typed refinement from some reduced SSBNF grammar. More explicitly:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.4em]
+\item \textup{(Soundness)} For every reduced SSBNF grammar \(G\), the extracted tuple \(\mathcal A(G)=(W,R,\omega,\chi,S)\) is a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor.
+\item \textup{(Completeness)} Conversely, for every finite \(M\)-typed two-sided occurrence descriptor \(\mathcal A=(W,R,\omega,\chi,S)\) with \(W\neq\varnothing\), the state-separated grammar \(G_{\mathrm{st}}(\mathcal A)\) is reduced and in SSBNF, and the structure \((W',R',S')\) extracted from its productive-first trimmed typed refinement satisfies \((W,R,S)\cong(W',R',S')\) via the bijection \(\varphi(X)=(N_X)_{\yt(X)}^{\lt(X),\rt(X)}\). If \(\mathcal A\) is shortlex-normalized, then \(\varphi\) also preserves the witness maps \(\omega\) and \(\chi\), giving an isomorphism of shortlex-normalized finite \(M\)-typed two-sided occurrence descriptors.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part (a) is Theorem~\ref{thm:extraction}. Part (b) is the combination of Theorem~\ref{thm:state-separated-inverse} and Corollary~\ref{cor:shortlex-normalized-reextraction}.
+
+For the displayed equivalence, if \(\mathcal A\) is, up to state separation, an extraction from a reduced SSBNF grammar \(G\), then by (a) it is a finite \(M\)-typed two-sided occurrence descriptor. Conversely, if \(\mathcal A\) is a finite \(M\)-typed two-sided occurrence descriptor with \(W\neq\varnothing\), then by (b) it is isomorphic to the structure extracted from the reduced SSBNF grammar \(G_{\mathrm{st}}(\mathcal A)\), and the extracted carrier is \(W'=\varphi(W)\neq\varnothing\).
+\end{proof}
+
+\subsection{Round-trip closure}
+\label{subsec:round-trip-closure}
+
+The characterization can be read not merely as an equivalence, but also as a round-trip statement. The class of finite \(M\)-typed two-sided occurrence descriptors is closed under state-separated realization followed by productive-first extraction.
+
+\begin{corollary}[Round-trip closure]
+\label{cor:round-trip-closure}
+Let \(\mathcal A=(W,R,\omega,\chi,S)\) be a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor with \(W\neq\varnothing\). Then \(\mathcal A(G_{\mathrm{st}}(\mathcal A))\) is isomorphic to \(\mathcal A\) as a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor. The isomorphism is given on states by \(\varphi(X)=(N_X)_{\yt(X)}^{\lt(X),\rt(X)}\).
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:state-separated-inverse} gives an isomorphism between \((W,R,S)\) and the state and rule structure extracted from the productive-first trimmed typed refinement of \(G_{\mathrm{st}}(\mathcal A)\). Since \(\mathcal A\) is shortlex-normalized, Corollary~\ref{cor:shortlex-normalized-reextraction} also preserves the witness maps \(\omega\) and \(\chi\). Hence \(\varphi\) is an isomorphism of shortlex-normalized finite \(M\)-typed two-sided occurrence descriptors.
+\end{proof}
+
+\begin{corollary}[Idempotence on extracted structures]
+\label{cor:idempotence-extracted-structures}
+Let \(G\) be a reduced SSBNF grammar, and assume that the state set of \(\mathcal A(G)\) is nonempty. Then \(\mathcal A(G_{\mathrm{st}}(\mathcal A(G)))\) is isomorphic to \(\mathcal A(G)\) as a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:extraction}, \(\mathcal A(G)\) is a shortlex-normalized finite \(M\)-typed two-sided occurrence descriptor. Apply Corollary~\ref{cor:round-trip-closure}.
+\end{proof}
+
+These corollaries do not mean that the construction is canonical at the language level. Rather, once a finite presentation-level structure has been extracted, state-separated realization and re-extraction leave it unchanged. Thus the construction is a retraction onto the finite image of the two-sided typed refinement operation, not a quotient of context-free languages.
+
+\subsection{Effectivity and decidability}
+\label{subsec:effectivity}
+
+The characterization is effective. The forward map is computable by Proposition~\ref{prop:effective-size}, and the resulting finite objects can be compared structurally.
+
+\begin{corollary}[Computable extraction and decidability of structural isomorphism]
+\label{cor:decidable-iso}
+Fix \(h:\Sigma^*\to M\).
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item Given a reduced SSBNF grammar \(G\), the extracted structure \(\mathcal A(G)=(W,R,\omega,\chi,S)\) is computable and satisfies \(|W|\le (|V|-1)|M|^3\).
+\item Given two reduced SSBNF grammars \(G_1,G_2\) over the same \(h\), it is decidable whether \(\mathcal A(G_1)\) and \(\mathcal A(G_2)\) are isomorphic as shortlex-normalized finite \(M\)-typed two-sided occurrence descriptors.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+For (i), Proposition~\ref{prop:effective-size} gives an effective finite construction of the full typed refinement, and the two trimming stages are least fixed-point computations over a finite set. This yields \(W\), \(R\), and \(S\) with the stated state bound. Each \(\omega(X)\) is the shortlex-minimal terminal word derivable from \(X\) in the finite grammar \(\Gtrim\), and the shortlex-minimal word derivable from a context-free grammar is computable. Each \(\chi(X)\) is the shortlex-minimal context pair \((u_X,v_X)\) such that \(\widetilde S\Rightarrow_{\Gtrim}^*u_XXv_X\), and it is likewise computable from a finite grammar. Hence \(\mathcal A(G)\) is computable.
+
+For (ii), by (i) both structures are computable and finite. A structural isomorphism is a type-preserving bijection \(W_1\to W_2\) that preserves and reflects terminal rules, binary rules, and start states. There are only finitely many bijections between the finite carriers, and for each bijection the type, rule, and start-state preservation conditions are decidable in finite time. The shortlex witnesses are determined by \((W,R,S)\), so witness preservation is also decidable. Thus isomorphism is decidable.
+\end{proof}
+
+\begin{remark}
+The bound in (i) is the size bound for the full refinement. Productive-first trimming only removes states, so \(|W|\) is at most this bound. The proof of decidability in (ii) is intentionally elementary. The search space can be reduced by first partitioning states by their type triple \((\yt,\lt,\rt)\), and, when state labels are considered part of the structure, also by those labels. Thus brute force need not range over all \(|W|!\) bijections, but only over products of bijections between corresponding type-label classes. Equivalently, the state-rule part can be viewed as an isomorphism problem for finite typed labeled directed hypergraphs, with terminal and binary rules as labeled hyperedges. No sharper complexity bound is needed for the present representation theorem. The conceptual point is that the monoid-visible two-sided behavior of the presentation is captured by a finite object, and structural equality on that object is a finite check. This contrasts with undecidability of context-free language equivalence. By the non-rigidity result in Section~\ref{sec:non-rigidity}, this structural relation is strictly finer than language equivalence: it is a relation between presentations, not between languages.
+\end{remark}
+
+\begin{proposition}[Finite bounded descriptor space]
+\label{prop:finite-bounded-descriptor-space}
+Fix a finite alphabet \(\Sigma\), a finite monoid \(M\), and a natural number
+\(N\). Up to isomorphism of typed states preserving the three type components,
+there are only finitely many finite \(M\)-typed two-sided rule descriptors
+\((W,R,S)\) with \(|W|\leq N\). If the witnesses are required to be
+shortlex-normalized, then the witness maps \(\omega\) and \(\chi\) are
+determined by \((W,R,S)\). Hence, for fixed \(\Sigma\), \(M\), and \(N\), there
+are only finitely many shortlex-normalized finite \(M\)-typed two-sided occurrence
+descriptors with at most \(N\) states, up to isomorphism.
+\end{proposition}
+
+\begin{proof}
+For each \(k\leq N\), choose a \(k\)-element carrier \(W\). There are only
+finitely many assignments of type components \(W\to M^3\), finitely many start
+subsets \(S\subseteq W\), finitely many terminal rule sets
+\(R_{\mathrm{term}}\subseteq W\times\Sigma\), and finitely many binary rule
+sets \(R_{\mathrm{bin}}\subseteq W\times W\times W\). The typed rule equations
+and the productivity, reachability, yield-witness, and context-witness
+conditions only select a subcollection of these finitely many possibilities.
+Finally, once \((W,R,S)\) is fixed, the families \(Y_R(X)\) and \(C_R(X)\) are
+fixed for every \(X\in W\). Under shortlex normalization, \(\omega(X)\) and
+\(\chi(X)\) are therefore uniquely determined as the least elements of these
+families. Thus only finitely many normalized structures remain.
+\end{proof}
+
+\begin{remark}[Learning-theoretic reading]
+Proposition~\ref{prop:finite-bounded-descriptor-space} should not be read as
+an efficient learning theorem.  It says instead that, after fixing the
+recognizable interface \(h\) and a size bound, the presentation descriptors
+characterized in this paper form a finite hypothesis space.  The main
+representation theorem identifies which finite objects in this hypothesis space
+are exactly the productive-first two-sided refinements of CFG presentations.
+This separates a representation problem from the separate problem of designing
+a learner or a characteristic sample for a chosen subclass.
+\end{remark}
+
+\section{The linear case: disappearance of the branching obstruction}
+\label{sec:linear-case}
+
+The example showing the need for productive-first trimming uses branching. A nonproductive wrong-yield parent can pass an incorrect inherited frame to one child while the other child supplies only its typed yield component. In a linear presentation this mechanism disappears: every rule has at most one nonterminal child, and the material inserted around that child is terminal.
+
+This section is not a premise of the main characterization theorem; it considers a separate linear version of the construction. In this section only, we consider linear state and rule structures with terminal rules \(X\to w\), where \(w\in\Sigma^+\), and linear rules \(X\to uYv\), where \(u,v\in\Sigma^*\) and \(Y\in W\). Such a structure is \(M\)-typed if terminal rules satisfy \(h(w)=\yt(X)\), and linear rules satisfy \(\yt(X)=h(u)\yt(Y)h(v)\), \(\lt(Y)=\lt(X)h(u)\), and \(\rt(Y)=h(v)\rt(X)\). Start states are required to have left and right type \(\eM\). Productivity and reachability are understood as the evident least fixed points generated by terminal and linear rules.
+
+The state-separated linear grammar representing such a structure has rules \(S_0\to N_X\) for \(X\in S\), rules \(N_X\to w\) for terminal rules \(X\to w\), and rules \(N_X\to uN_Yv\) for linear rules \(X\to uYv\). Its full typed refinement contains start rules \(\widetilde S\to (N_X)_p^{\eM,\eM}\), terminal rules \((N_X)_p^{m,n}\to w\) when \(h(w)=p\), and linear rules \((N_X)_p^{m,n}\to u(N_Y)_q^{m h(u),h(v)n}v\) when \(p=h(u)q h(v)\).
+
+\begin{lemma}[Untyped yield invariant for state-separated linear grammars]
+\label{lem:linear-untyped-yield-invariant}
+Let \(\mathcal B\) be a finite \(M\)-typed linear structure in the above sense. If \(N_X\Rightarrow_{G_{\mathrm{lin}}(\mathcal B)}^*w\) and \(w\in\Sigma^+\), then \(h(w)=\yt(X)\).
+\end{lemma}
+
+\begin{proof}
+Proceed by induction on the height of the derivation. If the derivation uses a terminal rule \(N_X\to w\), this rule comes from a terminal rule \(X\to w\) of \(\mathcal B\), so the type condition gives \(h(w)=\yt(X)\). Otherwise, the first rule comes from a linear rule \(X\to uYv\), so it has the form \(N_X\Rightarrow uN_Yv\Rightarrow^*uyv\), where \(N_Y\Rightarrow^*y\). By induction, \(h(y)=\yt(Y)\). The linear type equation gives \(\yt(X)=h(u)\yt(Y)h(v)\), and therefore \(h(uyv)=h(u)h(y)h(v)=\yt(X)\).
+\end{proof}
+
+\begin{lemma}[Typed yield invariant for linear refinement]
+\label{lem:linear-typed-yield-invariant}
+Let \(\mathcal B\) be a finite \(M\)-typed linear structure in the above sense, and construct the full typed refinement of \(G_{\mathrm{lin}}(\mathcal B)\) as above. If \((N_X)_p^{m,n}\Rightarrow^*w\) and \(w\in\Sigma^+\), then \(h(w)=p\).
+\end{lemma}
+
+\begin{proof}
+Proceed by induction on the height of the typed derivation. A terminal step uses a rule \((N_X)_p^{m,n}\to w\), which exists only when \(h(w)=p\). In the linear case, the first nonterminal step has the form \((N_X)_p^{m,n}\to u(N_Y)_q^{m h(u),h(v)n}v\) with \(p=h(u)qh(v)\). If the child derives \(y\), then by induction \(h(y)=q\), and the whole yield is \(uyv\). Thus \(h(uyv)=h(u)qh(v)=p\).
+\end{proof}
+
+\begin{lemma}[Frame invariant for reachable linear copies]
+\label{lem:linear-frame-invariant}
+Let \(\mathcal B\) be a finite \(M\)-typed linear structure in the above sense. In the full typed refinement of \(G_{\mathrm{lin}}(\mathcal B)\), if a copy \((N_X)_p^{m,n}\) is reachable from \(\widetilde S\), then \(m=\lt(X)\) and \(n=\rt(X)\).
+\end{lemma}
+
+\begin{proof}
+Proceed by induction on the length of the spine from \(\widetilde S\) to the occurrence of \((N_X)_p^{m,n}\). If it is reached by a start rule, then \((N_X)_p^{m,n}=(N_X)_p^{\eM,\eM}\) and \(X\in S\). The start-frame condition gives \(\lt(X)=\eM\) and \(\rt(X)=\eM\). For the induction step, suppose the occurrence is reached from a parent copy \((N_U)_s^{\ell,r}\) through a linear rule \(U\to uXv\). The full typed refinement gives the child frame \((\ell h(u),h(v)r)\). By induction, \(\ell=\lt(U)\) and \(r=\rt(U)\). The frame equation for \(U\to uXv\) gives \(\lt(X)=\lt(U)h(u)\) and \(\rt(X)=h(v)\rt(U)\). Hence the reached child frame is exactly \((\lt(X),\rt(X))\).
+\end{proof}
+
+\begin{proposition}[No extra reachable productive copies in the linear case]
+\label{prop:linear-no-spurious-copies}
+Let \(\mathcal B\) be a finite productive and reachable \(M\)-typed linear structure in the above sense, and let \(G_{\mathrm{lin}}(\mathcal B)\) be its state-separated linear grammar. In the full typed refinement of \(G_{\mathrm{lin}}(\mathcal B)\), a copy \((N_X)_p^{m,n}\) is reachable from \(\widetilde S\) and productive if and only if \(p=\yt(X)\), \(m=\lt(X)\), and \(n=\rt(X)\). Consequently, for state-separated linear presentations, productive-first trimming coincides with the naive procedure that keeps exactly the copies that are both reachable and productive in the full refinement.
+\end{proposition}
+
+\begin{proof}
+First suppose \((N_X)_p^{m,n}\) is reachable and productive. By productivity, it derives some \(w\in\Sigma^+\) in the full typed refinement. Lemma~\ref{lem:linear-typed-yield-invariant} gives \(h(w)=p\). Forgetting type annotations gives a derivation \(N_X\Rightarrow^*w\) in the state-separated linear grammar. Lemma~\ref{lem:linear-untyped-yield-invariant} gives \(h(w)=\yt(X)\), so \(p=\yt(X)\). Reachability and Lemma~\ref{lem:linear-frame-invariant} give \(m=\lt(X)\) and \(n=\rt(X)\).
+
+Conversely, consider the intended copy \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\). Since \(\mathcal B\) is productive, there is an abstract terminal or linear derivation from \(X\) to a terminal word. Each terminal step \(X\to w\) lifts to the typed rule \((N_X)_{\yt(X)}^{\lt(X),\rt(X)}\to w\), and each linear step \(X\to uYv\) lifts to a typed rule from the intended copy of \(X\) to the intended copy of \(Y\). This is exactly because \(\yt(X)=h(u)\yt(Y)h(v)\), \(\lt(Y)=\lt(X)h(u)\), and \(\rt(Y)=h(v)\rt(X)\) are the type equations of the linear refinement. Thus the intended copy is productive. Applying the same lifting argument to an abstract reachability path from a start state to \(X\), and using the start-frame condition, shows that the intended copy is reachable. Hence the reachable productive copies are exactly the intended copies. The final statement follows immediately.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:linear-no-spurious-copies} is not needed for the main characterization theorem. Its role is explanatory: it shows that the productive-first convention is forced not merely by the presence of inherited two-sided context types, but by branching. In the linear case, terminal material has fixed \(h\)-values and cannot create the wrong-context phenomenon of Example~\ref{ex:productive-first-needed}.
+\end{remark}
+
+\section{Boundary phenomena and the language boundary}
+\label{sec:non-rigidity}
+
+The characterization theorem extracts a finite presentation-level descriptor. This section locates its scope from two sides. First, the descriptor sits on top of a language-preserving construction: the productive-first trimmed typed refinement of a grammar generates the same terminal language as the original grammar (Section~\ref{subsec:language-preservation}). Second, the descriptor is genuinely finer than that language: two presentations generating the same language can be separated by different occurrence-level two-sided contexts (Section~\ref{subsec:resolving-power}). The gap between these two facts is the language boundary that any further quotient would have to cross (Section~\ref{subsec:language-boundary}). All isomorphism statements in this section are relative to the same fixed morphism \(h:\Sigma^*\to M\). Structures extracted with respect to different finite interfaces are not compared directly.
+
+\subsection{Language preservation}
+\label{subsec:language-preservation}
+
+\begin{proposition}[Language preservation by productive-first trimmed typed refinement]
+\label{prop:language-preservation-single}
+Let \(G=(V,\Sigma,P,S_0)\) be a reduced SSBNF grammar, fix \(h:\Sigma^*\to M\), and let \(\Gtrim\) be the trimmed typed refinement of \(G\). Then \(L(\Gtrim)=L(G)\).
+\end{proposition}
+
+\begin{proof}
+We prove both inclusions.
+
+First, let \(w\in L(\Gtrim)\). If the derivation uses the start rule \(\widetilde S\to\lambda\), then \(S_0\to\lambda\) is a rule of \(G\), so \(w=\lambda\in L(G)\). Otherwise, erase all type annotations from a derivation \(\widetilde S\Rightarrow_{\Gtrim}^* w\). Each typed start rule becomes a start rule of \(G\), each typed terminal rule \(A_p^{m,n}\to a\) becomes \(A\to a\), and each typed binary rule \(A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\) becomes \(A\to BC\). The erased derivation is therefore a derivation \(S_0\Rightarrow_G^*w\). Hence \(w\in L(G)\).
+
+Conversely, let \(w\in L(G)\). If \(w=\lambda\), then by the SSBNF shape the derivation uses \(S_0\to\lambda\). The full typed refinement contains \(\widetilde S\to\lambda\), and this start rule is retained in the trimmed grammar. Hence \(w\in L(\Gtrim)\).
+
+Now suppose \(w\in\Sigma^+\). Choose a derivation tree of \(G\) with root \(S_0\) and yield \(w\). For each non-start node labeled \(A\), let \(x_A\) be the terminal yield of the subtree rooted at that node, and let \((u_A,v_A)\) be the terminal yields occurring to the left and to the right of that occurrence in the whole derivation tree. Relabel the occurrence by \(A_{h(x_A)}^{h(u_A),h(v_A)}\). We show that every rule of the relabeled tree is a rule of the full typed refinement.
+
+Terminal rules are immediate. If \(A\to a\) occurs, then the corresponding typed node is \(A_{h(a)}^{m,n}\), and the full typed refinement contains \(A_{h(a)}^{m,n}\to a\) for all \(m,n\in M\). For a binary node \(A\to BC\), let the \(B\)-subtree and \(C\)-subtree have yields \(y\) and \(z\), respectively, and let the external context of the occurrence of \(A\) be \((u,v)\). Then the yield of the occurrence of \(A\) is \(yz\), the context of \(B\) is \((u,zv)\), and the context of \(C\) is \((uy,v)\). Thus the relabeled rule has the form \(A_{h(y)h(z)}^{h(u),h(v)}\to B_{h(y)}^{h(u),h(z)h(v)} C_{h(z)}^{h(u)h(y),h(v)}\), which is precisely a typed binary rule of the full typed refinement. The occurrence immediately below the start symbol has context \((\lambda,\lambda)\), so the corresponding typed start rule also has empty external frame.
+
+Thus the original derivation lifts to a derivation in \(\Gfull\). Every typed nonterminal appearing in this lifted derivation is productive, because its subtree derives a terminal word. Moreover, it is reachable inside the productive subgrammar, since the path from the root to the occurrence passes only through typed nonterminals whose own subtrees derive terminal words. Hence all typed nonterminals and rules used in the lifted derivation survive the trimming convention of Definition~\ref{def:productive-first-trimming}. The same derivation therefore exists in \(\Gtrim\), and \(w\in L(\Gtrim)\).
+
+The two inclusions give \(L(\Gtrim)=L(G)\).
+\end{proof}
+
+\begin{corollary}[Typed refinement preserves language equivalence]
+\label{prop:language-equivalence-preserved}
+Let \(G_1\) and \(G_2\) be reduced SSBNF grammars with \(L(G_1)=L(G_2)\). Let \(\widetilde G_1\) and \(\widetilde G_2\) be their respective productive-first trimmed typed refinements under the same fixed morphism \(h:\Sigma^*\to M\). Then \(L(\widetilde G_1)=L(\widetilde G_2)\).
+\end{corollary}
+
+\begin{proof}
+By Proposition~\ref{prop:language-preservation-single}, \(L(\widetilde G_1)=L(G_1)\) and \(L(\widetilde G_2)=L(G_2)\). The assumption \(L(G_1)=L(G_2)\) gives the claim.
+\end{proof}
+
+
+\subsection{Resolving power}
+\label{subsec:resolving-power}
+
+The descriptor refines the generated language even between presentations that have the same number of states and no duplicated derivation: two grammars differing only in the bracketing of a single word already yield non-isomorphic extracted structures. This strengthens the non-rigidity witness from a mere carrier-cardinality separation to a difference detected by the inherited two-sided frame of an internal constituent. Compare Example~\ref{ex:two-frames}, where two occurrences inside a single grammar are separated by their frames.
+
+\begin{proposition}[Resolving power via bracketing, without duplication]
+\label{prop:bracketing-nonrigidity}
+Let \(M=\mathbb Z/2\mathbb Z\), written additively. Let \(\Sigma=\{a,b,c\}\), and define \(h:\Sigma^*\to M\) by \(h(a)=h(b)=h(c)=1\). Consider the following reduced SSBNF grammars
+\[
+  G_1:\quad S_0\to X,\quad X\to A\,T,\quad T\to B\,C,\quad
+  A\to a,\ \ B\to b,\ \ C\to c,
+\]
+\[
+  G_2:\quad S_0\to Y,\quad Y\to U\,C,\quad U\to A\,B,\quad
+  A\to a,\ \ B\to b,\ \ C\to c.
+\]
+Both are reduced and in SSBNF, and \(L(G_1)=L(G_2)=\{abc\}\). Neither grammar duplicates a derivation: each has exactly five non-start nonterminals, the two presentations differ only in the bracketing \(a(bc)\) versus \((ab)c\), and the terminal symbols \(a,b,c\) occur in identical two-sided contexts in both grammars. The shortlex-normalized finite \(M\)-typed two-sided occurrence descriptors extracted from their productive-first trimmed typed refinements have the same number of states, but are not isomorphic.
+\end{proposition}
+
+\begin{proof}
+Each grammar has a unique derivation tree for the single word \(abc\). Hence each nonterminal has a unique yield and a unique global two-sided context along reachable productive derivations. Wrong-yield internal copies are removed by the productivity stage, and the subsequent reachability stage keeps exactly the copies displayed below.
+
+Using \(h(a)=h(b)=h(c)=1\), hence \(h(ab)=h(bc)=0\) and \(h(abc)=1\), together with the frame-transport law \(A_p^{m,n}\to B_q^{m,rn}C_r^{mq,n}\), the extracted typed states are
+\[
+  \mathcal A(G_1):\quad
+  X_1^{0,0},\quad A_1^{0,0},\quad T_0^{1,0},\quad B_1^{1,1},\quad C_1^{0,0},
+\]
+\[
+  \mathcal A(G_2):\quad
+  Y_1^{0,0},\quad U_0^{0,1},\quad A_1^{0,0},\quad B_1^{1,1},\quad C_1^{0,0}.
+\]
+The corresponding start states have the same type triple, and the three terminal states have the same type triples in the two structures. The only difference is the internal constituent: \(\mathcal A(G_1)\) has \(T_0^{1,0}\), representing the factor \(bc\) of yield type \(0\) anchored to the right of \(a\), whereas \(\mathcal A(G_2)\) has \(U_0^{0,1}\), representing the factor \(ab\) of yield type \(0\) anchored to the left of \(c\).
+
+Consider the multiset of type triples \((\yt,\lt,\rt)\) occurring in each structure. For \(\mathcal A(G_1)\) it is
+\[
+\{(1,0,0),(1,0,0),(1,0,0),(0,1,0),(1,1,1)\},
+\]
+and for \(\mathcal A(G_2)\) it is
+\[
+\{(1,0,0),(1,0,0),(1,0,0),(0,0,1),(1,1,1)\}.
+\]
+The triple \((0,1,0)\) occurs in \(\mathcal A(G_1)\) but not in \(\mathcal A(G_2)\), while \((0,0,1)\) occurs in \(\mathcal A(G_2)\) but not in \(\mathcal A(G_1)\). Any isomorphism of finite \(M\)-typed two-sided occurrence descriptors is type preserving, hence induces equality of these multisets. Therefore no such isomorphism exists.
+\end{proof}
+
+\begin{remark}[Non-rigidity is not a duplication artifact]
+\label{rem:bracketing-not-duplication}
+The two grammars of Proposition~\ref{prop:bracketing-nonrigidity} contain no duplicated derivation. They have the same number of non-start states and share the same terminal symbols; the separation is therefore not a cardinality artifact of copying nonterminals, but reflects genuine presentation-level constituent structure. The distinguishing invariant over the chosen nontrivial monoid is a two-sided context type: the even-length factor of yield type \(0\) sits to the right of \(a\) in \(G_1\), giving frame \((\lt,\rt)=(1,0)\), but to the left of \(c\) in \(G_2\), giving frame \((0,1)\). The inherited two-sided frame records this left/right asymmetry of one and the same yield type.
+
+Over the one-element monoid, the same pair is still separated by the ordered binary rule structure with terminal labels. There all type triples collapse, but the rooted ordered rule structures remain non-isomorphic: in \(G_1\) the left child of the root is a terminal state and the right child is binary, while in \(G_2\) the left child of the root is binary and the right child is terminal. A structural isomorphism preserves the start state and the left/right incidence of binary rules. Thus the descriptor resolves the bracketing \(a(bc)\) versus \((ab)c\) both through rule shape over the trivial interface and, over the nontrivial interface above, through the two-sided context type of the internal constituent.
+\end{remark}
+
+\begin{theorem}[Non-rigidity]
+\label{thm:non-rigidity}
+Shortlex-normalized finite typed occurrence descriptors extracted from productive-first trimmed typed refinements are not, in general, invariants of the generated language. In particular, they can distinguish different presentations generating the same terminal language.
+\end{theorem}
+
+\begin{proof}
+Proposition~\ref{prop:bracketing-nonrigidity} exhibits two reduced SSBNF grammars generating the same language but yielding non-isomorphic extracted structures, with the same number of states and no duplicated derivation. By Remark~\ref{rem:bracketing-not-duplication}, the separation already holds over the one-element monoid through ordered rule shape and, over a nontrivial monoid, is witnessed by the two-sided context type of the internal constituent.
+\end{proof}
+
+\subsection{The language boundary}
+\label{subsec:language-boundary}
+
+\begin{remark}[The boundary between presentations and languages]
+\label{rem:non-rigidity-implications}
+The contrast between Proposition~\ref{prop:language-preservation-single} and Theorem~\ref{thm:non-rigidity} is important. Typed refinement preserves the terminal language of a given grammar, but the finite typed occurrence descriptor extracted from that refinement can still remember presentation-level distinctions invisible at the language level. Thus non-rigidity is not merely a negative observation. It says that the extracted structure has genuine resolving power as a finite presentation-level classifier: even when two presentations generate the same terminal language, different occurrence-level two-sided descriptors can separate them. To obtain a language-level typed invariant, an additional quotient or minimization principle would be necessary, probably related to a two-sided Myhill--Nerode type equivalence. For CFG presentations, such a canonization is not contained in productive-first refinement itself; it is a separate problem.
+\end{remark}
+
+
+
+
+
+
+
+\section{Lean formalization artifact}
+\label{sec:lean-artifact}
+
+This section records the accompanying Lean 4 artifact.%
+\footnote{The development is publicly available at
+\url{https://github.com/growupkuriyama-hub/lean_cfg_project}; the JALC-specific
+files are under \texttt{LeanCfgProject/JALC/}.}
+The artifact is not a black-box assumption in the mathematical development
+above: the proofs in Sections~\ref{sec:extraction}--\ref{sec:characterization}
+are prose proofs of the stated theorems.  Its role is instead to provide a
+machine-checked audit of the finite typed infrastructure, the representation
+kernels used by the inverse construction, the productive-first trimming
+predicates, and the certificate architecture behind
+Algorithm~\ref{alg:productive-first-extraction}.
+
+The principal paper-facing
+targets are
+\begin{center}\small
+\begin{minipage}{0.92\linewidth}
+\texttt{LeanCfgProject.JALC.Summary}\par
+\texttt{LeanCfgProject.JALC.PaperFacingFullFiniteMain}\par
+\texttt{LeanCfgProject.JALC.PaperFacingFullAlgorithmicAgreement}\par
+\texttt{LeanCfgProject.JALC.PaperFacingExperimentClosure}\par
+\texttt{LeanCfgProject.JALC.PaperFacingConcreteBoundedWitnessBridge}\par
+\texttt{LeanCfgProject.JALC.PaperFacingFiniteObstructionViaCollision}.
+\end{minipage}
+\end{center}
+The last target is the current high-level bounded-search/collision endpoint.
+For reproduction, one may build it and its import dependencies with
+\begin{center}\small
+\texttt{lake build LeanCfgProject.JALC.PaperFacingFiniteObstructionViaCollision}.
+\end{center}
+The exact repository state corresponding to a submission version can be recorded
+in supplementary reproducibility metadata.  Such metadata is not part of the
+mathematical statement of the paper; the prose theorems above do not depend on
+any particular CI run.
+
+The repository workflow used during development also checks the JALC directory
+against proof-bypassing placeholders and extra primitive declarations.  The
+intended policy for \texttt{LeanCfgProject/JALC/} is no \texttt{sorry}, no
+\texttt{admit}, and no additional \texttt{axiom} declarations in the
+paper-facing files.
+
+Table~\ref{tab:lean-checks} summarizes the checked components and the current
+boundary of the artifact.  The distinction between ``checked'' and ``not yet
+claimed'' is deliberate: the artifact supports the theorem-facing finite
+architecture, but it is not presented as an end-to-end executable extractor from
+arbitrary CFG input.
+
+\begin{table}[p]
+\centering
+\tiny
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.84}
+\caption{Status of the Lean artifact.}
+\label{tab:lean-checks}
+\begin{tabular}{p{0.22\linewidth}p{0.45\linewidth}p{0.13\linewidth}p{0.14\linewidth}}
+\hline
+\textbf{Component} & \textbf{What is checked or delimited} & \textbf{Status} & \textbf{Paper role}\\
+\hline
+Finite typed infrastructure
+& Observers, two-sided \(h\)-types, typed nonterminals, finite descriptor universes, and residual/concept support.
+& Checked
+& Baseline architecture.\\
+\hline
+Transport and examples
+& Yield/context invariants over arbitrary monoids, the productive-first obstruction witness, and the bracketing non-rigidity calculation.
+& Checked
+& Local typing and examples.\\
+\hline
+Intended-copy kernels
+& Intended-copy injectivity, rule preservation/reflection, derivation preservation/reflection, start-language equivalence, and kept-state representation kernels.
+& Checked
+& Inverse representation.\\
+\hline
+Full all-copy refinement
+& Inclusion of the intended-copy lift, full-refinement language inclusion, full-yield pruning, full-frame reachability, and full-kept correctness.
+& Checked
+& Main trimming route.\\
+\hline
+Finite full-main package
+& Under finite input data and decidable \texttt{FullKept}, the full-kept construction has finite kept-state/rule universes and preserves the start language.
+& Checked
+& Finite theorem package.\\
+\hline
+Certified Algorithm~1 extraction
+& Finite closure certificates, productivity closure, productive-part reachability closure, computed keptness, and certified extraction data.
+& Checked
+& Effectivity kernel.\\
+\hline
+Full algorithmic agreement
+& For \texttt{fullExtractionRuleData tau G}, the certified Algorithm~1 predicate \texttt{computedKept} agrees with the abstract \texttt{FullKept tau G} predicate.
+& Checked
+& Algorithmic agreement.\\
+\hline
+Executable-interface chain
+& Stage decidability, rule-stage boundaries, finite rule/list certificates, closure trace-list certificates, iterator traces, finite-universe filtering, and finite-iterate decidability.
+& Checked
+& Executable boundary.\\
+\hline
+List stability and bounded search
+& Finite list-stability witnesses give \texttt{StableAt} and closure certificates; generic bounded search returns optional finite stability witnesses.
+& Checked
+& Stability layer.\\
+\hline
+Concrete bounded witnesses
+& Productive and reachable bounded witnesses for the concrete full all-copy rule data bridge back to certified extraction and \texttt{FullKept} decidability.
+& Checked
+& Search-witness bridge.\\
+\hline
+No-strict-growth bridge
+& No-strict-growth within a finite fuel implies list stability within that fuel and bounded-search success.
+& Checked
+& Growth-to-stability.\\
+\hline
+Strict-growth freshness
+& Persistent strict growth at ordered heights yields pairwise fresh support witnesses.
+& Checked
+& Counting setup.\\
+\hline
+Fresh-family embedding
+& A fresh witness family up to a fuel yields an injective map from \(\operatorname{Fin}(fuel+1)\) into the finite support list.
+& Checked
+& Pigeonhole interface.\\
+\hline
+Small-support and collision obstructions
+& Empty, singleton, doubleton, and collision-obstruction routes feed bounded-search success and closure certificates.
+& Checked
+& Finite obstruction route.\\
+\hline
+Finite obstruction via collision
+& Direct finite embedding obstructions route through the collision interface to bounded-search success and closure certificates.
+& Checked
+& Latest endpoint.\\
+\hline
+General finite-list pigeonhole theorem
+& The general theorem that \(fuel\ge |xs|\) rules out an injective \(\operatorname{Fin}(fuel+1)\)-indexed map into an arbitrary finite support list \(xs\).
+& Not yet checked
+& Remaining counting layer.\\
+\hline
+End-to-end executable extractor
+& Automatic construction of all decidability-preservation data, fixed-point certificates, and the final descriptor object from arbitrary finite CFG input.
+& Not claimed
+& Future executable layer.\\
+\hline
+Full witness normalization
+& A complete Lean proof of context-closure coincidence and finite ordered shortlex-minimal yield/context witness selection.
+& Not yet checked
+& Future witness layer.\\
+\hline
+\end{tabular}
+\end{table}
+
+The checked modules fall into several groups.  The finite-carrier infrastructure
+is contained in files such as \texttt{Basic.lean},
+\texttt{TwoSidedContext.lean}, \texttt{Descriptor.lean},
+\texttt{ResidualConcept.lean}, and \texttt{Summary.lean}.  Local theorem-facing
+kernels are checked in \texttt{Transport.lean}, \texttt{Bracketing.lean},
+\texttt{ProductiveFirst.lean}, and \texttt{PaperFacing.lean}.  The
+state-separated representation route is checked through the inverse,
+round-trip, intended-copy, rule-lift, derivation-lift, start-language,
+kept-state, and representation kernels.  The finite-universe and cardinality
+side is checked by the finite representation and finite cardinality kernels.
+
+The full-refinement route is checked by modules for full refinement, full
+language inclusion, full yield pruning, full frame reachability, full-kept
+correctness, trimmed-language preservation, the full main theorem kernel, and
+the finite full-main kernel.  These files verify the theorem-facing route used
+above: the full all-copy refinement contains the intended-copy lift,
+wrong-yield copies are removed by productivity, wrong-frame copies are removed
+by productive-part reachability, and the remaining \texttt{FullKept} copies are
+exactly the intended copies under the stated assumptions.
+
+The certified algorithmic layer is checked by finite-closure, productivity and
+reachability closure, algorithmic extraction, algorithmic full-bridge, and full
+algorithmic agreement kernels.  In particular, for the concrete full all-copy
+rule data, the artifact proves that the certified Algorithm~1 predicate
+\texttt{computedKept} agrees with the abstract \texttt{FullKept} predicate used
+in the main trimming proof.  Subsequent executable-interface modules refine the
+boundary through finite rule/list certificates, trace-list certificates,
+finite-universe filtering, finite-iterate decidability, list-stability
+witnesses, and bounded-search witnesses.
+
+This formalization clarifies four points that are also reflected in the prose
+proof.  First, productive-first trimming separates two mechanisms: productivity
+removes wrong-yield copies, while reachability inside the productive subgrammar
+removes wrong-frame copies.  Secondly, the order of multiplication in the
+frame-transport equation is essential for arbitrary, possibly noncommutative,
+monoids.  Thirdly, \texttt{FullKept} is the central predicate connecting the
+abstract trimming proof with certified Algorithm~1.  Fourthly, the executable
+boundary is naturally a finite certificate architecture: finite universes,
+rule/list certificates, step-decidability preservation, list-stability
+witnesses, and bounded-search certificates can be checked independently.
+
+The remaining boundary is sharply localized.  The artifact does not yet prove
+the fully general finite-list pigeonhole theorem
+\[
+ fuel\ge |xs| \quad\Longrightarrow\quad
+ \texttt{FinEmbeddingImpossible } xs\; fuel,
+\]
+that is, the general statement that a map from
+\(\operatorname{Fin}(fuel+1)\) into values lying in a finite support list
+\(xs\) must have a collision when the domain is too large.  Once such a
+standard finite counting theorem is supplied in the artifact's chosen list
+formulation, the already checked bridge routes it to no-strict-growth,
+bounded-search success, concrete two-stage extraction, and \texttt{FullKept}
+decidability.  Thus the present artifact should be read as a substantial
+machine-checked verification of the theorem-facing finite architecture and
+certified trimming interface, not as a claim of complete executable extraction.
+
+\section{Conclusion}
+\label{sec:conclusion-open-problems}
+
+For a fixed finite monoid morphism \(h:\Sigma^*\to M\), this paper characterized
+the finite occurrence descriptors obtained from CFG presentations by two-sided
+typed refinement and productive-first trimming.  The extraction theorem shows
+that every reduced start-separated binary grammar yields a finite descriptor
+satisfying the typed-rule, start-frame, productivity, and reachability axioms.
+The state-separated inverse shows that every finite descriptor satisfying these
+axioms is realized by a CFG presentation whose productive-first trimmed
+refinement recovers exactly the prescribed state and rule structure.  Together
+these results give an image theorem for the two-sided monoid-typed refinement
+operation.
+
+The technical center is the trimming order.  The full refinement creates many
+typed copies that should not survive.  Productive-first trimming deletes
+wrong-yield copies before reachability is computed, preventing nonproductive
+branching parents from transmitting wrong inherited frames to productive
+children.  The linear case shows that this obstruction is genuinely caused by
+branching.  The non-rigidity example shows the complementary boundary: the
+resulting descriptor is not a language invariant, since different presentations
+of the same terminal language can retain different monoid-visible occurrence
+structures.
+
+The theorem is intentionally presentation-level.  It does not minimize CFGs,
+decide CFG equivalence, or construct a learner.  Its role is to identify a
+finite target object that lies between raw grammar syntax and language-level
+quotients.  A natural continuation is to compare these occurrence descriptors
+with coarser language-level profile or cut abstractions under the same fixed
+recognizable interface.  Another continuation is learning-theoretic: after the
+finite image has been characterized, one can ask which subclasses of these
+descriptors are identifiable from samples, and under what data bounds.  Those
+questions require additional assumptions and are left for future work.
+
+\bibliographystyle{jalc}
+\bibliography{refs}
+
+\end{document}
