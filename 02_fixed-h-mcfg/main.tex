@@ -116,50 +116,28 @@ represent discontinuous and cross-serial dependencies
 \cite{SekiEtAl1991,Kallmeyer2010}.
 
 This paper fixes, as part of the learnable class, a homomorphism
-$h:\Sigma^*\to M$ into a finite monoid.  Two observed tuples are compared only
-when their corresponding components have the same $h$-values.  The typing is
-compositional because $h(uv)=h(u)h(v)$, and it is fixed before the positive
-text is seen.  This separates the problem of choosing a useful finite bias from
-the problem of learning under that bias, in the same spirit as typing or domain
-bias in automata inference \cite{CosteTyping2004}.  Prefix--suffix morphisms
-provide one systematic family of such biases, while transition morphisms of
-finite automata provide another.  The fan-out bound is part of the same bias:
-it controls not only representational power but also which tuple arities are
-tested for substitution, so choosing a larger $f$ is not automatically safer.
-If the typing itself is unknown but a bound on the size of its finite codomain
-is fixed, the bounded union is contained in a single fixed-typing class: one
-may take the product of all homomorphisms into monoids up to that size.
-Without a codomain-size bound, the union contains all regular languages and is
-not TxtEx-identifiable from positive data.  A useful way to read the fixed typing
-is as bounded finite-state information that selects among finitely many
-structural regimes while the MCFG carries the unbounded dependency itself.
-The framework does not attempt to encode an unbounded copied feature sequence;
-the separation examples later make both the usefulness and this limitation
-explicit.
+$h:\Sigma^*\to M$ into a finite monoid and compares observed tuples only
+when corresponding components have equal $h$-values.  The compositional type
+guard is fixed before the positive text is seen, separating the choice of a
+finite bias from learning under that bias~\cite{CosteTyping2004}.
+Prefix--suffix and DFA transition morphisms provide two useful families.
+Fan-out is part of the same bias because it determines which tuple arities are
+tested for substitution.  A fixed bound on the unknown codomain size can be
+absorbed into one product typing, whereas without such a bound the union
+contains all regular languages and is not TxtEx-identifiable.  Thus the typing
+supplies bounded finite-state information while the MCFG carries the
+unbounded dependency.
 
-Other learning biases organize the inference problem differently.  Takada's
-control-set approach represents even linear context-free languages by a fixed grammar whose
-derivations are selected by a regular control language
-\cite{Takada1988,Takada1995}; here the fixed object instead acts on terminal
-yields and gates distributional substitutions.  Coste, Garet, and Nicolas
-localize the evidence used to infer substitutability: bounded immediate
-neighborhoods may license a comparison even when the outer sentence contexts
-differ \cite{CosteGaretNicolas2012}; see also the polynomial reduction
-approach of Coste and Nicolas~\cite{CosteNicolas2019}.  Here the evidence remains a common full
-sentence context, while the finite typing records a compositional summary of
-the compared factor or tuple component itself.  Positive-data learning of
-other mildly context-sensitive families includes work on simple external
-contextual languages~\cite{OatesEtAl2006}; these use a different
-representational bias.  Richer-information settings for MCFGs and related
-formalisms include Yoshinaka's learning from positive data together with
-membership queries~\cite{Yoshinaka2010}, Clark--Yoshinaka's distributional
-learning of parallel MCFGs~\cite{ClarkYoshinaka2014}, and more recent
-extensions of distributional learning with membership queries
-\cite{KanazawaYoshinaka2023}.  Clark--Yoshinaka use an active setting and a
-dual representation based on sets of generalized contexts, whereas the
-present paper remains in the positive-data-only setting and uses observed
-tuple values as the primal objects.  These results therefore address
-different information and representation assumptions.
+Other learning biases make different choices.  Takada uses regular control
+languages over derivations~\cite{Takada1988,Takada1995}, while local
+substitutability restricts the evidence used to compare factors
+\cite{CosteGaretNicolas2012,CosteNicolas2019}.  Positive-data learning has
+also been studied for other mildly context-sensitive formalisms
+\cite{OatesEtAl2006}.  MCFG learning with richer information includes
+membership-query and dual context-set approaches
+\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  The present
+paper instead remains positive-data-only, uses observed tuple values as primal
+objects, and lets a fixed finite typing guard substitutions.
 
 \paragraph{Contributions.}
 The paper has four main contributions.
@@ -205,45 +183,33 @@ this loss need not be repairable by \emph{any} finite typing.
 \end{enumerate}
 
 \paragraph{Relation to prior work and scope.}
-Three layers should be distinguished.  First, Yoshinaka supplies the semantic
-baseline, the observed-tuple grammar with Type~I--III rules, the conservative
-update policy, the rule-witness completeness argument, and qualitative
-identification without a fixed rank bound
-\cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}.  The present
+Yoshinaka supplies the semantic baseline, the observed-tuple grammar with
+Type~I--III rules, the conservative update policy, rule-witness completeness,
+and qualitative identification without a fixed rank bound
+\cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}; the present
 reconstruction is therefore not claimed as a new grammar architecture.
-Proposition~\ref{prop:yoshinaka-type-guard} records the exact rule
-correspondence: (Const) and (Comp) are Type~I, (Link) is Type~II with the
-additional type guard, and (Start) is Type~III, apart from the separate
-$\eps$ convention.
+Proposition~\ref{prop:yoshinaka-type-guard} gives the exact correspondence:
+(Const) and (Comp) are Type~I, (Link) is Type~II with the type guard, and
+(Start) is Type~III, apart from the separate $\eps$ convention.
 
-Second, finite-monoid yield typing and typed refinement have a fan-out-one
-antecedent in the revised companion CFG manuscript~\cite{kuriyamaCFG}.  All
-definitions and arguments required in the present paper are nevertheless
-given here independently.
+Finite-monoid yield typing has a fan-out-one antecedent in the revised
+companion CFG manuscript~\cite{kuriyamaCFG}, but all definitions and proofs
+needed here are self-contained.  The MCFG-specific questions are componentwise
+typing of tuples, rule-rank/thickness dependence of characteristic data, and
+interaction with fan-out and regular filtering.  The non-branching lower bound
+used for the intrinsic-rank witness is prior work; the contribution is its
+boundary-typed wrapper, typed membership and Yoshinaka separation, and its
+connection to the quantitative theorem.
 
-Third, the new questions addressed here are what happens when the finite type
-guard is applied componentwise to MCFG tuples, how characteristic-data bounds
-depend on rule rank and rule thickness, and how finite typing interacts with
-fan-out and regular filtering.  The rank-one size-only theorem, the
-higher-rank boundary transfer together with an intrinsic-rank-two witness, the
-two exponential refinement obstructions, and the fan-out/separation results
-are the main quantitative and language-theoretic contributions.  The
-non-branching lower bound used for the intrinsic-rank witness is prior work;
-the contribution here is the boundary-typed wrapper, its typed membership and
-Yoshinaka separation, and its connection to the quantitative theorem.
+Throughout the polynomial statements, fan-out, rank cap, and finite typing are
+fixed.  Characteristic data for the set-driven reconstruction are not claimed
+to imply syntactic stabilization of that reconstruction, and the refinement
+obstructions concern the displayed proof routes rather than lower bounds on
+all learners or characteristic samples.
 
-Polynomial-time statements below treat the displayed fan-out, rank cap, and
-finite typing as fixed.  The distinction between characteristic data for the
-set-driven reconstruction and syntactic stabilization of the conservative
-learner is fixed here and not repeated after every theorem.  Likewise, the
-refinement obstructions are limitations of the displayed proof routes, not
-lower bounds on all possible learners or characteristic samples.
-
-Section~\ref{sec:prelim} fixes notation and the learning model.
-Section~\ref{sec:learner} gives the reconstruction and convergence proofs.
-Section~\ref{sec:char-data} develops the quantitative bounds and their
-limitations.  Section~\ref{sec:comparison} compares the framework with
-Yoshinaka's classes and gives the separation examples.
+Sections~\ref{sec:prelim}--\ref{sec:char-data} develop the model,
+reconstruction, convergence, and quantitative bounds; Section~\ref{sec:comparison}
+gives the comparison with Yoshinaka's classes and the separation results.
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -346,19 +312,11 @@ For two typings $h$ and $g$, their product typing $(h,g)$ refines both and
 satisfies $\ker(h,g)=\ker h\cap\ker g$.
 
 Finite-monoid homomorphisms serve here as finite-state typings.  Let
-$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ denote the unique homomorphism into the
-one-element monoid.
-For example, the transition morphism of a deterministic finite automaton (DFA) for a regular language
-$L_{\mathrm{reg}}\supseteq L$ supplies such an $h:\Sigma^*\to M$, where $h(w)$ records the
-state transformation induced by $w$ \cite{Pin1986}.  The reconstruction uses
-only this finite summary, not $L_{\mathrm{reg}}$ as a membership oracle for $L$.
-
-
-We call $h$ a \emph{finite-monoid typing} and $h^{(d)}(\tuple w)$ the
-\emph{yield type} of the tuple.  At fan-out one the definitions below reduce
-to ordinary two-sided fixed-$h$ substitutability on nonempty factors.
-The prefix--suffix morphism $h_\Sigma^{k,\ell}$ below is the boundary typing
-used for the fixed-window special case.
+$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ be the trivial typing.  A DFA
+transition morphism for a regular superset of the target is another example
+\cite{Pin1986}; only the induced finite summary is used, not a membership
+oracle.  We call $h^{(d)}(\tuple w)$ the \emph{yield type}.  The
+prefix--suffix morphism below supplies the boundary typing used later.
 
 \begin{definition}[Prefix--suffix typing]
 \label{def:prefix-suffix-typing}
