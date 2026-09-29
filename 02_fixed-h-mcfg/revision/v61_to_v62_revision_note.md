@@ -29,4 +29,4 @@ The comparison section decreases from approximately 6209 to 5066 TeX-tokenized w
 
 ## Validation
 
-Static checks confirm unchanged theorem-like environment counts, an identical label set, and balanced unescaped braces. Full pdfLaTeX CI and the resulting page count will be recorded after the build.
+Static checks confirm unchanged theorem-like environment counts, an identical label set, and balanced unescaped braces. GitHub Actions job “pdfLaTeX — 02 fixed-h MCFG” compiled v62 successfully; the final pdfLaTeX pass reports 41 pages (down from 42 pages in v61).
