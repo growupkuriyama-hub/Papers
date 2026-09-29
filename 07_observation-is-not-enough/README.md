@@ -7,7 +7,7 @@ Working bridge paper / doctoral-dissertation synthesis component.
 **Observation Is Not Enough: Compression and Reconstruction under Finite-Monoid Typing**
 
 Author: Takayuki Kuriyama  
-Internal version: **v2**  
+Internal version: **v3**  
 Status: **working manuscript**
 
 ## Purpose
@@ -40,6 +40,7 @@ It also records:
 - `PAPER.yaml` — repository metadata
 - `PROOF_AUDIT_v2.md` — adversarial theorem-by-theorem proof audit
 - `xkr_cw_small_audit.py` — finite exhaustive sanity check for the `X_{k,r}` bridge theorems
+- `LITERATURE_PRIORITY_AUDIT_v3.md` — dedicated novelty/precedence audit and claim boundary
 
 ## Dependencies
 
@@ -49,8 +50,10 @@ The new content of this note is the cross-paper theorem package and the exact Cl
 
 ## Build
 
-Run `pdflatex main.tex` twice. The v2 source was compile-checked locally and produced a 14-page PDF with no undefined references/citations or overfull boxes. The only remaining LaTeX diagnostics are harmless `hyperref` PDF-string warnings from mathematical section titles.
+Run `pdflatex main.tex` twice. The v2 proof-audited source compiled to 14 pages with no undefined references/citations or overfull boxes. Version v3 adds the literature-priority boundary and related-work references; compile status is recorded separately after the v3 check.
 
 ## Audit status
 
-This is a working manuscript, not yet a literature-priority claim. The all-arity `X_{k,r}` proof has now passed an internal adversarial audit and finite exhaustive sanity checks; see `PROOF_AUDIT_v2.md`. A dedicated literature-priority audit and an independent human proof read remain desirable before submission.
+This is a working manuscript. The all-arity `X_{k,r}` proof has passed an internal adversarial audit and finite exhaustive sanity checks; see `PROOF_AUDIT_v2.md`. The dedicated literature-priority audit is now complete; see `LITERATURE_PRIORITY_AUDIT_v3.md`.
+
+The audit found substantial **broad conceptual precedence** (characteristic/teaching data, typing bias, abstraction refinement, compatibility-based state minimization), but **no direct theorem-level predecessor in the searched scope** for optimizing observer image and positive locking-data cost over the same safe finite-monoid observer space. The novelty claim is therefore deliberately scoped. An external expert priority check and an independent human proof read remain recommended before submission.
