@@ -67,32 +67,26 @@ Independent Researcher, Tokyo, Japan\\
 Fix a fan-out bound $f$ and a homomorphism $h:\Sigma^*\to M$ into a finite
 monoid.  We study positive-data learning of multiple context-free languages
 under the bias that tuple components may be substituted only when their
-corresponding $h$-values agree.  Starting from Yoshinaka's positive-data
-reconstruction for multidimensional substitutability, we impose this finite
-type guard on substitution links and prove exact reconstruction after a finite
-target-dependent positive sample.  An uncapped conservative learner therefore
-identifies every target satisfying the fixed fan-out and typing condition in
-the limit; with a fixed rule-rank cap, updates are polynomial in the
-accumulated sample.
+corresponding $h$-values agree.  Starting from Yoshinaka's observed-tuple
+reconstruction, we guard substitution links by componentwise type equality.
+Although this modification is syntactically simple, completeness is not
+automatic: using a yield-typed refinement of a target grammar, we construct
+finite positive witnesses that force exact reconstruction.  An uncapped
+conservative learner therefore identifies every target satisfying the fixed
+fan-out and typing condition in the limit; with a fixed rule-rank cap, updates
+are polynomial in the accumulated sample.
 
-The main quantitative distinction is by rule rank.  For the corresponding
-capped reconstruction, every fixed finite typing gives rule-rank-one targets
-characteristic data of total length polynomial in grammar size alone.  At arbitrary fixed rank, for reduced good
-presentations, typings determined by fixed-length prefixes and suffixes admit
-characteristic data polynomial in grammar size and rule thickness.  We combine a known non-branching obstruction with a boundary-typed wrapper
-to obtain a $(1,1)$-boundary-typed non-context-free target of minimum fan-out
-two, outside Yoshinaka's trivial-typing class, whose minimum rule rank is two
-even when arbitrary finite fan-out is allowed.  Thus the higher-rank theorem
-applies to a genuinely non-context-free target that lies beyond the rank-one
-result at every finite fan-out.  Full yield-type refinement and empty-component elimination
-can each increase rule thickness exponentially.
-
-We also show that finite typing is not merely regular post-filtering and that
-fan-out is part of the learning bias.  At every level $m\ge2$ there is a
-rank-one target of minimum fan-out $m$ in a class typed by fixed first/last
-symbol information but outside Yoshinaka's class, and at fan-out two another
-finitely typed target cannot be represented as a Yoshinaka-substitutable
-language intersected with any target-dependent regular language.
+The quantitative behavior depends sharply on rule rank.  For arbitrary fixed
+finite typing, rule-rank-one targets admit characteristic data of total length
+polynomial in grammar size alone.  At arbitrary fixed rank, typings determined
+by fixed-length prefixes and suffixes admit characteristic data polynomial in
+grammar size and rule thickness for reduced good presentations.  Full
+yield-type refinement and empty-component elimination can each increase rule
+thickness exponentially.  Separation examples show that finite typing is not
+merely regular post-filtering and that fan-out forms part of the learning bias.
+In particular, the higher-rank result applies to a boundary-typed
+non-context-free target whose minimum fan-out and minimum rule rank are both
+two.
 \end{abstract}
 
 \medskip
@@ -136,21 +130,22 @@ also been studied for other mildly context-sensitive formalisms
 \cite{OatesEtAl2006}.  MCFG learning with richer information includes
 membership-query and dual context-set approaches
 \cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  The present
-paper instead remains positive-data-only, uses observed tuple values as primal
-objects, and lets a fixed finite typing guard substitutions.
+paper instead remains positive-data-only, uses observed tuple values as the basic
+sample-derived objects, and lets a fixed finite typing guard substitutions.
 
 \paragraph{Contributions.}
 The paper has four main contributions.
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
-\item \emph{A finite-typed form of Yoshinaka's positive-data learner.}
-Yoshinaka's finite-sample grammar is recovered exactly under trivial typing
-(up to notation and the separate treatment of $\eps$).  For a general fixed
-finite typing, the reconstruction changes only by deleting substitution links
-between tuples of unequal componentwise type.  A yield-typed refinement of a
-target grammar proves that the guarded reconstruction is still complete after
-a finite positive sample.  No rule-rank cap is needed for this qualitative
-identification result; for each fixed cap $r_{\max}$, the corresponding
-learner has polynomial-time updates in the accumulated positive sample.
+\item \emph{Typed completeness for observed-tuple reconstruction.}
+The guarded reconstruction differs syntactically from Yoshinaka's construction
+only in that substitution links are restricted to tuples of equal
+componentwise type.  The main issue is to prove that finite positive
+completeness survives this restriction.  We refine a target grammar by yield
+type and construct a finite witness set realizing every retained typed
+nonterminal and rule.  This yields exact reconstruction and, via a conservative
+sequential update policy, TxtEx identification without a rule-rank cap.
+For every fixed cap $r_{\max}$, updates are polynomial in the accumulated
+positive sample.
 
 \item \emph{A grammar-size polynomial at rule rank one.}
 For arbitrary fixed $h$, rule-rank-one targets have characteristic data of
@@ -158,21 +153,16 @@ total length polynomial in grammar size alone.  The proof uses unary
 derivation chains and applies to discontinuous tuples of arbitrary fixed
 fan-out; no thickness parameter is needed.
 
-\item \emph{A thickness-sensitive higher-rank transfer with an intrinsic-rank witness.}
+\item \emph{A thickness-sensitive higher-rank theorem.}
 At arbitrary fixed rank, typings that factor through a fixed prefix--suffix
 summary admit a polynomial characteristic-data bound for reduced good
-presentations in grammar size and rule thickness.  The proof simultaneously
-preserves bounded boundary information in several tuple components.  The
-rule-rank obstruction used below is inherited from the known non-branching
-lower bound for $\mathrm{MIX}_2$; the contribution here is a single
-$(1,1)$-typed non-context-free target combining that obstruction with minimum
-fan-out two and a separation from Yoshinaka's trivial-typing class.  Its
-minimum rule rank is two among \emph{all} finite-fan-out MCFG presentations,
-so the higher-rank theorem applies beyond the rank-one regime at every finite
-fan-out.
-Full yield-type refinement can increase rule thickness exponentially, and
-Appendix~\ref{app:normalization-details} shows the same phenomenon for
-empty-component elimination.
+presentations in grammar size and rule thickness.  The key argument preserves
+the required boundary information simultaneously across several tuple
+components.  A separate boundary-typed non-context-free witness has minimum
+fan-out two and minimum rule rank two even when arbitrary finite fan-out is
+allowed, showing that this theorem genuinely reaches beyond the rank-one
+regime.  Full yield-type refinement and empty-component elimination can,
+however, increase rule thickness exponentially.
 
 \item \emph{Multiple-context expressiveness and fan-out sensitivity.}
 For every $m\ge2$, a rank-one language of minimum fan-out $m$ belongs to the
@@ -189,12 +179,16 @@ Yoshinaka supplies the semantic baseline, the observed-tuple grammar with
 Type~I--III rules, the conservative update policy, rule-witness completeness,
 and qualitative identification without a fixed rank bound
 \cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}; the 2009 ALT paper is
-the conference precursor of this later TCS treatment~\cite{Yoshinaka2009}.  Accordingly,
-the novelty here is the finite type guard and its MCFG-specific consequences
-rather than a new observed-tuple grammar architecture.
-Proposition~\ref{prop:yoshinaka-type-guard} gives the exact correspondence:
-(Const) and (Comp) are Type~I, (Link) is Type~II with the type guard, and
-(Start) is Type~III, apart from the separate $\eps$ convention.
+the conference precursor of this later TCS treatment~\cite{Yoshinaka2009}.
+Accordingly, the observed-tuple grammar architecture itself is prior work.
+Proposition~\ref{prop:yoshinaka-type-guard} makes the syntactic relationship
+precise: (Const) and (Comp) correspond to Type~I, (Link) to Type~II with an
+additional type guard, and (Start) to Type~III, apart from the separate
+$\eps$ convention.  The technical contribution of the present paper is to
+show that this finite guard still admits finite positive completeness through
+yield-type refinement and typed witnesses, and then to determine when the
+resulting characteristic data retain polynomial size.  The latter question
+produces different answers at rule rank one and at higher rank.
 
 Finite-monoid yield typing has a fan-out-one antecedent in the revised
 companion CFG manuscript~\cite{kuriyamaCFG}, but all definitions and proofs
@@ -360,6 +354,9 @@ A finite typing $h$ is called \emph{$(k,\ell)$-boundary-determined} when
 $h\preceq h_\Sigma^{k,\ell}$.  Equivalently, equality of prefix--suffix types implies equality of $h$-types;
 a factor map exists on the image of the prefix--suffix typing.
 
+For brevity, we call a target $L\in\Cmcf{f}{h}$ \emph{boundary-typed} when
+$h$ is $(k,\ell)$-boundary-determined for some fixed $k,\ell$.
+
 
 \subsection{Multiple Context-Free Grammars}
 
@@ -474,8 +471,7 @@ Yoshinaka's multidimensional-context convention.  In particular,
 $\lambda$-freeness implies by induction that every component of every terminal tuple derived from a
 nonterminal is nonempty.
 
-The normalization used below uses only the nondeleting/information-lossless
-step (f3) in the proof of Seki et al.'s Lemma~2.2, in the rank-preserving form
+The normalization used below uses only the nondeleting step (f3) in the proof of Seki et al.'s Lemma~2.2, in the rank-preserving form
 recorded by Kanazawa, together with component permutation, explicit
 empty-component removal, and Yoshinaka's nonmerging conversion
 \cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  Yoshinaka also notes later in
@@ -517,7 +513,7 @@ If $\eps\notin L(G_{\mathrm{in}})$, the two grammars are equivalent.
 
 \begin{proof}
 First delete unreachable or unproductive nonterminals, then apply the
-nondeleting/information-lossless step (f3) from the proof of Seki et al.'s
+nondeleting step (f3) from the proof of Seki et al.'s
 Lemma~2.2, in the rank-preserving form recorded by
 Kanazawa~\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}.
 Decorating nonterminals by component permutations makes the grammar
@@ -542,7 +538,7 @@ after normalization.  Thickness-sensitive statements are therefore first
 proved for good presentations.  For reduced $\lambda$-free input
 presentations, including presentations with deleting rules,
 Proposition~\ref{prop:structural-good-thickness} gives a polynomial
-grammar-size-and-thickness transfer to the structural good form used below.
+grammar-size-and-thickness transfer to the good presentation used below.
 
 \subsection{Tuple Contexts and Substitutability}
 
@@ -1456,7 +1452,7 @@ input encoding of $h$ lies outside its scope.
 Put \(n_K:=\max(1,\|K\|_+)\).  Tuple occurrences of arity at most \(f\) are
 enumerable in \(n_K^{O(f)}\) time by the same cut-position count used in
 Lemma~\ref{lem:general-witness-enumeration}.  All observed constant rules are
-read from these tuples.  Since $h$ is given explicitly, all substring $h$-values in
+read from these tuples.  Since $h$ is represented as in Definition~\ref{def-monoid-morphism}, all substring $h$-values in
 the sample can be precomputed in polynomial time (for example, by extending
 from every cut position), so type evaluation introduces no hidden
 super-polynomial cost.  Rule~(Link) is obtained by grouping
@@ -1568,25 +1564,25 @@ Yoshinaka's fixed-dimension, fixed-rank good form
 $\theta_G(R)$ be the minimum length of a successful sentence derivation using
 $R$, put $\theta_G:=\max_{R\in P}\theta_G(R)$, and define
 \[
- \tau_G:=\max_A\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}.
+ t_G:=\max_A\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}.
 \]
-Thus $\theta_G$ is rule thickness and $\tau_G$ nonterminal thickness.  In
-Yoshinaka's notation these correspond respectively to his $\tau_G$ and $t_G$,
-with $\tau_G\le\|G\|t_G$ in his notation
+Thus $\theta_G$ is rule thickness and $t_G$ nonterminal thickness.
+Yoshinaka writes these quantities as $\tau_G$ and $t_G$, respectively, with
+$\tau_G\le\|G\|t_G$ in his notation
 \cite[Section~4.3]{Yoshinaka2011}.
 
 \begin{lemma}[Polynomial equivalence of the two thickness parameters]
 \label{lem:thickness-equivalence}
 For every reduced good presentation $G$,
 \[
-  \tau_G\le\theta_G
+  t_G\le\theta_G
   \qquad\text{and}\qquad
-  \theta_G\le 2\|G\|\max\{1,\tau_G\}.
+  \theta_G\le 2\|G\|\max\{1,t_G\}.
 \]
 \end{lemma}
 
 \begin{proof}
-For $\tau_G\le\theta_G$, choose any rule with left-hand side $A$ and place it
+For $t_G\le\theta_G$, choose any rule with left-hand side $A$ and place it
 in a successful derivation.  Nondeletion preserves the tuple produced at that
 occurrence of $A$, so its total length is bounded by the final sentence.
 Minimize for $A$ and maximize over $A$.
@@ -1598,7 +1594,7 @@ terminal tuple, then apply $R$ and complete its children likewise.  Across the
 distinct rules on this construction, both explicit terminal material and
 child-variable occurrences are bounded by $\|G\|$, giving a successful
 sentence of length at most
-$\|G\|+\|G\|\tau_G\le2\|G\|\max\{1,\tau_G\}$.
+$\|G\|+\|G\|t_G\le2\|G\|\max\{1,t_G\}$.
 \end{proof}
 
 Hence the two thickness parameters are polynomially equivalent on reduced good
@@ -1849,10 +1845,17 @@ paper~\cite{kuriyamaCFG}.  The point of
 Theorem~\ref{thm:rankone-polydata} is that the grammar-size bound continues to
 hold under arbitrary fixed componentwise finite typing at every fixed fan-out.
 
-Rank two already precludes a grammar-size-only data bound: the size-$O(n)$ grammar
-$A_0\to\mathtt c$, $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$ generates the singleton
-$\{\mathtt c^{2^n}\}$, so any nonempty characteristic sample has length at
-least $2^n$.  This motivates the thickness parameter used below.
+Rank two already precludes a grammar-size-only data bound.  The size-$O(n)$
+grammar
+$A_0\to\mathtt c$, $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
+generates the singleton $\{\mathtt c^{2^n}\}$.  Every unary singleton is
+$f$D-substitutable for every fixed $f$: if two tuples occur in one common
+sentence context, equality of the resulting unary word forces equality of
+their total component lengths, and hence they have the same distribution in
+the singleton language.  Thus this target belongs to $\Cmcf{f}{h}$ for every
+finite typing $h$ and every $f\ge1$ for which the presentation is viewed as an
+$f$-MCFG.  Any nonempty characteristic sample therefore has length at least
+$2^n$.  This motivates the thickness parameter used below.
 
 \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
 \label{subsec:boundary-polydata}
@@ -2128,7 +2131,7 @@ the two outer contexts in both directions.
 \end{proof}
 
 For general $f$, componentwise $h_\Sigma^{k,\ell}$-equality is exactly the
-corresponding multidimensional rectangular-window condition.
+corresponding componentwise prefix--suffix condition.
 
 \paragraph{Compatibility with Yoshinaka's bounded-rank scale.}
 For trivial typing every productive nonterminal has a unique componentwise
@@ -2472,8 +2475,7 @@ irreducible interaction between the resources.
 
 The non-branching lower bound itself is prior work.  What is specific to the
 present framework is that a strictly local wrapper and the $(1,1)$ boundary
-typing place this target inside the typed class, while the displayed
-substitution rectangle keeps it outside Yoshinaka's trivial-typing baseline.
+typing place this target inside the typed class, while the displayed four-instance substitution implication keeps it outside Yoshinaka's trivial-typing baseline.
 The wrapper retains the prior non-branching obstruction, so the same target
 also has intrinsic rule rank two across all finite fan-outs.
 
@@ -3036,7 +3038,7 @@ nondeleting and nonmerging conversions is standard
 \cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011}.
 
 \paragraph{Nondeleting conversion and component permutations.}
-After trimming, use only the nondeleting/information-lossless step (f3) from
+After trimming, use only the nondeleting step (f3) from
 the proof of Seki et al.'s Lemma~2.2, in Kanazawa's rank-preserving form
 \cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}.
 Retained-component subsets give at most $O_f(1)$ decorated copies per
@@ -3063,15 +3065,15 @@ $\lambda$-free.
 
 Induction on derivations gives
 $L_{A^I}$ exactly as the projection of source tuples having pattern $I$;
-all-empty omitted children are restored by their certified witnesses.  Since
+all-empty omitted children can be restored by terminal derivations realizing their all-empty component pattern.  Since
 the start symbol has fan-out one, $S^{\{1\}}$ generates precisely the nonempty
 part of the original language.  Projection shortens templates, giving
 $O_{f,r_{\max}}(\|G_{\mathrm{nd}}\|)$ size.
 
 \paragraph{Nonmerging.}
 Apply Yoshinaka's nonmerging conversion
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  Each decorated nonterminal has
-the full-image property used below, and adjacent-component concatenation
+\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  Each decorated nonterminal denotes exactly the projected tuples associated
+with its retained component pattern, and adjacent-component concatenation
 preserves $\lambda$-freeness, nonpermutation, fan-out, and rule rank.
 For fixed fan-out and rank Yoshinaka's combined good-form conversion has
 $O(\|G\|)$ size~\cite[Section~2.3, after Example~2]{Yoshinaka2011}; trimming
@@ -3089,9 +3091,9 @@ normalization of Proposition~\ref{prop:good-normalization} yields an equivalent
 reduced good grammar $G$ with the same fan-out and rule-rank bounds such that
 \[
   \|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|),\qquad
-  \tau_G\le \tau_{G_{\mathrm{in}}},\qquad
+  t_G\le t_{G_{\mathrm{in}}},\qquad
   \theta_G=O_{f,r_{\max}}\!\bigl(
-     \|G_{\mathrm{in}}\|\max\{1,\tau_{G_{\mathrm{in}}}\}\bigr).
+     \|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}\bigr).
 \]
 \end{proposition}
 
@@ -3103,7 +3105,7 @@ $L_A(G_{\mathrm{in}})$ onto $I$.  Hence its minimum total yield cannot exceed
 that of $A$.  Component permutations preserve total length, and Yoshinaka's
 nonmerging copies are exact adjacent-component images
 \cite[Section~2.3, Lemma~1]{Yoshinaka2011}, so
-$\tau_G\le\tau_{G_{\mathrm{in}}}$.  All decorations have fixed-parameter
+$t_G\le t_{G_{\mathrm{in}}}$.  All decorations have fixed-parameter
 linear overhead, giving
 $\|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$; then
 Lemma~\ref{lem:thickness-equivalence} yields the displayed bound on
@@ -3300,9 +3302,10 @@ O.~Rambow and G.~Satta.
 
 \bibitem{kuriyamaCFG}
 T.~Kuriyama.
-\newblock Distributional learning of context-free languages under fixed finite-monoid typing.
-\newblock Revised manuscript under major revision at \emph{Theoretical Computer Science}, 2026.
-\newblock Public predecessor: arXiv:1409.6247v4 [cs.FL].
+\newblock Distributional learning of context-free languages under fixed
+finite-monoid typing.
+\newblock Revised manuscript, 2026.
+\newblock arXiv:1409.6247v5 [cs.FL].
 
 \bibitem{McNaughtonPapert1971}
 R.~McNaughton and S.~Papert.
