@@ -7,7 +7,7 @@ v64 is a deliberately small pre-submission hardening pass following the independ
 ## Main edit
 
 - Strengthened the Bishop et al. corroboration paragraph in the intrinsic-rank-two witness.
-- Made the source chain explicit through Proposition A, Proposition 6.2, Remark 6.3, Definition 6.1, Lemma 6.8, Definition 7.1, Section 7, and Theorem C.
+- Made the source chain explicit through Proposition 5.2, Definition 6.1, Proposition 6.2, Remark 6.3, Lemma 6.8, Definition 7.1, Section 7, and Theorem C.
 - Preserved Gallot (2021) as the direct source for the non-branching MCFG lower bound actually used by the proof.
 - Clarified that Bishop et al. provide an independent corroborating route rather than the primary implication.
 
