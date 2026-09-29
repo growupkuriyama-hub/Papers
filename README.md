@@ -10,6 +10,8 @@ Public source repository for Takayuki Kuriyama's research papers.
 - `04_relative-factorization/` — *Relative Prime Factorization and Finite-State Presentations under Fixed Finite-Monoid Observation*
 - `05_jalc-occurrence-descriptors/` — *Finite Occurrence Descriptors for Context-Free Grammar Presentations under Monoid Typing* (JALC manuscript)
 - `06_ofet/` — *Observer--Fragmentation--Exposure Tradeoffs: From rectangular CFG exposure to ordered MCFG scheduling*
+- `07_observation-is-not-enough/` — working bridge/synthesis component connecting SCL compression with reconstruction-resource tradeoffs; master-only, no TeX yet
+- `doctoral-thesis/` — doctoral-dissertation planning master for *Observation Is Not Enough — Finite Observation and Resource Tradeoffs in Identification in the Limit*; TeX intentionally deferred until the five core components stabilize
 
 ## Other papers
 
