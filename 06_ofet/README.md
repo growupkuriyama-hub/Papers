@@ -21,3 +21,14 @@
 The arXiv title and abstract agree with the current internal v32 title/abstract. The exact arXiv source archive has not yet been compared byte-for-byte with `main.tex`, so the GitHub working source and the public arXiv snapshot remain explicitly distinguished until that verification is done.
 
 At import time, `main.tex` was treated as the current OFET working source; it remains the repository source-of-truth for ongoing edits.
+
+
+## Reproducibility artifact
+
+- `ofet_rank4_ordered_audit_v32.py` — 12,344 bytes
+- Restored from the ChatGPT Project Library on 2026-09-30.
+- The arXiv v1 submission confirmation lists the same ancillary filename and the same byte size (12,344 bytes).
+- Git blob SHA-1: `a591fc951eaeaea22db5669833b60f11991f0d89`
+- The script reproduces the exact rank-four census / ordered laminar-trace audit cited in `main.tex`.
+
+The exact SHA-256 against the arXiv source archive has not yet been independently checked, so provenance is recorded conservatively as filename+size matched to the arXiv submission manifest.
