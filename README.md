@@ -11,7 +11,8 @@ Public source repository for Takayuki Kuriyama's research papers.
 - `05_jalc-occurrence-descriptors/` — *Finite Occurrence Descriptors for Context-Free Grammar Presentations under Monoid Typing* (JALC manuscript)
 - `06_ofet/` — *Observer--Fragmentation--Exposure Tradeoffs: From rectangular CFG exposure to ordered MCFG scheduling*
 - `07_observation-is-not-enough/` — *Observation Is Not Enough: Compression and Reconstruction under Finite-Monoid Typing* (working bridge/synthesis manuscript)
-- `doctoral-thesis/` — doctoral-dissertation planning master for *Observation Is Not Enough — Finite Observation and Resource Tradeoffs in Identification in the Limit*; TeX intentionally deferred until the five core components stabilize
+- `doctoral-thesis/` — larger five-component dissertation plan for *Observation Is Not Enough — Finite Observation and Resource Tradeoffs in Identification in the Limit*; preserved as the maximal integration track
+- `doctoral-thesis-minimal/` — **current minimal dissertation track** for *Identification in the Limit beyond Fixed Observation*; core = #1 + #2 + a short bounded-vs-unbounded observation synthesis; no thesis TeX yet
 
 ## Other papers
 
