@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v63; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v64; this is the current source of truth.
+- `revision/v63_to_v64_revision_note.md` — citation-hardening pass after independent audit: expands the Bishop et al. corroboration chain while retaining Gallot as the direct non-branching MCFG lower-bound source; no mathematical statement changes.
+- `revision/v63_to_v64.diff` — unified manuscript diff for the v63 → v64 citation hardening.
 - `revision/v62_to_v63_revision_note.md` — final planned page-reduction pass: compresses characteristic-data exposition and normalization appendix bookkeeping without removing named results.
 - `revision/v62_to_v63.diff` — unified manuscript diff for the v62 → v63 compression.
 - `revision/v61_to_v62_revision_note.md` — safe page-reduction pass confined to the comparison section; compresses proof narration while preserving named result statements and the intrinsic-rank-two audit core.
