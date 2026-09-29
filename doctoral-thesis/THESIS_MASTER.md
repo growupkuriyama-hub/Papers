@@ -127,7 +127,7 @@ Working paper role:
 - connect minimum relational-morphism compression witnesses to reconstruction suboptimality;
 - package the observer-resource Pareto viewpoint.
 
-Current research status: **research master only; no TeX source yet**.
+Current research status: **working manuscript v1 plus research master; proof / scope / priority audits still pending**.
 
 Thesis role: synthesis / bridge chapter and dissertation-level theorem package.
 
