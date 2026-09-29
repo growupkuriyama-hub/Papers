@@ -29,4 +29,4 @@ Combined reduction: 1661 words.
 
 ## Validation
 
-Static checks confirm unchanged theorem-like environment counts, an identical label set, and balanced unescaped braces. Full pdfLaTeX CI and the resulting page count will be recorded after the build.
+Static checks confirm unchanged theorem-like environment counts, an identical label set, and balanced unescaped braces.  A follow-up safety check restored the explicit rank-one setup for $G$ and $\widetilde G_0$ and retained the audited restriction to Seki et al.'s step (f3). Full pdfLaTeX CI and the resulting page count will be recorded after the build.
