@@ -1,0 +1,1034 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\D}{\mathcal D}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\cmp}{\operatorname{cmp}}
+\newcommand{\cd}{\operatorname{cd}}
+\newcommand{\mcd}{\operatorname{mcd}}
+\newcommand{\ifrag}{\operatorname{ifrag}}
+\newcommand{\tfrag}{\operatorname{tfrag}}
+\newcommand{\Lock}{\operatorname{Lock}}
+\newcommand{\Safe}{\operatorname{Safe}}
+\newcommand{\Pareto}{\operatorname{Pareto}}
+\newcommand{\blank}{\square}
+\newcommand{\relto}{\mathrel{\rightsquigarrow}}
+
+\title{Observation Is Not Enough:\\
+Compression and Reconstruction under Finite-Monoid Typing}
+\author{Takayuki Kuriyama\\Independent Researcher, Tokyo, Japan\\\texttt{growup.kuriyama@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Finite-monoid typing plays two different roles in positive-data grammar
+learning.  It is a semantic compression device: a finite observer must retain
+enough information to make guarded substitution safe.  It is also part of a
+reconstruction architecture: once an observer is fixed, its fibers determine
+which positive witnesses can be reused.  These two optimization problems need
+not agree.
+
+This note makes the separation precise by connecting finite-monoid compression
+of principal syntactic-concept-lattice geometry with observer-sensitive
+characteristic data.  First, observer refinement is shown to be monotone in the
+opposite direction from the informal slogan that more information makes
+learning easier: finer observers preserve safety but remove substitution
+rules, split residual and transition cells, and can only increase minimum
+locking-sample cost for the fixed reconstruction systems considered here.
+Second, for the rigid CFG family $R_{m,q}$, every compression-optimal observer
+has strictly larger characteristic-data cost than a slightly larger observer;
+the exact gap is $4(m-1)(q-1)$.  In the regime $q=m^2$, the relative observer
+overhead tends to one while the characteristic-data ratio tends to two.
+Third, for the fan-out-two family $X_{k,r}$, the Clark--Wurm compression
+sequence is exactly $1,2,2,\ldots$, yet for $X_{2,r}$ the optimal encoded
+reconstruction cost is $2r(r+1)$.  Hence no function of the compression number
+alone can bound reconstruction cost.  The same family also separates the full
+Clark--Wurm tuple interface from the nonempty sentence-context interface used
+by the MCFG learner.  Finally, the relational-morphism characterization of
+minimum compression is lifted to a reconstruction separation: every selector
+of every minimum-codomain separating relational morphism for $R_{m,q}$ remains
+reconstruction-suboptimal.
+
+The resulting picture is an observer-resource Pareto geometry in which the
+finite-monoid compression number is only the first coordinate.  Minimal
+information and minimal positive reconstruction are therefore distinct finite
+resources.
+\end{abstract}
+
+\section{Introduction}
+
+Distributional grammar learning reconstructs grammatical structure from
+reusable contexts.  A finite monoid morphism
+\[
+  h:\Sigma^*\to M
+\]
+can be used as a finite typing bias: two fragments are candidates for
+substitution only when their $h$-types agree.  In fixed-observer CFG and MCFG
+learning this mechanism gives exact positive-data reconstruction for suitable
+substitutable targets; see \cite{KuriyamaCFG,KuriyamaMCFG} and the earlier
+substitutability literature \cite{ClarkEyraud2007,Yoshinaka2011}.
+
+A separate question is how much finite information is actually necessary for
+safe substitution.  In \cite{KuriyamaSCL}, finite-monoid observation is treated
+as a compression problem on the principal layer of the syntactic concept
+lattice (SCL): among all observers that separate every unsafe tuple conflict up
+to arity $f$, minimize the image size.  For regular languages this minimum is
+also characterized by finite-index congruences and by separating relational
+morphisms on the pointed syntactic monoid.
+
+The reconstruction problem begins only after this semantic compression problem
+has been solved.  The observer may split one semantic residual class into many
+typed fibers; higher-rank transitions may then fragment multiplicatively, and
+positive data must expose enough incidences, arithmetic directions, and
+ordered witnesses to reconnect the pieces.  These phenomena are quantified in
+\cite{KuriyamaOFET}.
+
+The organizing question of this note is therefore
+\[
+ \boxed{\text{Does the smallest safe observation also give the cheapest reconstruction?}}
+\]
+The answer is no in general, but the failure has two logically different
+forms.
+
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item \emph{Optimizer separation.}  For $R_{m,q}$, the observers minimizing
+      image size and those minimizing characteristic data are disjoint.
+\item \emph{Scalar insufficiency.}  For $X_{2,r}$, a two-state observer is
+      simultaneously compression-optimal and reconstruction-optimal, but the
+      optimal reconstruction cost still grows as $\Theta(r^2)$.  Thus the
+      compression number alone does not control reconstruction cost.
+\end{enumerate}
+
+These two statements are the precise sense in which observation is not enough.
+The note also records two structural principles.  Along a refinement chain,
+finer observation can only remove legal substitution rules and increase the
+minimum positive evidence required by the fixed reconstruction systems.  Thus
+a strict image-size/data-cost tradeoff can occur only between refinement-
+incomparable observers.  At the multiobjective level, the finite-monoid
+compression number is the first-coordinate projection of a finite Pareto
+frontier of observer resources.
+
+\paragraph{Provenance.}
+The exact $R_{m,q}$ fragmentation and characteristic-data formulas and the
+exact $X_{k,r}$ slot-observer characteristic-data formula are established in
+\cite{KuriyamaOFET}.  The SCL safety interface, congruence characterization,
+relational-morphism characterization, and selector lemma are established in
+\cite{KuriyamaSCL}.  The new content here is their exact connection: the two
+interface compression numbers, the $X_{k,r}$ Clark--Wurm compression
+calculation, the compression--reconstruction separation theorems, the
+relational-selector separation, and the general refinement/Pareto principles
+in the present form.
+
+\section{Two tuple interfaces and two compression numbers}
+\label{sec:interfaces}
+
+For $L\subseteq\Sigma^*$ and a word $x\in\Sigma^*$, write
+\[
+ \D_L(x)=\{(u,v):uxv\in L\}.
+\]
+For an ordered $d$-tuple $\mathbf x=(x_1,\ldots,x_d)$, its tuple distribution
+depends on the chosen class of tuple contexts.
+
+\subsection{The Clark--Wurm interface}
+
+A Clark--Wurm context of arity $d$ is
+\[
+ E=x_0\blank_1x_1\blank_2\cdots x_{d-1}\blank_dx_d,
+ \qquad x_i\in\Sigma^*.
+\]
+Tuple components are also allowed to be empty.  Write
+$\D^{(d),\mathrm{CW}}_L(\mathbf x)$ for the set of such contexts accepting
+$\mathbf x$.  This is the fixed-order principal SCL interface used in
+\cite{KuriyamaSCL}.
+
+\begin{definition}[Clark--Wurm safety]
+Let $h:\Sigma^*\to M$ be a finite monoid morphism.  Write
+$\Safe_f^{\mathrm{CW}}(h;L)$ if for every $1\le d\le f$,
+\[
+ h^{(d)}(\mathbf x)=h^{(d)}(\mathbf y),\qquad
+ \D_L^{(d),\mathrm{CW}}(\mathbf x)\cap
+ \D_L^{(d),\mathrm{CW}}(\mathbf y)\ne\varnothing
+\]
+imply
+\[
+ \D_L^{(d),\mathrm{CW}}(\mathbf x)
+ =
+ \D_L^{(d),\mathrm{CW}}(\mathbf y).
+\]
+Define
+\[
+ \cmp_f^{\mathrm{CW}}(L)
+ :=
+ \min\{|\im h|:\Safe_f^{\mathrm{CW}}(h;L)\}.
+\]
+\end{definition}
+
+By the principal-intent dictionary of \cite{KuriyamaSCL}, this is exactly the
+finite-monoid compression number of the principal Clark--Wurm SCL geometry.
+At arity one, equality of principal object concepts is equality modulo the
+ordinary syntactic congruence, in agreement with Clark's SCL construction
+\cite{Clark2013}.
+
+\subsection{The positive sentence-context interface}
+
+The MCFG reconstruction in \cite{KuriyamaMCFG,KuriyamaOFET} uses nonempty
+ordered tuple components and sentence contexts
+\[
+ E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d
+\]
+whose internal separators $v_1,\ldots,v_{d-1}$ are nonempty.  Let
+$\D_L^{(d),+}$ denote this restricted distribution.
+
+\begin{definition}[Positive-interface compression]
+Write $\Safe_f^+(h;L)$ for the corresponding substitution condition on
+nonempty tuples and positive internal separators, and put
+\[
+ \cmp_f^+(L)
+ :=
+ \min\{|\im h|:\Safe_f^+(h;L)\}.
+\]
+\end{definition}
+
+This notation is introduced only to keep the learning interface distinct from
+the full Clark--Wurm SCL interface.
+
+\begin{proposition}[Interface monotonicity]
+\label{prop:interface-monotonicity}
+For every language $L$ and $f\ge1$,
+\[
+ \cmp_f^+(L)\le \cmp_f^{\mathrm{CW}}(L).
+\]
+\end{proposition}
+
+\begin{proof}
+Every positive sentence context is a Clark--Wurm context, and every nonempty
+tuple is a Clark--Wurm tuple.  Thus Clark--Wurm safety tests a superset of the
+pairs tested by positive-interface safety.  Every Clark--Wurm-safe observer is
+therefore positive-interface safe.
+\end{proof}
+
+The inequality can be strict; Section~\ref{sec:X} gives the exact family
+$X_{k,r}$ with $\cmp_f^+=1$ and $\cmp_f^{\mathrm{CW}}=2$ for $f\ge2$.
+
+\begin{lemma}[Fixed-length unary bridge]
+\label{lem:fixed-length-bridge}
+If $L\subseteq\Sigma^n$ for one fixed $n$, then empty and nonempty unary
+fragments never form an overlapping Clark--Wurm pair.  Consequently the
+empty-fragment convention does not change unary safety, and
+\[
+ \cmp_1^{\mathrm{CW}}(L)=\cmp_1^+(L).
+\]
+\end{lemma}
+
+\begin{proof}
+If one unary context $u\blank v$ accepted both $\eps$ and a nonempty word $x$,
+then
+\[
+ |u|+|v|=n=|u|+|x|+|v|,
+\]
+which is impossible.  Hence all additional Clark--Wurm comparisons involving
+$\eps$ have empty overlap and impose no unary safety constraint.
+\end{proof}
+
+\section{Observer refinement and reconstruction monotonicity}
+\label{sec:refinement}
+
+\begin{definition}[Observer refinement]
+For finite monoid morphisms $h:\Sigma^*\to M$ and $g:\Sigma^*\to N$, write
+\[
+ h\preceq g
+\]
+when, after restricting codomains to their images, there exists a monoid
+morphism $\pi:\im g\to\im h$ with
+\[
+ h=\pi\circ g.
+\]
+Thus $g$ is finer and $h$ is coarser.
+\end{definition}
+
+\begin{proposition}[Elementary refinement monotonicity]
+\label{prop:elementary-refinement}
+If $h\preceq g$, then
+\[
+ |\im h|\le|\im g|.
+\]
+Moreover, for either tuple interface,
+\[
+ \Safe_f(h;L)\Longrightarrow \Safe_f(g;L).
+\]
+If $R$ is any semantic residual class and
+$\operatorname{frag}_h(R):=|h(R)|$, then
+\[
+ \operatorname{frag}_h(R)\le \operatorname{frag}_g(R).
+\]
+For pure witnessed higher-rank transitions, the transition fragmentation of
+\cite{KuriyamaOFET} is likewise nondecreasing under refinement.
+\end{proposition}
+
+\begin{proof}
+The factor map $\pi:\im g\twoheadrightarrow\im h$ gives the image-size
+inequality.  Equality of $g$-types implies equality of $h$-types, so every
+comparison required under $g$ is among those already controlled under $h$.
+The residual-fiber inequality follows because the $g$-partition refines the
+$h$-partition.  The transition statement follows from the product law
+\[
+ \tfrag_h(\theta)=\prod_j \operatorname{frag}_h(R_j)
+\]
+for pure witnessed transitions \cite{KuriyamaOFET}.
+\end{proof}
+
+We next isolate the reconstruction property used by both fixed-observer
+learners in \cite{KuriyamaOFET}.  Their observer-dependent rules are precisely
+semantic substitution rules controlled by equality of observer type; start,
+constant, structural decomposition, and composition rules are observer
+independent.
+
+\begin{theorem}[Reconstruction monotonicity]
+\label{thm:reconstruction-monotonicity}
+Let $\mathcal A_h$ be either the fixed-observer CFG reconstruction or the
+fixed-observer occurrence-MCFG reconstruction of \cite{KuriyamaOFET}.  If
+$h\preceq g$, then for every finite positive sample $K$,
+\[
+ L(\mathcal A_g(K))\subseteq L(\mathcal A_h(K)).
+\]
+If $L$ is safe under $h$, let $\Lock_h(L)$ be the set of characteristic
+locking samples for $\mathcal A_h$.  Then
+\[
+ \boxed{\Lock_g(L)\subseteq\Lock_h(L).}
+\]
+Consequently, for every nonnegative sample cost $c(C)$ independent of the
+observer,
+\[
+ \min_{C\in\Lock_h(L)}c(C)
+ \le
+ \min_{C\in\Lock_g(L)}c(C).
+\]
+\end{theorem}
+
+\begin{proof}
+Every semantic substitution rule available under $g$ is also available under
+$h$, because equality of $g$-type implies equality of $h$-type.  All other
+rules are unchanged.  Hence the $g$-hypothesis is a subgrammar of the
+$h$-hypothesis.
+
+Now let $C\in\Lock_g(L)$ and let $C\subseteq K\subseteq L$ be finite.
+Because $h$ is safe, the $h$-learner is sound on positive subsets of $L$.
+Therefore
+\[
+ L=L(\mathcal A_g(K))
+ \subseteq L(\mathcal A_h(K))
+ \subseteq L,
+\]
+so equality holds and $C\in\Lock_h(L)$.  Minimizing any fixed nonnegative
+cost over nested feasible sets gives the final inequality.
+\end{proof}
+
+\begin{corollary}[Least-safe-observer coincidence principle]
+\label{cor:least-safe}
+Suppose the safe observers for $L$ have a least element $h_\bot$ under
+refinement.  Then $h_\bot$ minimizes image size and simultaneously minimizes
+every reconstruction cost covered by Theorem~\ref{thm:reconstruction-monotonicity}.
+\end{corollary}
+
+\begin{corollary}[Incomparability principle]
+\label{cor:incomparability}
+If safe observers $h,g$ satisfy
+\[
+ |\im h|<|\im g|
+ \qquad\text{and}\qquad
+ \cd_h(L)>\cd_g(L),
+\]
+then $h$ and $g$ are refinement-incomparable.
+\end{corollary}
+
+\begin{proof}
+If $h\preceq g$, reconstruction monotonicity gives the opposite cost
+inequality.  If $g\preceq h$, image-size monotonicity gives the opposite image
+inequality.
+\end{proof}
+
+Thus a genuine larger-observer/cheaper-reconstruction effect cannot be a
+phenomenon along one refinement chain.  It must reallocate finite algebraic
+information in incomparable ways.
+
+\section{Exact optimizer separation on the CFG family $R_{m,q}$}
+\label{sec:R}
+
+Fix $m,q\ge2$ and let
+\[
+ P_q=\{p_0,\ldots,p_{q-1}\},\qquad
+ A_m=\{a_0,\ldots,a_{m-1}\},
+\]
+with fresh symbols $z_{s,i}$.  Define
+\[
+ R_{m,q}
+ =
+ \{p_sa_i a_j:s<q,\ i,j<m\}
+ \cup
+ \{p_sa_i z_{s,i}:s<q,\ i<m\}.
+\]
+Every target word has length three.  The second block consists of rigidity
+witnesses.  In the main block all suffixes $a_i a_j$ belong to one unary
+residual class $F$.  For a safe observer $h$, put
+\[
+ \kappa_h
+ :=
+ |\{h(a_i a_j):i,j<m\}|.
+\]
+
+The following exact facts are proved in \cite{KuriyamaOFET}.  We reproduce the
+form needed here.
+
+\begin{theorem}[Exact $R_{m,q}$ resource formulas, \cite{KuriyamaOFET}]
+\label{thm:R-input}
+For every $m,q\ge2$:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item
+\[
+ \cmp_1^+(R_{m,q})=qm.
+\]
+There is an observer $H^-$ of image size $qm$ with $\kappa_{H^-}=m$.
+\item Every safe $h$ with $|\im h|=qm$ satisfies $\kappa_h\ge m$.
+\item If $\kappa_h<m$, then $|\im h|\ge q(m+1)$, and an observer $H^+$
+      attains $|\im H^+|=q(m+1)$ with $\kappa_{H^+}=1$.
+\item For the fixed-observer CFG reconstruction,
+\[
+ \min\{|C|:C\in\Lock_h(R_{m,q})\}
+ =qm+m^2+\kappa_h(q-1),
+\]
+and, under the encoded cost $\|C\|=\sum_{w\in C}(|w|+1)$,
+\[
+ \boxed{
+ \cd_h(R_{m,q})
+ =4\bigl(qm+m^2+\kappa_h(q-1)\bigr).
+ }
+\]
+\end{enumerate}
+\end{theorem}
+
+The characteristic-data formula has a direct rectangular interpretation.  The
+observer fibers inside $F$ form column blocks.  Within each block, a locking
+sample must connect $q$ row vertices to all suffix vertices; minimum locking
+samples are spanning trees of the corresponding complete bipartite graphs.
+Thus splitting one critical observer fiber creates an exact positive-exposure
+penalty.
+
+Because $R_{m,q}\subseteq\Sigma^3$, Lemma~\ref{lem:fixed-length-bridge}
+identifies its unary positive-interface and Clark--Wurm compression numbers.
+
+\begin{theorem}[Observation--reconstruction separation]
+\label{thm:main-separation}
+For every $m,q\ge2$,
+\[
+ \boxed{\cmp_1^{\mathrm{CW}}(R_{m,q})=qm.}
+\]
+Among compression-optimal observers,
+\[
+ \boxed{
+ \min_{\substack{h\ \mathrm{safe}\\|\im h|=qm}}
+ \cd_h(R_{m,q})
+ =4(m^2+2qm-m).
+ }
+\]
+But over all safe observers,
+\[
+ \boxed{
+ \min_{h\ \mathrm{safe}}\cd_h(R_{m,q})
+ =4(m^2+qm+q-1),
+ }
+\]
+and every observer attaining this latter value has image size at least
+$q(m+1)>qm$.  Hence
+\[
+ \arg\min_h |\im h|
+ \ \cap\
+ \arg\min_h \cd_h(R_{m,q})
+ =\varnothing.
+\]
+The exact characteristic-data separation is
+\[
+ \boxed{4(m-1)(q-1).}
+\]
+\end{theorem}
+
+\begin{proof}
+The equality $\cmp_1^{\mathrm{CW}}=qm$ follows from
+Theorem~\ref{thm:R-input}(i) and Lemma~\ref{lem:fixed-length-bridge}.
+If $|\im h|=qm$, part (ii) gives $\kappa_h\ge m$.  Substitution into the exact
+formula in part (iv) gives
+\[
+ \cd_h\ge4(qm+m^2+m(q-1))
+ =4(m^2+2qm-m),
+\]
+with equality at $H^-$.  For arbitrary safe $h$, $\kappa_h\ge1$, so the same
+formula gives
+\[
+ \cd_h\ge4(qm+m^2+q-1),
+\]
+with equality at $H^+$.  Part (iii) shows that every observer with
+$\kappa_h<m$, in particular every observer attaining the global data minimum,
+has at least $q(m+1)$ image values.  Subtracting the two displayed costs gives
+$4(m-1)(q-1)$.
+\end{proof}
+
+\begin{corollary}[Constant overhead, unbounded additive saving]
+For $q=2$, increasing observer size from $2m$ to $2m+2$ reduces the optimal
+encoded characteristic-data cost by
+\[
+ 4(m-1).
+\]
+\end{corollary}
+
+\begin{corollary}[Vanishing relative overhead, factor-two data gain]
+\label{cor:factor-two}
+Let $q=m^2$ and $L_m=R_{m,m^2}$.  A reconstruction-optimal observer has
+\[
+ \frac{|\im H^+|}{\cmp_1^{\mathrm{CW}}(L_m)}
+ =1+\frac1m\longrightarrow1,
+\]
+while
+\[
+ \frac{
+ \min_{|\im h|=\cmp_1^{\mathrm{CW}}(L_m)}\cd_h(L_m)
+ }{
+ \min_h\cd_h(L_m)
+ }
+ \longrightarrow2.
+\]
+\end{corollary}
+
+\begin{proof}
+Here $\cmp_1^{\mathrm{CW}}=qm=m^3$ and
+$|\im H^+|=q(m+1)=m^3+m^2$.  The two characteristic-data values are
+\[
+ 4(2m^3+m^2-m)
+ \quad\text{and}\quad
+ 4(m^3+2m^2-1),
+\]
+whose ratio tends to $2$.
+\end{proof}
+
+\section{The fan-out-two family $X_{k,r}$}
+\label{sec:X}
+
+Fix $k,r\ge2$.  For $1\le j\le r$ and $1\le i\le k$, let $a_{j,i}$ and
+$b_{j,i}$ be distinct terminals, and set
+\[
+ w_{\mathbf i}
+ =a_{1,i_1}\cdots a_{r,i_r}
+  b_{1,i_1}\cdots b_{r,i_r},
+ \qquad
+ \mathbf i=(i_1,\ldots,i_r)\in[k]^r,
+\]
+\[
+ X_{k,r}=\{w_{\mathbf i}:\mathbf i\in[k]^r\}.
+\]
+Every word has length $2r$.  Let
+\[
+ S_r=A_1\cdots A_rB_1\cdots B_r
+\]
+be the skeleton obtained by erasing indices:
+$\sigma(a_{j,i})=A_j$ and $\sigma(b_{j,i})=B_j$.  Every symbol in $S_r$ occurs
+exactly once.
+
+\subsection{Exact Clark--Wurm compression}
+
+Let $E_2=\{1,z\}$ be the two-element monoid with $z^2=z$, and define
+\[
+ e:\Sigma^*\to E_2,
+ \qquad
+ e(w)=
+ \begin{cases}
+ 1,&w=\eps,\\
+ z,&w\ne\eps.
+ \end{cases}
+\]
+Thus $e$ records only emptiness.
+
+\begin{lemma}[Skeleton rigidity for Clark--Wurm blocks]
+\label{lem:skeleton-rigidity}
+Suppose two Clark--Wurm tuples $\mathbf x,\mathbf y$ have the same componentwise
+emptiness pattern and share an accepting context in $X_{k,r}$.  Delete the
+coordinates that are empty in both tuples and merge their adjacent fixed
+context pieces.  In each maximal run of remaining holes separated only by
+empty fixed strings, the concatenated skeleton word supplied by $\mathbf x$
+and by $\mathbf y$ is the same uniquely located interval of $S_r$.
+Moreover, in every other accepting context for $\mathbf x$, the holes of such
+a run are again separated only by empty fixed strings and occupy that same
+skeleton interval.
+\end{lemma}
+
+\begin{proof}
+After common empty coordinates are removed, all tuple components are nonempty.
+In a target word, the skeleton of every nonempty factor is a contiguous
+substring of $S_r$.  Since the symbols of $S_r$ are pairwise distinct, such a
+substring has at most one location.  Fixed nonempty context pieces therefore
+anchor the complementary skeleton positions uniquely.  A maximal run of holes
+with empty separators fills the unique intervening interval, so the
+concatenation of its component skeletons is fixed independently of the
+internal hole boundaries.
+
+Now consider another accepting context for $\mathbf x$.  Each component
+$x_i$ has the same uniquely located skeleton substring as before.  Whenever
+two consecutive components belonged to one empty-separated run, their unique
+locations are adjacent.  A nonempty separator between them would insert an
+extra skeleton symbol between two already adjacent fixed locations and could
+not yield $S_r$.  Hence those separators remain empty, and the run fills the
+same interval.
+\end{proof}
+
+\begin{theorem}[Exact Clark--Wurm compression of $X_{k,r}$]
+\label{thm:X-cw-compression}
+For every $k,r\ge2$,
+\[
+ \boxed{\cmp_1^{\mathrm{CW}}(X_{k,r})=1,}
+\]
+and for every $f\ge2$,
+\[
+ \boxed{\cmp_f^{\mathrm{CW}}(X_{k,r})=2.}
+\]
+\end{theorem}
+
+\begin{proof}
+We first prove that the emptiness observer $e$ is Clark--Wurm safe at every
+arity.  Let $\mathbf x,\mathbf y$ have equal componentwise $e$-type and share
+an accepting context.  Normalize common empty coordinates as in
+Lemma~\ref{lem:skeleton-rigidity}.  Consider any other context $D$ accepting
+$\mathbf x$.  By the lemma, every empty-separated run occupies the same
+skeleton interval under $D$, and the same run of $\mathbf y$ has the same
+concatenated skeleton.  Hence replacing $\mathbf x$ by $\mathbf y$ preserves
+the entire skeleton $S_r$.
+
+It remains to check indices.  For each slot $j$, consider the two positions
+$A_j$ and $B_j$.  If both are supplied by fixed context material, the tuple
+replacement is irrelevant.  If exactly one is supplied by a tuple component,
+the shared accepting context forces the index inside $\mathbf x$ and
+$\mathbf y$ to equal the fixed counterpart, so replacing one tuple by the
+other preserves that equality in every accepting context.  If both positions
+are supplied by tuple material, acceptance of the shared context already
+forces the two supplied terminals of $\mathbf y$ to have the same index.
+Thus $D[\mathbf y]\in X_{k,r}$.  Symmetry gives equality of tuple
+distributions.  Hence $e$ is safe and $\cmp_f^{\mathrm{CW}}\le2$ for every
+$f$.
+
+At arity one, the trivial observer is safe.  Empty and nonempty fragments
+cannot overlap by Lemma~\ref{lem:fixed-length-bridge}.  If two nonempty
+fragments share an accepting context, their unique skeleton substrings occupy
+the same interval.  The same slot-by-slot argument above shows equality of
+unary distributions.  Hence $\cmp_1^{\mathrm{CW}}=1$.
+
+For the arity-two lower bound, write the all-index-$1$ word as
+\[
+ s_1s_2\cdots s_{2r}.
+\]
+Let
+\[
+ \mathbf x=(\eps,s_1),\qquad
+ \mathbf y=(s_1,\eps).
+\]
+They share the accepting context
+\[
+ E=\blank_1\blank_2s_2\cdots s_{2r}.
+\]
+But for
+\[
+ D=\blank_1s_2\cdots s_{2r-1}\blank_2s_{2r}
+\]
+we have $D[\mathbf y]\in X_{k,r}$ while
+$D[\mathbf x]\notin X_{k,r}$.  Thus the trivial observer is not arity-two
+safe.  Therefore $\cmp_f^{\mathrm{CW}}\ge2$ for every $f\ge2$, proving the
+claim.
+\end{proof}
+
+\subsection{The positive interface collapses to one state}
+
+The same family behaves differently under the nonempty sentence-context
+interface.
+
+\begin{theorem}[Interface separation on $X_{k,r}$]
+\label{thm:X-interface}
+For every $k,r\ge2$ and every $f\ge1$,
+\[
+ \boxed{\cmp_f^+(X_{k,r})=1.}
+\]
+Consequently, for every $f\ge2$,
+\[
+ \boxed{
+ \cmp_f^+(X_{k,r})
+ <
+ \cmp_f^{\mathrm{CW}}(X_{k,r}).
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Take the trivial observer.  Suppose two nonempty $d$-tuples share an admissible
+sentence context.  Because every internal separator is nonempty and every
+symbol of the skeleton $S_r$ has a unique position, each tuple component is
+anchored to the same skeleton interval on both sides of the comparison.  Any
+slot whose two indexed terminals are not both internal to tuple material has
+its varying index fixed by the shared context.  A slot whose two terminals are
+both internal to the tuple may change index, but both terminals change
+together.  The same interval structure is forced in every other accepting
+sentence context.  Hence the two tuples have identical positive-interface
+distributions.  The one-element observer is therefore safe.
+\end{proof}
+
+This strict inequality is why the two tuple interfaces should not be silently
+identified: the Clark--Wurm SCL invariant and the MCFG learner's admissible
+comparison bias answer slightly different optimization questions.
+
+\subsection{Coincidence of the optimal observer, but not of the resources}
+
+Let $h_{\mathrm{slot}}$ be the slot observer of \cite{KuriyamaOFET}, mapping
+$a_{j,i}$ to $A_j$ and $b_{j,i}$ to $B_j$ in a finite truncation monoid.  The
+fixed-observer MCFG reconstruction of \cite{KuriyamaOFET} satisfies
+\[
+ \boxed{
+ \mcd_{h_{\mathrm{slot}}}(X_{k,r})
+ =2r[1+r(k-1)],
+ }
+\]
+and every characteristic sample has at least $1+r(k-1)$ words.
+
+\begin{proposition}[Equality of the relevant learner rules]
+\label{prop:X-learner-equality}
+For every finite $K\subseteq X_{k,r}$, the semantic unary rules generated by
+the trivial observer, by the emptiness observer $e$, and by
+$h_{\mathrm{slot}}$ coincide.  Hence the resulting hypotheses coincide on
+$X_{k,r}$:
+\[
+ \widehat G_{\mathrm{triv}}(K)
+ =\widehat G_e(K)
+ =\widehat G_{h_{\mathrm{slot}}}(K).
+\]
+\end{proposition}
+
+\begin{proof}
+The learner observes only nonempty tuple components, so $e$ is constant on all
+observed components and gives the same equality test as the trivial observer.
+If two observed tuples share an admissible context, the proof of
+Theorem~\ref{thm:X-interface} shows that corresponding components occupy the
+same skeleton intervals.  Hence they have equal slot type automatically.
+Thus every shared-context pair admitted by the trivial observer is also
+admitted by $h_{\mathrm{slot}}$, while the converse is immediate.  All
+non-unary learner rules are observer independent.
+\end{proof}
+
+\begin{theorem}[Compression--reconstruction coincidence on $X_{k,r}$]
+\label{thm:X-coincidence}
+Among Clark--Wurm-safe observers through arity two, the two-state emptiness
+observer $e$ is compression-optimal and simultaneously attains the minimum
+MCFG characteristic-data cost:
+\[
+ |\im e|=\cmp_2^{\mathrm{CW}}(X_{k,r})=2,
+\]
+\[
+ \boxed{
+ \min_{h:\Safe_2^{\mathrm{CW}}(h;X_{k,r})}
+ \mcd_h(X_{k,r})
+ =2r[1+r(k-1)].
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Compression optimality is Theorem~\ref{thm:X-cw-compression}.  By
+Proposition~\ref{prop:X-learner-equality}, $e$ has exactly the slot-observer
+hypothesis on every sample, so it attains the displayed OFET cost.  No safe
+observer can do better: the trivial observer is a coarsening of every observer,
+and it induces the same hypothesis as $e$ and $h_{\mathrm{slot}}$ on this
+family.  Theorem~\ref{thm:reconstruction-monotonicity} therefore makes this
+cost globally minimal.
+\end{proof}
+
+\begin{theorem}[Fixed compression, unbounded reconstruction]
+\label{thm:fixed-compression-unbounded}
+There is an infinite family of finite regular languages $L_r$ such that
+\[
+ \cmp_2^{\mathrm{CW}}(L_r)=2
+\]
+for every $r$, while the minimum characteristic-sample cardinality tends to
+infinity and the minimum encoded reconstruction cost is quadratic.  Explicitly,
+for
+\[
+ L_r=X_{2,r},
+\]
+one has
+\[
+ \boxed{\min |C|=r+1,}
+ \qquad
+ \boxed{\min\mcd=2r(r+1)=\Theta(r^2).}
+\]
+Consequently there is no function $F:\mathbb N\to\mathbb N$ satisfying
+\[
+ \min_{h:\Safe_2^{\mathrm{CW}}(h;L)}\mcd_h(L)
+ \le F(\cmp_2^{\mathrm{CW}}(L))
+\]
+for every target $L$ in any reconstruction class containing all languages
+$X_{2,r}$.
+\end{theorem}
+
+\begin{proof}
+Apply Theorems~\ref{thm:X-cw-compression} and
+\ref{thm:X-coincidence} with $k=2$.  If such a function $F$ existed, then
+$2r(r+1)\le F(2)$ for all $r$, a contradiction.
+\end{proof}
+
+Thus $X_{k,r}$ gives the opposite phenomenon from $R_{m,q}$: here a
+compression-optimal observer is reconstruction-optimal, yet the numerical
+compression invariant still carries too little information to predict the
+amount of positive evidence required.
+
+\section{Relational morphisms optimize feasibility, not reconstruction}
+\label{sec:relational}
+
+Assume $L$ is regular, with syntactic morphism
+\[
+ \eta:\Sigma^*\twoheadrightarrow T_L
+\]
+and accepting subset $P\subseteq T_L$.  The relational-morphism theorem of
+\cite{KuriyamaSCL} characterizes Clark--Wurm compression by
+\[
+ \cmp_f^{\mathrm{CW}}(L)
+ =
+ \min\{|M|:\rho:T_L\relto M\text{ is $f$-separating}\}.
+\]
+Here separation means that every unsafe syntactic tuple pair has a coordinate
+whose relational fibers are disjoint.
+
+The same paper proves a free-monoid selector lemma.  For each letter $a$, pick
+one value in $\rho(\eta(a))$ and extend freely to a morphism
+$h_{\rho,s}:\Sigma^*\to M$.  Then
+\[
+ \rho_{h_{\rho,s}}(t)\subseteq\rho(t)
+\]
+for every $t\in T_L$, so a separating relational morphism yields a safe
+functional observer.
+
+\begin{theorem}[Relational-morphism reconstruction separation]
+\label{thm:relational-separation}
+Let $L=R_{m,q}$ and let
+\[
+ \rho:T_L\relto M
+\]
+be any minimum-codomain unary separating relational morphism.  Then
+$|M|=qm$.  Every free-monoid selector $h_{\rho,s}$ is compression-optimal:
+\[
+ |\im h_{\rho,s}|=qm.
+\]
+Nevertheless every such selector is reconstruction-suboptimal, and
+\[
+ \boxed{
+ \cd_{h_{\rho,s}}(R_{m,q})
+ -
+ \min_h\cd_h(R_{m,q})
+ \ge4(m-1)(q-1).
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+By the relational characterization and
+Theorem~\ref{thm:main-separation}, $|M|=\cmp_1^{\mathrm{CW}}(R_{m,q})=qm$.
+The selector lemma gives a safe observer with
+$|\im h_{\rho,s}|\le |M|$.  A strict inequality would contradict minimality of
+$\cmp_1^{\mathrm{CW}}$, so equality holds.  The compression-optimal lower bound
+from Theorem~\ref{thm:main-separation} then applies to every selector, while the
+global reconstruction optimum is smaller by exactly $4(m-1)(q-1)$.
+\end{proof}
+
+Thus relational morphisms solve the semantic feasibility problem exactly, but
+a minimum relational codomain does not solve the positive reconstruction
+problem.  For reconstruction one must descend from a multivalued relational
+witness to the behavior of its functional selectors and their induced fibers.
+
+\section{Observer-resource Pareto geometry}
+\label{sec:pareto}
+
+Let $F_1,\ldots,F_s$ be finite-valued observer resources, for example residual
+fragmentation, transition fragmentation, minimum characteristic-sample
+cardinality, or encoded characteristic-data cost.  Define
+\[
+ \mathcal R_L(h)
+ =
+ \bigl(
+ |\im h|,F_1(h),\ldots,F_s(h)
+ \bigr)
+ \in\mathbb N^{s+1}
+\]
+for safe observers $h$, and order these vectors componentwise.
+
+\begin{theorem}[Observer-resource Pareto principle]
+\label{thm:pareto}
+If $L$ admits at least one safe finite observer and all chosen resource
+coordinates are finite natural numbers, then the set of Pareto-minimal resource
+vectors is finite and nonempty.  Moreover,
+\[
+ \boxed{
+ \cmp_f(L)
+ =
+ \min\{r_1:(r_1,\ldots,r_{s+1})\in\Pareto_f(L)\}.
+ }
+\]
+If all coordinates are nondecreasing under observer refinement, then two
+distinct Pareto points cannot be represented by comparable observers.
+\end{theorem}
+
+\begin{proof}
+The set of realized resource vectors is a nonempty subset of
+$\mathbb N^{s+1}$.  By Dickson's lemma, its set of componentwise minimal
+elements is finite.  Every realized vector dominates a minimal one, so a vector
+with globally minimum first coordinate dominates a Pareto-minimal vector with
+the same first coordinate; this gives the displayed equality.  Finally, if
+$h\preceq g$ and every coordinate is refinement-monotone, then
+$\mathcal R_L(h)\le\mathcal R_L(g)$, so comparable observers cannot represent
+two distinct Pareto-minimal vectors.
+\end{proof}
+
+For $R_{m,q}$, \cite{KuriyamaOFET} computes the full three-coordinate frontier
+for
+\[
+ (|\im h|,\ifrag_h,\cd_h)
+\]
+as exactly
+\[
+ P^-_{m,q}
+ =
+ \bigl(qm,m,4(m^2+2qm-m)\bigr)
+\]
+and
+\[
+ P^+_{m,q}
+ =
+ \bigl(q(m+1),1,4(m^2+qm+q-1)\bigr).
+\]
+The first point is compression-optimal; the second is reconstruction-optimal.
+
+\begin{corollary}[Weighted phase transition]
+\label{cor:weighted}
+For positive weights $\alpha,\beta,\gamma$, define
+\[
+ W_{\alpha,\beta,\gamma}(h)
+ =
+ \alpha|\im h|
+ +\beta\ifrag_h(R_{m,q})
+ +\gamma\cd_h(R_{m,q}).
+\]
+The minimizing Pareto profile is $P^-_{m,q}$ precisely when
+\[
+ \alpha q>
+ (m-1)\bigl[\beta+4\gamma(q-1)\bigr],
+\]
+and is $P^+_{m,q}$ precisely when the reverse strict inequality holds.  At
+equality both profiles minimize the weighted objective.
+\end{corollary}
+
+\begin{proof}
+Every positive weighted optimum is Pareto-minimal, so only the two displayed
+profiles need be compared.  Their objective difference is
+\[
+ W(P^-)-W(P^+)
+ =
+ -\alpha q
+ +(m-1)\bigl[\beta+4\gamma(q-1)\bigr].
+\]
+\end{proof}
+
+This phase transition is a nontrivial weighted extension of SCL compression:
+changing the relative price of global observation and positive reconstruction
+moves the optimum discontinuously between two algebraically incomparable
+observers.
+
+\section{Conclusion}
+
+Finite observation and positive reconstruction are distinct resources.  The
+compression number
+\[
+ \cmp_f(L)
+\]
+answers a semantic question: how many finite observer values are needed to
+separate all unsafe guarded substitutions?  Characteristic-data cost answers a
+different question: once those distinctions are implemented by a particular
+observer, how many positive witnesses are required to reconstruct the target
+under the fixed learner?
+
+The family $R_{m,q}$ shows that these two optimization problems can have
+disjoint optimizers, with an exact gap and a nontrivial two-point Pareto
+frontier.  The family $X_{2,r}$ shows something stronger in a different
+direction: even when a compression-optimal observer is also reconstruction-
+optimal, the compression number can remain fixed while the optimal
+reconstruction cost grows without bound.  The relational-morphism
+characterization does not eliminate this distinction: minimum relational
+codomain controls semantic feasibility, whereas reconstruction depends on the
+functional observer geometry induced after selection.
+
+The combined principle is therefore
+\[
+ \boxed{\textbf{Observation Is Not Enough}.}
+\]
+A finite observer can make reconstruction possible without determining how
+expensive that reconstruction will be.  In the resulting observer-resource
+geometry, SCL compression is the first coordinate, not the whole problem.
+
+\begin{thebibliography}{99}
+
+\bibitem{ClarkEyraud2007}
+A.~Clark and R.~Eyraud.
+\newblock Polynomial identification in the limit of substitutable context-free languages.
+\newblock \emph{Journal of Machine Learning Research}, 8:1725--1745, 2007.
+
+\bibitem{Clark2013}
+A.~Clark.
+\newblock The syntactic concept lattice: another algebraic theory of the context-free languages?
+\newblock \emph{Journal of Logic and Computation}, 25(5):1203--1229, 2015.
+\newblock Published online 2013.
+
+\bibitem{Yoshinaka2011}
+R.~Yoshinaka.
+\newblock Efficient learning of multiple context-free languages with multidimensional substitutability from positive data.
+\newblock \emph{Theoretical Computer Science}, 412(19):1821--1831, 2011.
+
+\bibitem{KuriyamaCFG}
+T.~Kuriyama.
+\newblock Distributional learning of context-free languages under fixed finite-monoid typing.
+\newblock Revised manuscript, 2026. Public predecessor: arXiv:1409.6247v4.
+
+\bibitem{KuriyamaMCFG}
+T.~Kuriyama.
+\newblock Positive-data learning of multiple context-free languages under fixed finite-monoid typing.
+\newblock arXiv:2605.11644, 2026.
+
+\bibitem{KuriyamaSCL}
+T.~Kuriyama.
+\newblock Finite-monoid compression in syntactic concept lattices: arity hierarchies and a pseudovariety trichotomy.
+\newblock arXiv:2608.29639, 2026.
+
+\bibitem{KuriyamaOFET}
+T.~Kuriyama.
+\newblock Observer--Fragmentation--Exposure Tradeoffs: From rectangular CFG exposure to ordered MCFG scheduling.
+\newblock arXiv:2609.34560, 2026.
+
+\end{thebibliography}
+
+\end{document}
