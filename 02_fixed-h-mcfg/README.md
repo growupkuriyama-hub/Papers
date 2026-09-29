@@ -7,7 +7,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v62; this is the current source of truth.
+- `main.tex` — English working manuscript, internal v63; this is the current source of truth.
+- `revision/v62_to_v63_revision_note.md` — final planned page-reduction pass: compresses characteristic-data exposition and normalization appendix bookkeeping without removing named results.
+- `revision/v62_to_v63.diff` — unified manuscript diff for the v62 → v63 compression.
 - `revision/v61_to_v62_revision_note.md` — safe page-reduction pass confined to the comparison section; compresses proof narration while preserving named result statements and the intrinsic-rank-two audit core.
 - `revision/v61_to_v62.diff` — unified manuscript diff for the v61 → v62 comparison-section compression.
 - `revision/v60_to_v61_revision_note.md` — final submission-hardening pass after two independent audits: fixes recognition/normalization citation scope, sharpens intrinsic-witness novelty positioning, strengthens the Gallot/Bishop bridge, and reduces defensive prose without changing theorem statements.
