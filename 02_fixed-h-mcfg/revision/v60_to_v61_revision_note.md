@@ -19,4 +19,4 @@ The batch reconstruction, conservative TxtEx learner, characteristic-sample cons
 
 ## Validation
 
-The update script required every intended source block to occur exactly once before replacement.  A static LaTeX sanity check preserved begin/end-environment counts and verified balanced unescaped braces.  Repository CI is expected to provide the full pdfLaTeX build check after the commit.
+The update script required every intended source block to occur exactly once before replacement.  A static LaTeX sanity check preserved begin/end-environment counts and verified balanced unescaped braces.  Repository CI job `pdfLaTeX — 02 fixed-h MCFG` completed successfully for commit `cf763448303cab7e327403d86753b650c86f338c`, providing the full manuscript build check.
