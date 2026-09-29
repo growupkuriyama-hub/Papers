@@ -2,7 +2,7 @@
 
 **Title:** Observer--Fragmentation--Exposure Tradeoffs: From rectangular CFG exposure to ordered MCFG scheduling  
 **Author:** Takayuki Kuriyama  
-**Internal source version:** v32
+**Internal source version:** v33
 
 ## Source
 
@@ -18,7 +18,7 @@
 - **Public record confirmed:** 2026-09-30
 - **Journal status:** not yet submitted
 
-The arXiv title and abstract agree with the current internal v32 title/abstract. The exact arXiv source archive has not yet been compared byte-for-byte with `main.tex`, so the GitHub working source and the public arXiv snapshot remain explicitly distinguished until that verification is done.
+The arXiv title and abstract agree with the arXiv-era internal v32 title/abstract. Current internal v33 differs only by adding an in-manuscript citation to the public, commit-pinned GitHub copy of the ancillary verification script; no mathematical statement or proof content changed. The exact arXiv source archive has not yet been compared byte-for-byte with `main.tex`, so the GitHub working source and the public arXiv snapshot remain explicitly distinguished until that verification is done.
 
 At import time, `main.tex` was treated as the current OFET working source; it remains the repository source-of-truth for ongoing edits.
 
