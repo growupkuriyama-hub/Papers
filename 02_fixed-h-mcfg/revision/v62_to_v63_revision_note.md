@@ -29,4 +29,4 @@ Combined reduction: 1661 words.
 
 ## Validation
 
-Static checks confirm unchanged theorem-like environment counts, an identical label set, and balanced unescaped braces.  A follow-up safety check restored the explicit rank-one setup for $G$ and $\widetilde G_0$ and retained the audited restriction to Seki et al.'s step (f3). Full pdfLaTeX CI and the resulting page count will be recorded after the build.
+Static checks confirm unchanged theorem-like environment counts, an identical label set, and balanced unescaped braces.  A follow-up safety check restored the explicit rank-one setup for $G$ and $\widetilde G_0$ and retained the audited restriction to Seki et al.'s step (f3). GitHub Actions job `pdfLaTeX — 02 fixed-h MCFG` completed successfully for source commit `110d61f23ac7dc4a63431600b81aad510fe7a2c3`; the final pdfLaTeX pass reports 38 pages (down from 41 pages in v62 and 42 pages in v61).
