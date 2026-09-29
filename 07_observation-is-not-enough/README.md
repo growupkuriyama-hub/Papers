@@ -7,7 +7,7 @@ Working bridge paper / doctoral-dissertation synthesis component.
 **Observation Is Not Enough: Compression and Reconstruction under Finite-Monoid Typing**
 
 Author: Takayuki Kuriyama  
-Internal version: **v1**  
+Internal version: **v2**  
 Status: **working manuscript**
 
 ## Purpose
@@ -38,6 +38,8 @@ It also records:
 - `main.tex` — canonical editable manuscript source
 - `MASTER_NOTES.md` — theorem provenance, proof obligations, and scope cautions
 - `PAPER.yaml` — repository metadata
+- `PROOF_AUDIT_v2.md` — adversarial theorem-by-theorem proof audit
+- `xkr_cw_small_audit.py` — finite exhaustive sanity check for the `X_{k,r}` bridge theorems
 
 ## Dependencies
 
@@ -47,8 +49,8 @@ The new content of this note is the cross-paper theorem package and the exact Cl
 
 ## Build
 
-Run `pdflatex main.tex` twice. The v1 source was compile-checked locally before the repository update and produced a 13-page PDF with no undefined references/citations or overfull boxes.
+Run `pdflatex main.tex` twice. The v2 source was compile-checked locally and produced a 14-page PDF with no undefined references/citations or overfull boxes. The only remaining LaTeX diagnostics are harmless `hyperref` PDF-string warnings from mathematical section titles.
 
 ## Audit status
 
-This is a working manuscript, not yet a priority claim. The all-arity `X_{k,r}` proof and the literature-priority discussion should receive an independent audit before journal or arXiv submission.
+This is a working manuscript, not yet a literature-priority claim. The all-arity `X_{k,r}` proof has now passed an internal adversarial audit and finite exhaustive sanity checks; see `PROOF_AUDIT_v2.md`. A dedicated literature-priority audit and an independent human proof read remain desirable before submission.
