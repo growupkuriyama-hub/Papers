@@ -210,7 +210,9 @@ nonempty tuples and positive internal separators, and put
 \end{definition}
 
 This notation is introduced only to keep the learning interface distinct from
-the full Clark--Wurm SCL interface.
+the full Clark--Wurm SCL interface.  For both compression numbers we use the
+extended-natural convention that the minimum is $\infty$ if no safe finite
+observer exists.
 
 \begin{proposition}[Interface monotonicity]
 \label{prop:interface-monotonicity}
@@ -272,9 +274,10 @@ If $h\preceq g$, then
 \[
  |\im h|\le|\im g|.
 \]
-Moreover, for either tuple interface,
+Moreover, for either tuple interface $\mathsf I\in\{\mathrm{CW},+\}$,
 \[
- \Safe_f(h;L)\Longrightarrow \Safe_f(g;L).
+ \Safe_f^{\mathsf I}(h;L)\Longrightarrow
+ \Safe_f^{\mathsf I}(g;L).
 \]
 If $R$ is any semantic residual class and
 $\operatorname{frag}_h(R):=|h(R)|$, then
@@ -311,8 +314,9 @@ $h\preceq g$, then for every finite positive sample $K$,
 \[
  L(\mathcal A_g(K))\subseteq L(\mathcal A_h(K)).
 \]
-If $L$ is safe under $h$, let $\Lock_h(L)$ be the set of characteristic
-locking samples for $\mathcal A_h$.  Then
+If $L$ is safe under $h$ for the tuple interface used by $\mathcal A_h$,
+let $\Lock_h(L)$ be the set of characteristic locking samples for
+$\mathcal A_h$.  Then
 \[
  \boxed{\Lock_g(L)\subseteq\Lock_h(L).}
 \]
@@ -345,9 +349,11 @@ cost over nested feasible sets gives the final inequality.
 
 \begin{corollary}[Least-safe-observer coincidence principle]
 \label{cor:least-safe}
-Suppose the safe observers for $L$ have a least element $h_\bot$ under
-refinement.  Then $h_\bot$ minimizes image size and simultaneously minimizes
-every reconstruction cost covered by Theorem~\ref{thm:reconstruction-monotonicity}.
+Fix the safety interface used by the reconstruction system.  Suppose its
+safe observers for $L$ have a least element $h_\bot$ under refinement.  Then
+$h_\bot$ minimizes image size within that feasible class and simultaneously
+minimizes every reconstruction cost covered by
+Theorem~\ref{thm:reconstruction-monotonicity}.
 \end{corollary}
 
 \begin{corollary}[Incomparability principle]
@@ -565,36 +571,51 @@ Let $E_2=\{1,z\}$ be the two-element monoid with $z^2=z$, and define
 \]
 Thus $e$ records only emptiness.
 
-\begin{lemma}[Skeleton rigidity for Clark--Wurm blocks]
+\begin{lemma}[Skeleton-block rigidity for Clark--Wurm contexts]
 \label{lem:skeleton-rigidity}
 Suppose two Clark--Wurm tuples $\mathbf x,\mathbf y$ have the same componentwise
-emptiness pattern and share an accepting context in $X_{k,r}$.  Delete the
-coordinates that are empty in both tuples and merge their adjacent fixed
-context pieces.  In each maximal run of remaining holes separated only by
-empty fixed strings, the concatenated skeleton word supplied by $\mathbf x$
-and by $\mathbf y$ is the same uniquely located interval of $S_r$.
-Moreover, in every other accepting context for $\mathbf x$, the holes of such
-a run are again separated only by empty fixed strings and occupy that same
-skeleton interval.
+emptiness pattern and share an accepting context in $X_{k,r}$.  Delete every
+coordinate that is empty in both tuples and concatenate the fixed context
+pieces on its two sides.  Partition the remaining holes into maximal blocks in
+which consecutive holes are separated by the empty word.  Then:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item for each block, the concatenation of the component skeletons supplied by
+      $\mathbf x$ and by $\mathbf y$ is the same interval of $S_r$;
+\item that interval is uniquely located in $S_r$; and
+\item in every other accepting context for $\mathbf x$, exactly the same holes
+      of the block remain separated by the empty word and occupy that same
+      interval.
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
-After common empty coordinates are removed, all tuple components are nonempty.
-In a target word, the skeleton of every nonempty factor is a contiguous
-substring of $S_r$.  Since the symbols of $S_r$ are pairwise distinct, such a
-substring has at most one location.  Fixed nonempty context pieces therefore
-anchor the complementary skeleton positions uniquely.  A maximal run of holes
-with empty separators fills the unique intervening interval, so the
-concatenation of its component skeletons is fixed independently of the
-internal hole boundaries.
+After the common empty coordinates are removed, every remaining component is
+nonempty.  The skeleton of any such component is a nonempty contiguous
+substring of
+\[
+ S_r=A_1\cdots A_rB_1\cdots B_r.
+\]
+Because every symbol of $S_r$ occurs exactly once, every nonempty substring of
+$S_r$ has at most one location.  Hence, in any accepting filling, each literal
+component of $\mathbf x$ occupies a uniquely determined interval of $S_r$.
+The same is true of every nonempty fixed context piece.
 
-Now consider another accepting context for $\mathbf x$.  Each component
-$x_i$ has the same uniquely located skeleton substring as before.  Whenever
-two consecutive components belonged to one empty-separated run, their unique
-locations are adjacent.  A nonempty separator between them would insert an
-extra skeleton symbol between two already adjacent fixed locations and could
-not yield $S_r$.  Hence those separators remain empty, and the run fills the
-same interval.
+Consider a maximal block of holes whose intervening fixed pieces are empty.
+In the shared accepting context, the block occupies the interval between the
+uniquely located fixed material immediately to its left and right (with the
+beginning or end of $S_r$ used when the block is exterior).  Therefore the
+concatenation of the component skeletons in the block is uniquely determined.
+The same context accepts $\mathbf y$, so its block must fill the same interval,
+proving (i)--(ii).
+
+Now let $D$ be any other context accepting $\mathbf x$.  Each component of
+$\mathbf x$ must again occur at its unique skeleton location.  Two consecutive
+components that were separated by the empty word in the shared context occupy
+adjacent intervals of $S_r$.  A nonempty separator between them in $D$ would
+insert at least one skeleton symbol between two adjacent uniquely located
+intervals, which is impossible.  Thus all separators internal to the block
+remain empty in $D$, and the block occupies the same union of intervals.  This
+proves (iii).
 \end{proof}
 
 \begin{theorem}[Exact Clark--Wurm compression of $X_{k,r}$]
@@ -619,17 +640,25 @@ skeleton interval under $D$, and the same run of $\mathbf y$ has the same
 concatenated skeleton.  Hence replacing $\mathbf x$ by $\mathbf y$ preserves
 the entire skeleton $S_r$.
 
-It remains to check indices.  For each slot $j$, consider the two positions
-$A_j$ and $B_j$.  If both are supplied by fixed context material, the tuple
-replacement is irrelevant.  If exactly one is supplied by a tuple component,
-the shared accepting context forces the index inside $\mathbf x$ and
-$\mathbf y$ to equal the fixed counterpart, so replacing one tuple by the
-other preserves that equality in every accepting context.  If both positions
-are supplied by tuple material, acceptance of the shared context already
-forces the two supplied terminals of $\mathbf y$ to have the same index.
-Thus $D[\mathbf y]\in X_{k,r}$.  Symmetry gives equality of tuple
-distributions.  Hence $e$ is safe and $\cmp_f^{\mathrm{CW}}\le2$ for every
-$f$.
+It remains to check indices.  Let $U\subseteq\{1,\ldots,2r\}$ be the
+union of skeleton positions occupied by the tuple material.  The block lemma
+shows that $U$ is the same for $\mathbf x$ and $\mathbf y$, and that every
+accepting context for $\mathbf x$, including $D$, places its tuple material on
+that same set $U$.
+
+Fix a slot $j$ and consider its paired positions $A_j,B_j$.  If neither
+position lies in $U$, both terminals are fixed by $D$, and acceptance of
+$D[\mathbf x]$ already supplies a matching pair.  If exactly one position lies
+in $U$, let its index in $\mathbf x$ be $i$.  In the original shared context,
+the other position is fixed; acceptance of both fillings forces the inside
+terminal of $\mathbf y$ to have the same index $i$.  Since $D[\mathbf x]$ is
+accepted, the fixed counterpart supplied by $D$ also has index $i$, so the
+pair remains matched after replacing $\mathbf x$ by $\mathbf y$.  Finally, if
+both positions lie in $U$, acceptance of the original shared context filled by
+$\mathbf y$ forces the two terminals supplied by $\mathbf y$ to have one and
+the same index.  Thus every slot is consistent in $D[\mathbf y]$, so
+$D[\mathbf y]\in X_{k,r}$.  Symmetry gives equality of tuple distributions.
+Hence $e$ is safe and $\cmp_f^{\mathrm{CW}}\le2$ for every $f$.
 
 At arity one, the trivial observer is safe.  Empty and nonempty fragments
 cannot overlap by Lemma~\ref{lem:fixed-length-bridge}.  If two nonempty
@@ -682,16 +711,27 @@ Consequently, for every $f\ge2$,
 \end{theorem}
 
 \begin{proof}
-Take the trivial observer.  Suppose two nonempty $d$-tuples share an admissible
-sentence context.  Because every internal separator is nonempty and every
-symbol of the skeleton $S_r$ has a unique position, each tuple component is
-anchored to the same skeleton interval on both sides of the comparison.  Any
-slot whose two indexed terminals are not both internal to tuple material has
-its varying index fixed by the shared context.  A slot whose two terminals are
-both internal to the tuple may change index, but both terminals change
-together.  The same interval structure is forced in every other accepting
-sentence context.  Hence the two tuples have identical positive-interface
-distributions.  The one-element observer is therefore safe.
+Take the trivial observer.  If $d>2r$, there is no accepting $d$-tuple of
+nonempty components, so safety is vacuous.  Let $1\le d\le2r$ and suppose two
+nonempty $d$-tuples share an admissible sentence context.  For $d\ge2$, every
+internal separator is nonempty.  Together with the unique occurrence of every
+symbol of $S_r$, these separators anchor each component to the same skeleton
+interval on both sides of the comparison.  For $d=1$, the same conclusion
+holds from the two exterior context pieces and the endpoints of $S_r$; in the
+root case both tuples are complete target words and have the unique root
+context.
+
+Now consider a paired slot $(A_j,B_j)$.  If at least one of its two positions
+lies outside tuple material, the shared accepting context fixes the outside
+terminal and therefore forces the inside index to be identical in the two
+tuples.  If both positions lie inside tuple material, acceptance forces the two
+terminals of that slot to carry the same index within each tuple, although the
+common index may change between the tuples.  Every other accepting sentence
+context for the first tuple must place the same component intervals at the same
+unique skeleton locations, so the same slot-by-slot alternatives apply.
+Replacing the first tuple by the second therefore preserves membership in
+$X_{k,r}$.  Symmetry gives equality of positive-interface distributions, and
+the one-element observer is safe.
 \end{proof}
 
 This strict inequality is why the two tuple interfaces should not be silently
@@ -701,8 +741,17 @@ comparison bias answer slightly different optimization questions.
 \subsection{Coincidence of the optimal observer, but not of the resources}
 
 Let $h_{\mathrm{slot}}$ be the slot observer of \cite{KuriyamaOFET}, mapping
-$a_{j,i}$ to $A_j$ and $b_{j,i}$ to $B_j$ in a finite truncation monoid.  The
-fixed-observer MCFG reconstruction of \cite{KuriyamaOFET} satisfies
+$a_{j,i}$ to $A_j$ and $b_{j,i}$ to $B_j$ in a finite truncation monoid.  In
+this section $\mcd_h$ uses the OFET encoding
+\[
+ \|K\|_{\mathrm{OFET}}:=\sum_{w\in K}\max(1,|w|).
+\]
+This is deliberately distinguished from the current positive-sample-size
+notation in \cite{KuriyamaMCFG}, which uses $\sum_{w\in K}(|w|+1)$.  The
+cardinality statements below are independent of that bookkeeping convention.
+Since every word of $X_{k,r}$ has length $2r$, the OFET cost of a sample is
+exactly $2r$ times its cardinality.  The fixed-observer MCFG reconstruction of
+\cite{KuriyamaOFET} satisfies
 \[
  \boxed{
  \mcd_{h_{\mathrm{slot}}}(X_{k,r})
@@ -776,9 +825,19 @@ for
 \]
 one has
 \[
- \boxed{\min |C|=r+1,}
- \qquad
- \boxed{\min\mcd=2r(r+1)=\Theta(r^2).}
+ \boxed{
+ \min_{h:\Safe_2^{\mathrm{CW}}(h;L_r)}
+ \ \min_{C\in\Lock_h(L_r)} |C|
+ =r+1,
+ }
+\]
+and, under the OFET encoding just fixed,
+\[
+ \boxed{
+ \min_{h:\Safe_2^{\mathrm{CW}}(h;L_r)}
+ \mcd_h(L_r)
+ =2r(r+1)=\Theta(r^2).
+ }
 \]
 Consequently there is no function $F:\mathbb N\to\mathbb N$ satisfying
 \[
@@ -791,9 +850,28 @@ $X_{2,r}$.
 
 \begin{proof}
 Apply Theorems~\ref{thm:X-cw-compression} and
-\ref{thm:X-coincidence} with $k=2$.  If such a function $F$ existed, then
+\ref{thm:X-coincidence} with $k=2$.  The OFET lower bound gives at least
+$r+1$ sample words, and its explicit locking sample attains this cardinality.
+Because every target word has length $2r$, this is equivalent to the encoded
+minimum $2r(r+1)$.  If such a function $F$ existed, then
 $2r(r+1)\le F(2)$ for all $r$, a contradiction.
 \end{proof}
+
+\begin{remark}[What the unboundedness does and does not say]
+The alphabets, target-word lengths, and witnessed rule ranks grow with $r$.
+The theorem therefore rules out a bound by the compression number alone; it
+does not rule out bounds that also depend on alphabet size, word length, rule
+rank, or other reconstruction parameters.
+\end{remark}
+
+\begin{remark}[Finite exhaustive sanity check]
+The ancillary script \texttt{xkr\_cw\_small\_audit.py} exhaustively enumerates
+all Clark--Wurm and positive-interface factorizations for
+$(k,r)=(2,2),(2,3),(3,2)$ over several arities.  It verifies the two-state
+Clark--Wurm upper bound, the one-state positive-interface upper bound, and the
+arity-two Clark--Wurm lower bound in those finite cases.  This computation is
+only a sanity check; the all-arity result is the proof above.
+\end{remark}
 
 Thus $X_{k,r}$ gives the opposite phenomenon from $R_{m,q}$: here a
 compression-optimal observer is reconstruction-optimal, yet the numerical
@@ -866,29 +944,32 @@ witness to the behavior of its functional selectors and their induced fibers.
 \section{Observer-resource Pareto geometry}
 \label{sec:pareto}
 
+Fix one safety interface $\mathsf I$ (for example $\mathrm{CW}$ or $+$).
 Let $F_1,\ldots,F_s$ be finite-valued observer resources, for example residual
 fragmentation, transition fragmentation, minimum characteristic-sample
 cardinality, or encoded characteristic-data cost.  Define
 \[
- \mathcal R_L(h)
+ \mathcal R_L^{\mathsf I}(h)
  =
  \bigl(
  |\im h|,F_1(h),\ldots,F_s(h)
  \bigr)
  \in\mathbb N^{s+1}
 \]
-for safe observers $h$, and order these vectors componentwise.
+for $\mathsf I$-safe observers $h$, and order these vectors componentwise.
+Write $\Pareto_f^{\mathsf I}(L)$ for the set of realized componentwise-minimal
+vectors.
 
 \begin{theorem}[Observer-resource Pareto principle]
 \label{thm:pareto}
-If $L$ admits at least one safe finite observer and all chosen resource
-coordinates are finite natural numbers, then the set of Pareto-minimal resource
-vectors is finite and nonempty.  Moreover,
+If $L$ admits at least one $\mathsf I$-safe finite observer and all chosen
+resource coordinates are finite natural numbers, then
+$\Pareto_f^{\mathsf I}(L)$ is finite and nonempty.  Moreover,
 \[
  \boxed{
- \cmp_f(L)
+ \cmp_f^{\mathsf I}(L)
  =
- \min\{r_1:(r_1,\ldots,r_{s+1})\in\Pareto_f(L)\}.
+ \min\{r_1:(r_1,\ldots,r_{s+1})\in\Pareto_f^{\mathsf I}(L)\}.
  }
 \]
 If all coordinates are nondecreasing under observer refinement, then two
@@ -896,7 +977,7 @@ distinct Pareto points cannot be represented by comparable observers.
 \end{theorem}
 
 \begin{proof}
-The set of realized resource vectors is a nonempty subset of
+The set of realized $\mathsf I$-resource vectors is a nonempty subset of
 $\mathbb N^{s+1}$.  By Dickson's lemma, its set of componentwise minimal
 elements is finite.  Every realized vector dominates a minimal one, so a vector
 with globally minimum first coordinate dominates a Pareto-minimal vector with
