@@ -1,6 +1,6 @@
 # Observation Is Not Enough — Research Master
 
-Status: working manuscript v2 exists in main.tex; mathematical proof audit closed internally, literature-priority audit still open.
+Status: working manuscript v3 exists in main.tex; mathematical proof audit and internal literature-priority audit are closed. External expert priority check and independent human proof read remain recommended.
 
 ## 1. Purpose
 
@@ -177,8 +177,10 @@ Repairs made in v2:
 - Do not claim cmp_f^{CW} and cmp_f^{+} are universally equal.
 - Do not present R_{m,q} or X_{k,r} as broader language-class separations than proved.
 - Do not claim a compression-only lower or upper bound under fixed alphabet/rank/word-length restrictions; that has not been proved.
-- Do not claim literature priority until a dedicated search has been completed.
-- Do not mark the manuscript submission-ready until literature-priority review and an independent human proof read are complete.
+- Do not claim broad priority for separating representation/model complexity from sample complexity; de la Higuera and teaching-dimension work already establish that broader distinction.
+- Do not claim that typing/abstraction granularity affecting inference is new; Coste et al. and active abstraction-refinement work are prior art.
+- Scoped wording such as "to the best of our knowledge, no prior work we found optimizes observer image and positive locking-data cost over the same safe finite-monoid observer space" is acceptable after the v3 audit.
+- Do not mark the manuscript submission-ready until an external expert priority check and an independent human proof read are complete.
 
 ## 6. Current repository state
 
@@ -188,5 +190,20 @@ Repairs made in v2:
 - MASTER_NOTES.md: this theorem/provenance master.
 - PROOF_AUDIT_v2.md: theorem-by-theorem adversarial audit.
 - xkr_cw_small_audit.py: finite exhaustive sanity checker.
+- LITERATURE_PRIORITY_AUDIT_v3.md: dedicated literature/precedence audit and novelty boundary.
+
+## 6. Literature-priority audit outcome
+
+The v3 audit searched the project literature first and then external sources across characteristic samples/teaching dimension, typing bias, active abstraction refinement, symbolic automata, incompletely specified FSM minimization, and finite-algebra/distributional learning.
+
+The strongest classical novelty boundary is de la Higuera (1997): characteristic-data efficiency is already known to depend on representation choice, so the broad statement "small representation does not imply small data" is not new.
+
+The closest current conceptual neighbor found is Kim and Choi (FSE 2026), whose dynamic symbolic mapper is explicitly granularity-aware and uses coarse versus fine abstractions differently during active learning. This does not use passive positive-only grammar reconstruction, finite-monoid factor observers, or SCL compression.
+
+No direct predecessor was found, in the searched scope, for the exact common-feasible-space optimization used here: safe finite-monoid observer image versus learner-relative positive locking-data cost, with the R_{m,q} optimizer separation, the X_{2,r} fixed-compression/unbounded-reconstruction result, or the minimum-relational-morphism selector corollary.
+
+The Pareto-finiteness theorem itself is a routine Dickson-lemma application and should not be sold as a standalone priority claim. The new content is the exact instantiated observer-resource geometry.
+
+See LITERATURE_PRIORITY_AUDIT_v3.md for the collision matrix and recommended wording.
 
 The v2 TeX was compile-checked locally and produced a 14-page PDF with no undefined references/citations or overfull boxes. The remaining LaTeX diagnostics are harmless hyperref PDF-string warnings caused by mathematical section titles.
