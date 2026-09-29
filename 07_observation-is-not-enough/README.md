@@ -50,7 +50,7 @@ The new content of this note is the cross-paper theorem package and the exact Cl
 
 ## Build
 
-Run `pdflatex main.tex` twice. The v2 proof-audited source compiled to 14 pages with no undefined references/citations or overfull boxes. Version v3 adds the literature-priority boundary and related-work references; compile status is recorded separately after the v3 check.
+Run `pdflatex main.tex` twice. The v3 source was compile-checked after the literature-priority update and produced a 15-page PDF with no undefined references/citations or overfull boxes. The only remaining diagnostics are the pre-existing harmless `hyperref` PDF-string warnings from mathematical section titles.
 
 ## Audit status
 
