@@ -10,9 +10,9 @@ Public source repository for Takayuki Kuriyama's research papers.
 - `04_relative-factorization/` — *Relative Prime Factorization and Finite-State Presentations under Fixed Finite-Monoid Observation*
 - `05_jalc-occurrence-descriptors/` — *Finite Occurrence Descriptors for Context-Free Grammar Presentations under Monoid Typing* (JALC manuscript)
 - `06_ofet/` — *Observer--Fragmentation--Exposure Tradeoffs: From rectangular CFG exposure to ordered MCFG scheduling*
-- `07_observation-is-not-enough/` — *Observation Is Not Enough: Compression and Reconstruction under Finite-Monoid Typing* (working bridge/synthesis manuscript)
+- `07_Minimal_Observation_Is_Not_Enough/` — *Minimal Observation Is Not Enough: Reconstruction Tradeoffs in Identification in the Limit* (focused journal-candidate; intended third paper after #1/#2)
 - `doctoral-thesis/` — larger five-component dissertation plan for *Observation Is Not Enough — Finite Observation and Resource Tradeoffs in Identification in the Limit*; preserved as the maximal integration track
-- `doctoral-thesis-minimal/` — **current minimal dissertation track** for *Identification in the Limit beyond Fixed Observation*; core = #1 + #2 + a short bounded-vs-unbounded observation synthesis; no thesis TeX yet
+- `doctoral-thesis-minimal/` — **current minimal high-impact dissertation track** for *Identification in the Limit beyond Fixed Observation*; core = #1 + #2 + #7 MOINE; no thesis TeX yet
 
 ## Other papers
 
