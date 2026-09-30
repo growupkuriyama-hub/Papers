@@ -1,8 +1,8 @@
-# 07 — Minimal Observation Is Not Enough
+# 07 — Minimum Observer Size Is Not Enough
 
 ## Current title
 
-**Minimal Observation Is Not Enough: Reconstruction Tradeoffs in Identification in the Limit**
+**Minimum Observer Size Is Not Enough: Exact Tradeoffs in Positive-Data Grammar Reconstruction**
 
 Author: Takayuki Kuriyama  
 Internal version: **v1**  
@@ -20,29 +20,31 @@ The paper is optimized for three goals:
 
 The paper no longer tries to summarize all of #3 SCL-Compression or all of OFET. It keeps only the pieces needed for one sharp question:
 
-> How far can fixed finite observation be relaxed, and does minimum safe observation determine minimum positive reconstruction?
+> How do observer image size, congruence refinement, and characteristic positive evidence trade off under the fixed #1/#2 reconstruction systems?
 
 ## Main theorem package
 
-1. **Finite-Observation Threshold Theorem**
-   - bounded unknown finite observation is reducible to one universal product observer;
-   - unrestricted target-dependent finite observation contains all regular languages and is not TxtEx-identifiable.
+1. **Observer refinement and kernel invariance**
+   - the fixed #1/#2 constructors depend on an observer only through its kernel;
+   - moving to a finer observer deletes substitution links and cannot lower characteristic-data cost.
 
-2. **Reconstruction monotonicity under observer refinement**
-   - finer observers admit fewer semantic substitutions;
-   - locking-sample cost is nondecreasing along refinement.
+2. **Exact coarsest-observer separation on (R_{m,q})**
+   - (mathrm{obs}_1(R_{m,q})=qm);
+   - (H^-) and (H^+) are both coarsest safe and are incomparable;
+   - the minimum-image observer and the reconstruction-optimal observer are disjoint;
+   - exact encoded-cost gap (4(m-1)(q-1));
+   - with (q=m^2), relative image overhead tends to 1 while the reconstruction-cost ratio tends to 2.
 
-3. **Exact optimizer separation on R_{m,q}**
-   - obs_1(R_{m,q}) = qm;
-   - every observation-optimal observer pays a strictly larger reconstruction cost than a q(m+1)-state observer;
-   - exact gap 4(m-1)(q-1);
-   - with q=m^2, relative observer overhead tends to 1 while the reconstruction-cost ratio tends to 2.
+3. **Universal-observer penalty**
+   - bounded unknown observation remains learnable by universal product compilation (background from #2);
+   - on (R_{m,q}), a sufficiently rich universal observer separates all length-two main suffixes;
+   - the minimum characteristic sample then equals the whole finite target language.
 
-4. **Fixed minimal observation, unbounded MCFG reconstruction on X_{2,r}**
+4. **Exact affine reconstruction on (X_{k,r})**
    - the one-state observer is safe and reconstruction-optimal;
-   - minimum characteristic-sample cardinality is r+1;
-   - with the current #2 sample encoding, optimal cost is (2r+1)(r+1) = Theta(r^2);
-   - therefore no function of the minimum observation number alone bounds reconstruction cost.
+   - minimum characteristic-sample cardinality is exactly (1+r(k-1));
+   - the lower bound is an affine-span invariant tied directly to #2's Start/Const/Comp/Link rules;
+   - for (X_{2,r}), the exact cardinality is (r+1) and encoded cost is ((2r+1)(r+1)).
 
 ## Deliberately removed from the core paper
 
@@ -69,7 +71,7 @@ Interpretation:
 
 - #1: identification under fixed finite observation for CFGs;
 - #2: multidimensional extension to MCFGs;
-- MOINE: beyond one fixed observer, followed by exact limits of what minimum observation can explain.
+- MOINE: beyond one fixed observer, with exact separation between observer image size, safe-congruence coarseness, and reconstruction evidence.
 
 This is the preferred high-impact minimal dissertation narrative.
 
