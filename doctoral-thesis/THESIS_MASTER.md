@@ -114,9 +114,9 @@ Thesis role: reconstruction-resource geometry chapter.
 
 ---
 
-### Core E — Observation Is Not Enough
+### Core E — Minimal Observation Is Not Enough (focused successor to the former bridge paper)
 
-Directory: `../07_observation-is-not-enough/`
+Directory: `../07_Minimal_Observation_Is_Not_Enough/`
 
 Working paper role:
 - bridge #3 and OFET;
@@ -127,7 +127,7 @@ Working paper role:
 - connect minimum relational-morphism compression witnesses to reconstruction suboptimality;
 - package the observer-resource Pareto viewpoint.
 
-Current research status: **working manuscript v1 plus research master; proof / scope / priority audits still pending**.
+Current research status: **focused journal-candidate v1; streamlined proof re-audit and literature-priority refresh pending**.
 
 Thesis role: synthesis / bridge chapter and dissertation-level theorem package.
 
