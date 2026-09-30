@@ -1,0 +1,941 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\D}{\mathcal D}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\obs}{\operatorname{obs}}
+\newcommand{\cd}{\operatorname{cd}}
+\newcommand{\mcd}{\operatorname{mcd}}
+\newcommand{\Lock}{\operatorname{Lock}}
+\newcommand{\Safe}{\operatorname{Safe}}
+\newcommand{\blank}{\square}
+
+\title{Minimal Observation Is Not Enough:\\
+Reconstruction Tradeoffs in Identification in the Limit}
+\author{Takayuki Kuriyama\\Independent Researcher, Tokyo, Japan\\\texttt{growup.kuriyama@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Finite-monoid typing gives a finite observation bias for positive-data
+grammar learning: fragments or tuples are substituted only when their observer
+values agree.  The companion CFG and MCFG learning results establish exact
+reconstruction and identification in the limit once such an observer is fixed.
+This paper asks how much of that observation must be fixed, and whether a
+smallest safe observer is also best for reconstruction.
+
+First, for a fixed alphabet and a fixed bound on finite-observer size, all
+admissible observers can be compiled into one universal product observer.
+Hence the bounded unknown-observer union remains identifiable from positive
+data, both for the CFG setting and for every fixed MCFG fan-out bound.  If the
+observer-size bound is removed, the union contains all regular languages and
+Gold's obstruction applies.  Thus the fixed-observer hypothesis can be relaxed
+to bounded finite observation, but not to unrestricted target-dependent finite
+observation.
+
+Second, observer size and reconstruction cost are different optimization
+objectives.  For an explicit finite CFG family \(R_{m,q}\), the minimum safe
+observer has \(qm\) values, yet every observer of that size has strictly larger
+minimum characteristic-data cost than a slightly larger observer with
+\(q(m+1)\) values.  The exact gap is \(4(m-1)(q-1)\); when \(q=m^2\), the
+relative observer overhead tends to one while the reconstruction-cost ratio
+tends to two.  Third, for a fan-out-two MCFG family \(X_{2,r}\), the trivial
+one-state observer is already safe and reconstruction-optimal, but the minimum
+characteristic-sample cardinality is \(r+1\) and the standard encoded sample
+cost is \((2r+1)(r+1)=\Theta(r^2)\).  Therefore no function of minimum
+observation size alone can bound reconstruction cost.
+
+The resulting boundary is twofold: bounded observation is sufficient for
+identification in the limit, while minimal observation is insufficient to
+determine the positive evidence needed for exact reconstruction.
+\end{abstract}
+
+\section{Introduction}
+
+Identification in the limit from positive data is possible only after a
+language class is restricted strongly enough to avoid Gold's superfinite
+obstruction \cite{Gold1967}.  In distributional grammar learning, one such
+restriction is substitutability: positive examples license the replacement of
+fragments that appear in compatible contexts \cite{ClarkEyraud2007,Yoshinaka2011}.
+The companion CFG and MCFG papers \cite{KuriyamaCFG,KuriyamaMCFG} refine this
+idea by a finite-monoid observer
+\[
+ h:\Sigma^*\to M.
+\]
+Only fragments or tuple components with equal \(h\)-values may be compared.
+For each fixed \(h\), this finite algebraic bias supports exact positive
+reconstruction and explanatory identification in the limit.
+
+A fixed observer raises two different questions.  The first is a
+\emph{learnability-boundary question}: must one particular \(h\) be known in
+advance, or is it enough to know that the useful observer has bounded finite
+size?  The second is an \emph{optimization question}: among all observers that
+make substitution safe, does a smallest observer also minimize the amount of
+positive evidence needed by the reconstruction algorithm?
+
+This paper gives exact answers.  The learnability boundary is
+\[
+ \boxed{\text{bounded finite observation}\quad\text{versus}\quad
+        \text{unbounded target-dependent observation}.}
+\]
+A bounded unknown observer can be replaced by one universal product observer;
+without the bound, the union already contains every regular language and is
+not identifiable from positive data.
+
+Inside the learnable region, however, minimum observation and minimum
+reconstruction diverge.  We use two finite test families.  The CFG family
+\(R_{m,q}\) gives \emph{optimizer separation}: every minimum-size safe observer
+is reconstruction-suboptimal.  The fan-out-two family \(X_{2,r}\) gives
+\emph{scalar insufficiency}: the minimum observation size is constantly one,
+even though optimal reconstruction cost grows quadratically.
+
+These two phenomena are logically independent.  The first says that the
+observer minimizing semantic information can be the wrong observer for
+positive reconstruction.  The second says that even when the same observer is
+optimal for both objectives, the numerical observation minimum alone does not
+control reconstruction cost.  This is the precise sense in which
+\[
+ \boxed{\textbf{Minimal Observation Is Not Enough}.}
+\]
+
+The paper is intentionally narrow.  It extracts the smallest theorem package
+needed to connect fixed-observer CFG and MCFG learning to an observer-resource
+viewpoint.  Broader algebraic compression and reconstruction-resource
+developments appear in the research preprints \cite{KuriyamaSCL,KuriyamaOFET};
+none of their classification, relational-morphism, scheduling, or
+higher-rank census machinery is required here.
+
+\paragraph{Contributions.}
+The main results are:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item a finite-observation threshold theorem, showing that bounded unknown
+      finite observation remains learnable while unrestricted target-dependent
+      finite observation does not;
+\item a general refinement monotonicity principle for the fixed-observer
+      reconstruction systems;
+\item an exact CFG family \(R_{m,q}\) with disjoint observer-size and
+      characteristic-data optimizers; and
+\item a fan-out-two MCFG family \(X_{2,r}\) with constant minimum observation
+      but unbounded optimal characteristic data.
+\end{enumerate}
+
+\section{Finite observation and positive reconstruction}
+\label{sec:setup}
+
+Let \(\Sigma\) be a finite alphabet and let
+\(h:\Sigma^*\to M\) be a morphism into a finite monoid.  We always restrict
+the codomain to \(\im h\) when counting observer values.
+
+For \(x\in\Sigma^+\), write
+\[
+ \D_L(x)=\{(u,v)\in\Sigma^*\times\Sigma^*:uxv\in L\}.
+\]
+The observer \(h\) is \emph{unary safe} for \(L\) if
+\[
+ h(x)=h(y),\qquad
+ \D_L(x)\cap\D_L(y)\ne\varnothing
+ \quad\Longrightarrow\quad
+ \D_L(x)=\D_L(y)
+\]
+for all nonempty \(x,y\).  This is the interface used by the companion CFG
+reconstruction \cite{KuriyamaCFG}.
+
+For MCFG reconstruction we use the positive sentence-context interface of
+\cite{KuriyamaMCFG}.  A \(d\)-tuple
+\(\mathbf x=(x_1,\ldots,x_d)\) has nonempty components, and an admissible
+sentence context is
+\[
+ E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d,
+\]
+where the internal separators \(v_1,\ldots,v_{d-1}\) are nonempty.  Write
+\(\D_L^{(d),+}(\mathbf x)\) for the accepting admissible contexts.
+
+\begin{definition}[Positive-interface safety and observation number]
+For \(f\ge1\), write \(\Safe_f(h;L)\) if for every \(1\le d\le f\),
+componentwise equality
+\[
+ h^{(d)}(\mathbf x)=h^{(d)}(\mathbf y)
+\]
+together with
+\[
+ \D_L^{(d),+}(\mathbf x)\cap
+ \D_L^{(d),+}(\mathbf y)\ne\varnothing
+\]
+implies equality of the two positive-interface tuple distributions.
+Define
+\[
+ \obs_f(L):=
+ \min\{|\im h|:\Safe_f(h;L)\}.
+\]
+At \(f=1\) this is exactly unary safety.
+\end{definition}
+
+We measure characteristic data relative to the fixed reconstruction
+algorithms, not as learner-independent teaching dimension.  Let
+\(\mathcal A_h\) denote the CFG constructor of \cite{KuriyamaCFG} or the
+bounded-fan-out MCFG constructor of \cite{KuriyamaMCFG}, as appropriate.
+
+\begin{definition}[Locking sample and reconstruction cost]
+For an \(h\)-safe target \(L\), a finite \(C\subseteq L\) is
+\emph{locking} for \(\mathcal A_h\) if
+\[
+ C\subseteq K\subseteq L
+ \quad\Longrightarrow\quad
+ L(\mathcal A_h(K))=L
+\]
+for every finite \(K\).  Write \(\Lock_h(L)\) for the set of such samples.
+For the common positive-sample encoding
+\[
+ \|K\|_+:=\sum_{w\in K}(|w|+1),
+\]
+put
+\[
+ \cd_h(L):=\min_{C\in\Lock_h(L)}\|C\|_+.
+\]
+When the MCFG setting needs emphasis we write \(\mcd_h\) for the same
+quantity.
+\end{definition}
+
+The cost is explicitly reconstruction-system-relative.  This is important:
+our results compare observers for the same fixed positive-data constructors.
+
+\section{The finite-observation threshold}
+\label{sec:threshold}
+
+The first result removes the need to know one particular observer, provided a
+finite size bound is known.
+
+\begin{theorem}[Finite-Observation Threshold Theorem]
+\label{thm:threshold}
+Fix a finite alphabet \(\Sigma\) and an integer \(m\ge1\).
+
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item There is a finite monoid morphism
+\[
+ U_{\Sigma,m}:\Sigma^*\to M_{\Sigma,m}
+\]
+such that every morphism \(h:\Sigma^*\to M\) with \(|\im h|\le m\)
+factors through \(U_{\Sigma,m}\).
+
+Consequently, the union of the companion CFG classes learnable under some
+such \(h\) is contained in one fixed-\(U_{\Sigma,m}\) CFG class and is
+identifiable in the limit from positive data.  For every fixed MCFG fan-out
+bound \(f\), the analogous bounded-observer union is likewise contained in one
+fixed-\(U_{\Sigma,m}\) MCFG class and is identifiable in the limit.
+
+\item If the observer-size bound is removed and arbitrary finite observers are
+allowed, the corresponding union contains every regular language.  Hence it
+is not identifiable in the limit from positive data.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For fixed \(\Sigma\) and \(m\), there are only finitely many multiplication
+tables on sets of size at most \(m\), and only finitely many maps from
+\(\Sigma\) into those finite monoids.  Each letter map extends uniquely to a
+free-monoid morphism.  Take the finite direct product of all resulting
+morphisms and restrict the codomain to its image; call the result
+\(U_{\Sigma,m}\).
+
+Every \(h\) with \(|\im h|\le m\) occurs, up to isomorphic relabeling of its
+image, as one of the product coordinates.  Therefore
+\[
+ h=\pi_h\circ U_{\Sigma,m}
+\]
+for a monoid morphism \(\pi_h\).  Equality of \(U_{\Sigma,m}\)-type is thus
+finer than equality of \(h\)-type.  Safety under \(h\) implies safety under
+\(U_{\Sigma,m}\), so every bounded-observer target belongs to the corresponding
+fixed-\(U_{\Sigma,m}\) class.  The fixed-observer identification theorems of
+\cite{KuriyamaCFG,KuriyamaMCFG} then give the positive-data learners.
+
+For the negative statement, let \(L\) be regular and let
+\(\eta_L:\Sigma^*\to T_L\) be its finite syntactic morphism.  If two tuple
+fillings have equal componentwise \(\eta_L\)-values, then inserting either
+filling into the same surrounding context gives the same total syntactic
+product, hence the same membership in \(L\).  Thus \(\eta_L\) is safe at every
+finite arity, and every regular language lies in the unrestricted union.
+That union therefore contains all finite languages and an infinite language.
+Gold's superfinite obstruction applies \cite{Gold1967}.
+\end{proof}
+
+\begin{remark}
+The theorem is qualitative.  The universal product \(U_{\Sigma,m}\) can be
+enormous; no polynomial dependence on \(m\) is claimed.  The point is the
+location of the learnability boundary, not an efficient compilation of all
+bounded observers.
+\end{remark}
+
+\section{Observer refinement and reconstruction monotonicity}
+\label{sec:refinement}
+
+\begin{definition}[Observer refinement]
+For finite monoid morphisms \(h:\Sigma^*\to M\) and \(g:\Sigma^*\to N\),
+write
+\[
+ h\preceq g
+\]
+when, after restricting codomains to their images, there is a monoid morphism
+\(\pi:\im g\to\im h\) such that \(h=\pi\circ g\).  Thus \(g\) is finer.
+\end{definition}
+
+\begin{theorem}[Reconstruction monotonicity]
+\label{thm:monotonicity}
+Suppose \(h\preceq g\), and let \(\mathcal A_h,\mathcal A_g\) be the same
+fixed-observer CFG or MCFG reconstruction architecture with the two observers.
+Then for every finite positive sample \(K\),
+\[
+ L(\mathcal A_g(K))\subseteq L(\mathcal A_h(K)).
+\]
+If \(L\) is safe under \(h\), then
+\[
+ \boxed{\Lock_g(L)\subseteq\Lock_h(L)}
+\]
+and therefore
+\[
+ \boxed{\cd_h(L)\le\cd_g(L).}
+\]
+\end{theorem}
+
+\begin{proof}
+Equality of \(g\)-type implies equality of \(h\)-type.  Hence every semantic
+substitution rule licensed under the finer observer \(g\) is also licensed
+under \(h\).  Structural, lexical, start, and composition rules are unchanged,
+so the \(g\)-hypothesis is a subgrammar of the \(h\)-hypothesis.
+
+Let \(C\in\Lock_g(L)\) and \(C\subseteq K\subseteq L\).  Safety of \(h\)
+gives soundness of the \(h\)-reconstruction on positive subsets of \(L\).
+Thus
+\[
+ L=L(\mathcal A_g(K))
+ \subseteq L(\mathcal A_h(K))
+ \subseteq L,
+\]
+so \(C\in\Lock_h(L)\).  Minimizing the same sample cost over nested locking
+families gives the final inequality.
+\end{proof}
+
+\begin{corollary}[Incomparability of a strict tradeoff]
+\label{cor:incomp}
+If safe observers \(h,g\) satisfy
+\[
+ |\im h|<|\im g|
+ \qquad\text{and}\qquad
+ \cd_h(L)>\cd_g(L),
+\]
+then neither observer refines the other.
+\end{corollary}
+
+Thus a larger-observer/cheaper-reconstruction tradeoff cannot arise merely by
+moving upward along one refinement chain.  It requires two incomparable ways
+of allocating finite information.
+
+\section{Exact optimizer separation for CFGs}
+\label{sec:R}
+
+Fix \(m,q\ge2\).  Let
+\[
+ P_q=\{p_0,\ldots,p_{q-1}\},\qquad
+ A_m=\{a_0,\ldots,a_{m-1}\},
+\]
+and use fresh terminals \(z_{s,i}\).  Define
+\[
+ R_{m,q}
+ =
+ \{p_sa_i a_j:s<q,\ i,j<m\}
+ \cup
+ \{p_sa_i z_{s,i}:s<q,\ i<m\}.
+\]
+Every target word has length three.  Call the first block the \emph{main}
+block and the second the \emph{rigidity} block.
+
+All main suffixes \(a_i a_j\) have the same unary distribution.  For a safe
+observer \(h\), put
+\[
+ \kappa_h:=|\{h(a_i a_j):i,j<m\}|.
+\]
+
+\begin{lemma}[Critical conflicts]
+\label{lem:R-conflicts}
+The \(qm\) prefixes \(p_sa_i\) are pairwise conflicting: their unary
+distributions overlap but are unequal.  The \(p_s\) are pairwise conflicting,
+the \(a_i\) are pairwise conflicting, and the rigidity symbols force the
+main-suffix residual class to remain distinct from the private rigidity
+residuals.
+\end{lemma}
+
+\begin{proof}
+Every prefix \(p_sa_i\) occurs before every last letter \(a_j\), so any two
+such prefixes have a common accepting right context.  Their distributions are
+unequal because \(p_sa_i z_{s,i}\) is present only for its matching pair
+\((s,i)\).  The remaining claims follow by the same direct inspection: main
+words provide common contexts, while the private \(z_{s,i}\) words distinguish
+rows and indices.
+\end{proof}
+
+\begin{theorem}[Exact minimum observation and fragmentation gap]
+\label{thm:R-observation}
+For every \(m,q\ge2\),
+\[
+ \boxed{\obs_1(R_{m,q})=qm.}
+\]
+Moreover:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item every safe \(h\) with \(|\im h|=qm\) satisfies \(\kappa_h\ge m\);
+\item if \(\kappa_h<m\), then \(|\im h|\ge q(m+1)\);
+\item both bounds are attained: there are safe observers \(H^-\) and \(H^+\)
+with
+\[
+ (|\im H^-|,\kappa_{H^-})=(qm,m),
+ \qquad
+ (|\im H^+|,\kappa_{H^+})=(q(m+1),1).
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The conflict clique in Lemma~\ref{lem:R-conflicts} gives
+\(|\im h|\ge qm\).
+
+For the matching upper bound, let \(C_q\) be the cyclic group of order \(q\)
+and let \(M_m=(\{0,\ldots,m-1\},\max)\), with identity \(0\).  Define
+\[
+ H^-(p_s)=(s,0),\qquad
+ H^-(a_i)=(0,i),\qquad
+ H^-(z_{s,i})=(1,m-1).
+\]
+The \(qm\) values \(H^-(p_sa_i)=(s,i)\) exhaust the image.  The conflict
+families in Lemma~\ref{lem:R-conflicts} are separated by the displayed
+coordinates, so \(H^-\) is safe.  Also
+\[
+ H^-(a_i a_j)=(0,\max(i,j)),
+\]
+hence \(\kappa_{H^-}=m\).
+
+Now let \(h\) be safe with \(|\im h|=qm\), and put
+\(y_s=h(p_s)\), \(x_i=h(a_i)\).  The \(qm\) values
+\[
+ B=\{y_sx_i:s<q,\ i<m\}
+\]
+are pairwise distinct by safety and therefore equal all of \(\im h\).
+The identity belongs to \(B\), say \(1=y_{s_0}x_{i_0}\).
+The \(x_i\) are pairwise distinct.  If
+\(x_{i_0}x_j=x_{i_0}x_k\), left multiplication by \(y_{s_0}\) gives
+\(x_j=x_k\), impossible.  Thus the \(m\) values
+\(x_{i_0}x_j\) are distinct members of
+\(\{h(a_i a_j)\}\), proving \(\kappa_h\ge m\).
+
+Finally suppose \(\kappa_h<m\).  We claim that no \(y_s\) lies in \(B\).
+If \(y_s=y_tx_i\), then
+\[
+ y_sx_j=y_t(x_ix_j)
+\]
+takes at most \(\kappa_h<m\) values as \(j\) varies, while the left-hand
+values are pairwise distinct because the prefixes \(p_sa_j\) conflict.
+Hence \(B\) is disjoint from \(\{y_s:s<q\}\).  The row values \(y_s\) are
+pairwise distinct, so
+\[
+ |\im h|\ge qm+q=q(m+1).
+\]
+
+For attainment let
+\[
+ N_m=\{1,c_0,\ldots,c_{m-1}\}
+\]
+have identity \(1\) and multiplication \(c_ic_j=c_0\).  Define
+\[
+ H^+(p_s)=(s,1),\qquad
+ H^+(a_i)=(0,c_i),\qquad
+ H^+(z_{s,i})=(1,c_0)
+\]
+into \(C_q\times N_m\).  Again the critical conflicts are separated, the
+image has \(q(m+1)\) elements, and
+\[
+ H^+(a_i a_j)=(0,c_0)
+\]
+for all \(i,j\).  Hence \(\kappa_{H^+}=1\).
+\end{proof}
+
+We now compute the positive evidence required by the fixed-observer CFG
+constructor of \cite{KuriyamaCFG}.  Partition the \(m^2\) main suffixes into
+their \(h\)-fibers
+\[
+ \mathcal C_h=\{C_1,\ldots,C_{\kappa_h}\}.
+\]
+For a finite sample \(K\subseteq R_{m,q}\), let \(G_t(K)\) be the bipartite
+graph with left vertices \(P_q\), right vertices \(C_t\), and an edge
+\((p_s,c)\) when \(p_sc\in K\).
+
+\begin{lemma}[Exact sample-graph criterion]
+\label{lem:R-graph}
+For safe \(h\) and \(K\subseteq R_{m,q}\),
+\[
+ L(\mathcal A_h(K))=R_{m,q}
+\]
+if and only if:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item every rigidity word \(p_sa_i z_{s,i}\) belongs to \(K\); and
+\item every \(G_t(K)\) is connected and spanning.
+\end{enumerate}
+\]
+\end{lemma}
+
+\begin{proof}
+Each \(z_{s,i}\) occurs in exactly one target word, so that rigidity word is
+mandatory.  In the main block, equal-\(h\)-type suffix substitutions act
+inside one fiber \(C_t\).  A sampled pair of main words sharing the same row
+licenses movement between their suffixes; a sampled pair sharing the same
+suffix licenses movement between rows.  Thus exactly the incidences in one
+connected component of \(G_t(K)\) can be combined by the reconstruction.
+Binary decomposition cannot bypass a missing component: the prefix
+\(p_sa_i\) and the remaining one-letter factor are protected by the conflict
+families of Lemma~\ref{lem:R-conflicts}.  Therefore all row--suffix pairs in
+\(P_q\times C_t\) are reconstructed exactly when \(G_t(K)\) is connected and
+spanning.  Soundness of the safe-observer constructor supplies the reverse
+language inclusion.
+\end{proof}
+
+\begin{theorem}[Exact CFG reconstruction cost]
+\label{thm:R-cost}
+For every safe observer \(h\),
+\[
+ \min_{C\in\Lock_h(R_{m,q})}|C|
+ =
+ qm+m^2+\kappa_h(q-1),
+\]
+and therefore
+\[
+ \boxed{
+ \cd_h(R_{m,q})
+ =
+ 4\bigl(qm+m^2+\kappa_h(q-1)\bigr).
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+The \(qm\) rigidity words are compulsory.  A connected spanning bipartite
+graph on \(q+|C_t|\) vertices has at least
+\(q+|C_t|-1\) edges, and a spanning tree attains the bound.  Hence the
+minimum number of main words is
+\[
+ \sum_{t=1}^{\kappa_h}(q+|C_t|-1)
+ =
+ \kappa_h(q-1)+m^2.
+\]
+Add the rigidity words.  Every target word has length three, so the common
+encoding \(\|K\|_+\) is four times cardinality.  Sample monotonicity and
+soundness make any exact sample locking.
+\end{proof}
+
+\begin{theorem}[Minimal-observation separation]
+\label{thm:R-separation}
+For every \(m,q\ge2\),
+\[
+ \boxed{
+ \min_{\substack{h\ {\rm safe}\\|\im h|=\obs_1(R_{m,q})}}
+ \cd_h(R_{m,q})
+ =
+ 4(m^2+2qm-m).
+ }
+\]
+In contrast,
+\[
+ \boxed{
+ \min_{h\ {\rm safe}}\cd_h(R_{m,q})
+ =
+ 4(m^2+qm+q-1),
+ }
+\]
+and every reconstruction-optimal observer has at least \(q(m+1)>qm\)
+image values.  Thus
+\[
+ \boxed{
+ \arg\min_h|\im h|
+ \cap
+ \arg\min_h\cd_h(R_{m,q})
+ =\varnothing.
+ }
+\]
+The exact reconstruction penalty paid by minimum observation is
+\[
+ \boxed{4(m-1)(q-1).}
+\]
+\end{theorem}
+
+\begin{proof}
+A minimum-size observer has \(qm\) values and, by
+Theorem~\ref{thm:R-observation}, \(\kappa_h\ge m\).  Insert this into
+Theorem~\ref{thm:R-cost}; \(H^-\) attains equality.  For arbitrary safe
+observers, \(\kappa_h\ge1\), and \(H^+\) attains \(\kappa=1\), giving the
+global reconstruction minimum.  The fragmentation-gap part of
+Theorem~\ref{thm:R-observation} forces at least \(q(m+1)\) observer values
+for every optimizer with \(\kappa_h<m\).  Subtracting the two costs gives the
+displayed gap.
+\end{proof}
+
+\begin{corollary}[Vanishing observation overhead, factor-two reconstruction gain]
+\label{cor:R-asymptotic}
+For \(q=m^2\),
+\[
+ \frac{|\im H^+|}{\obs_1(R_{m,m^2})}
+ =1+\frac1m\longrightarrow1,
+\]
+while
+\[
+ \frac{
+ \min_{|\im h|=\obs_1(R_{m,m^2})}\cd_h(R_{m,m^2})
+ }{
+ \min_h\cd_h(R_{m,m^2})
+ }
+ \longrightarrow2.
+\]
+\end{corollary}
+
+Thus an asymptotically negligible relative increase in observation size can
+halve the leading reconstruction cost.
+
+\section{Fixed observation with unbounded MCFG reconstruction}
+\label{sec:X}
+
+Fix \(k,r\ge2\).  For \(1\le j\le r\) and \(1\le i\le k\), let
+\(a_{j,i}\) and \(b_{j,i}\) be distinct terminals and put
+\[
+ w_{\mathbf i}
+ =
+ a_{1,i_1}\cdots a_{r,i_r}
+ b_{1,i_1}\cdots b_{r,i_r},
+ \qquad
+ \mathbf i=(i_1,\ldots,i_r)\in[k]^r,
+\]
+\[
+ X_{k,r}:=\{w_{\mathbf i}:\mathbf i\in[k]^r\}.
+\]
+Every word has length \(2r\).  Erasing indices gives the rigid skeleton
+\[
+ A_1A_2\cdots A_rB_1B_2\cdots B_r,
+\]
+whose symbols are all distinct.
+
+A fan-out-two MCFG generates \(X_{k,r}\) using nonterminals
+\(A_1,\ldots,A_r\) with rules
+\[
+ A_j\to(a_{j,i},b_{j,i})
+\]
+and one rank-\(r\) start rule that concatenates all first components and then
+all second components in slot order.
+
+\begin{lemma}[Trivial observation is safe]
+\label{lem:X-safe}
+For every \(k,r\ge2\) and every finite \(f\),
+\[
+ \boxed{\obs_f(X_{k,r})=1.}
+\]
+\end{lemma}
+
+\begin{proof}
+Use the one-element observer.  Suppose two nonempty \(d\)-tuples share an
+admissible positive sentence context.  Every nonempty tuple component is a
+contiguous substring of the unique skeleton.  Because each skeleton symbol
+occurs only once, the fixed context pieces anchor each component to the same
+skeleton interval in both fillings.  For \(d\ge2\), the required nonempty
+internal separators also anchor the gaps between components; for \(d=1\) the
+exterior context does so, with the root case consisting simply of two complete
+target words.
+
+Consider the paired skeleton positions \(A_j,B_j\).  If one position lies
+outside the tuple material, the shared accepting context fixes its indexed
+terminal and forces the terminal inside the tuple to carry the same index in
+both fillings.  If both positions lie inside tuple material, each filling
+supplies a complete matched pair and may change the common index freely.
+Exactly the same interval pattern holds in every other accepting context.
+Replacing one tuple by the other therefore preserves all slot equalities and
+hence target membership.  The two tuple distributions are equal.  Thus the
+trivial observer is safe at every arity.
+\end{proof}
+
+The minimum observation value is therefore already constant.  We now compute
+the exact positive evidence needed by the standard fan-out-two reconstruction
+of \cite{KuriyamaMCFG} under this observer.
+
+Let
+\[
+ u_{j,i}:=(a_{j,i},b_{j,i})
+\]
+be the complete tuple for slot \(j\).
+
+\begin{proposition}[A linear-cardinality locking sample]
+\label{prop:X-upper}
+Let \(w_0=w_{(1,\ldots,1)}\).  For each \(j\) and \(i\ge2\), let
+\(w_{j,i}\) differ from \(w_0\) only by changing slot \(j\) from index \(1\)
+to \(i\).  Then
+\[
+ C_{k,r}
+ =
+ \{w_0\}\cup
+ \{w_{j,i}:1\le j\le r,\ 2\le i\le k\}
+\]
+is locking, with
+\[
+ |C_{k,r}|=1+r(k-1).
+\]
+\end{proposition}
+
+\begin{proof}
+For each \(j,i\), the tuples \(u_{j,1}\) and \(u_{j,i}\) occur in the same
+admissible sentence context in \(w_0\) and \(w_{j,i}\), respectively.
+Under the trivial observer the learner therefore licenses the corresponding
+semantic substitution.  The base word \(w_0\) supplies the rank-\(r\)
+composition witness.  After that decomposition, the \(r\) child slots may be
+changed independently from \(u_{j,1}\) to any \(u_{j,i_j}\).  Hence every
+\(w_{\mathbf i}\) is generated.  Safety from Lemma~\ref{lem:X-safe} gives
+soundness, and sample monotonicity makes the sample locking.
+\end{proof}
+
+For the matching lower bound, encode an index vector in the real vector space
+with basis \(e_{j,i}\) by
+\[
+ \Phi(i_1,\ldots,i_r)
+ :=
+ \sum_{j=1}^r e_{j,i_j}.
+\]
+The affine hull of all \(\Phi([k]^r)\) has dimension \(r(k-1)\).
+
+\begin{lemma}[Affine-span invariant]
+\label{lem:X-affine}
+For any nonempty finite \(K\subseteq X_{k,r}\),
+\[
+ w_{\mathbf i}\in L(\mathcal A_{\rm triv}(K))
+ \quad\Longrightarrow\quad
+ \Phi(\mathbf i)\in\operatorname{Aff}\{\Phi(\mathbf j):w_{\mathbf j}\in K\}.
+\]
+\end{lemma}
+
+\begin{proof}
+A semantic unary substitution is witnessed by two sampled complete words that
+differ only on the slots fully contained in the substituted tuple.  Its effect
+on the full index vector is therefore exactly a difference of two sampled
+\(\Phi\)-vectors.  This difference is independent of the accepting outer
+context because the rigid skeleton fixes the tuple intervals.
+
+Induct on a learner derivation.  Constant or lexical steps contribute zero
+difference.  Unary steps add a sampled difference.  In a linear nondeleting
+composition rule, child occurrences are disjoint, so the changes contributed
+by the children add.  A complete derivation starts from a sampled root word.
+Hence every generated full index vector equals one sampled vector plus a
+linear combination of sampled differences, and therefore lies in the affine
+hull of the sample vectors.
+\end{proof}
+
+\begin{theorem}[Exact MCFG reconstruction cost]
+\label{thm:X-cost}
+For the trivial observer,
+\[
+ \boxed{
+ \min_{C\in\Lock_{\rm triv}(X_{k,r})}|C|
+ =
+ 1+r(k-1).
+ }
+\]
+With the positive-sample encoding of \cite{KuriyamaMCFG},
+\[
+ \boxed{
+ \mcd_{\rm triv}(X_{k,r})
+ =
+ (2r+1)\,[1+r(k-1)].
+ }
+\]
+Because the trivial observer is the least possible observer, it is also
+globally reconstruction-optimal over all safe observers.
+\end{theorem}
+
+\begin{proof}
+If \(K\) is locking, then its reconstruction generates every element of
+\(X_{k,r}\).  By Lemma~\ref{lem:X-affine}, the affine hull of the sample
+vectors must contain \(\Phi([k]^r)\), whose affine dimension is \(r(k-1)\).
+The affine hull of \(|K|\) points has dimension at most \(|K|-1\), hence
+\[
+ |K|\ge1+r(k-1).
+\]
+Proposition~\ref{prop:X-upper} attains equality.  Since every target word has
+length \(2r\), the encoded-cost formula follows.
+
+Finally the trivial observer is coarser than every finite observer.
+Theorem~\ref{thm:monotonicity} therefore shows that no refinement can have a
+smaller locking-sample cost.
+\end{proof}
+
+\begin{theorem}[Fixed minimal observation, unbounded reconstruction]
+\label{thm:X-main}
+Let \(L_r=X_{2,r}\).  Then for every \(r\ge2\),
+\[
+ \boxed{\obs_2(L_r)=1,}
+\]
+while
+\[
+ \boxed{
+ \min_{h:\Safe_2(h;L_r)}
+ \min_{C\in\Lock_h(L_r)}|C|
+ =r+1
+ }
+\]
+and
+\[
+ \boxed{
+ \min_{h:\Safe_2(h;L_r)}
+ \mcd_h(L_r)
+ =(2r+1)(r+1)=\Theta(r^2).
+ }
+\]
+Consequently there is no function \(F:\mathbb N\to\mathbb N\) such that
+\[
+ \min_{h:\Safe_2(h;L)}\mcd_h(L)
+ \le F(\obs_2(L))
+\]
+for every target in any reconstruction class containing all \(X_{2,r}\).
+\end{theorem}
+
+\begin{proof}
+Combine Lemma~\ref{lem:X-safe} and Theorem~\ref{thm:X-cost} with \(k=2\).
+If such an \(F\) existed, then
+\[
+ (2r+1)(r+1)\le F(1)
+\]
+for all \(r\), a contradiction.
+\end{proof}
+
+\begin{remark}
+The alphabet, target-word length, and start-rule rank grow with \(r\).
+The theorem rules out a bound by the minimum observation number
+\emph{alone}; it does not rule out bounds using those additional structural
+parameters.
+\end{remark}
+
+\section{Discussion}
+
+The three results describe different boundaries.
+
+First, Theorem~\ref{thm:threshold} shows that one fixed observer is not the
+essential assumption behind the companion learning results.  An unknown
+observer may vary with the target as long as its finite size is uniformly
+bounded.  What fails is unrestricted target-dependent finite observation.
+
+Second, Theorem~\ref{thm:R-separation} shows that inside the safe-observer
+region the smallest semantic observer can be the wrong reconstruction choice.
+The phenomenon is exact and quantitatively non-negligible: an
+asymptotically vanishing relative increase in observer size can yield a
+factor-two improvement in positive reconstruction cost.
+
+Third, Theorem~\ref{thm:X-main} shows that no scalar minimum-observation
+number can summarize reconstruction difficulty.  Even the absolute minimum
+value \(1\) is compatible with unbounded characteristic data.
+
+The CFG and MCFG examples use different finite geometries.  The \(R_{m,q}\)
+locking problem is connectivity of typed row--suffix incidence graphs, so
+minimum samples are spanning trees.  The \(X_{k,r}\) locking problem is an
+affine-basis problem for a product of simplices, giving
+\(1+r(k-1)\) samples.  This difference is precisely why observer size should
+be treated as only one reconstruction resource.
+
+For the dissertation sequence, the interpretation is especially compact:
+the first paper establishes CFG learning under fixed finite observation, the
+second lifts the construction to MCFGs, and the present paper moves beyond one
+fixed observer and identifies what finite observation can and cannot control.
+
+\section{Conclusion}
+
+Finite observation has two sharply different roles in positive-data grammar
+learning.  As a class-level bias, a bounded amount of finite observation is
+enough: all bounded observers can be compiled into one universal product
+observer, preserving identification in the limit.  As a reconstruction
+resource, however, minimal observation is not enough.
+
+The family \(R_{m,q}\) separates the observer minimizing image size from the
+observer minimizing characteristic data.  The family \(X_{2,r}\) goes
+further: minimum observation remains equal to one while optimal
+reconstruction cost grows without bound.  Thus
+\[
+ \boxed{
+ \text{finite observation can delimit learnability without determining
+ reconstruction cost.}
+ }
+\]
+This boundary is the intended endpoint of the fixed-observation CFG-to-MCFG
+program.
+
+\begin{thebibliography}{99}
+
+\bibitem{Gold1967}
+E.~M. Gold.
+\newblock Language identification in the limit.
+\newblock \emph{Information and Control}, 10(5):447--474, 1967.
+
+\bibitem{Higuera1997}
+C.~de~la~Higuera.
+\newblock Characteristic sets for polynomial grammatical inference.
+\newblock \emph{Machine Learning}, 27(2):125--138, 1997.
+
+\bibitem{CosteEtAl2004}
+F.~Coste, D.~Fredouille, C.~Kermorvant, and C.~de~la~Higuera.
+\newblock Introducing domain and typing bias in automata inference.
+\newblock In \emph{Grammatical Inference: Algorithms and Applications},
+LNCS 3264, pages 115--126. Springer, 2004.
+
+\bibitem{ClarkEyraud2007}
+A.~Clark and R.~Eyraud.
+\newblock Polynomial identification in the limit of substitutable context-free
+languages.
+\newblock \emph{Journal of Machine Learning Research}, 8:1725--1745, 2007.
+
+\bibitem{Yoshinaka2011}
+R.~Yoshinaka.
+\newblock Efficient learning of multiple context-free languages with
+multidimensional substitutability from positive data.
+\newblock \emph{Theoretical Computer Science}, 412(19):1821--1831, 2011.
+
+\bibitem{KuriyamaCFG}
+T.~Kuriyama.
+\newblock Distributional learning of context-free languages under fixed
+finite-monoid typing.
+\newblock Revised manuscript, 2026. Public predecessor: arXiv:1409.6247v4.
+
+\bibitem{KuriyamaMCFG}
+T.~Kuriyama.
+\newblock Positive-data learning of multiple context-free languages under
+fixed finite-monoid typing.
+\newblock arXiv:2605.11644, 2026.
+
+\bibitem{KuriyamaSCL}
+T.~Kuriyama.
+\newblock Finite-monoid compression in syntactic concept lattices: arity
+hierarchies and a pseudovariety trichotomy.
+\newblock arXiv:2608.29639, 2026.
+
+\bibitem{KuriyamaOFET}
+T.~Kuriyama.
+\newblock Observer--fragmentation--exposure tradeoffs: from rectangular CFG
+exposure to ordered MCFG scheduling.
+\newblock arXiv:2609.34560, 2026.
+
+\end{thebibliography}
+
+\end{document}
