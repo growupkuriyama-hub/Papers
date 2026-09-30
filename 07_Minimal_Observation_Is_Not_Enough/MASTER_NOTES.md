@@ -55,13 +55,25 @@ The bounded-unknown-observer product theorem is retained as background, not coun
 
 ### D. (X_{k,r}): exact affine geometry
 
-The headline is no longer the bare scalar “obs=1 but cost unbounded” statement.  The substantive result is the exact affine formula
+The headline is no longer the bare scalar “obs=1 but cost unbounded” statement.  The substantive fan-out-two result is the exact affine formula
 
 [
 |C|_{min}=1+r(k-1).
 ]
 
-The affine invariant has been rewritten directly in terms of #2 Start/Const/Comp/Link, including the half-contained-slot case.  For (X_{2,r}), this gives (r+1) examples and encoded cost ((2r+1)(r+1)).
+Under trivial typing this is also an exact characteristic-sample theorem for Yoshinaka's A(2,*).  The affine invariant is used as a sharp lower bound, not claimed as a complete reconstruction criterion for arbitrary samples.
+
+### E. Same observer, different reconstruction architectures
+
+A new exact theorem shows that for every K subset of X_{k,r}, the #1 CFG constructor under the trivial observer satisfies
+
+[
+L(B_triv(K))=K.
+]
+
+The proof uses a skeleton-interval dichotomy: an interval with no complete slot has its filling fixed by the exterior context, while an interval containing a complete slot fixes the entire target word; after an R1 split at least one child interval has no complete slot.
+
+Consequently the CFG characteristic sample is uniquely X_{k,r} itself, of size k^r, while the #2 fan-out-two MCFG constructor needs exactly 1+r(k-1).  This yields a same-target, same-observer exponential-versus-linear architecture separation.
 
 ## 4. What was intentionally cut
 
