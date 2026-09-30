@@ -1165,6 +1165,169 @@ parameters held fixed.  It shows instead that observer cardinality does not
 encode the independent affine degrees of freedom that the fixed constructor
 must witness.
 \end{remark}
+\section{Same observer, different reconstruction architectures}
+\label{sec:architecture}
+
+The preceding MCFG bound is not merely a consequence of choosing a coarse
+observer.  On the same targets and with the same trivial observer, the
+companion CFG constructor behaves exponentially worse.
+
+Number the positions of the rigid skeleton
+\[
+ A_1\cdots A_rB_1\cdots B_r
+\]
+by \(1,\ldots,2r\), so that slot \(j\) occupies positions \(j\) and \(r+j\).
+Every nonempty factor of a word in \(X_{k,r}\) therefore occupies a unique
+contiguous skeleton interval \(I\).  Say that \(I\) \emph{contains slot \(j\)}
+when it contains both of these positions.
+
+\begin{lemma}[Interval dichotomy]
+\label{lem:X-interval-dichotomy}
+Let \(I\) be a nonempty contiguous interval of the skeleton.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item If \(I\) contains no complete slot, then a fixed exterior context
+      determines at most one filling of \(I\) that completes to a word of
+      \(X_{k,r}\).
+\item If \(I\) contains a complete slot, then a fixed factor on \(I\)
+      occurs in at most one word of \(X_{k,r}\).
+\item If \(I\) is split into two nonempty adjacent intervals \(I_1I_2\),
+      then at least one of \(I_1,I_2\) contains no complete slot.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), if \(I\) contains no complete slot, then for every \(j\) at least one
+of \(A_j,B_j\) lies outside \(I\).  The exterior context therefore fixes the
+index \(i_j\) of every slot.  Any filling that completes to a target word must
+use those same indices, so it is unique.
+
+For (ii), suppose \(I\) contains both \(A_j\) and \(B_j\).  Because \(I\) is
+contiguous, it contains every skeleton position from \(A_j\) through \(B_j\).
+Hence for every slot \(t\), either \(A_t\in I\) when \(t\ge j\), or
+\(B_t\in I\) when \(t\le j\).  A factor on \(I\) therefore fixes the index of
+every slot and hence the entire target word.
+
+For (iii), every interval containing a complete slot contains both central
+positions \(A_r\) and \(B_1\).  Two disjoint adjacent subintervals cannot both
+contain these positions.
+\end{proof}
+
+\begin{theorem}[No positive generalization for the CFG constructor]
+\label{thm:X-cfg-no-generalization}
+For every finite sample \(K\subseteq X_{k,r}\),
+\[
+ L(\mathcal B_{\mathrm{triv}}(K))=K.
+\]
+In fact the same equality holds for \(\mathcal B_h(K)\) under every finite
+observer \(h\).
+\end{theorem}
+
+\begin{proof}
+It suffices first to prove the statement for the trivial observer.  We use the
+actual Rules~(R1)--(R5) of the companion CFG constructor
+\cite{KuriyamaCFG}.  For every observed hypothesis nonterminal
+\([x:u,v]\), let \(I\) be the unique skeleton interval occupied by \(x\).
+We prove by induction on a finite derivation tree that
+\[
+ [x:u,v]\Rightarrow_{\mathcal B_{\mathrm{triv}}(K)}^* y
+ \quad\Longrightarrow\quad
+ uyv\in K.
+\tag{*}
+\]
+
+Rule~(R4) is immediate from the definition of an observed nonterminal.
+For Rule~(R3), the child has the same exterior context \((u,v)\), so the
+induction hypothesis for the child is already exactly the desired conclusion.
+
+For Rule~(R2), suppose
+\[
+ [x:u,v]\to[x:u',v'].
+\]
+Both \(uxv\) and \(u'xv'\) belong to \(K\).  If \(I\) contains a complete
+slot, Lemma~\ref{lem:X-interval-dichotomy}(ii) says that the fixed factor
+\(x\) determines the whole target word, so \(u=u'\) and \(v=v'\), and the
+claim follows from the induction hypothesis.  If \(I\) contains no complete
+slot, the induction hypothesis gives \(u'yv'\in K\).  Comparing
+\(u'xv'\) and \(u'yv'\) in the same exterior context,
+Lemma~\ref{lem:X-interval-dichotomy}(i) gives \(y=x\).  Hence
+\(uyv=uxv\in K\).
+
+For Rule~(R1), write \(x=x_1x_2\) and let the two children derive
+\(y_1,y_2\):
+\[
+ [x_1x_2:u,v]
+ \to
+ [x_1:u,x_2v]\,[x_2:ux_1,v].
+\]
+The two induction hypotheses give
+\[
+ uy_1x_2v\in K,
+ \qquad
+ ux_1y_2v\in K.
+\]
+By Lemma~\ref{lem:X-interval-dichotomy}(iii), at least one child interval
+contains no complete slot.  If this is the interval of \(x_1\), then
+Lemma~\ref{lem:X-interval-dichotomy}(i), applied in the common context
+\((u,x_2v)\), gives \(y_1=x_1\).  Therefore the parent yield
+\(uy_1y_2v=ux_1y_2v\) belongs to \(K\).  The case in which the interval of
+\(x_2\) contains no complete slot is symmetric.  This proves \((*)\).
+
+Every Rule~(R5) start rule enters a root \([w:\eps,\eps]\) with \(w\in K\),
+so \((*)\) gives
+\(L(\mathcal B_{\mathrm{triv}}(K))\subseteq K\).  Sample consistency gives the
+reverse inclusion.
+
+Finally the trivial observer is coarser than every finite observer.  By
+Theorem~\ref{thm:monotonicity},
+\[
+ L(\mathcal B_h(K))
+ \subseteq
+ L(\mathcal B_{\mathrm{triv}}(K))
+ =K,
+\]
+while sample consistency again gives \(K\subseteq L(\mathcal B_h(K))\).
+\end{proof}
+
+\begin{corollary}[Exponential architecture separation]
+\label{cor:X-architecture-gap}
+Under the trivial observer, the unique CFG characteristic sample for
+\(X_{k,r}\) is the entire target language:
+\[
+ \min_{C\in\CS_{\rm triv}(X_{k,r})}|C|
+ =|X_{k,r}|=k^r,
+ \qquad
+ \cd_{\rm triv}(X_{k,r})=(2r+1)k^r.
+\]
+For the fan-out-two MCFG constructor,
+\[
+ \min_{C\subseteq X_{k,r}\,:\,C\text{ characteristic for }
+       \mathcal B_{2,\rm triv}} |C|
+ =1+r(k-1),
+ \qquad
+ \mcd_{\rm triv}(X_{k,r})
+ =(2r+1)[1+r(k-1)].
+\]
+Thus, for fixed \(k\ge2\), the same target and the same safe one-state
+observer exhibit an exponential-versus-linear characteristic-sample gap:
+\[
+ \frac{k^r}{1+r(k-1)}.
+\]
+The same ratio holds for the encoded costs.
+\end{corollary}
+
+\begin{proof}
+For the CFG constructor, if \(C\subseteq X_{k,r}\) is characteristic then,
+taking \(K=C\) in the definition and applying
+Theorem~\ref{thm:X-cfg-no-generalization}, one obtains
+\[
+ X_{k,r}=L(\mathcal B_{\mathrm{triv}}(C))=C.
+\]
+Conversely the whole target is trivially characteristic.  The CFG encoded cost
+follows because every word has length \(2r\).  The MCFG formulas are
+Theorem~\ref{thm:X-cost}.  Lemma~\ref{lem:X-safe} supplies safety of the same
+trivial observer for both unary CFG reconstruction and fan-out-two MCFG
+reconstruction.
+\end{proof}
 \section{Discussion}
 
 The bounded-observer compilation principle and the reconstruction results play
