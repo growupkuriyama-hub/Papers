@@ -42,9 +42,15 @@ The paper no longer tries to summarize all of #3 SCL-Compression or all of OFET.
 
 4. **Exact affine reconstruction on (X_{k,r})**
    - the one-state observer is safe and reconstruction-optimal;
-   - minimum characteristic-sample cardinality is exactly (1+r(k-1));
+   - minimum fan-out-two characteristic-sample cardinality is exactly (1+r(k-1));
    - the lower bound is an affine-span invariant tied directly to #2's Start/Const/Comp/Link rules;
-   - for (X_{2,r}), the exact cardinality is (r+1) and encoded cost is ((2r+1)(r+1)).
+   - under trivial typing this is an exact characteristic-data theorem for Yoshinaka's finite-sample reconstruction.
+
+5. **Same-observer CFG-vs-MCFG architecture separation**
+   - for every K subset of X_{k,r}, the #1 CFG constructor satisfies L(B_triv(K))=K;
+   - hence CFG reconstruction needs the entire target, k^r examples;
+   - the #2 fan-out-two constructor needs exactly 1+r(k-1) examples;
+   - for fixed k>=2 this is an exponential-versus-linear gap with the target and observer held fixed.
 
 ## Relation to public OFET preprint
 
@@ -87,7 +93,7 @@ This is the preferred high-impact minimal dissertation narrative.
 - `MASTER_NOTES.md` — trimming decisions and proof obligations
 - `PROOF_AUDIT_v2.md` — inherited adversarial audit from the predecessor bridge manuscript; re-audit required after the interface simplification
 - `LITERATURE_PRIORITY_AUDIT_v3.md` — inherited priority audit; refresh before submission
-- `xkr_cw_small_audit.py` — legacy finite sanity checker from the predecessor Clark--Wurm formulation; retained as provenance, not as a proof dependency
+- `xkr_cw_small_audit.py` — finite sanity checker for X_{k,r}, now including exhaustive small-case verification of the CFG no-generalization theorem; not a proof dependency
 
 ## Target size
 
