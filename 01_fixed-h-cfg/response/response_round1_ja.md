@@ -1,0 +1,272 @@
+# TCS-D-26-00494 Round 1 回答書 日本語確認版
+
+> **用途**: このファイルは response_round1.tex の内容確認用日本語版です。TCS への提出用本文は英語版です。査読者コメントは要旨化していますが、著者側の回答方針・撤回点・修正箇所は英語版と対応するように整理しています。
+
+## 全体方針
+
+今回の改訂では、次の8点を主要変更として明示した。
+
+1. **学習器の正しさ**  
+   初回投稿版の sequential learner は、正例が増えるたびに batch grammar を再構成していたため、文法そのものが構文的に収束する保証がなかった。改訂版では finite-sample batch constructor \(\mathcal B_h\) と conservative sequential learner \(\mathcal A_h\) を分離した。
+
+2. **outer-context typing の撤回**  
+   初回投稿版の outer-context type はどの証明でも使われていなかったため削除した。完全性証明に本当に必要なのは yield type \(A_\mu\) だけである。
+
+3. **terminal-rule completeness の修正**  
+   一つの typed nonterminal が複数の terminal rule を持つ場合、canonical yield だけでは不十分だった。各 \(X\to a\) に対して \(u_Xav_X\) を witness に加え、必要に応じて Rule (R3) の後に Rule (R4) を使うよう修正した。
+
+4. **空語の扱いの明確化**  
+   fixed-\(h\) substitutability は内部断片 \(x,y\in\Sigma^+\) に対して定義し、\(\lambda\) は start symbol 側で別扱いにした。
+
+5. **一般 fixed-\(h\) の quantitative boundary**  
+   新しい §7 で typed thickness を導入した。一般の fixed-\(h\) では canonical witness の大きさを source grammar の ordinary thickness だけで抑えられるとは限らず、固定2元モノイドでも full yield typing により指数的ギャップが生じうることを Prop. 7.3 で示した。
+
+6. **fixed-window との正確な対応**  
+   Prop. 3.3 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では既知の grammar-size-and-thickness scale と整合する characteristic-data bound を確認する。
+
+7. **linear theorem の非正規な射程**  
+   §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。
+
+8. **polynomial claim の切り分け**  
+   polynomial-time finite-sample reconstruction と characteristic-data bounds は維持するが、修正後の sequential learner 自体を de la Higuera 型の “polynomial time-and-data learner” とは呼ばない。Gold identification と batch complexity を明確に分ける。
+
+### 初回投稿版から撤回・限定した3つの主張
+
+- sequential learner の **order-independence**
+- outer-context type による分離が **必要** だという主張
+- linear sequential learner に対する **“polynomial time-and-data”** というラベル
+
+---
+
+## Editor への回答
+
+Editor の主懸念は、presentation の問題が科学的部分、とくに learning section の正しさにまで入り込んでいる点だった。
+
+改訂版では、(i) learner を conservative learner に差し替え、(ii) terminal-rule gap を witness set と completeness proof の双方で修正し、(iii) 使われていない outer-context annotations を削除し、(iv) fixed-\(h\) substitutability を nonempty fragment に限定した。§4 で batch operator と sequential learner を先に定義し、§5 で completeness 用の yield typing を導入する構成にした。さらに §7 で一般 fixed-\(h\) における typed-thickness limitation を明示し、§8・§9 では special subclasses に対する stronger quantitative bounds を分離した。
+
+**改訂箇所:** Def. 2.1, §4.2, §5.1, Thm. 5.3, Cor. 5.5, §§7–9.
+
+---
+
+# Reviewer 1
+
+## R1-01 学習アルゴリズムの致命的誤り
+
+**指摘要旨:** 初回投稿版の learning algorithm は収束しない。先行研究に倣えば修正可能。
+
+**回答:** 指摘どおりであり、初回版の learner には genuine correctness problem があった。改訂版では set-driven batch operator \(\mathcal B_h(K)\) と conservative sequential learner \(\mathcal A_h\) を分離した。新しい正例が現 hypothesis に含まれる限り hypothesis を保持し、拒否されたときだけ accumulated sample 全体から再構成する。この conservative device は Clark–Eyraud の SGL (Algorithm 2) と Yoshinaka の \((k,\ell)\)-SGL (Algorithm 1) と同型である。finite witness set が現れた後は高々1回の hypothesis change で target language に一致し、その後は文法そのものが構文的に安定する。
+
+order-independence の主張は撤回し、set-driven なのは batch operator のみとした。
+
+**改訂箇所:** §2.1, §4.2, Cor. 5.5, Thm. 8.3, Thm. 9.3.
+
+## R1-02 全体の presentation
+
+**指摘要旨:** technical terms の未定義、長すぎる証明、metavariable の不統一、節の細分化を整理し、大幅に短くすべき。
+
+**回答:** manuscript を大幅に圧縮・再編した。definitions と learning model は §2 に集約し、proof-local terminology は必要箇所だけで導入した。長い技術証明は Appendices A–C に移し、旧 boundary sections は §10 に統合した。固定的なページ数は回答書には書かず、最終ビルド依存の情報を避けた。
+
+**改訂箇所:** §§1–2, §§4–5, §§7–10, Apps. A–C.
+
+## R1-03 Introduction の位置づけ
+
+**指摘要旨:** 分野における位置づけと対象クラスの意義を明確にし、technical details を減らすべき。
+
+**回答:** Introduction の contribution を3本柱に整理した。(1) exact finite-witness reconstruction と conservative Gold learner、(2) fixed-window / linear quantitative results、(3) fixed-window hierarchy・deterministic CFL・Clark congruential family との構造的関係である。
+
+## R1-04 \(D_L\), \(\mathcal C_h^{cf}\) の定義
+
+**回答:** Introduction と §2 で明示的に定義した。“general context-free class” の曖昧な表現も削除した。
+
+## R1-05 contribution の過剰列挙
+
+**回答:** proof-local devices を contribution として数えず、実質的な3点に整理した。
+
+## R1-06 Łukasiewicz language の名称と引用
+
+**回答:** §10.3 で \(S\to aSS\mid b\) の言語を Łukasiewicz language と呼び、Autebert–Berstel–Boasson (1997) を引用した。現在の coding では \(L_{\mathrm{Luk}}=D_1b\) と記す。
+
+## R1-07 order-independence と constructor / learner の混同
+
+**回答:** batch constructor と sequential learner を分離した。§4.2 に、batch operator は set-driven だが stabilized grammar は presentation order に依存しうることを明記した。主張するのは target language を生成する文法への eventual syntactic stabilization だけである。
+
+## R1-08 基本用語の定義
+
+**回答:** CFG, derivation, reachable, productive, reduced, linear, binarization, encoding size, thickness などを §2 にまとめた。
+
+## R1-09 “finite typed reconstruction basis”
+
+**回答:** 用語・概念とも削除し、実際に必要な finite witness set だけを残した。
+
+## R1-10 \(\mathsf{RS}_h\) と \(\mathsf{RS}\) の順序、RS の非学習可能性
+
+**回答:** fixed \(h\) の slice を先に定義し、その後 expressive union \(\mathsf{RS}\) を定義した。RS 全体は全 regular languages を含み superfinite なので positive data から Gold-identifiable ではないことを明記した。
+
+## R1-11 \(\lambda\) の扱い
+
+**回答:** compared fragments を \(\Sigma^+\) に限定し、\(\lambda\) を start symbol で別扱いにした。Clark–Eyraud の \(a^+\) の扱いと整合することを脚注で説明した。
+
+## R1-12 fixed-window morphism の定義
+
+**回答:** prefix/suffix の意味と finite monoid の multiplication を明示し、Prop. 3.3 で Yoshinaka の fixed-window condition との同値性を両方向で証明した。
+
+## R1-13 “\(h\) is given as data” と linear CFG
+
+**回答:** \(h\) は finite monoid の multiplication table と letter images で表現される fixed efficiently computable homomorphism とした。linear CFG も §2 で定義した。
+
+## R1-14 “The proof for fixed \(h\)”
+
+**回答:** 曖昧な表現を削除した。
+
+## R1-15 reachable / productive
+
+**回答:** §2 で先に定義し、口語的説明を削除した。
+
+## R1-16 typing を導入する順序
+
+**回答:** reviewer の提案に従い、§4 で learner を先に定義し、§5 で completeness proof のために target-side yield typing を導入する順序に変更した。
+
+## R1-17〜R1-19 §4 の細部・重複 lemma・記号
+
+**回答:** \(\omega,\chi\) の導入順、\(\alpha\) の型、NT(), Rule(), realized/exhibited などの不要・重複表現を削除または整理した。lifting は Prop. 5.2 に集約した。
+
+## R1-20 learner が収束しない
+
+**回答:** R1-01 と同じ問題であり、proof だけでなく learner 自体を conservative learner に差し替えた。
+
+## R1-21 “soundness of a rule”
+
+**回答:** Rules (R1)–(R5) の直後に \([x:u,v]\) の直観的意味を1文で説明し、その直後に数学的な soundness invariant と Thm. 4.2 を置いた。
+
+## R1-22 不要 lemma と \(G\to\widetilde G\)
+
+**回答:** trivial / definition-restating lemmas を削除し、typed refinement の language preservation と yield invariant を Prop. 5.2 に整理した。
+
+## R1-23 theorem statement を数学的に
+
+**回答:** Thm. 5.4 を
+\[
+\mathsf W(\widetilde G)\subseteq K\subseteq L
+\Longrightarrow
+L(\mathcal B_h(K))=L
+\]
+という明示的な implication にした。
+
+## R1-24 Corollary の convergence proof
+
+**回答:** 証明だけを修繕するのではなく learner 自体を変更した。Cor. 5.5 が hypothesis grammar の eventual syntactic stabilization を証明する。
+
+## R1-25 §6 complexity
+
+**回答:** 定義的な議論を削り、finite sample size に対する reconstruction complexity の数え上げだけを残した。
+
+## R1-26 linear section が長い
+
+**回答:** 現在の §9 では Prop. 9.1 と Lemma 9.2 の statement と Thm. 9.3 の quantitative consequence を本体に残し、normalization と short-witness proof は Apps. B, C に移した。
+
+## R1-27 capped counter の記号
+
+**回答:** \(\{d,u,;\}\) を \(\{\uparrow,\downarrow,\#\}\) に変更し、CCL\(_p\) を CTR\(_\rho\) に改名した。§10.2 の fixed-window exclusion は2語だけを使う短い witness にした。
+
+## R1-28 boundary sections の統合
+
+**回答:** 旧 §§8–10 を現 §10 に統合し、不要な corollary と “block” terminology を削除した。\(\Delta^*\) は nonlinear witness として1 proposition に圧縮した。
+
+## R1-29 標準事実を再証明しすぎ
+
+**回答:** Dyck / Łukasiewicz の標準事実は Ginsburg–Greibach と Autebert–Berstel–Boasson を引用する形にし、旧 standalone lemma を削除した。
+
+## R1-30 quotient lemma の配置
+
+**回答:** 一般的な closure section を復活させず、実際に使う fixed-word right quotient の形だけを Lemma 10.8 として残し、その唯一の適用直前に置いた。
+
+## R1-31 Clark congruential family
+
+**回答:** Prop. 10.9 を追加した。Clark (2010) が ordinary substitutable と fixed-window substitutable classes を congruential family に含め、Dyck language を既知例として用いていることを本文で明示した。その上で、本稿では各 fixed-\(h\) slice に対して
+\[
+\mathcal C_h^{cf}\subseteq\mathsf{CONG}
+\]
+を証明し、union を取って
+\[
+\mathsf{RS}\cap\mathrm{CFL}\subseteq\mathsf{CONG}
+\]
+を得る。
+
+## R1-32〜R1-37 その他の presentation / boundary 指摘
+
+**回答:** proof-local lemmas の削除、標準事実の citation 化、right quotient lemma の局所配置、Clark family との比較追加まで含め、現 §§9–10 と Appendices に整理済み。
+
+---
+
+# Reviewer 2
+
+## R2-01 fixed \(h\) の意義・typing / PDA / Takada との関係
+
+**回答:** 一つの \(h\) を class 全体で固定することを明記し、Yoshinaka の fixed \((k,\ell)\) と同じ class-level bias として位置づけた。Coste et al. (2004) の typing/domain bias と関連づけ、Takada の control-set approach とは「regular control set が derivation representation に参加する」のに対し、本稿の finite monoid は比較可能な terminal yields を制御するものだと区別した。
+
+さらに新 §7 で、arbitrary fixed-\(h\) の quantitative limit を typed thickness により明示した。fixed-window は §8、linear は §9、pushdown / boundary は §10 に整理した。
+
+## R2-02 outer context type が transport に使われていない
+
+**回答:** reviewer の指摘どおりであり、初回投稿版で outer-context typing が必要だとした主張は unsupported だったため撤回した。outer annotations は削除し、yield type \(A_\mu\) だけを残した。R2 は同じ observed factor \(x\) が実際に観測された contexts 間を移す規則であり、周囲の \(h\)-type は不要である。
+
+## R2-03 linear theorem の射程
+
+**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。
+
+また §7 で general fixed-\(h\) の typed-thickness boundary、§8 で fixed-window quantitative compatibility、§10.1 で nonlinear witness \(\Delta^*\) を分けて提示する。
+
+## R2-04 冗長な reachable / productive qualification
+
+**回答:** trimmed refinement の convention を一度だけ述べ、以後の反復を削除した。
+
+## R2-05 Prop. 3.1 の “In particular”
+
+**回答:** finite-monoid characterization から直接 “Thus every regular language belongs to RS.” と結論する形に変更した。Introduction の同じ箇所も “Thus” に統一した。
+
+## R2-06 未使用の \(B(\widetilde G)\), NT(), Rule()
+
+**回答:** 削除した。
+
+## R2-07 Example 4.3 が SSBNF でない
+
+**回答:** 例自体を削除した。
+
+## R2-08 terminal rules が複数ある場合
+
+**回答:** genuine gap と認め、各 typed terminal rule \(X\to a\) に対して \(u_Xav_X\) を witness set に追加した。terminal base case は必要なら R3 で canonical yield から \(a\) に代表を変え、その後 R4 を適用する。
+
+## R2-09 Lemmas 5.3, 5.4
+
+**回答:** 不要なので削除した。
+
+## R2-10 Corollary の fixed \(h\) の明示
+
+**回答:** Cor. 5.5 を “For a fixed homomorphism \(h:\Sigma^*\to M\) into a finite monoid \(M\), ...” で開始する形にした。
+
+## R2-11 SSLNF normalization が長い
+
+**回答:** 本文 §9 には Prop. 9.1, Lemma 9.2, Thm. 9.3 の必要な statement だけを残し、詳細な normalization と short-witness proof を Apps. B, C に移した。
+
+---
+
+# 今回の round-2 precheck で追加した修正
+
+- §4.2 に Clark–Eyraud SGL Algorithm 2 と Yoshinaka \((k,\ell)\)-SGL Algorithm 1 と同型の conservative wrapper であることを明記。
+- §4.2 に stabilized grammar が presentation order に依存しうることを明記。
+- 新 §7 typed thickness / Prop. 7.3 を response letter の Overview と Reviewer 2 回答に追加。
+- fixed-window を §8、linear を §9、boundary を §10 とする現行 numbering に response letter を同期。
+- stale な page / line numbers を response letter から除去し、section / theorem references に統一。最終 frozen PDF ができた後に必要ならページ・行番号を再生成する。
+- Lemma 8.2 の fixed-window bounds を proof で実際に得ている \((N_t-1)B\) と \((N_t+1)B\) に統一。
+- linear = one-turn PDA の箇所に Autebert–Berstel–Boasson (1997) を追加引用。
+- Clark (2010) が既に ordinary / fixed-window substitutable classes と Dyck example を congruential family の文脈で述べていることを §10 で明示。
+- Yoshinaka 2008, Takada 1995, Coste et al. 2004 の series 表記を LNAI に修正。
+- thickness の出典として、Yoshinaka が帰属させている Wakatsuki–Tomita (1993) を追加。
+- Reviewer 2 の outer-context typing への回答は、弁明から始めず「指摘どおり unsupported だったので撤回した」と最初に述べる形へ変更。
+- 回答書冒頭の過剰な謝辞と “23 pages” というビルド依存の記述を削除。
+
+---
+
+## 現時点での提出前チェック項目
+
+英語版 response_round1.tex が提出用の正本であり、この日本語版は内容確認用である。最終提出前には、本文を凍結した後で PDF をビルドし、必要であれば response letter の revision locations に最終ページ・行番号を一括で付け直す。Lean/Zenodo については、現行の theorem numbering と主張の範囲が archive と矛盾していないかだけ最終確認する。
