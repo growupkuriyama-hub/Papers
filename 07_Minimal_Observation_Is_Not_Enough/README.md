@@ -28,9 +28,9 @@ The paper no longer tries to summarize all of #3 SCL-Compression or all of OFET.
    - the fixed #1/#2 constructors depend on an observer only through its kernel;
    - moving to a finer observer deletes substitution links and cannot lower characteristic-data cost.
 
-2. **Exact coarsest-observer separation on (R_{m,q})**
+2. **Exact maximally-coarse-observer separation on (R_{m,q})**
    - (mathrm{obs}_1(R_{m,q})=qm);
-   - (H^-) and (H^+) are both coarsest safe and are incomparable;
+   - (H^-) and (H^+) are both maximally coarse safe and are incomparable;
    - the minimum-image observer and the reconstruction-optimal observer are disjoint;
    - exact encoded-cost gap (4(m-1)(q-1));
    - with (q=m^2), relative image overhead tends to 1 while the reconstruction-cost ratio tends to 2.
@@ -46,6 +46,11 @@ The paper no longer tries to summarize all of #3 SCL-Compression or all of OFET.
    - the lower bound is an affine-span invariant tied directly to #2's Start/Const/Comp/Link rules;
    - for (X_{2,r}), the exact cardinality is (r+1) and encoded cost is ((2r+1)(r+1)).
 
+## Relation to public OFET preprint
+
+The broader `06_ofet` manuscript is already public as **arXiv:2609.34560v1** and contains predecessor versions of the exact `R_{m,q}` observer/characteristic-data formulas and the `X_{k,r}` affine result under a nontrivial slot observer.
+
+Paper 07 is therefore a **focused sharpening / superseding journal candidate**, not an unrelated second publication of the same theorem package. Its sharpenings include the kernel/refinement formulation, incomparable maximally coarse safe observers, the universal-product penalty, and the trivial-observer `X_{k,r}` theorem. Do not submit both OFET and paper 07 independently with overlapping results without restructuring the overlap.
 ## Deliberately removed from the core paper
 
 The following remain valuable research assets but are not needed in this focused paper:
