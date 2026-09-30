@@ -1,191 +1,138 @@
-# Minimal Doctoral Thesis Master
+# Minimal High-Impact Doctoral Thesis Master
 
 ## Fixed title
 
 **Identification in the Limit beyond Fixed Observation**
 
 Planning baseline: **2026-09-30**  
-Track: **minimal dissertation**
-
----
+Track: **minimal high-impact dissertation**  
+Thesis TeX: **not created yet**
 
 ## 1. Objective
 
-This plan minimizes thesis-specific work while preserving a clear doctoral-level contribution.
+Minimize dissertation-specific work while preserving the strongest possible research narrative.
 
-The dissertation uses only:
+The degree-critical core is exactly:
 
-- #1 fixed-h CFG;
-- #2 fixed-h MCFG;
-- a short synthesis showing exactly how far the fixed-observer assumption can be relaxed.
+1. `01_fixed-h-cfg/`
+2. `02_fixed-h-mcfg/`
+3. `07_Minimal_Observation_Is_Not_Enough/` (MOINE)
 
-The dissertation does **not** depend on completion of:
+No separate #3 SCL-Compression chapter and no separate OFET chapter are required for this track.
 
-- #3 SCL-Compression;
-- #6 OFET;
-- #7 Observation Is Not Enough;
-- #4 Relative Factorization;
-- #5 JALC.
+The conceptual spine is:
 
-Those remain independent research assets and may continue after the doctorate.
+`fixed observation / CFG -> fixed observation / MCFG -> beyond fixed observation -> limits of minimal observation`
 
----
-
-## 2. Core A — CFG reconstruction under fixed finite observation
+## 2. Paper 1 — CFG under fixed finite observation
 
 Directory: `../01_fixed-h-cfg/`
 
 Title: *Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing*
 
-Current repository status:
-- TCS major revision;
-- internal version v80;
-- manuscript source-of-truth: `../01_fixed-h-cfg/main.tex`.
+Current status:
+- TCS major revision
+- internal version v80
 
 Dissertation role:
-- establish finite-monoid typing as a fixed comparison bias;
-- exact reconstruction from finite positive witnesses;
-- conservative Gold/TxtEx identification;
-- fixed-window recovery and structural boundaries.
+- finite-monoid typing as a fixed comparison bias;
+- exact positive reconstruction;
+- Gold/TxtEx identification;
+- quantitative and structural CFG results.
 
-No new thesis-specific proof should be added here unless required for integration.
-
----
-
-## 3. Core B — MCFG reconstruction under fixed finite observation
+## 3. Paper 2 — MCFG under fixed finite observation
 
 Directory: `../02_fixed-h-mcfg/`
 
 Title: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing*
 
-Current repository status:
-- pre-submission working manuscript;
-- internal version v66;
-- arXiv:2605.11644 predates the current internal version;
-- manuscript source-of-truth: `../02_fixed-h-mcfg/main.tex`.
+Current status:
+- pre-submission working manuscript
+- internal version v66
+- arXiv:2605.11644
 
 Dissertation role:
-- lift the fixed-observation reconstruction principle from strings/substrings to tuples and sentence contexts;
-- obtain positive-data TxtEx identification for the typed bounded-fan-out MCFG setting;
-- isolate the role of fan-out and rule rank;
-- provide the existing bounded-unknown-typing proposition that motivates the final synthesis.
+- multidimensional extension of the fixed-observation principle;
+- tuple/sentence-context reconstruction;
+- bounded-fan-out MCFG identification;
+- rule-rank and characteristic-data analysis.
 
-No new thesis-specific proof should be added here unless required for integration.
+## 4. Paper 3 — MOINE
 
----
+Directory: `../07_Minimal_Observation_Is_Not_Enough/`
 
-## 4. Minimal additional chapter — Beyond Fixed Observation
+Title: *Minimal Observation Is Not Enough: Reconstruction Tradeoffs in Identification in the Limit*
 
-This is the only dissertation-specific mathematical addition planned.
+Current status:
+- focused journal-candidate v1
+- target length: approximately 14–18 journal pages
+- intended publication order: after #1 and #2
 
-### 4.1 Question
+Dissertation role:
+- remove the unnecessary requirement that one particular observer be fixed in advance;
+- state the **Finite-Observation Threshold Theorem**;
+- distinguish minimum safe observation from minimum reconstruction cost;
+- provide exact CFG optimizer separation on (R_{m,q});
+- provide fixed one-state observation with unbounded optimal MCFG reconstruction on (X_{2,r}).
 
-The #1/#2 learning theorems fix a finite-monoid morphism
-[
-h:Sigma^*	o M
-]
-as part of the class definition.
+The three-paper endpoint is:
 
-The final question is:
+> Bounded finite observation is sufficient for identification in the limit, but minimum observation does not determine the positive evidence required for exact reconstruction.
 
-> Must the learner know one particular observer (h) in advance, or is a bounded amount of finite observation sufficient?
+## 5. Why MOINE replaces the old short synthesis
 
-### 4.2 Bounded unknown observation
+The earlier plan reserved a 5–8 page dissertation-only chapter for bounded versus unbounded observation.
 
-Fix a finite alphabet (Sigma), the relevant grammar-side structural bounds, and an integer (mge1).
+That material is now absorbed into MOINE as its opening theorem package.
 
-Let the bounded-observer union range over all homomorphisms
-[
-h:Sigma^*	o M
-qquad	ext{with}qquad |M|le m.
-]
+This costs little additional dissertation work while making the endpoint independently publishable and substantially stronger:
 
-Because there are only finitely many monoid structures of size at most (m) and finitely many letter maps from fixed (Sigma), form the product of all such homomorphisms and restrict to its image:
-[
-U_{Sigma,m}:Sigma^*	o M_{Sigma,m}.
-]
+- the threshold result answers how far fixed observation can be relaxed;
+- the (R_{m,q}) theorem shows optimizer separation;
+- the (X_{2,r}) theorem shows scalar insufficiency.
 
-Every admissible (h) factors through (U_{Sigma,m}).  Thus (U_{Sigma,m}) refines every observer in the bounded family.
+Thus no separate dissertation-only mathematical chapter is needed.
 
-### 4.3 Target synthesis theorem
+## 6. Explicit exclusions
 
-The thesis should state one joint theorem/corollary package covering the two reconstruction levels.
+The following remain research assets but are outside the degree-critical core:
 
-**Bounded-observation principle.**
+- `../03_scl-compression/`
+- `../04_relative-factorization/`
+- `../05_jalc-occurrence-descriptors/`
+- `../06_ofet/`
 
-For each fixed finite observer-size bound (m):
+They may be cited as background or future work, but the dissertation must remain complete without dedicated chapters for them.
 
-- the union of the corresponding #1 CFG classes is contained in one fixed-observer CFG class defined by (U_{Sigma,m}), hence is TxtEx-identifiable from positive data;
-- for each fixed fan-out bound (f), the union of the corresponding #2 MCFG classes is contained in one fixed-observer MCFG class defined by (U_{Sigma,m}), hence is TxtEx-identifiable from positive data.
+## 7. Minimal dissertation architecture
 
-The MCFG half is already present in the current #2 manuscript as Proposition “Unknown typing with a bounded codomain”.  The CFG half should be written as the direct analogue using the #1 refinement and Gold-identification results.
-
-**Unbounded-observation boundary.**
-
-If the codomain-size bound is removed and arbitrary finite observers are allowed, the resulting union contains every regular language.  Therefore it contains all finite languages and an infinite language, so Gold's positive-data obstruction applies and the union is not TxtEx-identifiable.
-
-### 4.4 Interpretation
-
-The fixed-observer assumption is stronger than necessary.
-
-The genuine learnability boundary exposed by #1/#2 is:
-
-[
-oxed{
-	ext{bounded finite observation}
-quad	ext{vs.}quad
-	ext{unbounded target-dependent observation}.
-}
-]
-
-Thus the dissertation moves from learning **under one fixed observation** to identification **beyond fixed observation**, while retaining a finite observation budget.
-
-### 4.5 Scope cautions
-
-- Do not claim a polynomial dependence on the observer-size bound (m); the universal product observer can be extremely large.
-- Keep alphabet and grammar-side structural parameters explicit when required by the component theorem.
-- The unbounded negative result is a Gold-style class-level nonidentifiability statement, not a lower bound on every restricted subfamily.
-- Do not import #3/OFET terminology or machinery into this minimal chapter unless it becomes logically necessary.
-
-### 4.6 Size target
-
-This chapter should remain short: **approximately 5–8 pages** including statement, proof, interpretation, and the CFG/MCFG comparison.
-
-No separate journal paper is required.
-
----
-
-## 5. Minimal dissertation architecture
-
-### Chapter 1 — Introduction and Common Setup
+### Chapter 1 — Introduction and common setup
 
 Target: approximately 8–12 pages.
 
-Only what is needed to connect #1 and #2:
 - Gold identification in the limit;
-- positive data and characteristic samples;
-- substitutability / distributional learning;
+- substitutability and positive data;
 - finite-monoid observation;
-- why CFG and MCFG are treated in one thesis;
-- statement of the final bounded-vs-unbounded observation question.
+- the CFG-to-MCFG progression;
+- statement of the dissertation question.
 
-### Chapter 2 — Context-Free Languages under Fixed Observation
+### Chapter 2 — CFG under fixed observation
 
 Adapt #1 with minimal rewriting.
 
-### Chapter 3 — Multiple Context-Free Languages under Fixed Observation
+### Chapter 3 — MCFG under fixed observation
 
 Adapt #2 with minimal rewriting.
 
-### Chapter 4 — Beyond Fixed Observation
+### Chapter 4 — Minimal Observation Is Not Enough
 
-Approximately 5–8 pages.
+Adapt MOINE with minimal rewriting.
 
-Contents:
-- universal product observer (U_{Sigma,m});
-- bounded unknown-observer identification for CFG and MCFG;
-- unbounded-observer nonidentifiability;
-- interpretation as the dissertation-level boundary theorem.
+This chapter contains the dissertation-level climax:
+- Finite-Observation Threshold Theorem;
+- reconstruction monotonicity;
+- exact optimizer separation;
+- fixed minimum observation with unbounded reconstruction.
 
 ### Chapter 5 — Conclusion
 
@@ -193,35 +140,23 @@ Target: approximately 3–5 pages.
 
 No new mathematics.
 
----
+## 8. Integration rules
 
-## 6. Minimal-work integration rules
+1. Individual paper directories remain authoritative.
+2. Do not rewrite the three papers merely for stylistic uniformity.
+3. Dissertation-specific mathematics should be zero or nearly zero once MOINE is stable.
+4. Do not re-import #3/OFET machinery unless a proof obligation actually requires it.
+5. Keep MOINE focused; do not let it regrow into the old #3 + OFET + OINE aggregate.
+6. Do not create thesis TeX until all three core papers have stable theorem/proof baselines.
 
-1. **#1 and #2 remain authoritative.**  
-   Do not fork their theorem statements inside the dissertation master.
+## 9. TeX creation gate
 
-2. **Do not rewrite papers merely for stylistic uniformity.**  
-   Only remove duplicated preliminaries and add short transitions when the thesis TeX phase begins.
+Create `doctoral-thesis-minimal/tex/` only when:
 
-3. **No #3 / OFET / OINE dependency.**  
-   They may be cited in a future-work paragraph, but the minimal thesis must remain complete without them.
+- #1 has a stable post-review baseline;
+- #2 has a stable submission baseline;
+- MOINE has passed focused proof re-audit;
+- MOINE has passed literature-priority refresh;
+- the #1/#2/MOINE notation interface is frozen.
 
-4. **One new synthesis theorem package only.**  
-   Do not let Chapter 4 grow into a new paper.
-
-5. **No thesis TeX yet.**  
-   TeX assembly begins only after #1, #2, and the Chapter-4 proof note are stable.
-
----
-
-## 7. TeX creation gate
-
-Create `doctoral-thesis-minimal/tex/` only when all are true:
-
-- #1 has a stable post-review manuscript baseline;
-- #2 has a stable submission manuscript baseline;
-- the CFG analogue of bounded unknown typing has been written and audited;
-- the joint bounded/unbounded observation theorem statement is frozen;
-- no unresolved terminology mismatch remains between #1 and #2.
-
-Until then, this file is the architecture source-of-truth for the minimal dissertation track.
+Until then, this master is the architecture source-of-truth.
