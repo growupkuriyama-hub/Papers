@@ -489,7 +489,7 @@ directions.
 \label{thm:R-observation}
 For every \(m,q\ge2\),
 \[
- \boxed{\obs_1(R_{m,q})=qm.}
+ \obs_1(R_{m,q})=qm.
 \]
 Moreover:
 \begin{enumerate}[label=(\roman*),leftmargin=*]
@@ -844,7 +844,7 @@ to be the whole target language.
 This makes the role of Section~\ref{sec:threshold} precise: universal
 observation can be useful for class-level learnability while being maximally
 conservative for positive reconstruction.
-\section{Fixed observation with unbounded MCFG reconstruction}
+\section{Exact affine reconstruction for fan-out two}
 \label{sec:X}
 
 Fix \(k,r\ge2\).  For \(1\le j\le r\) and \(1\le i\le k\), let
@@ -878,7 +878,7 @@ all second components in slot order.
 \label{lem:X-safe}
 For every \(k,r\ge2\) and every finite \(f\),
 \[
- \boxed{\obs_f(X_{k,r})=1.}
+ \obs_f(X_{k,r})=1.
 \]
 \end{lemma}
 
@@ -905,7 +905,11 @@ trivial observer is safe at every arity.
 
 The minimum observation value is therefore already constant.  We now compute
 the exact positive evidence needed by the standard fan-out-two reconstruction
-of \cite{KuriyamaMCFG} under this observer.
+of \cite{KuriyamaMCFG} under this observer.  Throughout this section,
+\(\mathcal B_{2,\mathrm{triv}}\) denotes the uncapped constructor.  The same
+upper and lower bounds hold for the capped constructor whenever the cap is at
+least \(r\), because the explicit reconstruction below uses one rank-\(r\)
+composition witness and the affine invariant applies to every retained rule.
 
 Let
 \[
@@ -913,7 +917,7 @@ Let
 \]
 be the complete tuple for slot \(j\).
 
-\begin{proposition}[A linear-cardinality locking sample]
+\begin{proposition}[A linear-cardinality characteristic sample]
 \label{prop:X-upper}
 Let \(w_0=w_{(1,\ldots,1)}\).  For each \(j\) and \(i\ge2\), let
 \(w_{j,i}\) differ from \(w_0\) only by changing slot \(j\) from index \(1\)
@@ -924,7 +928,7 @@ to \(i\).  Then
  \{w_0\}\cup
  \{w_{j,i}:1\le j\le r,\ 2\le i\le k\}
 \]
-is locking, with
+is characteristic, with
 \[
  |C_{k,r}|=1+r(k-1).
 \]
@@ -933,12 +937,13 @@ is locking, with
 \begin{proof}
 For each \(j,i\), the tuples \(u_{j,1}\) and \(u_{j,i}\) occur in the same
 admissible sentence context in \(w_0\) and \(w_{j,i}\), respectively.
-Under the trivial observer the learner therefore licenses the corresponding
-semantic substitution.  The base word \(w_0\) supplies the rank-\(r\)
-composition witness.  After that decomposition, the \(r\) child slots may be
-changed independently from \(u_{j,1}\) to any \(u_{j,i_j}\).  Hence every
-\(w_{\mathbf i}\) is generated.  Safety from Lemma~\ref{lem:X-safe} gives
-soundness, and sample monotonicity makes the sample locking.
+Under the trivial observer, Rule~(Link) licenses the corresponding tuple
+substitution.  The base word \(w_0\) supplies a rank-\(r\) Rule~(Comp)
+witness whose children are the tuples \(u_{1,1},\ldots,u_{r,1}\).  After that
+decomposition, the \(r\) child slots may be changed independently by Link
+rules from \(u_{j,1}\) to any \(u_{j,i_j}\).  Hence every \(w_{\mathbf i}\)
+is generated.  Safety from Lemma~\ref{lem:X-safe} gives soundness, and sample
+monotonicity makes the sample characteristic.
 \end{proof}
 
 For the matching lower bound, encode an index vector in the real vector space
@@ -961,157 +966,152 @@ For any nonempty finite \(K\subseteq X_{k,r}\),
 \end{lemma}
 
 \begin{proof}
-A semantic unary substitution is witnessed by two sampled complete words that
-differ only on the slots fully contained in the substituted tuple.  Its effect
-on the full index vector is therefore exactly a difference of two sampled
-\(\Phi\)-vectors.  This difference is independent of the accepting outer
-context because the rigid skeleton fixes the tuple intervals.
+Consider first one Rule~(Link) instance \([\mathbf x]\to[\mathbf y]\).
+By definition of the MCFG constructor, there are sampled complete words
+\(w_{\boldsymbol\alpha},w_{\boldsymbol\beta}\in K\) in one common
+admissible sentence context, with \(\mathbf x\) and \(\mathbf y\) as the
+two fillings.  The rigid skeleton fixes the interval occupied by each tuple
+component.  If exactly one of the paired positions \(A_j,B_j\) lies in the
+tuple material, the other position lies in the common context and fixes the
+index, so the Link cannot change slot \(j\).  Hence a Link can change only
+those slots whose two paired positions are fully contained in the linked
+tuple.  On those slots its change is exactly
+\[
+ \Phi(\boldsymbol\beta)-\Phi(\boldsymbol\alpha),
+\]
+a difference of two sampled vectors.
 
-Induct on a learner derivation.  Constant or lexical steps contribute zero
-difference.  Unary steps add a sampled difference.  In a linear nondeleting
-composition rule, child occurrences are disjoint, so the changes contributed
-by the children add.  A complete derivation starts from a sampled root word.
-Hence every generated full index vector equals one sampled vector plus a
-linear combination of sampled differences, and therefore lies in the affine
-hull of the sample vectors.
+We prove by induction on a derivation below an observed tuple nonterminal that
+its contribution to the surrounding full index vector is the witnessed sample
+contribution plus a linear combination of such sampled differences, supported
+only on slots fully contained in that tuple occurrence.  Rule~(Const) gives
+zero change.  Rule~(Link) is the preceding paragraph.  For Rule~(Comp), the
+child occurrences are disjoint because the template is linear and
+nondeleting, so their supported changes add.  If the two positions of one
+slot are split between different children, that slot is not fully contained
+in either child and therefore cannot be changed by either child; this is the
+half-contained-slot case excluded by the Link analysis.
+
+A complete derivation begins with Rule~(Start) from a sampled root word.
+Consequently every generated full vector has the form
+\[
+ \Phi(\boldsymbol\alpha_0)
+ +\sum_{t=1}^N \lambda_t
+   \bigl(\Phi(\boldsymbol\beta_t)-\Phi(\boldsymbol\alpha_t)\bigr)
+\]
+for sampled vectors and integer coefficients arising from the derivation.
+Such a vector lies in the affine hull of the sampled vectors, proving the
+claim.
 \end{proof}
 
-\begin{theorem}[Exact MCFG reconstruction cost]
+\begin{theorem}[Exact affine reconstruction cost]
 \label{thm:X-cost}
-For the trivial observer,
+For the trivial observer and the uncapped fan-out-two constructor,
 \[
- \boxed{
  \min_{C\in\CS_{\rm triv}(X_{k,r})}|C|
- =
- 1+r(k-1).
- }
+ =1+r(k-1).
 \]
 With the positive-sample encoding of \cite{KuriyamaMCFG},
 \[
- \boxed{
  \mcd_{\rm triv}(X_{k,r})
- =
- (2r+1)\,[1+r(k-1)].
- }
+ =(2r+1)[1+r(k-1)].
 \]
-Because the trivial observer is the least possible observer, it is also
-globally reconstruction-optimal over all safe observers.
+The same equalities hold for every rank cap at least \(r\).  Because the
+trivial observer is coarser than every finite observer, it is globally
+reconstruction-optimal over all safe observers for each of these fixed
+architectures.
 \end{theorem}
 
 \begin{proof}
-If \(K\) is locking, then its reconstruction generates every element of
+If \(K\) is characteristic, its reconstruction generates every element of
 \(X_{k,r}\).  By Lemma~\ref{lem:X-affine}, the affine hull of the sample
-vectors must contain \(\Phi([k]^r)\), whose affine dimension is \(r(k-1)\).
-The affine hull of \(|K|\) points has dimension at most \(|K|-1\), hence
+vectors must contain \(\Phi([k]^r)\), whose affine dimension is
+\(r(k-1)\).  The affine hull of \(|K|\) points has dimension at most
+\(|K|-1\), hence
 \[
  |K|\ge1+r(k-1).
 \]
 Proposition~\ref{prop:X-upper} attains equality.  Since every target word has
-length \(2r\), the encoded-cost formula follows.
+length \(2r\), the encoded-cost formula follows.  The explicit upper-bound
+derivation has rank \(r\), while the affine invariant remains valid after
+deleting higher-rank Comp rules, proving the capped statement.
 
-Finally the trivial observer is coarser than every finite observer.
-Theorem~\ref{thm:monotonicity} therefore shows that no refinement can have a
-smaller locking-sample cost.
+Finally every finite observer refines the trivial observer.  Applying
+Theorem~\ref{thm:monotonicity} with the same fan-out and rank regime shows
+that no finer safe observer can have a smaller characteristic-sample cost.
 \end{proof}
-
-\begin{theorem}[Fixed minimal observation, unbounded reconstruction]
-\label{thm:X-main}
-Let \(L_r=X_{2,r}\).  Then for every \(r\ge2\),
+\begin{corollary}[The two-choice family]
+\label{cor:X-twochoice}
+For \(L_r=X_{2,r}\),
 \[
- \boxed{\obs_2(L_r)=1,}
-\]
-while
-\[
- \boxed{
- \min_{h:\Safe_2(h;L_r)}
- \min_{C\in\CS_h(L_r)}|C|
- =r+1
- }
+ \obs_2(L_r)=1,\qquad
+ \min_{C\in\CS_{\rm triv}(L_r)}|C|=r+1,
 \]
 and
 \[
- \boxed{
- \min_{h:\Safe_2(h;L_r)}
- \mcd_h(L_r)
- =(2r+1)(r+1)=\Theta(r^2).
- }
+ \mcd_{\rm triv}(L_r)=(2r+1)(r+1)=\Theta(r^2).
 \]
-Consequently there is no function \(F:\mathbb N\to\mathbb N\) such that
-\[
- \min_{h:\Safe_2(h;L)}\mcd_h(L)
- \le F(\obs_2(L))
-\]
-for every target in any reconstruction class containing all \(X_{2,r}\).
-\end{theorem}
+The same values are globally optimal over all safe observers for the fixed
+reconstruction architecture.
+\end{corollary}
 
-\begin{proof}
-Combine Lemma~\ref{lem:X-safe} and Theorem~\ref{thm:X-cost} with \(k=2\).
-If such an \(F\) existed, then
-\[
- (2r+1)(r+1)\le F(1)
-\]
-for all \(r\), a contradiction.
-\end{proof}
-
-\begin{remark}
-The alphabet, target-word length, and start-rule rank grow with \(r\).
-The theorem rules out a bound by the minimum observation number
-\emph{alone}; it does not rule out bounds using those additional structural
-parameters.
+\begin{remark}[Scope of the affine family]
+The point of Corollary~\ref{cor:X-twochoice} is the exact affine-dimension
+characterization, not merely that encoded cost can grow while
+\(\obs_2=1\).  In this family the alphabet, target-word length, and the rank
+needed by the displayed upper-bound reconstruction all grow with \(r\).
+Accordingly, the result does not claim a lower bound with those structural
+parameters held fixed.  It shows instead that observer cardinality does not
+encode the independent affine degrees of freedom that the fixed constructor
+must witness.
 \end{remark}
-
 \section{Discussion}
 
-The three results describe different boundaries.
+The bounded-observer compilation principle and the reconstruction results play
+different roles.  Universal products solve a class-level uncertainty problem:
+they replace an unknown bounded observer by one common finer observer.  The
+new monotonicity theorem shows the opposite pressure at reconstruction time:
+finer observers delete substitution links.  Corollary~\ref{cor:universal-penalty}
+makes the tension exact by exhibiting a family on which a sufficiently rich
+universal observer requires the entire target language as characteristic
+data.
 
-First, Theorem~\ref{thm:threshold} shows that one fixed observer is not the
-essential assumption behind the companion learning results.  An unknown
-observer may vary with the target as long as its finite size is uniformly
-bounded.  What fails is unrestricted target-dependent finite observation.
+The principal CFG separation is order-theoretic, not merely numerical.
+Proposition~\ref{prop:R-coarsest} shows that \(H^-\) and \(H^+\) are both
+coarsest safe observers and are incomparable.  Nevertheless their exact
+reconstruction costs differ, while Theorem~\ref{thm:R-separation} shows that
+the observer with minimum image cardinality is not reconstruction-optimal.
+Thus image cardinality does not identify the best point even on the frontier
+of safe congruences.
 
-Second, Theorem~\ref{thm:R-separation} shows that inside the safe-observer
-region the smallest semantic observer can be the wrong reconstruction choice.
-The phenomenon is exact and quantitatively non-negligible: an
-asymptotically vanishing relative increase in observer size can yield a
-factor-two improvement in positive reconstruction cost.
+The two explicit families expose different finite reconstruction geometries.
+For \(R_{m,q}\), characteristic data are controlled by connectivity of
+typed row--suffix incidence graphs, and minimum samples are spanning trees.
+For \(X_{k,r}\), characteristic data are controlled by an affine hull of a
+product of simplices, and the exact minimum is an affine-basis size
+\(1+r(k-1)\).  These are properties of the fixed reconstruction systems, not
+claims about learner-independent teaching dimension.
 
-Third, Theorem~\ref{thm:X-main} shows that no scalar minimum-observation
-number can summarize reconstruction difficulty.  Even the absolute minimum
-value \(1\) is compatible with unbounded characteristic data.
-
-The CFG and MCFG examples use different finite geometries.  The \(R_{m,q}\)
-locking problem is connectivity of typed row--suffix incidence graphs, so
-minimum samples are spanning trees.  The \(X_{k,r}\) locking problem is an
-affine-basis problem for a product of simplices, giving
-\(1+r(k-1)\) samples.  This difference is precisely why observer size should
-be treated as only one reconstruction resource.
-
-For the dissertation sequence, the interpretation is especially compact:
-the first paper establishes CFG learning under fixed finite observation, the
-second lifts the construction to MCFGs, and the present paper moves beyond one
-fixed observer and identifies what finite observation can and cannot control.
+Both families used for the exact formulas are finite.  The present paper uses
+them because they isolate observer choice from unrelated grammar-growth
+phenomena and permit exact optimization.  Whether analogous disjoint
+coarsest-safe/reconstruction optima can be forced for natural infinite target
+families is left open.
 
 \section{Conclusion}
 
-Finite observation has two sharply different roles in positive-data grammar
-learning.  As a class-level bias, a bounded amount of finite observation is
-enough: all bounded observers can be compiled into one universal product
-observer, preserving identification in the limit.  As a reconstruction
-resource, however, minimal observation is not enough.
+Finite observation serves two distinct purposes in positive-data grammar
+learning.  Bounded observation can delimit a learnable class, but the
+cardinality of a safe observer does not determine the positive evidence needed
+by a fixed reconstruction procedure.
 
-The family \(R_{m,q}\) separates the observer minimizing image size from the
-observer minimizing characteristic data.  The family \(X_{2,r}\) goes
-further: minimum observation remains equal to one while optimal
-reconstruction cost grows without bound.  Thus
-\[
- \boxed{
- \text{finite observation can delimit learnability without determining
- reconstruction cost.}
- }
-\]
-This boundary is the intended endpoint of the fixed-observation CFG-to-MCFG
-program.
-
+The CFG family \(R_{m,q}\) separates minimum image size from minimum
+reconstruction cost even among coarsest safe observers, and shows that
+universal-product compilation can eliminate all positive generalization.  The
+MCFG family \(X_{k,r}\) gives an independent affine geometry with exact
+characteristic-sample cardinality.  Together these results motivate treating
+observer image size, congruence refinement, and reconstruction evidence as
+separate resources rather than as one scalar notion of observation.
 \begin{thebibliography}{99}
 
 \bibitem{Gold1967}
@@ -1153,18 +1153,6 @@ T.~Kuriyama.
 \newblock Positive-data learning of multiple context-free languages under
 fixed finite-monoid typing.
 \newblock arXiv:2605.11644, 2026.
-
-\bibitem{KuriyamaSCL}
-T.~Kuriyama.
-\newblock Finite-monoid compression in syntactic concept lattices: arity
-hierarchies and a pseudovariety trichotomy.
-\newblock arXiv:2608.29639, 2026.
-
-\bibitem{KuriyamaOFET}
-T.~Kuriyama.
-\newblock Observer--fragmentation--exposure tradeoffs: from rectangular CFG
-exposure to ordered MCFG scheduling.
-\newblock arXiv:2609.34560, 2026.
 
 \end{thebibliography}
 
