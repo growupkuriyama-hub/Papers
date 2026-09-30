@@ -24,7 +24,7 @@
 \newcommand{\obs}{\operatorname{obs}}
 \newcommand{\cd}{\operatorname{cd}}
 \newcommand{\mcd}{\operatorname{mcd}}
-\newcommand{\Lock}{\operatorname{Lock}}
+\newcommand{\CS}{\mathsf{CS}}
 \newcommand{\Safe}{\operatorname{Safe}}
 \newcommand{\blank}{\square}
 
@@ -37,48 +37,53 @@ Reconstruction Tradeoffs in Identification in the Limit}
 \maketitle
 
 \begin{abstract}
-Finite-monoid typing gives a finite observation bias for positive-data
-grammar learning: fragments or tuples are substituted only when their observer
-values agree.  The companion CFG and MCFG learning results establish exact
-reconstruction and identification in the limit once such an observer is fixed.
-This paper asks how much of that observation must be fixed, and whether a
-smallest safe observer is also best for reconstruction.
+Finite-monoid typing provides a finite comparison bias for positive-data
+grammar reconstruction: fragments or tuple components may be substituted only
+when their observer values agree.  The companion CFG and MCFG results establish
+exact reconstruction and identification in the limit once such an observer is
+fixed.  The present paper studies the observer itself as a reconstruction
+resource.
 
-First, for a fixed alphabet and a fixed bound on finite-observer size, all
-admissible observers can be compiled into one universal product observer.
-Hence the bounded unknown-observer union remains identifiable from positive
-data, both for the CFG setting and for every fixed MCFG fan-out bound.  If the
-observer-size bound is removed, the union contains all regular languages and
-Gold's obstruction applies.  Thus the fixed-observer hypothesis can be relaxed
-to bounded finite observation, but not to unrestricted target-dependent finite
-observation.
+We first recall a background compilation principle: for a fixed alphabet and a
+fixed bound on observer image size, all admissible observers factor through one
+finite universal product observer.  Thus bounded unknown observation preserves
+identifiability, whereas the unrestricted target-dependent union contains all
+regular languages and is blocked by Gold's theorem.  The new question is what
+this finite information costs for reconstruction.
 
-Second, observer size and reconstruction cost are different optimization
-objectives.  For an explicit finite CFG family \(R_{m,q}\), the minimum safe
-observer has \(qm\) values, yet every observer of that size has strictly larger
-minimum characteristic-data cost than a slightly larger observer with
-\(q(m+1)\) values.  The exact gap is \(4(m-1)(q-1)\); when \(q=m^2\), the
-relative observer overhead tends to one while the reconstruction-cost ratio
-tends to two.  Third, for a fan-out-two MCFG family \(X_{2,r}\), the trivial
-one-state observer is already safe and reconstruction-optimal, but the minimum
-characteristic-sample cardinality is \(r+1\) and the standard encoded sample
-cost is \((2r+1)(r+1)=\Theta(r^2)\).  Therefore no function of minimum
-observation size alone can bound reconstruction cost.
+For an explicit CFG family \(R_{m,q}\), the minimum safe observer image has
+\(qm\) elements.  Nevertheless, minimum image size and minimum characteristic
+data have disjoint optimizers.  More strongly, two incomparable observers
+\(H^-\) and \(H^+\) are both coarsest among safe observers, yet they have
+different exact reconstruction costs.  The penalty paid by minimum image size
+is \(4(m-1)(q-1)\); for \(q=m^2\), the relative image-size overhead of \(H^+\)
+tends to one while the reconstruction-cost ratio tends to two.  Combining the
+same exact formula with universal-product compilation shows that a sufficiently
+fine universal observer can eliminate all positive generalization on this
+family and require the whole finite target as characteristic data.
 
-The resulting boundary is twofold: bounded observation is sufficient for
-identification in the limit, while minimal observation is insufficient to
-determine the positive evidence needed for exact reconstruction.
+For a fan-out-two MCFG family \(X_{k,r}\), the trivial one-state observer is
+already safe and reconstruction-optimal.  Here the exact minimum
+characteristic-sample cardinality is \(1+r(k-1)\), obtained from an affine-span
+invariant, and the standard encoded cost is
+\((2r+1)[1+r(k-1)]\).  Thus observer cardinality and reconstruction geometry
+measure genuinely different resources.
+
+The resulting picture is order-theoretic as well as quantitative: refinement
+of a safe observer can only restrict the language generated from a fixed
+positive sample, but observer image cardinality does not determine which
+coarsest safe observer is best for reconstruction.
 \end{abstract}
 
 \section{Introduction}
 
 Identification in the limit from positive data is possible only after a
 language class is restricted strongly enough to avoid Gold's superfinite
-obstruction \cite{Gold1967}.  In distributional grammar learning, one such
-restriction is substitutability: positive examples license the replacement of
-fragments that appear in compatible contexts \cite{ClarkEyraud2007,Yoshinaka2011}.
-The companion CFG and MCFG papers \cite{KuriyamaCFG,KuriyamaMCFG} refine this
-idea by a finite-monoid observer
+obstruction \cite{Gold1967}.  In distributional grammar learning, one standard
+restriction is substitutability: observed shared contexts license replacement
+only in language classes where this evidence is semantically sound
+\cite{ClarkEyraud2007,Yoshinaka2011}.  The companion CFG and MCFG papers
+\cite{KuriyamaCFG,KuriyamaMCFG} refine this idea by a finite-monoid observer
 \[
  h:\Sigma^*\to M.
 \]
@@ -86,59 +91,57 @@ Only fragments or tuple components with equal \(h\)-values may be compared.
 For each fixed \(h\), this finite algebraic bias supports exact positive
 reconstruction and explanatory identification in the limit.
 
-A fixed observer raises two different questions.  The first is a
-\emph{learnability-boundary question}: must one particular \(h\) be known in
-advance, or is it enough to know that the useful observer has bounded finite
-size?  The second is an \emph{optimization question}: among all observers that
-make substitution safe, does a smallest observer also minimize the amount of
-positive evidence needed by the reconstruction algorithm?
+The choice of observer can be viewed as a finite typing or domain bias in the
+sense familiar from automata inference \cite{CosteEtAl2004}.  Once an observer
+is fixed, characteristic positive data are algorithm-relative witnesses for
+exact reconstruction, in the characteristic-set tradition of grammatical
+inference \cite{Higuera1997}.  The present paper does not claim a
+learner-independent teaching dimension: throughout, reconstruction cost is
+measured for the fixed constructors of the companion CFG and MCFG papers.
 
-This paper gives exact answers.  The learnability boundary is
+Two orders on observers must be distinguished.  One is the numerical resource
 \[
- \boxed{\text{bounded finite observation}\quad\text{versus}\quad
-        \text{unbounded target-dependent observation}.}
+ |\im h|,
 \]
-A bounded unknown observer can be replaced by one universal product observer;
-without the bound, the union already contains every regular language and is
-not identifiable from positive data.
+the number of values in the image monoid.  The other is the refinement order
+of the induced finite-index congruences.  A smaller image need not be a
+coarser safe congruence, and two coarsest safe congruences can be incomparable.
+This distinction is the source of the main separation below.
 
-Inside the learnable region, however, minimum observation and minimum
-reconstruction diverge.  We use two finite test families.  The CFG family
-\(R_{m,q}\) gives \emph{optimizer separation}: every minimum-size safe observer
-is reconstruction-suboptimal.  The fan-out-two family \(X_{2,r}\) gives
-\emph{scalar insufficiency}: the minimum observation size is constantly one,
-even though optimal reconstruction cost grows quadratically.
+A bounded unknown observer can be compiled into one universal product observer.
+The MCFG form of this observation already appears in the companion manuscript
+\cite{KuriyamaMCFG}; we record the common CFG/MCFG statement only as
+background.  Its new role here is to expose a tension: the universal product is
+finer than every observer it compiles, while reconstruction monotonicity shows
+that moving to a finer observer can only remove substitution links.  Universal
+compilation may therefore preserve learnability while degrading positive
+generalization.
 
-These two phenomena are logically independent.  The first says that the
-observer minimizing semantic information can be the wrong observer for
-positive reconstruction.  The second says that even when the same observer is
-optimal for both objectives, the numerical observation minimum alone does not
-control reconstruction cost.  This is the precise sense in which
-\[
- \boxed{\textbf{Minimal Observation Is Not Enough}.}
-\]
-
-The paper is intentionally narrow.  It extracts the smallest theorem package
-needed to connect fixed-observer CFG and MCFG learning to an observer-resource
-viewpoint.  Broader algebraic compression and reconstruction-resource
-developments appear in the research preprints \cite{KuriyamaSCL,KuriyamaOFET};
-none of their classification, relational-morphism, scheduling, or
-higher-rank census machinery is required here.
+The main construction is the finite CFG family \(R_{m,q}\).  It yields exact
+optimizer separation and, more strongly, two incomparable coarsest safe
+observers with different reconstruction costs.  The fan-out-two family
+\(X_{k,r}\) supplies a second exact geometry: its minimum positive sample is an
+affine-basis problem rather than a graph-connectivity problem.
 
 \paragraph{Contributions.}
-The main results are:
+The new results are:
 \begin{enumerate}[label=(\roman*),leftmargin=*]
-\item a finite-observation threshold theorem, showing that bounded unknown
-      finite observation remains learnable while unrestricted target-dependent
-      finite observation does not;
-\item a general refinement monotonicity principle for the fixed-observer
-      reconstruction systems;
-\item an exact CFG family \(R_{m,q}\) with disjoint observer-size and
-      characteristic-data optimizers; and
-\item a fan-out-two MCFG family \(X_{2,r}\) with constant minimum observation
-      but unbounded optimal characteristic data.
+\item a refinement-monotonicity theorem for the fixed-observer CFG and MCFG
+      reconstruction systems, together with kernel invariance of the
+      reconstruction cost;
+\item an exact CFG family \(R_{m,q}\) for which minimum observer image size and
+      minimum characteristic-data cost have disjoint optimizers, and for which
+      two incomparable coarsest safe observers have different exact costs;
+\item an exact universal-observer penalty on the same family: sufficiently rich
+      universal compilation can force the characteristic sample to equal the
+      whole target language; and
+\item an affine-span characterization for a fan-out-two MCFG family
+      \(X_{k,r}\), giving exact minimum characteristic-sample cardinality
+      \(1+r(k-1)\).
 \end{enumerate}
 
+The bounded-observer compilation principle is included for context rather than
+counted as a new contribution.
 \section{Finite observation and positive reconstruction}
 \label{sec:setup}
 
