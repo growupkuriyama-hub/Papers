@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Finite sanity checks for Section 5 of Minimal Observation Is Not Enough.
+"""Finite sanity checks for the X_{k,r} results.
 
 This script is NOT a proof. It exhaustively enumerates the finite Clark--Wurm
-and positive sentence-context factorizations of several small X_{k,r} targets.
+and positive sentence-context factorizations of several small X_{k,r} targets,
+and it independently implements the companion CFG constructor R1--R5 under the
+trivial observer.
+
 It checks:
   (1) the emptiness observer is Clark--Wurm safe in the tested arities;
   (2) the trivial observer is positive-interface safe in the tested arities;
-  (3) the trivial observer fails Clark--Wurm safety at arity two.
+  (3) the trivial observer fails Clark--Wurm safety at arity two;
+  (4) for every K subset of X_{k,r} in the tested cases,
+      L(B_triv(K)) = K.
 """
 from collections import defaultdict
 from itertools import product
@@ -81,6 +86,104 @@ def check_safety(k, r, d, positive=False, typed=True):
     return True, None
 
 
+
+def cfg_observed_nonterminals(K):
+    """Observed triples [x:u,v] from the CFG constructor."""
+    nts = set()
+    for w in K:
+        n = len(w)
+        for i in range(n):
+            for j in range(i + 1, n + 1):
+                nts.add((w[i:j], w[:i], w[j:]))
+    return nts
+
+
+def cfg_trivial_language(K):
+    """Exact finite fixed-point language of R1--R5 under the trivial observer."""
+    K = set(K)
+    if not K:
+        return set()
+
+    nts = cfg_observed_nonterminals(K)
+    by_factor = defaultdict(list)
+    by_context = defaultdict(list)
+    for nt in nts:
+        x, u, v = nt
+        by_factor[x].append(nt)
+        by_context[(u, v)].append(nt)
+
+    rules = defaultdict(list)
+    for nt in nts:
+        x, u, v = nt
+
+        # R1.
+        for cut in range(1, len(x)):
+            x1, x2 = x[:cut], x[cut:]
+            c1 = (x1, u, x2 + v)
+            c2 = (x2, u + x1, v)
+            if c1 in nts and c2 in nts:
+                rules[nt].append(("bin", c1, c2))
+
+        # R2: same factor, observed in another context.
+        for child in by_factor[x]:
+            rules[nt].append(("unit", child))
+
+        # R3 under the trivial observer: any observed factor in the same context.
+        for child in by_context[(u, v)]:
+            rules[nt].append(("unit", child))
+
+        # R4.
+        if len(x) == 1:
+            rules[nt].append(("term", x))
+
+    yields = {nt: set() for nt in nts}
+    changed = True
+    while changed:
+        changed = False
+        for nt, nt_rules in rules.items():
+            for rule in nt_rules:
+                if rule[0] == "term":
+                    new = {rule[1]}
+                elif rule[0] == "unit":
+                    new = yields[rule[1]]
+                else:
+                    new = {
+                        left + right
+                        for left in yields[rule[1]]
+                        for right in yields[rule[2]]
+                    }
+                before = len(yields[nt])
+                yields[nt].update(new)
+                changed |= len(yields[nt]) != before
+
+    out = set()
+    for w in K:
+        out.update(yields[(w, (), ())])
+    return out
+
+
+def check_cfg_no_generalization(k, r):
+    """Exhaust all subsets for the small test cases."""
+    words = x_words(k, r)
+    n = len(words)
+    for mask in range(1 << n):
+        K = {words[i] for i in range(n) if (mask >> i) & 1}
+        got = cfg_trivial_language(K)
+        assert got == K, (
+            "CFG trivial-observer generalization mismatch",
+            k,
+            r,
+            mask,
+            len(K),
+            len(got),
+            got - K,
+        )
+    print(
+        f"PASS k={k}, r={r}: all {1 << n} samples satisfy "
+        "L(B_triv(K)) = K"
+    )
+
+
 def run_case(k, r):
     # Empty components can make CW arity exceed the word length, so test a few
     # arities beyond 2r as well.
@@ -105,7 +208,8 @@ def run_case(k, r):
 if __name__ == "__main__":
     for case in [(2, 2), (2, 3), (3, 2)]:
         run_case(*case)
+        check_cfg_no_generalization(*case)
     print(
         "All finite sanity checks passed. "
-        "These checks supplement, but do not replace, the proof."
+        "These checks supplement, but do not replace, the proofs."
     )
