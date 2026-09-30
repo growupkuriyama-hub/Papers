@@ -77,7 +77,7 @@ Fixed Finite-Monoid Typing''
 
 Author: Takayuki Kuriyama
 
-We are deeply grateful to the Editor and both reviewers for their exceptionally careful, insightful, and constructive assessment. In particular, the reviewers' detailed reports identified important weaknesses in the submitted manuscript and directly led to substantial improvements in its correctness, formulation, scope, and presentation. We greatly appreciate the precision and generosity with which they explained their concerns and suggested concrete ways to strengthen the work.
+We thank the Editor and both reviewers for their detailed and constructive reports. Their comments led us to correct the learning algorithm, remove an unused typing component, repair the terminal-rule completeness argument, and substantially reorganize the manuscript.
 
 Throughout this response, unqualified section, theorem, proposition, lemma,
 and corollary numbers refer to the revised manuscript. References to the
@@ -88,13 +88,20 @@ and omissions are indicated by \ldots{}.
 
 \subsection{Overview of changes}\label{overview-of-changes}
 
-The revision makes seven substantive changes in response to the Editor
-and reviewers. The first three concern correctness or proof formulation;
-the fourth clarifies the treatment of the empty word; the fifth makes
-the fixed-window correspondence exact and verifies quantitative compatibility
-with the grammar-size-and-thickness scale established in Yoshinaka's Theorem~1 and Lemmas~6--7; the sixth clarifies the genuine scope of the linear
-theorem; and the seventh states precisely which polynomial guarantees are
-retained after separating the batch constructor from the sequential learner:
+The revision makes eight substantive changes in response to the Editor
+and reviewers. The first three correct the learner or its proof architecture;
+the fourth clarifies the empty-word convention; the fifth isolates a quantitative
+boundary for arbitrary fixed typings; the sixth makes the fixed-window
+correspondence exact and verifies quantitative compatibility with Yoshinaka's
+grammar-size-and-thickness scale; the seventh clarifies the genuine scope of
+the linear theorem; and the eighth states precisely which polynomial guarantees
+remain after separating the batch constructor from the sequential learner.
+
+Three claims from the submitted version have been withdrawn or narrowed:
+(i) order-independence of the sequential learner, (ii) the claimed necessity of
+outer-context typing, and (iii) the ``polynomial time-and-data'' label for the
+sequential linear learner. The revised manuscript retains only the claims
+proved by the corrected architecture.
 
 Separately, to improve reproducibility, the Lean 4 formalization accompanying
 the revised manuscript has been archived on Zenodo (DOI
@@ -122,26 +129,25 @@ claims of the revision.
 \item
   \textbf{Nonempty-fragment convention.} Fixed-\(h\) substitutability is now
   stated only for nonempty internal fragments, with \(\lambda\) handled
-  separately at the start symbol. At the first occurrence of \(\Sigma^+\)
-  in the Introduction, a footnote now explains why this convention is needed:
-  Clark--Eyraud treat \(a^+\) as substitutable, whereas allowing
-  \(\lambda\) among the compared fragments would exclude \(a^+\).
+  separately at the start symbol.
+\item
+  \textbf{General fixed-\(h\) quantitative boundary.} New Section 7 isolates
+  the typed-thickness parameter governing the canonical full-refinement
+  witnesses. Proposition 7.3 gives a fixed two-element typing for which
+  typed thickness grows exponentially relative to source grammar size and
+  ordinary thickness. This explains why the arbitrary fixed-\(h\) bound is
+  stated in terms of typed thickness, while the special fixed-window and
+  linear settings admit stronger source-representation bounds.
 \item
   \textbf{Fixed-window correspondence and compatibility.} Proposition 3.3
-  now shows that, for every fixed \((k,\ell)\), the finite-monoid typing
+  shows that, for every fixed \((k,\ell)\), the finite-monoid typing
   \(h_{k,\ell}\) captures exactly Yoshinaka's
-  \((k,\ell)\)-substitutability condition, including \((0,0)\). Revised Section 7 then
+  \((k,\ell)\)-substitutability condition, including \((0,0)\). Section 8
   verifies that the present batch reconstruction recovers the same
-  grammar-size-and-thickness characteristic-data scale established in Yoshinaka's
-  Theorem~1 and Lemmas~6--7 on this special case.
-  A general thickness-preserving normalization from arbitrary reduced CFG
-  representations to SSBNF avoids reliance on a window-specific normal form.
-  This is presented as a compatibility/recovery result, remains deliberately
-  non-uniform in variable \(k,\ell\), and concerns the set-driven
-  reconstruction operator.
+  grammar-size-and-thickness characteristic-data scale established in
+  Yoshinaka's Theorem~1 and Lemmas~6--7 on this special case.
 \item
-  \textbf{Scope of the linear theorem.} To clarify the
-  nonregular scope of the linear result, revised Section 8 adds a nonregular
+  \textbf{Scope of the linear theorem.} Section 9 adds a nonregular
   linear language \(L_{\pm,e}\) that is fixed-\(h\) substitutable but is
   neither ordinarily substitutable nor \((k,\ell)\)-substitutable for any
   fixed \(k,\ell\).
@@ -181,21 +187,26 @@ order of presentation. \\
 Section 4 used yield type plus outer-context types. & Outer-context
 annotations are removed; only the yield type actually consulted by the
 completeness proof remains. \\
+The submitted manuscript did not separate ordinary source thickness from the
+thickness created by full yield typing. & New Section 7 introduces typed
+thickness for the general fixed-\(h\) analysis and gives an exponential
+source-to-typed gap for one fixed two-element monoid. This prevents the
+general theorem from silently claiming an ordinary source-thickness bound. \\
 The submitted fixed-window comparison was only expressive. & Proposition
 3.3 now identifies the fixed \((k,\ell)\) class exactly with the class induced
-by \(h_{k,\ell}\). Revised Section 7 is framed as a compatibility result: it checks
+by \(h_{k,\ell}\). Revised Section 8 is framed as a compatibility result: it checks
 that the new batch reconstruction recovers the same
 grammar-size-and-thickness scale established by Yoshinaka's Theorem~1 and Lemmas~6--7 on those known classes. The two short witness-bound
 proofs and the general thickness-preserving normalization are collected in
 Appendix A. \\
 The linear part contained a long normalization development. &
-Proposition 8.1 and Lemma 8.2 remain in Section 8, while the detailed
+Proposition 9.1 and Lemma 9.2 remain in Section 9, while the detailed
 linear normalization and short-witness proofs are moved to Appendices B and C;
 the spine terminology used only by the proof is moved there as well. Appendix A
 contains the two fixed-window witness-bound proofs together with the general
 thickness-preserving SSBNF normalization. \\
 Former Sections 8-10 and two optional boundary appendices spread the
-boundary material across several places. & They are consolidated into Section 9; the optional closure/counterexample
+boundary material across several places. & They are consolidated into Section 10; the optional closure/counterexample
 and exceptional CCL\(_1\) appendices are removed. Only a compact proposition for
 \(\Delta:=\{a^n b^n:n\ge0\}\) and its Kleene closure \(\Delta^*\) is
 retained. It shows that the general fixed-\(h\) theorem extends beyond its
@@ -207,11 +218,11 @@ The capped-counter notation used CCL\(_p\) and the alphabet
 \end{longtable}
 
 Three reviewer suggestions were followed with deliberate limits.
-Proposition 8.1 and Lemma 8.2 remain stated in the main text because
-Theorem 8.3 uses their exact single-spine form and witness bounds,
+Proposition 9.1 and Lemma 9.2 remain stated in the main text because
+Theorem 9.3 uses their exact single-spine form and witness bounds,
 although their detailed proofs are now in Appendices B and C. The former
 Lemma 9.11, reduced to the right-quotient statement actually used, is now
-Lemma 9.8 and remains immediately before that sole use rather than being moved
+Lemma 10.8 and remains immediately before that sole use rather than being moved
 to an appendix. Finally, the boundary discussion retains only the compact proposition for
 \(\Delta^*\), which records both a nonlinear fixed-\(h\) example and the
 separation \(\Delta^*\notin\mathsf{KL}\).
@@ -242,7 +253,7 @@ target-side yield typing for completeness. Polynomial characteristic data are
 attributed to the set-driven batch operator, while the sequential learner is
 asserted to have Gold stabilization with polynomial-time updates.
 
-\textbf{Revision location:} Definition 2.1, p. 4, ll. 141--148; Section 4.2, p. 8, ll. 287--295; Section 5.1 and Theorem 5.3, pp. 8--10, ll. 298--360; Corollary 5.5, p. 10, ll. 370--384; Section 7, pp. 11--12, ll. 416--464; Section 8, pp. 12--14, ll. 465--543.
+\textbf{Revision location:} Definition 2.1; Section 4.2; Section 5.1 and Theorem 5.3; Corollary 5.5; Sections 7--9.
 
 \subsection{Reviewer 1}\label{reviewer-1}
 
@@ -261,7 +272,7 @@ correctness problem in the submitted learner. The submitted manuscript
 recomputed a grammar from all data at every stage; this need not
 stabilize syntactically. The revision distinguishes a set-driven batch
 operator \(\mathcal B_h(K)=\widehat G(K)\) from a
-conservative sequential learner \(\mathcal A_h\). The learner keeps its
+conservative sequential learner \(\mathcal A_h\). This is the same conservative device used by Clark--Eyraud's SGL (Algorithm 2) and Yoshinaka's \((k,\ell)\)-SGL (Algorithm 1): a new hypothesis is constructed only when the next positive datum is not generated by the current one. The learner keeps its
 current grammar whenever the new
 positive datum is already generated and rebuilds only when the datum
 witnesses that the current hypothesis is too small. Once the finite
@@ -278,14 +289,13 @@ hypothesis must already be exact. Thus the hypothesis grammar itself
 eventually stabilizes. The submitted order-independence claim has also been removed: only the
 batch operator is set-driven. We retain the precise polynomial guarantees proved
 for the batch operator: reconstruction is polynomial in the finite sample size;
-fixed-window targets recover the same grammar-size-and-thickness data
-scale established by Yoshinaka's Theorem~1 and Lemmas~6--7; and linear targets have characteristic data polynomial in a chosen linear
+fixed-window targets have characteristic data polynomial in grammar size and ordinary thickness; and linear targets have characteristic data polynomial in a chosen linear
 CFG representation. We do not attach the submitted Theorem 7.9's
 ``polynomial time-and-data'' label to the corrected sequential learner itself,
 because the latter is a separate conservative Gold wrapper and the batch output
 need not be a linear representation.
 
-\textbf{Revision location:} Section 2.1, pp. 3--4, ll. 120--136; Section 4.2, p. 8, ll. 287--295; Corollary 5.5, p. 10, ll. 370--384; Theorem 7.3, pp. 11--12, ll. 434--445; Theorem 8.3 and the following clarification, p. 13, ll. 481--492.
+\textbf{Revision location:} Section 2.1; Section 4.2; Corollary 5.5; Theorem 8.3; Theorem 9.3 and the following clarification.
 
 \textbf{Comment (quoted excerpt):} ``On the other hand, the presentation leaves
 considerable room for improvement. By addressing the absence of definitions for
@@ -295,16 +305,9 @@ substantially reduce the burden on the reader, and I recommend a major revision
 along these lines. \ldots{} I suspect that this material could be presented in less
 than half the current length.''
 
-\textbf{Response:} Agreed. The submitted manuscript was 42 pages; the revised
-manuscript is 23 pages. Definitions and the learning model are consolidated in
-Section 2, proof-local terminology has been removed or introduced only at the point
-of use, and avoidable metavariable collisions have been eliminated where they could
-impede reading. Several long technical proofs have been moved to proof appendices,
-while the former three boundary sections have been consolidated into a single
-Section 9. The revision therefore addresses the four presentation issues identified
-by the reviewer while preserving the corrected proof architecture.
+\textbf{Response:} Agreed. The manuscript has been substantially shortened and reorganized. Definitions and the learning model are consolidated in Section 2, proof-local terminology has been removed or introduced only at the point of use, and avoidable metavariable collisions have been eliminated where they could impede reading. Several long technical proofs have been moved to proof appendices, while the former three boundary sections have been consolidated into Section 10.
 
-\textbf{Revision location:} Sections 1--2, pp. 1--4, ll. 29--148; Sections 4--5, pp. 7--10, ll. 252--384; Sections 7--9, pp. 11--18, ll. 416--692; Appendices A--C, pp. 19--22, ll. 726--882.
+\textbf{Revision location:} Sections 1--2; Sections 4--5; Sections 7--10; Appendices A--C.
 
 \subsubsection{Section 1}\label{section-1}
 
@@ -323,7 +326,7 @@ and Clark's congruential family. The fixed morphism is presented as a finite
 comparison/typing bias, and the fixed-\(h\) learning claim is explicitly
 separated from the expressive union RS.
 
-\textbf{Revision location:} Section 1, pp. 1--3, ll. 29--94.
+\textbf{Revision location:} Section 1.
 
 \textbf{Comment (quoted excerpt):} ``The notations \(\mathcal D_L\) and
 \(\mathcal C_h^{\mathrm{cf}}\) are not standard and require definitions.
@@ -338,7 +341,7 @@ Introduction as the class of context-free \(\sim_h\)-substitutable languages;
 defined formally in the framework section. The phrase ``general context-free
 class'' has been removed.
 
-\textbf{Revision location:} Introduction, pp. 1--2, ll. 39--65; Section 2.2 and the opening of Section 3, pp. 4--5, ll. 137--178.
+\textbf{Revision location:} Introduction; Section 2.2 and the opening of Section 3.
 
 \textbf{Comment (quoted excerpt):} ``The contributions are enumerated as
 (1)-(6), but it is unnecessary to count technical details as separate
@@ -350,7 +353,7 @@ able to follow them.''
 substantive contributions and no longer treats proof-local devices as
 separate contributions.
 
-\textbf{Revision location:} Section 1.2, p. 2, ll. 66--84.
+\textbf{Revision location:} Section 1.2.
 
 \textbf{Comment (quoted excerpt):} `` `Yoshinaka's classical language'
 is often called `the Łukasiewicz language' in the literature.''
@@ -359,7 +362,7 @@ is often called `the Łukasiewicz language' in the literature.''
 suggested Autebert--Berstel--Boasson (1997) handbook reference, and
 state its relation to the one-bracket Dyck language concisely.
 
-\textbf{Revision location:} Section 9.3, pp. 16--17, ll. 624--659.
+\textbf{Revision location:} Section 10.3.
 
 \subsubsection{Section 2}\label{section-2}
 
@@ -383,7 +386,7 @@ on presentation order although its generated language eventually equals
 footnote to Section 4.2 to show concretely why repeatedly recomputing
 the batch grammar need not stabilize syntactically as the sample grows.
 
-\textbf{Revision location:} Section 2.1, pp. 3--4, ll. 120--136; Section 4.2, p. 8, ll. 287--295; Corollary 5.5, p. 10, ll. 370--384.
+\textbf{Revision location:} Section 2.1; Section 4.2; Corollary 5.5.
 
 \textbf{Comment (quoted excerpt):} ``This section should thoroughly
 define the necessary notation and terminology, including basic notions
@@ -407,9 +410,9 @@ for the batch operator, sample consistency, distributions, and the
 fixed-\(h\) classes. Proof-local terminology is introduced only where
 used, and the linear section no longer uses wrapper/spine terminology
 before its definition. The former ``finite typed reconstruction basis''
-terminology has been removed entirely. Avoidable metavariable collisions have also been removed where they could impede reading: the four-element monoid of Section 8 is now denoted $M_{\pm,e}$, and the intermediate binarized grammar in Appendix A is denoted $G_{\mathrm{bin}}$.
+terminology has been removed entirely. Avoidable metavariable collisions have also been removed where they could impede reading: the four-element monoid of Section 9 is now denoted $M_{\pm,e}$, and the intermediate binarized grammar in Appendix A is denoted $G_{\mathrm{bin}}$.
 
-\textbf{Revision location:} Section 2, pp. 3--4, ll. 95--148; Section 5.1, pp. 8--9, ll. 298--339; Section 8.1, p. 13, around ll. 497--504; Appendix A.2, pp. 19--20, around ll. 767--790.
+\textbf{Revision location:} Section 2; Section 5.1; Section 9.1; Appendix A.2.
 
 \textbf{Comment (quoted excerpt):} ``The term `finite typed
 reconstruction basis', a combination of undefined words, is clearly
@@ -423,7 +426,7 @@ argument uses only the yield-typed target grammar and the finite witness
 set \(\mathsf W(\widetilde G)\) that is actually needed for exact
 reconstruction.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \subsubsection{Section 3}\label{section-3}
 
@@ -440,7 +443,7 @@ stronger conclusion explicitly: over every nonempty alphabet, neither
 positive data, because both contain all regular languages and are therefore
 superfinite in Gold's sense.
 
-\textbf{Revision location:} Section 2.2 and the opening of Section 3, pp. 4--5, ll. 137--178.
+\textbf{Revision location:} Section 2.2 and the opening of Section 3.
 
 \textbf{Comment (quoted excerpt):} ``Definition 3.2 requires care. On
 this point, the way Clark \& Eyraud (2007) state their definition is
@@ -466,7 +469,7 @@ trivial-monoid case; the revised text also cites Clark (2013) for this
 operational reading. In the \((k,\ell)\) definition all six string
 variables are explicitly declared to lie in \(\Sigma^*\).
 
-\textbf{Revision location:} Introduction, pp. 1--2, ll. 39--57 and footnote 1; Definition 2.1 and the Clark--Eyraud special case, pp. 4--5, ll. 141--186; the fixed-window definition in Section 3.1, p. 5, ll. 187--193.
+\textbf{Revision location:} Introduction; footnote 1; Definition 2.1 and the Clark--Eyraud special case; the fixed-window definition in Section 3.1.
 
 \textbf{Comment (quoted excerpt):} ``Proposition 3.5. \(\sqcup\) and
 \(\mathrm{pref}_k\) are undefined. \ldots{} The proof is very long. If
@@ -495,7 +498,7 @@ factors, equal length-\(k\) prefixes and length-\(\ell\) suffixes give
 equal \(h_{k,\ell}\)-types, so a shared context together with unequal
 distributions is already a complete counterexample.
 
-\textbf{Revision location:} Proposition 3.3 and the fixed-window counterexample criterion, pp. 5--6, ll. 194--220.
+\textbf{Revision location:} Proposition 3.3 and the fixed-window counterexample criterion.
 
 \textbf{Comment (quoted excerpt):} ``Rather than saying that \(h\) is
 given as data (the meaning is not crystal clear), it would be cleaner to
@@ -510,7 +513,7 @@ multiplication table and letter images, explicitly state how
 \(h\)(\(w\)) is computed, define linear CFGs in the preliminaries, and
 use ``fixed efficiently computable homomorphism'' in the main theorem.
 
-\textbf{Revision location:} Sections 2--3.2, pp. 3--7, ll. 95--251.
+\textbf{Revision location:} Sections 2--3.2.
 
 \textbf{Comment (quoted excerpt):} ``I do not understand `The proof for
 fixed \(h\)'. Do you mean `The proof for Theorem 3.7'?''
@@ -519,7 +522,7 @@ fixed \(h\)'. Do you mean `The proof for Theorem 3.7'?''
 revised text now states the relevant theorem and its proof directly,
 without this wording.
 
-\textbf{Revision location:} Section 3.2, pp. 6--7, ll. 227--251.
+\textbf{Revision location:} Section 3.2.
 
 \subsubsection{Section 4}\label{section-4}
 
@@ -533,7 +536,7 @@ of the full refinement, so thereafter all of its symbols are reachable and
 productive by convention and the repeated qualifications are removed. The
 quoted informal sentence has also been removed.
 
-\textbf{Revision location:} Section 2, pp. 3--4, ll. 95--148; Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 2; Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``Footnote 2: `productive' is already
 used earlier. Define it in Section 2 rather than in a footnote.''
@@ -542,13 +545,13 @@ used earlier. Define it in Section 2 rather than in a footnote.''
 defined in the preliminaries, before either term is used in the target
 refinement; the former explanatory footnote is gone.
 
-\textbf{Revision location:} Section 2, pp. 3--4, ll. 95--148; Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 2; Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``The text says `the set of reachable and productive typed nonterminals'; is there any nonterminal of $\tilde{G}$ that fails this condition? This may be intended as a helpful reminder or emphasis, but it confuses the reader instead.''
 
 \textbf{Response:} No. The revised notation defines $\widetilde G$ as the reduced part of the full yield-typed refinement, so every symbol retained in $\widetilde G$ is reachable and productive by definition. Repeated qualifications to that effect have been removed.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``The first paragraph states no
 reason why `different occurrences must be treated as different typed
@@ -574,7 +577,7 @@ for a typed binary rule, Rule (R3) must move from the canonical yield
 guarantees \(h(\omega(X))=h(\omega(Y))h(\omega(Z))\). No outer-context
 annotation is used.
 
-\textbf{Revision location:} Section 4, pp. 7--8, ll. 252--295; Section 5.1 and Theorem 5.3, pp. 8--10, ll. 298--360.
+\textbf{Revision location:} Section 4; Section 5.1 and Theorem 5.3.
 
 \textbf{Comment (quoted excerpt):} ``Lemma 4.4. It is confusing that an
 expression concerning derivations in \(G\) appears immediately after `In
@@ -587,7 +590,7 @@ which states language preservation and the yield invariant directly and
 keeps derivations of the original grammar and of the typed refinement
 syntactically separate.
 
-\textbf{Revision location:} Proposition 5.2, pp. 8--9, ll. 318--324.
+\textbf{Revision location:} Proposition 5.2.
 
 \textbf{Comment (quoted excerpt):} ``Lemma 4.8. `If \(X\) is reachable
 and productive in \(\widetilde G\),' This likewise confuses the
@@ -598,7 +601,7 @@ reduced part of the full yield refinement, so every symbol of
 \(\widetilde G\) is reachable and productive by convention. The former
 Lemma 4.8 is deleted, and the redundant hypothesis no longer appears.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``The opening paragraph (the
 definitions of \(\omega\) and \(\chi\)) would connect better if placed
@@ -629,7 +632,7 @@ sets/samples. The unused basis, \(NT(\cdot)\), \(\mathrm{Rule}(\cdot)\),
 ``realized/realizable,'' and ``exhibited'' terminology and the
 definition-restating lemmas have been removed.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``Lemma 4.6. This is far too trivial
 a corollary. Either label it as a Corollary or delete it.''
@@ -647,7 +650,7 @@ third sentences are not understandable owing to the undefined term
 have been removed. The entire typed-refinement section is now one
 definition, one invariant proposition, and the witness-set construction.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``\(\alpha\) is a string, not a
 symbol.''
@@ -672,7 +675,7 @@ proof says that erasing type annotations maps a typed derivation to a
 derivation of the original grammar. The former trivial corollaries are
 deleted.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \subsubsection{Section 5}\label{section-5}
 
@@ -685,7 +688,7 @@ the constructor/learner separation described above: Section 4.1 defines
 the batch constructor, Section 4.2 the conservative sequential learner,
 and Corollary 5.5 proves syntactic Gold stabilization.
 
-\textbf{Revision location:} Section 4.2, p. 8, ll. 287--295; Corollary 5.5, p. 10, ll. 370--384.
+\textbf{Revision location:} Section 4.2; Corollary 5.5.
 
 \textbf{Comment (quoted excerpt):} ``Corollary 5.8. This cannot be
 accepted as a proof. By the definition in Section 5.1, the learner's
@@ -697,7 +700,7 @@ changed the learner rather than only the proof. The revised learner is
 conservative and Corollary 5.5 proves that the hypothesis grammar itself
 eventually stabilizes syntactically.
 
-\textbf{Revision location:} Section 4.2, p. 8, ll. 287--295; Corollary 5.5, p. 10, ll. 370--384.
+\textbf{Revision location:} Section 4.2; Corollary 5.5.
 
 \textbf{Comment (quoted excerpt):} ``Remark 5.1. I cannot grasp the
 point. What does `soundness of a rule' mean? \ldots{} If one sentence is
@@ -721,7 +724,7 @@ confused with numbered displayed equations. The revised order is now:
 batch grammar, sample consistency and soundness, sequential learner,
 then target-side yield refinement and completeness.
 
-\textbf{Revision location:} Section 4, especially p. 7, ll. 253--286; Section 5.2, pp. 9--10, ll. 340--384.
+\textbf{Revision location:} Section 4, especially p. 7, ll. 253--286; Section 5.2.
 
 \textbf{Comment (quoted excerpt):} ``Lemma 5.2. In the second sentence,
 the first claim is trivial and the second is not understandable. What is
@@ -734,7 +737,7 @@ Their role is replaced by the explicit rule-by-rule soundness invariant
 in Theorem 4.2, which states directly what every hypothesis nonterminal
 may derive and proves it by induction on derivation-tree height, with a case analysis on the root reconstruction rule.
 
-\textbf{Revision location:} Theorem 4.2, p. 7, ll. 271--286.
+\textbf{Revision location:} Theorem 4.2.
 
 \textbf{Comment (quoted excerpt):} ``Page 14, line 1: `Since \(G\) is in
 SSBNF' \(\to\widetilde G\)?''
@@ -742,7 +745,7 @@ SSBNF' \(\to\widetilde G\)?''
 \textbf{Response:} Corrected during the rewrite; the relevant grammar is
 named explicitly throughout the completeness proof.
 
-\textbf{Revision location:} Theorem 5.3, pp. 9--10, ll. 341--360.
+\textbf{Revision location:} Theorem 5.3.
 
 \textbf{Comment (quoted excerpt):} ``Theorem 5.7. Make the statement
 mathematical. What do you mean by `a finite sample exposes the finite
@@ -753,7 +756,7 @@ tuple.''
 \(\mathsf W(\widetilde G)\subseteq K\subseteq L\Rightarrow L(\mathcal B_h(K))=L\)
 with all assumptions in the theorem statement.
 
-\textbf{Revision location:} Theorem 5.4, p. 10, ll. 361--369.
+\textbf{Revision location:} Theorem 5.4.
 
 \subsubsection{Section 6}\label{section-6}
 
@@ -769,7 +772,7 @@ transport/type pairs, and a safe explicit-output bound \(O(n_K^5)\) when
 string keys are copied. This size convention also counts \(\lambda\)
 correctly.
 
-\textbf{Revision location:} Section 6, pp. 10--11, ll. 385--415.
+\textbf{Revision location:} Section 6.
 
 \subsubsection{Section 7}\label{section-7}
 
@@ -781,18 +784,18 @@ understand, and what differs from the preceding sections.''
 ``Lemma 7.3. `strict linear derivation' is not defined.''
 
 \textbf{Response:} We substantially shortened the material corresponding
-to submitted Section 7; it is now Section 8. As explained in the
-Overview, only the statements of Proposition 8.1 and Lemma 8.2
-remain in the main text, because Theorem 8.3 uses their exact
+to submitted Section 7; it is now Section 9. As explained in the
+Overview, only the statements of Proposition 9.1 and Lemma 9.2
+remain in the main text, because Theorem 9.3 uses their exact
 single-spine form and the resulting witness bounds directly; their
 detailed proofs are now in Appendices B and C. The undefined ``strict
-linear derivation'' terminology has been removed, and Proposition 8.1
+linear derivation'' terminology has been removed, and Proposition 9.1
 now states explicitly that the binary rule contains one fresh
 terminal-wrapper child. At the end of Section 6, a compact
 doubling-grammar example explains why no grammar-size-only polynomial
 characteristic-data bound is claimed for arbitrary CFG representations.
 
-\textbf{Revision location:} The general-CFG limitation in Section 6, p. 11, ll. 405--415; Proposition 8.1 and the surrounding discussion, p. 12, ll. 469--478; Lemma 8.2, p. 13, ll. 479--480; Appendix B, pp. 20--21, ll. 801--839; Appendix C, pp. 21--22, ll. 840--883.
+\textbf{Revision location:} The general-CFG limitation in Section 6; Proposition 9.1 and the surrounding discussion; Lemma 9.2; Appendix B; Appendix C.
 
 \textbf{Comment (quoted excerpt):} ``Proposition 7.2 does not need two
 full pages on the proof. I do not know whether exactly the same
@@ -804,12 +807,12 @@ accept Proposition 7.2 as trivial or as folklore.''
 
 \textbf{Response:} The former two-page normalization proof and the
 elementary intermediate lemmas have been removed from the main
-development. Proposition 8.1 and Lemma 8.2 remain only as the two
-statements used immediately by Theorem 8.3; their detailed proofs are in
+development. Proposition 9.1 and Lemma 9.2 remain only as the two
+statements used immediately by Theorem 9.3; their detailed proofs are in
 Appendices B and C, respectively. The former elementary lemmas are
 absorbed into those appendix proofs or deleted.
 
-\textbf{Revision location:} Proposition 8.1 and the surrounding discussion, p. 12, ll. 469--478; Lemma 8.2, p. 13, ll. 479--480; Theorem 8.3 and the following clarification, p. 13, ll. 481--492; Appendix B, pp. 20--21, ll. 801--839; Appendix C, pp. 21--22, ll. 840--883.
+\textbf{Revision location:} Proposition 9.1 and the surrounding discussion; Lemma 9.2; Theorem 9.3 and the following clarification; Appendix B; Appendix C.
 
 \subsubsection{Sections 8--10}\label{sections-810}
 
@@ -827,13 +830,13 @@ witness is not the essence of the theorem and only burdens the reader.''
 in Section 3 a short fixed-window counterexample criterion: two sufficiently
 long factors with the same length-\(k\) prefix and length-\(\ell\) suffix,
 a shared context, and different distributions already refute
-\((k,\ell)\)-substitutability by Proposition 3.3. Section 9.2 then uses only
+\((k,\ell)\)-substitutability by Proposition 3.3. Section 10.2 then uses only
 the two words \((\uparrow\downarrow)^k\uparrow^{\rho-1}\#^\ell\) and
 \((\uparrow\downarrow)^k\uparrow^\rho\#^\ell\): they share the empty
 context, while one extra leading \(\uparrow\) distinguishes their
 distributions. No six-variable replacement witness is expanded there.
 
-\textbf{Revision location:} Section 9.2, pp. 15--16, ll. 602--623.
+\textbf{Revision location:} Section 10.2.
 
 \textbf{Comment (quoted excerpt):} ``There is no need to devote an
 entire subsection to this material. It is unclear what Corollary 8.7
@@ -876,7 +879,7 @@ final summary
 writes ambient alphabets explicitly in the strict-inclusion statements.
 The two optional appendices have been removed entirely.
 
-\textbf{Revision location:} Section 9, pp. 14--18, ll. 544--692.
+\textbf{Revision location:} Section 10.
 
 \textbf{Comment (quoted excerpt):} ``Definition 9.1. Define the symbol
 \#, and make its use consistent in Section 9.''
@@ -910,7 +913,7 @@ invariant. Notation has been aligned with the definitions; the former
 standalone \(\Delta^*\) development remains condensed into that single
 proposition.
 
-\textbf{Revision location:} Section 9, pp. 14--18, ll. 544--692.
+\textbf{Revision location:} Section 10.
 
 \textbf{Comment (quoted excerpt):} ``Lemma 9.11 is a fundamental
 property of \(\sim_h\) substitutability; since the basic mathematical
@@ -918,10 +921,10 @@ properties of \(\sim_h\) substitutability are collected in an appendix,
 placing it there is one option.''
 
 \textbf{Response:} We followed the reviewer's suggestion to isolate the
-fundamental property, but deliberately did not move this one-use lemma
-to an appendix. The submitted Lemma 9.11 has been reduced to the
+fundamental property. We retained only the right-quotient form actually used
+and placed it immediately before its single application. The submitted Lemma 9.11 has been reduced to the
 right-quotient case actually used by the Łukasiewicz argument; this reduced
-statement is now Lemma 9.8 and appears immediately before that application.
+statement is now Lemma 10.8 and appears immediately before that application.
 The former optional
 boundary-property appendices were removed in the consolidation of
 Sections 8--10; the three proof appendices are devoted to the general thickness-preserving
@@ -929,7 +932,7 @@ normalization and the two detailed linear proofs. Keeping the
 two-line quotient argument next to its sole use makes the dependency
 local without recreating a separate boundary appendix.
 
-\textbf{Revision location:} Lemma 9.8, p. 17, ll. 652--659; proof appendices, pp. 19--22, ll. 726--882.
+\textbf{Revision location:} Lemma 10.8; proof appendices.
 
 \subsubsection{Section 11}\label{section-11}
 
@@ -937,8 +940,7 @@ local without recreating a separate boundary appendix.
 \(\mathsf{RS}\cap\mathrm{CFL}\) is a subset of the class of
 Clark's congruential CFLs.''
 
-\textbf{Response:} Added as Proposition 9.9, with Clark (2010) cited
-explicitly for the congruential-CFL notion. The revised statement is made
+\textbf{Response:} Added as Proposition 10.9. Clark (2010) already observes that substitutable and \((k,\ell)\)-substitutable languages lie in his congruential family and uses the Dyck language as a standard example beyond ordinary substitutability; the revision now says this explicitly. Our proposition extends the containment statement to every fixed-\(h\) slice and hence to \(\mathsf{RS}\cap\mathrm{CFL}\). The revised statement is made
 slice-wise: for every fixed finite-monoid homomorphism \(h\),
 \(\mathcal C_h^{\mathrm{cf}}\subseteq\mathsf{CONG}(\Gamma)\); taking the union
 over \(h\) gives \(\mathsf{RS}(\Gamma)\cap\mathrm{CFL}
@@ -952,7 +954,7 @@ notation \(L_G[I]\) makes this finite-initial-set convention explicit. The
 inclusion is proper over \(\{a,b\}\) because \(D_1\) is congruential but
 lies outside RS.
 
-\textbf{Revision location:} Proposition 9.9, pp. 17--18, ll. 666--692.
+\textbf{Revision location:} Proposition 10.9.
 
 \subsection{Reviewer 2}\label{reviewer-2}
 
@@ -986,16 +988,18 @@ remains outside the present scope. Following the reviewer's suggestion,
 the introduction cites Coste, Fredouille, Kermorvant and de la Higuera
 (2004) and presents \(h\) explicitly as a finite typing/comparison bias.
 
+New Section 7 also makes the quantitative limitation of the general fixed-\(h\) setting explicit. The general canonical-witness bound is polynomial in grammar size and typed thickness, and Proposition 7.3 gives a fixed two-element monoid for which full yield typing can make that parameter exponentially larger than ordinary source thickness. The manuscript therefore does not transfer Yoshinaka's ordinary source-thickness scale to arbitrary fixed typings.
+
 The revision also makes the relation with Yoshinaka exact. Proposition 3.3
 shows that the class induced by \(h_{k,\ell}\) is precisely the fixed
-\((k,\ell)\)-substitutable class. Section 7 is therefore presented as a
+\((k,\ell)\)-substitutable class. Section 8 is therefore presented as a
 compatibility/recovery result: for the present batch reconstruction it recovers
 the same grammar-size-and-thickness finite-sample scale established by
-Yoshinaka's Theorem~1 and Lemmas~6--7 rather than claiming a new fixed-window learnability theorem. The quantitative transfer is proved through Proposition 7.4 and Corollary 7.5.
+Yoshinaka's Theorem~1 and Lemmas~6--7 rather than claiming a new fixed-window learnability theorem. The quantitative transfer is proved through Proposition 8.4 and Corollary 8.5.
 We retain the stated non-uniformity in variable \(k,\ell\) and keep this batch
 finite-sample result separate from sequential Gold stabilization.
 
-Section 8 gives a concrete four-element monoid for which the typing ignores
+Section 9 gives a concrete four-element monoid for which the typing ignores
 \(a,b\) and records only the center-symbol pattern. This provides an explicit
 finite comparison bias that cannot be replaced by any fixed prefix--suffix
 window for the nonregular linear example constructed there. The Introduction
@@ -1021,13 +1025,13 @@ Two elementary observations clarify useful typings: if
 nonregular linear example \(L_{\pm,e}\). The revision now also notes that
 product typings compose finite biases: \(\ker(h\times g)=\ker h\cap\ker g\),
 so a window typing and an independent finite domain feature may be combined
-within one fixed homomorphism. Section 8 records the classical one-turn
-pushdown characterization of linear languages, and Section 9 gives a
+within one fixed homomorphism. Section 9 records the classical one-turn
+pushdown characterization of linear languages, and Section 10 gives a
 finite-monoid obstruction lemma that immediately excludes the uncapped counter
 and one-bracket Dyck languages from RS. A fuller characterization of useful
 typings and of the pushdown boundary remains future work.
 
-\textbf{Revision location:} Introduction, pp. 1--3, ll. 39--94; Section 3, pp. 4--7, ll. 149--251; Section 7, pp. 11--12, ll. 416--464; Section 8, pp. 12--14, ll. 465--543; Sections 9.3--9.4, pp. 16--18, ll. 624--692; Conclusion, pp. 18--19, ll. 693--711.
+\textbf{Revision location:} Introduction; Section 3; Section 7; Section 8; Section 9; Sections 10.3--10.4; Conclusion.
 
 \subsubsection{Main concern 1: outer context typing and
 transport}\label{main-concern-1-outer-context-typing-and-transport}
@@ -1051,17 +1055,7 @@ cannot be established by any example. The yield typing, which is genuinely
 essential and is what becomes vacuous under the trivial monoid, should not
 be left in a footnote.''
 
-\textbf{Response:} Yes. The absence of an outer-type condition in
-Rule (R2) is intentional: R2 transports the same observed factor $x$ only
-between contexts in which $x$ itself has been observed, so that common
-occurrence supplies the shared-context premise needed for substitutability;
-no $h$-type condition on the surrounding contexts is used. We agree with the
-reviewer's central observation that the submitted outer-context components
-were not consulted by the proof, so they have been removed rather than
-defended; the target refinement now contains only yield-typed symbols
-\(A_\mu\). Accordingly, we withdraw the submitted Section 1.1 description of
-this mechanism as ``typed transport,'' as well as the claim that occurrences
-must be separated according to their outer types. This agrees with the reviewer's
+\textbf{Response:} The reviewer is correct. The submitted outer-context annotations were not used by any proof, so the submitted claim that such outer typing was necessary was unsupported. We have therefore removed those annotations and withdrawn the description of the mechanism as ``typed transport,'' together with the claim that occurrences must be separated according to their outer types. Rule (R2) transports the same observed factor $x$ only between contexts in which $x$ itself has been observed; that common occurrence supplies the shared-context premise needed for substitutability, and no $h$-type condition on the surrounding contexts is used. The target refinement now contains only yield-typed symbols \(A_\mu\). This agrees with the reviewer's
 observation that the algebraic condition in the submitted Definition 2.3
 constrains the substituted fragment, not the surrounding context. The hypothesis
 grammar still records observed contexts syntactically as \([x:u,v]\). The
@@ -1074,7 +1068,7 @@ typed refinement supplies the required equality of \(h\)-values. Thus
 Section 4 defines the reconstruction rules first, and Section 5
 introduces exactly the target typing needed to simulate them.
 
-\textbf{Revision location:} Section 4, pp. 7--8, ll. 252--295; Section 5.1 and Theorem 5.3, pp. 8--10, ll. 298--360.
+\textbf{Revision location:} Section 4; Section 5.1 and Theorem 5.3.
 
 \subsubsection{Main concern 2: extent of the linear
 theorem}\label{main-concern-2-extent-of-the-linear-theorem}
@@ -1092,12 +1086,12 @@ theorem reads as a technical strengthening on a class of unknown extent,
 the non-regular linear case being left open.''
 
 \textbf{Response:} We thank the reviewer for identifying this missing
-case. Section 8 now adds a nonregular linear language \(L_{\pm,e}\) with a
-four-element monoid morphism. Proposition 8.4 proves that it is linear,
+case. Section 9 now adds a nonregular linear language \(L_{\pm,e}\) with a
+four-element monoid morphism. Proposition 9.4 proves that it is linear,
 nonregular, fixed-\(h\) substitutable, and neither ordinarily substitutable nor
-\((k,\ell)\)-substitutable for any fixed \(k,\ell\). Thus Theorem 8.3 has
+\((k,\ell)\)-substitutable for any fixed \(k,\ell\). Thus Theorem 9.3 has
 nonregular linear content beyond the fixed-window hierarchy. The fixed-window
-quantitative comparison is handled separately in Section 7; the general-CFG
+quantitative comparison is handled separately in Section 8. New Section 7 explains the general fixed-\(h\) quantitative boundary in terms of typed thickness and gives a fixed two-element source-to-typed exponential gap. The general-CFG
 limitation remains documented by the doubling-grammar example in Section 6,
 which now explicitly notes that each singleton target in that family is
 \(\sim_h\)-substitutable for every \(h\). Correspondingly, we no longer
@@ -1106,11 +1100,11 @@ describe the corrected sequential learner as identifying the linear class in
 characteristic data for the batch reconstruction, while Gold identification is
 supplied separately by Corollary 5.5.
 
-For completeness, Section 9.1 retains the compact nonlinear witness
+For completeness, Section 10.1 retains the compact nonlinear witness
 \(\Delta^*\), showing that the separation also persists at a nonlinear
 context-free target.
 
-\textbf{Revision location:} The general-CFG limitation in Section 6, p. 11, ll. 405--415; Section 7, pp. 11--12, ll. 416--464; Theorem 8.3 and Proposition 8.4, pp. 13--14, ll. 481--543; Proposition 9.1, p. 15, ll. 569--601.
+\textbf{Revision location:} The general-CFG limitation in Sections 6--7; Section 8; Theorem 9.3 and Proposition 9.4; Proposition 10.1.
 
 \subsubsection{Further comments}\label{further-comments}
 
@@ -1127,7 +1121,7 @@ and one sentence recording the convention would suffice.''
 \textbf{Response:} The repeated qualifications are removed and the
 reduced-part convention is stated once.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``Proposition 3.1: the hypothesis
 \(L=h^{-1}(F)\) characterises the regular languages exactly. Replace `In
@@ -1140,7 +1134,7 @@ and then makes explicit the consequence relevant here: if
 \(L=h^{-1}(\mathsf{Acc})\) and \(h(x)=h(y)\), then
 \(h(uxv)=h(uyv)\) for every \(u,v\), so the two distributions agree.
 
-\textbf{Revision location:} Proposition 3.1, p. 5, ll. 173--178.
+\textbf{Revision location:} Proposition 3.1.
 
 \textbf{Comment (quoted excerpt):} ``Definition 4.11: the basis
 \(B(\widetilde G)\) is never used. Is it useful to introduce it as well
@@ -1151,14 +1145,14 @@ unnecessary since it is sufficient to define \(G\) = () and use defined
 \textbf{Response:} Agreed. These objects and notations have been
 removed.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``Example 4.3 is not in SSBNF''
 
 \textbf{Response:} The former example has been removed entirely; the
 revised proof no longer needs it.
 
-\textbf{Revision location:} Section 5.1, pp. 8--9, ll. 298--339.
+\textbf{Revision location:} Section 5.1.
 
 \textbf{Comment (quoted excerpt):} ``Lemma 5.2 (i): If \(X\) carries
 several terminal rules \(\omega(X)\) is not sufficient, and rule (3)
@@ -1170,13 +1164,13 @@ $u_Xav_X$ for every typed terminal rule $X\to a$, ensuring that the observed
 nonterminal $[a:u_X,v_X]$ is present. The terminal base case then applies
 Rule (R3) when the canonical yield differs from $a$, followed by Rule (R4).
 
-\textbf{Revision location:} Theorem 5.3, pp. 9--10, ll. 341--360.
+\textbf{Revision location:} Theorem 5.3.
 
 \textbf{Comment (quoted excerpt):} ``Are Lemmas 5.3 and 5.4 needed?''
 
 \textbf{Response:} Agreed. They are deleted.
 
-\textbf{Revision location:} Sections 4--5.1, pp. 7--9, ll. 252--339.
+\textbf{Revision location:} Sections 4--5.1.
 
 \textbf{Comment (quoted excerpt):} ``Corollary 5.8 Should begin with
 `For a fixed homomorphism \(h\) from \(\Sigma^*\) to a finite monoid
@@ -1186,18 +1180,18 @@ Rule (R3) when the canonical yield differs from $a$, followed by Rule (R4).
 exactly in the requested explicit form: ``For a fixed homomorphism \(h\)
 : \(\Sigma^*\to M\) into a finite monoid \(M\), \ldots{}''.
 
-\textbf{Revision location:} Corollary 5.5, p. 10, ll. 370--384.
+\textbf{Revision location:} Corollary 5.5.
 
 \textbf{Comment (quoted excerpt):} ``section 7.1 Transformation to
 standard SSLNF (3 pages) could be condensed or given in appendix.''
 
 \textbf{Response:} We have taken the appendix option suggested by the
-reviewer. As summarized in the Overview, Section 8 retains only the statements
-needed directly by Theorem 8.3, while the detailed normalization and
+reviewer. As summarized in the Overview, Section 9 retains only the statements
+needed directly by Theorem 9.3, while the detailed normalization and
 short-witness proofs are moved to Appendices B and C. The main text therefore
 contains only the statements and the resulting polynomial characteristic-data
 argument.
 
-\textbf{Revision location:} Proposition 8.1 and the surrounding discussion, p. 12, ll. 469--478; Lemma 8.2, p. 13, ll. 479--480; Theorem 8.3 and the following clarification, p. 13, ll. 481--492; Appendix B, pp. 20--21, ll. 801--839; Appendix C, pp. 21--22, ll. 840--883.
+\textbf{Revision location:} Proposition 9.1 and the surrounding discussion; Lemma 9.2; Theorem 9.3 and the following clarification; Appendix B; Appendix C.
 
 \end{document}
