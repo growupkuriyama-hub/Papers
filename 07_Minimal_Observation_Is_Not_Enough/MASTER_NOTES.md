@@ -27,7 +27,7 @@ The key conceptual distinction is:
 
 - **class-level sufficiency:** bounded finite observation is enough for TxtEx learning (background compilation principle);
 - **order-level monotonicity:** finer observers remove reconstruction links;
-- **resource-level separation:** minimum image cardinality need not select the reconstruction-optimal coarsest safe observer.
+- **resource-level separation:** minimum image cardinality need not select the reconstruction-optimal maximally coarse safe observer.
 
 ## 3. Headline results
 
@@ -42,7 +42,7 @@ The streamlined proof now contains a complete classification of all overlapping 
 Main exact statements:
 
 - (mathrm{obs}_1(R_{m,q})=qm);
-- (H^-) and (H^+) are both coarsest safe and incomparable;
+- (H^-) and (H^+) are both maximally coarse safe and incomparable;
 - (mathrm{CD}_{min	ext{-image}}=4(m^2+2qm-m));
 - (mathrm{CD}_{mathrm{global}}=4(m^2+qm+q-1));
 - (Delta mathrm{CD}=4(m-1)(q-1)).
@@ -82,12 +82,12 @@ These are interesting but dilute the third-paper thesis narrative.
 
 Before journal submission:
 
-1. independently re-audit the new complete conflict classification and coarsest-safe proposition;
+1. independently re-audit the new complete conflict classification and maximally-coarse-safe proposition;
 2. independently re-audit the expanded R1--R3 incidence-graph proof;
 3. independently re-audit the revised Start/Const/Comp/Link affine invariant;
 4. compile twice; current static audit has balanced environments/braces and no undefined refs/cites;
 5. refresh literature priority around minimum quotient size versus characteristic-data optimization;
-6. test whether an infinite-language analogue of the coarsest-safe separation is worth adding, without diluting the focused paper.
+6. test whether an infinite-language analogue of the maximally-coarse-safe separation is worth adding, without diluting the focused paper.
 
 ## 6. Submission posture
 
@@ -109,3 +109,17 @@ The target dissertation can now be extremely compact:
 3. MOINE — beyond one fixed observer and limits of minimal observation
 
 No separate #3 / OFET chapter is required for the minimal high-impact track.
+
+## 8. Public-preprint overlap gate
+
+`06_ofet` is public as arXiv:2609.34560v1 and already contains predecessor versions of the `R_{m,q}` exact resource formulas and the `X_{k,r}` affine characteristic-data argument (under the slot observer). The focused paper-07 path is viable only if treated transparently as a sharpening/superseding version of those overlapping portions.
+
+New sharpenings isolated in paper 07 include:
+
+- reconstruction/kernel invariance and congruence-index formulation;
+- two incomparable maximally coarse safe observers on `R_{m,q}`;
+- the universal-product "whole target" penalty;
+- trivial-observer safety and exact affine cost for `X_{k,r}`;
+- proof alignment to the current #1 R1--R5 and #2 Start/Const/Comp/Link constructors.
+
+Submission gate: do not pursue independent journal publication of both overlapping theorem packages without removing the duplication or following the target venues' explicit extended-version policy.
