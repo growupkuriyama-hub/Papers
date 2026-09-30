@@ -1,4 +1,4 @@
-# MOINE — Research Master
+# MOINE — Research Master (Minimum Observer Size Is Not Enough)
 
 Date: 2026-09-30  
 Status: focused journal-candidate v1
@@ -18,49 +18,50 @@ The paper is not a compressed table of contents of #3 + OFET + old #7. It is a t
 ## 2. Narrative
 
 fixed observation  
-→ bounded unknown observation  
-→ learnability threshold  
-→ minimum observation versus minimum reconstruction
+→ bounded unknown observation as background  
+→ refinement monotonicity / safe-congruence frontier  
+→ minimum observer image versus minimum reconstruction  
+→ universal-observer penalty and affine reconstruction geometry
 
 The key conceptual distinction is:
 
-- **class-level sufficiency:** bounded finite observation is enough for TxtEx learning;
-- **resource-level insufficiency:** the smallest safe observer neither has to minimize reconstruction cost nor determine it numerically.
+- **class-level sufficiency:** bounded finite observation is enough for TxtEx learning (background compilation principle);
+- **order-level monotonicity:** finer observers remove reconstruction links;
+- **resource-level separation:** minimum image cardinality need not select the reconstruction-optimal coarsest safe observer.
 
 ## 3. Headline results
 
-### A. Finite-Observation Threshold Theorem
+### A. Refinement and kernel theorem
 
-Use the universal product observer over all morphisms whose image has size at most m.
+The current manuscript proves that #1 Rule (R3) and #2 Rule (Link) depend only on observer equality, hence only on (ker h).  Along the refinement order, a finer observer yields a subgrammar and cannot reduce characteristic-data cost.
 
-Positive side: bounded unknown observation reduces to one fixed observer, so #1/#2 apply.
+### B. (R_{m,q}): exact frontier separation
 
-Negative side: without an observation-size bound, every regular language is admitted via its syntactic morphism, so Gold's superfinite obstruction applies.
+The streamlined proof now contains a complete classification of all overlapping unequal factor distributions.  This closes the safety proof for (H^-) and (H^+).
 
-### B. R-family optimizer separation
+Main exact statements:
 
-Keep only the exact chain needed for:
+- (mathrm{obs}_1(R_{m,q})=qm);
+- (H^-) and (H^+) are both coarsest safe and incomparable;
+- (mathrm{CD}_{min	ext{-image}}=4(m^2+2qm-m));
+- (mathrm{CD}_{mathrm{global}}=4(m^2+qm+q-1));
+- (Delta mathrm{CD}=4(m-1)(q-1)).
 
-- obs_1(R_{m,q}) = qm
-- CD_min-observation = 4(m^2 + 2qm - m)
-- CD_global = 4(m^2 + qm + q - 1)
-- Delta CD = 4(m-1)(q-1)
+The sample-graph iff has been rewritten against the actual #1 R1--R5 rules.
 
-For q=m^2: observer-size ratio 1+1/m -> 1, reconstruction-cost ratio -> 2.
+### C. Universal-observer penalty
 
-### C. X-family scalar insufficiency
+The bounded-unknown-observer product theorem is retained as background, not counted as a new contribution.  Combined with refinement monotonicity and the exact (R_{m,q}) cost formula, a sufficiently rich universal observer forces (kappa=m^2) and therefore requires the entire finite target as characteristic data.
 
-Use the #1/#2 positive sentence-context interface, not the full Clark--Wurm interface.
+### D. (X_{k,r}): exact affine geometry
 
-This is the main simplification relative to the predecessor paper.
+The headline is no longer the bare scalar “obs=1 but cost unbounded” statement.  The substantive result is the exact affine formula
 
-For X_{2,r}:
+[
+|C|_{min}=1+r(k-1).
+]
 
-- obs_2 = 1
-- |C|_min = r+1
-- ||C||_{+,min} = (2r+1)(r+1)
-
-Therefore minimum observation size alone cannot bound reconstruction cost.
+The affine invariant has been rewritten directly in terms of #2 Start/Const/Comp/Link, including the half-contained-slot case.  For (X_{2,r}), this gives (r+1) examples and encoded cost ((2r+1)(r+1)).
 
 ## 4. What was intentionally cut
 
@@ -81,12 +82,12 @@ These are interesting but dilute the third-paper thesis narrative.
 
 Before journal submission:
 
-1. re-audit the R-family safety check for H^- and H^+ in the streamlined presentation;
-2. re-audit the exact sample-graph criterion against the current #1 constructor;
-3. re-audit the X-family affine invariant against the current #2 v66 constructor and its exact positive-interface conventions;
-4. compile twice and remove undefined references/citations;
-5. refresh literature priority around observer minimization versus characteristic-data minimization;
-6. decide whether the two research-preprint citations (#3 / OFET) remain in the final journal version or move to an author note / provenance statement.
+1. independently re-audit the new complete conflict classification and coarsest-safe proposition;
+2. independently re-audit the expanded R1--R3 incidence-graph proof;
+3. independently re-audit the revised Start/Const/Comp/Link affine invariant;
+4. compile twice; current static audit has balanced environments/braces and no undefined refs/cites;
+5. refresh literature priority around minimum quotient size versus characteristic-data optimization;
+6. test whether an infinite-language analogue of the coarsest-safe separation is worth adding, without diluting the focused paper.
 
 ## 6. Submission posture
 
