@@ -170,8 +170,9 @@ sentence context is
 \[
  E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d,
 \]
-where the internal separators \(v_1,\ldots,v_{d-1}\) are nonempty.  Write
-\(\D_L^{(d),+}(\mathbf x)\) for the accepting admissible contexts.
+where the internal separators \(v_1,\ldots,v_{d-1}\) are nonempty.  As in the
+companion MCFG paper, write \(\D_L^{(d)}(\mathbf x)\) for the accepting
+admissible contexts.
 
 \begin{definition}[Positive-interface safety and observation number]
 For \(f\ge1\), write \(\Safe_f(h;L)\) if for every \(1\le d\le f\),
@@ -181,8 +182,8 @@ componentwise equality
 \]
 together with
 \[
- \D_L^{(d),+}(\mathbf x)\cap
- \D_L^{(d),+}(\mathbf y)\ne\varnothing
+ \D_L^{(d)}(\mathbf x)\cap
+ \D_L^{(d)}(\mathbf y)\ne\varnothing
 \]
 implies equality of the two positive-interface tuple distributions.
 Define
@@ -193,42 +194,50 @@ Define
 At \(f=1\) this is exactly unary safety.
 \end{definition}
 
-We measure characteristic data relative to the fixed reconstruction
-algorithms, not as learner-independent teaching dimension.  Let
-\(\mathcal A_h\) denote the CFG constructor of \cite{KuriyamaCFG} or the
-bounded-fan-out MCFG constructor of \cite{KuriyamaMCFG}, as appropriate.
+The image of a monoid morphism is itself a monoid and contains
+\(h(\eps)=1\); thus the identity value is included in \(|\im h|\).
 
-\begin{definition}[Locking sample and reconstruction cost]
-For an \(h\)-safe target \(L\), a finite \(C\subseteq L\) is
-\emph{locking} for \(\mathcal A_h\) if
+We measure characteristic data relative to the fixed reconstruction
+algorithms, not as a learner-independent teaching dimension.  Let
+\(\mathcal B_h\) denote the set-driven CFG constructor of
+\cite{KuriyamaCFG}, and let \(\mathcal B_{f,h}\) denote the uncapped
+fan-out-\(f\) MCFG constructor of \cite{KuriyamaMCFG}; when a rank cap is used,
+it will be displayed explicitly.
+
+\begin{definition}[Characteristic sample and reconstruction cost]
+For an \(h\)-safe CFG target \(L\), a finite \(C\subseteq L\) is a
+\emph{characteristic sample} for \(\mathcal B_h\) if
 \[
  C\subseteq K\subseteq L
  \quad\Longrightarrow\quad
- L(\mathcal A_h(K))=L
+ L(\mathcal B_h(K))=L
 \]
-for every finite \(K\).  Write \(\Lock_h(L)\) for the set of such samples.
+for every finite \(K\).  Write \(\CS_h(L)\) for the family of such samples.
 For the common positive-sample encoding
 \[
  \|K\|_+:=\sum_{w\in K}(|w|+1),
 \]
 put
 \[
- \cd_h(L):=\min_{C\in\Lock_h(L)}\|C\|_+.
+ \cd_h(L):=\min_{C\in\CS_h(L)}\|C\|_+.
 \]
-When the MCFG setting needs emphasis we write \(\mcd_h\) for the same
-quantity.
+In the MCFG setting the same definition is made relative to
+\(\mathcal B_{f,h}\), and we write \(\mcd_h\) when the fan-out is clear from
+context.
 \end{definition}
 
-The cost is explicitly reconstruction-system-relative.  This is important:
-our results compare observers for the same fixed positive-data constructors.
-
-\section{The finite-observation threshold}
+The cost is therefore explicitly reconstruction-system-relative.  The same
+observer may be used with other learners, but no learner-independent
+characteristic-sample lower bound is claimed here.
+\section{Bounded unknown observation: background}
 \label{sec:threshold}
 
-The first result removes the need to know one particular observer, provided a
-finite size bound is known.
+We first record the common compilation principle behind bounded unknown
+observation.  The MCFG statement is already Proposition ``Unknown typing with
+a bounded codomain'' in the companion manuscript \cite{KuriyamaMCFG}; the
+formulation below places the CFG and MCFG cases side by side for later use.
 
-\begin{theorem}[Finite-Observation Threshold Theorem]
+\begin{proposition}[Bounded-observer compilation]
 \label{thm:threshold}
 Fix a finite alphabet \(\Sigma\) and an integer \(m\ge1\).
 
@@ -250,7 +259,7 @@ fixed-\(U_{\Sigma,m}\) MCFG class and is identifiable in the limit.
 allowed, the corresponding union contains every regular language.  Hence it
 is not identifiable in the limit from positive data.
 \end{enumerate}
-\end{theorem}
+\end{proposition}
 
 \begin{proof}
 For fixed \(\Sigma\) and \(m\), there are only finitely many multiplication
@@ -282,10 +291,11 @@ Gold's superfinite obstruction applies \cite{Gold1967}.
 \end{proof}
 
 \begin{remark}
-The theorem is qualitative.  The universal product \(U_{\Sigma,m}\) can be
-enormous; no polynomial dependence on \(m\) is claimed.  The point is the
-location of the learnability boundary, not an efficient compilation of all
-bounded observers.
+The proposition is qualitative.  The universal product \(U_{\Sigma,m}\) can
+be enormous; no polynomial dependence on \(m\) is claimed.  More importantly
+for the present paper, \(U_{\Sigma,m}\) refines every observer that it
+compiles.  Section~\ref{sec:universal-penalty} shows that this universality can
+have a sharp reconstruction cost.
 \end{remark}
 
 \section{Observer refinement and reconstruction monotonicity}
@@ -303,39 +313,72 @@ when, after restricting codomains to their images, there is a monoid morphism
 
 \begin{theorem}[Reconstruction monotonicity]
 \label{thm:monotonicity}
-Suppose \(h\preceq g\), and let \(\mathcal A_h,\mathcal A_g\) be the same
-fixed-observer CFG or MCFG reconstruction architecture with the two observers.
+Suppose \(h\preceq g\).  In the CFG case use the two constructors
+\(\mathcal B_h,\mathcal B_g\).  In the MCFG case fix the same fan-out and use
+either the same rank cap for both observers or the uncapped constructors.
 Then for every finite positive sample \(K\),
 \[
- L(\mathcal A_g(K))\subseteq L(\mathcal A_h(K)).
+ L(\mathcal B_g(K))\subseteq L(\mathcal B_h(K)).
 \]
 If \(L\) is safe under \(h\), then
 \[
- \boxed{\Lock_g(L)\subseteq\Lock_h(L)}
+ \CS_g(L)\subseteq\CS_h(L)
+ \qquad\text{and}\qquad
+ \cd_h(L)\le\cd_g(L),
 \]
-and therefore
-\[
- \boxed{\cd_h(L)\le\cd_g(L).}
-\]
+with the analogous statement for \(\mcd\) in the MCFG setting.
 \end{theorem}
 
 \begin{proof}
-Equality of \(g\)-type implies equality of \(h\)-type.  Hence every semantic
-substitution rule licensed under the finer observer \(g\) is also licensed
-under \(h\).  Structural, lexical, start, and composition rules are unchanged,
-so the \(g\)-hypothesis is a subgrammar of the \(h\)-hypothesis.
+Equality of \(g\)-type implies equality of \(h\)-type.  In the CFG constructor
+of \cite{KuriyamaCFG}, the only observer-dependent rule is Rule~(R3), which
+changes the represented factor only under equality of observer type.  Thus
+every Rule~(R3) instance licensed by \(g\) is also licensed by \(h\), while
+Rules~(R1), (R2), (R4), and (R5) are unchanged.
 
-Let \(C\in\Lock_g(L)\) and \(C\subseteq K\subseteq L\).  Safety of \(h\)
+In the MCFG constructor of \cite{KuriyamaMCFG}, the only observer-dependent
+rule is Rule~(Link).  Rules~(Start), (Const), and (Comp) are unchanged, and
+every Link licensed by \(g\) is also licensed by \(h\).  Hence in either
+architecture the \(g\)-hypothesis is a subgrammar of the \(h\)-hypothesis.
+
+Let \(C\in\CS_g(L)\) and \(C\subseteq K\subseteq L\).  Safety of \(h\)
 gives soundness of the \(h\)-reconstruction on positive subsets of \(L\).
-Thus
+Therefore
 \[
- L=L(\mathcal A_g(K))
- \subseteq L(\mathcal A_h(K))
+ L=L(\mathcal B_g(K))
+ \subseteq L(\mathcal B_h(K))
  \subseteq L,
 \]
-so \(C\in\Lock_h(L)\).  Minimizing the same sample cost over nested locking
-families gives the final inequality.
+so \(C\in\CS_h(L)\).  Minimizing the same sample cost over the nested
+characteristic-sample families gives the cost inequality.
 \end{proof}
+
+\begin{proposition}[Kernel invariance]
+\label{prop:kernel-invariance}
+If two observers \(h\) and \(g\) have the same kernel on \(\Sigma^*\), then
+the corresponding fixed-observer reconstruction grammars are identical for
+every finite sample, up to irrelevant renaming of observer values.  In
+particular their characteristic-sample families and reconstruction costs are
+equal.
+\end{proposition}
+
+\begin{proof}
+Both companion constructors inspect an observer only through equality tests:
+Rule~(R3) in the CFG case and Rule~(Link) in the MCFG case.  The same kernel
+therefore licenses exactly the same observer-dependent rules; all remaining
+rules are independent of the observer.
+\end{proof}
+
+\begin{definition}[Coarsest safe observer]
+Two observers are called \emph{equivalent} when they have the same kernel.
+A safe observer \(h\) is \emph{coarsest safe} if there is no safe observer
+\(g\) with \(g\preceq h\) and \(\ker h\subsetneq\ker g\).  Equivalently,
+\(h\) has no strict safe coarsening.
+\end{definition}
+
+Because codomains are restricted to images, every strict coarsening is a
+proper quotient and has strictly smaller image cardinality.  The converse is
+false: a smaller image need not be comparable in the refinement order.
 
 \begin{corollary}[Incomparability of a strict tradeoff]
 \label{cor:incomp}
@@ -348,9 +391,9 @@ If safe observers \(h,g\) satisfy
 then neither observer refines the other.
 \end{corollary}
 
-Thus a larger-observer/cheaper-reconstruction tradeoff cannot arise merely by
-moving upward along one refinement chain.  It requires two incomparable ways
-of allocating finite information.
+Thus a larger-image/cheaper-reconstruction tradeoff cannot arise merely by
+moving along one refinement chain.  It requires incomparable finite
+congruences rather than a simple increase of information.
 
 \section{Exact optimizer separation for CFGs}
 \label{sec:R}
@@ -492,7 +535,7 @@ graph with left vertices \(P_q\), right vertices \(C_t\), and an edge
 \label{lem:R-graph}
 For safe \(h\) and \(K\subseteq R_{m,q}\),
 \[
- L(\mathcal A_h(K))=R_{m,q}
+ L(\mathcal B_h(K))=R_{m,q}
 \]
 if and only if:
 \begin{enumerate}[label=(\roman*),leftmargin=*]
@@ -521,7 +564,7 @@ language inclusion.
 \label{thm:R-cost}
 For every safe observer \(h\),
 \[
- \min_{C\in\Lock_h(R_{m,q})}|C|
+ \min_{C\in\CS_h(R_{m,q})}|C|
  =
  qm+m^2+\kappa_h(q-1),
 \]
@@ -727,7 +770,7 @@ The affine hull of all \(\Phi([k]^r)\) has dimension \(r(k-1)\).
 \label{lem:X-affine}
 For any nonempty finite \(K\subseteq X_{k,r}\),
 \[
- w_{\mathbf i}\in L(\mathcal A_{\rm triv}(K))
+ w_{\mathbf i}\in L(\mathcal B_{2,\rm triv}(K))
  \quad\Longrightarrow\quad
  \Phi(\mathbf i)\in\operatorname{Aff}\{\Phi(\mathbf j):w_{\mathbf j}\in K\}.
 \]
@@ -754,7 +797,7 @@ hull of the sample vectors.
 For the trivial observer,
 \[
  \boxed{
- \min_{C\in\Lock_{\rm triv}(X_{k,r})}|C|
+ \min_{C\in\CS_{\rm triv}(X_{k,r})}|C|
  =
  1+r(k-1).
  }
@@ -797,7 +840,7 @@ while
 \[
  \boxed{
  \min_{h:\Safe_2(h;L_r)}
- \min_{C\in\Lock_h(L_r)}|C|
+ \min_{C\in\CS_h(L_r)}|C|
  =r+1
  }
 \]
