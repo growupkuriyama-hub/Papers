@@ -14,7 +14,7 @@ The dissertation is **not yet maintained as a monolithic TeX source**. The five 
 2. `02_fixed-h-mcfg/`
 3. `03_scl-compression/`
 4. `06_ofet/`
-5. `07_observation-is-not-enough/`
+5. `07_Minimal_Observation_Is_Not_Enough/`
 
 The source-of-truth for each research component remains its own paper directory. This directory records only the dissertation-level architecture, dependencies, terminology, status, and integration decisions.
 
