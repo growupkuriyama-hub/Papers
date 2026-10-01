@@ -17,6 +17,13 @@
 
 The historical file is preserved as an immutable archival baseline and should not be edited in place.
 
+## Submission-format preflight
+
+The current manuscript remains on the `article` class while the journal-specific
+submission requirement is being confirmed.  Elsevier recommends `elsarticle`
+for LaTeX manuscripts, but a template change should be made only if required
+for this TCS revision because it changes every page/line locator in the response.
+
 ## Formalization
 
 The theorem-facing Lean 4 formalization is maintained separately in
