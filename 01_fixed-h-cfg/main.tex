@@ -1155,7 +1155,7 @@ substitutability.
 \begin{theorem}[ordinary-thickness lower bound for $\mathcal B_h$]
 \label{thm:ordinary-thickness-lower}
 For the single fixed homomorphism $h_\circ$ above there is a family of
-reduced CFGs $G_n$ such that
+reduced SSBNF grammars $G_n$ such that
 \[
  L(G_n)=K_n\in\Ccf{h_\circ},\qquad
  |G_n|=\operatorname{poly}(n),\qquad
@@ -1173,28 +1173,53 @@ $\|C_L\|\le Q(|G|,\tau_G)$.
 \end{theorem}
 
 \begin{proof}
-Let $G_n$ have nonterminals
-$A_0,\ldots,A_n,Z_0,\ldots,Z_n$, start symbol $A_n$, and rules
+We give $G_n$ directly in SSBNF.  Introduce terminal carriers
+\[
+ T_{\mathtt l}\to\mathtt l,\quad
+ T_{\mathtt r}\to\mathtt r,\quad
+ T_{\mathtt a}\to\mathtt a,\quad
+ T_{\mathtt c}\to\mathtt c,\quad
+ T_{\mathtt 0}\to\mathtt 0,\quad
+ T_{\mathtt d}\to\mathtt d,
+\]
+a start symbol $S_0$ with $S_0\to A_n$, and for $0\le i\le n$ the auxiliary
+symbols below:
 \[
 \begin{aligned}
  Z_0&\to\mathtt 0,
- &Z_i&\to Z_{i-1}\mathtt 0
+ &Z_i&\to Z_{i-1}T_{\mathtt 0}
        &&(1\le i\le n),\\
- A_0&\to \mathtt l\mathtt a\mathtt r
-       \mid \mathtt l\mathtt c Z_0\mathtt d\mathtt r,\\
- A_i&\to \mathtt l A_{i-1}A_{i-1}\mathtt r
-       \mid
-       \mathtt l\mathtt c Z_i\mathtt d\mathtt r
+ U_i&\to T_{\mathtt c}Z_i,
+ &V_i&\to U_iT_{\mathtt d},
+ &W_i&\to T_{\mathtt l}V_i
+       &&(0\le i\le n),\\
+ E_0&\to T_{\mathtt l}T_{\mathtt a},
+ &A_0&\to E_0T_{\mathtt r}\mid W_0T_{\mathtt r},\\
+ B_i&\to A_{i-1}A_{i-1},
+ &E_i&\to T_{\mathtt l}B_i,
+ &A_i&\to E_iT_{\mathtt r}\mid W_iT_{\mathtt r}
        &&(1\le i\le n).
 \end{aligned}
 \]
-Here $Z_i\Rightarrow^*\mathtt 0^{i+1}$, so the grammar is reduced and
-generates $K_n$.  Its production-symbol count is $O(n)$.  Moreover
-$|\omega(Z_i)|=i+1$, $A_0$ has a terminal yield of length $3$, and for
-$i\ge1$ the shortcut rule gives a terminal yield of length $i+5$.  Hence
-$\tau_{G_n}\le n+5$.  Under any fixed reasonable grammar encoding,
-$|G_n|=\operatorname{poly}(n)$ (and the ordinary production-symbol count is
-linear in $n$).
+Every non-start rule is terminal or binary, and $S_0$ occurs on no
+right-hand side, so this is SSBNF.  Since
+$Z_i\Rightarrow^*\mathtt 0^{i+1}$ and
+$V_i\Rightarrow^*s_i$, the grammar generates exactly $K_n$; all displayed
+symbols occur on a successful derivation, so it is reduced.  The
+production-symbol count is $O(n)$.
+
+For thickness, $|\omega(Z_i)|=i+1$,
+$|\omega(U_i)|=i+2$, $|\omega(V_i)|=i+3$, and
+$|\omega(W_i)|=i+4$.  Also $|\omega(A_0)|=3$ and the shortcut alternative
+gives $|\omega(A_i)|\le i+5$ for $i\ge1$.  Finally
+$|\omega(B_i)|\le2(i+4)$ and
+$|\omega(E_i)|\le2i+9$.  Thus
+\[
+ \tau_{G_n}\le2n+9.
+\]
+Under any fixed reasonable grammar encoding,
+$|G_n|=\operatorname{poly}(n)$ (indeed the ordinary production-symbol count
+is linear in $n$).
 
 Lemma~\ref{lem:level-coded-substitutable} makes $K_n$ substitutable, hence
 $\sim_{h_\circ}$-substitutable; since $K_n$ is finite, it lies in
