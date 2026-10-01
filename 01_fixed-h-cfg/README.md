@@ -6,11 +6,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision working manuscript, internal v82 (round-2 preflight fixes).
-- `japanese/main_JP.tex` — Japanese reference version; synchronization with the v82 English preflight changes is pending.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, v82.
-
-The current source of truth for manuscript editing is `main.tex`.
+- `main.tex` — English major-revision manuscript, internal v83; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference version; synchronization with the current English manuscript is pending.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
 ## Historical baseline
 
@@ -22,4 +20,11 @@ The historical file is preserved as an immutable archival baseline and should no
 ## Formalization
 
 The theorem-facing Lean 4 formalization is maintained separately in
-`growupkuriyama-hub/tcs1-lean-formalization`.  Its archived manuscript baseline is v79.
+`growupkuriyama-hub/tcs1-lean-formalization`.
+
+- The immutable historical release is `tcs1-v79-formalization-1.0.0`, archived on Zenodo at DOI `10.5281/zenodo.22939434`.
+- The v83 theorem-facing re-verification has been completed and merged into the formalization repository's `main` branch.
+- The v83 audit covers the revised fibre restriction, typed-thickness and fixed-window bounds, the level-coded Appendix argument, the compact `R_n,R_n^-` grammars, reducedness, ordinary-thickness bounds, and the exponential characteristic-sample lower-bound package.
+- The integration checkpoint passed the repository CI gates, including full `TCS1.All`, no-`sorry`, and no-project-axiom checks.
+
+The manuscript proofs remain self-contained; the Lean development is a reproducibility and verification artifact, not a substitute for the paper proofs.
