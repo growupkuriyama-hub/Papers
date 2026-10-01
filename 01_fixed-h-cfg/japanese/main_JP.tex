@@ -639,7 +639,7 @@ $uxv,uyv\in K_n$ とする．木の構文解析は左から右へ決定的であ
 
 \begin{theorem}[$\mathcal B_h$ に対する通常厚み下界]
 \label{thm:ordinary-thickness-lower}
-上で固定した単一の準同型 $h_\circ$ に対して，縮約済み CFG の族 $G_n$ が存在し，
+上で固定した単一の準同型 $h_\circ$ に対して，縮約済み SSBNF 文法の族 $G_n$ が存在し，
 \[
  L(G_n)=K_n\in\Ccf{h_\circ},\qquad
  |G_n|=\operatorname{poly}(n),\qquad
@@ -657,22 +657,52 @@ $uxv,uyv\in K_n$ とする．木の構文解析は左から右へ決定的であ
 \end{theorem}
 
 \begin{proof}
-$G_n$ の非終端記号を
-$A_0,\ldots,A_n,Z_0,\ldots,Z_n$，開始記号を $A_n$ とし，規則を
+$G_n$ を直接 SSBNF で与える．まず終端記号用の非終端記号
+\[
+ T_{\mathtt l}\to\mathtt l,\quad
+ T_{\mathtt r}\to\mathtt r,\quad
+ T_{\mathtt a}\to\mathtt a,\quad
+ T_{\mathtt c}\to\mathtt c,\quad
+ T_{\mathtt 0}\to\mathtt 0,\quad
+ T_{\mathtt d}\to\mathtt d
+\]
+を導入し，開始記号 $S_0$ に対して $S_0\to A_n$ とする．さらに
+$0\le i\le n$ に対して次の補助非終端記号と規則を置く：
 \[
 \begin{aligned}
  Z_0&\to\mathtt 0,
- &Z_i&\to Z_{i-1}\mathtt 0
+ &Z_i&\to Z_{i-1}T_{\mathtt 0}
        &&(1\le i\le n),\\
- A_0&\to \mathtt l\mathtt a\mathtt r
-       \mid \mathtt l\mathtt c Z_0\mathtt d\mathtt r,\\
- A_i&\to \mathtt l A_{i-1}A_{i-1}\mathtt r
-       \mid
-       \mathtt l\mathtt c Z_i\mathtt d\mathtt r
-       &&(1\le i\le n)
+ U_i&\to T_{\mathtt c}Z_i,
+ &V_i&\to U_iT_{\mathtt d},
+ &W_i&\to T_{\mathtt l}V_i
+       &&(0\le i\le n),\\
+ E_0&\to T_{\mathtt l}T_{\mathtt a},
+ &A_0&\to E_0T_{\mathtt r}\mid W_0T_{\mathtt r},\\
+ B_i&\to A_{i-1}A_{i-1},
+ &E_i&\to T_{\mathtt l}B_i,
+ &A_i&\to E_iT_{\mathtt r}\mid W_iT_{\mathtt r}
+       &&(1\le i\le n).
 \end{aligned}
 \]
-とする．$Z_i\Rightarrow^*\mathtt 0^{i+1}$ なので，この文法は縮約済みで $K_n$ を生成する．生成規則中の記号数は $O(n)$ である．また $|\omega(Z_i)|=i+1$ であり，$A_0$ は長さ $3$ の終端生成語をもち，$i\ge1$ では短絡規則が長さ $i+5$ の終端生成語を与える．従って $\tau_{G_n}\le n+5$ である．固定した任意の妥当な文法符号化の下で $|G_n|=\operatorname{poly}(n)$ であり，通常の生成規則記号数は $n$ に関して線形である．
+非開始規則はすべて終端規則または二項規則であり，$S_0$ は右辺に現れないので，これは SSBNF である．また
+$Z_i\Rightarrow^*\mathtt 0^{i+1}$ および
+$V_i\Rightarrow^*s_i$ だから，この文法はちょうど $K_n$ を生成する．表示したすべての非終端記号は成功導出上に現れるので縮約済みでもある．生成規則中の記号数は $O(n)$ である．
+
+厚みについては，
+$|\omega(Z_i)|=i+1$，
+$|\omega(U_i)|=i+2$，
+$|\omega(V_i)|=i+3$，
+$|\omega(W_i)|=i+4$ である．また
+$|\omega(A_0)|=3$ であり，$i\ge1$ では短絡側から
+$|\omega(A_i)|\le i+5$ を得る．さらに
+$|\omega(B_i)|\le2(i+4)$，
+$|\omega(E_i)|\le2i+9$ なので，
+\[
+ \tau_{G_n}\le2n+9
+\]
+である．固定した任意の妥当な文法符号化の下で
+$|G_n|=\operatorname{poly}(n)$ であり，通常の生成規則記号数は実際に $n$ に関して線形である．
 
 補題~\ref{lem:level-coded-substitutable} により $K_n$ は通常の意味で代入可能であり，従って $\sim_{h_\circ}$-代入可能でもある．さらに $K_n$ は有限なので $K_n\in\Ccf{h_\circ}$ である．
 \[
