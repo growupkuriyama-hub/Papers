@@ -10,6 +10,9 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{plain}
 \newcommand{\D}{\mathcal{D}}
 \newcommand{\WitnessSet}{\mathsf{W}}
 \newcommand{\cf}{\mathrm{cf}}
@@ -313,10 +316,12 @@ A second useful observation gives a simple sufficient condition on the typing.
 If $\ker h$, restricted to $\Sigma^+$, refines $\equiv_L$, then%
 \footnote{If one required $\ker h\subseteq\equiv_L$ on all of $\Sigma^*$, the condition would be too strong: for the trivial monoid, $\lambda$ and every nonempty word have the same type, so even the ordinarily substitutable language $a^+$ would be excluded because $\lambda\not\equiv_{a^+}a$.}
 $L\in\mathsf{RS}_h$, since equal $h$-types are already syntactically congruent.
-This is not necessary: Proposition~\ref{prop:linear-separator-example} below
-gives a four-element fixed-$h$ example whose syntactic congruence has infinite
-index whereas every finite-monoid kernel has finite index.  Thus fixed-$h$ substitutability is
-strictly weaker than requiring $\ker h$ to refine the full syntactic congruence.
+The converse fails already for ordinary substitutability.  Clark--Eyraud's
+language $L_0=\{a^ncb^n:n>0\}$ is substitutable~\cite[Section~6.1]{clark-eyraud2007},
+hence belongs to the trivial-monoid slice, but $\equiv_{L_0}$ has infinite
+index: if $1\le r<s$, then $(a,cb^{r+1})$ is a context of $a^r$ but not of
+$a^s$.  Thus fixed-$h$ substitutability is strictly weaker than requiring
+$\ker h$ to refine the full syntactic congruence.
 
 \begin{proposition}\label{prop:regular-auto}
 A language is regular iff it has the form $h^{-1}(\mathsf{Acc})$ for some homomorphism
@@ -452,10 +457,7 @@ conservative sequential learner $\mathcal A_h$ such that:
 \item $\mathcal B_h$ is sample-consistent and $\mathcal B_h(K)$ is
 constructible in time polynomial in $\|K\|$;
 \item every $L\in\Ccf{h}$ has a finite characteristic sample for
-$\mathcal B_h$; for a nonempty target represented by the reduced binary
-normal form introduced in Section~\ref{sec:typing}, one such sample has size
-polynomial in the grammar size and in the typed-thickness parameter introduced
-in Section~\ref{sec:typed-thickness};
+$\mathcal B_h$;
 \item $\mathcal A_h$ identifies every nonempty $L\in\Ccf{h}$ in Gold's
 sense, each update taking time polynomial in the data seen so far;
 \item for fixed $(k,\ell)$, taking $h=h_{k,\ell}$, the sample in~(ii) can
@@ -464,12 +466,9 @@ representing the target;
 \item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can be
 chosen polynomial in $|R|$ for any linear CFG $R$ representing $L$.
 \end{enumerate}
-In contrast, Section~\ref{subsec:ordinary-thickness-lower} constructs one
-fixed two-element homomorphism and nested finite targets in its fixed-$h$
-class, with reduced CFGs of polynomial size and ordinary thickness $O(n)$,
-such that every characteristic sample of the larger target has size
-$2^{\Omega(n)}$ for every set-driven operator with characteristic samples
-for both targets, in particular for $\mathcal B_h$ at that fixed typing.
+The quantitative mechanism behind items~(iv)--(v), together with its
+limitation for arbitrary fixed typings, is developed in
+Sections~\ref{sec:typed-thickness}--\ref{sec:linear}.
 \end{theorem}
 
 The class $\Ccf{h}$ does not contain all finite languages, in accordance
@@ -530,7 +529,7 @@ $L(\widehat G(K))\subseteq L$.
 \end{theorem}
 
 \begin{proof}
-Induct on the height of a derivation tree rooted at $[x:u,v]$ and prove simultaneously that
+Induct on the height of a derivation tree rooted at $[x:u,v]$ to prove
 \begin{equation}\label{eq:soundness-invariant}
  [x:u,v]\Rightarrow_{\widehat G(K)}^*w
  \quad\Longrightarrow\quad
@@ -587,6 +586,21 @@ Every rebuild uses the whole accumulated sample $K_n$.  Although
 $\mathcal B_h$ is set-driven, the grammar on which $\mathcal A_h$ stabilizes
 may depend on the presentation order; only eventual syntactic stabilization
 to a grammar for the target is claimed (Corollary~\ref{cor:ilt}).
+
+\paragraph{Order dependence.}
+For infinite targets this dependence can be seen directly.  Let
+$L\in\Ccf{h}$ be infinite and let $T$ be a text on which $\mathcal A_h$
+is constant from stage $n_0$ onward.  Choose $w\in L$ longer than every
+word in $K_{n_0}$, which is possible because an infinite language over a
+finite alphabet has unbounded word length.  The limit grammar on $T$ is
+$\mathcal B_h(K_m)$ for some last rebuild stage $m\le n_0$ and therefore
+has no nonterminal $[w:\lambda,\lambda]$.  On the text obtained by placing
+$w$ first and then following $T$, the first hypothesis is
+$\mathcal B_h(\{w\})$, and every later rebuild uses an accumulated sample
+still containing $w$; hence every later hypothesis contains
+$[w:\lambda,\lambda]$.  The two stabilized grammars are therefore
+syntactically different although both eventually generate $L$.  The
+reviewer's example $\{a^ncb^n:n\ge0\}$ is an instance of this phenomenon.
 
 \section{Completeness via Yield-Typed Refinement and Finite Witnesses}
 \label{sec:typing}
@@ -780,6 +794,15 @@ $L(H_{n_0})=L$; in this case no hypothesis change after stage $n_0$ is
 needed.
 \end{proof}
 
+This is the delayed-rebuild phenomenon highlighted by
+Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016}:
+after a characteristic sample has been seen, a conservative learner can
+still retain an earlier incorrect hypothesis if every newly seen example is
+already generated by it; a later positive example outside that hypothesis
+forces a rebuild from an accumulated sample that already contains the
+characteristic data.  The proof above spells out this stabilization argument
+for $\mathcal B_h$.
+
 \section{Complexity of the Reconstruction Step}
 \label{sec:complexity}
 
@@ -909,75 +932,37 @@ Theorem~\ref{thm:reconstruction-fixed-h} gives characteristicity.
 The typed thickness cannot in general be replaced by the ordinary source
 thickness through the full-refinement argument.
 
-\begin{proposition}[exponential source-to-typed thickness gap]
+\begin{remark}[exponential source-to-typed thickness gap]
 \label{prop:typed-thickness-gap}
-There is a fixed homomorphism $h_{\mathtt c}$ into a two-element monoid and a
-family of reduced SSBNF grammars $G_n^{\mathtt c}$ whose production-symbol count is
-$O(n)$ and whose ordinary thickness is $\tau_{G_n^{\mathtt c}}=1$, such that
-$L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+\in\Ccf{h_{\mathtt c}}$ but
-\[
- \tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge 2^n.
-\]
-Consequently, for this fixed $h_{\mathtt c}$ there is no polynomial bound on
-the typed thickness in terms of source grammar size and ordinary thickness.
-\end{proposition}
-
-\begin{proof}
-Let $M_{\mathtt c}=\{1,\zeta\}$, where $1$ is the identity and $\zeta$ is a
-zero, and define
-\[
- h_{\mathtt c}(\mathtt a)=1,\qquad
- h_{\mathtt c}(\mathtt c)=\zeta.
-\]
-For $n\ge1$, let $G_n^{\mathtt c}$ have the rules
+Typed thickness need not be polynomially bounded by ordinary source
+thickness.  Let $M_{\mathtt c}=\{1,\zeta\}$ be the two-element monoid
+with zero $\zeta$, let
+$h_{\mathtt c}(\mathtt a)=1$ and $h_{\mathtt c}(\mathtt c)=\zeta$,
+and for $n\ge1$ let $G_n^{\mathtt c}$ have
 \[
 \begin{aligned}
- S_0&\to Y,\\
- Y&\to \mathtt a\mid\mathtt c\mid YY\mid A_nC,\\
- C&\to\mathtt c,\qquad A_0\to\mathtt a,\\
+ S_0&\to Y, &
+ Y&\to \mathtt a\mid\mathtt c\mid YY\mid A_nC, &
+ C&\to\mathtt c,\\
+ A_0&\to\mathtt a, &
  A_i&\to A_{i-1}A_{i-1}\mid\mathtt c
- \qquad(1\le i\le n).
+ \quad(1\le i\le n).
 \end{aligned}
 \]
-This is reduced and in SSBNF.  The rules
-$Y\to\mathtt a\mid\mathtt c\mid YY$ already generate every nonempty word over
-$\{\mathtt a,\mathtt c\}$, while the additional rule $Y\to A_nC$ generates
-only such words.  Hence $L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+$.  Every
-nonterminal has a one-letter terminal yield, so $\tau_{G_n^{\mathtt c}}=1$, and the
-production-symbol count is $O(n)$.
-
-Consider now the trimmed full $h_{\mathtt c}$-typed refinement.  Since
-$\zeta$ is a zero, the only product in $M_{\mathtt c}$ equal to $1$ is
-$1\cdot1$.  Therefore
-\[
- (A_0)_1\to\mathtt a,\qquad
- (A_i)_1\to(A_{i-1})_1(A_{i-1})_1
- \quad(1\le i\le n),
-\]
-and no terminal rule to $\mathtt c$ is available from $(A_i)_1$.  Induction
-gives
-\[
- L_{\widetilde G_n^{\mathtt c}}((A_i)_1)=\{\mathtt a^{2^i}\}.
-\]
-Moreover $(A_n)_1$ survives trimming: the full refinement contains the
-successful derivation
-\[
- \widetilde S\to Y_\zeta
- \to (A_n)_1C_\zeta
- \Rightarrow^*\mathtt a^{2^n}\mathtt c.
-\]
-Thus the canonical yield of $(A_n)_1$ has length $2^n$, proving the displayed
-lower bound.  Finally, $\{\mathtt a,\mathtt c\}^+$ is
-$\sim_{h_{\mathtt c}}$-substitutable because every nonempty factor has the
-same distribution $\Sigma^*\times\Sigma^*$.  Since the fixed encoding size of
-$G_n^{\mathtt c}$ is polynomial in its $O(n)$ production-symbol count, $2^n$ is
-superpolynomial in $|G_n^{\mathtt c}|$ while $\tau_{G_n^{\mathtt c}}=1$.
-\end{proof}
-
-Proposition~\ref{prop:typed-thickness-gap} is a presentation-level
-obstruction: its target language has short characteristic data.  The next
-result gives an ordinary-thickness lower bound that is independent of the
-internal construction of a set-driven reconstruction operator.
+These reduced SSBNF grammars have size $O(n)$, ordinary thickness $1$, and
+language $\{\mathtt a,\mathtt c\}^+\in\Ccf{h_{\mathtt c}}$.
+In the trimmed typed refinement, the only product equal to $1$ is
+$1\cdot1$, so
+$L((A_i)_1)=\{\mathtt a^{2^i}\}$ by induction.  The symbol $(A_n)_1$
+survives trimming through
+$\widetilde S\to Y_\zeta\to(A_n)_1C_\zeta$, and therefore
+$\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge2^n$.
+Thus no polynomial bound on typed thickness in terms of source grammar size
+and ordinary thickness is possible even for this fixed typing.  The target
+itself has short characteristic data, so this is only a gap for the canonical
+full-refinement witnesses; Theorem~\ref{thm:ordinary-thickness-lower}
+gives the operator-independent lower bound.
+\end{remark}
 
 \subsection{A set-driven ordinary-thickness lower bound}
 \label{subsec:ordinary-thickness-lower}
@@ -1223,45 +1208,6 @@ $\|C_n\|\ge|z_n|+1=5\cdot2^n-1$, which is exponential in $n$ while the
 two displayed representation parameters are linear.
 \end{proof}
 
-\paragraph{Scope and consistency with the fixed-window bound.}
-The lower bound concerns $\Ccf{h_\circ}$ rather than the larger target in
-isolation.  The language $\mathcal T_n$ is ordinarily substitutable, hence
-belongs to the $(0,0)$ fixed-window class.  In contrast,
-$\mathcal T_n^-$ is not ordinarily substitutable for $n\ge1$: write
-$z_n=p_n\mathtt a q_n$ with $p_n:=\mathtt l^{\,n+1}$ and obtain
-$\bar q_n$ from $q_n$ by replacing one other height-$0$ body
-$\mathtt a$ by $s_0$.  Then $p_n\mathtt a$ and $p_ns_0$ share
-$(\lambda,\bar q_n)$ in $\mathcal T_n^-$, whereas
-$(\lambda,q_n)$ is a context of $p_ns_0$ but not of
-$p_n\mathtt a$; their $h_\circ$-types are different.
-
-More generally, for every fixed $(k,\ell)$,
-$\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ for all sufficiently large $n$.
-Otherwise $\mathcal B_{h_{k,\ell}}$ would have characteristic samples for
-both nested targets by Theorem~\ref{thm:reconstruction-fixed-h}; the nested
-lemma would force the sample for $\mathcal T_n$ to contain $z_n$, contradicting
-the polynomial fixed-window bound of
-Corollary~\ref{cor:window-transfer} for the polynomial-size,
-$O(n)$-thickness grammar $R_n$.
-
-The general lower-bound argument uses only the characteristic-sample
-semantics of Section~\ref{sec:learning}; its application to
-$\mathcal B_{h_\circ}$ uses
-Theorem~\ref{thm:reconstruction-fixed-h}.  It is measured against arbitrary
-reduced CFG representations and does not exclude bounds relative to a
-restricted normal-form representation class.  A complementary direction is
-the local-substitutability framework of Coste, Garet and
-Nicolas~\cite{coste-garet-nicolas2012}, which localizes the substitutability
-condition rather than replacing the comparison bias by an arbitrary finite
-typing.  Coste--Nicolas~\cite{coste-nicolas2019} obtain IPTtD for
-$k,\ell$-local substitutable languages represented by RNF context-free
-grammars.  Our negative result therefore does not conflict with that positive
-RNF result: the language condition and the representation class are both
-different.  Thus qualitative Gold identification with polynomial-time
-updates under arbitrary fixed $h$ does not imply a polynomial
-characteristic-data bound in ordinary thickness for arbitrary reduced CFG
-representations.
-
 \section{Fixed-Window Thick Data}
 \label{sec:fixed-window-thick}
 
@@ -1269,7 +1215,7 @@ Both positive quantitative regimes below are obtained by bounding
 $\tau_h^{\mathrm{typ}}$ and invoking
 Corollary~\ref{cor:typed-thickness-data}.  For $h_{k,\ell}$, a typed
 nonterminal need preserve only a bounded prefix and suffix, which controls
-typed thickness; Proposition~\ref{prop:typed-thickness-gap} shows that no
+typed thickness; Remark~\ref{prop:typed-thickness-gap} shows that no
 such transfer is available for general $h$.  Characteristic-sample bounds
 polynomial in representation size and thickness are the data component of
 identification in polynomial time and thick data (IPTtD) in the terminology
@@ -1376,6 +1322,25 @@ The polynomial depends on the fixed window and alphabet; no uniform bound in
 variable $k,\ell$ is asserted.  This is a characteristic-data statement for
 the batch reconstruction; Gold stabilization of the conservative sequential
 learner is Corollary~\ref{cor:ilt}.
+
+\paragraph{Consistency with the general lower bound.}
+Theorem~\ref{thm:ordinary-thickness-lower} does not conflict with the
+fixed-window result.  The larger target $\mathcal T_n$ is ordinarily
+substitutable, but for $n\ge1$ the nested target $\mathcal T_n^-$ is not:
+write $z_n=p_n\mathtt a q_n$ with $p_n:=\mathtt l^{\,n+1}$ and obtain
+$\bar q_n$ by replacing one other height-$0$ body $\mathtt a$ by $s_0$.
+Then $p_n\mathtt a$ and $p_ns_0$ share the context
+$(\lambda,\bar q_n)$ in $\mathcal T_n^-$, whereas $(\lambda,q_n)$ is
+a context of $p_ns_0$ but not of $p_n\mathtt a$.  More generally, for
+every fixed $(k,\ell)$, $\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ for all
+sufficiently large $n$: otherwise the nested-target lemma together with
+Corollary~\ref{cor:window-transfer} would force the exponentially long
+$z_n$ into a polynomially bounded fixed-window characteristic sample.
+The general lower bound is measured against arbitrary reduced CFG
+representations and therefore also does not conflict with the IPTtD result
+of Coste--Nicolas~\cite{coste-nicolas2019} for $k,\ell$-local
+substitutable languages represented in RNF, where both the language
+condition and representation class are different.
 
 \section{The Linear Subclass}
 \label{sec:linear}
@@ -1526,12 +1491,12 @@ them on the same branch.  Hence $\D_L(x)=\D_L(y)$.
 
 The language is not Clark--Eyraud substitutable because $c,e\in L$ share the
 empty context but $(a,b)\in\D_L(e)\setminus\D_L(c)$.  Finally fix
-$k,\ell$ and put $m:=2\max\{1,k+\ell\}$,
+$k,\ell$ and put $N:=2\max\{1,k+\ell\}$,
 $w_e:=a^keb^\ell$, $w_c:=a^kcb^\ell$.  These factors have the same
 length-$k$ prefix and length-$\ell$ suffix and share
-$(a^{m-k},b^{m-\ell})$, whereas
+$(a^{N-k},b^{N-\ell})$, whereas
 \[
- (a^{m+1-k},b^{m+1-\ell})
+ (a^{N+1-k},b^{N+1-\ell})
  \in\D_L(w_e)\setminus\D_L(w_c).
 \]
 The \hyperref[crit:kl]{fixed-window counterexample criterion} therefore gives
@@ -1609,15 +1574,16 @@ Let nonempty $x,y$ satisfy $h_\star(x)=h_\star(y)$ and share a context $(u,v)$.
 Since $uxv,uyv\in\Delta^*$, comparison of total balances gives
 $\beta(x)=\beta(y)$.
 
-Applying \textup{($\star$)} to $sxt$ shows that, for a fixed context $(s,t)$,
-the membership conditions depending on $x$ are determined by
+Applying \textup{($\star$)} to $u'xv'$ shows that, for a fixed context
+$(u',v')$, the membership conditions depending on $x$ are determined by
 $\operatorname{fst}(x)$, $\operatorname{lst}(x)$, $\beta(x)$, and whether
-$\beta(s)\in\mathcal E(x)$.
+$\beta(u')\in\mathcal E(x)$.
 Indeed, the prefix-nonnegativity and zero-height conditions internal to $x$ are
-precisely encoded by $\beta(s)\in\mathcal E(x)$.  A possible $ba$ at the
-boundary $s|x$ is determined by $\operatorname{fst}(x)$ and $\beta(s)$, while
-the boundary $x|t$ and all height conditions internal to $t$ depend only on
-the exit height $\beta(s)+\beta(x)$ and on $\operatorname{lst}(x)$.  It
+precisely encoded by $\beta(u')\in\mathcal E(x)$.  A possible $ba$ at the
+boundary $u'|x$ is determined by $\operatorname{fst}(x)$ and $\beta(u')$,
+while the boundary $x|v'$ and all height conditions internal to $v'$ depend
+only on the exit height $\beta(u')+\beta(x)$ and on
+$\operatorname{lst}(x)$.  It
 therefore suffices to prove $\mathcal E(x)=\mathcal E(y)$.
 
 If $\operatorname{ba}(x)=\operatorname{ba}(y)=1$, any internal occurrence of
@@ -1689,9 +1655,6 @@ Proposition~\ref{prop:regular-auto} gives membership in $\mathsf{RS}$.
 For every $\rho\ge2$, $\mathrm{CTR}_\rho$ is not $(k,\ell)$-substitutable for
 any $k,\ell\ge0$.
 \end{theorem}
-\noindent
-We thank an anonymous reviewer for suggesting that this separation be
-presented by a direct two-word witness.
 \begin{proof}
 Fix $k,\ell\ge0$ and put
 $s:=(\uparrow\downarrow)^k\uparrow^{\rho-1}\#^\ell$ and
@@ -1938,7 +1901,10 @@ public, commercial, or not-for-profit sectors.
 The author thanks Makoto Kanazawa and Ryo Yoshinaka for guidance,
 encouragement, and help with relevant literature, and the two anonymous
 reviewers for careful and constructive reports that substantially improved
-the paper.  Any remaining errors are the author's responsibility.
+the paper, in particular by prompting the order-dependence clarification in
+Section~\ref{sec:algo} and the direct two-word witness in
+Theorem~\ref{thm:ctr-non-kl}.  Any remaining errors are the author's
+responsibility.
 
 \appendix
 \section{Fixed-window witness bounds and thickness-preserving normalization}
@@ -2243,7 +2209,7 @@ doi:10.1007/978-3-662-48395-4\_2.
 
 \bibitem{coste-garet-nicolas2012}
 F.~Coste, G.~Garet, and J.~Nicolas.
-\newblock Locally substitutable languages for enhanced inductive leaps.
+\newblock Local substitutability for sequence generalization.
 \newblock In \emph{Proceedings of ICGI 2012}, JMLR Workshop and Conference
 Proceedings 21, pp.~97--111, 2012.
 
