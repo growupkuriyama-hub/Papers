@@ -1041,59 +1041,13 @@ Then $z_i$ is the unique $\mathtt c$-free word of $\mathcal T_i$, and
  \label{eq:clean-tree-length}
 \end{equation}
 
-\paragraph{Tree representation and terminology.}
-View $\mathtt l,\mathtt r$ as matching tree brackets and put
-\[
- b_0:=\mathtt a,\qquad b_i:=z_{i-1}z_{i-1}\quad(i\ge1).
-\]
-We make the tree model used below explicit.  A node of \emph{residual
-height} $0$ is either a clean leaf with body $\mathtt a$ or a shortcut with
-body $s_0$.  Recursively, a node of residual height $i\ge1$ is either a
-shortcut with body $s_i$, or a binary node with two ordered children of
-residual height $i-1$.  Serialization surrounds every node by
-$\mathtt l,\mathtt r$; a binary node serializes the two child words in
-order.  By the definition of $\mathcal T_i$, its words are exactly the
-serializations of residual-height-$i$ trees.  A subtree is \emph{clean} if
-it contains no shortcut node.  There is a unique clean tree of each residual
-height $i$, and its serialization is $z_i$.
-
-Shortcut nodes in a parsed tree form an \emph{antichain}, meaning that no
-shortcut node is an ancestor of another: choosing a shortcut replaces the
-entire subtree rooted at that node.  Conversely, an antichain of nodes of the
-clean height-$n$ tree determines one word of $\mathcal T_n$ by replacing
-each selected clean subtree by the corresponding shortcut.  Thus the set of
-shortcut nodes is an equivalent description of a parsed word.
-
-\paragraph{Unique parsing and replacement sites.}
-Every word of $\mathcal T_n$ has exactly one such tree parse.  Indeed, the
-outermost brackets determine the root.  At residual height $0$, the first
-body symbol is $\mathtt a$ in the clean case and $\mathtt c$ in the shortcut
-case.  At positive residual height, it is $\mathtt c$ in the shortcut case
-and $\mathtt l$ in the binary case.  In the binary case ordinary bracket
-matching uniquely determines the end of the first child and hence the start
-of the second; induction determines both child parses.
-
-This unique parse also identifies the replacement sites used below.  A
-literal occurrence of $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is a shortcut
-body of residual height $i$: shortcut bodies contain no brackets, and the run
-of exactly $i+1$ zeros followed by $\mathtt d$ distinguishes its level.
-A literal occurrence of $z_i$ is the serialization of a clean
-residual-height-$i$ subtree.  To see this, $z_i$ is bracket-balanced and,
-relative to its first $\mathtt l$, returns to the entering bracket depth only
-at its final $\mathtt r$, so an occurrence cannot cross a node boundary;
-induction then forces the enclosed subtree to be the unique clean one.
-Finally, for $i\ge1$, an occurrence of
-$b_i=z_{i-1}z_{i-1}$ consists of the two adjacent clean children of one
-residual-height-$i$ node; it cannot cross a parent boundary because a closing
-$\mathtt r$ of that parent would intervene.  For $i=0$, $b_0=\mathtt a$ is
-the clean leaf body.  Consequently the literal toggle
-\begin{equation}
- s_i\longleftrightarrow b_i
- \tag{$\dagger$}
-\end{equation}
-at a parsed residual-height-$i$ node replaces a shortcut by the clean subtree,
-or conversely a clean subtree by a shortcut, and remains inside
-$\mathcal T_n$.
+The tree-parsing argument needed for the lower bound is elementary but
+notationally longer than the main line of the proof, so we defer its details to
+Appendix~\ref{app:level-coded-substitutability}.  The key point is that every
+word of $\mathcal T_n$ has a unique residual-height tree parse and is obtained
+from the clean tree $z_n$ by replacing an antichain of clean subtrees by the
+level-coded shortcuts $s_i$.  The level code makes the replacement sites
+unambiguous.
 
 \begin{lemma}[level-coded tree languages are substitutable]
 \label{lem:level-coded-substitutable}
@@ -1102,32 +1056,7 @@ Clark--Eyraud sense.
 \end{lemma}
 
 \begin{proof}
-By the unique-parsing fact above, every word of $\mathcal T_n$ is obtained
-from the clean tree $z_n$ by applying~($\dagger$) at an antichain of tree
-nodes, and that antichain is uniquely determined by the word.
-
-Suppose $uxv,uyv\in\mathcal T_n$.  Any node at which their two shortcut
-antichains differ lies wholly between the cut after $u$ and the cut before
-$v$.  If such a node body began before the left cut, its first body symbol
-($\mathtt c$ versus $\mathtt a$ or $\mathtt l$) would differ inside the
-common prefix.  If it ended after the right cut, its last body symbol
-($\mathtt d$ versus $\mathtt a$ or $\mathtt r$) would differ inside the
-common suffix.
-
-Starting from $uxv$, expand every shortcut occurring in its antichain but
-not in that of $uyv$.  All these legal replacements lie inside the displayed
-factor $x$.  After those expansions, introduce the shortcut nodes belonging
-to the antichain of $uyv$ but not to that of $uxv$; the required bodies are
-clean because the target shortcut set is an antichain.  This gives a finite
-sequence of legal replacements, all inside $x$, that transforms $x$ into
-$y$.
-
-If $pxq\in\mathcal T_n$, the same literal replacement sequence can be
-performed inside that occurrence of $x$; the unique-parsing fact guarantees
-that every step is again legal and remains in $\mathcal T_n$.  It ends at
-$pyq$.  Thus
-$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$; reversing the
-sequence gives equality.
+See Appendix~\ref{app:level-coded-substitutability}.
 \end{proof}
 
 \begin{theorem}[set-driven ordinary-thickness lower bound]
@@ -2114,6 +2043,58 @@ $X_i=X_j$ with $i<j$, deleting the segment between the two occurrences gives
 a valid derivation with fewer spine steps and hence a shorter yield.  Thus the
 $t+1$ typed spine symbols are distinct non-start symbols, so
 $t+1\le n_t$.  Hence $|\omega(X)|\le n_t$ in all cases.
+\end{proof}
+
+\section{Substitutability of the level-coded tree languages}
+\label{app:level-coded-substitutability}
+
+\begin{proof}[Proof of Lemma~\ref{lem:level-coded-substitutable}]
+View $\mathtt l,\mathtt r$ as matching tree brackets.  A residual-height-$0$
+node is either the clean leaf with body $\mathtt a$ or the shortcut with body
+$s_0$; a residual-height-$i\ge1$ node is either the shortcut with body $s_i$
+or a binary node with two ordered children of residual height $i-1$.
+Serialization surrounds each node by $\mathtt l,\mathtt r$.  Hence
+$\mathcal T_i$ is exactly the set of serializations of residual-height-$i$
+trees, and $z_i$ is the unique serialization containing no shortcut.
+
+Every word in $\mathcal T_n$ has a unique parse.  At height $0$, the first
+body symbol is $\mathtt a$ in the clean case and $\mathtt c$ in the shortcut
+case; at positive height it is $\mathtt l$ in the binary case and
+$\mathtt c$ in the shortcut case.  In the binary case bracket matching
+uniquely separates the two children, so induction determines the whole tree.
+The shortcut nodes therefore form a uniquely determined antichain: choosing a
+shortcut removes the entire subtree rooted there.
+
+For $i\ge1$ put $b_i:=z_{i-1}z_{i-1}$ and put $b_0:=\mathtt a$.
+A literal occurrence of $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is the body
+of a residual-height-$i$ shortcut, because shortcut bodies contain no brackets
+and the zero run records the level.  A literal occurrence of $z_i$ is a clean
+residual-height-$i$ subtree: it is bracket-balanced and cannot cross a node
+boundary, and induction fixes the enclosed clean tree.  Likewise an
+occurrence of $b_i$ consists of the two clean children of one
+residual-height-$i$ node.  Consequently the literal replacement
+\[
+ s_i\longleftrightarrow b_i
+\]
+is legal exactly at a residual-height-$i$ node and stays inside
+$\mathcal T_n$.
+
+Now suppose $uxv,uyv\in\mathcal T_n$.  Any node on which their shortcut
+antichains differ lies wholly between the cut after $u$ and the cut before
+$v$: if such a node started before the left cut, the first body symbol
+($\mathtt c$ versus $\mathtt a$ or $\mathtt l$) would already differ in the
+common prefix; if it ended after the right cut, the last body symbol
+($\mathtt d$ versus $\mathtt a$ or $\mathtt r$) would differ in the common
+suffix.  Starting from $uxv$, first expand shortcuts present only in its
+antichain and then introduce shortcuts present only in the antichain of
+$uyv$.  All replacements occur inside the displayed factor and transform
+$x$ into $y$.
+
+If $pxq\in\mathcal T_n$, the same literal replacement sequence can be
+performed inside that occurrence of $x$: unique parsing makes every step
+legal, so the result is $pyq\in\mathcal T_n$.  Thus
+$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$, and reversing the
+sequence gives equality.  Therefore $\mathcal T_n$ is substitutable.
 \end{proof}
 
 \begin{thebibliography}{99}
