@@ -36,18 +36,17 @@ We study distributional learning of context-free languages under a fixed
 recognizable congruence $\sim_h$, the kernel of a homomorphism
 $h:\Sigma^*\to M$ into a finite monoid: nonempty factors with equal $h$-values
 that share one context must share all contexts.  For fixed $h$ we define a
-set-driven reconstruction operator that recovers every context-free
-$\sim_h$-substitutable target exactly from finitely many positive witnesses,
-and a conservative sequential learner that identifies every nonempty such
-target in the limit; reconstruction and updates take polynomial time.  The
-canonical witnesses are polynomial in grammar size and the thickness of a
-yield-typed refinement, which can be exponentially larger than ordinary
-thickness.  For one fixed two-element typing this cost cannot be removed by
-any set-driven operator: nested finite targets with reduced CFGs of polynomial
-size and ordinary thickness force an exponentially long word into every
-characteristic sample of the larger target whenever the same operator has
-characteristic samples for both targets.  By contrast, characteristic data
-are polynomial in reduced CFG size and ordinary thickness for every fixed
+set-driven (sample-set based) reconstruction operator that recovers every
+context-free $\sim_h$-substitutable target exactly from finitely many positive
+witnesses, and a conservative sequential learner that identifies every
+nonempty such target in the limit; reconstruction and updates take polynomial
+time.  The size of the canonical witnesses is controlled by a finite
+target-side refinement parameter introduced later, and this parameter can be
+exponentially larger than the corresponding source-grammar thickness.  For
+one fixed two-element typing, no sample-set based reconstruction scheme valid
+for the whole slice admits characteristic data bounded polynomially in reduced
+CFG size and source-grammar thickness.  By contrast, such characteristic data
+are polynomially bounded for every fixed
 prefix--suffix window $(k,\ell)$, whose typing captures Yoshinaka's
 $(k,\ell)$-substitutability exactly, and polynomial in the size of a linear
 CFG for linear targets under every fixed $h$.  For suitable fixed homomorphisms we exhibit regular, nonregular linear, and
@@ -146,16 +145,17 @@ many canonical positive witnesses, and a separate conservative sequential
 learner $\mathcal A_h$ identifies every nonempty target in Gold's sense;
 reconstruction and updates take time polynomial in the accumulated sample.
 
-\item \emph{Quantitative boundary.}  For arbitrary fixed $h$ the canonical
-witnesses are polynomial in grammar size and the thickness of the yield-typed
-refinement, which can be exponential in source size even when ordinary
-thickness is $1$.  For one fixed two-element typing $h_\circ$, no set-driven
-operator with characteristic samples for all of $\Ccf{h_\circ}$ has
-characteristic data polynomial in reduced CFG size and ordinary thickness.
-Such a bound does hold for every fixed prefix--suffix window $(k,\ell)$, whose
-typing captures Yoshinaka's $(k,\ell)$-substitutability exactly, and data
-polynomial in linear-grammar size suffice for linear targets under every
-fixed $h$.
+\item \emph{Quantitative boundary.}  For arbitrary fixed $h$, the size of
+the canonical witnesses is controlled by a finite parameter of a target-side
+refinement introduced in Section~\ref{sec:typed-thickness}; this parameter can
+be exponentially larger than the corresponding source-grammar thickness.
+For one fixed two-element typing $h_\circ$, no reconstruction operator whose
+output depends only on the observed sample set and that has characteristic
+samples throughout $\Ccf{h_\circ}$ admits a bound polynomial in reduced CFG
+size and source-grammar thickness.  Such a bound does hold for every fixed
+prefix--suffix window $(k,\ell)$, whose typing captures Yoshinaka's
+$(k,\ell)$-substitutability exactly, and data polynomial in linear-grammar
+size suffice for linear targets under every fixed $h$.
 
 \item \emph{Expressive position.}  Suitable fixed homomorphisms admit
 regular, nonregular linear, and nonlinear context-free targets outside every
@@ -317,7 +317,7 @@ If $\ker h$, restricted to $\Sigma^+$, refines $\equiv_L$, then%
 \footnote{If one required $\ker h\subseteq\equiv_L$ on all of $\Sigma^*$, the condition would be too strong: for the trivial monoid, $\lambda$ and every nonempty word have the same type, so even the ordinarily substitutable language $a^+$ would be excluded because $\lambda\not\equiv_{a^+}a$.}
 $L\in\mathsf{RS}_h$, since equal $h$-types are already syntactically congruent.
 The converse fails already for ordinary substitutability.  Clark--Eyraud's
-language $L_0=\{a^ncb^n:n>0\}$ is substitutable~\cite[Section~6.1]{clark-eyraud2007},
+language $L_0=\{a^ncb^n:n\ge0\}$ is substitutable~\cite[Section~6.1]{clark-eyraud2007},
 hence belongs to the trivial-monoid slice, but $\equiv_{L_0}$ has infinite
 index: if $1\le r<s$, then $(a,cb^{r+1})$ is a context of $a^r$ but not of
 $a^s$.  Thus fixed-$h$ substitutability is strictly weaker than requiring
@@ -600,7 +600,7 @@ $\mathcal B_h(\{w\})$, and every later rebuild uses an accumulated sample
 still containing $w$; hence every later hypothesis contains
 $[w:\lambda,\lambda]$.  The two stabilized grammars are therefore
 syntactically different although both eventually generate $L$.  The
-reviewer's example $\{a^ncb^n:n\ge0\}$ is an instance of this phenomenon.
+same language $\{a^ncb^n:n\ge0\}$ is an instance of this phenomenon.
 
 \section{Completeness via Yield-Typed Refinement and Finite Witnesses}
 \label{sec:typing}
@@ -837,7 +837,8 @@ rebuild is polynomial by the same theorem.
 
 Together with Lemma~\ref{lem:sample-consistency},
 Theorem~\ref{thm:reconstruction-fixed-h} and Corollary~\ref{cor:ilt}, this
-proves Theorem~\ref{thm:main}(i)--(iii) apart from the size bound in~(ii).
+proves Theorem~\ref{thm:main}(i)--(iii).  The quantitative bounds in
+items~(iv)--(v) are proved in Sections~\ref{sec:fixed-window-thick}--\ref{sec:linear}.
 No bound in grammar size alone is possible: the reduced SSBNF grammars
 $S_0\to A_n$, $A_0\to a$, $A_i\to A_{i-1}A_{i-1}$ have $O(n)$
 production symbols but generate only $a^{2^n}$, and every singleton language
@@ -933,7 +934,7 @@ The typed thickness cannot in general be replaced by the ordinary source
 thickness through the full-refinement argument.
 
 \begin{remark}[exponential source-to-typed thickness gap]
-\label{prop:typed-thickness-gap}
+\label{rem:typed-thickness-gap}
 Typed thickness need not be polynomially bounded by ordinary source
 thickness.  Let $M_{\mathtt c}=\{1,\zeta\}$ be the two-element monoid
 with zero $\zeta$, let
@@ -1012,7 +1013,7 @@ Fix
 \]
 and the two-element monoid $M_\circ:=\{1,\zeta\}$ with identity $1$ and
 zero $\zeta$.  This is the same abstract two-element zero monoid used in
-Proposition~\ref{prop:typed-thickness-gap}; the homomorphism is given a new
+Remark~\ref{rem:typed-thickness-gap}; the homomorphism is given a new
 name because its alphabet and letter map are different.  Define
 $h_\circ:\Sigma_\circ^*\to M_\circ$ by
 $h_\circ(\mathtt c)=\zeta$ and by sending every other letter to $1$; thus
@@ -1216,7 +1217,7 @@ Both positive quantitative regimes below are obtained by bounding
 $\tau_h^{\mathrm{typ}}$ and invoking
 Corollary~\ref{cor:typed-thickness-data}.  For $h_{k,\ell}$, a typed
 nonterminal need preserve only a bounded prefix and suffix, which controls
-typed thickness; Remark~\ref{prop:typed-thickness-gap} shows that no
+typed thickness; Remark~\ref{rem:typed-thickness-gap} shows that no
 such transfer is available for general $h$.  Characteristic-sample bounds
 polynomial in representation size and thickness are the data component of
 identification in polynomial time and thick data (IPTtD) in the terminology
@@ -1349,7 +1350,7 @@ condition and representation class are different.
 Linear languages are exactly the languages accepted by one-turn pushdown
 automata~\cite{ginsburg-spanier1966,autebert1997}.  The normalization below
 gives the grammatical counterpart: every successful derivation has one
-continuing nonterminal path.
+continuing nonterminal path, which we call its \emph{spine}.
 
 \begin{proposition}[linear-spine SSBNF normalization]\label{prop:linear-normal}
 There is a fixed polynomial $P_{\mathrm{lin}}$ such that every linear CFG
