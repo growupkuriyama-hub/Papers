@@ -101,6 +101,10 @@ plays the same class-level role as a fixed pair $(k,\ell)$ in Yoshinaka's
 hierarchy.  We separate choosing a useful typing
 from learning once that typing has been specified, a viewpoint close to
 typing or domain bias in automata inference~\cite{coste-typing2004}.
+Finite biases can also be composed without making the typing target-specific:
+for example, the product of a fixed window typing with an independently
+specified finite domain feature is again one fixed finite-monoid typing for
+the whole class; Section~\ref{sec:framework} makes this precise.
 
 There is also a useful contrast with control-set approaches.  Takada's
 even-linear framework controls derivations of a fixed universal grammar by a
@@ -422,23 +426,24 @@ conservative sequential learner $\mathcal A_h$ such that:
 \item $\mathcal B_h$ is sample-consistent and $\mathcal B_h(K)$ is
 constructible in time polynomial in $\|K\|$;
 \item every $L\in\Ccf{h}$ has a finite characteristic sample for
-$\mathcal B_h$; if $L\ne\emptyset$ and $G$ is a reduced SSBNF grammar for
-$L$, one such sample has size polynomial in $|G|$ and
-$\tau_h^{\mathrm{typ}}(G)$;
+$\mathcal B_h$; for a nonempty target represented by the reduced binary
+normal form introduced in Section~\ref{sec:typing}, one such sample has size
+polynomial in the grammar size and in the typed-thickness parameter introduced
+in Section~\ref{sec:typed-thickness};
 \item $\mathcal A_h$ identifies every nonempty $L\in\Ccf{h}$ in Gold's
 sense, each update taking time polynomial in the data seen so far;
-\item for fixed $(k,\ell)$ the sample in~(ii) can be chosen polynomial in
-$|R|$ and $\tau_R$ for any reduced CFG $R$ representing a target in
-$\Ccf{h_{k,\ell}}$; for $L\in\Clin{h}$ it can be chosen polynomial in
+\item for fixed $(k,\ell)$, taking $h=h_{k,\ell}$, the sample in~(ii) can
+be chosen polynomial in $|R|$ and $\tau_R$ for any reduced CFG $R$
+representing the target; for $L\in\Clin{h}$ it can be chosen polynomial in
 $|R|$ for any linear CFG $R$ representing $L$.
 \end{enumerate}
-In contrast, for a fixed two-element homomorphism $h_\circ$ there are nested
-finite targets in $\Ccf{h_\circ}$ with reduced CFGs of polynomial size and
-ordinary thickness $O(n)$ such that every characteristic sample of the larger
-target has size $2^{\Omega(n)}$ for every set-driven operator with
-characteristic samples for both targets, in particular for
-$\mathcal B_{h_\circ}$.
-\end{theorem}
+In contrast, Section~\ref{subsec:ordinary-thickness-lower} constructs one
+fixed two-element homomorphism and nested finite targets in its fixed-$h$
+class, with reduced CFGs of polynomial size and ordinary thickness $O(n)$,
+such that every characteristic sample of the larger target has size
+$2^{\Omega(n)}$ for every set-driven operator with characteristic samples
+for both targets, in particular for $\mathcal B_h$ at that fixed typing.
+\end{theorem}\end{theorem}
 
 The class $\Ccf{h}$ does not contain all finite languages, in accordance
 with Gold's theorem: choose distinct nonempty $x,y$ with $h(x)=h(y)$ and
@@ -759,9 +764,12 @@ $\|K\|$.
 Put $n_K:=\|K\|$.  Sample words have $O(n_K^2)$ factorizations $uxv$ with
 $x\ne\lambda$, so $|\widehat V(K)|=O(n_K^2)$, and all factor $h$-values can
 be cached with $O(n_K^2)$ multiplications in the fixed monoid.  Rule~(R1) has
-$O(n_K^3)$ candidates and Rules~(R2)--(R3) at most $O(n_K^4)$.  With factors
-and contexts stored as occurrence identifiers, each test is constant-time for
-fixed $h$.  Each production has encoding length $O(n_K)$, so the grammar can
+$O(n_K^3)$ candidates and Rules~(R2)--(R3) at most $O(n_K^4)$.  A polynomial
+preprocessing step can assign canonical identifiers to equal factors and
+context components (for example by sorting the $O(n_K^2)$ factor
+occurrences); once these identifiers and the $h$-values are cached, each
+subsequent equality/type test is constant-time for fixed $h$.  Each production
+has encoding length $O(n_K)$, so the grammar can
 be checked and written explicitly in $O(n_K^5)$ time.
 \end{proof}
 
@@ -787,6 +795,8 @@ is $\sim_h$-substitutable for every $h$.
 
 \section{Typed Thickness for General Fixed Typings}
 \label{sec:typed-thickness}
+
+\subsection{Typed-thickness bounds and a presentation-level gap}
 
 For an arbitrary fixed $h$, the finite-witness construction admits a direct
 quantitative bound once the cost of yield typing is measured explicitly.  Let
@@ -1014,6 +1024,41 @@ Then $z_i$ is the unique $\mathtt c$-free word of $\mathcal T_i$, and
  \label{eq:clean-tree-length}
 \end{equation}
 
+\paragraph{Unique parsing and replacement sites.}
+View $\mathtt l,\mathtt r$ as matching tree brackets and put
+\[
+ b_0:=\mathtt a,\qquad b_i:=z_{i-1}z_{i-1}\quad(i\ge1).
+\]
+Every word of $\mathcal T_n$ has a unique rooted ordered-tree parse of
+residual height $n$.  In that parse, every occurrence of
+$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is exactly a height-$i$ shortcut
+body; every occurrence of $z_i$ is exactly the yield of a clean height-$i$
+subtree; and, for $i\ge1$, every occurrence of $b_i$ is exactly the two
+adjacent clean children of one height-$i$ node (for $i=0$, $b_0$ is the
+clean height-$0$ body).  Consequently every literal replacement
+\begin{equation}
+ s_i\longleftrightarrow b_i
+ \tag{$\dagger$}
+\end{equation}
+made at such an occurrence is a legal replacement inside $\mathcal T_n$.
+
+Indeed, the outermost brackets determine the root.  At residual height
+$0$ its body starts with $\mathtt a$ or $\mathtt c$, distinguishing the
+two cases.  At positive residual height it starts with $\mathtt c$ in the
+shortcut case and with $\mathtt l$ in the binary case.  In the latter case,
+because shortcut words contain no $\mathtt l$ or $\mathtt r$, ordinary
+bracket matching uniquely determines the end of the first child and hence
+the second child; induction determines both subparses.  The word $s_i$ is
+recognized by its unique block of $i+1$ zeros between $\mathtt c$ and
+$\mathtt d$.  The word $z_i$ is balanced and, relative to its first
+$\mathtt l$, returns to the entering bracket depth only at its final
+$\mathtt r$; therefore a literal occurrence cannot cross a node boundary
+and must be one parsed subtree.  Induction on residual height then forces
+that subtree to be the clean height-$i$ subtree.  Two consecutive occurrences
+$z_{i-1}z_{i-1}$ cannot cross a parent boundary (a closing
+$\mathtt r$ would intervene), so they are precisely the two children of a
+height-$i$ node.  This proves the assertions about replacement sites.
+
 \begin{lemma}[level-coded tree languages are substitutable]
 \label{lem:level-coded-substitutable}
 For every $n\ge0$, $\mathcal T_n$ is substitutable in the
@@ -1021,41 +1066,30 @@ Clark--Eyraud sense.
 \end{lemma}
 
 \begin{proof}
-View $\mathtt l,\mathtt r$ as matching tree brackets.  A word of
-$\mathcal T_n$ encodes a rooted ordered binary tree of residual height $n$:
-at height $0$ the node body is $\mathtt a$ or $s_0$, while at height $i>0$
-it is $s_i$ or the concatenation of two height-$(i-1)$ subtrees.  Put
-\[
- b_0:=\mathtt a,\qquad b_i:=z_{i-1}z_{i-1}\quad(i\ge1).
-\]
-Thus every word is obtained from the clean tree $z_n$ by replacing
-pairwise non-descendant clean bodies according to
-\begin{equation}
- s_i\longleftrightarrow b_i .
- \tag{$\dagger$}
-\end{equation}
+By the unique-parsing fact above, every word of $\mathcal T_n$ is obtained
+from the clean tree $z_n$ by applying~($\dagger$) at an antichain of tree
+nodes, and that antichain is uniquely determined by the word.
 
-These replacement sites are recognizable from the word itself:
-$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ can occur only as a height-$i$
-shortcut body, while every occurrence of the primitive balanced word $z_j$
-is a clean height-$j$ subtree; hence an occurrence
-$z_{i-1}z_{i-1}$ is exactly the pair of children of one height-$i$ node.
-Consequently every literal occurrence of either side of~($\dagger$) is a
-legal body replacement.
-
-Now suppose $uxv,uyv\in\mathcal T_n$.  Their parses are deterministic.
-Any node body on which the two parses choose differently must lie wholly
-between the cut after $u$ and the cut before $v$: if its body began before
-the left cut, its first body symbol
+Suppose $uxv,uyv\in\mathcal T_n$.  Any node at which their two shortcut
+antichains differ lies wholly between the cut after $u$ and the cut before
+$v$.  If such a node body began before the left cut, its first body symbol
 ($\mathtt c$ versus $\mathtt a$ or $\mathtt l$) would differ inside the
-common prefix; if it ended after the right cut, its last body symbol
+common prefix.  If it ended after the right cut, its last body symbol
 ($\mathtt d$ versus $\mathtt a$ or $\mathtt r$) would differ inside the
-common suffix.  Hence $x$ can be transformed into $y$ by a finite sequence of
-legal replacements~($\dagger$), all inside the displayed factor.
+common suffix.
+
+Starting from $uxv$, expand every shortcut occurring in its antichain but
+not in that of $uyv$.  All these legal replacements lie inside the displayed
+factor $x$.  After those expansions, introduce the shortcut nodes belonging
+to the antichain of $uyv$ but not to that of $uxv$; the required bodies are
+clean because the target shortcut set is an antichain.  This gives a finite
+sequence of legal replacements, all inside $x$, that transforms $x$ into
+$y$.
 
 If $pxq\in\mathcal T_n$, the same literal replacement sequence can be
-performed inside that occurrence of $x$, remaining in $\mathcal T_n$ at
-every step and ending at $pyq$.  Thus
+performed inside that occurrence of $x$; the unique-parsing fact guarantees
+that every step is again legal and remains in $\mathcal T_n$.  It ends at
+$pyq$.  Thus
 $\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$; reversing the
 sequence gives equality.
 \end{proof}
@@ -1166,11 +1200,18 @@ semantics of Section~\ref{sec:learning}; its application to
 $\mathcal B_{h_\circ}$ uses
 Theorem~\ref{thm:reconstruction-fixed-h}.  It is measured against arbitrary
 reduced CFG representations and does not exclude bounds relative to a
-restricted normal-form representation class, such as the RNF-based setting
-of Coste--Nicolas~\cite{coste-nicolas2019}, or learning models with a
-different finite-sample success criterion.  Thus qualitative Gold
-identification with polynomial-time updates under arbitrary fixed $h$ does
-not imply a polynomial characteristic-data bound in ordinary CFG thickness.
+restricted normal-form representation class.  A complementary direction is
+the local-substitutability framework of Coste, Garet and
+Nicolas~\cite{coste-garet-nicolas2012}, which localizes the substitutability
+condition rather than replacing the comparison bias by an arbitrary finite
+typing.  Coste--Nicolas~\cite{coste-nicolas2019} obtain IPTtD for
+$k,\ell$-local substitutable languages represented by RNF context-free
+grammars.  Our negative result therefore does not conflict with that positive
+RNF result: the language condition and the representation class are both
+different.  Thus qualitative Gold identification with polynomial-time
+updates under arbitrary fixed $h$ does not imply a polynomial
+characteristic-data bound in ordinary thickness for arbitrary reduced CFG
+representations.
 
 \section{Fixed-Window Thick Data}
 \label{sec:fixed-window-thick}
@@ -1820,11 +1861,11 @@ finite-sample criteria.
 
 \section*{Data availability}
 No data were used for the research described in this article. A Lean 4
-formalization accompanying parts of the development, corresponding to
-manuscript baseline v79, is publicly archived on Zenodo at DOI
-10.5281/zenodo.22939434. The stronger set-driven ordinary-thickness
-lower-bound results added in Section~\ref{sec:typed-thickness} after that
-baseline are not part of the v79 artifact.
+formalization accompanying parts of the development is publicly archived on
+Zenodo at DOI 10.5281/zenodo.22939434. Its scope predates and does not include
+the set-driven ordinary-thickness lower-bound results of
+Section~\ref{sec:typed-thickness}.  The manuscript does not rely on the
+formalization as a substitute for any paper proof.
 
 \section*{Declaration of competing interest}
 The author declares no known competing financial interests or personal
@@ -2138,6 +2179,12 @@ R.~Eyraud, J.~Heinz, and R.~Yoshinaka.
 \newblock In J.~Heinz and J.~M.~Sempere (Eds.),
 \emph{Topics in Grammatical Inference}, Springer, 2016.
 doi:10.1007/978-3-662-48395-4\_2.
+
+\bibitem{coste-garet-nicolas2012}
+F.~Coste, G.~Garet, and J.~Nicolas.
+\newblock Locally substitutable languages for enhanced inductive leaps.
+\newblock In \emph{Proceedings of ICGI 2012}, JMLR Workshop and Conference
+Proceedings 21, pp.~97--111, 2012.
 
 \bibitem{coste-nicolas2019}
 F.~Coste and J.~Nicolas.
