@@ -1,3 +1,28 @@
+\begin{abstract}
+We study distributional learning of context-free languages under a fixed
+recognizable congruence $\sim_h$, the kernel of a homomorphism
+$h:\Sigma^*\to M$ into a finite monoid: nonempty factors with equal $h$-values
+that share one context must share all contexts.  For fixed $h$ we define a
+set-driven reconstruction operator that recovers every context-free
+$\sim_h$-substitutable target exactly from finitely many positive witnesses,
+and a conservative sequential learner that identifies every nonempty such
+target in the limit; reconstruction and updates take polynomial time.  The
+canonical witnesses are polynomial in grammar size and the thickness of a
+yield-typed refinement, which can be exponentially larger than ordinary
+thickness.  For one fixed two-element typing this cost cannot be removed by
+any set-driven operator: nested finite targets with reduced CFGs of polynomial
+size and ordinary thickness force an exponentially long word into every
+characteristic sample of the larger target whenever the same operator has
+characteristic samples for both targets.  By contrast, characteristic data are
+polynomial in reduced CFG size and ordinary thickness for every fixed
+prefix--suffix window $(k,\ell)$, whose typing captures Yoshinaka's
+$(k,\ell)$-substitutability exactly, and polynomial in the size of a linear
+CFG for linear targets under every fixed $h$.  We also separate the
+fixed-window hierarchy from the recognizable-substitutable family by regular,
+nonregular linear, and nonlinear examples, and show that the one-bracket Dyck
+language lies outside this family.
+\end{abstract}
+
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
@@ -98,66 +123,38 @@ control-set framework is claimed.
 The paper has three main contributions.
 
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
-\item For a fixed finite monoid homomorphism $h$, we define a set-driven
-reconstruction operator and prove exact reconstruction from finitely many
-canonical positive witnesses.  A separate conservative sequential learner then
-gives Gold identification for every nonempty language in $\Ccf{h}$, with
-polynomial-time reconstruction and updates.
+\item \emph{Learning for fixed $h$.}  A set-driven reconstruction operator
+$\mathcal B_h$ reconstructs every target in $\Ccf{h}$ exactly from finitely
+many canonical positive witnesses, and a separate conservative sequential
+learner $\mathcal A_h$ identifies every nonempty target in Gold's sense;
+reconstruction and updates take time polynomial in the accumulated sample.
 
-\item For arbitrary fixed $h$, we isolate the quantitative cost of yield typing:
-the canonical characteristic data are polynomial in target grammar size and a
-typed-refinement thickness parameter (the maximum shortest-yield length in the
-reduced yield-typed refinement), while a fixed two-element typing shows
-that this parameter can be exponential in source grammar size even when
-ordinary thickness is $1$.  We then strengthen this presentation-level
-obstruction to a set-driven finite-sample lower bound: for another fixed
-two-element typing, a family of nested finite $\sim_h$-substitutable targets has reduced
-CFG presentations of polynomial size and ordinary thickness, yet every
-characteristic sample of the larger target, for any set-driven operator that
-also has characteristic data for the smaller target, contains an exponentially
-long positive word.  Hence no set-driven characteristic-sample scheme covering
-the whole fixed-$h$ class admits a polynomial
-grammar-size-and-ordinary-thickness data bound.  For every fixed
-prefix--suffix window $(k,\ell)$, the induced typing is exactly equivalent to
-Yoshinaka's $(k,\ell)$-substitutability condition, and after polynomial
-normalization the present reconstruction has characteristic data polynomial in
-the same two parameters used in Yoshinaka's analysis: grammar size and ordinary
-thickness.  For the linear subclass under an arbitrary fixed $h$,
-characteristic data are polynomial in the size of a linear CFG representation.
+\item \emph{Quantitative boundary.}  For arbitrary fixed $h$ the canonical
+witnesses are polynomial in grammar size and the thickness of the yield-typed
+refinement, which can be exponential in source size even when ordinary
+thickness is $1$.  For one fixed two-element typing $h_\circ$, no set-driven
+operator with characteristic samples for all of $\Ccf{h_\circ}$ has
+characteristic data polynomial in reduced CFG size and ordinary thickness.
+Such a bound does hold for every fixed prefix--suffix window $(k,\ell)$, whose
+typing captures Yoshinaka's $(k,\ell)$-substitutability exactly, and data
+polynomial in linear-grammar size suffice for linear targets under every
+fixed $h$.
 
-\item We locate the framework structurally.  For an alphabet $\Gamma$, write
-$\mathsf{KL}(\Gamma)$ for the union of the $(k,\ell)$-substitutable classes
-over all fixed $k,\ell\ge0$, and $\mathsf{RS}(\Gamma)$ for the union of the
-$\sim_h$-substitutable classes over all finite-monoid homomorphisms with
-domain $\Gamma^*$.  We give a regular separation
-$\mathsf{KL}(\Sigma_c)\subsetneq\mathsf{RS}(\Sigma_c)$ over
-$\Sigma_c=\{\uparrow,\downarrow,\#\}$, a nonregular linear separation
-over $\{a,b,c,d,e\}$, and a nonlinear context-free separation over
-$\{a,b\}$.  On the other hand, the one-bracket Dyck language over
-$\{a,b\}$ lies outside $\mathsf{RS}(\{a,b\})$.  For every finite alphabet
-$\Gamma$, $\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ is contained in Clark's
-congruential family, and this containment is proper already for
-$\Gamma=\{a,b\}$.
+\item \emph{Expressive position.}  Over suitable finite alphabets the
+fixed-window hierarchy is separated from the union $\mathsf{RS}$ of all
+fixed-$h$ classes by regular, nonregular linear, and nonlinear context-free
+languages; the one-bracket Dyck language lies outside $\mathsf{RS}$; and
+$\mathsf{RS}\cap\mathrm{CFL}$ is properly contained in Clark's congruential
+family.
 \end{enumerate}
 
 \subsection{Organization of the paper}
-Section~\ref{sec:prelim} fixes notation and the learning model, and
-Section~\ref{sec:framework} relates fixed recognizable substitutability to
-the classical classes.  Section~\ref{sec:algo} defines the reconstruction
-operator and the conservative sequential learner, while
-Section~\ref{sec:typing} proves exact reconstruction and Gold convergence by
-yield-typing a target grammar.  Section~\ref{sec:complexity} gives the
-polynomial construction bound.  Section~\ref{sec:typed-thickness} isolates the
-general refined-thickness parameter, proves that it can grow exponentially
-relative to source thickness, and gives a set-driven finite-sample obstruction
-to any general ordinary-thickness characteristic-data bound for the whole
-fixed-$h$ class.
-Section~\ref{sec:fixed-window-thick} then proves a fixed-window bound
-polynomial in grammar size and ordinary thickness after
-polynomial normalization, and Section~\ref{sec:linear} proves direct polynomial
-bounds for arbitrary fixed-$h$ linear targets.  Section~\ref{sec:boundaries}
-records the main expressiveness and boundary results.  The technical
-normalization and short-witness proofs are deferred to the appendices.
+Sections~\ref{sec:prelim}--\ref{sec:framework} fix notation and treat the
+classical special cases, Sections~\ref{sec:algo}--\ref{sec:complexity} prove
+the learning result, Sections~\ref{sec:typed-thickness}--\ref{sec:linear}
+establish the quantitative boundary and positive regimes, and
+Section~\ref{sec:boundaries} gives the expressiveness results.  Long
+normalization proofs are deferred to the appendices.
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -333,13 +330,9 @@ $\D_L(x)\cap\D_L(y)\ne\varnothing$ implies $\D_L(x)=\D_L(y)$.
 Under Definition~\ref{def:hsubst}, this is exactly the trivial-monoid case and
 hence also Yoshinaka's $(0,0)$ case.
 
-\begin{proposition}[Clark--Eyraud special case]\label{prop:ce-special}
-Every Clark--Eyraud substitutable language belongs to $\mathsf{RS}$.
-\end{proposition}
-\begin{proof}
-Take the one-element monoid.  Then the type condition is vacuous and
-Definition~\ref{def:hsubst} is ordinary substitutability.
-\end{proof}
+The one-element monoid makes the type condition vacuous, so
+Clark--Eyraud substitutability is exactly the trivial-typing case and every
+such language belongs to $\mathsf{RS}$.
 
 For $k,\ell\ge0$, write $\pref_k(w)$ and $\suf_\ell(w)$ for the prefix and
 suffix of the indicated lengths whenever they exist, with
@@ -368,56 +361,31 @@ $\sim_{h_{k,\ell}}$-substitutable.
 \end{proposition}
 
 \begin{proof}
-
-Put $m_0:=\max\{1,k+\ell\}$.  Define
-\[
-h_{k,\ell}(w)=
-\begin{cases}
- w, & |w|<m_0,\\
- \langle\pref_k(w),\suf_\ell(w)\rangle, & |w|\ge m_0,
-\end{cases}
-\]
-where a one-bit tag is used so that the elements representing short words and
-those representing long words form disjoint sets, and put
-$M_{k,\ell}:=h_{k,\ell}(\Sigma^*)$.  For short words $x,y$ and tagged
-elements in the image, define multiplication by
+Put $m_0:=\max\{1,k+\ell\}$, let $h_{k,\ell}(w):=w$ if $|w|<m_0$ and
+$h_{k,\ell}(w):=\langle\pref_k(w),\suf_\ell(w)\rangle$ (with a tag
+separating short words from pairs) otherwise, and let $M_{k,\ell}$ be the
+image.  For short words $x,y$ and tagged pairs define
 \[
 \begin{aligned}
- x\cdot y&:=h_{k,\ell}(xy), &
- x\cdot\langle p,q\rangle&:=\langle\pref_k(xp),q\rangle,\\
- \langle p,q\rangle\cdot y&:=\langle p,\suf_\ell(qy)\rangle, &
- \langle p,q\rangle\cdot\langle p',q'\rangle&:=\langle p,q'\rangle.
+x\cdot y&:=h_{k,\ell}(xy),&
+x\cdot\langle p,q\rangle&:=\langle\pref_k(xp),q\rangle,\\
+\langle p,q\rangle\cdot y&:=\langle p,\suf_\ell(qy)\rangle,&
+\langle p,q\rangle\cdot\langle p',q'\rangle&:=\langle p,q'\rangle.
 \end{aligned}
 \]
-A direct check of the four cases gives
-$h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$.  Since $h_{k,\ell}$ is
-onto, associativity follows from associativity of concatenation, and
-$h_{k,\ell}(\lambda)$ is the identity.  Thus $M_{k,\ell}$ is a finite
-monoid and $h_{k,\ell}$ is a homomorphism.
+The four cases give $h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$;
+surjectivity of $h_{k,\ell}$ then gives associativity, with identity
+$h_{k,\ell}(\lambda)$.
 
-Suppose $s,t\in\Sigma^+$, $h_{k,\ell}(s)=h_{k,\ell}(t)$, and
-$\D_L(s)\cap\D_L(t)\ne\varnothing$.  If $|s|<m_0$, then $s=t$.
-Otherwise $s,t$ are both long and have the same length-$k$ prefix $p$ and
-length-$\ell$ suffix $q$, so write $s=py_1q$ and $t=py_2q$.
-Let $(u_0,v_0)$ be a shared context of $s,t$, and let $(u',v')$ be any
-context of $s$.  The three words
-\[
-u_0py_1qv_0,\qquad u_0py_2qv_0,\qquad u'py_1qv'
-\]
-belong to $L$.  Applying $(k,\ell)$-substitutability gives
-$u'py_2qv'\in L$.  Hence $\D_L(s)\subseteq\D_L(t)$, and symmetry gives
-equality.
-
-Conversely, assume that $L$ is $\sim_{h_{k,\ell}}$-substitutable and
-consider strings satisfying the premises of the $(k,\ell)$-substitutability
-condition.  Put $s:=py_1q$ and $t:=py_2q$; by definition both are nonempty.
-If $k+\ell>0$, then $|s|,|t|\ge k+\ell=m_0$ and both have type
-$\langle p,q\rangle$.  If $k=\ell=0$, nonemptiness gives $|s|,|t|\ge1=m_0$,
-and both have the unique nonempty-word type $\langle\lambda,\lambda\rangle$.
-Thus $h_{k,\ell}(s)=h_{k,\ell}(t)$.  The first two premise words show that
-$s$ and $t$ share context $(x_1,z_1)$, while the third gives
-$(x_2,z_2)\in\D_L(s)$.  Fixed-$h_{k,\ell}$ substitutability therefore gives
-$(x_2,z_2)\in\D_L(t)$, which is exactly the required fourth word.
+For $s,t\in\Sigma^+$, equal $h_{k,\ell}$-types mean either $s=t$ or that
+$s=py_1q$ and $t=py_2q$ for some $p\in\Sigma^k$ and
+$q\in\Sigma^\ell$ (for $k=\ell=0$ every nonempty word has the same tagged
+pair).  In the latter case, the first two premise words in Yoshinaka's
+$(k,\ell)$ condition say that $s,t$ share a context, the third gives an
+arbitrary context of $s$, and the conclusion transfers that context to $t$.
+Quantifying over the context and using symmetry proves that
+$(k,\ell)$-substitutability implies $\sim_{h_{k,\ell}}$-substitutability;
+the same reading in reverse proves the converse.
 \end{proof}
 
 \phantomsection\label{crit:kl}
@@ -451,53 +419,35 @@ and abbreviate $\mathsf{KL}:=\mathsf{KL}(\Sigma)$ on the current alphabet.
 
 \begin{theorem}[Fixed-$h$ learning theorem]\label{thm:main}
 Fix an efficiently computable homomorphism $h:\Sigma^*\to M$ into a finite
-monoid.  There are a set-driven reconstruction operator $\mathcal B_h$ and
-a conservative sequential learner $\mathcal A_h$ such that:
+monoid.  There are a set-driven reconstruction operator $\mathcal B_h$ and a
+conservative sequential learner $\mathcal A_h$ such that:
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $\mathcal B_h$ is sample-consistent, and $\mathcal B_h(K)$ is
-constructible in time polynomial in $\|K\|$ for every finite positive
-sample $K$;
-\item every $L\in\Ccf{h}$ has a finite characteristic
-sample $C_L\subseteq L$ for $\mathcal B_h$; and
+\item $\mathcal B_h$ is sample-consistent and $\mathcal B_h(K)$ is
+constructible in time polynomial in $\|K\|$;
+\item every $L\in\Ccf{h}$ has a finite characteristic sample for
+$\mathcal B_h$; if $L\ne\emptyset$ and $G$ is a reduced SSBNF grammar for
+$L$, one such sample has size polynomial in $|G|$ and
+$\tau_h^{\mathrm{typ}}(G)$;
 \item $\mathcal A_h$ identifies every nonempty $L\in\Ccf{h}$ in Gold's
-sense, and each update is polynomial-time in $\|K_n\|$, where $K_n$ is the
-positive-example set seen up to that stage.
+sense, each update taking time polynomial in the data seen so far;
+\item for fixed $(k,\ell)$ the sample in~(ii) can be chosen polynomial in
+$|R|$ and $\tau_R$ for any reduced CFG $R$ representing a target in
+$\Ccf{h_{k,\ell}}$; for $L\in\Clin{h}$ it can be chosen polynomial in
+$|R|$ for any linear CFG $R$ representing $L$.
 \end{enumerate}
-For an arbitrary fixed $h$ and a reduced SSBNF target grammar $G$, the
-canonical characteristic sample has encoded size polynomial in $|G|$ and the
-typed thickness $\tau_h^{\mathrm{typ}}(G)$ defined in
-Section~\ref{sec:typed-thickness}.  For every fixed $(k,\ell)$, this can be
-strengthened for targets in $\Ccf{h_{k,\ell}}$---equivalently, for
-context-free $(k,\ell)$-substitutable targets---to a bound polynomial in
-reduced target CFG size and ordinary thickness.  For the linear subclass
-$\Clin{h}$ under an arbitrary fixed $h$, the characteristic samples can be
-chosen with encoded size polynomial in the size of a linear grammar for the
-target.  In contrast, there is a fixed two-element homomorphism $h_\circ$ and
-nested finite targets in $\Ccf{h_\circ}$ with reduced SSBNF representations
-of production-symbol count $O(n)$ and ordinary thickness $O(n)$ such that,
-for any set-driven operator admitting characteristic samples for all targets
-in $\Ccf{h_\circ}$, every characteristic sample of the larger target has
-encoded size $2^{\Omega(n)}$.  In particular this lower bound applies to
+In contrast, for a fixed two-element homomorphism $h_\circ$ there are nested
+finite targets in $\Ccf{h_\circ}$ with reduced CFGs of size $O(n)$ and
+ordinary thickness $O(n)$ such that every characteristic sample of the larger
+target has size $2^{\Omega(n)}$ for every set-driven operator with
+characteristic samples for both targets, in particular for
 $\mathcal B_{h_\circ}$.
 \end{theorem}
 
-Sections~\ref{sec:algo}--\ref{sec:complexity} prove the qualitative theorem;
-Sections~\ref{sec:fixed-window-thick} and~\ref{sec:linear} establish the two
-quantitative bounds.  For the linear statement, Section~\ref{sec:linear}
-derives direct polynomial bounds on the canonical yields and canonical
-contexts used by the witness construction.
-
-There is no conflict with Gold's standard superfinite obstruction: a class
-containing all finite languages together with an infinite language is not
-identifiable from positive data.  Let the alphabet be nonempty and fix any
-finite $h$.  Choose distinct nonempty strings $x,y$ with $h(x)=h(y)$, and
-then choose $r$ with $|r|>\max\{|x|,|y|\}$.  Then
-$rx\notin\{x,y\}$ and $ry\notin\{x,y,rx\}$: the first exclusion follows
-from length, while $rx\ne ry$ follows from left cancellation and $x\ne y$.
-The finite language $\{x,y,rx\}$ is not $\sim_h$-substitutable.  Indeed,
-$x$ and $y$ share the empty context, while $(r,\lambda)$ is a context of
-$x$ but not of $y$.  Hence neither $\mathsf{RS}_h$ nor
-$\Ccf{h}=\mathsf{RS}_h\cap\mathrm{CFL}$ contains all finite languages.
+The class $\Ccf{h}$ does not contain all finite languages, in accordance
+with Gold's theorem: choose distinct nonempty $x,y$ with $h(x)=h(y)$ and
+$|r|>\max\{|x|,|y|\}$.  Then $x,y$ share the empty context in
+$\{x,y,rx\}$ while $(r,\lambda)$ is a context of $x$ only, so this finite
+language is not $\sim_h$-substitutable.
 
 \section{Reconstruction Operator and Sequential Learner}
 \label{sec:algo}
@@ -586,20 +536,15 @@ $\lambda\in K\subseteq L$.
 
 \subsection{The sequential learner}
 
-In general, the batch operator itself need not stabilize syntactically when
-recomputed after every positive example.\footnote{For instance, for
-$L=\{a^ncb^n:n\ge 0\}$, if increasingly long positive examples are added to
-the accumulated sample, each new word contributes new factor/context triples
-such as $[a^ncb^n:\lambda,\lambda]$.}  We therefore use the standard
-conservative wrapper, starting from the fixed empty grammar $H_0$ defined in
-Section~\ref{sec:learning}.  This is the same conservative device used in
-Clark--Eyraud's SGL (Algorithm~2) and Yoshinaka's $(k,\ell)$-SGL
-(Algorithm~1): a new hypothesis is reconstructed only when the next positive
-datum is not generated by the current hypothesis~\cite{clark-eyraud2007,yoshinaka2008}.
-Although the batch operator $\mathcal B_h$ is set-driven, the stabilized grammar
-produced by $\mathcal A_h$ may depend on the presentation order; only eventual
-syntactic stabilization to a grammar generating the target language is claimed.
-After reading $w_n$, put
+Recomputing $\mathcal B_h$ after every datum need not stabilize
+syntactically.\footnote{For $L=\{a^ncb^n:n\ge0\}$, longer examples add
+new triples such as $[a^ncb^n:\lambda,\lambda]$; see also
+Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016} on the
+gap between set-based and incremental learning.}
+We therefore use the conservative wrapper of Clark--Eyraud's SGL
+(Algorithm~2) and Yoshinaka's $(k,\ell)$-SGL
+(Algorithm~1)~\cite{clark-eyraud2007,yoshinaka2008}.  Starting from the fixed
+empty grammar $H_0$, after reading $w_n$ put
 \[
  H_n:=
  \begin{cases}
@@ -609,13 +554,10 @@ After reading $w_n$, put
  \qquad
  \mathcal A_h(T[n]):=H_n.
 \]
-The finite-sample characteristic-set viewpoint follows the classical
-substitutability literature; cf. Clark--Eyraud~\cite{clark-eyraud2007}.
-Here we place the batch constructor inside a conservative sequential wrapper:
-every rebuild uses the entire accumulated set $K_n$, and a rebuild occurs only
-when the current hypothesis rejects the next positive example.  Consequently,
-once a characteristic sample for $\mathcal B_h$ is contained in $K_n$, any later
-rebuild falls directly under Theorem~\ref{thm:reconstruction-fixed-h}.
+Every rebuild uses the whole accumulated sample $K_n$.  Although
+$\mathcal B_h$ is set-driven, the grammar on which $\mathcal A_h$ stabilizes
+may depend on the presentation order; only eventual syntactic stabilization
+to a grammar for the target is claimed (Corollary~\ref{cor:ilt}).
 
 \section{Completeness via Yield-Typed Refinement and Finite Witnesses}
 \label{sec:typing}
@@ -817,26 +759,13 @@ For fixed $h$, $\mathcal B_h(K)$ is constructible in time polynomial in
 $\|K\|$.
 \end{theorem}
 \begin{proof}
-Put $n_K:=\|K\|$.  Across all sample words there are $O(n_K^2)$
-factorizations $uxv$ with $x\ne\lambda$, so
-$|\widehat V(K)|=O(n_K^2)$.  All substring $h$-values can also be
-precomputed and cached using $O(n_K^2)$ monoid multiplications.
-
-Rule~(R1) has $O(n_K^3)$ candidates, whereas Rules~(R2) and~(R3) use pairs
-of observed nonterminals and therefore have at most $O(n_K^4)$ candidates.
-For fixed $h$, each type test is constant-time.  Hence the total number of
-productions generated is at most $O(n_K^4)$.
-
-Each nonterminal occurring in a production explicitly stores a factor and its
-context from a sample word, so the encoding length of each production is
-$O(n_K)$.  Therefore the total encoding length of the output grammar is
-$O(n_K^4)\cdot O(n_K)=O(n_K^5)$.  If factors and contexts are represented
-by precomputed occurrence identifiers, the equality tests used while scanning
-candidate tuples are constant-time; even with direct comparison of their
-$O(n_K)$-length encodings, scanning and checking all $O(n_K^4)$ candidates
-takes at most $O(n_K^5)$ time.  Explicitly writing the output grammar also
-takes at most $O(n_K^5)$ time.  Thus $\mathcal B_h(K)$ can be constructed
-explicitly in $O(n_K^5)$ time.
+Put $n_K:=\|K\|$.  Sample words have $O(n_K^2)$ factorizations $uxv$ with
+$x\ne\lambda$, so $|\widehat V(K)|=O(n_K^2)$, and all factor $h$-values can
+be cached with $O(n_K^2)$ multiplications in the fixed monoid.  Rule~(R1) has
+$O(n_K^3)$ candidates and Rules~(R2)--(R3) at most $O(n_K^4)$.  With factors
+and contexts stored as occurrence identifiers, each test is constant-time for
+fixed $h$.  Each production has encoding length $O(n_K)$, so the grammar can
+be checked and written explicitly in $O(n_K^5)$ time.
 \end{proof}
 
 \begin{corollary}\label{cor:poly-update}
@@ -851,24 +780,13 @@ hypothesis has polynomial size by Theorem~\ref{thm:poly-build}; a triggered
 rebuild is polynomial by the same theorem.
 \end{proof}
 
-Lemma~\ref{lem:sample-consistency}, Theorems~\ref{thm:reconstruction-fixed-h}
-and~\ref{thm:poly-build}, together with Corollaries~\ref{cor:ilt}
-and~\ref{cor:poly-update}, prove the qualitative part of Theorem~\ref{thm:main}.
-A grammar-size-only data bound is impossible for arbitrary CFG representations:
-the SSBNF family $S_0\to A_n$, $A_0\to a$,
-$A_i\to A_{i-1}A_{i-1}$ has $O(n)$ production-symbol count, and hence encoded
-size polynomial in $n$ under our convention, but generates only $a^{2^n}$.
-More generally, every singleton language is $\sim_h$-substitutable for every
-$h$: if two nonempty factors share a context inside its unique word, then
-cancellation in the free monoid makes the factors
-equal.  Thus this obstruction already occurs inside every fixed-$h$ target
-class.  Every characteristic sample must contain a word of length $2^n$, which is
-superpolynomial in the encoded grammar size.  The following sections separate the remaining quantitative issues.  We first
-measure the cost introduced by full yield typing itself; the fixed-window
-section then shows when ordinary source thickness controls that cost, while
-Section~\ref{sec:linear} obtains a grammar-size-only bound for linear targets
-under arbitrary fixed $h$.
-
+Together with Lemma~\ref{lem:sample-consistency},
+Theorem~\ref{thm:reconstruction-fixed-h} and Corollary~\ref{cor:ilt}, this
+proves Theorem~\ref{thm:main}(i)--(iii) apart from the size bound in~(ii).
+No bound in grammar size alone is possible: the reduced SSBNF grammars
+$S_0\to A_n$, $A_0\to a$, $A_i\to A_{i-1}A_{i-1}$ have $O(n)$
+production symbols but generate only $a^{2^n}$, and every singleton language
+is $\sim_h$-substitutable for every $h$.
 
 \section{Typed Thickness for General Fixed Typings}
 \label{sec:typed-thickness}
