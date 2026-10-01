@@ -878,11 +878,11 @@ thickness through the full-refinement argument.
 \begin{proposition}[exponential source-to-typed thickness gap]
 \label{prop:typed-thickness-gap}
 There is a fixed homomorphism $h_{\mathtt c}$ into a two-element monoid and a
-family of reduced SSBNF grammars $G_n$ whose production-symbol count is
-$O(n)$ and whose ordinary thickness is $\tau_{G_n}=1$, such that
-$L(G_n)=\{\mathtt a,\mathtt c\}^+\in\Ccf{h_{\mathtt c}}$ but
+family of reduced SSBNF grammars $G_n^{\mathtt c}$ whose production-symbol count is
+$O(n)$ and whose ordinary thickness is $\tau_{G_n^{\mathtt c}}=1$, such that
+$L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+\in\Ccf{h_{\mathtt c}}$ but
 \[
- \tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n)\ge 2^n.
+ \tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge 2^n.
 \]
 Consequently, for this fixed $h_{\mathtt c}$ there is no polynomial bound on
 the typed thickness in terms of source grammar size and ordinary thickness.
@@ -895,21 +895,21 @@ zero, and define
  h_{\mathtt c}(\mathtt a)=1,\qquad
  h_{\mathtt c}(\mathtt c)=\zeta.
 \]
-For $n\ge1$, let $G_n$ have the rules
+For $n\ge1$, let $G_n^{\mathtt c}$ have the rules
 \[
 \begin{aligned}
- S_0&\to T,\\
- T&\to \mathtt a\mid\mathtt c\mid TT\mid A_nC,\\
+ S_0&\to Y,\\
+ Y&\to \mathtt a\mid\mathtt c\mid YY\mid A_nC,\\
  C&\to\mathtt c,\qquad A_0\to\mathtt a,\\
  A_i&\to A_{i-1}A_{i-1}\mid\mathtt c
  \qquad(1\le i\le n).
 \end{aligned}
 \]
 This is reduced and in SSBNF.  The rules
-$T\to\mathtt a\mid\mathtt c\mid TT$ already generate every nonempty word over
-$\{\mathtt a,\mathtt c\}$, while the additional rule $T\to A_nC$ generates
-only such words.  Hence $L(G_n)=\{\mathtt a,\mathtt c\}^+$.  Every
-nonterminal has a one-letter terminal yield, so $\tau_{G_n}=1$, and the
+$Y\to\mathtt a\mid\mathtt c\mid YY$ already generate every nonempty word over
+$\{\mathtt a,\mathtt c\}$, while the additional rule $Y\to A_nC$ generates
+only such words.  Hence $L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+$.  Every
+nonterminal has a one-letter terminal yield, so $\tau_{G_n^{\mathtt c}}=1$, and the
 production-symbol count is $O(n)$.
 
 Consider now the trimmed full $h_{\mathtt c}$-typed refinement.  Since
@@ -923,12 +923,12 @@ $1\cdot1$.  Therefore
 and no terminal rule to $\mathtt c$ is available from $(A_i)_1$.  Induction
 gives
 \[
- L_{\widetilde G_n}((A_i)_1)=\{\mathtt a^{2^i}\}.
+ L_{\widetilde G_n^{\mathtt c}^{\mathtt c}}((A_i)_1)=\{\mathtt a^{2^i}\}.
 \]
 Moreover $(A_n)_1$ survives trimming: the full refinement contains the
 successful derivation
 \[
- \widetilde S\to T_\zeta
+ \widetilde S\to Y_\zeta
  \to (A_n)_1C_\zeta
  \Rightarrow^*\mathtt a^{2^n}\mathtt c.
 \]
@@ -936,8 +936,8 @@ Thus the canonical yield of $(A_n)_1$ has length $2^n$, proving the displayed
 lower bound.  Finally, $\{\mathtt a,\mathtt c\}^+$ is
 $\sim_{h_{\mathtt c}}$-substitutable because every nonempty factor has the
 same distribution $\Sigma^*\times\Sigma^*$.  Since the fixed encoding size of
-$G_n$ is polynomial in its $O(n)$ production-symbol count, $2^n$ is
-superpolynomial in $|G_n|$ while $\tau_{G_n}=1$.
+$G_n^{\mathtt c}$ is polynomial in its $O(n)$ production-symbol count, $2^n$ is
+superpolynomial in $|G_n^{\mathtt c}|$ while $\tau_{G_n^{\mathtt c}}=1$.
 \end{proof}
 
 Proposition~\ref{prop:typed-thickness-gap} is deliberately a
@@ -950,9 +950,9 @@ of the reconstruction operator.
 \subsection{A set-driven ordinary-thickness lower bound}
 \label{subsec:ordinary-thickness-lower}
 
-We first record a simple closure observation.
+We use two elementary observations.
 
-\begin{lemma}[restriction to observer fibres]
+\begin{lemma}[restriction to type fibres]
 \label{lem:fibre-restriction}
 Let $h:\Sigma^*\to M$ be a monoid homomorphism and let $L$ be
 $\sim_h$-substitutable.  For every $F\subseteq M$, the language
@@ -960,72 +960,52 @@ $L\cap h^{-1}(F)$ is also $\sim_h$-substitutable.
 \end{lemma}
 
 \begin{proof}
-Put $L_F:=L\cap h^{-1}(F)$.  Suppose $h(x)=h(y)$ and that $x,y\in\Sigma^+$
-share a context in $L_F$.  They then share a context in $L$, so
-$\D_L(x)=\D_L(y)$.  For arbitrary $u,v\in\Sigma^*$,
+If $L_F:=L\cap h^{-1}(F)$ and equal-type nonempty factors $x,y$ share a
+context in $L_F$, then they share one in $L$, so $\D_L(x)=\D_L(y)$.  For
+all $u,v$,
 \[
  uxv\in L_F
- \iff uxv\in L\ \text{and}\ h(u)h(x)h(v)\in F.
+ \iff uxv\in L\ \text{and}\ h(u)h(x)h(v)\in F,
 \]
-The first condition is unchanged when $x$ is replaced by $y$, by
-$\D_L(x)=\D_L(y)$, and the second is unchanged because $h(x)=h(y)$.
-Hence $\D_{L_F}(x)=\D_{L_F}(y)$.
+and both conditions are unchanged when $x$ is replaced by $y$.
 \end{proof}
 
 \begin{lemma}[nested-target characteristic-sample obstruction]
 \label{lem:nested-characteristic-obstruction}
 Let $\mathcal B$ be any set-driven operator and let $L'\subsetneq L$.  If
-$C$ is a characteristic sample for $L$ and $C'$ is a characteristic sample
-for $L'$, both with respect to the same operator $\mathcal B$, then
+$C$ and $C'$ are characteristic samples for $L$ and $L'$, respectively,
+with respect to the same $\mathcal B$, then
 \[
  C\cap(L\setminus L')\ne\varnothing.
 \]
 \end{lemma}
 
 \begin{proof}
-Suppose instead that $C\subseteq L'$, and put $K:=C\cup C'$.  Then $K$ is
-finite and
-\[
- C\subseteq K\subseteq L,\qquad
- C'\subseteq K\subseteq L'.
-\]
-Characteristicity of $C$ forces $L(\mathcal B(K))=L$, while
-characteristicity of $C'$ forces $L(\mathcal B(K))=L'$, a contradiction.
+Otherwise $C\subseteq L'$.  For $K:=C\cup C'$ we have
+$C\subseteq K\subseteq L$ and $C'\subseteq K\subseteq L'$, so
+characteristicity forces both $L(\mathcal B(K))=L$ and
+$L(\mathcal B(K))=L'$, a contradiction.
 \end{proof}
 
-This elementary nested-target observation uses neither soundness nor the
-internal grammar construction of $\mathcal B$.
-
-Fix the alphabet
+Fix
 \[
  \Sigma_\circ:=\{\mathtt l,\mathtt r,\mathtt a,\mathtt c,
                     \mathtt 0,\mathtt d\}
 \]
-and the two-element monoid $M_\circ:=\{1,\zeta\}$ in which $1$ is the
-identity and $\zeta$ is a zero.  Define the fixed homomorphism
-$h_\circ:\Sigma_\circ^*\to M_\circ$ by
-\[
- h_\circ(\mathtt c)=\zeta,
- \qquad
- h_\circ(\mathtt l)=h_\circ(\mathtt r)
- =h_\circ(\mathtt a)=h_\circ(\mathtt 0)
- =h_\circ(\mathtt d)=1.
-\]
-Thus $h_\circ(w)=\zeta$ exactly when $w$ contains $\mathtt c$.
+and the two-element monoid $M_\circ:=\{1,\zeta\}$ with identity $1$ and
+zero $\zeta$.  Define $h_\circ:\Sigma_\circ^*\to M_\circ$ by
+$h_\circ(\mathtt c)=\zeta$ and by sending every other letter to $1$; thus
+$h_\circ(w)=\zeta$ exactly when $w$ contains $\mathtt c$.
 
-For $i\ge0$ put
+For $i\ge0$ put $s_i:=\mathtt c\mathtt 0^{\,i+1}\mathtt d$ and define
+finite languages
 \[
- s_i:=\mathtt c\,\mathtt 0^{\,i+1}\mathtt d,
-\]
-and define finite languages $K_i$ recursively by
-\[
- K_0:=\{\mathtt l\mathtt a\mathtt r,\,
-          \mathtt l s_0\mathtt r\},
+ \mathcal T_0:=\{\mathtt l\mathtt a\mathtt r,\,
+                    \mathtt l s_0\mathtt r\},
  \qquad
- K_i:=\{\mathtt l s_i\mathtt r\}
-      \cup
-      \{\mathtt lxy\mathtt r:x,y\in K_{i-1}\}
-      \quad(i\ge1).
+ \mathcal T_i:=\{\mathtt l s_i\mathtt r\}
+ \cup\{\mathtt lxy\mathtt r:x,y\in\mathcal T_{i-1}\}
+ \quad(i\ge1).
 \]
 Let
 \[
@@ -1033,7 +1013,7 @@ Let
  \qquad
  z_i:=\mathtt l z_{i-1}z_{i-1}\mathtt r.
 \]
-Then $z_i$ is the unique word of $K_i$ containing no $\mathtt c$, and
+Then $z_i$ is the unique $\mathtt c$-free word of $\mathcal T_i$, and
 \begin{equation}
  |z_i|=5\cdot2^i-2.
  \label{eq:clean-tree-length}
@@ -1041,281 +1021,160 @@ Then $z_i$ is the unique word of $K_i$ containing no $\mathtt c$, and
 
 \begin{lemma}[level-coded tree languages are substitutable]
 \label{lem:level-coded-substitutable}
-Every $K_i$ is substitutable in the Clark--Eyraud sense.
+For every $n\ge0$, $\mathcal T_n$ is substitutable in the
+Clark--Eyraud sense.
 \end{lemma}
 
 \begin{proof}
-View $\mathtt l$ and $\mathtt r$ as matching tree brackets.  Every word of
-$K_n$ is the depth-first encoding of a rooted ordered binary tree whose nodes
-carry a residual height.  At residual height $0$ the body is either
-$\mathtt a$ or $s_0$; at residual height $i>0$ the body is either $s_i$ or
-the concatenation of two residual-height-$(i-1)$ subtree encodings.
-
-Write
+View $\mathtt l,\mathtt r$ as matching tree brackets.  A word of
+$\mathcal T_n$ encodes a rooted ordered binary tree of residual height $n$:
+at height $0$ the node body is $\mathtt a$ or $s_0$, while at height $i>0$
+it is $s_i$ or the concatenation of two height-$(i-1)$ subtrees.  Put
 \[
  b_0:=\mathtt a,\qquad b_i:=z_{i-1}z_{i-1}\quad(i\ge1).
 \]
-Starting from the unique clean tree $z_n$, every word of $K_n$ is obtained by
-replacing, at a set of pairwise non-descendant nodes, a clean body $b_i$ by
-the shortcut body $s_i$.  Conversely, expanding a shortcut $s_i$ to $b_i$
-and then making analogous choices below recovers all words of $K_n$.
+Thus every word is obtained from the clean tree $z_n$ by replacing
+pairwise non-descendant clean bodies according to
+\begin{equation}
+ s_i\longleftrightarrow b_i .
+ \tag{$\dagger$}
+\end{equation}
 
-We use two elementary properties of this encoding.
+These replacement sites are recognizable from the word itself:
+$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ can occur only as a height-$i$
+shortcut body, while every occurrence of the primitive balanced word $z_j$
+is a clean height-$j$ subtree; hence an occurrence
+$z_{i-1}z_{i-1}$ is exactly the pair of children of one height-$i$ node.
+Consequently every literal occurrence of either side of~($\dagger$) is a
+legal body replacement.
 
-\emph{Site recognition.}
-An occurrence of
-$s_i=\mathtt c\mathtt 0^{i+1}\mathtt d$ in a word of $K_n$ can only be the
-body of a residual-height-$i$ shortcut node: the symbols $\mathtt c$ and
-$\mathtt d$ occur only in shortcut bodies, and the number of intervening
-$\mathtt 0$ symbols fixes $i$.  Likewise $z_j$ is a primitive balanced
-$\mathtt l/\mathtt r$ word whose recursive shape has residual height $j$.
-In the tree encoding, a factor equal to such a primitive balanced word begins
-at a node-opening $\mathtt l$ and ends at its matching $\mathtt r$; hence
-every occurrence of $z_j$ in a word of $K_n$ is a clean
-residual-height-$j$ subtree.  For $i\ge1$, two adjacent occurrences of
-$z_{i-1}$ with no intervening symbol must be the two children of one
-residual-height-$i$ node: crossing a parent boundary would insert an
-additional closing or opening bracket.  Thus every occurrence of
-$b_i=z_{i-1}z_{i-1}$ is exactly a clean level-$i$ body.  The case
-$b_0=\mathtt a$ is immediate.  Consequently every literal occurrence of
-either side of
-\[
- s_i\longleftrightarrow b_i
- \tag{\dagger}
-\]
-in a word of $K_n$ is a legal level-$i$ body replacement, and applying one
-such replacement keeps the whole word in $K_n$.
+Now suppose $uxv,uyv\in\mathcal T_n$.  Their parses are deterministic.
+Any node body on which the two parses choose differently must lie wholly
+between the cut after $u$ and the cut before $v$: if its body began before
+the left cut, its first body symbol
+($\mathtt c$ versus $\mathtt a$ or $\mathtt l$) would differ inside the
+common prefix; if it ended after the right cut, its last body symbol
+($\mathtt d$ versus $\mathtt a$ or $\mathtt r$) would differ inside the
+common suffix.  Hence $x$ can be transformed into $y$ by a finite sequence of
+legal replacements~($\dagger$), all inside the displayed factor.
 
-\emph{Localization.}
-The parse of a word in $K_n$ is deterministic.  At a node of known residual
-height $i$, after its opening $\mathtt l$ the next symbol is
-$\mathtt c$ exactly in the shortcut case; otherwise it is $\mathtt a$ when
-$i=0$ and $\mathtt l$ when $i>0$, beginning the clean alternative.
-Thus a common prefix determines the same partial parse in two words; the
-symmetric statement holds from the right because a shortcut body ends in
-$\mathtt d$, whereas a clean body ends in $\mathtt a$ at height $0$ and
-in $\mathtt r$ at positive height.
-
-Now suppose $uxv,uyv\in K_n$.  Compare the two deterministic parses at the
-cut after $u$ and the cut before $v$.  If a node on which the two parses make
-different shortcut/expansion choices began before the left cut, then its first
-body symbol ($\mathtt c$ versus $\mathtt a$ or $\mathtt l$) would already
-make the common prefix differ.  If such a node ended after the right cut, its
-last body symbol ($\mathtt d$ versus $\mathtt a$ or $\mathtt r$) would
-make the common suffix differ.  Hence every differing node body lies wholly
-between the two cuts.
-
-Expand, within these cuts, shortcut bodies until the differing region is
-clean, and then contract the pairwise non-descendant shortcut bodies required
-by the second parse.  This yields a finite sequence of replacements
-$(\dagger)$ from $x$ to $y$, all wholly inside the displayed factor.
-
-Let $(p,q)$ be any context with $pxq\in K_n$.  The same literal replacement
-instances occur inside this occurrence of $x$; by site recognition, applying
-them one by one keeps the whole word in $K_n$ and ends at $pyq$.  Hence $\D_{K_n}(x)\subseteq\D_{K_n}(y)$.  Reversing the replacement
-sequence gives the converse inclusion.  Therefore
-$\D_{K_n}(x)=\D_{K_n}(y)$ whenever the two distributions intersect, proving
-substitutability.
+If $pxq\in\mathcal T_n$, the same literal replacement sequence can be
+performed inside that occurrence of $x$, remaining in $\mathcal T_n$ at
+every step and ending at $pyq$.  Thus
+$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$; reversing the
+sequence gives equality.
 \end{proof}
 
 \begin{theorem}[set-driven ordinary-thickness lower bound]
 \label{thm:ordinary-thickness-lower}
-For the single fixed homomorphism $h_\circ$ above and every $n\ge1$ there
-are reduced SSBNF grammars $G_n$ and $G_n^-$ such that, with
-$K_n^-:=K_n\setminus\{z_n\}$,
+For the fixed homomorphism $h_\circ$ above and every $n\ge1$ there are
+reduced CFGs $R_n,R_n^-$ such that, with
+$\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$,
 \[
- L(G_n)=K_n,\qquad L(G_n^-)=K_n^-,
+ L(R_n)=\mathcal T_n,\qquad L(R_n^-)=\mathcal T_n^-,
 \]
 \[
- K_n,K_n^-\in\Ccf{h_\circ},\qquad
- |G_n|+|G_n^-|=\operatorname{poly}(n),\qquad
- \tau_{G_n},\tau_{G_n^-}\le2n+9.
+ \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},\qquad
+ |R_n|+|R_n^-|=O(n),\qquad
+ \tau_{R_n},\tau_{R_n^-}\le n+5.
 \]
-Let $\mathcal B$ be any set-driven operator for which both $K_n$ and
-$K_n^-$ have characteristic samples.  Then every
-characteristic sample $C_n$ for $K_n$ with respect to $\mathcal B$ satisfies
+Let $\mathcal B$ be any set-driven operator for which both targets have
+characteristic samples.  Then every characteristic sample $C_n$ for
+$\mathcal T_n$ satisfies
 \[
- \|C_n\|\ge 5\cdot2^n-1.
+ \|C_n\|\ge5\cdot2^n-1.
 \]
-Consequently no set-driven operator that admits characteristic samples for
-every target in $\Ccf{h_\circ}$ can have a characteristic-data bound
-polynomial in reduced CFG size and ordinary thickness.  In particular, the
-lower bound applies to $\mathcal B_{h_\circ}$.
+Consequently no set-driven operator admitting characteristic samples for all
+targets in $\Ccf{h_\circ}$ has a characteristic-data bound polynomial in
+reduced CFG size and ordinary thickness.  In particular this applies to
+$\mathcal B_{h_\circ}$.
 \end{theorem}
 
 \begin{proof}
-We give $G_n$ directly in SSBNF.  Introduce terminal carriers
-\[
- T_{\mathtt l}\to\mathtt l,\quad
- T_{\mathtt r}\to\mathtt r,\quad
- T_{\mathtt a}\to\mathtt a,\quad
- T_{\mathtt c}\to\mathtt c,\quad
- T_{\mathtt 0}\to\mathtt 0,\quad
- T_{\mathtt d}\to\mathtt d,
-\]
-a start symbol $S_0$ with $S_0\to A_n$, and for $0\le i\le n$ the auxiliary
-symbols below:
+A compact reduced CFG $R_n$ is
 \[
 \begin{aligned}
- Z_0&\to\mathtt 0,
- &Z_i&\to Z_{i-1}T_{\mathtt 0}
-       &&(1\le i\le n),\\
- U_i&\to T_{\mathtt c}Z_i,
- &V_i&\to U_iT_{\mathtt d},
- &W_i&\to T_{\mathtt l}V_i
-       &&(0\le i\le n),\\
- E_0&\to T_{\mathtt l}T_{\mathtt a},
- &A_0&\to E_0T_{\mathtt r}\mid W_0T_{\mathtt r},\\
- B_i&\to A_{i-1}A_{i-1},
- &E_i&\to T_{\mathtt l}B_i,
- &A_i&\to E_iT_{\mathtt r}\mid W_iT_{\mathtt r}
+ S&\to A_n,&
+ Z_0&\to\mathtt0,&
+ Z_i&\to Z_{i-1}\mathtt0 &&(1\le i\le n),\\
+ A_0&\to\mathtt l\mathtt a\mathtt r
+       \mid\mathtt l\mathtt cZ_0\mathtt d\mathtt r,\\
+ A_i&\to\mathtt lA_{i-1}A_{i-1}\mathtt r
+       \mid\mathtt l\mathtt cZ_i\mathtt d\mathtt r
        &&(1\le i\le n).
 \end{aligned}
 \]
-Every non-start rule is terminal or binary, and $S_0$ occurs on no
-right-hand side, so this is SSBNF.  Since
-$Z_i\Rightarrow^*\mathtt 0^{i+1}$ and
-$V_i\Rightarrow^*s_i$, the grammar generates exactly $K_n$; all displayed
-symbols occur on a successful derivation, so it is reduced.  The
-production-symbol count is $O(n)$.
+It generates exactly $\mathcal T_n$.  Every displayed symbol is reachable
+and productive, the production-symbol count is $O(n)$, and the shortcut
+alternative gives $|\omega(A_i)|\le i+5$, so
+$\tau_{R_n}\le n+5$.
 
-For thickness, $|\omega(Z_i)|=i+1$,
-$|\omega(U_i)|=i+2$, $|\omega(V_i)|=i+3$, and
-$|\omega(W_i)|=i+4$.  Also $|\omega(A_0)|=3$ and the shortcut alternative
-gives $|\omega(A_i)|\le i+5$ for $i\ge1$.  Finally
-$|\omega(B_i)|\le2(i+4)$ and
-$|\omega(E_i)|\le2i+9$.  Thus
-\[
- \tau_{G_n}\le2n+9.
-\]
-Under any fixed reasonable grammar encoding,
-$|G_n|=\operatorname{poly}(n)$ (indeed the ordinary production-symbol count
-is linear in $n$).
-
-The proper sublanguage $K_n^-$ has an equally compact SSBNF presentation.
-Retain the needed non-start rules displayed above (equivalently, retain all of
-them and finally trim the now-unreachable $A_n,B_n,E_n$), replace the start
-rule by $S_0^-\to H_n$, and add
-\[
- H_0\to W_0T_{\mathtt r},
-\]
-together with, for $1\le i\le n$,
+For $R_n^-$ retain $Z_0,\ldots,Z_n$ and the rules for
+$A_0,\ldots,A_{n-1}$ above, add $S^-\to A_n^-$, and put
 \[
 \begin{aligned}
- D_i^L&\to H_{i-1}A_{i-1},
- &D_i^R&\to A_{i-1}H_{i-1},\\
- F_i^L&\to T_{\mathtt l}D_i^L,
- &F_i^R&\to T_{\mathtt l}D_i^R,\\
- H_i&\to W_iT_{\mathtt r}
-       \mid F_i^LT_{\mathtt r}
-       \mid F_i^RT_{\mathtt r}.
+ A_0^-&\to\mathtt l\mathtt cZ_0\mathtt d\mathtt r,\\
+ A_i^-&\to\mathtt l\mathtt cZ_i\mathtt d\mathtt r
+ \mid\mathtt lA_{i-1}^-A_{i-1}\mathtt r
+ \mid\mathtt lA_{i-1}A_{i-1}^-\mathtt r
+ \quad(1\le i\le n).
 \end{aligned}
 \]
-Inductively, $H_i$ generates exactly those words of $K_i$ containing at least
-one shortcut, namely $K_i^-$.  After the indicated trim, the resulting grammar $G_n^-$ is reduced
-and remains in SSBNF.  It adds only $O(n)$ production symbols.  The shortcut alternative
-gives $|\omega(H_i)|\le i+5$, while
-$|\omega(D_i^L)|,|\omega(D_i^R)|\le2i+8$ and
-$|\omega(F_i^L)|,|\omega(F_i^R)|\le2i+9$, so
-$\tau_{G_n^-}\le2n+9$.
+Inductively, $A_i^-$ generates exactly the words of $\mathcal T_i$
+containing at least one shortcut, so $L(R_n^-)=\mathcal T_n^-$.  This grammar
+is again reduced, has $O(n)$ production symbols, and
+$|\omega(A_i^-)|\le i+5$, hence $\tau_{R_n^-}\le n+5$.
 
-Lemma~\ref{lem:level-coded-substitutable} makes $K_n$ substitutable, hence
-$\sim_{h_\circ}$-substitutable; since $K_n$ is finite, it lies in
-$\Ccf{h_\circ}$.  Put
+By Lemma~\ref{lem:level-coded-substitutable}, $\mathcal T_n$ is
+$\sim_{h_\circ}$-substitutable.  Moreover
 \[
- K_n^-:=K_n\setminus\{z_n\}.
+ \mathcal T_n^-
+ =\mathcal T_n\cap h_\circ^{-1}(\{\zeta\}),
 \]
-By uniqueness of the $\mathtt c$-free word,
-$K_n^-=K_n\cap h_\circ^{-1}(\{\zeta\})$.  Lemma~\ref{lem:fibre-restriction}
-makes $K_n^-$ $\sim_{h_\circ}$-substitutable, and finiteness again gives
-$K_n^-\in\Ccf{h_\circ}$.
+so Lemma~\ref{lem:fibre-restriction} gives the same property for
+$\mathcal T_n^-$.  Both languages are finite and therefore belong to
+$\Ccf{h_\circ}$.
 
-Let $\mathcal B$ be as in the theorem, and choose any characteristic sample
-$C_n$ for $K_n$ and any characteristic sample $C_n^-$ for $K_n^-$.  Since
-$K_n\setminus K_n^-=\{z_n\}$,
-Lemma~\ref{lem:nested-characteristic-obstruction} forces
-$z_n\in C_n$.  Equation~\eqref{eq:clean-tree-length} and the sample-size
-convention give
-\[
- \|C_n\|\ge |z_n|+1=5\cdot2^n-1.
-\]
-Since both $|G_n|$ and $\tau_{G_n}$ are polynomially bounded in $n$, no
-polynomial in these two parameters can bound the characteristic data.
+Let $C_n$ and $C_n^-$ be characteristic samples for the two targets with
+respect to $\mathcal B$.  Since
+$\mathcal T_n\setminus\mathcal T_n^-=\{z_n\}$,
+Lemma~\ref{lem:nested-characteristic-obstruction} forces $z_n\in C_n$.
+Equation~\eqref{eq:clean-tree-length} gives
+$\|C_n\|\ge|z_n|+1=5\cdot2^n-1$, which is exponential in $n$ while the
+two displayed representation parameters are linear.
 \end{proof}
 
-This lower bound is specific to the fixed typing that defines the target
-class, not to the intrinsic complexity of the larger target language viewed
-without that typing.  Indeed
-$K_n$ itself is ordinarily substitutable, so under the trivial typing it
-belongs to the $(0,0)$ fixed-window case and therefore admits the polynomial
-ordinary-thickness data bound proved below.
+\paragraph{Scope and consistency with the fixed-window bound.}
+The lower bound concerns $\Ccf{h_\circ}$ rather than the larger target in
+isolation.  The language $\mathcal T_n$ is ordinarily substitutable, hence
+belongs to the $(0,0)$ fixed-window class.  In contrast,
+$\mathcal T_n^-$ is not ordinarily substitutable for $n\ge1$: write
+$z_n=p_n\mathtt a q_n$ with $p_n:=\mathtt l^{\,n+1}$ and obtain
+$\bar q_n$ from $q_n$ by replacing one other height-$0$ body
+$\mathtt a$ by $s_0$.  Then $p_n\mathtt a$ and $p_ns_0$ share
+$(\lambda,\bar q_n)$ in $\mathcal T_n^-$, whereas
+$(\lambda,q_n)$ is a context of $p_ns_0$ but not of
+$p_n\mathtt a$; their $h_\circ$-types are different.
 
-\paragraph{Why the nontrivial typing matters.}
-For $n\ge1$, the proper sublanguage $K_n^-$ is \emph{not} ordinarily
-substitutable.  Write
-\[
- z_n=p_n\mathtt a q_n,
- \qquad p_n:=\mathtt l^{\,n+1},
-\]
-using the leftmost residual-height-zero leaf of the clean tree.  Let
-$\bar q_n$ be obtained from $q_n$ by replacing the body
-$\mathtt a$ of any other residual-height-zero leaf by the shortcut $s_0$.
-Then
-\[
- p_n\mathtt a\bar q_n,\quad
- p_ns_0\bar q_n\in K_n^-,
-\]
-so $p_n\mathtt a$ and $p_ns_0$ share the context
-$(\lambda,\bar q_n)$.  But
-\[
- p_n\mathtt a q_n=z_n\notin K_n^-,
- \qquad
- p_ns_0q_n\in K_n^-.
-\]
-Hence their distributions in $K_n^-$ differ.  The fixed observer
-$h_\circ$ assigns these two factors different types, because exactly one
-contains $\mathtt c$, so this ordinary-substitutability failure is invisible
-to the $h_\circ$-substitution condition.  In this precise sense the finer
-typing enlarges the target class enough to create the nested-target
-characteristic-data obstruction.  The point is that $h_\circ$
-separates the unique $\mathtt c$-free word from all shortcut words, while
-$K_n^-$ remains a valid $h_\circ$-substitutable target.  For the particular
-operator $\mathcal B_{h_\circ}$, soundness additionally prevents it from
-generating $z_n$ until that word is present in the positive sample.  The homomorphism $h_\circ$ is
-genuinely non-boundary: no fixed prefix--suffix window determines whether an
-arbitrarily deep interior occurrence of $\mathtt c$ is present.
+More generally, for every fixed $(k,\ell)$,
+$\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ for all sufficiently large $n$.
+Otherwise $\mathcal B_{h_{k,\ell}}$ would have characteristic samples for
+both nested targets by Theorem~\ref{thm:reconstruction-fixed-h}; the nested
+lemma would force the sample for $\mathcal T_n$ to contain $z_n$, contradicting
+the polynomial fixed-window bound of
+Corollary~\ref{cor:window-transfer} for the $O(n)$-size, $O(n)$-thickness
+grammar $R_n$.
 
-\paragraph{Scope of the lower-bound argument.}
-The proof no longer depends on the soundness theorem for the specific
-reconstruction $\mathcal B_h$.  It applies to \emph{every} set-driven
-operator using the characteristic-sample semantics of
-Section~\ref{sec:learning}, provided that the same operator supplies
-characteristic samples for both nested targets.  Thus replacing the canonical
-full-refinement witnesses by a smarter finite sample, or replacing
-$\mathcal B_h$ by another set-driven reconstruction of the whole
-$\Ccf{h_\circ}$ class, cannot restore a polynomial
-$|G|$--$\tau_G$ bound.  What is not ruled out is a genuinely different
-learning architecture or a different finite-sample success notion outside the
-set-driven characteristic-sample framework used in this paper.
-
-The same nested pair nevertheless has a sequential consequence.  A finite
-data sequence for $K_n$ that has not yet displayed $z_n$ is also a sequence
-over $K_n^-$.  Hence no learner required to identify both targets on all
-texts can treat such a sequence as a locking point for $K_n$: extending it
-to a text for $K_n^-$ would then force the learner to remain locked on the
-wrong target.  Thus $z_n$ is also unavoidable in any finite locking evidence
-for the larger target, although we do not use locking-sequence size as the
-polynomial-data notion in this paper.
-
-Accordingly, qualitative Gold identification with polynomial-time updates
-under arbitrary fixed $h$ does not entail polynomial thick data.  The
-separation already occurs for a two-element observer and finite, hence
-regular, targets; the fixed-window and linear positive results below are
-genuinely additional quantitative restrictions.
-
-The next two sections identify two settings in which polynomial data bounds
-do survive: fixed-window typings and linear grammars.
-
+The general lower-bound argument uses only the characteristic-sample
+semantics of Section~\ref{sec:learning}; its application to
+$\mathcal B_{h_\circ}$ uses
+Theorem~\ref{thm:reconstruction-fixed-h}.  It is measured against arbitrary
+reduced CFG representations and does not exclude bounds relative to a
+restricted normal-form representation class, such as the RNF-based setting
+of Coste--Nicolas~\cite{coste-nicolas2019}, or learning models with a
+different finite-sample success criterion.  Thus qualitative Gold
+identification with polynomial-time updates under arbitrary fixed $h$ does
+not imply a polynomial characteristic-data bound in ordinary CFG thickness.
 
 \section{Fixed-Window Thick Data}
 \label{sec:fixed-window-thick}
