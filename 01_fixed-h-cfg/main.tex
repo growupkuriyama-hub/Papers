@@ -61,78 +61,51 @@ slice.
 
 Gold~\cite{gold1967} showed that no language class containing all finite
 languages and at least one infinite language is identifiable in the limit
-from positive data alone. This negative result motivated a broad line of
-research in grammatical inference; see, for example,
-de~la~Higuera~\cite{higuera2010} for general background. For context-free languages, one standard way to
-recover positive learning results is the \emph{distributional} approach,
-in which learnability is obtained by restricting which substrings may be
-compared across contexts. Classical examples include Clark--Eyraud
+from positive data alone.  For context-free languages, distributional
+learning recovers positive results by restricting which substrings may be
+compared across contexts; classical examples are Clark--Eyraud
 substitutability~\cite{clark-eyraud2007} and Yoshinaka's
-$(k,\ell)$-substitutability~\cite{yoshinaka2008}. More generally,
-positive-data learnability has also been established for other grammar
-classes under suitable finite control assumptions; see, for example,
-Kanazawa~\cite{kanazawa1998} for restricted categorial grammars.
+$(k,\ell)$-substitutability~\cite{yoshinaka2008}.  See
+de~la~Higuera~\cite{higuera2010} for general background and
+Kanazawa~\cite{kanazawa1998} for another positive-data grammar-learning
+setting.
 
-The present paper studies a recognizable-congruence version of this
-distributional program. Let $h:\Sigma^*\to M$ be a homomorphism into a
-finite monoid, and write $\sim_h:=\ker h$, that is, $x\sim_h y$ iff $h(x)=h(y)$. For $x\in\Sigma^*$, let
-$\D_L(x):=\{(u,v)\in\Sigma^*\times\Sigma^*:uxv\in L\}$ denote its
-distribution in $L$. A language $L\subseteq\Sigma^*$ is
-\emph{$\sim_h$-substitutable} if $h(x)=h(y)$ and
-$\D_L(x)\cap\D_L(y)\neq\emptyset$ imply $\D_L(x)=\D_L(y)$ for all
-$x,y\in\Sigma^+$%
-\footnote{Clark--Eyraud treat $a^+$ as substitutable, whereas including $\lambda$ itself among the compared fragments would exclude $a^+$. See also Clark~\cite{clark2013}.}. Thus full equality of distributions is required only
-for strings that already agree under a fixed finite algebraic summary.
+We study a recognizable-congruence version of this program.  Let
+$h:\Sigma^*\to M$ be a homomorphism into a finite monoid and
+$\sim_h:=\ker h$.  For $x\in\Sigma^*$, write
+$\D_L(x):=\{(u,v):uxv\in L\}$.  A language $L$ is
+\emph{$\sim_h$-substitutable} if, for nonempty $x,y$,
+$h(x)=h(y)$ and $\D_L(x)\cap\D_L(y)\ne\emptyset$ imply
+$\D_L(x)=\D_L(y)$%
+\footnote{Clark--Eyraud treat $a^+$ as substitutable, whereas including
+$\lambda$ itself among the compared fragments would exclude $a^+$; see also
+Clark~\cite{clark2013}.}.  Thus full distributional equality is required
+only after a fixed finite algebraic comparison.
 
-Recognizable congruences are a natural comparison mechanism here. If
-$L=h^{-1}(\mathsf{Acc})$ for some finite monoid homomorphism $h:\Sigma^*\to M$ and
-some $\mathsf{Acc}\subseteq M$, then any two strings with the same $h$-value
-automatically have the same continuation behavior, and hence the same
-distribution. Thus every regular language belongs to the broader
-class $\mathsf{RS}$ (defined formally in Section~\ref{sec:framework}) of
-languages that are $\sim_h$-substitutable for \emph{some} finite monoid
-homomorphism. This observation shows that finite
-monoid typings are not an ad hoc generalization of bounded contexts, but a
-canonical algebraic source of a finite comparison bias.
+Recognizable congruences provide a natural finite bias.  If
+$L=h^{-1}(\mathsf{Acc})$ for a finite monoid homomorphism, equal $h$-values
+have identical distributions, so every regular language lies in the broader
+class $\mathsf{RS}$ defined in Section~\ref{sec:framework}.  Our learning
+results, however, use the \emph{fixed-$h$} regime: one homomorphism is fixed
+uniformly over the class $\Ccf{h}$, just as one pair $(k,\ell)$ is fixed in
+Yoshinaka's hierarchy.
 
-Our focus is the \emph{fixed-$h$} regime: the same finite monoid
-homomorphism $h:\Sigma^*\to M$ is fixed uniformly over the class
-$\Ccf{h}$ of context-free $\sim_h$-substitutable languages, rather than
-selected separately for each target after observing its data.  Thus fixed $h$
-plays the same class-level role as a fixed pair $(k,\ell)$ in Yoshinaka's
-hierarchy.  We separate choosing a useful typing
-from learning once that typing has been specified, a viewpoint
-methodologically close to the use of externally supplied typing or domain
-background knowledge in automata inference~\cite{coste-typing2004}.
-Coste et al. encode expert typing by finite-state type automata: the type of
-an occurrence may depend on its left and right contexts, and state merging is
-constrained so that the typing embedded in the inferred automaton remains
-compatible with that expert typing.  Our object is different---$h$ gives a
-compositional finite type to terminal factors rather than an occurrence-level
-contextual type to automaton structure---but it plays an analogous role as a
-fixed finite comparison bias.
-Finite biases can also be composed without making the typing target-specific:
-for example, the product of a fixed window typing with an independently
-specified finite domain feature is again one fixed finite-monoid typing for
-the whole class; Section~\ref{sec:framework} makes this precise.
+This separates choosing a useful finite typing from learning once it is
+specified.  The viewpoint is methodologically related to externally supplied
+typing or domain biases in automata inference~\cite{coste-typing2004}, but
+the present $h$ acts compositionally on terminal factors rather than on
+occurrence-level automaton structure.  Independent finite biases can be
+combined by product homomorphisms, as noted in
+Section~\ref{sec:framework}.
 
-There is also a useful contrast with control-set approaches.  Takada's 1988
-result reduces inference of even-linear languages to inference of regular
-control sets on a fixed universal even-linear grammar~\cite{takada1988}.
-His 1995 synthesis makes the architecture especially explicit: on a fixed
-universal unambiguous even-linear grammar, each target has a unique canonical
-regular control set, and learning even-linear languages reduces to learning
-regular languages; the same chapter develops regular-control representations
-more broadly for linear and equal-matrix grammars~\cite{takada1995}.  In
-these approaches the target-specific regular control language constrains
-sequences of production labels.  By contrast, the present homomorphism acts
-on terminal yields and supplies a class-level finite \emph{comparison bias}:
-fixing $h$ restricts which substrings may be compared but does not determine
-one target language.  Related positive-data work obtains learnable subclasses
-by restricting the regular control sets further
-~\cite{koshiba-makinen-takada1997}.  We use this contrast only for
-positioning; no equivalence, subsumption, or class separation with respect to
-the control-set methodology in general is claimed.
+A complementary comparison is with control-set learning.  Takada's approach
+encodes a target by a regular control language over production sequences of a
+fixed grammar~\cite{takada1988,takada1995}; related positive-data results
+further restrict such controls~\cite{koshiba-makinen-takada1997}.  Here the
+fixed homomorphism instead types terminal factors and restricts which factors
+may be compared.  We use this distinction only for positioning and claim no
+equivalence, subsumption, or general class separation between the two
+methodologies.
 
 \subsection{Contributions and main results}
 
@@ -145,32 +118,28 @@ many canonical positive witnesses, and a separate conservative sequential
 learner $\mathcal A_h$ identifies every nonempty target in Gold's sense;
 reconstruction and updates take time polynomial in the accumulated sample.
 
-\item \emph{Quantitative boundary.}  For arbitrary fixed $h$, the size of
-the canonical witnesses is controlled by a finite parameter of a target-side
-refinement introduced in Section~\ref{sec:typed-thickness}; this parameter can
-be exponentially larger than the corresponding source-grammar thickness.
-For one fixed two-element typing $h_\circ$, no reconstruction operator whose
-output depends only on the observed sample set and that has characteristic
-samples throughout $\Ccf{h_\circ}$ admits a bound polynomial in reduced CFG
-size and source-grammar thickness.  Such a bound does hold for every fixed
-prefix--suffix window $(k,\ell)$, whose typing captures Yoshinaka's
-$(k,\ell)$-substitutability exactly, and data polynomial in linear-grammar
-size suffice for linear targets under every fixed $h$.
+\item \emph{Quantitative boundary.}  For arbitrary fixed $h$, canonical
+witness size is controlled by a target-side typed-thickness parameter that can
+be exponentially larger than source-grammar thickness.  For one fixed
+two-element typing $h_\circ$, no set-driven reconstruction operator having
+characteristic samples throughout $\Ccf{h_\circ}$ admits a bound polynomial
+in reduced CFG size and ordinary thickness.  Such a bound does hold for every
+fixed prefix--suffix window $(k,\ell)$, and linear targets under every fixed
+$h$ admit characteristic data polynomial in linear-grammar size.
 
 \item \emph{Expressive position.}  Suitable fixed homomorphisms admit
 regular, nonregular linear, and nonlinear context-free targets outside every
 fixed-window class.  The one-bracket Dyck language lies outside
-$\mathsf{RS}$ altogether, and $\mathsf{RS}\cap\mathrm{CFL}$ is properly
-contained in Clark's congruential family.
+$\mathsf{RS}$, while $\mathsf{RS}\cap\mathrm{CFL}$ is properly contained
+in Clark's congruential family.
 \end{enumerate}
 
 \subsection{Organization of the paper}
-Sections~\ref{sec:prelim}--\ref{sec:framework} fix notation and treat the
-classical special cases, Sections~\ref{sec:algo}--\ref{sec:complexity} prove
-the learning result, Sections~\ref{sec:typed-thickness}--\ref{sec:linear}
-establish the quantitative boundary and positive regimes, and
-Section~\ref{sec:boundaries} gives the expressiveness results.  Long
-normalization proofs are deferred to the appendices.
+Sections~\ref{sec:prelim}--\ref{sec:framework} set up the framework,
+Sections~\ref{sec:algo}--\ref{sec:complexity} prove learnability,
+Sections~\ref{sec:typed-thickness}--\ref{sec:linear} give the quantitative
+results, and Section~\ref{sec:boundaries} gives the expressiveness
+comparisons.  Long normalization proofs are deferred to the appendices.
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -279,74 +248,61 @@ need not itself be linear.
 \section{Fixed Recognizable Substitutability}
 \label{sec:framework}
 
-For the fixed homomorphism $h$, put
+For fixed $h$, put
 $\mathsf{RS}_h:=\{L\subseteq\Sigma^*:L\text{ is $\sim_h$-substitutable}\}$.
-Thus $\Ccf{h}=\mathsf{RS}_h\cap\mathrm{CFL}$, while $\Clin{h}$ consists of
-those languages in $\mathsf{RS}_h\cap\mathrm{CFL}$ that are generated by
-some linear CFG.
-For expressive comparisons only, let
+Then $\Ccf{h}=\mathsf{RS}_h\cap\mathrm{CFL}$, while $\Clin{h}$ consists
+of its linearly generated members.  For expressive comparisons only, let
 $\mathsf{RS}:=\bigcup_h\mathsf{RS}_h$, where $h$ ranges over finite-monoid
-homomorphisms with domain $\Sigma^*$.  All such class notation is relative to
-the ambient alphabet.  When the alphabet must be displayed explicitly, we
-write $\mathsf{RS}_h(\Gamma)$ and $\mathsf{RS}(\Gamma)$ for the analogous
-classes over $\Gamma^*$; class inclusions are always understood
-alphabetwise.  The learning results in this paper concern one fixed $h$.
-For every nonempty alphabet, neither $\mathsf{RS}$ nor
-$\mathsf{RS}\cap\mathrm{CFL}$ is identifiable from positive data.\footnote{By
-Proposition~\ref{prop:regular-auto}, every regular language belongs to
-$\mathsf{RS}$. Hence both $\mathsf{RS}$ and $\mathsf{RS}\cap\mathrm{CFL}$
-contain every finite language over the ambient alphabet and also the infinite
-regular language $\Sigma^*$. Thus both classes are superfinite, and Gold's
-theorem~\cite{gold1967} applies.}  There is, however, a simple monotonicity
-with respect to refinement of the typing bias.  If $h':\Sigma^*\to M'$ refines $h$ in the sense that
-$\ker h'\subseteq\ker h$, then
-$\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$: equality under $h'$ implies
-equality under $h$, so every comparison required by $h'$ is already covered by
-$h$-substitutability.  Thus finer typings permit a larger fixed-$h$ class by
-requiring fewer pairs of factors to be compared.  This gain is not cost-free
-in the quantitative bounds below, since refining the typing may increase the
-number of typed nonterminals and hence the witness-set size.  In particular,
-for two finite typings $h$ and $g$, the product homomorphism $h\times g$ has
-$\ker(h\times g)=\ker h\cap\ker g$ and therefore refines both; hence
-$\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$.  Thus
-window information and an independent finite domain-specific feature can be
-combined in a single fixed typing.
+homomorphisms on $\Sigma^*$.  We write $\mathsf{RS}_h(\Gamma)$ and
+$\mathsf{RS}(\Gamma)$ when the alphabet matters; all inclusions below are
+alphabetwise.  The learning results always concern one fixed $h$.
+Neither $\mathsf{RS}$ nor $\mathsf{RS}\cap\mathrm{CFL}$ is identifiable
+from positive data on a nonempty alphabet: by
+Proposition~\ref{prop:regular-auto} both contain all finite languages and
+$\Sigma^*$, so Gold's theorem applies.
 
-A second useful observation gives a simple sufficient condition on the typing.
-If $\ker h$, restricted to $\Sigma^+$, refines $\equiv_L$, then%
-\footnote{If one required $\ker h\subseteq\equiv_L$ on all of $\Sigma^*$, the condition would be too strong: for the trivial monoid, $\lambda$ and every nonempty word have the same type, so even the ordinarily substitutable language $a^+$ would be excluded because $\lambda\not\equiv_{a^+}a$.}
-$L\in\mathsf{RS}_h$, since equal $h$-types are already syntactically congruent.
-The converse fails already for ordinary substitutability.  Clark--Eyraud's
-language $L_0=\{a^ncb^n:n\ge0\}$ is substitutable~\cite[Section~6.1]{clark-eyraud2007},
-hence belongs to the trivial-monoid slice, but $\equiv_{L_0}$ has infinite
-index: if $1\le r<s$, then $(a,cb^{r+1})$ is a context of $a^r$ but not of
-$a^s$.  Thus fixed-$h$ substitutability is strictly weaker than requiring
-$\ker h$ to refine the full syntactic congruence.
+Typing refinement is monotone.  If $\ker h'\subseteq\ker h$, then
+$\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$, since $h'$ requires fewer
+factor comparisons.  Refinement may nevertheless enlarge the typed grammar
+used in the quantitative analysis.  For two finite typings $h,g$,
+$\ker(h\times g)=\ker h\cap\ker g$, hence
+$\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$;
+in particular, window information and another finite feature can be combined
+without making the typing target-specific.
+
+If $\ker h$ restricted to $\Sigma^+$ refines the syntactic congruence
+$\equiv_L$, then $L\in\mathsf{RS}_h$.  The converse already fails for
+ordinary substitutability: Clark--Eyraud's
+$L_0=\{a^ncb^n:n\ge0\}$ is substitutable~\cite[Section~6.1]{clark-eyraud2007},
+but $\equiv_{L_0}$ has infinite index, since for $1\le r<s$ the context
+$(a,cb^{r+1})$ distinguishes $a^r$ from $a^s$.  The restriction to
+$\Sigma^+$ is essential: with the trivial monoid, comparing $\lambda$ as
+well would wrongly exclude examples such as $a^+$.
 
 \begin{proposition}\label{prop:regular-auto}
-A language is regular iff it has the form $h^{-1}(\mathsf{Acc})$ for some homomorphism
-$h:\Sigma^*\to M$ into a finite monoid $M$ and some $\mathsf{Acc}\subseteq M$.  For every fixed
-$h$ and $\mathsf{Acc}\subseteq M$, the language $h^{-1}(\mathsf{Acc})$ is
+A language is regular iff it has the form $h^{-1}(\mathsf{Acc})$ for some
+homomorphism $h:\Sigma^*\to M$ into a finite monoid and some
+$\mathsf{Acc}\subseteq M$.  For every fixed $h$ and
+$\mathsf{Acc}\subseteq M$, the language $h^{-1}(\mathsf{Acc})$ is
 $\sim_h$-substitutable.  Thus every regular language belongs to
 $\mathsf{RS}$.
 \end{proposition}
 
 \begin{proof}
-The first statement is the standard finite-monoid characterization of regular
-languages~\cite{eilenberg1974}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$,
-then $h(uxv)=h(uyv)$ for every $u,v$; hence $\D_L(x)=\D_L(y)$.
+The first statement is the standard finite-monoid characterization
+\cite{eilenberg1974}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
+$h(uxv)=h(uyv)$ for all $u,v$, so $\D_L(x)=\D_L(y)$.
 \end{proof}
 
 \subsection{Classical special cases}
 
-Clark--Eyraud's Definition~5~\cite{clark-eyraud2007} is written for
-all strings, but their Section~6.1 treats $a^+$ as substitutable; Clark's later
-formulation~\cite{clark2013} explicitly uses nonempty compared fragments.  We
-follow this operational convention: a language $L\subseteq\Sigma^*$ is called
-\emph{Clark--Eyraud substitutable} here if, for all $x,y\in\Sigma^+$,
-$\D_L(x)\cap\D_L(y)\ne\varnothing$ implies $\D_L(x)=\D_L(y)$.
-Under Definition~\ref{def:hsubst}, this is exactly the trivial-monoid case and
-hence also Yoshinaka's $(0,0)$ case.
+Following the nonempty-fragment convention used operationally by
+Clark--Eyraud~\cite{clark-eyraud2007} and explicitly by
+Clark~\cite{clark2013}, call $L$ \emph{Clark--Eyraud substitutable} when
+$\D_L(x)\cap\D_L(y)\ne\emptyset$ implies
+$\D_L(x)=\D_L(y)$ for all $x,y\in\Sigma^+$.  This is exactly the
+trivial-monoid case of Definition~\ref{def:hsubst}, and hence also
+Yoshinaka's $(0,0)$ case.
 
 \begin{proposition}[Clark--Eyraud special case]\label{prop:ce-special}
 Every Clark--Eyraud substitutable language belongs to $\mathsf{RS}$.
@@ -355,17 +311,14 @@ Every Clark--Eyraud substitutable language belongs to $\mathsf{RS}$.
 Use the one-element monoid.
 \end{proof}
 
-For $k,\ell\ge0$, write $\pref_k(w)$ and $\suf_\ell(w)$ for the prefix and
-suffix of the indicated lengths whenever they exist, with
-$\pref_0(w)=\suf_0(w)=\lambda$.
-
-Yoshinaka's original definition~\cite{yoshinaka2008} writes the left
-length-$k$ window as $v\in\Sigma^k$ and the right length-$\ell$ window as
-$u\in\Sigma^\ell$.  To avoid collision with our generic context notation
-$(u,v)$, we rename only these two window variables to $p$ and $q$ below.
-Thus a language $L$ is \emph{$(k,\ell)$-substitutable} if for all
-$p\in\Sigma^k$, $q\in\Sigma^\ell$ and strings
-$x_1,x_2,y_1,y_2,z_1,z_2\in\Sigma^*$, with $py_1q,py_2q\ne\lambda$,
+For $k,\ell\ge0$, let $\pref_k(w)$ and $\suf_\ell(w)$ denote the
+corresponding prefix and suffix, with
+$\pref_0(w)=\suf_0(w)=\lambda$.  Renaming Yoshinaka's window variables to
+avoid collision with our context notation, $L$ is
+\emph{$(k,\ell)$-substitutable} if, for
+$p\in\Sigma^k$, $q\in\Sigma^\ell$ and
+$x_1,x_2,y_1,y_2,z_1,z_2\in\Sigma^*$ with
+$py_1q,py_2q\ne\lambda$,
 \[
 \begin{split}
 &x_1py_1qz_1\in L,\quad x_1py_2qz_1\in L,\quad
@@ -376,16 +329,16 @@ x_2py_1qz_2\in L\\
 
 \begin{proposition}\label{prop:yl-special}
 For every fixed $k,\ell\ge0$ there is a finite monoid homomorphism
-$h_{k,\ell}$ such that, for every language $L\subseteq\Sigma^*$,
-$L$ is $(k,\ell)$-substitutable if and only if it is
+$h_{k,\ell}$ such that, for every $L\subseteq\Sigma^*$,
+$L$ is $(k,\ell)$-substitutable iff it is
 $\sim_{h_{k,\ell}}$-substitutable.
 \end{proposition}
 
 \begin{proof}
-Put $m_0:=\max\{1,k+\ell\}$, let $h_{k,\ell}(w):=w$ if $|w|<m_0$ and
-$h_{k,\ell}(w):=\langle\pref_k(w),\suf_\ell(w)\rangle$ (with a tag
-separating short words from pairs) otherwise, and let $M_{k,\ell}$ be the
-image.  For short words $x,y$ and tagged pairs define
+Put $m_0:=\max\{1,k+\ell\}$, let $h_{k,\ell}(w):=w$ for
+$|w|<m_0$, and otherwise let
+$h_{k,\ell}(w):=\langle\pref_k(w),\suf_\ell(w)\rangle$, with a tag
+separating the two cases.  On the finite image define, for short $x,y$,
 \[
 \begin{aligned}
 x\cdot y&:=h_{k,\ell}(xy),&
@@ -394,58 +347,40 @@ x\cdot\langle p,q\rangle&:=\langle\pref_k(xp),q\rangle,\\
 \langle p,q\rangle\cdot\langle p',q'\rangle&:=\langle p,q'\rangle.
 \end{aligned}
 \]
-The four cases give $h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$;
-surjectivity of $h_{k,\ell}$ then gives associativity, with identity
-$h_{k,\ell}(\lambda)$.
+Then $h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$; surjectivity
+gives associativity and $h_{k,\ell}(\lambda)$ is the identity.
 
-For $s,t\in\Sigma^+$, equal $h_{k,\ell}$-types mean either $s=t$ or that
-$s=py_1q$ and $t=py_2q$ for some $p\in\Sigma^k$ and
-$q\in\Sigma^\ell$ (for $k=\ell=0$ every nonempty word has the same tagged
-pair).
-
-First suppose that $L$ is $(k,\ell)$-substitutable.  In the nontrivial case
-above, the first two premise words in Yoshinaka's condition say that $s,t$
-share a context, the third gives an arbitrary context of $s$, and the
-conclusion transfers that context to $t$.  Quantifying over the context and
-using symmetry gives $\D_L(s)=\D_L(t)$.
-
-Conversely, suppose that $L$ is $\sim_{h_{k,\ell}}$-substitutable and take
-an instance of Yoshinaka's premise.  Put $s:=py_1q$ and $t:=py_2q$.  These
-two factors are nonempty by definition.  Moreover, if $k+\ell>0$ then
-$|s|,|t|\ge k+\ell=m_0$, while if $k=\ell=0$ their nonemptiness gives
-$|s|,|t|\ge1=m_0$.  Hence both are in the long-word part of the coding and
-$h_{k,\ell}(s)=\langle p,q\rangle=h_{k,\ell}(t)$.  The first two premise
-words give a shared context for $s,t$, so their distributions are equal; the
-third premise word is then a context of $s$ and therefore also of $t$, which
-is exactly the required fourth word.
+For nonempty $s,t$, equal types mean either $s=t$ or
+$s=py_1q$, $t=py_2q$ for common length-$k$ prefix $p$ and length-$\ell$
+suffix $q$ (including $k=\ell=0$).  If $L$ is
+$(k,\ell)$-substitutable, a shared context plus any context of one factor
+instantiates Yoshinaka's four-word condition, and symmetry gives equal
+distributions.  Conversely, in any Yoshinaka premise the factors
+$s:=py_1q$ and $t:=py_2q$ are nonempty and lie in the long-word part of the
+coding, hence have equal $h_{k,\ell}$-type; fixed-$h_{k,\ell}$
+substitutability transfers the third context and yields the fourth word.
 \end{proof}
 
 \phantomsection\label{crit:kl}
 \paragraph{Fixed-window counterexample criterion.}
-Let $k,\ell\ge0$ and put $m_0:=\max\{1,k+\ell\}$.  If
-$s,t\in\Sigma^*$ satisfy $|s|,|t|\ge m_0$,
-$\pref_k(s)=\pref_k(t)$, $\suf_\ell(s)=\suf_\ell(t)$,
-$\D_L(s)\cap\D_L(t)\ne\varnothing$, and $\D_L(s)\ne\D_L(t)$,
-then $L$ is not $(k,\ell)$-substitutable.  Indeed, the length and
-prefix--suffix assumptions give $h_{k,\ell}(s)=h_{k,\ell}(t)$, whereas the
-shared context together with unequal distributions shows that $L$ is not
-$\sim_{h_{k,\ell}}$-substitutable.  Proposition~\ref{prop:yl-special}
-therefore gives the claim.
+Let $m_0:=\max\{1,k+\ell\}$.  If $s,t$ have length at least $m_0$, the
+same length-$k$ prefix and length-$\ell$ suffix, a common context, and
+unequal distributions, then $L$ is not $(k,\ell)$-substitutable: the first
+three conditions give equal $h_{k,\ell}$-types and a shared context, while
+the last contradicts $\sim_{h_{k,\ell}}$-substitutability.
 
-Consequently the fixed $(k,\ell)$ class is exactly
-$\mathsf{RS}_{h_{k,\ell}}$.  Section~\ref{sec:fixed-window-thick} shows that
-the present reconstruction has a finite-sample bound polynomial in grammar
-size and ordinary thickness on this special case.  For
-$k=\ell=0$, the homomorphism $h_{0,0}$ separates $\lambda$ from the nonempty
-words, so under Definition~\ref{def:hsubst} it induces the same
-substitutability condition as the one-element trivial monoid.  For an
-alphabet $\Gamma$, define
+Thus the fixed $(k,\ell)$ class is exactly
+$\mathsf{RS}_{h_{k,\ell}}$.  Section~\ref{sec:fixed-window-thick} gives
+its polynomial thick-data bound.  For $k=\ell=0$,
+$h_{0,0}$ merely separates $\lambda$ from nonempty words and induces the
+same substitutability condition as the one-element monoid.  For an alphabet
+$\Gamma$, set
 \[
 \mathsf{KL}(\Gamma):=
 \bigcup_{k,\ell\ge0}
 \{L\subseteq\Gamma^*:L\text{ is $(k,\ell)$-substitutable}\},
 \]
-and abbreviate $\mathsf{KL}:=\mathsf{KL}(\Sigma)$ on the current alphabet.
+and abbreviate $\mathsf{KL}:=\mathsf{KL}(\Sigma)$.
 
 \subsection{Main theorem}
 
@@ -463,19 +398,18 @@ sense, each update taking time polynomial in the data seen so far;
 \item for fixed $(k,\ell)$, taking $h=h_{k,\ell}$, the sample in~(ii) can
 be chosen polynomial in $|R|$ and $\tau_R$ for any reduced CFG $R$
 representing the target;
-\item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can be
-chosen polynomial in $|R|$ for any linear CFG $R$ representing $L$.
+\item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can
+be chosen polynomial in $|R|$ for any linear CFG $R$ representing $L$.
 \end{enumerate}
 The quantitative mechanism behind items~(iv)--(v), together with its
 limitation for arbitrary fixed typings, is developed in
 Sections~\ref{sec:typed-thickness}--\ref{sec:linear}.
 \end{theorem}
 
-The class $\Ccf{h}$ does not contain all finite languages, in accordance
-with Gold's theorem: choose distinct nonempty $x,y$ with $h(x)=h(y)$ and
-$|r|>\max\{|x|,|y|\}$.  Then $x,y$ share the empty context in
-$\{x,y,rx\}$ while $(r,\lambda)$ is a context of $x$ only, so this finite
-language is not $\sim_h$-substitutable.
+The class $\Ccf{h}$ does not contain all finite languages: choose distinct
+nonempty $x,y$ with $h(x)=h(y)$ and $|r|>\max\{|x|,|y|\}$.  In
+$\{x,y,rx\}$ the factors $x,y$ share the empty context but
+$(r,\lambda)$ is a context of $x$ only.
 
 \section{Reconstruction Operator and Sequential Learner}
 \label{sec:algo}
@@ -1446,374 +1380,256 @@ context-free families.
 
 \subsection{A nonlinear target inside \texorpdfstring{$\mathsf{RS}$}{RS}}
 
-Let $\Delta:=\{a^nb^n:n\ge0\}$ and consider its Kleene closure $\Delta^*$.
-For $z\in\{a,b\}^*$ put $\beta(z):=|z|_a-|z|_b$, and let
-$\underline\beta(z)$ be the minimum of $\beta$ over all prefixes of $z$,
-including $\lambda$ and $z$ itself.  If $z_i z_{i+1}=ba$, call position $i$
-an \emph{occurrence} of $ba$ and call $\beta(z[1..i])$ its height.
+Let $\Delta:=\{a^nb^n:n\ge0\}$ and consider $\Delta^*$.  For
+$z\in\{a,b\}^*$ put $\beta(z):=|z|_a-|z|_b$ and let
+$\underline\beta(z)$ be the minimum prefix balance.  Call an occurrence of
+$ba$ to have the height of the prefix ending at its $b$.  We use:
+\textup{($\star$)} $w\in\Delta^*$ iff
+$\underline\beta(w)\ge0$, $\beta(w)=0$, and every occurrence of $ba$
+has height $0$.  The forward implication follows from the factorization into
+$a^nb^n$ blocks; conversely, cutting at successive zero-height positions
+gives balanced $a^*b^*$ segments.
 
-We use the following characterization.  \textup{($\star$)} A word $w$ belongs
-to $\Delta^*$ iff $\underline\beta(w)\ge0$, $\beta(w)=0$, and every occurrence
-of $ba$ in $w$ has height $0$.  The forward implication is immediate from a
-factorization $w=a^{n_1}b^{n_1}\cdots a^{n_r}b^{n_r}$.  Conversely, assume the
-right-hand side and $w\ne\lambda$.  Cut $w$ at consecutive positions of height
-$0$.  Every interior position of each resulting segment has positive height, so
-an internal occurrence of $ba$ would contradict the zero-height condition in
-\textup{($\star$)}.  Hence each segment lies in $a^*b^*$, and its total balance
-is $0$, so it has the form $a^nb^n$.  The case $w=\lambda$ is immediate.
+Let $\operatorname{fst}(w),\operatorname{lst}(w)\in\{\bot,a,b\}$ be
+the first and last symbols, with $\bot$ on $\lambda$, and let
+$\operatorname{ba}(w)$ record whether $w$ contains $ba$.  Put
+\[
+h_\star(w):=
+(\operatorname{fst}(w),\operatorname{lst}(w),\operatorname{ba}(w)).
+\]
+The summary of a concatenation is determined by the summaries of its factors:
+the endpoints concatenate in the evident way and a new $ba$ can arise only
+across a boundary $b|a$.  Hence the finite image
+$M_\star:=h_\star(\{a,b\}^*)$ carries the product
+$h_\star(x)h_\star(y):=h_\star(xy)$, making $h_\star$ a finite-monoid
+homomorphism.
 
-For a word $w$, let $\operatorname{fst}(w),\operatorname{lst}(w)\in
-\{\bot,a,b\}$ be its first and last symbols, with both equal to $\bot$ on
-$\lambda$, and let $\operatorname{ba}(w)\in\{0,1\}$ record whether $w$
-contains $ba$.  Put
-$h_\star(w):=(\operatorname{fst}(w),\operatorname{lst}(w),\operatorname{ba}(w))$.
-The first symbol of $xy$ is inherited from $x$ when $x\ne\lambda$ and from
-$y$ otherwise, and the last symbol is symmetric.  Moreover, $xy$ contains
-$ba$ iff $x$ contains $ba$, or $y$ contains $ba$, or
-$\operatorname{lst}(x)=b$ and $\operatorname{fst}(y)=a$.  Thus
-$h_\star(xy)$ is determined by $h_\star(x)$ and $h_\star(y)$.  On the finite
-image $M_\star:=h_\star(\{a,b\}^*)$, define
-$h_\star(x)\cdot h_\star(y):=h_\star(xy)$.  This product is well defined;
-surjectivity together with associativity of concatenation makes it associative,
-and $h_\star(\lambda)$ is the identity.  Hence $M_\star$ is a finite monoid
-and $h_\star:\{a,b\}^*\to M_\star$ is a homomorphism.
-
-For a nonempty word $x$ and $d\in\mathbb Z$, call $d$ an
-\emph{admissible entry height} for $x$ if
+For nonempty $x$ and $d\in\mathbb Z$, call $d$ an
+\emph{admissible entry height} if
 $d+\underline\beta(x)\ge0$ and $d+\eta=0$ for every height $\eta$ of an
-internal occurrence of $ba$ in $x$.  Write $\mathcal E(x)$ for the set of
-all such $d$.
+internal $ba$ in $x$; write $\mathcal E(x)$ for the set of such $d$.
 
 \begin{proposition}[a nonlinear fixed-$h_\star$ target]
 \label{prop:nonlinear-rs-example}
 The language $\Delta^*$ is context-free, nonregular, and non-linear, and it is
-$\sim_{h_\star}$-substitutable for the finite homomorphism above.  Moreover,
-it is not $(k,\ell)$-substitutable for any fixed $k,\ell\ge0$.  In particular,
+$\sim_{h_\star}$-substitutable.  Moreover it is not
+$(k,\ell)$-substitutable for any fixed $k,\ell\ge0$.  Hence
 $\Delta^*\in\mathsf{RS}_{h_\star}(\{a,b\})\cap\mathrm{CFL}$ and
 $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$.
 \end{proposition}
 
 \begin{proof}
 The grammar $S\to TS\mid\lambda$, $T\to aTb\mid\lambda$ generates
-$\Delta^*$, so the language is context-free.  It is nonregular because
-$\Delta^*\cap a^*b^*=\Delta$.  It is also non-linear: linear languages are
-closed under intersection with regular languages, whereas
-$\Delta^*\cap a^*b^*a^*b^*=\Delta\Delta$ is not linear~\cite{autebert1997}.
+$\Delta^*$.  Nonregularity follows from
+$\Delta^*\cap a^*b^*=\Delta$, and nonlinearity from closure of linear
+languages under regular intersection together with
+$\Delta^*\cap a^*b^*a^*b^*=\Delta\Delta$, which is not linear
+\cite{autebert1997}.
 
-\emph{$\sim_{h_\star}$-substitutability.}
-Let nonempty $x,y$ satisfy $h_\star(x)=h_\star(y)$ and share a context $(u,v)$.
-Since $uxv,uyv\in\Delta^*$, comparison of total balances gives
-$\beta(x)=\beta(y)$.
+For substitutability, let nonempty $x,y$ have equal $h_\star$-type and a
+common context $(u,v)$.  Since $uxv,uyv\in\Delta^*$, total balance gives
+$\beta(x)=\beta(y)$.  By \textup{($\star$)}, membership of $u'xv'$ is
+determined, as far as $x$ is concerned, by its first and last symbols,
+$\beta(x)$, and whether $\beta(u')\in\mathcal E(x)$.  It therefore
+suffices to show $\mathcal E(x)=\mathcal E(y)$.
 
-Applying \textup{($\star$)} to $u'xv'$ shows that, for a fixed context
-$(u',v')$, the membership conditions depending on $x$ are determined by
-$\operatorname{fst}(x)$, $\operatorname{lst}(x)$, $\beta(x)$, and whether
-$\beta(u')\in\mathcal E(x)$.
-Indeed, the prefix-nonnegativity and zero-height conditions internal to $x$ are
-precisely encoded by $\beta(u')\in\mathcal E(x)$.  A possible $ba$ at the
-boundary $u'|x$ is determined by $\operatorname{fst}(x)$ and $\beta(u')$,
-while the boundary $x|v'$ and all height conditions internal to $v'$ depend
-only on the exit height $\beta(u')+\beta(x)$ and on
-$\operatorname{lst}(x)$.  It
-therefore suffices to prove $\mathcal E(x)=\mathcal E(y)$.
+If both contain $ba$, any internal $ba$ forces the unique possible entry
+height, and the common context supplies it; hence
+$\mathcal E(x)=\{\beta(u)\}=\mathcal E(y)$.  If neither contains
+$ba$, then $x,y\in a^*b^*$ and
+$\mathcal E(z)=\{d:d\ge-\min\{0,\beta(z)\}\}$, so equality follows
+from $\beta(x)=\beta(y)$.  Thus
+$\D_{\Delta^*}(x)=\D_{\Delta^*}(y)$.
 
-If $\operatorname{ba}(x)=\operatorname{ba}(y)=1$, any internal occurrence of
-$ba$ at height $\eta$ forces an admissible entry height to equal $-\eta$.
-Thus each of $\mathcal E(x)$ and $\mathcal E(y)$ has at most one element.
-The shared context gives $\beta(u)\in\mathcal E(x)\cap\mathcal E(y)$, so
-$\mathcal E(x)=\{\beta(u)\}=\mathcal E(y)$.
-
-If $\operatorname{ba}(x)=\operatorname{ba}(y)=0$, then $x,y\in a^*b^*$.
-For every $z\in a^*b^*$, $\underline\beta(z)=\min\{0,\beta(z)\}$, and hence
-$\mathcal E(z)=\{d\in\mathbb Z:d\ge-\min\{0,\beta(z)\}\}$.  Since
-$\beta(x)=\beta(y)$, again $\mathcal E(x)=\mathcal E(y)$.  Therefore
-$\D_{\Delta^*}(x)=\D_{\Delta^*}(y)$, proving
-$\sim_{h_\star}$-substitutability.
-
-\emph{Excluding fixed windows.}
-Fix $k,\ell\ge0$ and put
-$m_{\mathrm{win}}:=\max\{1,k+\ell\}$,
-$s:=a^{m_{\mathrm{win}}}b^{m_{\mathrm{win}}}$, and
-$t:=a^{m_{\mathrm{win}}}b^{m_{\mathrm{win}}}
-     a^{m_{\mathrm{win}}}b^{m_{\mathrm{win}}}$.  Both words have length at least
-$\max\{1,k+\ell\}$, share the length-$k$ prefix $a^k$ and length-$\ell$
-suffix $b^\ell$, and share the empty context because $s,t\in\Delta^*$.
-Moreover
-$asb=a^{m_{\mathrm{win}}+1}b^{m_{\mathrm{win}}+1}\in\Delta^*$,
-whereas in
-$atb=a^{m_{\mathrm{win}}+1}b^{m_{\mathrm{win}}}
-      a^{m_{\mathrm{win}}}b^{m_{\mathrm{win}}+1}$ the central occurrence of $ba$ has height $1$,
-so \textup{($\star$)} gives $atb\notin\Delta^*$.  Thus
-$(a,b)\in\D_{\Delta^*}(s)\setminus\D_{\Delta^*}(t)$, and the
-\hyperref[crit:kl]{fixed-window counterexample criterion} shows that
-$\Delta^*$ is not $(k,\ell)$-substitutable.  Since $k,\ell$ were arbitrary,
-$\Delta^*\notin\mathsf{KL}(\{a,b\})$.
+For the fixed-window separation, fix $k,\ell$ and let
+$m:=\max\{1,k+\ell\}$,
+$s:=a^mb^m$, and $t:=a^mb^ma^mb^m$.  They have the same length-$k$ prefix
+and length-$\ell$ suffix and share the empty context.  Moreover
+$asb\in\Delta^*$, whereas the central $ba$ in $atb$ has height $1$, so
+$atb\notin\Delta^*$.  The fixed-window counterexample criterion therefore
+excludes every $(k,\ell)$.
 \end{proof}
 
-Proposition~\ref{prop:linear-separator-example} and this example show two
-different ranges of the fixed-$h$ framework.  The former shows that the
-polynomial characteristic-data theorem for the linear subclass already applies
-to a nonregular linear language outside the fixed-window hierarchy.  In
-contrast, $\Delta^*$ shows that the general context-free fixed-$h$ theorem
-reaches a non-linear context-free language outside that hierarchy.  In
-particular, because $\Delta^*$ is not linear, it is not even-linear either.
-No separation from control-set methods in general is claimed here.
+Thus the fixed-$h$ framework reaches both the nonregular linear example
+$L_{\pm,e}$ of Section~\ref{sec:linear} and the nonlinear context-free
+language $\Delta^*$ beyond the fixed-window hierarchy.  No separation from
+control-set methods in general is claimed.
 
 \subsection{Regular separation from the fixed-window hierarchy}
 
-Let $\Sigma_c:=\{\uparrow,\downarrow,\#\}$ be the counter alphabet.  In this
-subsection, abbreviate $\mathsf{RS}(\Sigma_c)$ and $\mathsf{KL}(\Sigma_c)$ by
-$\mathsf{RS}$ and $\mathsf{KL}$.  For
-$w=\delta_1\cdots\delta_n\in\Sigma_c^*$ put $\mathrm{ht}_0(w):=0$ and define
-$\mathrm{ht}_i(w)$ by reading from left to right: $\uparrow$ increases the
-height by $1$, $\downarrow$ decreases it by $1$, and $\#$ resets it to $0$.
+Let $\Sigma_c:=\{\uparrow,\downarrow,\#\}$.  For
+$w=\delta_1\cdots\delta_n$, let $\mathrm{ht}_0(w)=0$ and update height by
+$+1$ on $\uparrow$, $-1$ on $\downarrow$, and reset to $0$ on $\#$.
 For $\rho\ge1$, put
-$\mathrm{CTR}_\rho:=\{w\in\Sigma_c^*:0\le\mathrm{ht}_i(w)\le\rho
-\text{ for all }0\le i\le|w|\}$.
+\[
+\mathrm{CTR}_\rho:=
+\{w\in\Sigma_c^*:0\le\mathrm{ht}_i(w)\le\rho
+\text{ for all }0\le i\le|w|\}.
+\]
 
 \begin{proposition}\label{prop:ctr-regular}
-For every $\rho\ge1$, $\mathrm{CTR}_\rho$ is regular and hence belongs to
-$\mathsf{RS}$.
+For every $\rho\ge1$, $\mathrm{CTR}_\rho$ is regular and hence belongs
+to $\mathsf{RS}(\Sigma_c)$.
 \end{proposition}
 \begin{proof}
-Use states $0,1,\ldots,\rho$ to record the current height and one sink state
-after leaving the allowed range.  The symbol $\#$ sends every non-sink state
-to $0$.  Thus $\mathrm{CTR}_\rho$ is regular, and
-Proposition~\ref{prop:regular-auto} gives membership in $\mathsf{RS}$.
+A DFA records heights $0,\ldots,\rho$, uses one sink outside the range, and
+resets to $0$ on $\#$.  Apply Proposition~\ref{prop:regular-auto}.
 \end{proof}
 
 \begin{theorem}\label{thm:ctr-non-kl}
-For every $\rho\ge2$, $\mathrm{CTR}_\rho$ is not $(k,\ell)$-substitutable for
-any $k,\ell\ge0$.
+For every $\rho\ge2$, $\mathrm{CTR}_\rho$ is not
+$(k,\ell)$-substitutable for any $k,\ell\ge0$.
 \end{theorem}
 \begin{proof}
-Fix $k,\ell\ge0$ and put
+Fix $k,\ell$ and put
 $s:=(\uparrow\downarrow)^k\uparrow^{\rho-1}\#^\ell$ and
-$t:=(\uparrow\downarrow)^k\uparrow^\rho\#^\ell$.  Since $\rho\ge2$,
-$|s|,|t|\ge\max\{1,k+\ell\}$, and the two words share the same length-$k$
-prefix and the same length-$\ell$ suffix $\#^\ell$.
-
-Both $s$ and $t$ lie in $\mathrm{CTR}_\rho$, so they share the empty context.
-In $\uparrow s$, after the initial $\uparrow$, the factor
-$(\uparrow\downarrow)^k$ runs between heights $1$ and $2$, and the final
-$\uparrow^{\rho-1}$ reaches exactly height $\rho$.  Thus
-$\uparrow s\in\mathrm{CTR}_\rho$ because $\rho\ge2$.  By contrast,
-$\uparrow t$ reaches height $\rho+1$ before the first reset, so
-$\uparrow t\notin\mathrm{CTR}_\rho$.  Hence
-$(\uparrow,\lambda)\in\D_{\mathrm{CTR}_\rho}(s)
-\setminus\D_{\mathrm{CTR}_\rho}(t)$, and the
-\hyperref[crit:kl]{fixed-window counterexample criterion} proves the claim.
+$t:=(\uparrow\downarrow)^k\uparrow^\rho\#^\ell$.  They are long
+enough for the fixed-window criterion, have the same length-$k$ prefix and
+length-$\ell$ suffix, and both lie in $\mathrm{CTR}_\rho$.  Yet
+$\uparrow s\in\mathrm{CTR}_\rho$ while
+$\uparrow t\notin\mathrm{CTR}_\rho$, the latter reaching height
+$\rho+1$.  Hence their distributions differ, and the criterion applies.
 \end{proof}
 
-For every $\rho\ge2$, Proposition~\ref{prop:regular-auto} supplies a finite
-monoid homomorphism $h_\rho$ recognizing $\mathrm{CTR}_\rho$.  Hence
-Proposition~\ref{prop:ctr-regular} and Theorem~\ref{thm:ctr-non-kl} give
-\[
- \mathrm{CTR}_\rho\in\Ccf{h_\rho}\setminus\mathsf{KL}.
-\]
-Thus failure of all fixed-window conditions already occurs inside a single
-fixed-$h$ learnable slice, and already for a regular target.  The target-dependent
-union $\mathsf{RS}$ is used only for expressive comparisons, not as the class
-to which the learning theorem is applied.
+A finite recognizing homomorphism $h_\rho$ therefore gives
+$\mathrm{CTR}_\rho\in\Ccf{h_\rho}\setminus\mathsf{KL}$.
+Thus the fixed-window hierarchy already misses regular targets inside single
+fixed-$h$ learnable slices.
 
 \subsection{Natural deterministic context-free languages outside \texorpdfstring{$\mathsf{RS}$}{RS}}
 
-The following simple obstruction isolates the common reason why the
-counter and Dyck examples below fall outside every class induced by a finite-monoid homomorphism.
-
 \begin{lemma}[finite-monoid obstruction]\label{lem:finite-monoid-obstruction}
-Let $L\subseteq\Sigma^*$.  Suppose there is an infinite set
-$\Xi\subseteq\Sigma^+$ such that for every distinct $x,y\in\Xi$,
-$\D_L(x)\cap\D_L(y)\ne\emptyset$ and $\D_L(x)\ne\D_L(y)$.
-Then $L\notin\mathsf{RS}(\Sigma)$.
+Let $L\subseteq\Sigma^*$.  Suppose an infinite
+$\Xi\subseteq\Sigma^+$ satisfies, for all distinct $x,y\in\Xi$,
+$\D_L(x)\cap\D_L(y)\ne\emptyset$ and
+$\D_L(x)\ne\D_L(y)$.  Then $L\notin\mathsf{RS}(\Sigma)$.
 \end{lemma}
 \begin{proof}
-Let $h:\Sigma^*\to M$ be any homomorphism into a finite monoid.  Since
-$\Xi$ is infinite and $M$ is finite, there exist distinct $x,y\in\Xi$ with
-$h(x)=h(y)$.  Their distributions
-intersect but are unequal, contradicting $\sim_h$-substitutability.  Thus
-$L\notin\mathsf{RS}_h(\Sigma)$ for every finite $h$.
+Any finite $h$ identifies two elements of $\Xi$; their common context and
+unequal distributions contradict $\sim_h$-substitutability.
 \end{proof}
 
-Removing the upper cap gives
+Removing the upper cap gives the deterministic context-free language
 \[
- \mathrm{CTR}:=
- \{w\in\Sigma_c^*:\mathrm{ht}_i(w)\ge0\text{ for every }0\le i\le |w|\}.
+\mathrm{CTR}:=
+\{w\in\Sigma_c^*: \mathrm{ht}_i(w)\ge0
+\text{ for all }0\le i\le|w|\},
 \]
-It is deterministic context-free: a deterministic pushdown automaton pushes
-on $\uparrow$, pops on $\downarrow$ (rejecting underflow), and clears the
-stack to its bottom marker on $\#$.
+accepted by the evident deterministic pushdown counter with reset.
 
 \begin{corollary}[uncapped counter obstruction]
 $\mathrm{CTR}\notin\mathsf{RS}(\Sigma_c)$.
 \end{corollary}
 \begin{proof}
-Apply Lemma~\ref{lem:finite-monoid-obstruction} to
-$\Xi=\{\uparrow^i:i\ge1\}$.  If $i<j$, then $(\lambda,\downarrow^i)$ is a context of both
-$\uparrow^i$ and $\uparrow^j$, while $(\lambda,\downarrow^j)$ is a context
-of $\uparrow^j$ but not of $\uparrow^i$.
+Use $\Xi=\{\uparrow^i:i\ge1\}$.  For $i<j$,
+$(\lambda,\downarrow^i)$ is common, while
+$(\lambda,\downarrow^j)$ is a context only of $\uparrow^j$.
 \end{proof}
 
-The same obstruction appears in the one-bracket Dyck language
+For the one-bracket Dyck language
 \[
  D_1:=\{w\in\{a,b\}^*: |w'|_a\ge|w'|_b
- \text{ for every prefix }w'\text{ of }w,\ 
- |w|_a=|w|_b\},
+ \text{ for every prefix }w',\ |w|_a=|w|_b\},
 \]
-where $|t|_a$ and $|t|_b$ denote the numbers of $a$'s and $b$'s in a
-word $t$.
-This is a standard deterministic context-free language~\cite{ginsburg-greibach1966}.
-Our symbol $D_1$ denotes the whole one-bracket Dyck language.  In the notation
-of Autebert--Berstel--Boasson~\cite{autebert1997}, the Dyck language is the
-free submonoid generated by the Dyck-prime language and is written $D_1^*$;
-thus our $D_1$ corresponds to their $D_1^*$.
+a standard deterministic context-free language
+\cite{ginsburg-greibach1966}, our notation denotes the whole Dyck language
+(called $D_1^*$ in the convention of
+Autebert--Berstel--Boasson~\cite{autebert1997}).
 
 \begin{corollary}\label{cor:dyck-not-rs}
 $D_1\notin\mathsf{RS}(\{a,b\})$.
 \end{corollary}
 \begin{proof}
-Apply Lemma~\ref{lem:finite-monoid-obstruction} to
-$\Xi=\{b^i a^i:i\ge1\}$.  For $i<j$, the context $(a^j,b^j)$ is common to
-$b^ia^i$ and $b^ja^j$, while $(a^i,b^i)$ is a context of $b^ia^i$ but not
-of $b^ja^j$, since the prefix $a^ib^j$ underflows.
+Use $\Xi=\{b^ia^i:i\ge1\}$.  For $i<j$,
+$(a^j,b^j)$ is common, whereas $(a^i,b^i)$ is a context only of
+$b^ia^i$; for $b^ja^j$ the prefix $a^ib^j$ underflows.
 \end{proof}
-Thus $\mathsf{RS}(\{a,b\})$ does not contain all deterministic context-free
-languages over $\{a,b\}$.
 
-This obstruction has a useful pushdown interpretation.  The interesting point
-is that unbounded stack behaviour by itself is not incompatible with
-$\mathsf{RS}$: $L_{\pm,e}$ is already a nonregular one-turn language in
-$\mathsf{RS}(\{a,b,c,d,e\})$.  What fails for $\mathrm{CTR}$ and $D_1$
-is more specific: an infinite family of factors remains mutually comparable
-through common contexts while carrying pairwise distinct contextual behaviours,
-so no finite $h$ can keep all incompatible factors apart.  We use this only as
-an obstruction and not as a complete pushdown characterization of
-$\mathsf{RS}\cap\mathrm{CFL}$.
+Thus unbounded stack behavior alone is not the obstruction---the nonregular
+one-turn language $L_{\pm,e}$ lies in $\mathsf{RS}$---but an infinite
+family of mutually comparable factors with distinct contextual behavior
+cannot be separated by any finite $h$.
 
-We use one elementary closure fact for the final example.
 \begin{lemma}[fixed-word quotient]\label{lem:rs-fixed-quotient}
-If $L$ is $\sim_h$-substitutable and $z\in\Sigma^*$, then the right
-quotient $L/z:=\{w:wz\in L\}$ is $\sim_h$-substitutable.
+If $L$ is $\sim_h$-substitutable and $z\in\Sigma^*$, then
+$L/z:=\{w:wz\in L\}$ is $\sim_h$-substitutable.
 \end{lemma}
 \begin{proof}
-A common context $(u,v)$ for equal-type nonempty $x,y$ in $L/z$ becomes
-$(u,vz)$ in $L$, so $\D_L(x)=\D_L(y)$; replacing any context $(s,t)$ by
-$(s,tz)$ then gives $\D_{L/z}(x)=\D_{L/z}(y)$.
+A common context $(u,v)$ in $L/z$ becomes $(u,vz)$ in $L$; equality of
+distributions in $L$ then transfers every context $(s,t)$ by appending $z$.
 \end{proof}
 
-The language generated by $S\to aSS\mid b$ is usually called the
-\emph{\L{}ukasiewicz language}.  Autebert--Berstel--Boasson write the
-standard relation as $L_{\mathrm{Luk}}=D_1^*b$; with the present notation for
-the whole Dyck language this is $L_{\mathrm{Luk}}=D_1b$
-~\cite{autebert1997}.  It is also a standard
-deterministic context-free language~\cite{ginsburg-greibach1966}.  If
-$L_{\mathrm{Luk}}\in\mathsf{RS}(\{a,b\})$, Lemma~\ref{lem:rs-fixed-quotient} would give
-$D_1=L_{\mathrm{Luk}}/b\in\mathsf{RS}(\{a,b\})$, contradicting
+The language generated by $S\to aSS\mid b$ is the
+\emph{\L{}ukasiewicz language}.  In the notation used here,
+$L_{\mathrm{Luk}}=D_1b$~\cite{autebert1997}, and it is deterministic
+context-free~\cite{ginsburg-greibach1966}.  If it belonged to
+$\mathsf{RS}(\{a,b\})$, Lemma~\ref{lem:rs-fixed-quotient} would put
+$D_1=L_{\mathrm{Luk}}/b$ in $\mathsf{RS}$, contradicting
 Corollary~\ref{cor:dyck-not-rs}.
-
 
 \subsection{Comparison with Clark's congruential family}
 
-Clark's convention~\cite{clark2010congruential} permits a finite set of
-initial symbols in place of a single start symbol.  For a finite initial set
-$I\subseteq V$, write $L_G[I]:=\bigcup_{A\in I}L_G(A)$.  A CFG $G$ with
-initial set $I$ is \emph{congruential} if, for every nonterminal $A$,
-$L_G(A)$ is contained in a single syntactic-congruence class of $L_G[I]$.
-The condition is vacuous when $L_G(A)=\emptyset$.  For a finite alphabet
-$\Gamma$, let $\mathsf{CONG}(\Gamma)$ denote the languages over $\Gamma$
-generated by congruential CFGs.  Clark~\cite{clark2010congruential} already
-notes that substitutable and $(k,\ell)$-substitutable languages belong to
-this congruential family, and uses the Dyck language as a standard example
-beyond ordinary substitutability.  The next proposition extends the
-containment statement to every fixed-$h$ slice and hence to
-$\mathsf{RS}\cap\mathrm{CFL}$; $D_1$ is reused only as a properness witness.
+Clark~\cite{clark2010congruential} allows a finite initial set
+$I\subseteq V$; write $L_G[I]:=\bigcup_{A\in I}L_G(A)$.  Such a grammar is
+\emph{congruential} if each $L_G(A)$ lies in one syntactic-congruence class
+of $L_G[I]$.  Let $\mathsf{CONG}(\Gamma)$ be the languages over $\Gamma$
+generated by such grammars.  Clark already places substitutable and
+$(k,\ell)$-substitutable languages in this family; the following extends
+the containment to every fixed-$h$ slice.
 
 \begin{proposition}[comparison with Clark's congruential family]
 \label{prop:clark-congruential-comparison}
-For every finite alphabet $\Gamma$ and every finite-monoid homomorphism
-$h:\Gamma^*\to M$, we have
-$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$.  Consequently,
+For every finite alphabet $\Gamma$ and finite-monoid homomorphism
+$h:\Gamma^*\to M$,
+$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$.  Consequently
 $\mathsf{RS}(\Gamma)\cap\mathrm{CFL}
- \subseteq\mathsf{CONG}(\Gamma)$,
-and for $\Gamma=\{a,b\}$ this inclusion is proper.
+\subseteq\mathsf{CONG}(\Gamma)$, and for $\Gamma=\{a,b\}$ the
+inclusion is proper.
 \end{proposition}
 
 \begin{proof}
-Let $L\in\Ccf{h}$.  If $L=\emptyset$, take one initial nonterminal with no
-productions.  Assume henceforth that $L\ne\emptyset$.
+Let nonempty $L\in\Ccf{h}$ and take its reduced SSBNF grammar and typed
+refinement $\widetilde G$.  Every non-start typed symbol $X=A_\mu$ has a
+terminal reaching context $(u,v)$, and every
+$w\in L_{\widetilde G}(X)$ is nonempty with $h(w)=\mu$ by
+Proposition~\ref{prop:typed-core}.  Hence any
+$x,y\in L_{\widetilde G}(X)$ have the same type and the common context
+$(u,v)$; fixed-$h$ substitutability gives $x\equiv_L y$.  Thus each typed
+nonterminal generates strings from one syntactic-congruence class.
 
-Take a reduced SSBNF grammar for $L$ and apply the typed refinement of
-Section~\ref{sec:typing}, obtaining
-$\widetilde G=(\widetilde V,\Gamma,\widetilde P,\widetilde S)$.  Fix an
-arbitrary non-start typed nonterminal $X=A_\mu$.  Since $\widetilde G$ is
-reduced, $X$ has some terminal reaching context $(u,v)$.  Thus
-$uwv\in L$ for every $w\in L_{\widetilde G}(X)$.  On the other hand,
-Proposition~\ref{prop:typed-core} gives $h(w)=\mu$, and SSBNF has no
-non-start $\lambda$-production, so $w\ne\lambda$.
+Delete the separated start symbol and use its typed successors as the finite
+initial set; if $\lambda\in L$, add one fresh initial symbol generating only
+$\lambda$.  Proposition~\ref{prop:typed-core} then gives a congruential
+grammar for $L$.  The empty language is handled by an initial symbol with no
+productions.  This proves the inclusion after taking the union over $h$.
 
-Now take arbitrary $x,y\in L_{\widetilde G}(X)$.  They are nonempty strings
-with the same $h$-value and the common context $(u,v)$.  Since $L$ is
-$\sim_h$-substitutable, $\D_L(x)=\D_L(y)$, that is, $x\equiv_L y$.
-Hence, for every non-start typed nonterminal $X$,
-$L_{\widetilde G}(X)$ is contained in a single $\equiv_L$-class.
-
-Remove $\widetilde S$ and its productions, and let
-$I:=\{X:\widetilde S\to X\in\widetilde P\}$ be the initial set.  If
-$\lambda\in L$, add a fresh nonterminal $X_\lambda$ with the rule
-$X_\lambda\to\lambda$ and include $X_\lambda$ in $I$.  Since
-$\widetilde S$ occurs on no right-hand side, this operation does not change
-the yield language of any old non-start symbol.  Moreover,
-Proposition~\ref{prop:typed-core} gives $L(\widetilde G)=L$, so the resulting
-grammar $G'$ satisfies $L_{G'}[I]=L$.  Each old non-start symbol generates
-only one $\equiv_L$-class as shown above, and
-$L_{G'}(X_\lambda)=\{\lambda\}\subseteq[\lambda]_{\equiv_L}$.  Thus $G'$ is
-congruential and $L\in\mathsf{CONG}(\Gamma)$.  This proves
-$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$, and therefore
-$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}
- \subseteq\mathsf{CONG}(\Gamma)$.
-
-For properness, consider the one-bracket Dyck language $D_1$ over
-$\Gamma=\{a,b\}$.  For every $x\in D_1$ and $u,v\in\{a,b\}^*$,
-$uxv\in D_1$ iff $uv\in D_1$.  Indeed, $x$ has total balance $0$ and every
-prefix of $x$ has nonnegative relative balance.  Thus inserting $x$ between
-$u$ and $v$ leaves all subsequent heights unchanged and never drops below
-the height at the insertion point while traversing $x$; deleting $x$
-preserves the same height condition in reverse.  Hence
-$x\equiv_{D_1}\lambda$.
-
-Therefore the grammar $S\to aSbS\mid\lambda$ is congruential, since
-$L_G(S)=D_1\subseteq[\lambda]_{\equiv_{D_1}}$, and so
-$D_1\in\mathsf{CONG}(\{a,b\})$.  On the other hand,
+For properness over $\{a,b\}$, every $x\in D_1$ satisfies
+$uxv\in D_1$ iff $uv\in D_1$, so $x\equiv_{D_1}\lambda$.  Hence
+$S\to aSbS\mid\lambda$ is congruential, while
 Corollary~\ref{cor:dyck-not-rs} gives
-$D_1\notin\mathsf{RS}(\{a,b\})$.  Hence
-$\mathsf{RS}(\{a,b\})\cap\mathrm{CFL}
- \subsetneq\mathsf{CONG}(\{a,b\})$.
+$D_1\notin\mathsf{RS}(\{a,b\})$.
 \end{proof}
-
 
 \section{Conclusion}
 
-For a fixed finite-monoid typing $h$, every context-free
-$\sim_h$-substitutable language is reconstructed exactly from finitely many
-canonical positive witnesses, and a conservative learner identifies every
-nonempty target in the limit with polynomial-time updates.  The witnesses are
-polynomial in grammar size and typed thickness.  For the fixed typing
-$h_\circ$, no set-driven operator with characteristic samples for all of
-$\Ccf{h_\circ}$ admits a bound polynomial in reduced CFG size and ordinary
-thickness, whereas such a bound holds for every fixed prefix--suffix window
-and a grammar-size bound holds for linear targets.  Structurally, suitable
-fixed-$h$ slices contain regular, nonregular linear, and nonlinear
-context-free targets outside every fixed-window class; the regular,
-nonregular linear, and nonlinear separation examples use
-$\{\uparrow,\downarrow,\#\}$, $\{a,b,c,d,e\}$, and $\{a,b\}$,
-respectively.  Moreover, $D_1\notin\mathsf{RS}$, and
-$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ is properly contained in Clark's
-congruential family.
+For every fixed finite-monoid typing $h$, the paper gives polynomial-time
+set-driven reconstruction from finite canonical positive witnesses and a
+separate conservative Gold learner.  Characteristic data are polynomial in
+grammar size and typed thickness, but for one fixed two-element typing no
+set-driven scheme over the whole slice admits a polynomial bound in reduced
+CFG size and ordinary thickness.  Ordinary thickness again suffices for every
+fixed prefix--suffix window, while linear fixed-$h$ targets admit a
+grammar-size bound.
 
-Open problems include characterizing $\mathsf{RS}\cap\mathrm{CFL}$,
-choosing useful typings, learning with unknown $h$, extensions to richer
-grammar formalisms, and efficiency notions based on other representation or
-finite-sample criteria.
+The framework contains regular, nonregular linear, and nonlinear
+context-free targets outside every fixed-window class, over
+$\{\uparrow,\downarrow,\#\}$, $\{a,b,c,d,e\}$, and $\{a,b\}$,
+respectively.  On the other hand, $D_1\notin\mathsf{RS}$ and
+$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ is properly contained in Clark's
+congruential family.  Open problems include characterizing
+$\mathsf{RS}\cap\mathrm{CFL}$, choosing or learning useful typings, and
+extending the framework and its efficiency criteria to richer grammar
+formalisms.
 
 \section*{Data availability}
 No data were used for the research described in this article. A Lean 4
