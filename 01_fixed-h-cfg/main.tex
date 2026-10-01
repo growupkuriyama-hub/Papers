@@ -47,10 +47,10 @@ characteristic samples for both targets.  By contrast, characteristic data
 are polynomial in reduced CFG size and ordinary thickness for every fixed
 prefix--suffix window $(k,\ell)$, whose typing captures Yoshinaka's
 $(k,\ell)$-substitutability exactly, and polynomial in the size of a linear
-CFG for linear targets under every fixed $h$.  We also separate the
-fixed-window hierarchy from the recognizable-substitutable family by regular,
-nonregular linear, and nonlinear examples, and show that the one-bracket Dyck
-language lies outside this family.
+CFG for linear targets under every fixed $h$.  For suitable fixed homomorphisms we exhibit regular, nonregular linear, and
+nonlinear context-free targets that lie outside every fixed-window class, and
+we show that the one-bracket Dyck language lies outside every finite-typing
+slice.
 \end{abstract}
 
 \section{Introduction}
@@ -101,20 +101,30 @@ plays the same class-level role as a fixed pair $(k,\ell)$ in Yoshinaka's
 hierarchy.  We separate choosing a useful typing
 from learning once that typing has been specified, a viewpoint close to
 typing or domain bias in automata inference~\cite{coste-typing2004}.
+Coste et al. encode typing knowledge by finite-state type automata and require
+the typing embedded in an inferred automaton to be compatible with the
+expert-supplied typing.  Our object is different---$h$ types terminal factors
+rather than automaton states---but it plays an analogous role as a fixed
+finite comparison bias.
 Finite biases can also be composed without making the typing target-specific:
 for example, the product of a fixed window typing with an independently
 specified finite domain feature is again one fixed finite-monoid typing for
 the whole class; Section~\ref{sec:framework} makes this precise.
 
-There is also a useful contrast with control-set approaches.  Takada's
-even-linear framework controls derivations of a fixed universal grammar by a
-regular language of rule labels~\cite{takada1988,takada1995}, whereas the
+There is also a useful contrast with control-set approaches.  Takada's 1988
+result reduces inference of even-linear languages to inference of regular
+control sets on a fixed universal even-linear grammar~\cite{takada1988}.
+His 1995 chapter develops the same control-set methodology more broadly for
+linear grammars (via suitable skeletons and regular control sets) and for
+equal-matrix grammars~\cite{takada1995}.  In these approaches the regular
+control language constrains sequences of production labels.  By contrast, the
 present homomorphism acts on terminal yields and supplies a finite
-\emph{comparison bias}: fixing $h$ restricts which substrings may be identified
-but does not determine one target language.  Related positive-data work on
-control sets imposes additional restrictions~\cite{koshiba-makinen-takada1997}.
-We use this contrast only for positioning; no class separation from the full
-control-set framework is claimed.
+\emph{comparison bias}: fixing $h$ restricts which substrings may be compared
+but does not determine one target language.  Related positive-data work
+obtains learnable subclasses by restricting the regular control sets further
+~\cite{koshiba-makinen-takada1997}.  We use this contrast only for
+positioning; no class separation from the control-set methodology in general
+is claimed.
 
 \subsection{Contributions and main results}
 
@@ -138,12 +148,11 @@ typing captures Yoshinaka's $(k,\ell)$-substitutability exactly, and data
 polynomial in linear-grammar size suffice for linear targets under every
 fixed $h$.
 
-\item \emph{Expressive position.}  Over suitable finite alphabets the
-fixed-window hierarchy is separated from the union $\mathsf{RS}$ of all
-fixed-$h$ classes by regular, nonregular linear, and nonlinear context-free
-languages; the one-bracket Dyck language lies outside $\mathsf{RS}$; and
-$\mathsf{RS}\cap\mathrm{CFL}$ is properly contained in Clark's congruential
-family.
+\item \emph{Expressive position.}  Suitable fixed homomorphisms admit
+regular, nonregular linear, and nonlinear context-free targets outside every
+fixed-window class.  The one-bracket Dyck language lies outside
+$\mathsf{RS}$ altogether, and $\mathsf{RS}\cap\mathrm{CFL}$ is properly
+contained in Clark's congruential family.
 \end{enumerate}
 
 \subsection{Organization of the paper}
@@ -381,12 +390,23 @@ $h_{k,\ell}(\lambda)$.
 For $s,t\in\Sigma^+$, equal $h_{k,\ell}$-types mean either $s=t$ or that
 $s=py_1q$ and $t=py_2q$ for some $p\in\Sigma^k$ and
 $q\in\Sigma^\ell$ (for $k=\ell=0$ every nonempty word has the same tagged
-pair).  In the latter case, the first two premise words in Yoshinaka's
-$(k,\ell)$ condition say that $s,t$ share a context, the third gives an
-arbitrary context of $s$, and the conclusion transfers that context to $t$.
-Quantifying over the context and using symmetry proves that
-$(k,\ell)$-substitutability implies $\sim_{h_{k,\ell}}$-substitutability;
-the same reading in reverse proves the converse.
+pair).
+
+First suppose that $L$ is $(k,\ell)$-substitutable.  In the nontrivial case
+above, the first two premise words in Yoshinaka's condition say that $s,t$
+share a context, the third gives an arbitrary context of $s$, and the
+conclusion transfers that context to $t$.  Quantifying over the context and
+using symmetry gives $\D_L(s)=\D_L(t)$.
+
+Conversely, suppose that $L$ is $\sim_{h_{k,\ell}}$-substitutable and take
+an instance of Yoshinaka's premise.  Put $s:=py_1q$ and $t:=py_2q$.  These
+two factors are nonempty by definition.  Moreover, if $k+\ell>0$ then
+$|s|,|t|\ge k+\ell=m_0$, while if $k=\ell=0$ their nonemptiness gives
+$|s|,|t|\ge1=m_0$.  Hence both are in the long-word part of the coding and
+$h_{k,\ell}(s)=\langle p,q\rangle=h_{k,\ell}(t)$.  The first two premise
+words give a shared context for $s,t$, so their distributions are equal; the
+third premise word is then a context of $s$ and therefore also of $t$, which
+is exactly the required fourth word.
 \end{proof}
 
 \phantomsection\label{crit:kl}
@@ -434,8 +454,9 @@ in Section~\ref{sec:typed-thickness};
 sense, each update taking time polynomial in the data seen so far;
 \item for fixed $(k,\ell)$, taking $h=h_{k,\ell}$, the sample in~(ii) can
 be chosen polynomial in $|R|$ and $\tau_R$ for any reduced CFG $R$
-representing the target; for $L\in\Clin{h}$ it can be chosen polynomial in
-$|R|$ for any linear CFG $R$ representing $L$.
+representing the target;
+\item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can be
+chosen polynomial in $|R|$ for any linear CFG $R$ representing $L$.
 \end{enumerate}
 In contrast, Section~\ref{subsec:ordinary-thickness-lower} constructs one
 fixed two-element homomorphism and nested finite targets in its fixed-$h$
@@ -443,7 +464,7 @@ class, with reduced CFGs of polynomial size and ordinary thickness $O(n)$,
 such that every characteristic sample of the larger target has size
 $2^{\Omega(n)}$ for every set-driven operator with characteristic samples
 for both targets, in particular for $\mathcal B_h$ at that fixed typing.
-\end{theorem}\end{theorem}
+\end{theorem}
 
 The class $\Ccf{h}$ does not contain all finite languages, in accordance
 with Gold's theorem: choose distinct nonempty $x,y$ with $h(x)=h(y)$ and
@@ -998,7 +1019,10 @@ Fix
                     \mathtt 0,\mathtt d\}
 \]
 and the two-element monoid $M_\circ:=\{1,\zeta\}$ with identity $1$ and
-zero $\zeta$.  Define $h_\circ:\Sigma_\circ^*\to M_\circ$ by
+zero $\zeta$.  This is the same abstract two-element zero monoid used in
+Proposition~\ref{prop:typed-thickness-gap}; the homomorphism is given a new
+name because its alphabet and letter map are different.  Define
+$h_\circ:\Sigma_\circ^*\to M_\circ$ by
 $h_\circ(\mathtt c)=\zeta$ and by sending every other letter to $1$; thus
 $h_\circ(w)=\zeta$ exactly when $w$ contains $\mathtt c$.
 
@@ -1024,40 +1048,59 @@ Then $z_i$ is the unique $\mathtt c$-free word of $\mathcal T_i$, and
  \label{eq:clean-tree-length}
 \end{equation}
 
-\paragraph{Unique parsing and replacement sites.}
+\paragraph{Tree representation and terminology.}
 View $\mathtt l,\mathtt r$ as matching tree brackets and put
 \[
  b_0:=\mathtt a,\qquad b_i:=z_{i-1}z_{i-1}\quad(i\ge1).
 \]
-Every word of $\mathcal T_n$ has a unique rooted ordered-tree parse of
-residual height $n$.  In that parse, every occurrence of
-$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is exactly a height-$i$ shortcut
-body; every occurrence of $z_i$ is exactly the yield of a clean height-$i$
-subtree; and, for $i\ge1$, every occurrence of $b_i$ is exactly the two
-adjacent clean children of one height-$i$ node (for $i=0$, $b_0$ is the
-clean height-$0$ body).  Consequently every literal replacement
+We make the tree model used below explicit.  A node of \emph{residual
+height} $0$ is either a clean leaf with body $\mathtt a$ or a shortcut with
+body $s_0$.  Recursively, a node of residual height $i\ge1$ is either a
+shortcut with body $s_i$, or a binary node with two ordered children of
+residual height $i-1$.  Serialization surrounds every node by
+$\mathtt l,\mathtt r$; a binary node serializes the two child words in
+order.  By the definition of $\mathcal T_i$, its words are exactly the
+serializations of residual-height-$i$ trees.  A subtree is \emph{clean} if
+it contains no shortcut node.  There is a unique clean tree of each residual
+height $i$, and its serialization is $z_i$.
+
+Shortcut nodes in a parsed tree form an \emph{antichain}, meaning that no
+shortcut node is an ancestor of another: choosing a shortcut replaces the
+entire subtree rooted at that node.  Conversely, an antichain of nodes of the
+clean height-$n$ tree determines one word of $\mathcal T_n$ by replacing
+each selected clean subtree by the corresponding shortcut.  Thus the set of
+shortcut nodes is an equivalent description of a parsed word.
+
+\paragraph{Unique parsing and replacement sites.}
+Every word of $\mathcal T_n$ has exactly one such tree parse.  Indeed, the
+outermost brackets determine the root.  At residual height $0$, the first
+body symbol is $\mathtt a$ in the clean case and $\mathtt c$ in the shortcut
+case.  At positive residual height, it is $\mathtt c$ in the shortcut case
+and $\mathtt l$ in the binary case.  In the binary case ordinary bracket
+matching uniquely determines the end of the first child and hence the start
+of the second; induction determines both child parses.
+
+This unique parse also identifies the replacement sites used below.  A
+literal occurrence of $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is a shortcut
+body of residual height $i$: shortcut bodies contain no brackets, and the run
+of exactly $i+1$ zeros followed by $\mathtt d$ distinguishes its level.
+A literal occurrence of $z_i$ is the serialization of a clean
+residual-height-$i$ subtree.  To see this, $z_i$ is bracket-balanced and,
+relative to its first $\mathtt l$, returns to the entering bracket depth only
+at its final $\mathtt r$, so an occurrence cannot cross a node boundary;
+induction then forces the enclosed subtree to be the unique clean one.
+Finally, for $i\ge1$, an occurrence of
+$b_i=z_{i-1}z_{i-1}$ consists of the two adjacent clean children of one
+residual-height-$i$ node; it cannot cross a parent boundary because a closing
+$\mathtt r$ of that parent would intervene.  For $i=0$, $b_0=\mathtt a$ is
+the clean leaf body.  Consequently the literal toggle
 \begin{equation}
  s_i\longleftrightarrow b_i
  \tag{$\dagger$}
 \end{equation}
-made at such an occurrence is a legal replacement inside $\mathcal T_n$.
-
-Indeed, the outermost brackets determine the root.  At residual height
-$0$ its body starts with $\mathtt a$ or $\mathtt c$, distinguishing the
-two cases.  At positive residual height it starts with $\mathtt c$ in the
-shortcut case and with $\mathtt l$ in the binary case.  In the latter case,
-because shortcut words contain no $\mathtt l$ or $\mathtt r$, ordinary
-bracket matching uniquely determines the end of the first child and hence
-the second child; induction determines both subparses.  The word $s_i$ is
-recognized by its unique block of $i+1$ zeros between $\mathtt c$ and
-$\mathtt d$.  The word $z_i$ is balanced and, relative to its first
-$\mathtt l$, returns to the entering bracket depth only at its final
-$\mathtt r$; therefore a literal occurrence cannot cross a node boundary
-and must be one parsed subtree.  Induction on residual height then forces
-that subtree to be the clean height-$i$ subtree.  Two consecutive occurrences
-$z_{i-1}z_{i-1}$ cannot cross a parent boundary (a closing
-$\mathtt r$ would intervene), so they are precisely the two children of a
-height-$i$ node.  This proves the assertions about replacement sites.
+at a parsed residual-height-$i$ node replaces a shortcut by the clean subtree,
+or conversely a clean subtree by a shortcut, and remains inside
+$\mathcal T_n$.
 
 \begin{lemma}[level-coded tree languages are substitutable]
 \label{lem:level-coded-substitutable}
@@ -1640,6 +1683,9 @@ Proposition~\ref{prop:regular-auto} gives membership in $\mathsf{RS}$.
 For every $\rho\ge2$, $\mathrm{CTR}_\rho$ is not $(k,\ell)$-substitutable for
 any $k,\ell\ge0$.
 \end{theorem}
+\noindent
+We thank an anonymous reviewer for suggesting that this separation be
+presented by a direct two-word witness.
 \begin{proof}
 Fix $k,\ell\ge0$ and put
 $s:=(\uparrow\downarrow)^k\uparrow^{\rho-1}\#^\ell$ and
@@ -1659,16 +1705,16 @@ $(\uparrow,\lambda)\in\D_{\mathrm{CTR}_\rho}(s)
 \hyperref[crit:kl]{fixed-window counterexample criterion} proves the claim.
 \end{proof}
 
-\begin{corollary}[regular separation]
-$\mathsf{KL}\subsetneq\mathsf{RS}$, and the strict inclusion already occurs
-among regular languages.
-\end{corollary}
-\begin{proof}
-Each fixed $(k,\ell)$ class is contained in $\mathsf{RS}$ by
-Proposition~\ref{prop:yl-special}, whereas for every $\rho\ge2$,
+For every $\rho\ge2$, Proposition~\ref{prop:regular-auto} supplies a finite
+monoid homomorphism $h_\rho$ recognizing $\mathrm{CTR}_\rho$.  Hence
 Proposition~\ref{prop:ctr-regular} and Theorem~\ref{thm:ctr-non-kl} give
-$\mathrm{CTR}_\rho\in\mathsf{RS}\setminus\mathsf{KL}$.
-\end{proof}
+\[
+ \mathrm{CTR}_\rho\in\Ccf{h_\rho}\setminus\mathsf{KL}.
+\]
+Thus failure of all fixed-window conditions already occurs inside a single
+fixed-$h$ learnable slice, and already for a regular target.  The target-dependent
+union $\mathsf{RS}$ is used only for expressive comparisons, not as the class
+to which the learning theorem is applied.
 
 \subsection{Natural deterministic context-free languages outside \texorpdfstring{$\mathsf{RS}$}{RS}}
 
@@ -1717,6 +1763,10 @@ The same obstruction appears in the one-bracket Dyck language
 where $|t|_a$ and $|t|_b$ denote the numbers of $a$'s and $b$'s in a
 word $t$.
 This is a standard deterministic context-free language~\cite{ginsburg-greibach1966}.
+Our symbol $D_1$ denotes the whole one-bracket Dyck language.  In the notation
+of Autebert--Berstel--Boasson~\cite{autebert1997}, the Dyck language is the
+free submonoid generated by the Dyck-prime language and is written $D_1^*$;
+thus our $D_1$ corresponds to their $D_1^*.
 
 \begin{corollary}\label{cor:dyck-not-rs}
 $D_1\notin\mathsf{RS}(\{a,b\})$.
@@ -1752,8 +1802,10 @@ $(s,tz)$ then gives $\D_{L/z}(x)=\D_{L/z}(y)$.
 \end{proof}
 
 The language generated by $S\to aSS\mid b$ is usually called the
-\emph{\L{}ukasiewicz language}; it satisfies $L_{\mathrm{Luk}}=D_1b$ under
-the present coding of $D_1$~\cite{autebert1997}.  It is also a standard
+\emph{\L{}ukasiewicz language}.  Autebert--Berstel--Boasson write the
+standard relation as $L_{\mathrm{Luk}}=D_1^*b$; with the present notation for
+the whole Dyck language this is $L_{\mathrm{Luk}}=D_1b$
+~\cite{autebert1997}.  It is also a standard
 deterministic context-free language~\cite{ginsburg-greibach1966}.  If
 $L_{\mathrm{Luk}}\in\mathsf{RS}(\{a,b\})$, Lemma~\ref{lem:rs-fixed-quotient} would give
 $D_1=L_{\mathrm{Luk}}/b\in\mathsf{RS}(\{a,b\})$, contradicting
@@ -1849,10 +1901,10 @@ polynomial in grammar size and typed thickness.  For the fixed typing
 $h_\circ$, no set-driven operator with characteristic samples for all of
 $\Ccf{h_\circ}$ admits a bound polynomial in reduced CFG size and ordinary
 thickness, whereas such a bound holds for every fixed prefix--suffix window
-and a grammar-size bound holds for linear targets.  Structurally, the
-fixed-window hierarchy is strictly extended by regular, nonregular linear,
-and nonlinear examples; $D_1\notin\mathsf{RS}$; and
-$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ is properly contained in Clark's
+and a grammar-size bound holds for linear targets.  Structurally, suitable
+fixed-$h$ slices contain regular, nonregular linear, and nonlinear
+context-free targets outside every fixed-window class; $D_1\notin\mathsf{RS}$;
+and $\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ is properly contained in Clark's
 congruential family.
 
 Open problems include characterizing $\mathsf{RS}\cap\mathrm{CFL}$,
@@ -2023,21 +2075,21 @@ $v=b_1\cdots b_n$.  Because non-start unit rules have already been
 eliminated, the case $m=n=0$ (which would be the unit rule $A\to B$) cannot
 occur; hence $m+n>0$.  Treat the cases explicitly.  If $m=0$, then necessarily
 $n>0$.  For $n=1$ use $A\to BW_{b_1}$.
-For $n\ge2$, introduce fresh $R_1,\ldots,R_{n-1}$ and use
+For $n\ge2$, introduce fresh $Q_1,\ldots,Q_{n-1}$ and use
 \[
- R_1\to BW_{b_1},\qquad
- R_j\to R_{j-1}W_{b_j}\ (2\le j\le n-1),\qquad
- A\to R_{n-1}W_{b_n}.
+ Q_1\to BW_{b_1},\qquad
+ Q_j\to Q_{j-1}W_{b_j}\ (2\le j\le n-1),\qquad
+ A\to Q_{n-1}W_{b_n}.
 \]
 Now suppose $m>0$.  Define $U:=B$ if $n=0$.  Here $B$ is a
 nonterminal of the pre-wrapper grammar, so it is not one of the fresh
 terminal wrappers introduced in this binarization.  If $n>0$, introduce fresh
-$R_1,\ldots,R_n$ and set
+$Q_1,\ldots,Q_n$ and set
 \[
- R_1\to BW_{b_1},\qquad
- R_j\to R_{j-1}W_{b_j}\quad(2\le j\le n),
+ Q_1\to BW_{b_1},\qquad
+ Q_j\to Q_{j-1}W_{b_j}\quad(2\le j\le n),
 \]
-then put $U:=R_n$.  For $m=1$ use the single binary rule $A\to W_{a_1}U$.
+then put $U:=Q_n$.  For $m=1$ use the single binary rule $A\to W_{a_1}U$.
 For $m\ge2$, introduce fresh $J_1,\ldots,J_{m-1}$ and use
 \[
  A\to W_{a_1}J_1,\qquad
@@ -2148,6 +2200,7 @@ Y.~Takada.
 \newblock Learning formal languages based on control sets.
 \newblock In K.~P. Jantke and S.~Lange (Eds.), \textit{Algorithmic Learning
 for Knowledge-Based Systems}, LNAI 961, pp.~316--339, Springer, 1995.
+doi:10.1007/3-540-60217-8\_15.
 
 \bibitem{koshiba-makinen-takada1997}
 T.~Koshiba, E.~M\"akinen, and Y.~Takada.
@@ -2165,6 +2218,7 @@ doi:10.1137/0304034.
 F.~Coste, D.~Fredouille, C.~Kermorvant, and C.~de~la~Higuera.
 \newblock Introducing domain and typing bias in automata inference.
 \newblock In \textit{ICGI 2004}, LNAI 3264, pp.~115--126, Springer, 2004.
+doi:10.1007/978-3-540-30195-0\_11.
 
 \bibitem{clark2013}
 A.~Clark.
@@ -2191,7 +2245,9 @@ Proceedings 21, pp.~97--111, 2012.
 F.~Coste and J.~Nicolas.
 \newblock Learning local substitutable context-free languages from positive
 examples in polynomial time and data by reduction.
-\newblock \emph{Proceedings of Machine Learning Research}, 93:155--168, 2019.
+\newblock In \emph{Proceedings of the International Conference on
+Grammatical Inference (ICGI 2018)}, \emph{Proceedings of Machine Learning
+Research}, 93:155--168, 2019.
 
 \bibitem{autebert1997}
 J.-M.~Autebert, J.~Berstel, and L.~Boasson.
