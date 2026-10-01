@@ -22,7 +22,7 @@
    新しい §7 で typed thickness を導入した。一般の fixed-\(h\) では canonical witness の大きさを source grammar の ordinary thickness だけで抑えられるとは限らず、固定2元モノイドでも full yield typing により指数的ギャップが生じうることを Prop. 7.3 で示した。
 
 6. **fixed-window との正確な対応**  
-   Prop. 3.3 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では既知の grammar-size-and-thickness scale と整合する characteristic-data bound を確認する。
+   Prop. 3.3 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では Yoshinaka と同じ polynomial degree や normal form を主張せず、同じ2つのパラメータ（文法サイズと ordinary thickness）に関して polynomial な characteristic-data bound を得る、と限定した。
 
 7. **linear theorem の非正規な射程**  
    §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。
@@ -253,10 +253,10 @@ L(\mathcal B_h(K))=L
 # 今回の round-2 precheck で追加した修正
 
 - §4.2 に Clark–Eyraud SGL Algorithm 2 と Yoshinaka \((k,\ell)\)-SGL Algorithm 1 と同型の conservative wrapper であることを明記。
-- §4.2 に stabilized grammar が presentation order に依存しうることを明記。
+- §4.2 に stabilized grammar が presentation order に依存しうることを明記。査読者の \(a^ncb^n\) 例は order-dependence の証明としては使わず、batch grammar を毎回再計算すると構文的に安定しないことの例として位置づける、と回答書でも明確化。
 - 新 §7 typed thickness / Prop. 7.3 を response letter の Overview と Reviewer 2 回答に追加。
 - fixed-window を §8、linear を §9、boundary を §10 とする現行 numbering に response letter を同期。
-- stale な page / line numbers を response letter から除去し、section / theorem references に統一。最終 frozen PDF ができた後に必要ならページ・行番号を再生成する。
+- stale な page / line numbers を response letter から除去し、section / theorem references に統一。TCS メールは page・paragraph・line number を明示的に要求しているため、最終 frozen PDF を作った後に全 Revision location へ一括で戻す。
 - Lemma 8.2 の fixed-window bounds を proof で実際に得ている \((N_t-1)B\) と \((N_t+1)B\) に統一。
 - linear = one-turn PDA の箇所に Autebert–Berstel–Boasson (1997) を追加引用。
 - Clark (2010) が既に ordinary / fixed-window substitutable classes と Dyck example を congruential family の文脈で述べていることを §10 で明示。
@@ -264,6 +264,14 @@ L(\mathcal B_h(K))=L
 - thickness の出典として、Yoshinaka が帰属させている Wakatsuki–Tomita (1993) を追加。
 - Reviewer 2 の outer-context typing への回答は、弁明から始めず「指摘どおり unsupported だったので撤回した」と最初に述べる形へ変更。
 - 回答書冒頭の過剰な謝辞と “23 pages” というビルド依存の記述を削除。
+- Introduction / Conclusion の fixed-window hierarchy の strict inclusion は、一般の alphabet \(\Gamma\) に対する主張に読めないよう、regular は \(\{\uparrow,\downarrow,\#\}\)、nonregular linear は \(\{a,b,c,d,e\}\)、nonlinear は \(\{a,b\}\) と明示。
+- Abstract を1段落に圧縮し、SSBNF・canonical yields など proof-internal な用語密度を下げた。
+- §8 の “same scale as Yoshinaka” は削除し、「文法サイズと ordinary thickness という同じ2パラメータに関して polynomial」と限定。normal form と polynomial degree は同一と主張しない。
+- Lemma 8.2 は “has a terminal reaching context” ではなく canonical context \(\chi(X)=(u_X,v_X)\) の bound として記述。
+- §4.1 で observed nonterminal を明示的に定義。
+- §10.1 の reviewer が問題視した block は segment に変更。
+- Clark–Eyraud Def. 5 が all strings で書かれている一方、同論文 §6.1 の \(a^+\) と Clark 2013 が nonempty-fragment reading を支持することを本文で明示。
+- Data availability / 回答書の Lean 記述は full formalization と誤解されないよう “parts of the development” に弱めた。
 
 ---
 
