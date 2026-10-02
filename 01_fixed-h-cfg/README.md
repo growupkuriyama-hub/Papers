@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v84; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference version; synchronization with the current English manuscript is pending.
+- `main.tex` — English major-revision manuscript, internal v85; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference version; the v85 bibliographic source audit is synchronized, while broader synchronization with the English manuscript remains pending.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
 ## Historical baseline
@@ -16,6 +16,16 @@
 - SHA-256 of that historical source: `fcdcff7fc09140e7f3e83982d6cd57fa297f30ece0bc607f7f7859bb91c71b0d`.
 
 The historical file is preserved as an immutable archival baseline and should not be edited in place.
+
+## v85 citation-source audit
+
+The current revision tightens three literature attributions without changing any theorem or proof:
+
+- Kanazawa (1998) is replaced in the current manuscript by Kanazawa (1996) for the positive-data learnability result for $k$-valued categorial grammars.
+- The standard finite-monoid characterization is cited to the directly checked modern source Pin (2025) rather than relying on Eilenberg (1974).
+- The thickness attribution to Wakatsuki--Tomita is made through Yoshinaka (2008); the 1993 paper is no longer presented as independently checked support.
+
+The exact first-submission snapshot under `archive/tcs-round1-arxiv-v4/` remains untouched.
 
 ## Submission-format preflight
 
