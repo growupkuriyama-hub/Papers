@@ -261,7 +261,9 @@ L(\mathcal B_h(K))=L
 - linear = one-turn PDA の箇所に Autebert–Berstel–Boasson (1997) を追加引用。
 - Clark (2010) が既に ordinary / fixed-window substitutable classes と Dyck example を congruential family の文脈で述べていることを §10 で明示。
 - Yoshinaka 2008, Takada 1995, Coste et al. 2004 の series 表記を LNAI に修正。
-- thickness の出典として、Yoshinaka が帰属させている Wakatsuki–Tomita (1993) を追加。
+- thickness の帰属は Yoshinaka (2008) 経由で述べ、Wakatsuki–Tomita (1993) を直接確認済みの根拠としては扱わない形に修正。
+- 制限付き範疇文法の正例学習可能性は Kanazawa (1998) のモノグラフではなく、該当結果を直接支える Kanazawa (1996) の査読論文を本文で引用。
+- 正則言語の有限モノイド特徴づけは Eilenberg (1974) への直接依存を外し、実際に確認した Pin (2025) の現代的記述へ差し替え。
 - Reviewer 2 の outer-context typing への回答は、弁明から始めず「指摘どおり unsupported だったので撤回した」と最初に述べる形へ変更。
 - 回答書冒頭の過剰な謝辞と “23 pages” というビルド依存の記述を削除。
 - Introduction / Conclusion の fixed-window hierarchy の strict inclusion は、一般の alphabet \(\Gamma\) に対する主張に読めないよう、regular は \(\{\uparrow,\downarrow,\#\}\)、nonregular linear は \(\{a,b,c,d,e\}\)、nonlinear は \(\{a,b\}\) と明示。
