@@ -6,7 +6,7 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v83; this is the source of truth.
+- `main.tex` — English major-revision manuscript, internal v84; this is the source of truth.
 - `japanese/main_JP.tex` — Japanese reference version; synchronization with the current English manuscript is pending.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
