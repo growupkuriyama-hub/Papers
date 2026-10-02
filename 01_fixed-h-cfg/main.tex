@@ -1049,10 +1049,12 @@ A compact reduced CFG $R_n$ is
 \end{aligned}
 \]
 It generates exactly $\mathcal T_n$.  Every displayed symbol is reachable
-and productive, and the production-symbol count is $O(n)$; hence the encoded
-size is polynomial in $n$ under our fixed convention.  The shortcut
-alternative gives $|\omega(A_i)|\le i+5$, so
-$\tau_{R_n}\le n+5$.
+and productive.  The shortcut alternative gives
+$|\omega(A_i)|\le i+5$, while
+$Z_i\Rightarrow^*\mathtt 0^{\,i+1}$; since $S\Rightarrow A_n$,
+every nonterminal has a terminal yield of length at most $n+5$.
+The production-symbol count is $O(n)$, hence the encoded size is polynomial
+in $n$ under our fixed convention, and $\tau_{R_n}\le n+5$.
 
 For $R_n^-$ retain $Z_0,\ldots,Z_n$ and the rules for
 $A_0,\ldots,A_{n-1}$ above, add $S^-\to A_n^-$, and put
@@ -1066,9 +1068,14 @@ $A_0,\ldots,A_{n-1}$ above, add $S^-\to A_n^-$, and put
 \end{aligned}
 \]
 Inductively, $A_i^-$ generates exactly the words of $\mathcal T_i$
-containing at least one shortcut, so $L(R_n^-)=\mathcal T_n^-$.  This grammar
-is again reduced, has $O(n)$ production symbols and polynomial encoded size,
-and $|\omega(A_i^-)|\le i+5$, hence $\tau_{R_n^-}\le n+5$.
+containing at least one shortcut, so $L(R_n^-)=\mathcal T_n^-$.  From
+$S^-\to A_n^-$ the binary rules make every $A_i^-$ reachable; each retained
+$A_i$ occurs as an ordinary sibling in an $A_{i+1}^-$ rule, and each $Z_i$
+occurs in a shortcut rule.  All these symbols are productive.  Moreover
+$|\omega(A_i^-)|\le i+5$, the retained $A_i$ satisfy the same bound, and
+$Z_i\Rightarrow^*\mathtt 0^{\,i+1}$, so $\tau_{R_n^-}\le n+5$.
+Thus the grammar is reduced and again has $O(n)$ production symbols and
+polynomial encoded size.
 
 By Lemma~\ref{lem:level-coded-substitutable}, $\mathcal T_n$ is
 $\sim_{h_\circ}$-substitutable.  Moreover
@@ -1085,8 +1092,8 @@ respect to $\mathcal B$.  Since
 $\mathcal T_n\setminus\mathcal T_n^-=\{z_n\}$,
 Lemma~\ref{lem:nested-characteristic-obstruction} forces $z_n\in C_n$.
 Equation~\eqref{eq:clean-tree-length} gives
-$\|C_n\|\ge|z_n|+1=5\cdot2^n-1$, which is exponential in $n$ while the
-two displayed representation parameters are linear.
+$\|C_n\|\ge|z_n|+1=5\cdot2^n-1$, which is exponential in $n$, while the
+grammar sizes are polynomial in $n$ and the thicknesses are linear in $n$.
 \end{proof}
 
 \section{Fixed-Window Thick Data}
@@ -1885,9 +1892,10 @@ Thus $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is the shortcut body and
 $b_i$ is the clean body of a residual-height-$i$ node.  In a valid
 serialization, a literal occurrence of either body is the body of a genuine
 residual-height-$i$ parsed node.  For $s_i$, this follows because shortcut
-bodies contain no brackets and the zero run records the level.  For $b_i$,
-bracket matching together with induction identifies the two clean children
-when $i\ge1$, while $b_0=\mathtt a$ is the clean leaf body.  Consequently
+bodies contain no brackets and the zero run records the level.  For $b_i$, each $z_{i-1}$ is bracket-balanced, so bracket matching
+forces the occurrence to respect parsed-subtree boundaries; induction then
+identifies the two clean residual-height-$(i-1)$ children when $i\ge1$,
+while $b_0=\mathtt a$ is the clean leaf body.  Consequently
 the literal body replacement
 \[
  s_i\longleftrightarrow b_i
@@ -1900,13 +1908,13 @@ $s$ by a finite sequence of literal body replacements
 $s_i\leftrightarrow b_i$, performed in arbitrary word contexts.  The
 preceding occurrence-recognition argument implies that every such step is
 replay-admissible: if $prq\in\mathcal T_n$ and $r\rightsquigarrow s$ by
-one legal body step, then the corresponding replacement yields
+one literal body-replacement step, then the corresponding replacement yields
 $psq\in\mathcal T_n$.
 
 We next isolate the locality needed for substitutability.  For two distinct
 residual-height-$n$ parse trees $S,T$, let $w_S,w_T$ denote their
-serializations.  Induction on their common recursive shape gives a
-\emph{difference core}: there are words $p,q,\xi,\eta$ such that
+serializations.  Induction on the residual height, with case analysis on the
+two root constructors, gives a \emph{difference core}: there are words $p,q,\xi,\eta$ such that
 \[
  w_S=p\xi q,\qquad
  w_T=p\eta q,\qquad
