@@ -27,11 +27,11 @@
 \maketitle
 
 \begin{abstract}
-We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_{d+1}\)-dimension at most \(t_h\). At fan-out one this bound is sharp, already for finite regular languages. In the modern higher-arity PAC framework the bound yields proper \(PAC_{d+1}\)-learnability. The resulting statistical complexity is then compared with exact positive-data reconstruction under the same observer.
+We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. In the modern higher-arity PAC framework the bound yields proper \(PAC_{d+1}\)-learnability. The resulting statistical complexity is then compared with exact positive-data reconstruction under the same observer.
 \end{abstract}
 
 \paragraph{Status.}
-Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. Higher-fan-out sharpness, effective grammar-valued PAC learning, and a formal exact-vs-statistical separation theorem remain research tasks.
+Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. Effective grammar-valued PAC learning and a formal exact-vs-statistical separation theorem remain research tasks.
 
 \section{Setup}
 
@@ -135,6 +135,64 @@ Grammar formalisms matter when one asks representability and effective
 grammar-valued learning.
 \end{remark}
 
+\begin{theorem}[Contiguous-block strengthening]\label{thm:block-bound}
+Let \(2\le d\le f\). Then
+\[
+  \VC_{d+1}\!\left(\Rclass_{f,h}^{(d)}\right)
+  \le \left\lfloor t_h^{1/(d-1)}\right\rfloor.
+\]
+Equivalently, every shattered box of side size \(m\) satisfies
+\[
+  m^{d-1}\le t_h.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+A_0\times A_1\times\cdots\times A_d
+\]
+be a shattered box of side size \(m\), and fix one context
+\[
+E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d\in A_0.
+\]
+For \((x_1,\ldots,x_{d-1})\in A_1\times\cdots\times A_{d-1}\) put
+\[
+z(x_1,\ldots,x_{d-1})
+:=x_1v_1x_2\cdots v_{d-2}x_{d-1}\in\Sigma^+.
+\]
+We claim that the map
+\[
+(x_1,\ldots,x_{d-1})\longmapsto h(z(x_1,\ldots,x_{d-1}))
+\]
+is injective. Otherwise choose distinct tuples \(\mathbf x,\mathbf y\) with the
+same image. Since \(m\ge2\) for any nontrivial violation of the claimed
+bound, choose distinct \(a,b\in A_d\). Shattering gives a target \(L\) for which
+\[
+E[\mathbf x,a],\quad E[\mathbf y,a],\quad E[\mathbf x,b]\in L,
+\qquad E[\mathbf y,b]\notin L.
+\]
+As ordinary one-factor contexts for the two block strings, use
+\[
+C_a=(v_0,v_{d-1}av_d),\qquad
+C_b=(v_0,v_{d-1}bv_d).
+\]
+Then \(C_a\) belongs to both one-factor distributions of
+\(z(\mathbf x)\) and \(z(\mathbf y)\), while their \(h\)-types agree. The arity-one
+instance of \((f,h)\)-tuple substitutability therefore makes those distributions
+equal, contradicting the two different labels at \(C_b\). Hence the map is
+injective. Its domain has \(m^{d-1}\) elements and its image lies in
+\(h(\Sigma^+)\), which has \(t_h\) elements.
+\end{proof}
+
+\begin{remark}
+The stronger exponent is forced already by the arity-one substitutability
+condition inside the higher-fan-out model. A \((d+1)\)-ary box contains, after
+fixing one sentence context and one final factor coordinate, an ordinary
+one-factor substitution test on a contiguous block carrying the other
+\(d-1\) coordinates.
+\end{remark}
+
 \begin{corollary}[Fan-out one]\label{cor:cfg-upper}
 For fixed-\(h\) substitutable incidence relations
 \[
@@ -201,6 +259,134 @@ R_{L_S}(E_i,x_j)=1\Longleftrightarrow(i,j)\in S.
 Arbitrary \(S\) therefore realizes every trace on the box.
 \end{proof}
 
+\section{Higher-arity sharpness at the optimal exponent}
+
+The exponent in Theorem~\ref{thm:block-bound} is optimal. We give an
+explicit rigid-skeleton construction on an infinite family of observer sizes.
+
+\begin{theorem}[Optimal higher-arity exponent]\label{thm:higher-sharp}
+Fix \(d\ge2\) and let \(q\) be a prime power with \(q\ge d+1\). There are a finite
+alphabet \(\Sigma\), a homomorphism
+\[
+h:\Sigma^*\to (\mathbb F_q^{\,d-1},+)
+\]
+with
+\[
+t_h=q^{d-1},
+\]
+and a family of finite regular, \((d,h)\)-tuple-substitutable languages whose
+arity-\(d\) incidence relations shatter a box of side size \(q\). Consequently
+\[
+\VC_{d+1}=q=t_h^{1/(d-1)}
+\]
+for the corresponding full relation class.
+\end{theorem}
+
+\begin{proof}
+Choose vectors
+\[
+a_1,\ldots,a_d,b\in\mathbb F_q^{d-1}
+\]
+such that every \(d-1\) of them are linearly independent. Such a set exists
+for \(q\ge d+1\), for example by taking \(d+1\) columns of a Vandermonde
+matrix. In particular, \(a_1,\ldots,a_{d-1}\) form a basis.
+
+Use pairwise disjoint role alphabets consisting of symbols
+\[
+c_i,r_i,s_{i,1},\ldots,s_{i,d-1}\quad(i\in\mathbb F_q)
+\]
+and
+\[
+x_{r,j}\quad(1\le r\le d,\ j\in\mathbb F_q).
+\]
+Define the letter images by
+\[
+h(x_{r,j})=j a_r,\qquad
+h(c_i)=h(r_i)=i b,\qquad
+h(s_{i,r})=0.
+\]
+Because \(a_1,\ldots,a_{d-1}\) span the group and a nonempty separator maps to
+zero, every group element is realized by a nonempty word; hence
+\(t_h=q^{d-1}\).
+
+For
+\(\mathbf i=(i_0,i_1,\ldots,i_d)\in\mathbb F_q^{d+1}\) define the rigid codeword
+\[
+w_{\mathbf i}
+=c_{i_0}x_{1,i_1}s_{i_0,1}x_{2,i_2}\cdots
+s_{i_0,d-1}x_{d,i_d}r_{i_0}.
+\]
+For arbitrary \(S\subseteq\mathbb F_q^{d+1}\) let
+\[
+L_S:=\{w_{\mathbf i}:\mathbf i\in S\}.
+\]
+These languages are finite and therefore regular.
+
+We verify \((d,h)\)-tuple substitutability. Project every codeword to its
+role skeleton
+\[
+C,X_1,S_1,X_2,\ldots,S_{d-1},X_d,R.
+\]
+All role alphabets are disjoint, so two tuple occurrences with a common
+sentence context have the same interval positions in this skeleton. Their
+common context fixes every variable \(i_r\) whose \(X_r\) position lies outside
+the holes. It also fixes \(i_0\) whenever at least one of the context-specific
+marker positions \(C,S_1,\ldots,S_{d-1},R\) lies outside the holes.
+
+Consider two such tuples with equal componentwise \(h\)-types. If an interval
+contains at most \(d-1\) variable positions and \(i_0\) is already fixed, equality
+of its \(h\)-type determines all variable values inside that interval, because
+the corresponding subset of the \(a_r\) is linearly independent. For a
+multi-interval occurrence, this applies component by component whenever a
+variable remains in the common context.
+
+It remains only to justify recovery of \(i_0\) when all context-specific markers
+lie inside the holes. With at least two holes, a nonempty gap must then
+contain a variable position. The two end components contain respectively
+\(c_{i_0}\) and \(r_{i_0}\). If one end component contains no variable position,
+its type \(i_0b\) determines \(i_0\). Otherwise each end component contains at
+most \(d-2\) variable positions; since \(b\) together with any at most \(d-2\) of
+the \(a_r\) is linearly independent, equality of the end-component type again
+determines \(i_0\). Once \(i_0\) is known, the preceding componentwise argument
+recovers all selected variable values.
+
+The only remaining possibility is a single interval containing all \(d\)
+variable positions. It necessarily contains every internal separator
+\(s_{i_0,r}\), so the factor itself fixes \(i_0\) literally; there is no variable
+coordinate left outside the factor. Any two such same-type factors that
+share a context therefore have the same singleton distribution. Thus in all
+cases, equal tuple type plus one common context implies equal tuple
+distributions, proving \((d,h)\)-tuple substitutability.
+
+Finally, for each \(i\in\mathbb F_q\) put
+\[
+E_i=c_i\blank_1s_{i,1}\blank_2\cdots
+s_{i,d-1}\blank_dr_i,
+\]
+and for coordinate \(r\) put
+\[
+A_r=\{x_{r,j}:j\in\mathbb F_q\}.
+\]
+Then
+\[
+R_{L_S}^{(d)}(E_{i_0},x_{1,i_1},\ldots,x_{d,i_d})=1
+\quad\Longleftrightarrow\quad
+(i_0,i_1,\ldots,i_d)\in S.
+\]
+As \(S\) is arbitrary, the \((d+1)\)-box
+\(\{E_i:i\in\mathbb F_q\}\times A_1\times\cdots\times A_d\) is shattered.
+The lower bound \(\VC_{d+1}\ge q\) and
+Theorem~\ref{thm:block-bound} give equality.
+\end{proof}
+
+\begin{remark}
+For \(d=2\) the construction can be read over the cyclic group \(C_t\) for every
+\(t\ge1\): use codewords \(c_i x_j s_i y_k r_i\) with
+\(h(c_i)=h(r_i)=h(x_i)=h(y_i)=i\) and \(h(s_i)=0\). Hence the \(VC_3\le t_h\)
+bound is sharp for all observer sizes in arity two. The finite-field theorem
+is used only to obtain a clean uniform construction in arbitrary arity.
+\end{remark}
+
 \section{PAC consequences}
 
 Kuriyama--Takeuchi's original \(PAC_n\) model observes the target on unions
@@ -258,12 +444,10 @@ observer. This remains a current task.
 \section{Next problems}
 
 \begin{enumerate}
-\item \textbf{Higher-fan-out sharpness.} Determine whether, for every
-\(d\ge2\) and \(t\ge1\), one can realize
-\[
-\VC_{d+1}=t
-\]
-inside an \((f,h)\)-tuple-substitutable MCFG family with \(t_h=t\).
+\item \textbf{Exact observer-size spectrum.} Theorem~\ref{thm:higher-sharp}
+matches the root exponent on prime-power observer sizes. Determine the exact
+maximum \(VC_{d+1}\) for arbitrary finite \(t_h\), not only the optimal
+asymptotic exponent.
 
 \item \textbf{Effective PAC reconstruction.} Convert the proper
 relation-valued PAC learner into a computable, preferably polynomial-time,
