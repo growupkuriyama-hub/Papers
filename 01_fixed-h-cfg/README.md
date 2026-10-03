@@ -7,7 +7,7 @@
 ## Current working baseline
 
 - `main.tex` — English major-revision manuscript, internal v88; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference version; the v88 Section 10.1 center-marker correction and the v85 bibliographic source audit are synchronized, while broader synchronization with the English manuscript remains pending.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v88 English source on 2026-10-03; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
 ## Historical baseline
