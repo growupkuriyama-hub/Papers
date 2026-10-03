@@ -6,7 +6,7 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v86; this is the source of truth.
+- `main.tex` — English major-revision manuscript, internal v87; this is the source of truth.
 - `japanese/main_JP.tex` — Japanese reference version; the v85 bibliographic source audit is synchronized, while broader synchronization with the English manuscript remains pending.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
@@ -40,7 +40,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 `growupkuriyama-hub/tcs1-lean-formalization`.
 
 - The immutable historical release is `tcs1-v79-formalization-1.0.0`, archived on Zenodo at DOI `10.5281/zenodo.22939434`.
-- The v83 development remains the completed mathematical proof layer; the current v86 manuscript has now been synchronized against that theorem surface by `V86FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V86.md`.
+- The v83 development remains the completed mathematical proof layer; v86 was synchronized against that theorem surface by `V86FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V86.md`. The current v87 source adds only Lean-guided proof exposition to the already verified theorem surface; exact-version synchronization is pending.
 - The v83-to-v86 source audit found no new or strengthened theorem-facing mathematical statement requiring a new Lean theorem. The intervening changes elaborate paper proofs, tighten terminology/citations, and remove one redundant displayed lemma.
 - The v86 synchronization is merged at `46d234382057ebd07d1792ed47858c9f43ee80d9`. TCS1 Lean CI run #300 passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates.
 
