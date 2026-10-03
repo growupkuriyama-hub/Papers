@@ -182,7 +182,7 @@ L(\mathcal B_h(K))=L
 
 ## R1-31 Clark congruential family
 
-**回答:** Prop. 10.9 を追加した。Clark (2010) が ordinary substitutable と fixed-window substitutable classes を congruential family に含め、Dyck language を既知例として用いていることを本文で明示した。その上で、本稿では各 fixed-\(h\) slice に対して
+**回答:** Prop. 10.8 を追加した。Clark (2010) が ordinary substitutable と fixed-window substitutable classes を congruential family に含め、Dyck language を既知例として用いていることを本文で明示した。その上で、本稿では各 fixed-\(h\) slice に対して
 \[
 \mathcal C_h^{cf}\subseteq\mathsf{CONG}
 \]
