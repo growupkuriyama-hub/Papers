@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v88; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v88 English source on 2026-10-03; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
+- `main.tex` — English major-revision manuscript, internal v89; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v89 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
 ## Historical baseline
@@ -39,10 +39,15 @@ for this TCS revision because it changes every page/line locator in the response
 The theorem-facing Lean 4 formalization is maintained separately in
 `growupkuriyama-hub/tcs1-lean-formalization`.
 
-- The current public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
+- The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The current v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. A direct v87-to-v88 comparison found 34 theorem/proposition/lemma/corollary environments in each version and identical contents.
+- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v89 working manuscript is a preflight/presentation revision: it moves the canonical-yield definition before first use, moves the parity motivation into the main text, compresses the unnumbered Section 10.1 comparison, and clarifies the $\rho=1$ endpoint. No numbered theorem/proposition/lemma/corollary statement was added or removed in this preflight, so no separate v89 Lean archive has been minted; v88 remains the theorem-facing verification baseline.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
 - The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
 The manuscript proofs remain self-contained; the Lean development is a reproducibility and verification artifact, not a substitute for the paper proofs.
+
+
+## v89 preflight note
+
+The v89 manuscript/response pass resolves the round-2 precheck issues around forward use of $\omega$, keeps the yield-typing motivation in the main text, compresses the unnumbered $L_\times$ comparison, and marks response-letter page/line locators for regeneration from the final frozen PDF. Appendix D is unchanged because the occurrence-recognition and replay-admissibility arguments were already explicit in v88.
