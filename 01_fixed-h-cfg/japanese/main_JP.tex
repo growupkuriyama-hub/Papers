@@ -10,6 +10,9 @@
 \newtheorem{proposition}[theorem]{命題}
 \newtheorem{corollary}[theorem]{系}
 \newtheorem{definition}[theorem]{定義}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{備考}
+\theoremstyle{plain}
 \newcommand{\D}{\mathcal{D}}
 \newcommand{\WitnessSet}{\mathsf{W}}
 \newcommand{\cf}{\mathrm{cf}}
@@ -35,40 +38,71 @@ $\sim_h$ の下で文脈自由言語の分布学習を研究する．同じ $h$-
 固定 $h$ に対し，集合駆動型再構成作用素 $\mathcal B_h$ は文脈自由
 $\sim_h$-代入可能標的を有限個の正例証拠から厳密に再構成し，別の保守的
 逐次学習器はすべての非空標的を Gold の意味で極限同定する．再構成と各更新は
-多項式時間である．
+多項式時間である．標準証拠の大きさは後で導入する有限な標的側精密化の
+パラメータによって制御されるが，このパラメータは通常の文法厚みより
+指数的に大きくなり得る．一つの固定二元型付けに対しては，固定-$h$ クラス
+全体で妥当な集合駆動型再構成作用素の特徴データを，縮約済み CFG サイズと
+通常の文法厚みの多項式で一様に抑えることはできない．これに対し，任意の
+固定接頭辞--接尾辞窓 $(k,\ell)$ では，対応する型付けが Yoshinaka の
+$(k,\ell)$-代入可能性をちょうど表し，縮約済み CFG サイズと通常の厚みに
+関して多項式の特徴データを得る．任意の固定 $h$ の線形標的では，線形 CFG
+サイズに関して多項式の特徴データを得る．さらに，適切な固定準同型に対し，
+どの固定窓クラスにも属さない正則・非正則線形・非線形文脈自由の標的を与え，
+一種類の括弧の Dyck 言語がどの固定型付けクラスにも属さないことを示す．
+\end{abstract}
 
-標準証拠は文法サイズと生成語型付き精密化の厚みに関して多項式であるが，
-この型付き厚みは通常の厚みより指数的に大きくなり得る．さらに，一つの固定
-二元型付け $h_\circ$ に対して，多項式サイズかつ通常の厚み $O(n)$ の縮約済み
-CFG をもつ入れ子状有限標的を構成し，同じ集合駆動型作用素が両標的に特徴標本を
-もつなら，大きい方の任意の特徴標本が指数長の語を含むことを示す．一方，
-任意の固定接頭辞--接尾辞窓 $(k,\ell)$ では，対応する型付けが Yoshinaka の
-$(k,\ell)$-代入可能性をちょうど表し，縮約済み CFG サイズと通常の厚みに関して
-多項式の特徴データを得る．任意の固定 $h$ の線形標的では，線形 CFG サイズに
-関して多項式の特徴データを得る．さらに，固定窓階層からの正則・非正則線形・
-非線形の分離例を与え，一種類の括弧の Dyck 言語が可認識代入可能族の外にある
-ことを示す．
 \end{abstract}
 
 \section{序論}
 
 \subsection{背景と動機}
 
-Gold~\cite{gold1967} は，すべての有限言語と少なくとも一つの無限言語を含む言語クラスは，正例データのみから極限同定できないことを示した．この否定的結果は，文法推論における広範な研究の流れを生み出した．一般的背景については，たとえば de~la~Higuera~\cite{higuera2010} を参照されたい．文脈自由言語について正例学習可能性を回復する標準的な方法の一つが，\emph{分布的}アプローチである．そこでは，異なる文脈間で比較してよい部分文字列を制限することで学習可能性を得る．古典的な例として，Clark--Eyraud の代入可能性~\cite{clark-eyraud2007} および Yoshinaka の $(k,\ell)$-代入可能性~\cite{yoshinaka2008} がある．より一般には，適切な有限制御の仮定の下で，他の文法クラスに対しても正例データからの学習可能性が示されている．たとえば $k$-valued 範疇文法の正例学習可能性については Kanazawa~\cite{kanazawa1996} を参照されたい．
+Gold~\cite{gold1967} は，すべての有限言語と少なくとも一つの無限言語を含む
+言語クラスは，正例データのみから極限同定できないことを示した．文脈自由言語では，
+比較してよい部分文字列を文脈間で制限する分布学習により正の結果が回復される．
+古典的な例として Clark--Eyraud の代入可能性~\cite{clark-eyraud2007} と
+Yoshinaka の $(k,\ell)$-代入可能性~\cite{yoshinaka2008} がある．一般的背景は
+de~la~Higuera~\cite{higuera2010} を，$k$-valued 範疇文法の正例学習可能性は
+Kanazawa~\cite{kanazawa1996} を参照されたい．
 
-本論文では，この分布的研究計画の可認識合同関係版を研究する．$h:\Sigma^*\to M$ を有限モノイドへの準同型とし，$\sim_h:=\ker h$，すなわち $x\sim_h y \Longleftrightarrow h(x)=h(y)$ とおく．$x\in\Sigma^*$ に対し，
+本論文では，この研究計画の可認識合同関係版を考える．
+$h:\Sigma^*\to M$ を有限モノイドへの準同型とし，$\sim_h:=\ker h$ とする．
+$x\in\Sigma^*$ に対し
 \[
-\D_L(x):=\{(u,v)\in\Sigma^*\times\Sigma^*:uxv\in L\}
+ \D_L(x):=\{(u,v):uxv\in L\}
 \]
-を $L$ における $x$ の分布とする．言語 $L\subseteq\Sigma^*$ が \emph{$\sim_h$-代入可能}であるとは，すべての $x,y\in\Sigma^+$
-について%
-\footnote{Clark--Eyraud では $a^+$ が代入可能として扱われるが，$\lambda$ 自身を比較対象に含めると $a^+$ は代入可能でなくなる．この点については Clark~\cite{clark2013} も参照されたい．}，$h(x)=h(y)$ かつ $\D_L(x)\cap\D_L(y)\neq\emptyset$ ならば $\D_L(x)=\D_L(y)$ が成り立つことをいう．したがって分布の完全な一致を要求するのは，あらかじめ固定された有限代数的要約の下ですでに一致する文字列同士に限られる．
+と書く．言語 $L$ が \emph{$\sim_h$-代入可能}であるとは，非空の $x,y$ について
+$h(x)=h(y)$ かつ $\D_L(x)\cap\D_L(y)\ne\emptyset$ ならば
+$\D_L(x)=\D_L(y)$ が成り立つことをいう%
+\footnote{Clark--Eyraud では $a^+$ が代入可能として扱われるが，
+$\lambda$ 自身を比較対象に含めると $a^+$ は除外される．Clark~\cite{clark2013}
+も参照されたい．}．文脈自由な $\sim_h$-代入可能言語のクラスを $\Ccf{h}$ と書き，
+これを \emph{fixed-$h$ slice} と呼ぶ．したがって，分布の完全な一致を要求するのは，
+固定された有限代数的比較の下ですでに一致する因子だけである．
 
-ここで，可認識合同関係は自然な比較機構を与える．ある有限モノイド準同型 $h:\Sigma^*\to M$ と $\mathsf{Acc}\subseteq M$ に対して $L=h^{-1}(\mathsf{Acc})$ であるならば，同じ $h$-値をもつ任意の二つの文字列は自動的に同じ継続挙動をもち，したがって同じ分布をもつ．特に，すべての正則言語は，\emph{ある}有限モノイド準同型に対して $\sim_h$-代入可能な言語からなる，より広いクラス $\mathsf{RS}$（第~\ref{sec:framework}節で形式的に定義する）に属する．この観察は，有限モノイド型付けが有界文脈の場当たり的な一般化ではなく，有限な比較バイアスを与える標準的な代数的源であることを示している．
+可認識合同関係は自然な有限型付けを与える．
+$L=h^{-1}(\mathsf{Acc})$ が有限モノイド準同型で認識されるなら，同じ $h$-値を
+もつ語は同じ分布をもつので，すべての正則言語は第~\ref{sec:framework}節で定義する
+より広いクラス $\mathsf{RS}$ に属する．ただし本論文の学習結果で用いるのは
+\emph{固定-$h$} の状況であり，一つの準同型をクラス $\Ccf{h}$ 全体で一様に固定する．
+これは Yoshinaka の階層で一つの組 $(k,\ell)$ を固定することに対応する．
 
-本論文の焦点は \emph{固定-$h$} の状況である．同じ有限モノイド準同型 $h:\Sigma^*\to M$ が，文脈自由 $\sim_h$-代入可能言語のクラス $\Ccf{h}$ 全体にわたって一様に固定され，各標的についてデータ観測後に別々に選ばれるのではない．したがって固定 $h$ は，Yoshinaka の階層における固定された組 $(k,\ell)$ と同じクラスレベルの役割を果たす．有用な型付けを選ぶ問題と，型付けがすでに指定された後に学習する問題とを分離する点で，この観点はオートマトン推論における，外部から与えられる型付け・領域背景知識の利用~\cite{coste-typing2004} と方法論的に近い．Coste らは専門家の型付けを有限状態の型オートマトンで表現し，ある記号出現の型がその左右文脈に依存しうることを許したうえで，推論されたオートマトンに埋め込まれる型付けが専門家の型付けと両立するよう状態併合を制約する．これに対して本論文の $h$ は，オートマトン構造中の出現位置に文脈依存の型を与えるのではなく，終端部分文字列そのものに合成的な有限型を与える点で形式的には異なるが，固定された有限比較バイアスとしては類似した役割を果たす．
+この見方は，有用な有限型付けを選ぶ問題と，型付けが与えられた後に学習する問題を
+分離する．さらに，固定有限モノイド型付けは，一つの接頭辞--接尾辞窓より広い有限比較を
+一つの学習機構のまま扱える．独立な有限特徴は積準同型で合成でき，
+第~\ref{sec:linear}--\ref{sec:boundaries}節では，どの固定窓クラスにも属さない
+正則・非正則線形・非線形文脈自由の例を与える．一方，無界カウンタや Dyck 型の挙動は，
+文脈的に異なる因子を無限に強制し，どの有限型付けでも捉えられない場合がある．
+この観点は，外部から与えられる型付け・領域バイアスを用いるオートマトン推論
+~\cite{coste-typing2004} と方法論的に関連するが，本論文の $h$ は出現ごとの
+オートマトン状態ではなく終端因子に合成的に作用する．
 
-制御集合アプローチとの対比もある．Takada の 1988 年の結果は，固定された普遍 even-linear 文法上の正則制御集合の学習へ even-linear 言語の推論を還元する~\cite{takada1988}．1995 年の総合的な章ではこの構図がさらに明示され，固定された普遍かつ非曖昧な even-linear 文法上で各標的は一意な標準正則制御集合をもち，even-linear 言語の学習が正則言語の学習へ還元される．同じ章では，線形文法および equal-matrix 文法についても正則制御集合による表現がより広く展開されている~\cite{takada1995}．これらの枠組みでは，標的ごとの正則制御言語が生成規則ラベル列を制約する．これに対し，本論文の準同型は終端生成語に作用し，クラス全体で固定された有限な \emph{比較バイアス} を与える．すなわち，$h$ を固定しても一つの標的言語が決まるのではなく，どの部分文字列を比較してよいかが制限されるだけである．制御集合に関する正例学習では，正則制御集合にさらに制限を課すことで学習可能な部分クラスが得られる~\cite{koshiba-makinen-takada1997}．ここでは位置づけのためにこの対比を用いるだけであり，control-set 方法論全体との同値性・包含関係・クラス分離はいずれも主張しない．
+補完的な比較として control-set 学習がある．Takada の方法は，固定文法の生成規則列を
+正則制御言語で符号化して標的を表す~\cite{takada1988,takada1995}．関連する正例学習
+ではこのような制御に追加制限を課す~\cite{koshiba-makinen-takada1997}．
+これに対し，本論文の固定準同型は終端因子に型を与え，比較してよい因子を制限する．
+ここでは位置づけのためにこの相違を述べるだけで，両方法論の同値性・包含関係・
+一般的なクラス分離は主張しない．
 
 \subsection{貢献と主要結果}
 
@@ -82,27 +116,24 @@ Gold~\cite{gold1967} は，すべての有限言語と少なくとも一つの�
 多項式時間である．
 
 \item \emph{定量的境界．}
-任意の固定 $h$ では，標準証拠は文法サイズと生成語型付き精密化の厚みに
-関して多項式であるが，通常の厚みが $1$ でも型付き厚みは指数的になり得る．
-一つの固定二元型付け $h_\circ$ に対しては，
-$\Ccf{h_\circ}$ 全体に特徴標本を与える集合駆動型作用素には，縮約済み CFG
-サイズと通常の厚みによる一般の多項式データ上界が存在しない．これに対し，
-任意の固定窓 $(k,\ell)$ では Yoshinaka の $(k,\ell)$-代入可能性とちょうど
-対応する多項式厚み上界が得られ，任意の固定 $h$ の線形標的では線形文法サイズ
-に関して多項式の特徴データが得られる．
+任意の固定 $h$ では，生成語型付け後の最短生成語は元の文法より指数的に長くなり得る．
+一つの固定二元型付け $h_\circ$ に対し，$\Ccf{h_\circ}$ 全体で特徴標本をもつ
+集合駆動型再構成作用素には，縮約済み CFG サイズと元の文法の最短生成語長の
+多項式による特徴データ上界は存在しない．一方，任意の固定窓 $(k,\ell)$ では
+そのような上界が成立し，任意の固定 $h$ の線形標的では線形文法サイズに関して
+多項式の特徴データが得られる．
 
 \item \emph{表現力上の位置．}
-適切な有限アルファベット上で，可認識代入可能族は固定窓階層を正則，
-非正則線形，非線形文脈自由の各水準で真に拡張する．一方，一種類の括弧の
-Dyck 言語は $\mathsf{RS}$ の外にあり，
+適切な固定準同型は，どの固定窓クラスにも属さない正則・非正則線形・非線形
+文脈自由の標的を許す．一種類の括弧の Dyck 言語は $\mathsf{RS}$ の外にあり，
 $\mathsf{RS}\cap\mathrm{CFL}$ は Clark の congruential family に真に含まれる．
 \end{enumerate}
 
 \subsection{論文の構成}
-第~\ref{sec:prelim}--\ref{sec:framework}節で記法と古典的特殊場合を整え，
-第~\ref{sec:algo}--\ref{sec:complexity}節で学習結果を証明する．
-第~\ref{sec:typed-thickness}--\ref{sec:linear}節で定量的境界と二つの正の場合を扱い，
-第~\ref{sec:boundaries}節で表現力上の境界を与える．長い正規化証明は付録に置く．
+第~\ref{sec:prelim}--\ref{sec:framework}節で枠組みを準備し，
+第~\ref{sec:algo}--\ref{sec:complexity}節で学習可能性を証明する．
+第~\ref{sec:typed-thickness}--\ref{sec:linear}節で定量的結果を与え，
+第~\ref{sec:boundaries}節で表現力を比較する．長い正規化証明は付録に置く．
 
 \section{準備}
 \label{sec:prelim}
@@ -156,42 +187,75 @@ Gold の explanatory model~\cite{gold1967} を用いる．$H_0$ を，一つの�
 \section{固定可認識代入可能性}
 \label{sec:framework}
 
-固定準同型 $h$ に対し，
+固定 $h$ に対し
 \[
-\mathsf{RS}_h:=\{L\subseteq\Sigma^*:L\text{ は $\sim_h$-代入可能}\}
+ \mathsf{RS}_h:=\{L\subseteq\Sigma^*:L\text{ は $\sim_h$-代入可能}\}
 \]
-とおく．したがって $\Ccf{h}=\mathsf{RS}_h\cap\mathrm{CFL}$ であり，$\Clin{h}$ は $\mathsf{RS}_h\cap\mathrm{CFL}$ に属し，かつある線形 CFG により生成される言語からなる．表現力の比較のためだけに，$h$ が定義域 $\Sigma^*$ をもつ有限モノイド準同型全体を動くものとして，
-\[
-\mathsf{RS}:=\bigcup_h\mathsf{RS}_h
-\]
-とする．このようなクラス記法はすべて周囲のアルファベットに相対的である．アルファベットを明示する必要があるときは，$\Gamma^*$ 上の対応するクラスを $\mathsf{RS}_h(\Gamma)$ および $\mathsf{RS}(\Gamma)$ と書く．クラス包含は常にアルファベットごとに理解する．本論文の学習結果は一つの固定 $h$ を対象とする．非空アルファベット上では，$\mathsf{RS}$ も $\mathsf{RS}\cap\mathrm{CFL}$ も正例データから極限同定できない．\footnote{命題~\ref{prop:regular-auto} で示すように，すべての正則言語は $\mathsf{RS}$ に属する．したがって，非空アルファベット $\Sigma$ 上では，$\mathsf{RS}$ も $\mathsf{RS}\cap\mathrm{CFL}$ もすべての有限言語を含み，さらに無限正則言語 $\Sigma^*$ も含む．ゆえに両クラスは superfinite であり，Gold の定理~\cite{gold1967} により正例データから極限同定できない．}ただし，型付けバイアスの精密化について単純な単調性がある．$h':\Sigma^*\to M'$ が $\ker h'\subseteq\ker h$ という意味で $h$ を精密化するとき，$\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$ が成り立つ．実際，$h'$ の下で等しいことは $h$ の下で等しいことを意味するので，$h'$ が要求するすべての比較はすでに $h$-代入可能性によって覆われている．したがって，より細かい型付けは比較すべき因子対を減らすことにより，より大きな固定-$h$ クラスを許す．ただし，この利得は以下の量的上界において無償ではない．型付けを精密化すると，後述する型付き非終端記号数が増え，その結果，証拠集合サイズも増える可能性がある．特に，二つの有限型付け $h,g$ に対して積準同型 $h\times g$ は $\ker(h\times g)=\ker h\cap\ker g$ をもち，両者を精密化する．したがって $\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$ であり，窓情報と独立な有限の領域固有特徴を一つの固定型付けに合成できる．
+とおく．fixed-$h$ slice は
+$\Ccf{h}=\mathsf{RS}_h\cap\mathrm{CFL}$ であり，$\Clin{h}$ はそのうち
+線形 CFG で生成される言語からなる．表現力の比較に限り，
+$h$ を $\Sigma^*$ 上の有限モノイド準同型全体に動かして
+$\mathsf{RS}:=\bigcup_h\mathsf{RS}_h$ とする．アルファベットを明示するときは
+$\mathsf{RS}_h(\Gamma)$，$\mathsf{RS}(\Gamma)$ と書き，以下の包含は
+アルファベットごとに解釈する．学習結果は常に一つの固定 $h$ を対象とする．
+非空アルファベット上では，$\mathsf{RS}$ も
+$\mathsf{RS}\cap\mathrm{CFL}$ も正例データから極限同定できない．
+命題~\ref{prop:regular-auto} により両者はすべての有限言語と $\Sigma^*$ を含むため，
+Gold の定理が適用されるからである．
 
-型付けに関するもう一つの有用な観察として，単純な十分条件が得られる．$\ker h$ を $\Sigma^+$ に制限した関係が $\equiv_L$ を精密化するならば\footnote{もし$\ker h\subseteq\equiv_L$ を $\Sigma^*$ 全体で要求してしまうと，例えば自明モノイドでは $\lambda$ とすべての非空語が同じ型になるため，通常は代入可能とされる $a^+$ も $\lambda\not\equiv_{a^+} a$ により除外されてしまう．}，$L\in\mathsf{RS}_h$ である．なぜなら，$h$-型が等しい語はすでに構文合同だからである．しかしこれは必要条件ではない．後の命題~\ref{prop:linear-separator-example} は，四元の固定-$h$ に属しながら構文合同関係が無限指数をもつ例を与える．任意の有限モノイド核の指数は有限なので，固定-$h$ 代入可能性は，$\ker h$ が完全な構文合同関係を精密化することよりも真に弱い．
+型付けの精密化には単調性がある．$\ker h'\subseteq\ker h$ ならば，
+$h'$ は比較を要求する因子対を減らすので
+$\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$ である．ただし精密化は，
+後の定量解析で使う型付き文法を大きくし得る．二つの有限型付け $h,g$ に対し
+$\ker(h\times g)=\ker h\cap\ker g$ だから
+$\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$ であり，
+窓情報と別の有限特徴を標的ごとに型付けを変えずに合成できる．
+
+$\ker h$ を $\Sigma^+$ に制限した関係が構文合同 $\equiv_L$ を精密化するなら
+$L\in\mathsf{RS}_h$ である．逆は通常の代入可能性ですでに成り立たない．
+中心記号付き言語
+$L_0:=\{a^ncb^n:n\ge0\}$ を考える．以下で採用する非空因子規約の下で
+$L_0$ は Clark--Eyraud 代入可能だが，$\equiv_{L_0}$ は無限指数である．
+実際 $1\le r<s$ に対して文脈 $(a,cb^{r+1})$ は $a^r$ と $a^s$ を区別する．
+$\Sigma^+$ への制限は本質的であり，自明モノイドの下で $\lambda$ まで比較すると
+$a^+$ のような例まで誤って除外される．
 
 \begin{proposition}\label{prop:regular-auto}
-言語が正則であることと，ある有限モノイド $M$ への準同型 $h:\Sigma^*\to M$ およびある $\mathsf{Acc}\subseteq M$ に対して $h^{-1}(\mathsf{Acc})$ の形に書けることは同値である．さらに，任意の固定 $h$ と $\mathsf{Acc}\subseteq M$ に対し，言語 $h^{-1}(\mathsf{Acc})$ は $\sim_h$-代入可能である．したがって，すべての正則言語は $\mathsf{RS}$ に属する．
+言語が正則であることと，ある有限モノイド $M$ への準同型
+$h:\Sigma^*\to M$ と $\mathsf{Acc}\subseteq M$ に対して
+$h^{-1}(\mathsf{Acc})$ の形に書けることは同値である．さらに任意の固定 $h$ と
+$\mathsf{Acc}\subseteq M$ に対し，$h^{-1}(\mathsf{Acc})$ は
+$\sim_h$-代入可能である．従ってすべての正則言語は $\mathsf{RS}$ に属する．
 \end{proposition}
 
 \begin{proof}
-最初の主張は，有限モノイドによる正則言語の標準的特徴づけである~\cite{pin2025}．
-$L=h^{-1}(\mathsf{Acc})$ かつ $h(x)=h(y)$ ならば，任意の $u,v$ に対して
-$h(uxv)=h(uyv)$ である．したがって $\D_L(x)=\D_L(y)$ である．
+最初の主張は有限モノイドによる正則言語の標準的特徴づけである~\cite{pin2025}．
+$L=h^{-1}(\mathsf{Acc})$ かつ $h(x)=h(y)$ なら，すべての $u,v$ に対し
+$h(uxv)=h(uyv)$ なので $\D_L(x)=\D_L(y)$ である．
 \end{proof}
 
 \subsection{古典的特殊場合}
 
-言語 $L\subseteq\Sigma^*$ が \emph{Clark--Eyraud 代入可能} であるとは，すべての $x,y\in\Sigma^+$ について，$\D_L(x)\cap\D_L(y)\ne\varnothing$ ならば $\D_L(x)=\D_L(y)$ が成り立つことをいう．定義~\ref{def:hsubst} の非空因子規約の下では，これはちょうど自明モノイドの場合である．特に，Yoshinaka の $(0,0)$ の場合に一致する．同じ運用上の規約については Clark~\cite{clark2013} も参照されたい．
+Clark--Eyraud の定義~5 は一般の文字列について量化している
+~\cite{clark-eyraud2007}．ここでは Clark~\cite{clark2013} が明示する
+非空因子規約を採用し，Clark--Eyraud の設定で論じられる $a^+$ のような例も保つ．
+すべての $x,y\in\Sigma^+$ について
+$\D_L(x)\cap\D_L(y)\ne\emptyset$ から $\D_L(x)=\D_L(y)$ が従うとき，
+$L$ を \emph{Clark--Eyraud 代入可能}と呼ぶ．これは定義~\ref{def:hsubst} の
+自明モノイドの場合，従って Yoshinaka の $(0,0)$ の場合にちょうど一致する．
 
 \begin{proposition}[Clark--Eyraud の特殊場合]\label{prop:ce-special}
 すべての Clark--Eyraud 代入可能言語は $\mathsf{RS}$ に属する．
 \end{proposition}
 \begin{proof}
-一元モノイドをとる．すると型条件は自明となり，定義~\ref{def:hsubst} は通常の代入可能性そのものになる．
+一元モノイドをとればよい．
 \end{proof}
 
-$k,\ell\ge0$ に対し，$\pref_k(w)$ および $\suf_\ell(w)$ を，それぞれ存在するときの指定長の接頭辞と接尾辞とし，$\pref_0(w)=\suf_0(w)=\lambda$ とする．
-
-Yoshinaka の元の定義~\cite{yoshinaka2008} では，長さ $k$ の左窓を $v\in\Sigma^k$，長さ $\ell$ の右窓を $u\in\Sigma^\ell$ と書く．以下では一般の文脈記法 $(u,v)$ との衝突を避けるため，この二つの窓変数だけを $p,q$ と改名する．したがって，言語 $L$ が \emph{$(k,\ell)$-代入可能} であるとは，すべての $p\in\Sigma^k$, $q\in\Sigma^\ell$ および $x_1,x_2,y_1,y_2,z_1,z_2\in\Sigma^*$ について，$py_1q,py_2q\ne\lambda$ かつ
+$k,\ell\ge0$ に対し，$\pref_k(w)$ と $\suf_\ell(w)$ を対応する接頭辞と接尾辞とし，
+$\pref_0(w)=\suf_0(w)=\lambda$ とする．一般の文脈記法との衝突を避けるため
+Yoshinaka の窓変数を改名して，$L$ が \emph{$(k,\ell)$-代入可能} であるとは，
+$p\in\Sigma^k$, $q\in\Sigma^\ell$ および
+$x_1,x_2,y_1,y_2,z_1,z_2\in\Sigma^*$ で $py_1q,py_2q\ne\lambda$ のとき
 \[
 \begin{split}
 &x_1py_1qz_1\in L,\quad x_1py_2qz_1\in L,\quad
@@ -202,85 +266,80 @@ x_2py_1qz_2\in L\\
 が成り立つことをいう．
 
 \begin{proposition}\label{prop:yl-special}
-任意の固定 $k,\ell\ge0$ に対して有限モノイド準同型 $h_{k,\ell}$ が存在し，任意の言語 $L\subseteq\Sigma^*$ について，$L$ が $(k,\ell)$-代入可能であることと，$L$ が $\sim_{h_{k,\ell}}$-代入可能であることは同値である．
+任意の固定 $k,\ell\ge0$ に対して有限モノイド準同型 $h_{k,\ell}$ が存在し，
+任意の $L\subseteq\Sigma^*$ について，$L$ が $(k,\ell)$-代入可能であることと
+$\sim_{h_{k,\ell}}$-代入可能であることは同値である．
 \end{proposition}
 
 \begin{proof}
-
-$m_0:=\max\{1,k+\ell\}$ とおく．$|w|<m_0$ のとき $h_{k,\ell}(w)=w$ とし，それ以外では
-\[
-h_{k,\ell}(w)=\langle\pref_k(w),\suf_\ell(w)\rangle
-\]
-とする．1 ビットのタグを用いて，短い語を表す要素と長い語を表す要素とを互いに素に区別する．さらに $M_{k,\ell}:=h_{k,\ell}(\Sigma^*)$ とおく．短い語 $x,y$ と像中のタグ付き要素に対し，積を
+$m_0:=\max\{1,k+\ell\}$ とし，$|w|<m_0$ なら $h_{k,\ell}(w):=w$，
+それ以外では，二つの場合を区別するタグを付けて
+$h_{k,\ell}(w):=\langle\pref_k(w),\suf_\ell(w)\rangle$ とする．
+有限像を $M_{k,\ell}:=h_{k,\ell}(\Sigma^*)$ と書く．短い語 $x,y$ について
 \[
 \begin{aligned}
- x\cdot y&:=h_{k,\ell}(xy), &
- x\cdot\langle p,q\rangle&:=\langle\pref_k(xp),q\rangle,\\
- \langle p,q\rangle\cdot y&:=\langle p,\suf_\ell(qy)\rangle, &
- \langle p,q\rangle\cdot\langle p',q'\rangle&:=\langle p,q'\rangle
+x\cdot y&:=h_{k,\ell}(xy),&
+x\cdot\langle p,q\rangle&:=\langle\pref_k(xp),q\rangle,\\
+\langle p,q\rangle\cdot y&:=\langle p,\suf_\ell(qy)\rangle,&
+\langle p,q\rangle\cdot\langle p',q'\rangle&:=\langle p,q'\rangle
 \end{aligned}
 \]
-と定める．四つの場合を直接確認すれば $h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$ が得られる．$h_{k,\ell}$ は全射なので，結合律は連接の結合律から従い，$h_{k,\ell}(\lambda)$ が単位元である．したがって $M_{k,\ell}$ は有限モノイドであり，$h_{k,\ell}$ は準同型である．
+と積を定める．すると
+$h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$ であり，全射性から結合律が従い，
+$h_{k,\ell}(\lambda)$ が単位元になる．
 
-$s,t\in\Sigma^+$ かつ $h_{k,\ell}(s)=h_{k,\ell}(t)$ かつ $\D_L(s)\cap\D_L(t)\ne\varnothing$ と仮定する．$|s|<m_0$ ならば $s=t$ である．そうでなければ $s,t$ はともに長く，同じ長さ $k$ の接頭辞 $p$ と長さ $\ell$ の接尾辞 $q$ をもつので，$s=py_1q$，$t=py_2q$ と書ける．$(u_0,v_0)$ を $s,t$ の共通文脈とし，$(u',v')$ を $s$ の任意の文脈とする．三つの語
-\[
-u_0py_1qv_0,\quad u_0py_2qv_0,\quad u'py_1qv'
-\]
-は $L$ に属する．$(k,\ell)$-代入可能性を適用すると $u'py_2qv'\in L$ を得る．よって $\D_L(s)\subseteq\D_L(t)$ であり，対称性から等号が成り立つ．
-
-逆に，$L$ が $\sim_{h_{k,\ell}}$-代入可能であるとし，$(k,\ell)$-代入可能性の前提を満たす文字列をとる．$s:=py_1q$, $t:=py_2q$ とおくと，定義により両者は非空である．$k+\ell>0$ なら $|s|,|t|\ge k+\ell=m_0$ であり，両者の型はともに $\langle p,q\rangle$ である．$k=\ell=0$ なら，非空性から $|s|,|t|\ge1=m_0$ であり，両者は唯一の非空語型 $\langle\lambda,\lambda\rangle$ をもつ．よって，どちらの場合でも $h_{k,\ell}(s)=h_{k,\ell}(t)$ である．最初の二つの前提語から $s,t$ は文脈 $(x_1,z_1)$ を共有し，第三の前提語から $(x_2,z_2)\in\D_L(s)$ である．固定-$h_{k,\ell}$ 代入可能性により $(x_2,z_2)\in\D_L(t)$ が従い，これは必要な第四の語そのものである．
+非空 $s,t$ の型が等しいことは，$s=t$ であるか，共通の長さ $k$ の接頭辞 $p$ と
+長さ $\ell$ の接尾辞 $q$ を用いて $s=py_1q$, $t=py_2q$ と書けることを意味する
+（$k=\ell=0$ も含む）．$L$ が $(k,\ell)$-代入可能なら，共通文脈と片方の任意の
+文脈から Yoshinaka の四語条件を適用し，対称性により分布が一致する．逆に
+Yoshinaka の前提では $s:=py_1q$, $t:=py_2q$ は非空で，長語側の符号化に属するため
+同じ $h_{k,\ell}$-型をもつ．固定-$h_{k,\ell}$ 代入可能性が第三の文脈を移送し，
+第四の語を与える．
 \end{proof}
 
 \phantomsection\label{crit:kl}
 \paragraph{固定窓代入可能性の反例基準．}
-$k,\ell\ge0$ とし，$m_0:=\max\{1,k+\ell\}$ とおく．
-$s,t\in\Sigma^*$ が $|s|,|t|\ge m_0$，
-$\pref_k(s)=\pref_k(t)$，$\suf_\ell(s)=\suf_\ell(t)$，
-$\D_L(s)\cap\D_L(t)\ne\emptyset$ を満たし，かつ
-$\D_L(s)\ne\D_L(t)$ であるならば，$L$ は $(k,\ell)$-代入可能ではない．
-実際，長さの仮定と接頭辞--接尾辞の一致から
-$h_{k,\ell}(s)=h_{k,\ell}(t)$ である一方，
-$s,t$ は共通文脈をもちながら分布が異なるので，
-$L$ は $\sim_{h_{k,\ell}}$-代入可能ではない．
-命題~\ref{prop:yl-special} より結論が従う．
+$m_0:=\max\{1,k+\ell\}$ とする．$s,t$ が長さ $m_0$ 以上で，同じ長さ $k$ の
+接頭辞と長さ $\ell$ の接尾辞をもち，共通文脈をもつ一方で分布が異なるなら，
+$L$ は $(k,\ell)$-代入可能ではない．最初の三条件から
+$h_{k,\ell}$-型が等しく共通文脈をもち，最後の条件が
+$\sim_{h_{k,\ell}}$-代入可能性に反するからである．
 
-したがって，固定 $(k,\ell)$ クラスはちょうど $\mathsf{RS}_{h_{k,\ell}}$ である．第~\ref{sec:fixed-window-thick}節では，この特殊場合に本論文の再構成作用素が Yoshinaka の文法サイズと厚みに関する有限標本尺度を回収することを確認する．ここで $k,\ell$ は固定されており，窓パラメータを可変とした一様な多項式上界は主張しない．また，厚み付きデータの主張は集合駆動型作用素 $\mathcal B_{h_{k,\ell}}$ による一括再構成に関するものであり，保守的逐次学習器の最終的安定化は別に Gold の極限同定として示す．$k=\ell=0$ のとき，準同型 $h_{0,0}$ は $\lambda$ と非空語を区別し，非空内部因子だけを比較する定義~\ref{def:hsubst} の下では一元自明モノイドと同じ代入可能性条件を誘導する．アルファベット $\Gamma$ に対し，
+従って固定 $(k,\ell)$ クラスはちょうど $\mathsf{RS}_{h_{k,\ell}}$ であり，
+第~\ref{sec:fixed-window-thick}節でその多項式厚み付きデータ上界を与える．
+$k=\ell=0$ では $h_{0,0}$ は $\lambda$ と非空語を区別するだけで，
+一元モノイドと同じ代入可能性条件を誘導する．アルファベット $\Gamma$ に対し
 \[
 \mathsf{KL}(\Gamma):=
 \bigcup_{k,\ell\ge0}
 \{L\subseteq\Gamma^*:L\text{ は $(k,\ell)$-代入可能}\}
 \]
-と定め，現在のアルファベット上では $\mathsf{KL}:=\mathsf{KL}(\Sigma)$ と略記する．
+とし，$\mathsf{KL}:=\mathsf{KL}(\Sigma)$ と略記する．
 
 \subsection{主定理}
 
 \begin{theorem}[固定-$h$ 学習定理]\label{thm:main}
-有限モノイドへの効率的に計算可能な準同型 $h:\Sigma^*\to M$ を固定する．
-集合駆動型再構成作用素 $\mathcal B_h$ と保守的逐次学習器 $\mathcal A_h$ が
-存在して，次を満たす．
+効率的に計算可能な有限モノイド準同型 $h:\Sigma^*\to M$ を固定する．
+集合駆動型再構成作用素 $\mathcal B_h$ と保守的逐次学習器 $\mathcal A_h$ が存在し，
+次を満たす．
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $\mathcal B_h$ は標本整合的で，$\mathcal B_h(K)$ は
-$\|K\|$ に関して多項式時間で構成できる．
+\item $\mathcal B_h$ は標本整合的で，$\mathcal B_h(K)$ は $\|K\|$ の多項式時間で構成できる．
 \item すべての $L\in\Ccf{h}$ は $\mathcal B_h$ に対する有限特徴標本をもつ．
-$L\ne\emptyset$ で $G$ が $L$ の縮約済み SSBNF 文法なら，その一つは
-$|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式サイズに選べる．
 \item $\mathcal A_h$ はすべての非空 $L\in\Ccf{h}$ を Gold の意味で同定し，
-各更新はそれまでに見たデータのサイズに関して多項式時間である．
-\item 固定 $(k,\ell)$ に対し，$\Ccf{h_{k,\ell}}$ の標的を表す任意の縮約済み
-CFG $R$ について，(ii) の標本は $|R|$ と $\tau_R$ の多項式に選べる．
-また $L\in\Clin{h}$ なら，任意の線形 CFG $R$ に対して $|R|$ の多項式に選べる．
+各更新はそれまでに見たデータの多項式時間で行える．
+\item 固定 $(k,\ell)$ に対し $h=h_{k,\ell}$ とすると，(ii) の標本は，
+標的を表す任意の縮約済み CFG $R$ について $|R|$ と $\tau_R$ の多項式サイズに選べる．
+\item 任意の固定 $h$ と $L\in\Clin{h}$ に対し，(ii) の標本は，
+$L$ を表す任意の線形 CFG $R$ について $|R|$ の多項式サイズに選べる．
 \end{enumerate}
-これに対し，ある固定二元準同型 $h_\circ$ について，
-$\Ccf{h_\circ}$ の入れ子状有限標的が存在し，両者は多項式サイズ，
-通常の厚み $O(n)$ の縮約済み CFG をもつが，両標的に特徴標本をもつ任意の
-集合駆動型作用素に対し，大きい方の標的の任意の特徴標本サイズは
-$2^{\Omega(n)}$ である．特に $\mathcal B_{h_\circ}$ にもこの下界が適用される．
+項目~(iv)--(v) の定量的機構と，一般の固定型付けに対するその限界は，
+第~\ref{sec:typed-thickness}--\ref{sec:linear}節で扱う．
 \end{theorem}
 
-Gold の superfinite obstruction との矛盾はない．相異なる非空語 $x,y$ を
-$h(x)=h(y)$ となるように選び，$|r|>\max\{|x|,|y|\}$ とすれば，
-$x,y$ は $\{x,y,rx\}$ で空文脈を共有する一方，$(r,\lambda)$ は $x$ の
-文脈にしかならない．従ってこの有限言語は $\sim_h$-代入可能ではない．
+クラス $\Ccf{h}$ はすべての有限言語を含むわけではない．
+$h(x)=h(y)$ を満たす相異なる非空語 $x,y$ を取り，
+$|r|>\max\{|x|,|y|\}$ とする．$\{x,y,rx\}$ では $x,y$ は空文脈を共有するが，
+$(r,\lambda)$ は $x$ だけの文脈である．
 
 \section{再構成作用素と逐次学習器}
 \label{sec:algo}
@@ -359,6 +418,18 @@ $H_0$ から始め，$w_n$ を読んだ後
 集合駆動型だが，$\mathcal A_h$ が最終的に安定する文法は提示順序に依存し得る．
 主張するのは，標的言語を生成する文法への最終的な構文的安定化だけである
 （系~\ref{cor:ilt}）．
+
+\paragraph{提示順序への依存．}
+無限標的ではこの依存性を直接確認できる．$L\in\Ccf{h}$ を無限とし，
+あるテキスト $T$ 上で $\mathcal A_h$ が段階 $n_0$ 以降一定になるとする．
+有限アルファベット上の無限言語は語長が非有界なので，$K_{n_0}$ のどの語よりも長い
+$w\in L$ を選べる．$T$ 上の極限文法は，最後の再構成段階 $m\le n_0$ における
+$\mathcal B_h(K_m)$ だから，非終端記号 $[w:\lambda,\lambda]$ をもたない．
+これに対し，$w$ を最初に置いてから $T$ を続けるテキストでは，最初の仮説は
+$\mathcal B_h(\{w\})$ であり，その後の再構成もすべて $w$ を含む蓄積標本を使う．
+従って以後の各仮説は $[w:\lambda,\lambda]$ を含む．二つの極限文法は，
+どちらも最終的に $L$ を生成するにもかかわらず，構文的には異なる．
+同じ現象は $L=\{a^ncb^n:n\ge0\}$ でも生じる．
 
 \section{生成語型付き精密化と有限証拠による完全性}
 \label{sec:typing}
@@ -464,6 +535,13 @@ $L\in\Ccf{h}$ を非空とし，$G$ を $L$ の縮約済み SSBNF 文法，$\wid
 本論文のテキスト規約の下では，Gold の主張は非空標的を対象とする．$H_0$ は初期空仮説である．$L$ を非空とし，$T$ を $L$ のテキストとする．$w_1\notin L(H_0)=\emptyset$ なので，学習器は段階 $1$ で再構成する．$\WitnessSet(\widetilde G)\subseteq K_{n_0}$ を満たす $n_0$ を選ぶ．ある段階 $n\ge n_0$ で学習器が再構成するならば，定理~\ref{thm:reconstruction-fixed-h} により新たな仮説はちょうど $L$ となり，その後はいかなる正例も追加の変更を引き起こさない．この場合はこれが最後の仮説変更となる．一方，どの段階 $n\ge n_0$ でも再構成が起こらないと仮定する．健全性から $L(H_{n_0})\subseteq L$ である．さらに，すべての $n$ について $K_n\subseteq L(H_n)$ が成り立つ．再構成時には標本整合性があり，再構成しない段階では新たに提示されたデータがすでに変更されない仮説によって生成されるからである．したがって真の包含 $L(H_{n_0})\subsetneq L$ ならば，段階 $n_0$ までまだ現れていないある $w^\star\in L\setminus L(H_{n_0})$ が存在する．しかし標的のすべての語は最終的にテキストに現れるので，$w^\star$ は後の段階で現れて再構成を強制し，矛盾する．したがって $L(H_{n_0})=L$ である．この場合，段階 $n_0$ 以後に仮説変更は必要ない．
 \end{proof}
 
+これは Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016}
+が指摘する delayed-rebuild 現象である．特徴標本をすでに見終えた後でも，
+新しい各正例が以前の誤った仮説によって生成されている限り，保守的学習器はその仮説を
+保持し得る．その仮説の外にある後続の正例が現れたとき，すでに特徴データを含む
+蓄積標本全体から再構成が行われる．上の証明は $\mathcal B_h$ に対するこの安定化を
+明示している．
+
 \section{再構成ステップの計算量}
 \label{sec:complexity}
 
@@ -474,9 +552,11 @@ $h$ を固定すると，$\mathcal B_h(K)$ は $\|K\|$ に関して多項式時�
 $n_K:=\|K\|$ とおく．標本語には $x\ne\lambda$ を満たす分解 $uxv$ が
 $O(n_K^2)$ 個あり，従って $|\widehat V(K)|=O(n_K^2)$ である．因子の $h$-値も
 固定モノイド中の $O(n_K^2)$ 回の積でキャッシュできる．規則~(R1) の候補は
-$O(n_K^3)$，規則~(R2)--(R3) は高々 $O(n_K^4)$ 個である．因子と文脈を
-出現識別子で保持すれば，固定 $h$ の下で各検査は定数時間である．各生成規則の
-符号化長は $O(n_K)$ なので，文法全体を明示的に検査・出力する時間は
+$O(n_K^3)$，規則~(R2)--(R3) は高々 $O(n_K^4)$ 個である．多項式時間の前処理で
+等しい因子と文脈成分に標準識別子を割り当てられる
+（例えば $O(n_K^2)$ 個の因子出現をソートすればよい）．この識別子と $h$-値を
+キャッシュした後は，固定 $h$ の下で各等値・型検査を定数時間で行える．
+各生成規則の符号化長は $O(n_K)$ なので，文法全体を明示的に検査・出力する時間は
 $O(n_K^5)$ で抑えられる．
 \end{proof}
 
@@ -490,40 +570,50 @@ CFG membership は文法と入力サイズに関して多項式時間であり�
 \end{proof}
 
 補題~\ref{lem:sample-consistency}，定理~\ref{thm:reconstruction-fixed-h}，
-系~\ref{cor:ilt} と合わせて，主定理~\ref{thm:main}(i)--(iii) が得られる
-（(ii) のデータサイズ上界を除く）．文法サイズだけによる上界は不可能である．
-縮約済み SSBNF 文法
-$S_0\to A_n$, $A_0\to a$, $A_i\to A_{i-1}A_{i-1}$ は
-$O(n)$ 個の生成規則記号しかもたないが，生成言語は $\{a^{2^n}\}$ である．
-また任意の singleton 言語は，任意の $h$ に対して $\sim_h$-代入可能である．
+系~\ref{cor:ilt} と合わせて，主定理~\ref{thm:main}(i)--(iii) が得られる．
+定量的な (iv)--(v) は第~\ref{sec:fixed-window-thick}--\ref{sec:linear}節で証明する．
+文法サイズだけによる上界は不可能である．標準的な doubling family
+（de~la~Higuera~\cite{higuera1997} および
+Eyraud--Heinz--Yoshinaka~\cite[Example~2.3]{eyraud-heinz-yoshinaka2016} も参照）
+は，縮約済み SSBNF 文法
+$S_0\to A_n$, $A_0\to a$, $A_i\to A_{i-1}A_{i-1}$ をもち，
+生成規則記号数は $O(n)$ だが生成言語は $\{a^{2^n}\}$ である．
+任意の singleton 言語は，任意の $h$ に対して $\sim_h$-代入可能である．
 
 \section{一般の固定型付けに対する型付き厚み}
 \label{sec:typed-thickness}
 
-任意の固定 $h$ に対しても，生成語型付けそのもののコストを明示的に測れば，有限証拠構成には直接的な定量上界が得られる．$G=(V,\Sigma,P,S_0)$ を縮約済み SSBNF 文法，$\widetilde G$ をその trim 済み生成語型付き精密化とする．
+\subsection{型付き厚み上界と表現レベルのギャップ}
+
+任意の固定 $h$ に対し，生成語型付けの費用を明示的に測れば，有限証拠構成から
+直接的な定量上界が得られる．$G=(V,\Sigma,P,S_0)$ を縮約済み SSBNF 文法，
+$\widetilde G$ をそのトリム済み生成語型付き精密化とし，
 \[
  N:=|V\setminus\{S_0\}|,\qquad
  N_t:=|\widetilde V\setminus\{\widetilde S\}|
 \]
-とおき，この表現の \emph{型付き厚み}を
+とおく．この表現の \emph{型付き厚み}を
 \[
  \tau_h^{\mathrm{typ}}(G):=
  \max\Bigl(\{\,|\omega(X)|:
  X\in\widetilde V\setminus\{\widetilde S\}\,\}\cup\{1\}\Bigr)
 \]
-と定める．したがって $\tau_h^{\mathrm{typ}}(G)$ は，完全生成語型分割と trim の後に，各非開始記号から得られる最短終端生成語の長さを測る．これは表現に依存するパラメータであり，学習器への追加仮定ではない．
+と定める．これは完全な生成語型分割とトリミング後の最短終端生成語を測る
+表現依存パラメータであり，学習器への追加仮定ではない．
 
-\begin{lemma}[型付き厚みによる証拠語上界]
+\begin{lemma}[型付き厚みによる証拠上界]
 \label{lem:typed-thickness-bound}
-上の $G,\widetilde G$ に対し，$\tau:=\tau_h^{\mathrm{typ}}(G)$ とおく．任意の非開始型付き記号 $X$ について
+$G,\widetilde G$ を上の通りとし，$\tau:=\tau_h^{\mathrm{typ}}(G)$ と書く．
+任意の非開始型付き記号 $X$ に対し
 \[
  |u_X|+|v_X|\le (N_t-1)\tau
 \]
-が成り立ち，任意の $w\in\WitnessSet(\widetilde G)$ について
+であり，任意の $w\in\WitnessSet(\widetilde G)$ に対し
 \[
  |w|\le (N_t+1)\tau
 \]
-が成り立つ．さらに，$P_{\mathrm{ter}}$ と $P_{\mathrm{bin}}$ をそれぞれ $G$ の非開始終端規則集合と二項規則集合とすると，
+である．$P_{\mathrm{ter}},P_{\mathrm{bin}}$ をそれぞれ $G$ の非開始終端規則と
+二項規則の集合とすると
 \[
  \|\WitnessSet(\widetilde G)\|
  \le
@@ -531,94 +621,84 @@ $O(n)$ 個の生成規則記号しかもたないが，生成言語は $\{a^{2^n
        +|P_{\mathrm{bin}}||M|^2+1\bigr)
  \bigl((N|M|+1)\tau+1\bigr).
 \]
-従って固定 $h$ の下では，この上界は $|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式である．
+特に固定 $h$ の下で，この上界は $|G|$ と
+$\tau_h^{\mathrm{typ}}(G)$ の多項式である．
 \end{lemma}
 
 \begin{proof}
-$\widetilde G$ の非開始記号を頂点とし，各二項生成規則について親から二つの子への辺を張る有向依存グラフを考える．$\widetilde G$ は縮約済みなので，任意の非開始記号 $X$ は到達可能である．従って，ある開始規則の非開始子 $A$ から $X$ への道がこの依存グラフに存在する．そのような道のうち最短のものを選ぶ．最短道は型付き記号を繰り返さないので，辺数は高々 $N_t-1$ である．
+$\widetilde G$ の非開始記号を頂点とし，二項規則で親から各子へ辺を張る依存有向グラフを
+作る．$\widetilde G$ は縮約済みなので任意の非開始記号 $X$ は到達可能であり，
+ある開始子 $A$ から $X$ への経路がある．最短経路を選ぶと型付き記号を反復せず，
+辺数は高々 $N_t-1$ である．
 
-道の各辺について，その辺を実現する二項規則を一つ選び，道上にない兄弟記号をその標準生成語へ展開する．$\widetilde S\to A$ から出発してこれらの展開を行うと，$X$ の終端到達文脈が得られる．道外の各標準生成語の長さは高々 $\tau$ なので，文脈の全長は高々 $(N_t-1)\tau$ である．標準文脈 $(u_X,v_X)$ はこれより長くない．
+経路の各辺について，その辺を実現する二項規則を選び，経路外の子をその標準生成語へ
+展開する．$\widetilde S\to A$ から始めれば，これらの展開は $X$ の終端到達文脈を
+与える．各経路外の標準生成語長は高々 $\tau$ なので文脈全長は
+$(N_t-1)\tau$ 以下であり，標準文脈 $(u_X,v_X)$ はそれより長くない．
 
-アンカーは標準文脈に標準生成語を一つ，終端規則証拠は終端記号を一つ，二項規則証拠は標準生成語を二つ加える．$\tau\ge1$ だから，式~\eqref{eq:W} の各語の長さは高々 $(N_t+1)\tau$ である．また $N_t\le N|M|$ であり，元の終端規則は高々一つの型付き終端規則を，元の二項規則は高々 $|M|^2$ 個の型付きコピーを生む．従って表示した第一因子は，必要なら含まれる $\lambda$ も含めた証拠語個数を上から抑え，第二因子は各証拠語の $|w|+1$ を上から抑える．両者を掛ければ主張が従う．
+アンカーは標準生成語を一つ，終端規則証拠は終端記号を一つ，二項規則証拠は標準文脈に
+標準生成語を二つ加える．$\tau\ge1$ だから，式~\eqref{eq:W} の各語の長さは
+$(N_t+1)\tau$ 以下である．さらに $N_t\le N|M|$ であり，元の終端規則から生じる
+型付き終端規則は高々一つ，元の各二項規則からは高々 $|M|^2$ 個の型付き規則が生じる．
+従って第一因子が $\lambda$ の可能な証拠も含めた証拠個数を，第二因子が各
+$|w|+1$ を抑える．積をとれば主張が従う．
 \end{proof}
 
-\begin{corollary}[型付き厚みによる特徴データ]
+\begin{corollary}[型付き厚みからの特徴データ]
 \label{cor:typed-thickness-data}
-$h$ を固定する．$G$ が非空な $L(G)\in\Ccf{h}$ に対する縮約済み SSBNF 文法ならば，$\WitnessSet(\widetilde G)$ は $\mathcal B_h$ に対する特徴標本であり，その符号化サイズは $|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式で抑えられる．
+$h$ を固定する．$G$ が非空な $L(G)\in\Ccf{h}$ の縮約済み SSBNF 文法なら，
+$\WitnessSet(\widetilde G)$ は $\mathcal B_h$ に対する特徴標本であり，
+その符号化サイズは $|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式である．
 \end{corollary}
-
 \begin{proof}
-補題~\ref{lem:typed-thickness-bound} が定量上界を与え，定理~\ref{thm:reconstruction-fixed-h} が特徴標本であることを与える．
+定量上界は補題~\ref{lem:typed-thickness-bound}，特徴標本性は
+定理~\ref{thm:reconstruction-fixed-h} による．
 \end{proof}
 
-しかし，完全型付き精密化を経由する限り，この型付き厚みを元の文法の通常の厚みで一般に置き換えることはできない．
+完全精密化による議論では，型付き厚みを一般に元文法の通常の厚みへ置き換えられない．
 
-\begin{proposition}[元の厚みと型付き厚みの指数的ギャップ]
-\label{prop:typed-thickness-gap}
-固定された二元モノイドへの準同型 $h_{\mathtt c}$ と，生成規則中の記号数が $O(n)$ で通常の厚みが $\tau_{G_n^{\mathtt c}}=1$ である縮約済み SSBNF 文法族 $G_n^{\mathtt c}$ が存在し，
-\[
- L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+\in\Ccf{h_{\mathtt c}},
- \qquad
- \tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge2^n
-\]
-が成り立つ．従ってこの固定 $h_{\mathtt c}$ に対して，型付き厚みを元の文法サイズと通常の厚みの多項式で一様に抑えることはできない．
-\end{proposition}
-
-\begin{proof}
-$M_{\mathtt c}=\{1,\zeta\}$ とし，$1$ を単位元，$\zeta$ を零元とする．
-\[
- h_{\mathtt c}(\mathtt a)=1,\qquad
- h_{\mathtt c}(\mathtt c)=\zeta
-\]
-と定める．$n\ge1$ に対し，$G_n^{\mathtt c}$ を次の規則をもつ文法とする．
+\begin{remark}[元文法と型付き厚みの指数ギャップ]
+\label{rem:typed-thickness-gap}
+型付き厚みは通常の文法厚みの多項式では一般に抑えられない．
+$M_{\mathtt c}=\{1,\zeta\}$ を零元 $\zeta$ をもつ二元モノイドとし，
+$h_{\mathtt c}(\mathtt a)=1$, $h_{\mathtt c}(\mathtt c)=\zeta$ とする．
+$n\ge1$ に対し $G_n^{\mathtt c}$ を
 \[
 \begin{aligned}
- S_0&\to Y,\\
- Y&\to \mathtt a\mid\mathtt c\mid YY\mid A_nC,\\
- C&\to\mathtt c,\qquad A_0\to\mathtt a,\\
+ S_0&\to Y, &
+ Y&\to \mathtt a\mid\mathtt c\mid YY\mid A_nC, &
+ C&\to\mathtt c,\\
+ A_0&\to\mathtt a, &
  A_i&\to A_{i-1}A_{i-1}\mid\mathtt c
- \qquad(1\le i\le n).
+ \quad(1\le i\le n)
 \end{aligned}
 \]
-これは縮約済み SSBNF 文法である．$Y\to\mathtt a\mid\mathtt c\mid YY$ だけですでに $\{\mathtt a,\mathtt c\}$ 上のすべての非空語を生成し，追加規則 $Y\to A_nC$ が生成する語もすべてその集合に属する．従って $L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+$ である．すべての非終端記号が一文字の終端生成語をもつので $\tau_{G_n^{\mathtt c}}=1$ であり，生成規則中の記号数は $O(n)$ である．
-
-次に，trim 済み完全 $h_{\mathtt c}$-型付き精密化を考える．$\zeta$ は零元なので，$M_{\mathtt c}$ において積が $1$ になるのは $1\cdot1$ だけである．従って
-\[
- (A_0)_1\to\mathtt a,\qquad
- (A_i)_1\to(A_{i-1})_1(A_{i-1})_1
- \quad(1\le i\le n)
-\]
-であり，$(A_i)_1$ から $\mathtt c$ への終端規則は存在しない．帰納法により
-\[
- L_{\widetilde G_n^{\mathtt c}}((A_i)_1)=\{\mathtt a^{2^i}\}
-\]
-を得る．さらに $(A_n)_1$ は trim 後も残る．実際，完全精密化には成功導出
-\[
- \widetilde S\to Y_\zeta
- \to (A_n)_1C_\zeta
- \Rightarrow^*\mathtt a^{2^n}\mathtt c
-\]
-が存在する．従って $(A_n)_1$ の標準生成語の長さは $2^n$ であり，表示した下界が従う．最後に，$\{\mathtt a,\mathtt c\}^+$ では任意の非空因子の分布がすべて $\Sigma^*\times\Sigma^*$ に等しいので，この言語は $\sim_{h_{\mathtt c}}$-代入可能である．また，本論文で固定した符号化の下で $G_n^{\mathtt c}$ の符号化サイズは $O(n)$ の生成規則記号数の多項式であるから，$\tau_{G_n^{\mathtt c}}=1$ であるにもかかわらず $2^n$ は $|G_n^{\mathtt c}|$ に関して超多項式である．
-\end{proof}
-
-命題~\ref{prop:typed-thickness-gap} は表現レベルの障害であり，その標的言語自体は短い特徴データをもつ．次の結果は，再構成作用素の内部構成に依存しない通常厚み下界を与える．
+で定める．これらはサイズ $O(n)$，通常の厚み $1$ の縮約済み SSBNF 文法で，
+生成言語は $\{\mathtt a,\mathtt c\}^+\in\Ccf{h_{\mathtt c}}$ である．
+トリム済み型付き精密化では $1$ になる積は $1\cdot1$ だけなので，帰納法により
+$L((A_i)_1)=\{\mathtt a^{2^i}\}$ である．さらに
+$\widetilde S\to Y_\zeta\to(A_n)_1C_\zeta$ により $(A_n)_1$ はトリミング後も残る．
+従って
+$\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge2^n$ であり，
+この固定型付けですら元文法サイズと通常の厚みによる型付き厚みの多項式上界は存在しない．
+ただし標的言語 $\{\mathtt a,\mathtt c\}^+$ 自体は $n$ に依存しないので，ここで示すのは
+標準的な完全精密化証拠に関するギャップに限られる．作用素に依存しない下界は
+定理~\ref{thm:ordinary-thickness-lower} で与える．
+\end{remark}
 
 \subsection{集合駆動型特徴標本に対する通常厚み下界}
 \label{subsec:ordinary-thickness-lower}
 
-二つの単純な観察を用いる．
+まず二つの初等的観察を用いる．
 
-\begin{lemma}[型ファイバーへの制限]
-\label{lem:fibre-restriction}
-$h:\Sigma^*\to M$ をモノイド準同型とし，$L$ を $\sim_h$-代入可能とする．
+\begin{lemma}[型ファイバーへの制限]\label{lem:fibre-restriction}
+$h:\Sigma^*\to M$ をモノイド準同型，$L$ を $\sim_h$-代入可能とする．
 任意の $F\subseteq M$ に対し，$L\cap h^{-1}(F)$ も
 $\sim_h$-代入可能である．
 \end{lemma}
-
 \begin{proof}
-$L_F:=L\cap h^{-1}(F)$ とする．同型の非空因子 $x,y$ が $L_F$ で
-共通文脈をもてば，$L$ でも共通文脈をもつので $\D_L(x)=\D_L(y)$ である．
-任意の $u,v$ について
+$L_F:=L\cap h^{-1}(F)$ とする．同型の非空因子 $x,y$ が $L_F$ で共通文脈を
+もてば，$L$ でも共通文脈をもつので $\D_L(x)=\D_L(y)$ である．任意の $u,v$ について
 \[
  uxv\in L_F
  \iff uxv\in L\ \text{かつ}\ h(u)h(x)h(v)\in F
@@ -628,119 +708,89 @@ $L_F:=L\cap h^{-1}(F)$ とする．同型の非空因子 $x,y$ が $L_F$ で
 
 \begin{lemma}[入れ子標的に対する特徴標本障害]
 \label{lem:nested-characteristic-obstruction}
-$\mathcal B$ を任意の集合駆動型作用素，$L'\subsetneq L$ とする．
-同じ $\mathcal B$ に対し $C,C'$ がそれぞれ $L,L'$ の特徴標本ならば
+$\mathcal B$ を任意の集合駆動型作用素，$L'\subsetneq L$ とする．同じ $\mathcal B$ に
+対し $C,C'$ がそれぞれ $L,L'$ の特徴標本なら
 \[
- C\cap(L\setminus L')\ne\varnothing
+ C\cap(L\setminus L')\ne\varnothing.
 \]
-である．
 \end{lemma}
-
 \begin{proof}
-逆に $C\subseteq L'$ とすると，$K:=C\cup C'$ は
-$C\subseteq K\subseteq L$ と $C'\subseteq K\subseteq L'$ を同時に満たす．
-従って特徴標本性から
-$L(\mathcal B(K))=L=L'$ が必要となり，矛盾する．
+そうでなければ $C\subseteq L'$ である．$K:=C\cup C'$ とおけば
+$C\subseteq K\subseteq L$ かつ $C'\subseteq K\subseteq L'$ なので，
+特徴標本性は $L(\mathcal B(K))=L$ と $L(\mathcal B(K))=L'$ を同時に強制し矛盾する．
 \end{proof}
 
-アルファベット
 \[
  \Sigma_\circ:=\{\mathtt l,\mathtt r,\mathtt a,\mathtt c,
                     \mathtt 0,\mathtt d\}
 \]
-と，単位元 $1$，零元 $\zeta$ をもつ二元モノイド
-$M_\circ:=\{1,\zeta\}$ を固定する．
-$h_\circ(\mathtt c)=\zeta$ とし，他の文字をすべて $1$ へ送る準同型
-$h_\circ:\Sigma_\circ^*\to M_\circ$ を定める．従って
-$h_\circ(w)=\zeta$ は $w$ が $\mathtt c$ を含むことと同値である．
+とし，$M_\circ:=\{1,\zeta\}$ を単位元 $1$ と零元 $\zeta$ をもつ二元モノイドとする．
+これは備考~\ref{rem:typed-thickness-gap} と同じ抽象的二元零モノイドだが，
+アルファベットと文字像が異なるため準同型には別名を用いる．
+$h_\circ:\Sigma_\circ^*\to M_\circ$ を
+$h_\circ(\mathtt c)=\zeta$，その他のすべての文字を $1$ に送る準同型とする．
+従って $h_\circ(w)=\zeta$ であることと $w$ が $\mathtt c$ を含むことは同値である．
 
-$i\ge0$ に対し
-$s_i:=\mathtt c\mathtt0^{\,i+1}\mathtt d$ とおき，
+$i\ge0$ に対し $s_i:=\mathtt c\mathtt 0^{\,i+1}\mathtt d$ とし，
+有限言語を
 \[
- \mathcal T_0:=\{\mathtt l\mathtt a\mathtt r,,
+ \mathcal T_0:=\{\mathtt l\mathtt a\mathtt r,\,
                     \mathtt l s_0\mathtt r\},
  \qquad
  \mathcal T_i:=\{\mathtt l s_i\mathtt r\}
  \cup\{\mathtt lxy\mathtt r:x,y\in\mathcal T_{i-1}\}
  \quad(i\ge1)
 \]
-と定める．さらに
+で定める．また
 \[
- z_0:=\mathtt l\mathtt a\mathtt r,qquad
+ z_0:=\mathtt l\mathtt a\mathtt r,\qquad
  z_i:=\mathtt l z_{i-1}z_{i-1}\mathtt r
 \]
-とおく．$z_i$ は $\mathcal T_i$ の唯一の $\mathtt c$-自由語であり，
+とおく．$z_i$ は $\mathcal T_i$ の中で $\mathtt c$ を含まない唯一の語であり，
 \begin{equation}
  |z_i|=5\cdot2^i-2.
  \label{eq:clean-tree-length}
 \end{equation}
 
-\begin{lemma}[レベル符号化木言語の代入可能性]
+下界に必要な木構文解析は初等的だが，本論の流れに比べ記法が長いので
+付録~\ref{app:level-coded-substitutability} に回す．要点は，
+$\mathcal T_n$ の各語が残余高さに基づく一意な木構文解析をもち，clean tree $z_n$ の
+互いに祖先・子孫関係をもたない部分木を level-coded shortcut $s_i$ に置換して
+得られることである．レベル符号により置換位置が一意に認識できる．
+
+\begin{lemma}[level-coded tree language の代入可能性]
 \label{lem:level-coded-substitutable}
-任意の $n\ge0$ に対し，$\mathcal T_n$ は Clark--Eyraud の意味で
-代入可能である．
+任意の $n\ge0$ に対し，$\mathcal T_n$ は Clark--Eyraud の意味で代入可能である．
 \end{lemma}
-
 \begin{proof}
-$\mathtt l,\mathtt r$ を木の対応する括弧とみなす．
-$\mathcal T_n$ の語は残余高さ $n$ の順序付き二分木を符号化する．
-高さ $0$ の本体は $\mathtt a$ または $s_0$，高さ $i>0$ の本体は
-$s_i$ または高さ $i-1$ の二部分木の連接である．
-\[
- b_0:=\mathtt a,qquad b_i:=z_{i-1}z_{i-1}\quad(i\ge1)
-\]
-とおくと，任意の語は完全展開木 $z_n$ に対し，互いに祖先・子孫関係にない
-節点本体を
-\begin{equation}
- s_i\longleftrightarrow b_i
- \tag{$\dagger$}
-\end{equation}
-で置換して得られる．
-
-この置換位置は語から認識できる．
-$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ の出現は高さ $i$ の短絡本体に限られ，
-原始的均衡語 $z_j$ の各出現は高さ $j$ の完全展開部分木である．従って
-$z_{i-1}z_{i-1}$ の出現は一つの高さ $i$ 節点の二つの子に一致する．
-ゆえに~($\dagger$) の各字面上の出現は合法な本体置換位置である．
-
-いま $uxv,uyv\in\mathcal T_n$ とする．構文解析は決定的である．
-二つの解析で短絡／展開の選択が異なる節点本体は，$u$ の直後と $v$ の直前の
-二つの切断位置の間に完全に含まれる．実際，本体が左切断より前に始まれば，
-最初の本体記号（$\mathtt c$ と $\mathtt a$ または $\mathtt l$）の差が
-共通接頭辞内に現れ，右切断より後に終われば，最後の本体記号
-（$\mathtt d$ と $\mathtt a$ または $\mathtt r$）の差が共通接尾辞内に現れる．
-従って $x$ から $y$ へ，表示因子内部だけで合法な~($\dagger$) の有限置換列が
-存在する．任意の $pxq\in\mathcal T_n$ に同じ置換列を適用すれば
-$pyq\in\mathcal T_n$ を得る．よって
-$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$ であり，逆向きも同様なので
-両分布は等しい．
+付録~\ref{app:level-coded-substitutability} を参照されたい．
 \end{proof}
 
-\begin{theorem}[集合駆動型の通常厚み下界]
+\begin{theorem}[集合駆動型特徴標本に対する通常厚み下界]
 \label{thm:ordinary-thickness-lower}
-上の固定準同型 $h_\circ$ に対し，各 $n\ge1$ について縮約済み CFG
+上で固定した準同型 $h_\circ$ に対し，任意の $n\ge1$ について縮約済み CFG
 $R_n,R_n^-$ が存在する．
 $\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$ とおくと
 \[
- L(R_n)=\mathcal T_n,qquad L(R_n^-)=\mathcal T_n^-,
+ L(R_n)=\mathcal T_n,\qquad L(R_n^-)=\mathcal T_n^-,
 \]
 \[
- \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},qquad
- |R_n|+|R_n^-|=O(n),qquad
+ \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},\qquad
+ |R_n|+|R_n^-|=\operatorname{poly}(n),\qquad
  \tau_{R_n},\tau_{R_n^-}\le n+5.
 \]
-$\mathcal B$ を両標的に特徴標本をもつ任意の集合駆動型作用素とする．
+両標的に特徴標本をもつ任意の集合駆動型作用素 $\mathcal B$ をとる．
 このとき $\mathcal T_n$ の任意の特徴標本 $C_n$ は
 \[
  \|C_n\|\ge5\cdot2^n-1
 \]
-を満たす．従って，$\Ccf{h_\circ}$ のすべての標的に特徴標本を与える
-集合駆動型作用素には，縮約済み CFG サイズと通常の厚みによる一般の
-多項式特徴データ上界は存在しない．特に $\mathcal B_{h_\circ}$ にも適用される．
+を満たす．従って $\Ccf{h_\circ}$ の全標的に特徴標本をもつ集合駆動型作用素には，
+縮約済み CFG サイズと通常の厚みに関する多項式特徴データ上界は存在しない．
+特にこれは $\mathcal B_{h_\circ}$ にも適用される．
 \end{theorem}
 
 \begin{proof}
-$\mathcal T_n$ を生成する縮約済み CFG $R_n$ を
+$\mathcal T_n$ をちょうど生成する縮約済み CFG $R_n$ を
 \[
 \begin{aligned}
  S&\to A_n,&
@@ -753,12 +803,21 @@ $\mathcal T_n$ を生成する縮約済み CFG $R_n$ を
        &&(1\le i\le n)
 \end{aligned}
 \]
-で与える．すべての記号は到達可能かつ生産的で，生成規則記号数は $O(n)$ であり，
-本論文の固定符号化の下で符号化サイズは $n$ の多項式である．短絡側から $|\omega(A_i)|\le i+5$ が得られるので
-$\tau_{R_n}\le n+5$ である．
+とする．すべての表示した記号は到達可能かつ生産的である．より具体的に
+\[
+ Z_i\Rightarrow^*\mathtt 0^{\,i+1},\qquad
+ A_i\Rightarrow
+ \mathtt l\mathtt cZ_i\mathtt d\mathtt r
+ \Rightarrow^*
+ \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r
+\]
+なので，$Z_i,A_i$ はそれぞれ長さ $i+1,i+5$ の終端生成語をもつ．
+$S\Rightarrow A_n$ なので開始記号にも長さ $n+5$ の証拠がある．従って全非終端記号は
+長さ $n+5$ 以下の終端生成語をもち，$\tau_{R_n}\le n+5$ である．
+生成規則記号数は $O(n)$ だから，固定した符号化の下で符号化サイズは $n$ の多項式である．
 
-$R_n^-$ では同じ $Z_0,\ldots,Z_n$ と
-$A_0,\ldots,A_{n-1}$ の規則を用い，$S^-\to A_n^-$ を加えて
+$R_n^-$ では $Z_0,\ldots,Z_n$ と上の $A_0,\ldots,A_{n-1}$ の規則を保ち，
+$S^-\to A_n^-$ を加えて
 \[
 \begin{aligned}
  A_0^-&\to\mathtt l\mathtt cZ_0\mathtt d\mathtt r,\\
@@ -768,81 +827,62 @@ $A_0,\ldots,A_{n-1}$ の規則を用い，$S^-\to A_n^-$ を加えて
  \quad(1\le i\le n)
 \end{aligned}
 \]
-とする．帰納法により $A_i^-$ は $\mathcal T_i$ のうち少なくとも一つの
-短絡を含む語をちょうど生成する．従って
-$L(R_n^-)=\mathcal T_n^-$ であり，この文法も縮約済みで，生成規則記号数は $O(n)$，符号化サイズは多項式，
-厚みは高々 $n+5$ である．
+とする．帰納法により $A_i^-$ は $\mathcal T_i$ のうち少なくとも一つの shortcut を
+含む語をちょうど生成するので，$L(R_n^-)=\mathcal T_n^-$ である．
+$S^-\to A_n^-$ から二項規則をたどればすべての $A_i^-$ が到達可能であり，
+各 $A_i$ は $A_{i+1}^-$ の規則で通常の兄弟として現れ，各 $Z_i$ は shortcut 規則に
+現れる．従って表示したすべての非終端記号が到達可能である．生産性と厚みも
+\[
+ Z_i\Rightarrow^*\mathtt 0^{\,i+1},\qquad
+ A_i^-\Rightarrow
+ \mathtt l\mathtt cZ_i\mathtt d\mathtt r
+ \Rightarrow^*
+ \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r
+\]
+で明示できる．保たれた $A_i$ は $R_n$ と同じ shortcut 証拠をもち，
+$S^-\Rightarrow A_n^-$ が開始記号の証拠を与える．従ってすべての非終端記号は
+生産的で長さ $n+5$ 以下の終端生成語をもち，$R_n^-$ は縮約済みかつ
+$\tau_{R_n^-}\le n+5$ である．これも生成規則記号数 $O(n)$，符号化サイズは多項式である．
 
 補題~\ref{lem:level-coded-substitutable} により $\mathcal T_n$ は
-$\sim_{h_\circ}$-代入可能である．また
+$\sim_{h_\circ}$-代入可能である．さらに
 \[
  \mathcal T_n^-=\mathcal T_n\cap h_\circ^{-1}(\{\zeta\})
 \]
-なので，補題~\ref{lem:fibre-restriction} により $\mathcal T_n^-$ も同様である．
-両言語は有限なので $\Ccf{h_\circ}$ に属する．
+なので，補題~\ref{lem:fibre-restriction} から $\mathcal T_n^-$ も同じ性質をもつ．
+両言語は有限だから $\Ccf{h_\circ}$ に属する．
 
-両標的の特徴標本を $C_n,C_n^-$ とする．
+$C_n,C_n^-$ を同じ $\mathcal B$ に関する二標的の特徴標本とする．
 $\mathcal T_n\setminus\mathcal T_n^-=\{z_n\}$ なので，
-補題~\ref{lem:nested-characteristic-obstruction} から $z_n\in C_n$ が従い，
-\[
- \|C_n\|\ge|z_n|+1=5\cdot2^n-1
-\]
-を得る．一方，二つの文法サイズと通常の厚みは $n$ に関して線形である．
+補題~\ref{lem:nested-characteristic-obstruction} は $z_n\in C_n$ を強制する．
+式~\eqref{eq:clean-tree-length} より
+$\|C_n\|\ge|z_n|+1=5\cdot2^n-1$ であり，これは $n$ に指数的である一方，
+文法サイズは $n$ の多項式，厚みは $n$ に線形である．
 \end{proof}
-
-\paragraph{下界の適用範囲と固定窓上界との整合性．}
-下界は大きい方の標的言語単独の複雑さではなく，
-$\Ccf{h_\circ}$ という標的クラスに関するものである．
-$\mathcal T_n$ 自体は通常の意味で代入可能なので $(0,0)$ 固定窓クラスに属する．
-一方 $n\ge1$ では $\mathcal T_n^-$ は通常代入可能ではない．
-$z_n=p_n\mathtt a q_n$, $p_n:=\mathtt l^{\,n+1}$ と書き，
-$q_n$ 中の別の高さ $0$ 本体 $\mathtt a$ を $s_0$ に置き換えた接尾辞を
-$\bar q_n$ とする．すると $p_n\mathtt a$ と $p_ns_0$ は
-$\mathcal T_n^-$ で文脈 $(\lambda,\bar q_n)$ を共有するが，
-$(\lambda,q_n)$ は $p_ns_0$ の文脈であって $p_n\mathtt a$ の文脈ではない．
-両因子の $h_\circ$-型は異なる．
-
-さらに任意の固定 $(k,\ell)$ について，十分大きい $n$ では
-$\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ である．そうでなければ
-定理~\ref{thm:reconstruction-fixed-h} により
-$\mathcal B_{h_{k,\ell}}$ は二つの入れ子標的の双方に特徴標本をもち，
-入れ子標的補題は $\mathcal T_n$ の特徴標本に $z_n$ を強制する．これは，
-多項式サイズ，厚み $O(n)$ の $R_n$ に対する
-系~\ref{cor:window-transfer} の固定窓多項式上界と，十分大きい $n$ で矛盾する．
-
-一般の下界は第~\ref{sec:learning}節の特徴標本意味論だけを用いる．
-$\mathcal B_{h_\circ}$ への適用には定理~\ref{thm:reconstruction-fixed-h} を用いる．
-また下界は任意の縮約済み CFG 表現を尺度としており，
-Coste--Nicolas~\cite{coste-nicolas2019} の RNF のような制限付き正規形表現に
-相対化した上界や，異なる有限標本成功概念を排除しない．従って，
-任意の固定 $h$ における定性的 Gold 同定と多項式時間更新から，
-通常 CFG 厚みによる多項式特徴データ上界は従わない．
 
 \section{固定窓に対する厚み付きデータ}
 \label{sec:fixed-window-thick}
 
-以下の二つの正の定量結果はいずれも，$\tau_h^{\mathrm{typ}}$ を上から抑え，
-系~\ref{cor:typed-thickness-data} を適用することで得られる．
-$h_{k,\ell}$ では，型付き非終端記号が保存すべき情報は有界長の接頭辞と接尾辞
-だけなので，型付き厚みを制御できる．命題~\ref{prop:typed-thickness-gap} は，
-一般の $h$ ではこの移送が成り立たないことを示す．表現サイズと厚みに関して
-多項式の特徴標本上界は，Eyraud--Heinz--Yoshinaka
-~\cite{eyraud-heinz-yoshinaka2016} の用語では identification in polynomial
-time and thick data (IPTtD) のデータ部分に対応する．Yoshinaka の定理~1，
-補題~6--7 は $(k,\ell)$-代入可能性に対し同型の尺度を与える
-~\cite{yoshinaka2008}．ここでは $\mathcal B_{h_{k,\ell}}$ に対して同じ種類の
-上界を示すが，同じ正規形や同じ多項式次数は主張しない．
+以下の二つの正の定量結果はいずれも $\tau_h^{\mathrm{typ}}$ を上から抑え，
+系~\ref{cor:typed-thickness-data} を適用して得られる．$h_{k,\ell}$ では，
+型付き非終端記号が保存すべきなのは有界な接頭辞と接尾辞だけなので型付き厚みを
+制御できる．備考~\ref{rem:typed-thickness-gap} が示すように，一般の $h$ には
+この移送はない．表現サイズと厚みに関して多項式の特徴標本上界は，
+Eyraud--Heinz--Yoshinaka~\cite{eyraud-heinz-yoshinaka2016} の用語でいう
+identification in polynomial time and thick data (IPTtD) のデータ部分である．
+Yoshinaka の定理~1 と補題~6--7 は $(k,\ell)$-代入可能性について同種の上界を与える
+~\cite{yoshinaka2008}．ここでは $\mathcal B_{h_{k,\ell}}$ に対応する上界を示すが，
+同じ正規形や同じ多項式次数は主張しない．
 
-$k,\ell\ge0$ を固定し，$r:=k+\ell$ とする．
-$G=(V,\Sigma,P,S_0)$ を縮約済み SSBNF 文法，
-$\widetilde G$ をその $h_{k,\ell}$-型付き精密化とし，
+$k,\ell\ge0$ を固定し $r:=k+\ell$ とおく．$G=(V,\Sigma,P,S_0)$ を縮約済み
+SSBNF 文法，$\widetilde G$ をその縮約済み $h_{k,\ell}$-型付き精密化とし，
 \[
- N:=|V\setminus\{S_0\}|,qquad
- N_t:=|\widetilde V\setminus\{\widetilde S\}|,qquad
+ N:=|V\setminus\{S_0\}|,\qquad
+ N_t:=|\widetilde V\setminus\{\widetilde S\}|,\qquad
  \theta_{k,\ell}(G):=
  \begin{cases}
-   \tau_G,&r=0,\\[1mm]
-   r+(2r-1)N\tau_G,&r>0
+   \tau_G, & r=0,\\[1mm]
+   r+(2r-1)N\tau_G, & r>0
  \end{cases}
 \]
 とおく．
@@ -859,25 +899,11 @@ $\widetilde G$ の任意の非開始型付き記号 $A_\mu$ に対し
 付録~\ref{app:fixed-window-bounds} を参照されたい．
 \end{proof}
 
-\begin{lemma}[固定窓文脈と証拠語の有界性]
-\label{lem:window-context}
-任意の非開始型付き記号 $X$ に対し
-\[
- |u_X|+|v_X|\le(N_t-1)\theta_{k,\ell}(G),
-\]
-また $\WitnessSet(\widetilde G)$ の各語の長さは高々
-$(N_t+1)\theta_{k,\ell}(G)$ である．
-\end{lemma}
-\begin{proof}
-補題~\ref{lem:window-typed-yield} と
-補題~\ref{lem:typed-thickness-bound} を合わせればよい．
-\end{proof}
-
 \begin{theorem}[固定窓に対する多項式厚み付きデータ]
 \label{thm:window-thick}
-任意に固定した $(k,\ell)$ とアルファベット $\Sigma$ に対し，多項式
-$Q_{k,\ell}$ が存在して，$L(G)\in\Ccf{h_{k,\ell}}$ を満たす任意の
-縮約済み SSBNF 文法 $G$ について
+任意に固定した組 $(k,\ell)$ とアルファベット $\Sigma$ に対し，多項式
+$Q_{k,\ell}$ が存在し，$L(G)\in\Ccf{h_{k,\ell}}$ を満たす任意の縮約済み
+SSBNF 文法 $G$ について
 \[
  \|\WitnessSet(\widetilde G)\|
  \le Q_{k,\ell}(|G|,\tau_G)
@@ -886,14 +912,14 @@ $Q_{k,\ell}$ が存在して，$L(G)\in\Ccf{h_{k,\ell}}$ を満たす任意の
 $\mathcal B_{h_{k,\ell}}$ に対する特徴標本である．
 \end{theorem}
 \begin{proof}
-補題~\ref{lem:window-typed-yield} から
+補題~\ref{lem:window-typed-yield} より
 $\tau_{h_{k,\ell}}^{\mathrm{typ}}(G)\le\theta_{k,\ell}(G)$ であり，
 固定 $k,\ell,\Sigma$ の下では右辺は $|G|,\tau_G$ の多項式である．
 系~\ref{cor:typed-thickness-data} を適用すればよい．
 \end{proof}
 
-上の定理は縮約済み SSBNF 表現について述べる．次の正規化により任意の縮約済み
-CFG 表現へ移送できる．
+上の定理は縮約済み SSBNF 表現について述べている．次の正規化で任意の縮約済み
+CFG へ移送する．
 
 \begin{proposition}[厚みを多項式的に保存する SSBNF 正規化]
 \label{prop:thick-ssbnf-normal}
@@ -906,15 +932,14 @@ CFG 表現へ移送できる．
 が成り立つ．
 \end{proposition}
 
-証明は付録~\ref{app:thick-ssbnf} に与える．終端分離と二分化を非開始
-$\lambda$-規則除去より先に行うことで，文法サイズと最短非空生成語をともに
-多項式に保つ．
+証明は付録~\ref{app:thick-ssbnf} に与える．文法サイズと最短非空生成語を
+多項式に保つため，終端分離と二分化を非開始 $\lambda$-規則除去より先に行う．
 
 \begin{corollary}[固定窓計算量の移送]
 \label{cor:window-transfer}
 任意の固定 $k,\ell\ge0$ と有限アルファベット $\Sigma$ に対し，
-縮約済み CFG $R$ で表される任意の $L\in\Ccf{h_{k,\ell}}$，すなわち
-文脈自由な $(k,\ell)$-代入可能標的は，
+縮約済み CFG $R$ で表される任意の $L\in\Ccf{h_{k,\ell}}$，同値にそのような
+$R$ で表される任意の文脈自由 $(k,\ell)$-代入可能標的は，
 $\mathcal B_{h_{k,\ell}}$ に対して $|R|$ と $\tau_R$ の多項式サイズの
 特徴データをもつ．
 \end{corollary}
@@ -923,21 +948,37 @@ $\mathcal B_{h_{k,\ell}}$ に対して $|R|$ と $\tau_R$ の多項式サイズ�
 同値性は命題~\ref{prop:yl-special} による．
 \end{proof}
 
-多項式は固定された窓とアルファベットに依存し，$k,\ell$ を可変とした一様上界は
+多項式は固定した窓とアルファベットに依存し，可変な $k,\ell$ に関する一様上界は
 主張しない．これはバッチ再構成の特徴データに関する主張であり，保守的逐次学習器の
 Gold 安定化は系~\ref{cor:ilt} で別途与える．
+
+\paragraph{一般下界との整合性．}
+定理~\ref{thm:ordinary-thickness-lower} は固定窓の結果と矛盾しない．
+大きい方の標的 $\mathcal T_n$ は通常の意味で代入可能なので，自明型付けからの
+型付け精密化により，任意の固定 $(k,\ell)$ について $\Ccf{h_{k,\ell}}$ に属する．
+しかし $n\ge1$ では，入れ子標的 $\mathcal T_n^-$ は通常の意味ですら代入可能でない．
+$z_n=p_n\mathtt a q_n$ と書き，$p_n:=\mathtt l^{\,n+1}$ とする．別の高さ $0$ の
+body $\mathtt a$ を一つ $s_0$ に置き換えて $\bar q_n$ を得る．すると
+$p_n\mathtt a$ と $p_ns_0$ は $\mathcal T_n^-$ で文脈
+$(\lambda,\bar q_n)$ を共有するが，$(\lambda,q_n)$ は $p_ns_0$ の文脈であって
+$p_n\mathtt a$ の文脈ではない．さらに一般に，任意の固定 $(k,\ell)$ について，
+十分大きい $n$ では $\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ である．
+そうでなければ入れ子標的補題と系~\ref{cor:window-transfer} により，指数長の $z_n$ が
+多項式サイズに抑えられる固定窓特徴標本へ入ることを強制される．一般下界は任意の
+縮約済み CFG 表現に対して測られるので，Coste--Nicolas~\cite{coste-nicolas2019} の
+RNF 表現された $k,\ell$-local substitutable language に対する IPTtD 結果とも矛盾しない．
+そこでは言語条件も表現クラスも異なる．
 
 \section{線形部分クラス}
 \label{sec:linear}
 
 線形言語はちょうど 1 ターン・プッシュダウンオートマトンによって受理される
-~\cite{ginsburg-spanier1966,autebert1997}．以下の正規化はその文法的対応物を
-与え，成功導出に一つの継続する非終端記号の道をもたせる．
+~\cite{ginsburg-spanier1966,autebert1997}．以下の正規化はその文法的対応物を与える．
+成功導出には一つの継続する非終端記号の経路があり，これを \emph{spine} と呼ぶ．
 
 \begin{proposition}[linear-spine SSBNF 正規化]\label{prop:linear-normal}
 固定多項式 $P_{\mathrm{lin}}$ が存在し，非空言語を生成する任意の線形 CFG $G$ を
-多項式時間で同値な縮約済み SSBNF 文法
-$G_0=(V_0,\Sigma,P_0,S_0)$ へ変換でき，
+多項式時間で同値な縮約済み SSBNF 文法 $G_0=(V_0,\Sigma,P_0,S_0)$ へ変換でき，
 $|G_0|\le P_{\mathrm{lin}}(|G|)$ である．さらに各二項生成規則は，
 $W_a\to a$ を満たすちょうど一つの新鮮な終端ラッパー子と，
 ちょうど一つのそれ以外の非終端子をもつ．
@@ -957,6 +998,8 @@ $\widetilde G_0$ の任意の型付き非開始記号 $X$ に対し
 である．従って $\tau_h^{\mathrm{typ}}(G_0)\le n_t$ である．
 \end{lemma}
 
+証明は付録~\ref{app:linear-short-proof} に与える．
+
 \begin{theorem}[線形標的に対する多項式特徴データ]
 \label{thm:linear-poly}
 $h$ を固定する．線形 CFG で表される $\Clin{h}$ の任意の言語は，
@@ -969,8 +1012,8 @@ $L=\emptyset$ と $L=\{\lambda\}$ では第~\ref{sec:typing}節の標本を用�
 補題~\ref{lem:linear-short} から
 $\tau_h^{\mathrm{typ}}(G_0)\le n_t\le
 |V_0\setminus\{S_0\}|\,|M|$ なので，
-系~\ref{cor:typed-thickness-data} により $|G_0|\le P_{\mathrm{lin}}(|G|)$ の
-多項式サイズの特徴標本を得る．
+系~\ref{cor:typed-thickness-data} により
+$|G_0|\le P_{\mathrm{lin}}(|G|)$ の多項式サイズの特徴標本を得る．
 \end{proof}
 
 定理~\ref{thm:poly-build} と合わせると，任意の有限標本からのバッチ再構成は
@@ -981,7 +1024,6 @@ $\tau_h^{\mathrm{typ}}(G_0)\le n_t\le
 \subsection{非正則な線形 \texorpdfstring{fixed-$h$}{fixed-h} 例}
 
 直前の定理は，正則標的や既知の線形代入可能クラスに限定されない．
-次を定める．
 \[
 \begin{split}
 L_{\pm,e}:={}&
@@ -992,523 +1034,398 @@ L_{\pm,e}:={}&
 \{a^neb^n:n\ge0\}.
 \end{split}
 \]
-これは次の線形文法によって生成される．
+これは線形文法
 \[
 \begin{array}{lll}
 S\to U_{\mathrm{ev}}\mid U_e, &
 U_{\mathrm{ev}}\to c\mid aU_{\mathrm{odd}}b, &
 U_{\mathrm{odd}}\to d\mid aU_{\mathrm{ev}}b,\\[1mm]
-&&U_e\to e\mid aU_eb.
+&&U_e\to e\mid aU_eb
 \end{array}
 \]
+で生成される．
 
-$c,d,e$ を\emph{中心記号}と呼ぶ．
-$M_{\pm,e}:=\{1,\kappa_{cd},\kappa_e,0\}$ を，
-$1$ が単位元であり，
-$\alpha\beta=0$ がすべての
-$\alpha,\beta\in\{\kappa_{cd},\kappa_e,0\}$ に対して成り立つ
-四元モノイドとする．
-すなわち $M_{\pm,e}$ は三元 null semigroup に単位元を付加したものである．
-準同型
-$h:\{a,b,c,d,e\}^*\to M_{\pm,e}$ を
+$c,d,e$ を \emph{中心記号}と呼ぶ．
+$M_{\pm,e}:=\{1,\kappa_{cd},\kappa_e,0\}$ を，$1$ が単位元で，
+$\mu\nu=0$ がすべての $\mu,\nu\in\{\kappa_{cd},\kappa_e,0\}$ に対して成り立つ
+四元モノイドとする．すなわち三元 null semigroup に単位元を付加したものである．
+準同型 $h_{\pm,e}:\{a,b,c,d,e\}^*\to M_{\pm,e}$ を
 \begin{equation}\label{eq:lpm-h}
- h(a)=h(b)=1,\qquad
- h(c)=h(d)=\kappa_{cd},\qquad
- h(e)=\kappa_e
+ h_{\pm,e}(a)=h_{\pm,e}(b)=1,\qquad
+ h_{\pm,e}(c)=h_{\pm,e}(d)=\kappa_{cd},\qquad
+ h_{\pm,e}(e)=\kappa_e
 \end{equation}
-により定める．
-従って $h(w)$ は，$w$ が中心記号を含まなければ $1$，
-ちょうど一つ含みそれが $c$ または $d$ なら $\kappa_{cd}$，
-それが $e$ なら $\kappa_e$，二つ以上含めば $0$ である．
+で定める．従って $h_{\pm,e}(w)$ は，中心記号を含まなければ $1$，
+ちょうど一つ含みそれが $c$ または $d$ なら $\kappa_{cd}$，それが $e$ なら
+$\kappa_e$，二つ以上含めば $0$ である．
 
-また
-$\operatorname{par}(c):=0$,
-$\operatorname{par}(d):=1$
-とおく．
-このとき $m,n\ge0$ と $\zeta\in\{c,d,e\}$ に対して
+$\operatorname{par}(c):=0$, $\operatorname{par}(d):=1$ とおく．
+$m,n\ge0$ と $\xi\in\{c,d,e\}$ に対し
 \begin{equation}\label{eq:lpm-membership}
-a^m\zeta b^n\in L_{\pm,e}
+a^m\xi b^n\in L_{\pm,e}
 \iff
 m=n
 \ \text{かつ}\
 \bigl[
- \zeta=e
+ \xi=e
  \ \text{または}\
- (\zeta\in\{c,d\}
+ (\xi\in\{c,d\}
   \ \text{かつ}\
-  m\equiv\operatorname{par}(\zeta)\pmod2)
+  m\equiv\operatorname{par}(\xi)\pmod2)
 \bigr].
 \end{equation}
 
 \begin{proposition}\label{prop:linear-separator-example}
-言語 $L_{\pm,e}$ は線形かつ非正則であり，
-\eqref{eq:lpm-h} の準同型に対して $\sim_h$-代入可能である．
-一方，Clark--Eyraud 代入可能ではなく，
-いかなる固定 $k,\ell\ge0$ に対しても
-$(k,\ell)$-代入可能ではない．
+言語 $L_{\pm,e}$ は線形かつ非正則であり，式~\eqref{eq:lpm-h} の準同型に対して
+$\sim_{h_{\pm,e}}$-代入可能である．一方，Clark--Eyraud 代入可能ではなく，
+いかなる固定 $k,\ell\ge0$ に対しても $(k,\ell)$-代入可能ではない．
 \end{proposition}
 
 \begin{proof}
-線形性は表示した文法から直ちに従い，
-$L_{\pm,e}\cap a^*eb^*=\{a^neb^n:n\ge0\}$ から非正則性も従う．
-以下 $L:=L_{\pm,e}$ と書く．
+線形性は表示文法から直ちに従い，
+$L_{\pm,e}\cap a^*eb^*=\{a^neb^n:n\ge0\}$ から非正則性が従う．
+以下 $L:=L_{\pm,e}$ とする．
 
-$\sim_h$-代入可能性を示す．同型の非空因子 $x,y$ が $L$ で共通文脈をもつとする．
-$L$ の語に現れる因子が型 $0$ をもつことはない．共通型が $1$ なら
-$x,y\in a^+\cup b^+$ であり，共通文脈から
-$|x|_a-|x|_b=|y|_a-|y|_b$ を得る．この値は $a^+\cup b^+$ の語を一意に
-決めるので $x=y$ である．
+$\sim_{h_{\pm,e}}$-代入可能性について，同じ型の非空因子 $x,y$ が $L$ で
+共通文脈をもつとする．$L$ の語に現れる因子が型 $0$ をもつことはない．共通型が
+$1$ なら $x,y\in a^+\cup b^+$ であり，共通文脈は
+$|x|_a-|x|_b=|y|_a-|y|_b$ を強制する．この値は
+$a^+\cup b^+$ の語を一意に決めるので $x=y$ である．
 
-残る場合は
-$x=a^i\zeta b^j$, $y=a^{i'}\zeta'b^{j'}$ と書け，各因子は中心記号を
-一つだけ含む．式~\eqref{eq:lpm-membership} より，その文脈は $(a^m,b^n)$
-の形に限られ，
+それ以外では
+$x=a^i\xi b^j$, $y=a^{i'}\xi'b^{j'}$ と書け，各因子は中心記号を一つ含む．
+式~\eqref{eq:lpm-membership} によりその文脈は $(a^m,b^n)$ の形で，
 \[
 \begin{array}{ll}
 (a^m,b^n)\in\D_L(a^ieb^j)
  &\Longleftrightarrow n-m=i-j,\\
-(a^m,b^n)\in\D_L(a^i\zeta b^j),\ \zeta\in\{c,d\}
- &\Longleftrightarrow n-m=i-j\ \text{かつ}\
- m\equiv\operatorname{par}(\zeta)-i\pmod2.
+(a^m,b^n)\in\D_L(a^i\xi b^j),\ \xi\in\{c,d\}
+ &\Longleftrightarrow
+ n-m=i-j\ \text{かつ}\
+ m\equiv\operatorname{par}(\xi)-i\pmod2
 \end{array}
 \]
-従って $e$-分岐の分布は $i-j$ により，$c/d$-分岐の分布は
-$(i-j,\operatorname{par}(\zeta)-i\bmod2)$ により決まる．
-共通文脈は対応する不変量を一致させ，同じ $h$-型であることは両因子が同じ分岐に
-属することを保証する．よって $\D_L(x)=\D_L(y)$ である．
+である．従って $e$-因子の分布は $i-j$ により，$c/d$-因子の分布は
+$(i-j,\operatorname{par}(\xi)-i\bmod2)$ により決まる．共通文脈は対応する
+不変量を一致させ，同じ $h_{\pm,e}$-型であることは同じ分岐に属することを保証する．
+よって $\D_L(x)=\D_L(y)$ である．
 
-一方，$c,e\in L$ は空文脈を共有するが
+一方 $c,e\in L$ は空文脈を共有するが
 $(a,b)\in\D_L(e)\setminus\D_L(c)$ なので Clark--Eyraud 代入可能ではない．
-さらに $k,\ell$ を固定し，$m:=2\max\{1,k+\ell\}$，
-$w_e:=a^keb^\ell$, $w_c:=a^kcb^\ell$ とおく．両因子は同じ長さ $k$ の
-接頭辞と長さ $\ell$ の接尾辞をもち，文脈
-$(a^{m-k},b^{m-\ell})$ を共有するが，
+さらに $k,\ell$ を固定し $N:=2\max\{1,k+\ell\}$，
+$w_e:=a^keb^\ell$, $w_c:=a^kcb^\ell$ とおく．両因子は同じ長さ $k$ の接頭辞と
+長さ $\ell$ の接尾辞をもち，文脈 $(a^{N-k},b^{N-\ell})$ を共有する一方
 \[
- (a^{m+1-k},b^{m+1-\ell})
- \in\D_L(w_e)\setminus\D_L(w_c).
+ (a^{N+1-k},b^{N+1-\ell})
+ \in\D_L(w_e)\setminus\D_L(w_c)
 \]
-従って \hyperref[crit:kl]{固定窓代入可能性の反例基準}より
+である．従って \hyperref[crit:kl]{固定窓代入可能性の反例基準}より
 $L_{\pm,e}\notin\mathsf{KL}$ である．
 \end{proof}
 
-従って定理~\ref{thm:linear-poly} は $\mathsf{KL}$ の外にある
-非正則線形言語にも適用される．表示した文法は even-linear なので，
-Takada の control-set 枠組みからの分離は主張しない．
+従って定理~\ref{thm:linear-poly} は $\mathsf{KL}$ の外にある非正則線形言語にも
+適用される．表示文法は even-linear なので，Takada の control-set 枠組みからの
+分離は主張しない．
 
 \section{表現力と境界}
 \label{sec:boundaries}
 
-以上の主要な学習結果は，固定された可認識合同関係を対象としていた．ここでは，この枠組みの位置づけに必要な構造的比較だけを記録する．要点は四つある．第一に，可認識合同関係による制御は，正則言語の段階ですでに，任意の固定された接頭辞--接尾辞窓よりも真に表現力が高い．第二に，第~\ref{sec:linear}節で示したように，この真の包含は，非正則な線形言語に対しても成立する．第三に，一般の文脈自由言語に対する定理は，その線形部分クラスだけでは尽くされない．すなわち，ある fixed-$h$ クラスは，固定窓階層全体の外にも位置する非線形な文脈自由言語を含む．第四に，それでもなおクラス $\mathsf{RS}$ は，自然な決定性文脈自由言語のいくつかを含まない．
+ここでは fixed-window 階層と，より広い文脈自由言語族の間で本枠組みを位置づける．
 
-\subsection{\texorpdfstring{$\mathsf{RS}$}{RS} 内の非線形な標的}
+\subsection{\texorpdfstring{$\mathsf{RS}$}{RS} 内の非線形標的}
 
-$\Delta:=\{a^nb^n:n\ge0\}$ とおき，その Kleene 閉包 $\Delta^*$ を考える．
-語 $z\in\{a,b\}^*$ に対して $\beta(z):=|z|_a-|z|_b$ とし，
-$\underline\beta(z)$ を $z$ の全接頭辞（$\lambda$ と $z$ 自身を含む）における
-$\beta$ の最小値とする．また，$z_i z_{i+1}=ba$ となる位置 $i$ を
-$ba$ の\emph{出現}と呼び，その高さを $\beta(z[1..i])$ とする．
+$\Delta:=\{a^nb^n:n\ge0\}$ とし $\Delta^*$ を考える．
+$z\in\{a,b\}^*$ に対し $\beta(z):=|z|_a-|z|_b$，また
+$\underline\beta(z)$ を接頭辞バランスの最小値とする．$ba$ の各出現の高さを，
+その $b$ で終わる接頭辞の高さと呼ぶ．次の特徴づけを用いる：
+\textup{($\star$)} $w\in\Delta^*$ であることと，
+$\underline\beta(w)\ge0$，$\beta(w)=0$，かつすべての $ba$ の出現高さが $0$
+であることは同値である．順方向は $a^nb^n$ 因子への分解から従い，逆方向は
+高さ $0$ となる位置ごとに切れば balanced な $a^*b^*$ segment が得られる．
 
-以下の特徴づけを用いる．\textup{($\star$)}
-$w\in\Delta^*$ であることと，$\underline\beta(w)\ge0$，$\beta(w)=0$，
-かつ $w$ におけるすべての $ba$ の出現が高さ $0$ にあることとは同値である．
-実際，$w=a^{n_1}b^{n_1}\cdots a^{n_r}b^{n_r}$ ならば右辺は明らかである．
-逆に右辺を仮定し，$w\ne\lambda$ とする．高さが $0$ となる連続する位置で
-$w$ を切断すると，各ブロックの内部では高さが正である．従って各ブロックの
-内部に $ba$ があれば \textup{($\star$)} の高さ $0$ 条件に反するので，
-そのような $ba$ は存在しない．各ブロックはしたがって $a^*b^*$ に属し，
-全体のバランスが $0$ なので $a^nb^n$ の形である．$w=\lambda$ の場合は自明である．
+$\operatorname{fst}(w),\operatorname{lst}(w)\in\{\bot,a,b\}$ を最初と最後の記号
+（$\lambda$ では $\bot$）とし，$\operatorname{ba}(w)$ で $w$ が $ba$ を含むかを
+記録する．
+\[
+ h_\star(w):=
+ (\operatorname{fst}(w),\operatorname{lst}(w),\operatorname{ba}(w)).
+\]
+連接の要約は二因子の要約だけから決まる．端点は明らかな仕方で連接され，新しい $ba$ は
+境界 $b|a$ でのみ生じ得る．従って有限像
+$M_\star:=h_\star(\{a,b\}^*)$ に
+$h_\star(x)h_\star(y):=h_\star(xy)$ と積を入れれば，
+$h_\star$ は有限モノイド準同型になる．
 
-語 $w$ の先頭記号と末尾記号を
-$\operatorname{fst}(w),\operatorname{lst}(w)\in\{\bot,a,b\}$ とし，
-$w=\lambda$ のときはいずれも $\bot$ とする．また
-$\operatorname{ba}(w)\in\{0,1\}$ を，$w$ が $ba$ を含むかどうかを表す
-フラグとする．$h_\star(w):=(\operatorname{fst}(w),\operatorname{lst}(w),
-\operatorname{ba}(w))$ とおく．
+非空 $x$ と $d\in\mathbb Z$ に対し，
+$d+\underline\beta(x)\ge0$ かつ $x$ 内部の各 $ba$ の高さ $\eta$ について
+$d+\eta=0$ であるとき，$d$ を \emph{許容進入高さ}と呼び，その集合を
+$\mathcal E(x)$ と書く．
 
-連結 $xy$ の先頭記号は $x\ne\lambda$ なら $\operatorname{fst}(x)$，
-そうでなければ $\operatorname{fst}(y)$ であり，末尾記号についても対称的である．
-また $xy$ が $ba$ を含むのは，$x$ が $ba$ を含むか，$y$ が $ba$ を含むか，
-または $\operatorname{lst}(x)=b$ かつ $\operatorname{fst}(y)=a$ の場合に限る．
-従って $h_\star(xy)$ は $h_\star(x)$ と $h_\star(y)$ だけから決まる．
-ゆえに有限像 $M_\star:=h_\star(\{a,b\}^*)$ 上で
-$h_\star(x)\cdot h_\star(y):=h_\star(xy)$ と定めることができる．
-この積は良定義であり，全射性と連接の結合律から結合的である．
-また $h_\star(\lambda)$ が単位元なので，$M_\star$ は有限モノイドであり，
-$h_\star:\{a,b\}^*\to M_\star$ は準同型である．
-
-非空語 $x$ と $d\in\mathbb Z$ に対し，
-$d+\underline\beta(x)\ge0$ であり，かつ $x$ 内の各 $ba$ の高さ
-$\eta$ について $d+\eta=0$ であるとき，$d$ を $x$ の
-\emph{許容入口高さ}と呼ぶ．その集合を $\mathcal E(x)$ と書く．
-
-\begin{proposition}[非線形な fixed-$h_\star$ 標的]
+\begin{proposition}[非線形 fixed-$h_\star$ 標的]
 \label{prop:nonlinear-rs-example}
-言語 $\Delta^*$ は文脈自由，非正則，かつ非線形であり，
-上の有限準同型に対して $\sim_{h_\star}$-代入可能である．さらに，
-どの固定 $k,\ell\ge0$ に対しても $(k,\ell)$-代入可能ではない．特に，
+$\Delta^*$ は文脈自由・非正則・非線形で，$\sim_{h_\star}$-代入可能である．
+さらにどの固定 $k,\ell\ge0$ に対しても $(k,\ell)$-代入可能ではない．従って
 $\Delta^*\in\mathsf{RS}_{h_\star}(\{a,b\})\cap\mathrm{CFL}$ かつ
 $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$ である．
 \end{proposition}
 
 \begin{proof}
-文法 $S\to TS\mid\lambda$，$T\to aTb\mid\lambda$ は $\Delta^*$ を生成するので，
-$\Delta^*$ は文脈自由である．また $\Delta^*\cap a^*b^*=\Delta$ であり，
-$\Delta$ は非正則なので $\Delta^*$ も非正則である．さらに，線形言語は
-正則言語との共通部分について閉じている一方，
-$\Delta^*\cap a^*b^*a^*b^*=\Delta\Delta$ は線形でない~\cite{autebert1997}．
-従って $\Delta^*$ は非線形である．
+文法 $S\to TS\mid\lambda$, $T\to aTb\mid\lambda$ は $\Delta^*$ を生成する．
+$\Delta^*\cap a^*b^*=\Delta$ から非正則であり，線形言語の正則交差に対する閉包性と
+\[
+ \Delta^*\cap a^*b^*a^*b^*=\Delta\Delta
+\]
+および $\Delta\Delta$ の非線形性~\cite{autebert1997} から非線形である．
 
-\emph{$\sim_{h_\star}$-代入可能性．}
-非空語 $x,y$ が $h_\star(x)=h_\star(y)$ を満たし，共通文脈 $(u,v)$ をもつとする．
-$uxv,uyv\in\Delta^*$ なので全体のバランスを比較すれば $\beta(x)=\beta(y)$ である．
+代入可能性を示すため，同じ $h_\star$-型をもつ非空因子 $x,y$ が共通文脈
+$(u,v)$ をもつとする．$uxv,uyv\in\Delta^*$ なので全体バランスから
+$\beta(x)=\beta(y)$ である．\textup{($\star$)} により，$u'xv'$ の membership のうち
+$x$ に依存する情報は，最初と最後の記号，$\beta(x)$，および
+$\beta(u')\in\mathcal E(x)$ かどうかだけである．従って
+$\mathcal E(x)=\mathcal E(y)$ を示せばよい．
 
-ここで \textup{($\star$)} を $sxt$ に適用すると，固定した文脈 $(s,t)$ に対する
-所属判定に必要な情報のうち $x$ に依存するものは，$\operatorname{fst}(x)$，
-$\operatorname{lst}(x)$，$\beta(x)$，および $\beta(s)\in\mathcal E(x)$
-であるかどうかだけである．実際，$x$ 内部の接頭辞非負性と $ba$ の高さ条件は
-$\beta(s)\in\mathcal E(x)$ にちょうど含まれる．境界 $s|x$ の $ba$ 条件は
-$\operatorname{fst}(x)$ と $\beta(s)$ で決まり，$x|t$ の条件および $t$ 内部の
-すべての高さ条件は，出口高さ $\beta(s)+\beta(x)$ と
-$\operatorname{lst}(x)$ によって決まる．従って $\mathcal E(x)=\mathcal E(y)$
-を示せば $\D_{\Delta^*}(x)=\D_{\Delta^*}(y)$ が従う．
+両者が $ba$ を含むなら，内部 $ba$ は可能な進入高さを一意に強制し，共通文脈が
+その高さを供給するので
+$\mathcal E(x)=\{\beta(u)\}=\mathcal E(y)$ である．どちらも $ba$ を含まなければ
+$x,y\in a^*b^*$ で，
+$\mathcal E(z)=\{d:d\ge-\min\{0,\beta(z)\}\}$ だから
+$\beta(x)=\beta(y)$ から等号が従う．従って
+$\D_{\Delta^*}(x)=\D_{\Delta^*}(y)$ である．
 
-まず $\operatorname{ba}(x)=\operatorname{ba}(y)=1$ とする．内部に一つでも
-$ba$ があれば，その高さ $\eta$ に対して許容入口高さは $d=-\eta$ に固定されるので，
-$\mathcal E(x)$ と $\mathcal E(y)$ はいずれも高々一元集合である．共通文脈
-$(u,v)$ が存在するため $\beta(u)\in\mathcal E(x)\cap\mathcal E(y)$ であり，
-従って $\mathcal E(x)=\{\beta(u)\}=\mathcal E(y)$ である．
-
-次に $\operatorname{ba}(x)=\operatorname{ba}(y)=0$ とする．このとき
-$x,y\in a^*b^*$ である．任意の $z\in a^*b^*$ について
-$\underline\beta(z)=\min\{0,\beta(z)\}$ なので，
-$\mathcal E(z)=\{d\in\mathbb Z:d\ge-\min\{0,\beta(z)\}\}$ である．
-$\beta(x)=\beta(y)$ から $\mathcal E(x)=\mathcal E(y)$ が従う．以上により
-$\Delta^*$ は $\sim_{h_\star}$-代入可能である．
-
-\emph{固定窓の排除．}
-$k,\ell\ge0$ を任意に固定し，$N:=\max\{1,k+\ell\}$ とおく．
-$s:=a^Nb^N$，$t:=a^Nb^Na^Nb^N$ とする．両語は長さ
-$\max\{1,k+\ell\}$ 以上で，長さ $k$ の接頭辞 $a^k$ と長さ $\ell$ の
-接尾辞 $b^\ell$ を共有し，しかも $s,t\in\Delta^*$ なので空文脈を共有する．
-一方 $asb=a^{N+1}b^{N+1}\in\Delta^*$ であるが，
-$atb=a^{N+1}b^Na^Nb^{N+1}$ では中央の $ba$ が高さ $1$ に現れるため，
-\textup{($\star$)} より $atb\notin\Delta^*$ である．従って
-$(a,b)\in\D_{\Delta^*}(s)\setminus\D_{\Delta^*}(t)$ であり，
-\hyperref[crit:kl]{固定窓代入可能性の反例基準}より $\Delta^*$ は
-$(k,\ell)$-代入可能ではない．$k,\ell$ は任意であったから
-$\Delta^*\notin\mathsf{KL}(\{a,b\})$ である．
+固定窓からの分離として $k,\ell$ を固定し，
+$m:=\max\{1,k+\ell\}$，
+$s:=a^mb^m$，
+$t:=a^mb^ma^mb^m$ とおく．両者は同じ長さ $k$ の接頭辞と長さ $\ell$ の接尾辞をもち，
+空文脈を共有する．さらに $asb\in\Delta^*$ だが，$atb$ の中央の $ba$ は高さ $1$
+なので $atb\notin\Delta^*$ である．従って固定窓代入可能性の反例基準から，
+$\Delta^*$ はどの $(k,\ell)$ にも属さない．
 \end{proof}
 
-命題~\ref{prop:linear-separator-example} とこの例は，異なる範囲で
-fixed-$h$ 枠組みの広がりを示す．前者は，線形部分クラスに対する多項式特徴データ
-定理が，固定窓階層の外にある非正則線形言語にも適用されることを示す．これに対し
-$\Delta^*$ は，一般の文脈自由 fixed-$h$ 定理が，固定窓階層の外にある非線形
-文脈自由言語にも及ぶことを示す．特に $\Delta^*$ は線形でないため even-linear
-でもない．ただし，ここから control-set 法一般とのクラス分離を主張するものではない．
+従って fixed-$h$ 枠組みは，固定窓階層の外にある第~\ref{sec:linear}節の
+非正則線形例 $L_{\pm,e}$ と，非線形文脈自由言語 $\Delta^*$ の双方を含む．
+control-set 法一般との分離は主張しない．
 
-比較のため，固定窓階層の文脈自由部分それ自体も線形言語には含まれないことを記しておく．
+比較のため，fixed-window 階層の文脈自由部分それ自体も線形言語に限られない．
 $\Gamma:=\{a,b,c,d,e\}$ 上で
 \[
  P:=\{a^ncb^n:n\ge0\},\qquad
  L_\times:=PdP
  =\{a^ncb^nd\,a^mcb^m:n,m\ge0\}
 \]
-とおく．これは Clark--Eyraud が論じた中心記号付き言語族
-~\cite{clark-eyraud2007} の端点 $c$ を含む版である．まず $P$ の代入可能性を
-直接確認する．$P$ の語の非空因子は，$r>0$ に対する $a^r$，$s>0$ に対する
-$b^s$，または $i,j\ge0$ に対する $a^icb^j$ のいずれかである．
-二つの因子 $x,y$ が $P$ で共通文脈をもつなら，両方が $c$ を含むか，
-どちらも含まないかのいずれかである．一方だけが $c$ を含むなら，もう一方に
-唯一の $c$ を供給する共通外側文脈が，前者には二個目の $c$ を作ってしまうからである．
-どちらも $c$ を含まない場合，$\beta(z):=|z|_a-|z|_b$ とおけば，
-共通文脈で得られる二つの $P$ の語のバランスを比較して
-$\beta(x)=\beta(y)$ となる．$c$ を避ける因子は $a$ または $b$ の非空純冪なので，
-これは $x=y$ を意味する．両方が $c$ を含む場合，
-$x=a^icb^j$，$y=a^{i'}cb^{j'}$ と書く．$x$ の任意の $P$-文脈は
-$r+i=s+j$ を満たす $(a^r,b^s)$ の形であり，共通文脈の存在から
-$i-j=i'-j'$ を得る．従って同じ方程式が $y$ の $P$-文脈も特徴づけるので，
+とする．これは Clark--Eyraud~\cite{clark-eyraud2007} が論じた
+center-marker family の endpoint-complete 版である．まず $P$ が代入可能であることを
+直接確かめる．$P$ の語の非空因子は $r>0$ に対する $a^r$，$s>0$ に対する $b^s$，
+または $i,j\ge0$ に対する $a^icb^j$ のいずれかである．二因子 $x,y$ が $P$ で
+共通文脈をもつなら，両者とも $c$ を含むか，どちらも含まない．一方だけが $c$ を
+含めば，もう一方に唯一の $c$ を供給する共通外側文脈が前者には二個目の $c$ を
+作ってしまうからである．どちらも $c$ を含まなければ，共通文脈で得られる二語の
+$\beta(z):=|z|_a-|z|_b$ を比較して $\beta(x)=\beta(y)$ となる．$c$ を避ける因子は
+$a$ または $b$ の非空純冪なので $x=y$ である．両方が $c$ を含むなら
+$x=a^icb^j$, $y=a^{i'}cb^{j'}$ と書く．$x$ の各 $P$-文脈は
+$r+i=s+j$ を満たす $(a^r,b^s)$ の形で，共通文脈から $i-j=i'-j'$ となる．
+従って同じ方程式が $y$ の $P$-文脈も特徴づけ，
 $\D_P(x)=\D_P(y)$ である．ゆえに $P$ は代入可能である．
 
-さらに $P$ は接頭辞自由かつ接尾辞自由である．実際，$n<m$ なら
+さらに $P$ は接頭辞自由かつ接尾辞自由である．$n<m$ なら
 $a^ncb^n$ と $a^mcb^m$ の第 $n+1$ 文字はそれぞれ $c$ と $a$ であり，
-接尾辞についても対称である．次に $L_\times$ が代入可能であることを示す．
-非空因子 $x,y$ が $L_\times$ で共通文脈 $(u,v)$ をもつとする．
-$L_\times$ の各語は $d$ をちょうど一つ含むので，$x,y$ が含む $d$ の個数は等しい．
-どちらも $d$ を含まない場合，一意な区切り記号は共通外側文脈にある．例えば
-$v=rds$ なら $uxr,uyr\in P$ であり，$d\in u$ の場合も対称である．
-従って $P$ の代入可能性から $\D_P(x)=\D_P(y)$ を得る．
-$x$ の任意の別の $L_\times$-文脈でも，一意な $d$ は二つの外側部分の一方にあり，
-対応する $P$-文脈を $x$ から $y$ へ移せる．対称性より
+接尾辞も対称である．次に $L_\times$ の代入可能性を示す．非空因子 $x,y$ が
+$L_\times$ で共通文脈 $(u,v)$ をもつとする．各語は $d$ をちょうど一つ含むので，
+$x,y$ が含む $d$ の個数は等しい．どちらも $d$ を含まなければ，一意な separator は
+共通外側文脈にある．例えば $v=rds$ なら $uxr,uyr\in P$ であり，$d\in u$ の場合も
+対称である．$P$ の代入可能性から $\D_P(x)=\D_P(y)$ となる．
+$x$ の別の $L_\times$-文脈でも一意な $d$ は二つの外側部分の一方にあり，
+対応する $P$-文脈を $x$ から $y$ へ移せる．対称性により
 $\D_{L_\times}(x)=\D_{L_\times}(y)$ である．
 
-両因子が $d$ を含む場合は
-$x=x_1dx_2$，$y=y_1dy_2$ と書く．このとき
+両因子が $d$ を含むなら
+$x=x_1dx_2$, $y=y_1dy_2$ と書く．このとき
 $ux_1,uy_1\in P$ かつ $x_2v,y_2v\in P$ である．
-接頭辞自由性と接尾辞自由性から，$i=1,2$ について
-$x_i=\lambda$ iff $y_i=\lambda$ が従う．対応する部分が非空なら，
+接頭辞自由性と接尾辞自由性から $i=1,2$ について
+$x_i=\lambda$ iff $y_i=\lambda$ である．対応する部分が非空なら，
 左側では共通文脈 $(u,\lambda)$，右側では $(\lambda,v)$ を用いて
-$P$ の代入可能性を適用でき，
-$\D_P(x_i)=\D_P(y_i)$ を得る．従って $d$ の左右で文脈を独立に移せるので，
-再び $\D_{L_\times}(x)=\D_{L_\times}(y)$ である．
-ゆえに $L_\times$ は通常の Clark--Eyraud 型の意味で代入可能であり，
-したがって $(0,0)$-固定窓クラス，特に $\mathsf{KL}(\Gamma)$ に属する．また
-$S\to XdX$，$X\to aXb\mid c$ により文脈自由である．
+$P$ の代入可能性から $\D_P(x_i)=\D_P(y_i)$ を得る．従って $d$ の左右で
+文脈を独立に移せ，再び $\D_{L_\times}(x)=\D_{L_\times}(y)$ となる．
+ゆえに $L_\times$ は通常の意味で代入可能で，$(0,0)$ fixed-window class，
+従って $\mathsf{KL}(\Gamma)$ に属する．また
+$S\to XdX$, $X\to aXb\mid c$ により文脈自由である．
 
-最後に，$a,b$ を固定し $c,d,e$ を消去する準同型は $L_\times$ を
+最後に $a,b$ を固定し $c,d,e$ を消去する準同型は $L_\times$ を
 \[
  \Delta\Delta=\{a^nb^na^mb^m:n,m\ge0\}
 \]
-へ写す．もし $L_\times$ が線形なら，線形言語は準同型で閉じているので
-$\Delta\Delta$ も線形になるはずである．これは上で用いた
-$\Delta\Delta$ の標準的な非線形性~\cite{autebert1997} に反する．従って
-$L_\times\in\mathsf{KL}(\Gamma)\cap\mathrm{CFL}$ は非線形である．
-同じアルファベット上で命題~\ref{prop:linear-separator-example} は
-$\mathsf{KL}(\Gamma)$ の外にある線形言語を与えているので，
+へ写す．もし $L_\times$ が線形なら，線形言語の準同型に対する閉包性から
+$\Delta\Delta$ も線形となり，上で用いた標準的な非線形性~\cite{autebert1997} に反する．
+従って $L_\times\in\mathsf{KL}(\Gamma)\cap\mathrm{CFL}$ は非線形である．
+同じアルファベットで命題~\ref{prop:linear-separator-example} は
+$\mathsf{KL}(\Gamma)$ の外にある線形言語を与えるので，
 $\mathsf{KL}(\Gamma)\cap\mathrm{CFL}$ と $\Gamma$ 上の線形文脈自由言語族は
 互いに比較不能である．
 
 \subsection{固定窓階層からの正則分離}
 
-カウンタ・アルファベットを $\Sigma_c:=\{\uparrow,\downarrow,\#\}$ とする．
-この小節では $\mathsf{RS}:=\mathsf{RS}(\Sigma_c)$，
-$\mathsf{KL}:=\mathsf{KL}(\Sigma_c)$ と略記する．
-$w=\delta_1\cdots\delta_n\in\Sigma_c^*$ に対し，$\mathrm{ht}_0(w):=0$ とし，
-左から一文字読むごとに $\uparrow$ なら高さを $1$ 増やし，
-$\downarrow$ なら $1$ 減らし，$\#$ なら $0$ にリセットすることで
-$\mathrm{ht}_i(w)$ を定める．$\rho\ge1$ に対して
-$\mathrm{CTR}_\rho:=\{w\in\Sigma_c^*:0\le\mathrm{ht}_i(w)\le\rho
-\text{ for all }0\le i\le|w|\}$ とおく．
+$\Sigma_c:=\{\uparrow,\downarrow,\#\}$ とする．
+$w=\delta_1\cdots\delta_n$ に対し $\mathrm{ht}_0(w)=0$ とし，
+$\uparrow$ で $+1$，$\downarrow$ で $-1$，$\#$ で $0$ にリセットして高さを更新する．
+$\rho\ge1$ に対し
+\[
+\mathrm{CTR}_\rho:=
+\{w\in\Sigma_c^*:0\le\mathrm{ht}_i(w)\le\rho
+\text{ for all }0\le i\le|w|\}
+\]
+とおく．
 
 \begin{proposition}\label{prop:ctr-regular}
-任意の $\rho\ge1$ に対して $\mathrm{CTR}_\rho$ は正則であり，
-従って $\mathsf{RS}$ に属する．
+任意の $\rho\ge1$ に対し $\mathrm{CTR}_\rho$ は正則であり，
+従って $\mathsf{RS}(\Sigma_c)$ に属する．
 \end{proposition}
 \begin{proof}
-状態 $0,1,\ldots,\rho$ で現在の高さを記録し，範囲外に出た後のシンク状態を
-一つ加えればよい．$\#$ はすべての非シンク状態を $0$ に戻す．従って
-$\mathrm{CTR}_\rho$ は正則であり，命題~\ref{prop:regular-auto} より
-$\mathsf{RS}$ に属する．
+DFA が高さ $0,\ldots,\rho$ を記録し，範囲外に一つの sink を置き，$\#$ で $0$ に
+戻ればよい．命題~\ref{prop:regular-auto} を適用する．
 \end{proof}
 
 \begin{theorem}\label{thm:ctr-non-kl}
-任意の $\rho\ge2$ に対して，$\mathrm{CTR}_\rho$ はどの $k,\ell\ge0$ に対しても
+任意の $\rho\ge2$ に対し $\mathrm{CTR}_\rho$ はどの $k,\ell\ge0$ についても
 $(k,\ell)$-代入可能ではない．
 \end{theorem}
 \begin{proof}
-$k,\ell\ge0$ を固定し，
+$k,\ell$ を固定し
 $s:=(\uparrow\downarrow)^k\uparrow^{\rho-1}\#^\ell$，
-$t:=(\uparrow\downarrow)^k\uparrow^\rho\#^\ell$ とおく．$\rho\ge2$ より
-$|s|,|t|\ge\max\{1,k+\ell\}$ であり，両語は同じ長さ $k$ の接頭辞と
-同じ長さ $\ell$ の接尾辞 $\#^\ell$ をもつ．
-
-$s,t$ はともに $\mathrm{CTR}_\rho$ に属するので，空文脈を共有する．さらに
-$\uparrow s$ では，最初の $\uparrow$ の後，$(\uparrow\downarrow)^k$ を高さ $1$
-から走るため高さは $1$ と $2$ の間を往復し，その後の $\uparrow^{\rho-1}$
-によってちょうど高さ $\rho$ に達する．従って $\rho\ge2$ より
-$\uparrow s\in\mathrm{CTR}_\rho$ である．一方 $\uparrow t$ は最初のリセットより
-前に高さ $\rho+1$ に達するので $\uparrow t\notin\mathrm{CTR}_\rho$ である．
-従って $(\uparrow,\lambda)\in\D_{\mathrm{CTR}_\rho}(s)
-\setminus\D_{\mathrm{CTR}_\rho}(t)$ であり，
-\hyperref[crit:kl]{固定窓代入可能性の反例基準}より結論が従う．
+$t:=(\uparrow\downarrow)^k\uparrow^\rho\#^\ell$ とおく．両者は固定窓基準に十分長く，
+同じ長さ $k$ の接頭辞と長さ $\ell$ の接尾辞をもち，ともに
+$\mathrm{CTR}_\rho$ に属する．一方
+$\uparrow s\in\mathrm{CTR}_\rho$ だが
+$\uparrow t\notin\mathrm{CTR}_\rho$ で，後者は高さ $\rho+1$ に達する．
+従って分布が異なり，反例基準が適用できる．
 \end{proof}
 
-\begin{corollary}[正則言語による分離]
-$\mathsf{KL}\subsetneq\mathsf{RS}$ であり，この真の包含は正則言語の範囲ですでに生じる．
-\end{corollary}
-\begin{proof}
-各固定 $(k,\ell)$ クラスは命題~\ref{prop:yl-special} により $\mathsf{RS}$ に
-含まれる．一方，任意の $\rho\ge2$ について命題~\ref{prop:ctr-regular} と
-定理~\ref{thm:ctr-non-kl} から
-$\mathrm{CTR}_\rho\in\mathsf{RS}\setminus\mathsf{KL}$ である．
-\end{proof}
+従って有限認識準同型 $h_\rho$ をとれば
+$\mathrm{CTR}_\rho\in\Ccf{h_\rho}\setminus\mathsf{KL}$ である．
+fixed-window 階層は，一つの fixed-$h$ 学習可能 slice の中ですでに正則標的を取りこぼす．
 
 \subsection{\texorpdfstring{$\mathsf{RS}$}{RS} の外にある自然な決定性文脈自由言語}
 
-次の単純な障害は，以下のカウンタ言語と Dyck 言語が，あらゆる有限モノイド準同型が誘導するクラスの外に落ちる共通理由を切り出すものである．
-
 \begin{lemma}[有限モノイド障害]\label{lem:finite-monoid-obstruction}
-$L\subseteq\Sigma^*$ とする．無限集合
-$\Xi\subseteq\Sigma^+$ が存在し，互いに異なるすべての $x,y\in\Xi$ に対して
-$\D_L(x)\cap\D_L(y)\ne\emptyset$ かつ $\D_L(x)\ne\D_L(y)$ が成り立つとする．
-このとき $L\notin\mathsf{RS}(\Sigma)$ である．
+$L\subseteq\Sigma^*$ とする．無限集合 $\Xi\subseteq\Sigma^+$ が存在し，
+相異なる任意の $x,y\in\Xi$ について
+$\D_L(x)\cap\D_L(y)\ne\emptyset$ かつ $\D_L(x)\ne\D_L(y)$ が成り立つなら
+$L\notin\mathsf{RS}(\Sigma)$ である．
 \end{lemma}
 \begin{proof}
-$h:\Sigma^*\to M$ を有限モノイドへの任意の準同型とする．$\Xi$ は無限で $M$ は有限だから，互いに異なる $x,y\in\Xi$ で $h(x)=h(y)$ を満たすものが存在する．その分布は交わるが等しくないので，$\sim_h$-代入可能性に反する．従って任意の有限 $h$ に対して
-$L\notin\mathsf{RS}_h(\Sigma)$ である．
+有限 $h$ は $\Xi$ の二要素を同一視する．その二語は共通文脈をもち分布が異なるので
+$\sim_h$-代入可能性に反する．
 \end{proof}
 
-上限を取り除くと，
+上限を外すと決定性文脈自由言語
 \[
- \mathrm{CTR}:=
- \{w\in\Sigma_c^*:\mathrm{ht}_i(w)\ge0\text{ がすべての }0\le i\le |w|\text{ について成り立つ}\}
+\mathrm{CTR}:=
+\{w\in\Sigma_c^*: \mathrm{ht}_i(w)\ge0
+\text{ for all }0\le i\le|w|\}
 \]
-を得る．これは決定性文脈自由言語である．決定性プッシュダウンオートマトンは，$\uparrow$ でスタック記号を一つ積み，$\downarrow$ で一つ取り除き（アンダーフローなら棄却し），$\#$ では入力走査を再開する前に底記号まで取り除く決定的なクリア状態へ移ればよい．
+を得る．これは reset 付きの明らかな決定性プッシュダウン・カウンタで受理される．
 
 \begin{corollary}[上限なしカウンタの障害]
 $\mathrm{CTR}\notin\mathsf{RS}(\Sigma_c)$ である．
 \end{corollary}
 \begin{proof}
-補題~\ref{lem:finite-monoid-obstruction} を
-$\Xi=\{\uparrow^i:i\ge1\}$ に適用する．$i<j$ なら，
-$(\lambda,\downarrow^i)$ は $\uparrow^i$ と $\uparrow^j$ の双方の文脈である一方，
-$(\lambda,\downarrow^j)$ は $\uparrow^j$ の文脈だが $\uparrow^i$ の文脈ではない．
+$\Xi=\{\uparrow^i:i\ge1\}$ を用いる．$i<j$ なら
+$(\lambda,\downarrow^i)$ は共通文脈だが，
+$(\lambda,\downarrow^j)$ は $\uparrow^j$ だけの文脈である．
 \end{proof}
 
-同じ障害は一種類の括弧の Dyck 言語
+一種類の括弧の Dyck 言語
 \[
  D_1:=\{w\in\{a,b\}^*: |w'|_a\ge|w'|_b
- \text{ が }w\text{ のすべての接頭辞 }w'\text{ について成り立つ},\ 
- |w|_a=|w|_b\}
+ \text{ for every prefix }w',\ |w|_a=|w|_b\}
 \]
-にも現れる．ここで $|t|_a$ と $|t|_b$ は語 $t$ に現れる $a,b$ の個数を表す．これは標準的な決定性文脈自由言語である~\cite{ginsburg-greibach1966}．
+は標準的な決定性文脈自由言語~\cite{ginsburg-greibach1966} である．
+ここでの $D_1$ は Dyck 言語全体を表し，
+Autebert--Berstel--Boasson~\cite{autebert1997} の規約では $D_1^*$ と書かれる．
 
 \begin{corollary}\label{cor:dyck-not-rs}
 $D_1\notin\mathsf{RS}(\{a,b\})$ である．
 \end{corollary}
 \begin{proof}
-補題~\ref{lem:finite-monoid-obstruction} を
-$\Xi=\{b^i a^i:i\ge1\}$ に適用する．$i<j$ のとき，文脈 $(a^j,b^j)$ は
-$b^ia^i$ と $b^ja^j$ に共通する一方，$(a^i,b^i)$ は $b^ia^i$ の文脈だが
-$b^ja^j$ の文脈ではない．実際，接頭辞 $a^ib^j$ がアンダーフローを起こす．
+$\Xi=\{b^ia^i:i\ge1\}$ を用いる．$i<j$ なら $(a^j,b^j)$ は共通文脈だが，
+$(a^i,b^i)$ は $b^ia^i$ だけの文脈である．$b^ja^j$ では接頭辞 $a^ib^j$ が
+アンダーフローを起こす．
 \end{proof}
 
-この障害は，プッシュダウンの観点から有用な解釈をもつ．興味深い点は，無限に大きくなりうるスタック挙動それ自体が $\mathsf{RS}$ と両立しないわけではない．$L_{\pm,e}$ はすでに
-$\mathsf{RS}(\{a,b,c,d,e\})$ に属する非正則 1 ターン言語である．
-$\mathrm{CTR}$ と $D_1$ で失敗するのは，より具体的な性質である．すなわち，無限個の因子族が，共通文脈によって互いに比較可能なまま，二つずつ異なる文脈的挙動を担うため，有限な $h$ ではすべての互換でない因子を分離できない．ここではこれを障害としてのみ用い，$\mathsf{RS}\cap\mathrm{CFL}$ の完全なプッシュダウン特徴づけとしては主張しない．
+従って障害は無界スタック挙動それ自体ではない．非正則 1-turn 言語
+$L_{\pm,e}$ は $\mathsf{RS}$ に属する．障害は，文脈的挙動が異なるにもかかわらず
+相互に比較可能な因子が無限族をなし，有限 $h$ ではそれらをすべて分離できないことである．
 
-最後の例のために，初等的な閉包性を一つ用いる．
 \begin{lemma}[固定語による商]\label{lem:rs-fixed-quotient}
-$L$ が $\sim_h$-代入可能で $z\in\Sigma^*$ なら，右商
+$L$ が $\sim_h$-代入可能で $z\in\Sigma^*$ なら，
 $L/z:=\{w:wz\in L\}$ も $\sim_h$-代入可能である．
 \end{lemma}
 \begin{proof}
-同じ $h$-型をもつ空でない $x,y$ が $L/z$ において共通文脈 $(u,v)$ をもつなら，
-$(u,vz)$ は $L$ における共通文脈であるから $\D_L(x)=\D_L(y)$ である．任意の $(s,t)$ に対して，
-\[
- (s,t)\in\D_{L/z}(x)\iff(s,tz)\in\D_L(x)
- \iff(s,tz)\in\D_L(y)\iff(s,t)\in\D_{L/z}(y).
-\]
+$L/z$ の共通文脈 $(u,v)$ は $L$ では $(u,vz)$ になる．$L$ で分布が等しいなら，
+任意の文脈 $(s,t)$ の右に $z$ を付加することで $L/z$ に分布等式を移せる．
 \end{proof}
 
-$S\to aSS\mid b$ が生成する言語は通常 \emph{\L{}ukasiewicz 言語}と呼ばれる．本論文での $D_1$ の符号化では
-$L_{\mathrm{Luk}}=D_1b$ を満たす~\cite{autebert1997}．これは標準的な決定性文脈自由言語でもある~\cite{ginsburg-greibach1966}．もし
-$L_{\mathrm{Luk}}\in\mathsf{RS}(\{a,b\})$ なら，補題~\ref{lem:rs-fixed-quotient} により
-$D_1=L_{\mathrm{Luk}}/b\in\mathsf{RS}(\{a,b\})$ となり，系~\ref{cor:dyck-not-rs} に反する．
-
+$S\to aSS\mid b$ が生成する言語を \emph{\L{}ukasiewicz 言語}と呼ぶ．
+本論文の記法では $L_{\mathrm{Luk}}=D_1b$~\cite{autebert1997} で，これは決定性
+文脈自由言語でもある~\cite{ginsburg-greibach1966}．もし
+$L_{\mathrm{Luk}}\in\mathsf{RS}(\{a,b\})$ なら補題~\ref{lem:rs-fixed-quotient} により
+$D_1=L_{\mathrm{Luk}}/b\in\mathsf{RS}$ となり，
+系~\ref{cor:dyck-not-rs} に反する．
 
 \subsection{Clark の congruential family との比較}
 
-Clark~\cite{clark2010congruential} の規約では，
-CFG の開始側に単一の開始記号ではなく有限初期集合を許す．
-有限初期集合 $I\subseteq V$ に対して
-$L_G[I]:=\bigcup_{A\in I}L_G(A)$ と書く．
-初期集合 $I$ をもつ CFG $G$ が \emph{congruential} であるとは，
-各非終端記号 $A$ について $L_G(A)$ が
-$L_G[I]$ の単一の構文合同類に含まれることをいう．
-$L_G(A)=\emptyset$ の場合はこの条件を自明に満たす．
-有限アルファベット $\Gamma$ に対し，
-congruential CFG によって生成される $\Gamma$ 上の言語全体を
-$\mathsf{CONG}(\Gamma)$ と書く．
+Clark~\cite{clark2010congruential} は有限初期集合 $I\subseteq V$ を許し，
+$L_G[I]:=\bigcup_{A\in I}L_G(A)$ と書く．このような文法が
+\emph{congruential} であるとは，各 $L_G(A)$ が $L_G[I]$ の一つの構文合同類に
+含まれることをいう．$\Gamma$ 上の congruential grammar が生成する言語全体を
+$\mathsf{CONG}(\Gamma)$ と書く．Clark はすでに substitutable および
+$(k,\ell)$-substitutable language をこの族に位置づけている．次の命題はこの包含を
+すべての fixed-$h$ slice へ拡張する．
 
 \begin{proposition}[Clark の congruential family との比較]
 \label{prop:clark-congruential-comparison}
 任意の有限アルファベット $\Gamma$ と有限モノイド準同型
 $h:\Gamma^*\to M$ に対して
-$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$ である．
-従って
-$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}
- \subseteq\mathsf{CONG}(\Gamma)$
-であり，$\Gamma=\{a,b\}$ ではこの包含は真である．
+$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$ である．従って
+$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}\subseteq\mathsf{CONG}(\Gamma)$ であり，
+$\Gamma=\{a,b\}$ ではこの包含は真である．
 \end{proposition}
 
 \begin{proof}
-$L\in\Ccf{h}$ とする．
-$L=\emptyset$ なら，生成規則をもたない一つの非終端記号を
-初期集合とすればよい．
-以下 $L\ne\emptyset$ とする．
+非空 $L\in\Ccf{h}$ の縮約済み SSBNF 文法と型付き精密化 $\widetilde G$ を取る．
+任意の非開始型付き記号 $X=A_\mu$ は終端到達文脈 $(u,v)$ をもち，
+命題~\ref{prop:typed-core} より任意の
+$w\in L_{\widetilde G}(X)$ は非空かつ $h(w)=\mu$ である．従って
+$x,y\in L_{\widetilde G}(X)$ は同じ型と共通文脈 $(u,v)$ をもち，
+fixed-$h$ 代入可能性から $x\equiv_L y$ となる．すなわち各型付き非終端記号は
+一つの構文合同類の語だけを生成する．
 
-$L$ の縮約済み SSBNF 文法を取り，
-第~\ref{sec:typing}節の型付き精密化
-$\widetilde G=(\widetilde V,\Gamma,\widetilde P,\widetilde S)$
-を施す．
-非開始型付き非終端記号 $X=A_\mu$ を任意に固定する．
-$\widetilde G$ は縮約済みなので，
-$X$ にはある終端到達文脈 $(u,v)$ が存在する．
-従ってすべての $w\in L_{\widetilde G}(X)$ について
-$uwv\in L$ である．
-一方命題~\ref{prop:typed-core} より $h(w)=\mu$ であり，
-SSBNF には非開始 $\lambda$-生成規則がないため $w\ne\lambda$ である．
+分離された開始記号を削除し，その型付き後続記号を有限初期集合として用いる．
+$\lambda\in L$ なら $\lambda$ だけを生成する新しい初期記号を一つ加える．
+命題~\ref{prop:typed-core} により，これで $L$ の congruential grammar が得られる．
+空言語は生成規則をもたない初期記号で扱える．$h$ 全体に和を取れば包含が従う．
 
-そこで $x,y\in L_{\widetilde G}(X)$ を任意にとると，
-$x,y$ は同じ $h$-値をもち，かつ共通文脈 $(u,v)$ をもつ非空語である．
-$L$ の $\sim_h$-代入可能性から
-$\D_L(x)=\D_L(y)$，すなわち $x\equiv_L y$ が従う．
-従って，各非開始型付き非終端記号 $X$ について
-$L_{\widetilde G}(X)$ は単一の $\equiv_L$-同値類に含まれる．
-
-次に $\widetilde S$ とその生成規則を除き，
-$I:=\{X:\widetilde S\to X\in\widetilde P\}$ を初期集合とする．
-$\lambda\in L$ なら，新しい非終端記号 $X_\lambda$ と規則
-$X_\lambda\to\lambda$ を加え，$X_\lambda$ も $I$ に含める．
-$\widetilde S$ はいかなる右辺にも現れないので，
-各非開始記号 $X$ の生成語言語はこの操作で変わらない．
-また命題~\ref{prop:typed-core} より
-$L(\widetilde G)=L$ であるから，得られた文法 $G'$ は
-$L_{G'}[I]=L$ を満たす．
-各旧非開始記号の生成語言語は上で示したように
-一つの $\equiv_L$-同値類に含まれ，
-$L_{G'}(X_\lambda)=\{\lambda\}
- \subseteq[\lambda]_{\equiv_L}$ でもある．
-従って $G'$ は congruential であり，
-$L\in\mathsf{CONG}(\Gamma)$ である．
-これにより
-$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$，
-従って
-$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}
- \subseteq\mathsf{CONG}(\Gamma)$
-が従う．
-
-包含が真であることを示すため，
-$\Gamma=\{a,b\}$ 上の一種類の括弧 Dyck 言語 $D_1$ を考える．
-任意の $x\in D_1$ と $u,v\in\{a,b\}^*$ に対して
-$uxv\in D_1 \Longleftrightarrow uv\in D_1$ である．
-実際，$x$ は全体のバランスが $0$ で，
-各接頭辞の相対バランスが非負である．
-従って $x$ を $u$ と $v$ の間に挿入しても，
-挿入後の高さは変化せず，$x$ の内部でも挿入位置の高さを下回らない．
-逆に $x$ を削除しても同じ高さ条件は保存される．
-ゆえに $x\equiv_{D_1}\lambda$ である．
-
-従って文法
-$S\to aSbS\mid\lambda$
-は $L_G(S)=D_1\subseteq[\lambda]_{\equiv_{D_1}}$
-を満たす congruential grammar であり，
-$D_1\in\mathsf{CONG}(\{a,b\})$ である．
-一方系~\ref{cor:dyck-not-rs} より
+$\{a,b\}$ 上で包含が真であることには，Clark~\cite{clark2010congruential} も論じる
+Dyck 例を用いる．任意の $x\in D_1$ に対し
+$uxv\in D_1$ iff $uv\in D_1$ なので $x\equiv_{D_1}\lambda$ である．従って
+$S\to aSbS\mid\lambda$ は congruential だが，系~\ref{cor:dyck-not-rs} より
 $D_1\notin\mathsf{RS}(\{a,b\})$ である．
-従って
-$\mathsf{RS}(\{a,b\})\cap\mathrm{CFL}
- \subsetneq\mathsf{CONG}(\{a,b\})$ である．
 \end{proof}
-
-
 
 \section{結論}
 
-固定有限モノイド型付け $h$ の下で，文脈自由 $\sim_h$-代入可能言語を有限個の
-標準正例証拠から厳密再構成でき，保守的学習器がすべての非空標的を多項式時間更新で
-Gold 同定することを示した．標準証拠は文法サイズと型付き厚みに関して多項式である．
-固定型付け $h_\circ$ では，$\Ccf{h_\circ}$ 全体に特徴標本を与える集合駆動型作用素に，
-縮約済み CFG サイズと通常の厚みによる多項式上界は存在しない．一方，任意の固定
-接頭辞--接尾辞窓ではその上界が成立し，線形標的では線形文法サイズに関する
-多項式上界が成立する．表現力については，固定窓階層を正則・非正則線形・非線形の
-各水準で真に拡張する例を与え，$D_1\notin\mathsf{RS}$ および
-$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ が Clark の congruential family に
-真に含まれることを示した．
+任意の固定有限モノイド型付け $h$ に対し，有限個の標準正例証拠からの
+多項式時間の集合駆動型再構成と，それとは別の保守的 Gold 学習器を与えた．
+特徴データは文法サイズと型付き厚みに関して多項式であるが，一つの固定二元型付けでは，
+fixed-$h$ slice 全体を対象とする集合駆動型作用素に，縮約済み CFG サイズと通常の厚みに
+関する多項式上界は存在しない．一方，任意の固定接頭辞--接尾辞窓では通常の厚みで十分であり，
+線形 fixed-$h$ 標的では文法サイズに関する上界が得られる．
 
-未解決問題として，$\mathsf{RS}\cap\mathrm{CFL}$ の特徴づけ，有用な型付けの選択，
-未知の $h$ の学習，より豊かな文法形式への拡張，および別の表現・有限標本尺度に
-基づく効率性が残る．
+本枠組みには，それぞれ
+$\{\uparrow,\downarrow,\#\}$，$\{a,b,c,d,e\}$，$\{a,b\}$ 上で，
+どの fixed-window class にも属さない正則・非正則線形・非線形文脈自由標的が存在する．
+一方 $D_1\notin\mathsf{RS}$ であり，
+$\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ は Clark の congruential family に真に含まれる．
+未解決問題として，$\mathsf{RS}\cap\mathrm{CFL}$ の特徴づけ，有用な型付けの選択または
+学習，および本枠組みと効率性基準のより豊かな文法形式への拡張がある．
 
 \section*{データ利用可能性}
 本研究では実証データを使用していない．本改訂稿の定理レベルの数学的内容と同期した
@@ -1520,15 +1437,21 @@ Zenodo（DOI: 10.5281/zenodo.23114558）に公開・保存されている．
 補助的成果物として提供する．
 
 \section*{利益相反の申告}
-著者は，本論文で報告した研究に影響を与えたと考えられる既知の競合する金銭的利害関係または個人的関係がないことを申告する．
+著者は，本論文で報告した研究に影響を与えたと考えられる既知の競合する金銭的利害関係
+または個人的関係がないことを申告する．
 
 \section*{研究費}
-本研究は，公的機関，民間企業，または非営利部門のいずれの資金配分機関からも特定の助成を受けていない．
+本研究は，公的機関，民間企業，または非営利部門のいずれの資金配分機関からも
+特定の助成を受けていない．
 
 \section*{謝辞}
 著者は，指導・励まし・関連文献への助力をいただいた金澤誠教授と吉仲亮教授，
 ならびに本論文を大幅に改善する丁寧で建設的な報告をくださった二名の匿名査読者に
-感謝する．残る誤りはすべて著者の責任である．
+感謝する．特に査読者は，投稿版の学習アルゴリズムの問題点を指摘し，
+定理~\ref{thm:ctr-non-kl} の直接的な二語反例を促してくださった．
+残る誤りはすべて著者の責任である．
+
+\appendix
 
 \appendix
 \section{固定窓証拠語上界と厚み保存正規化}
@@ -1619,19 +1542,19 @@ $S$ を元の開始記号とする．右辺に決して現れない新しい $S_
 
 残るのは，新たな単位規則を作らずに二分化することである．以下の二項生成規則の子として現れる各終端記号 $a$ に対して，新しいラッパー $W_a\to a$ を一つ導入する．同値に，すべての $a\in\Sigma$ に対してそのようなラッパーを導入してもよい．
 規則 $A\to uBv$ に対して，$u=a_1\cdots a_m$，$v=b_1\cdots b_n$ と書く．非開始単位規則はすでに消去されているので，$m=n=0$ の場合（これは単位規則 $A\to B$ になる）は起こらない．従って $m+n>0$ である．以下，場合分けを明示する．$m=0$ なら必ず $n>0$ である．$n=1$ なら $A\to BW_{b_1}$ を用いる．
-$n\ge2$ なら，新しい $R_1,\ldots,R_{n-1}$ を導入し，
+$n\ge2$ なら，新しい $Q_1,\ldots,Q_{n-1}$ を導入し，
 \[
- R_1\to BW_{b_1},\qquad
- R_j\to R_{j-1}W_{b_j}\ (2\le j\le n-1),\qquad
- A\to R_{n-1}W_{b_n}
+ Q_1\to BW_{b_1},\qquad
+ Q_j\to Q_{j-1}W_{b_j}\ (2\le j\le n-1),\qquad
+ A\to Q_{n-1}W_{b_n}
 \]
 とする．
-次に $m>0$ とする．$n=0$ なら $U:=B$ と定める．ここで $B$ はラッパー導入前の文法の非終端記号なので，この二分化で導入した新しい終端ラッパー記号の一つではない．$n>0$ なら新しい $R_1,\ldots,R_n$ を導入して
+次に $m>0$ とする．$n=0$ なら $U:=B$ と定める．ここで $B$ はラッパー導入前の文法の非終端記号なので，この二分化で導入した新しい終端ラッパー記号の一つではない．$n>0$ なら新しい $Q_1,\ldots,Q_n$ を導入して
 \[
- R_1\to BW_{b_1},\qquad
- R_j\to R_{j-1}W_{b_j}\quad(2\le j\le n)
+ Q_1\to BW_{b_1},\qquad
+ Q_j\to Q_{j-1}W_{b_j}\quad(2\le j\le n)
 \]
-とし，$U:=R_n$ とおく．$m=1$ なら単一の二項規則 $A\to W_{a_1}U$ を用いる．$m\ge2$ なら，新しい $J_1,\ldots,J_{m-1}$ を導入して
+とし，$U:=Q_n$ とおく．$m=1$ なら単一の二項規則 $A\to W_{a_1}U$ を用いる．$m\ge2$ なら，新しい $J_1,\ldots,J_{m-1}$ を導入して
 \[
  A\to W_{a_1}J_1,\qquad
  J_i\to W_{a_{i+1}}J_{i+1}\quad(1\le i\le m-2),\qquad
@@ -1667,7 +1590,97 @@ $X=X_0,X_1,\ldots,X_t$ と書く．$X_t$ は終端規則を用い，生成語長
 $|\omega(X)|\le n_t$ が従う．
 \end{proof}
 
+\section{level-coded tree language の代入可能性}
+\label{app:level-coded-substitutability}
+
+\begin{proof}[補題~\ref{lem:level-coded-substitutable} の証明]
+$\mathtt l,\mathtt r$ を対応する木括弧とみなす．残余高さ $0$ の節点は，
+body が $\mathtt a$ の clean leaf か，body が $s_0$ の shortcut のいずれかである．
+残余高さ $i\ge1$ の節点は，body が $s_i$ の shortcut か，残余高さ $i-1$ の
+順序付き二子をもつ二分節点のいずれかである．直列化では各節点を
+$\mathtt l,\mathtt r$ で囲む．従って $\mathcal T_i$ はちょうど残余高さ $i$ の
+木の直列化全体であり，$z_i$ は shortcut を含まない唯一の直列化である．
+
+$\mathcal T_n$ の各語は一意な構文解析をもつ．高さ $0$ では body の最初の記号が
+clean の場合 $\mathtt a$，shortcut の場合 $\mathtt c$ である．正の高さでは
+二分節点の場合 $\mathtt l$，shortcut の場合 $\mathtt c$ である．二分の場合，
+括弧対応が二つの子を一意に分離し，帰納法で木全体が決まる．従って shortcut 節点は
+一意に定まる antichain をなす．shortcut を選ぶと，その根から下の部分木全体が除かれる．
+
+$i\ge1$ に対し $b_i:=z_{i-1}z_{i-1}$，また $b_0:=\mathtt a$ とおく．
+$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ は shortcut body，$b_i$ は残余高さ $i$ の
+clean node body である．有効な直列化におけるどちらの body の literal occurrence も，
+真の残余高さ $i$ の解析済み節点の body である．$s_i$ では body に括弧がなく，
+0 の run がレベルを記録するので明らかである．$b_0=\mathtt a$ も clean leaf body
+そのものである．$i\ge1$ では $b_i=z_{i-1}z_{i-1}$ の最初の $z_{i-1}$ の出現を考える．
+帰納法により，これは真の残余高さ $i-1$ の解析済み部分木である．直近の親 frame を見ると，
+二個目の $z_{i-1}$ が後続するので root ではなく，右子なら次の記号が親を閉じるはずなので
+右子でもない．従って残余高さ $i$ の二分節点の左子である．残り suffix の
+残余高さ $i-1$ の解析一意性により，続く $z_{i-1}$ はその右の兄弟に強制される．
+よって $b_i$ の literal occurrence 全体はその解析済み節点の clean body に一致する．
+従って
+\[
+ s_i\longleftrightarrow b_i
+\]
+という literal body replacement は，残余高さ $i$ の節点でちょうど正当に実行でき，
+共通の外側括弧 $\mathtt l,\mathtt r$ を残したまま $\mathcal T_n$ 内にとどまる．
+
+任意の語文脈の中で $s_i\leftrightarrow b_i$ という literal body replacement を
+有限回行って $r$ から $s$ を得られるとき $r\rightsquigarrow s$ と書く．
+上の occurrence recognition から各一段階は replay 可能である．すなわち
+$prq\in\mathcal T_n$ かつ一回の body replacement で
+$r\rightsquigarrow s$ なら，対応する置換で $psq\in\mathcal T_n$ を得る．
+
+次に代入可能性に必要な局所性を取り出す．相異なる二つの残余高さ $n$ の解析木
+$S,T$ の直列化を $w_S,w_T$ とする．二つの root constructor を場合分けしつつ
+残余高さについて帰納法を行うと，\emph{difference core} が得られる．
+すなわち，語 $p,q,\xi,\eta$ が存在して
+\[
+ w_S=p\xi q,\qquad
+ w_T=p\eta q,\qquad
+ \xi\rightsquigarrow\eta
+\]
+であり，$\xi,\eta$ は非空，その最初の記号どうしも最後の記号どうしも異なる．
+これを残余高さについて帰納法で示す．高さ $0$ では clean leaf と shortcut しかなく，
+異なる場合は body $\mathtt a$ と $s_0$ を取ればよい．一回の body replacement で
+結ばれ，両端記号も異なる．
+
+残余高さ $i\ge1$ とする．一方の root が shortcut，他方が binary なら二つの root body
+を取る．まず shortcut body $s_i$ を clean body
+$b_i=z_{i-1}z_{i-1}$ に置き換え，その後，異なる子に帰納法を使って二つの clean child を
+目標の左・右 child へ独立に変形する．これで二 root body 間の有限 body-replacement
+列が得られ，最初と最後の記号は異なる．両 root が binary で順序付き子の一方だけが
+異なるなら，その子の中で帰納法を適用し，difference core の外側の一致部分を $p,q$ に
+吸収する．両子が異なるなら，各子に帰納法を適用し，左 difference core，二 core 間の
+不変部分，右 difference core を連接する．得られた置換列は左子，次に右子を変えるので
+$\xi\rightsquigarrow\eta$ であり，最初の記号は左子内，最後の記号は右子内で異なる．
+これで全場合を尽くす．
+
+いま $uxv,uyv\in\mathcal T_n$ とし，それぞれの一意な解析木を取る．木が等しければ
+cancellation により $x=y$ である．そうでなければ上の difference core を取り
+\[
+ uxv=p\xi q,\qquad uyv=p\eta q
+\]
+とする．$u$ は共通接頭辞なので $\xi,\eta$ の双方へ真に入り込むことはできない．
+次の記号が異なるからである．従ってある $\alpha$ に対し $p=u\alpha$ である．
+同様に $v$ は共通接尾辞で，$\xi,\eta$ の最後の記号が異なるので，ある $\beta$ に対し
+$q=\beta v$ である．外側の共通部分を cancel すると
+\[
+ x=\alpha\xi\beta,\qquad y=\alpha\eta\beta
+\]
+を得る．従って difference core 全体は表示した因子の内部にある．
+有限列 $\xi\rightsquigarrow\eta$ を $\alpha,\beta$ で文脈化すれば，
+$x$ から $y$ への有限で正当な body-replacement 列が得られる．
+
+最後に $rxs\in\mathcal T_n$ とする．replay 可能性により同じ有限列を $x$ の出現内で
+再生でき，$rys\in\mathcal T_n$ を得る．よって
+$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$ であり，
+置換列を逆向きにすれば逆包含も従う．従って $\mathcal T_n$ は代入可能である．
+\end{proof}
+
 \begin{thebibliography}{99}
+
+\bibitem{kanazawa1996}
 
 \bibitem{kanazawa1996}
 M.~Kanazawa.
@@ -1764,7 +1777,9 @@ doi:10.1007/978-3-662-48395-4\_2.
 F.~Coste and J.~Nicolas.
 \newblock Learning local substitutable context-free languages from positive
 examples in polynomial time and data by reduction.
-\newblock \emph{Proceedings of Machine Learning Research}, 93:155--168, 2019.
+\newblock In \emph{Proceedings of the International Conference on
+Grammatical Inference (ICGI 2018)}, \emph{Proceedings of Machine Learning
+Research}, 93:155--168, 2019.
 
 \bibitem{autebert1997}
 J.-M.~Autebert, J.~Berstel, and L.~Boasson.
