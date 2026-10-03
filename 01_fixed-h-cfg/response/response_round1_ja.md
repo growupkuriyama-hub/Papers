@@ -204,7 +204,11 @@ L(\mathcal B_h(K))=L
 
 **回答:** 一つの \(h\) を class 全体で固定することを明記し、Yoshinaka の fixed \((k,\ell)\) と同じ class-level bias として位置づけた。Coste et al. (2004) の typing/domain bias と関連づけ、Takada の control-set approach とは「regular control set が derivation representation に参加する」のに対し、本稿の finite monoid は比較可能な terminal yields を制御するものだと区別した。
 
-さらに新 §7 で、arbitrary fixed-\(h\) の quantitative limit を typed thickness により明示した。fixed-window は §8、linear は §9、pushdown / boundary は §10 に整理した。
+さらに新 §7 で、arbitrary fixed-\(h\) の quantitative limit を typed thickness により明示した。fixed-window は §8、linear は §9、pushdown / boundary は §10 に整理した。加えて §10 末尾で、有限群値の型付けだけを許した union を \(\mathsf{GRS}\) とおくと
+\[
+\mathsf{GRS}(\{a\})\subsetneq\mathsf{RS}(\{a\})
+\]
+となることを、一文字正則言語 \(L_{\ge2}=\{a^m:m\ge2\}\) で示した。したがって finite monoid を finite group に制限すること自体が表現力の真の損失であり、monoid を使うことは単なる抽象化上の飾りではない。
 
 ## R2-02 outer context type が transport に使われていない
 
@@ -274,6 +278,7 @@ L(\mathcal B_h(K))=L
 - §10.1 の reviewer が問題視した block は segment に変更。
 - §10.1 の center-marker witness は endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) に統一し、\(P\) の代入可能性を本文内で自己完結に証明した。これにより準同型像は直接 \(\Delta\Delta\) となり、非線形性の議論も簡潔化した。
 - Clark–Eyraud Def. 5 が all strings で書かれている一方、同論文 §6.1 の \(a^+\) と Clark 2013 が nonempty-fragment reading を支持することを本文で明示。
+- §10 末尾に finite-group typing と finite-monoid typing の分離を追加。\(\mathsf{GRS}(\{a\})\subsetneq\mathsf{RS}(\{a\})\) を、\(L_{\ge2}=\{a^m:m\ge2\}\) で示し、Conclusion にも「有限モノイドを使うことが本質的」と一文で回収。
 - Data availability / 回答書の Lean 記述は full formalization と誤解されないよう “parts of the development” に弱めた。
 
 ---
