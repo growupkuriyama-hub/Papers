@@ -18,7 +18,7 @@
 \newcommand{\PAC}{\operatorname{PAC}}
 \newcommand{\blank}{\square}
 
-\title{\(PAC_n\) Learning under Fixed Finite-Monoid Distributional Typing\\
+\title{\(PAC_n\) and Higher-Arity VC Geometry under Fixed Finite-Monoid Distributional Typing\\
 \large Typed box obstructions for CFG and MCFG incidence relations}
 \author{Takayuki Kuriyama}
 \date{Working draft, 2026}
@@ -27,11 +27,11 @@
 \maketitle
 
 \begin{abstract}
-We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. In the modern higher-arity PAC framework the bound yields proper \(PAC_{d+1}\)-learnability. The resulting statistical complexity is then compared with exact positive-data reconstruction under the same observer.
+We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. The relation to \(PAC_n\) learning requires a model audit: Takeuchi's 2020 counterexample to the original full-slice \(PAC_2\) definition and the later equivalence claim of Chernikov--Towsner must first be reconciled. The unconditional results of this note are therefore stated at the higher-arity VC level, and are compared with exact positive-data reconstruction under the same observer.
 \end{abstract}
 
 \paragraph{Status.}
-Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. Effective grammar-valued PAC learning and sharper quantitative PAC bounds remain research tasks; the fixed-observer exact-vs-statistical separation is proved below.
+Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. The exact PAC transfer is deliberately left conditional pending a definition audit. The fixed-observer exact-vs-VC separation is unconditional.
 
 \section{Setup}
 
@@ -387,41 +387,129 @@ bound is sharp for all observer sizes in arity two. The finite-field theorem
 is used only to obtain a clean uniform construction in arbitrary arity.
 \end{remark}
 
-\section{PAC consequences}
-
-Kuriyama--Takeuchi's original \(PAC_n\) model observes the target on unions
-of coordinate slices through sampled anchor points. Their necessity theorem
-shows that \(PAC_n\)-learnability implies finite \(VC_n\)-dimension and,
-from a shattered box of side size \(D\), yields
+\begin{proposition}[Arbitrary observer budgets: asymptotic sharpness]
+\label{prop:arbitrary-budget}
+Fix \(d\ge2\), let \(T\ge1\), and put
 \[
-N_{\eps,\delta}\ge
-D\left(1-\sqrt[n]{2(\eps+\delta)}\right)
+ r:=\left\lfloor T^{1/(d-1)}\right\rfloor.
 \]
-when the right-hand side is positive.
+If \(r\ge2(d+1)\), there are a finite monoid \(M_T\) with \(|M_T|=T\), a
+homomorphism \(h_T\) with
+\[
+ |h_T(\Sigma^+)|=T,
+\]
+and a family of finite regular \((d,h_T)\)-tuple-substitutable languages such
+that
+\[
+ \VC_{d+1}>\frac r2.
+\]
+Together with Theorem~\ref{thm:block-bound}, the optimal higher-arity VC
+dimension under an observer budget \(T\) is therefore
+\[
+ \Theta_d\!\left(T^{1/(d-1)}\right).
+\]
+\end{proposition}
 
-Chernikov--Towsner later prove, in their graded probability-space framework,
-that every class of finite \(VC_k\)-dimension is properly \(PAC_k\)-learnable.
-Hence:
+\begin{proof}
+Let \(q\) be the largest power of \(2\) not exceeding \(r\). Then
+\(q>r/2\), and the assumption on \(r\) gives \(q\ge d+1\).
+Apply Theorem~\ref{thm:higher-sharp} over \(\mathbb F_q\). Its core observer
+is the additive group
+\[
+ G=(\mathbb F_q^{\,d-1},+)
+\]
+of size \(q^{d-1}\le T\), and it realizes a shattered box of side \(q\).
 
-\begin{corollary}[Statistical learnability under fixed typing]\label{cor:pac}
-Within the measurable higher-arity PAC framework of Chernikov--Towsner,
-\(\Rclass_{f,h}^{(d)}\) is properly \(PAC_{d+1}\)-learnable for every
-\(1\le d\le f\).
-\end{corollary}
+It remains to pad the observer without changing the target languages.
+If \(k:=T-|G|>0\), adjoin elements \(z_1,\ldots,z_k\) and define
+\[
+ gz_i=z_i g=z_i\quad(g\in G),\qquad
+ z_i z_j=z_{\max\{i,j\}}.
+\]
+Together with the identity of \(G\), this is a monoid \(M_T\) of size \(T\).
+Add fresh letters \(e_i\) with \(h_T(e_i)=z_i\), while retaining the old
+letter map into \(G\). The old alphabet realizes all elements of \(G\), and
+the new letters realize all \(z_i\), so \(|h_T(\Sigma^+)|=T\).
 
-\begin{remark}[Representation versus statistical properness]
-This is a theorem about the induced incidence-relation class. It does not
-yet give a polynomial-time learner outputting a finite CFG or MCFG.
-Effectivizing the relation-valued PAC learner is a separate problem.
+The target languages use no \(e_i\). Hence every factor containing a fresh
+letter has empty distribution and cannot create a new substitutability
+premise with an occurring factor. The core languages therefore remain
+\((d,h_T)\)-tuple-substitutable and retain the shattered \(q\)-box. Thus
+\(\VC_{d+1}\ge q>r/2\).
+\end{proof}
+
+\section{\(PAC_n\) model audit and conditional transfer}
+\label{sec:pac-audit}
+
+The combinatorial results above do not depend on a PAC definition.  The
+statistical interpretation requires more care than the preliminary version
+of this note suggested.
+
+Kuriyama--Takeuchi's 2015 definition uses the full coordinate-slice sample
+\[
+ D_n(\bar a)=
+ \bigcup_{i<n}
+ V_1\times\cdots\times V_{i-1}\times\{a_i\}\times
+ V_{i+1}\times\cdots\times V_n
+\]
+(and unions of these sets over sampled anchors).  The 2015 paper claimed the
+necessity implication
+\[
+ PAC_n\text{-learnable}\Longrightarrow VC_n<\infty.
+\]
+
+Takeuchi's 2020 note shows that this implication is not valid for the
+original \(PAC_2\) definition as stated.  Its class
+\(\mathcal C_{\mathrm{circles}}\) has infinite \(VC_2\)-dimension
+(Proposition~5) but is \(PAC_2\)-learnable in the sense of the old
+Definition~3 (Proposition~7); Remark~8 says that a similar example can be
+made on the countable domain \(\mathbb Q^2\).  The note then restricts to
+finite or countable domains and replaces the full slice by the
+support-sensitive observation
+\[
+ D_\mu(x):=\{y\in D(x):\mu(\{y\})>0\}.
+\]
+For this repaired definition, it states that \(PAC_2\)-learnability again
+implies finite \(VC_2\)-dimension.
+
+Chernikov--Towsner (2025), however, formulate Definition~4.3 again with the
+full coordinate slices \(D_n(\bar a)\) and state an equivalence between
+finite \(VC_k\)-dimension, their packing property, and proper \(PAC_k\)
+learnability.  On the face of the written definitions, this is in tension
+with Takeuchi's 2020 counterexample.  There may be an additional
+graded-probability-space or measurability hypothesis that resolves the
+apparent conflict, but no such reconciliation is established in the present
+note.
+
+Accordingly we adopt the following conservative rule.
+
+\begin{proposition}[Unconditional conclusion of this note]
+\label{prop:unconditional-vc}
+All VC bounds and sharpness results in
+Theorems~\ref{thm:typed-box}, \ref{thm:block-bound},
+\ref{thm:higher-sharp}, Proposition~\ref{prop:sharp-cfg}, and
+Proposition~\ref{prop:arbitrary-budget} are independent of the disputed PAC
+implication and remain valid under the stated substitutability definitions.
+\end{proposition}
+
+\begin{remark}[Conditional PAC transfer]
+If a chosen \(PAC_k\) model is proved to satisfy
+\[
+ VC_k(F)<\infty\Longrightarrow F\text{ is properly }PAC_k\text{-learnable}
+\]
+on the countable incidence domains used here, then the VC bounds above
+immediately yield the corresponding proper \(PAC_{d+1}\) learnability
+statements.  Until the 2020/2025 definitions are reconciled, this is a
+conditional corollary rather than a theorem of the present draft.
 \end{remark}
 
-For the sharp CFG family,
-\[
-N_{\eps,\delta}\ge
-t\left(1-\sqrt{2(\eps+\delta)}\right).
-\]
-Thus the realized nonempty observer-type count can genuinely control
-higher-arity sample complexity linearly.
+\begin{remark}[The 2015 quantitative lower bound is quarantined]
+The 2015 proof also derives a lower bound on sample complexity from a
+shattered box.  Since Takeuchi (2020) explicitly identifies a failure in the
+old necessity argument and repairs the observation domain, this draft does
+not use that numerical lower bound until the exact proof step and model
+assumptions have been re-audited.
+\end{remark}
 
 \section{Exact reconstruction versus statistical complexity}
 
@@ -437,19 +525,17 @@ having characteristic samples for both targets, has encoded size at least
 The typed-box theorem gives a qualitatively different complexity statement
 for the incidence-relation view of the very same fixed observer.
 
-\begin{theorem}[Fixed-observer observation-geometry separation]
+\begin{theorem}[Fixed-observer exact-vs-VC separation]
 \label{thm:observation-separation}
 There is a fixed two-element monoid homomorphism \(h_\circ\) such that:
 
 \begin{enumerate}
 \item the incidence-relation class induced by
-\(\mathcal C_{h_\circ}^{\mathrm{cf}}\) satisfies
+\(\mathcal C_{h_\circ}^{\mathrm{cf}}\) has uniformly bounded higher-arity
+statistical geometry,
 \[
-  \VC_2\le2,
+  \VC_2\le2;
 \]
-and is therefore properly \(PAC_2\)-learnable in the
-Chernikov--Towsner framework, with a sample-complexity function depending
-only on \(\eps,\delta\) and the constant dimension bound;
 
 \item no set-driven exact positive-data reconstruction operator having
 characteristic samples throughout
@@ -463,18 +549,16 @@ are polynomial in \(n\).
 
 \begin{proof}
 Part (1) is Corollary~\ref{cor:cfg-upper} with
-\(|h_\circ(\Sigma^+)|\le2\), followed by the finite-\(VC_2\) to proper
-\(PAC_2\) implication.  Part (2) is exactly the set-driven
+\(|h_\circ(\Sigma^+)|\le2\).  Part (2) is exactly the set-driven
 ordinary-thickness lower bound of the companion fixed-\(h\) CFG manuscript.
 \end{proof}
 
 Thus under one fixed finite observer, exact positive-data reconstruction can
 require exponentially large characteristic exposure even though the
-higher-arity statistical dimension of the induced incidence class is
-uniformly constant.  There is no contradiction: the observation geometries
-are different.  Exact identification receives positive target strings,
-whereas \(PAC_2\) receives labelled coordinate slices of the
-context--factor incidence relation.
+\(VC_2\)-dimension of the induced context--factor incidence class is
+uniformly constant.  Any further statement converting the latter fact into
+a \(PAC_2\) theorem is subject to the model audit in
+Section~\ref{sec:pac-audit}.
 
 \section{Next problems}
 
@@ -488,17 +572,16 @@ asymptotic exponent.
 relation-valued PAC learner into a computable, preferably polynomial-time,
 grammar-valued learner under explicit representation assumptions.
 
-\item \textbf{Quantitative separation.} Strengthen
-Theorem~\ref{thm:observation-separation} by extracting explicit upper
-sample-complexity bounds for the proper \(PAC_2\) learner and comparing them
-numerically with the exact characteristic-sample lower bound.
+\item \textbf{\(PAC_n\) definition audit.} Reconcile Takeuchi's 2020
+counterexample with Chernikov--Towsner's 2025 Definition~4.3 and equivalence
+claim before importing a statistical sample-complexity theorem.
 
 \item \textbf{Observer refinement.} Compare the monotonic behavior of
 \(VC_{d+1}\) under typing refinement with exact reconstruction cost.
 
-\item \textbf{Model audit.} Keep separate the 2015 slice-observation
-definition, Takeuchi's 2020 support-sensitive \(PAC_2\) repair, and the later
-graded-probability-space formulation of Chernikov--Towsner.
+\item \textbf{Repaired higher arity.} Determine the correct
+support-sensitive or otherwise repaired \(PAC_n\) definition for \(n>2\),
+and test whether finite \(VC_n\) is sufficient as well as necessary.
 \end{enumerate}
 
 \section{Relation to earlier grammatical-inference work}
@@ -513,9 +596,8 @@ structural chain
 \Longrightarrow
 \text{forbidden higher-arity boxes}
 \Longrightarrow
-\text{bounded }VC_n
-\Longrightarrow
-\PAC_n,
+\text{bounded }VC_n,
+
 \]
 together with its comparison to exact reconstruction under the same observer.
 
