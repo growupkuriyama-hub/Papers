@@ -6,10 +6,11 @@
 
 ## Current theorem package
 
-- Typed-box obstruction: `VC_{d+1} <= |h(Sigma^+)| <= |M|` for incidence relations induced by `(f,h)`-tuple-substitutable languages.
+- Typed-box obstruction: `VC_{d+1} <= |h(Sigma^+)| <= |M|`, strengthened for `d>=2` to `VC_{d+1}^{d-1} <= |h(Sigma^+)|`.
 - Fan-out-one sharpness: the `VC_2` bound is attained by an explicit family of finite regular fixed-`h` substitutable languages.
 - PAC consequence: combine finite higher-arity VC dimension with Chernikov–Towsner's proper `PAC_k` theorem, with probability-space/model assumptions stated explicitly.
-- Current research tasks: higher-fan-out sharpness, effective grammar-valued PAC reconstruction, and exact-vs-statistical separation.
+- Higher-arity sharpness: the root exponent is attained on a prime-power family of observer sizes by explicit finite regular `(d,h)`-tuple-substitutable targets.
+- Current research tasks: exact arbitrary-size spectrum, effective grammar-valued PAC reconstruction, and exact-vs-statistical separation.
 
 ## Relation to the project
 
