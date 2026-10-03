@@ -590,6 +590,49 @@ $\widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S)$ is the
 reduced part of this grammar.  By convention, every symbol of
 $\widetilde G$ is therefore reachable and productive.
 
+Fix an order on $\Sigma$ and use the induced \emph{shortlex} order:
+shorter strings come first, with lexicographic order breaking equal-length
+ties.  For every non-start symbol $X$ of $\widetilde G$, let $\omega(X)$
+be its shortlex-minimal terminal yield, called the \emph{canonical yield} of
+$X$.  This is well-defined because $\widetilde G$ is reduced.
+
+The yield-type index is needed for Rule~(R3) in the completeness proof.
+That proof must compare the canonical yield of a typed parent with the
+concatenation of the canonical yields of its typed children.  For a retained
+typed binary rule $X=A_{\mu\nu}\to Y=B_\mu Z=C_\nu$, the yield invariant
+proved below gives
+\[
+ h(\omega(X))=\mu\nu
+ =h(\omega(Y))h(\omega(Z))
+ =h(\omega(Y)\omega(Z)),
+\]
+which is exactly the equality needed to apply Rule~(R3).
+
+The need for this split can already be seen before typing.  Let
+$h(w)=|w|\bmod 2$ and take source rules
+$A\to a\mid BC$, $B\to a$, and $C\to a$.  A shortest yield of $A$
+may be $a$, of odd type, while the concatenation of shortest yields of
+$B$ and $C$ is $aa$, of even type.  Without separating $A$ by yield type,
+the corresponding Rule~(R3) transition is therefore not guaranteed.
+Splitting by yield type makes the required equality an invariant.  By
+contrast, no types are attached to the surrounding left or right contexts,
+because the reconstruction operator never tests such types.
+
+\begin{proposition}[typed lifting and yield invariant]\label{prop:typed-core}
+The typed refinement satisfies $L(\widetilde G)=L(G)$.  Moreover, if
+$X=A_\mu$ is a non-start symbol of $\widetilde G$, then
+$X\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$.
+\end{proposition}
+\begin{proof}
+Erase type annotations to map every typed derivation to a derivation of $G$.
+Conversely, annotate each non-start node of a successful derivation tree of
+$G$ by the $h$-type of its terminal yield.  The terminal and binary rules
+above are exactly the bottom-up propagation laws for those types, so the
+annotated tree is a derivation of the full refinement; all symbols on a
+successful tree survive trimming.  The invariant follows by induction on a
+typed derivation.
+\end{proof}
+
 For every non-start symbol $X$ of $\widetilde G$, choose
 $\chi(X)=(u_X,v_X)$ among the terminal reaching contexts of $X$ so as to
 minimize $|u_X|+|v_X|$, breaking ties by the shortlex orders of $u_X$ and
@@ -600,7 +643,7 @@ the surrounding nonterminals lets all symbols to its left and right be
 expanded to terminal strings.  Proposition~\ref{prop:typed-core} gives
 $h(\omega(A_\mu))=\mu$ for every typed non-start symbol.
 
-Define the finite witness setDefine the finite witness set
+Define the finite witness set
 \begin{equation}\label{eq:W}
 \begin{split}
 \WitnessSet(\widetilde G):={}&
@@ -621,7 +664,7 @@ occurrence of $X$, while the other words serve the distinct role of terminal or 
 \emph{rule witnesses}.
 
 
-\subsection{Exact reconstruction and Gold convergence}
+\subsection{Exact reconstruction and Gold convergence}\subsection{Exact reconstruction and Gold convergence}
 
 \begin{theorem}[completeness from the finite witnesses]\label{thm:complete}
 Let $G$ be any reduced SSBNF grammar for a nonempty language $L$, and let
