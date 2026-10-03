@@ -208,7 +208,7 @@ L(\mathcal B_h(K))=L
 \[
 \mathsf{GRS}(\{a\})\subsetneq\mathsf{RS}(\{a\})
 \]
-となることを、一文字正則言語 \(L_{\ge2}=\{a^m:m\ge2\}\) で示した。したがって finite monoid を finite group に制限すること自体が表現力の真の損失であり、monoid を使うことは単なる抽象化上の飾りではない。
+となることを、一文字正則言語 \(L_{\ge2}=\{a^m:m\ge2\}\) で示した。したがって finite monoid を finite group に制限すること自体が表現力の真の損失であり、monoid を使うことは単なる抽象化上の飾りではない。この小分離は新しい主定理として押し出すのではなく、Reviewer 2 の「fixed-window の抽象的一般化以上に何が得られるのか」という広い懸念に対する具体的な応答の一つとして追加したもの、と英語版 Overview と R2-01 の双方で明示した。Overview にも置くことで、Reviewer 1 から見ても追加理由が分かる構成にした。
 
 ## R2-02 outer context type が transport に使われていない
 
@@ -279,6 +279,7 @@ L(\mathcal B_h(K))=L
 - §10.1 の center-marker witness は endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) に統一し、\(P\) の代入可能性を本文内で自己完結に証明した。これにより準同型像は直接 \(\Delta\Delta\) となり、非線形性の議論も簡潔化した。
 - Clark–Eyraud Def. 5 が all strings で書かれている一方、同論文 §6.1 の \(a^+\) と Clark 2013 が nonempty-fragment reading を支持することを本文で明示。
 - §10 末尾に finite-group typing と finite-monoid typing の分離を追加。\(\mathsf{GRS}(\{a\})\subsetneq\mathsf{RS}(\{a\})\) を、\(L_{\ge2}=\{a^m:m\ge2\}\) で示し、Conclusion にも「有限モノイドを使うことが本質的」と一文で回収。
+- Response letter の Overview と R2-01 に、この分離は独立の headline claim ではなく、Reviewer 2 の「単なる Yoshinaka の抽象化以上の意義があるのか」という問題意識への具体的な応答の一つとして追加した、と控えめに明記。Overview にも入れ、Reviewer 1 にも追加理由が伝わるようにした。
 - Data availability / 回答書の Lean 記述は full formalization と誤解されないよう “parts of the development” に弱めた。
 
 ---
