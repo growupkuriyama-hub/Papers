@@ -25,7 +25,7 @@
    Prop. 3.3 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では Yoshinaka と同じ polynomial degree や normal form を主張せず、同じ2つのパラメータ（文法サイズと ordinary thickness）に関して polynomial な characteristic-data bound を得る、と限定した。
 
 7. **linear theorem の非正規な射程と fixed-window との位置関係**  
-   §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。さらに §10.1 に新しい numbered result や subsection を増やさず一段落だけ加え、Clark–Eyraud の substitutable language \(P=\{a^ncb^n:n>0\}\) の marked product から nonlinear な \((0,0)\)-substitutable CFL を構成した。これと \(L_{\pm,e}\) を合わせ、context-free fixed-window hierarchy と linear CFLs が比較不能であることを明示した。
+   §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。さらに §10.1 で、Clark–Eyraud の substitutable language \(P=\{a^ncb^n:n>0\}\) と fresh separator \(d\) から \(L_\times=PdP\) を構成し、nonlinear な \((0,0)\)-substitutable CFL を与えた。これと \(L_{\pm,e}\) を合わせ、\(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs が比較不能であることを明示した。
 
 8. **polynomial claim の切り分け**  
    polynomial-time finite-sample reconstruction と characteristic-data bounds は維持するが、修正後の sequential learner 自体を de la Higuera 型の “polynomial time-and-data learner” とは呼ばない。Gold identification と batch complexity を明確に分ける。
@@ -212,7 +212,7 @@ L(\mathcal B_h(K))=L
 
 ## R2-03 linear theorem の射程
 
-**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。さらに §10.1 の短い unnumbered paragraph で反対向きの分離も与え、nonlinear な Clark–Eyraud substitutable CFL がすでに \((0,0)\) fixed-window class に属することを示した。したがって context-free fixed-window hierarchy と linear CFLs は単純な包含関係ではなく比較不能である。
+**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。さらに §10.1 の短い unnumbered paragraph で反対向きの分離も与え、nonlinear な Clark–Eyraud substitutable CFL がすでに \((0,0)\) fixed-window class に属することを示した。したがって \(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs は単純な包含関係ではなく比較不能である。
 
 また §7 で general fixed-\(h\) の typed-thickness boundary、§8 で fixed-window quantitative compatibility、§10.1 で nonlinear witness \(\Delta^*\) を分けて提示する。
 
@@ -256,7 +256,7 @@ L(\mathcal B_h(K))=L
 - §4.2 に stabilized grammar が presentation order に依存しうることを明記。査読者の \(a^ncb^n\) 例は order-dependence の証明としては使わず、batch grammar を毎回再計算すると構文的に安定しないことの例として位置づける、と回答書でも明確化。
 - 新 §7 typed thickness / Prop. 7.3 を response letter の Overview と Reviewer 2 回答に追加。
 - fixed-window を §8、linear を §9、boundary を §10 とする現行 numbering に response letter を同期。
-- stale な page / line numbers を response letter から除去し、section / theorem references に統一。TCS メールは page・paragraph・line number を明示的に要求しているため、最終 frozen PDF を作った後に全 Revision location へ一括で戻す。
+- response letter の全 Revision location に、最終 frozen PDF に対応する page / numbered-line locator を付与済み。§10.1 の追加後にページ境界が変わった箇所も再点検し、current PDF と同期した。
 - Lemma 8.2 の fixed-window bounds を proof で実際に得ている \((N_t-1)B\) と \((N_t+1)B\) に統一。
 - linear = one-turn PDA の箇所に Autebert–Berstel–Boasson (1997) を追加引用。
 - Clark (2010) が既に ordinary / fixed-window substitutable classes と Dyck example を congruential family の文脈で述べていることを §10 で明示。
