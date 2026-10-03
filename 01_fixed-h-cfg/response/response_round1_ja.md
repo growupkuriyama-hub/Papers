@@ -208,7 +208,7 @@ L(\mathcal B_h(K))=L
 
 ## R2-02 outer context type が transport に使われていない
 
-**回答:** reviewer の指摘どおりであり、初回投稿版で outer-context typing が必要だとした主張は unsupported だったため撤回した。outer annotations は削除し、yield type \(A_\mu\) だけを残した。R2 は同じ observed factor \(x\) が実際に観測された contexts 間を移す規則であり、周囲の \(h\)-type は不要である。
+**回答:** reviewer の指摘どおりであり、初回投稿版で outer-context typing が必要だとした主張は unsupported だったため撤回した。outer annotations は削除し、yield type \(A_\mu\) だけを残した。R2 は同じ observed factor \(x\) が実際に観測された contexts 間を移す規則であり、周囲の \(h\)-type は不要である。残した yield-type index の必要性が直観的に分かるよう、§5.1 に長さの偶奇を用いた短い例を追加し、型付けなしでは \(\omega(A)\) と \(\omega(B)\omega(C)\) の \(h\)-値がずれて必要な R3 遷移が存在しない場合を明示した。
 
 ## R2-03 linear theorem の射程
 
