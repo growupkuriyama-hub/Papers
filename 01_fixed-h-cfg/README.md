@@ -39,10 +39,10 @@ for this TCS revision because it changes every page/line locator in the response
 The theorem-facing Lean 4 formalization is maintained separately in
 `growupkuriyama-hub/tcs1-lean-formalization`.
 
-- The current public archive is `tcs1-v87-formalization-2.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23114558`. The immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
+- The current public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
 - The current v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. A direct v87-to-v88 comparison found 34 theorem/proposition/lemma/corollary environments in each version and identical contents.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
-- The current v88 verification head is `8a1f5dbd98005a0ce92c5d29f4e213ebb6cc1d28`. TCS1 Lean CI run #366 passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates. The public Zenodo archive remains the v87 release until a separate v88 archival release is made.
+- The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
 The manuscript proofs remain self-contained; the Lean development is a reproducibility and verification artifact, not a substitute for the paper proofs.
