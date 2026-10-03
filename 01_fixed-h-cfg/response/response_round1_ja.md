@@ -128,7 +128,7 @@ order-independence の主張は撤回し、set-driven なのは batch operator �
 
 ## R1-17〜R1-19 §4 の細部・重複 lemma・記号
 
-**回答:** \(\omega,\chi\) の導入順、\(\alpha\) の型、NT(), Rule(), realized/exhibited などの不要・重複表現を削除または整理した。lifting は Prop. 5.2 に集約した。
+**回答:** \(\omega\) は trimmed typed refinement の直後に定義して前方参照を解消し、\(\chi\) は witness set の直前に置いた。parity 例は脚注から本文へ移し、型なし source symbol に \(\omega\) を適用しない書き方に修正した。\(\alpha\) の型、NT(), Rule(), realized/exhibited などの不要・重複表現も削除または整理し、lifting は Prop. 5.2 に集約した。
 
 ## R1-20 learner が収束しない
 
@@ -170,7 +170,7 @@ L(\mathcal B_h(K))=L
 
 ## R1-28 boundary sections の統合
 
-**回答:** 旧 §§8–10 を現 §10 に統合し、不要な corollary と “block” terminology を削除した。\(\Delta^*\) は nonlinear witness として1 proposition に圧縮した。さらに class positioning を明確にするため、§10.1 に新しい subsection・lemma・proposition を作らず一段落だけ追加した。Clark–Eyraud の center-marker 例を踏まえた endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を本文で直接証明し、fresh separator から nonlinear な context-free fixed-window language を得て、Prop. 9.4 の反対向きの分離と合わせ、context-free fixed-window hierarchy と linear CFLs が比較不能であることを示した。
+**回答:** 旧 §§8–10 を現 §10 に統合し、不要な corollary と “block” terminology を削除した。\(\Delta^*\) は nonlinear witness として1 proposition に圧縮した。さらに class positioning を明確にするため、§10.1 に新しい subsection・lemma・proposition を作らず、短い unnumbered comparison を置いた。center-marker 部分は再査読向けに大幅に圧縮した。Clark–Eyraud の center-marker 例を踏まえた endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を本文で直接証明し、fresh separator から nonlinear な context-free fixed-window language を得て、Prop. 9.4 の反対向きの分離と合わせ、context-free fixed-window hierarchy と linear CFLs が比較不能であることを示した。
 
 ## R1-29 標準事実を再証明しすぎ
 
@@ -212,11 +212,11 @@ L(\mathcal B_h(K))=L
 
 ## R2-02 outer context type が transport に使われていない
 
-**回答:** reviewer の指摘どおりであり、初回投稿版で outer-context typing が必要だとした主張は unsupported だったため撤回した。outer annotations は削除し、yield type \(A_\mu\) だけを残した。R2 は同じ observed factor \(x\) が実際に観測された contexts 間を移す規則であり、周囲の \(h\)-type は不要である。残した yield-type index の必要性が直観的に分かるよう、§5.1 に長さの偶奇を用いた短い例を追加し、型付けなしでは \(\omega(A)\) と \(\omega(B)\omega(C)\) の \(h\)-値がずれて必要な R3 遷移が存在しない場合を明示した。
+**回答:** reviewer の指摘どおりであり、初回投稿版で outer-context typing が必要だとした主張は unsupported だったため撤回した。outer annotations は削除し、yield type \(A_\mu\) だけを残した。R2 は同じ observed factor \(x\) が実際に観測された contexts 間を移す規則であり、周囲の \(h\)-type は不要である。残した yield-type index の必要性が直観的に分かるよう、§5.1 に長さの偶奇を用いた短い例を本文として追加した。例は source grammar の shortest yields の型不一致として記述し、型なしの \(A,B,C\) に \(\omega\) を適用しない形にした。
 
 ## R2-03 linear theorem の射程
 
-**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。さらに §10.1 の短い unnumbered paragraph で反対向きの分離も与え、endpoint-complete center-marker language \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を直接証明した上で、\(L_\times=PdP\) が nonlinear な \((0,0)\) fixed-window CFL であることを示した。したがって \(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs は単純な包含関係ではなく比較不能である。
+**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。さらに §10.1 の短い unnumbered comparison で反対向きの分離も与え、endpoint-complete center-marker language \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を直接証明した上で、\(L_\times=PdP\) が nonlinear な \((0,0)\) fixed-window CFL であることを示した。したがって \(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs は単純な包含関係ではなく比較不能である。
 
 また §7 で general fixed-\(h\) の typed-thickness boundary、§8 で fixed-window quantitative compatibility、§10.1 で nonlinear witness \(\Delta^*\) を分けて提示する。
 
@@ -260,7 +260,7 @@ L(\mathcal B_h(K))=L
 - §4.2 に stabilized grammar が presentation order に依存しうることを明記。査読者の \(a^ncb^n\) 例は order-dependence の証明としては使わず、batch grammar を毎回再計算すると構文的に安定しないことの例として位置づける、と回答書でも明確化。
 - 新 §7 typed thickness / Prop. 7.3 を response letter の Overview と Reviewer 2 回答に追加。
 - fixed-window を §8、linear を §9、boundary を §10 とする現行 numbering に response letter を同期。
-- response letter の全 Revision location に、最終 frozen PDF に対応する page / numbered-line locator を付与済み。§10.1 の追加後にページ境界が変わった箇所も再点検し、current PDF と同期した。
+- 本 preflight では本文をさらに編集したため、response letter の page / numbered-line locator は一旦「final frozen PDF から再生成」に戻した。structural locator は維持し、提出直前の freeze 後に全 locator を再付与する。
 - Lemma 8.2 の fixed-window bounds を proof で実際に得ている \((N_t-1)B\) と \((N_t+1)B\) に統一。
 - linear = one-turn PDA の箇所に Autebert–Berstel–Boasson (1997) を追加引用。
 - Clark (2010) が既に ordinary / fixed-window substitutable classes と Dyck example を congruential family の文脈で述べていることを §10 で明示。
