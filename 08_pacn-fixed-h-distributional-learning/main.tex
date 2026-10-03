@@ -1,0 +1,351 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=28mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\D}{\mathcal D}
+\newcommand{\E}{\mathcal E}
+\newcommand{\Rclass}{\mathfrak R}
+\newcommand{\VC}{\operatorname{VC}}
+\newcommand{\PAC}{\operatorname{PAC}}
+\newcommand{\blank}{\square}
+
+\title{\(PAC_n\) Learning under Fixed Finite-Monoid Distributional Typing\\
+\large Typed box obstructions for CFG and MCFG incidence relations}
+\author{Takayuki Kuriyama}
+\date{Working draft, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_{d+1}\)-dimension at most \(t_h\). At fan-out one this bound is sharp, already for finite regular languages. In the modern higher-arity PAC framework the bound yields proper \(PAC_{d+1}\)-learnability. The resulting statistical complexity is then compared with exact positive-data reconstruction under the same observer.
+\end{abstract}
+
+\paragraph{Status.}
+Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. Higher-fan-out sharpness, effective grammar-valued PAC learning, and a formal exact-vs-statistical separation theorem remain research tasks.
+
+\section{Setup}
+
+Let \(\Sigma\) be a nonempty finite alphabet, \(M\) a finite monoid, and
+\[
+h:\Sigma^*\to M
+\]
+a fixed homomorphism. Put
+\[
+T_h^+:=h(\Sigma^+),\qquad t_h:=|T_h^+|.
+\]
+Only nonempty factors are compared, as in the companion fixed-\(h\) CFG and MCFG manuscripts.
+
+For \(d\ge1\), a sentence context is
+\[
+E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d,
+\]
+where \(v_0,v_d\in\Sigma^*\) and \(v_1,\ldots,v_{d-1}\in\Sigma^+\).
+Let \(\E_d\) be the set of these contexts. For
+\(\mathbf x=(x_1,\ldots,x_d)\in(\Sigma^+)^d\), write \(E[\mathbf x]\) for
+hole filling and
+\[
+\D_L^{(d)}(\mathbf x):=\{E\in\E_d:E[\mathbf x]\in L\},\qquad
+h^{(d)}(\mathbf x):=(h(x_1),\ldots,h(x_d)).
+\]
+
+\begin{definition}[Typed tuple substitutability]
+Fix \(f\ge1\). A language \(L\subseteq\Sigma^*\) is
+\emph{\((f,h)\)-tuple-substitutable} if, for every \(1\le d\le f\) and
+\(\mathbf x,\mathbf y\in(\Sigma^+)^d\),
+\[
+h^{(d)}(\mathbf x)=h^{(d)}(\mathbf y),\qquad
+\D_L^{(d)}(\mathbf x)\cap\D_L^{(d)}(\mathbf y)\ne\varnothing
+\]
+imply
+\[
+\D_L^{(d)}(\mathbf x)=\D_L^{(d)}(\mathbf y).
+\]
+At \(d=1\) this is the ordinary two-sided fixed-\(h\) substitutability condition.
+\end{definition}
+
+Each language induces the \((d+1)\)-ary incidence relation
+\[
+R_L^{(d)}
+:=
+\{(E,x_1,\ldots,x_d)\in\E_d\times(\Sigma^+)^d:
+E[x_1,\ldots,x_d]\in L\}.
+\]
+Let \(\Rclass_{f,h}^{(d)}\) be the family of all such relations induced by
+\((f,h)\)-tuple-substitutable languages. CFG or MCFG restrictions only pass
+to subclasses.
+
+\section{The typed-box obstruction}
+
+\begin{theorem}[Typed-box obstruction]\label{thm:typed-box}
+For \(1\le d\le f\),
+\[
+\VC_{d+1}\!\left(\Rclass_{f,h}^{(d)}\right)
+\le t_h\le |M|.
+\]
+The same bound holds for the subfamilies induced by fixed-\(h\) CFGs and
+fixed-\(h\) fan-out-\(f\) MCFGs.
+\end{theorem}
+
+\begin{proof}
+Suppose a box
+\[
+A_0\times A_1\times\cdots\times A_d
+\subseteq \E_d\times(\Sigma^+)^d
+\]
+of side size \(m>t_h\) were shattered. Since \(|A_1|>t_h\), choose distinct
+\(a,b\in A_1\) with \(h(a)=h(b)\). Fix arbitrary \(x_j\in A_j\) for
+\(2\le j\le d\), and put
+\[
+\mathbf x=(a,x_2,\ldots,x_d),\qquad
+\mathbf y=(b,x_2,\ldots,x_d).
+\]
+Then \(h^{(d)}(\mathbf x)=h^{(d)}(\mathbf y)\).
+
+Because \(m>t_h\ge1\), choose distinct \(E_0,E_1\in A_0\). Shattering
+permits a target whose trace contains
+\[
+(E_0,\mathbf x),\quad(E_0,\mathbf y),\quad(E_1,\mathbf x)
+\]
+but omits \((E_1,\mathbf y)\). Thus
+\[
+E_0\in\D_L^{(d)}(\mathbf x)\cap\D_L^{(d)}(\mathbf y).
+\]
+Typed tuple substitutability gives
+\[
+\D_L^{(d)}(\mathbf x)=\D_L^{(d)}(\mathbf y),
+\]
+contradicting the different labels at \(E_1\).
+\end{proof}
+
+\begin{remark}
+The proof uses neither context-freeness nor multiple context-freeness.
+The dimension bound follows from the abstract closure axiom:
+equal finite type plus one common context implies equal distributions.
+Grammar formalisms matter when one asks representability and effective
+grammar-valued learning.
+\end{remark}
+
+\begin{corollary}[Fan-out one]\label{cor:cfg-upper}
+For fixed-\(h\) substitutable incidence relations
+\[
+R_L(E,x)\Longleftrightarrow E[x]\in L,
+\]
+one has
+\[
+\VC_2\le t_h.
+\]
+In particular, trivial typing gives \(\VC_2\le1\).
+\end{corollary}
+
+\section{Sharpness for CFG incidence relations}
+
+\begin{proposition}[The fan-out-one bound is sharp]\label{prop:sharp-cfg}
+For every \(t\ge1\), there are a finite alphabet \(\Sigma_t\), a homomorphism
+\(h_t:\Sigma_t^*\to C_t\), and a family of finite regular fixed-\(h_t\)
+substitutable languages whose incidence relations shatter a box of side
+size \(t\). Consequently
+\[
+\VC_2=t=|h_t(\Sigma_t^+)|
+\]
+for the corresponding full fixed-\(h_t\) relation class.
+\end{proposition}
+
+\begin{proof}
+Let \(C_t=\mathbb Z/t\mathbb Z\) and
+\[
+\Sigma_t=\{c_0,\ldots,c_{t-1},x_0,\ldots,x_{t-1}\}.
+\]
+Set \(h_t(c_i)=h_t(x_i)=i\bmod t\). Then
+\(h_t(\Sigma_t^+)=C_t\).
+
+For \(S\subseteq[t]\times[t]\), put
+\[
+L_S:=\{c_i x_j:(i,j)\in S\}.
+\]
+Each \(L_S\) is finite and regular. The only factors having nonempty
+distribution are \(c_i\), \(x_j\), and occurring \(c_i x_j\), with
+\[
+\D_{L_S}(c_i)=\{(\epsilon,x_j):(i,j)\in S\},
+\]
+\[
+\D_{L_S}(x_j)=\{(c_i,\epsilon):(i,j)\in S\},
+\]
+and
+\[
+\D_{L_S}(c_i x_j)=\{(\epsilon,\epsilon)\}.
+\]
+Distinct one-letter factors of the same kind have distinct types; \(c_i\)
+and \(x_i\) have equal type but disjoint distributions; a one-letter factor
+and a two-letter factor have disjoint distributions; and occurring
+two-letter factors have identical singleton distribution. Thus the
+fixed-\(h_t\) substitutability implication holds.
+
+Let \(E_i=c_i\blank\). Then on
+\[
+\{E_0,\ldots,E_{t-1}\}\times\{x_0,\ldots,x_{t-1}\}
+\]
+we have
+\[
+R_{L_S}(E_i,x_j)=1\Longleftrightarrow(i,j)\in S.
+\]
+Arbitrary \(S\) therefore realizes every trace on the box.
+\end{proof}
+
+\section{PAC consequences}
+
+Kuriyama--Takeuchi's original \(PAC_n\) model observes the target on unions
+of coordinate slices through sampled anchor points. Their necessity theorem
+shows that \(PAC_n\)-learnability implies finite \(VC_n\)-dimension and,
+from a shattered box of side size \(D\), yields
+\[
+N_{\eps,\delta}\ge
+D\left(1-\sqrt[n]{2(\eps+\delta)}\right)
+\]
+when the right-hand side is positive.
+
+Chernikov--Towsner later prove, in their graded probability-space framework,
+that every class of finite \(VC_k\)-dimension is properly \(PAC_k\)-learnable.
+Hence:
+
+\begin{corollary}[Statistical learnability under fixed typing]\label{cor:pac}
+Within the measurable higher-arity PAC framework of Chernikov--Towsner,
+\(\Rclass_{f,h}^{(d)}\) is properly \(PAC_{d+1}\)-learnable for every
+\(1\le d\le f\).
+\end{corollary}
+
+\begin{remark}[Representation versus statistical properness]
+This is a theorem about the induced incidence-relation class. It does not
+yet give a polynomial-time learner outputting a finite CFG or MCFG.
+Effectivizing the relation-valued PAC learner is a separate problem.
+\end{remark}
+
+For the sharp CFG family,
+\[
+N_{\eps,\delta}\ge
+t\left(1-\sqrt{2(\eps+\delta)}\right).
+\]
+Thus the realized nonempty observer-type count can genuinely control
+higher-arity sample complexity linearly.
+
+\section{Exact reconstruction versus statistical complexity}
+
+The companion fixed-\(h\) CFG manuscript shows that even for one fixed
+two-element typing, characteristic data for exact set-driven positive-data
+reconstruction cannot in general be bounded polynomially by reduced CFG
+size and ordinary grammar thickness. In contrast, the same observer gives
+\[
+\VC_2\le2.
+\]
+This suggests a separation between exact exposure/reconstruction cost and
+higher-arity statistical dimension. The observation geometries differ:
+positive-data identification receives target strings, while \(PAC_n\)
+observes labelled coordinate slices of a product-domain relation.
+
+A formal separation theorem should instantiate the exact lower-bound family,
+form its incidence relations, and state both conclusions under one fixed
+observer. This remains a current task.
+
+\section{Next problems}
+
+\begin{enumerate}
+\item \textbf{Higher-fan-out sharpness.} Determine whether, for every
+\(d\ge2\) and \(t\ge1\), one can realize
+\[
+\VC_{d+1}=t
+\]
+inside an \((f,h)\)-tuple-substitutable MCFG family with \(t_h=t\).
+
+\item \textbf{Effective PAC reconstruction.} Convert the proper
+relation-valued PAC learner into a computable, preferably polynomial-time,
+grammar-valued learner under explicit representation assumptions.
+
+\item \textbf{Exact-vs-statistical separation.} Combine the fixed
+two-element exact-reconstruction obstruction with the constant \(VC_2\)
+upper bound.
+
+\item \textbf{Observer refinement.} Compare the monotonic behavior of
+\(VC_{d+1}\) under typing refinement with exact reconstruction cost.
+
+\item \textbf{Model audit.} Keep separate the 2015 slice-observation
+definition, Takeuchi's 2020 support-sensitive \(PAC_2\) repair, and the later
+graded-probability-space formulation of Chernikov--Towsner.
+\end{enumerate}
+
+\section{Relation to earlier grammatical-inference work}
+
+Earlier work already gives probabilistic or stochastic learning results for
+restricted CFG/MCFG families under distributional assumptions, including
+Clark, Shibata--Yoshinaka, and Case--Yoshinaka--Zeugmann. The intended
+contribution here is not merely probabilistic grammar learnability, but the
+structural chain
+\[
+\text{finite-monoid typed substitutability}
+\Longrightarrow
+\text{forbidden higher-arity boxes}
+\Longrightarrow
+\text{bounded }VC_n
+\Longrightarrow
+\PAC_n,
+\]
+together with its comparison to exact reconstruction under the same observer.
+
+\begin{thebibliography}{99}
+
+\bibitem{KT2015}
+T.~Kuriyama and K.~Takeuchi.
+\newblock On the \(PAC_n\) learning.
+\newblock RIMS K\^oky\^uroku 1938, 54--58, 2015.
+
+\bibitem{Kob2015}
+M.~Kobayashi.
+\newblock A generalization of the PAC learning in product probability spaces.
+\newblock RIMS K\^oky\^uroku 1938, 33--37, 2015.
+
+\bibitem{CPT2019}
+A.~Chernikov, D.~Palacin, and K.~Takeuchi.
+\newblock On \(n\)-dependence.
+\newblock Notre Dame Journal of Formal Logic 60(2):195--214, 2019.
+
+\bibitem{CT2020}
+A.~Chernikov and H.~Towsner.
+\newblock Hypergraph regularity and higher arity VC-dimension.
+\newblock arXiv:2010.00726, 2020.
+
+\bibitem{CT2025}
+A.~Chernikov and H.~Towsner.
+\newblock Higher-arity PAC learning, VC dimension and packing lemma.
+\newblock arXiv:2510.02420v2, 2025.
+
+\bibitem{Takeuchi2020}
+K.~Takeuchi.
+\newblock On \(VC_2\)-dimension and learnability.
+\newblock RIMS K\^oky\^uroku 2170:73--78, 2020.
+
+\bibitem{ClarkEyraud2007}
+A.~Clark and R.~Eyraud.
+\newblock Polynomial identification in the limit of substitutable context-free languages.
+\newblock Journal of Machine Learning Research 8:1725--1745, 2007.
+
+\bibitem{Yoshinaka2011}
+R.~Yoshinaka.
+\newblock Efficient learning of multiple context-free languages with multidimensional substitutability from positive data.
+\newblock Theoretical Computer Science 412(19):1821--1831, 2011.
+
+\bibitem{CaseYoshinakaZeugmann2013}
+J.~Case, R.~Yoshinaka, and T.~Zeugmann.
+\newblock Stochastic finite learning of some mildly context-sensitive languages.
+\newblock 2013.
+
+\end{thebibliography}
+
+\end{document}
