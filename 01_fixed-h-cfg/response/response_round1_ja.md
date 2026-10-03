@@ -204,6 +204,8 @@ L(\mathcal B_h(K))=L
 
 **回答:** 一つの \(h\) を class 全体で固定することを明記し、Yoshinaka の fixed \((k,\ell)\) と同じ class-level bias として位置づけた。Coste et al. (2004) の typing/domain bias と関連づけ、Takada の control-set approach とは「regular control set が derivation representation に参加する」のに対し、本稿の finite monoid は比較可能な terminal yields を制御するものだと区別した。
 
+また「未知の \(h\) をどうするか」については、既知の像サイズ上界 \(m\) がある場合とない場合を分けた。固定 alphabet \(\Sigma\) と \(|\operatorname{im}h|\le m\) が分かっていれば、サイズ \(m\) 以下の有限モノイド構造と文字写像は有限個しかないので、それらを総当たりして product を取ることで、すべてを refine する一つの universal observer にコンパイルできる。ただし \(m\) に関する多項式計算量は主張しない。上界を外すと、全有限 observer の union は全正則言語を含むため、Gold の superfinite obstruction により正例から同定不能である。したがって「bounded unknown observation」と「unrestricted observer selection」は質的に別問題である。
+
 さらに新 §7 で、arbitrary fixed-\(h\) の quantitative limit を typed thickness により明示した。fixed-window は §8、linear は §9、pushdown / boundary は §10 に整理した。加えて §10 末尾で、有限群値の型付けだけを許した union を \(\mathsf{GRS}\) とおくと
 \[
 \mathsf{GRS}(\{a\})\subsetneq\mathsf{RS}(\{a\})
