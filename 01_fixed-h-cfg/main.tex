@@ -1049,12 +1049,21 @@ A compact reduced CFG $R_n$ is
 \end{aligned}
 \]
 It generates exactly $\mathcal T_n$.  Every displayed symbol is reachable
-and productive.  The shortcut alternative gives
-$|\omega(A_i)|\le i+5$, while
-$Z_i\Rightarrow^*\mathtt 0^{\,i+1}$; since $S\Rightarrow A_n$,
-every nonterminal has a terminal yield of length at most $n+5$.
-The production-symbol count is $O(n)$, hence the encoded size is polynomial
-in $n$ under our fixed convention, and $\tau_{R_n}\le n+5$.
+and productive.  More explicitly,
+\[
+ Z_i\Rightarrow^*\mathtt 0^{\,i+1},
+ \qquad
+ A_i\Rightarrow
+ \mathtt l\mathtt cZ_i\mathtt d\mathtt r
+ \Rightarrow^*
+ \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r,
+\]
+so $Z_i$ and $A_i$ have terminal yields of lengths $i+1$ and $i+5$,
+respectively.  Since $S\Rightarrow A_n$, the start symbol has the same
+$n+5$ witness.  Hence every nonterminal has a terminal yield of length at
+most $n+5$, and therefore $\tau_{R_n}\le n+5$.  The production-symbol
+count is $O(n)$, so the encoded size is polynomial in $n$ under our fixed
+convention.
 
 For $R_n^-$ retain $Z_0,\ldots,Z_n$ and the rules for
 $A_0,\ldots,A_{n-1}$ above, add $S^-\to A_n^-$, and put
@@ -1071,11 +1080,21 @@ Inductively, $A_i^-$ generates exactly the words of $\mathcal T_i$
 containing at least one shortcut, so $L(R_n^-)=\mathcal T_n^-$.  From
 $S^-\to A_n^-$ the binary rules make every $A_i^-$ reachable; each retained
 $A_i$ occurs as an ordinary sibling in an $A_{i+1}^-$ rule, and each $Z_i$
-occurs in a shortcut rule.  All these symbols are productive.  Moreover
-$|\omega(A_i^-)|\le i+5$, the retained $A_i$ satisfy the same bound, and
-$Z_i\Rightarrow^*\mathtt 0^{\,i+1}$, so $\tau_{R_n^-}\le n+5$.
-Thus the grammar is reduced and again has $O(n)$ production symbols and
-polynomial encoded size.
+occurs in a shortcut rule.  Thus every displayed nonterminal is reachable.
+Productivity and the thickness bound can again be witnessed explicitly:
+\[
+ Z_i\Rightarrow^*\mathtt 0^{\,i+1},
+ \qquad
+ A_i^-\Rightarrow
+ \mathtt l\mathtt cZ_i\mathtt d\mathtt r
+ \Rightarrow^*
+ \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r.
+\]
+The retained $A_i$ have the same shortcut witnesses as in $R_n$, and
+$S^-\Rightarrow A_n^-$ supplies the start-symbol witness.  Consequently all
+nonterminals are productive and have terminal yields of length at most $n+5$,
+so $R_n^-$ is reduced and $\tau_{R_n^-}\le n+5$.  Again it has $O(n)$
+production symbols and polynomial encoded size.
 
 By Lemma~\ref{lem:level-coded-substitutable}, $\mathcal T_n$ is
 $\sim_{h_\circ}$-substitutable.  Moreover
@@ -1894,10 +1913,18 @@ Thus $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is the shortcut body and
 $b_i$ is the clean body of a residual-height-$i$ node.  In a valid
 serialization, a literal occurrence of either body is the body of a genuine
 residual-height-$i$ parsed node.  For $s_i$, this follows because shortcut
-bodies contain no brackets and the zero run records the level.  For $b_i$, each $z_{i-1}$ is bracket-balanced, so bracket matching
-forces the occurrence to respect parsed-subtree boundaries; induction then
-identifies the two clean residual-height-$(i-1)$ children when $i\ge1$,
-while $b_0=\mathtt a$ is the clean leaf body.  Consequently
+bodies contain no brackets and the zero run records the level.  For $b_0$ the
+claim is immediate, since $b_0=\mathtt a$ is exactly the clean leaf body.
+For $i\ge1$, consider first the initial occurrence of
+$z_{i-1}$ in $b_i=z_{i-1}z_{i-1}$.  By induction it is a genuine
+residual-height-$(i-1)$ parsed subtree.  Inspecting its immediate parent frame,
+it cannot be the root, because a second $z_{i-1}$ follows, and it cannot be a
+right child, because the next symbol after a right child would close its
+parent.  Hence it is the left child of a residual-height-$i$ binary node.
+Uniqueness of the residual-height-$(i-1)$ parse of the remaining suffix then
+forces the following $z_{i-1}$ to be its right sibling.  Thus the whole
+literal occurrence of $b_i$ is exactly the clean body of that parsed node.
+Consequently
 the literal body replacement
 \[
  s_i\longleftrightarrow b_i
@@ -1923,23 +1950,27 @@ two root constructors, gives a \emph{difference core}: there are words $p,q,\xi,
  \xi\rightsquigarrow\eta,
 \]
 where $\xi,\eta$ are nonempty, their first symbols differ, and their last
-symbols differ.  We prove this claim by induction on the residual height.  If
-one root is a shortcut and the other is clean, take the two root bodies; they
-are connected by the body-replacement relation and have different first and
-last symbols.  If both roots are binary and exactly one ordered child differs,
-apply the induction hypothesis inside that child and absorb the identical
-material outside its difference core into $p$ and $q$.  If both ordered
-children differ, apply the induction hypothesis to each child and concatenate
-the left difference core, the unchanged material between the two child cores,
-and the right difference core.  The concatenated replacement sequence first
-changes the left child and then the right child, so
+symbols differ.  We prove this claim by induction on the residual height.
+At height $0$ there are only the clean leaf and the shortcut; if they differ,
+take their two bodies $\mathtt a$ and $s_0$, which are related by one body
+replacement and differ at both endpoints.
+
+Now let the residual height be $i\ge1$.  If one root is a shortcut and the
+other is binary, take the two root bodies.  First replace the shortcut body
+$s_i$ by the clean body $b_i=z_{i-1}z_{i-1}$; then transform the two clean
+children independently into the target left and right children, using the
+induction hypothesis wherever a child differs.  This gives a finite
+body-replacement sequence between the two root bodies, whose first and last
+symbols differ.  If both roots are binary and exactly one ordered child
+differs, apply the induction hypothesis inside that child and absorb the
+identical material outside its difference core into $p$ and $q$.  If both
+ordered children differ, apply the induction hypothesis to each child and
+concatenate the left difference core, the unchanged material between the two
+child cores, and the right difference core.  The resulting replacement
+sequence changes the left child and then the right child, so
 $\xi\rightsquigarrow\eta$; its first symbols differ in the left child and
-its last symbols differ in the right child.  If one root is a shortcut and the other is binary, first replace the shortcut
-body $s_i$ by the clean body $b_i=z_{i-1}z_{i-1}$.  The resulting clean
-binary root can then be transformed into the target binary root by applying
-the preceding binary-child cases to the left and right children as needed.
-Concatenating these legal replacement sequences preserves the required
-first- and last-symbol differences.  This completes the induction.
+its last symbols differ in the right child.  These cases exhaust the two root
+constructors and complete the induction.
 
 Now suppose $uxv,uyv\in\mathcal T_n$ and take their unique parse trees.
 If the trees are equal, cancellation gives $x=y$.  Otherwise choose a
