@@ -25,7 +25,7 @@
    Prop. 3.3 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では Yoshinaka と同じ polynomial degree や normal form を主張せず、同じ2つのパラメータ（文法サイズと ordinary thickness）に関して polynomial な characteristic-data bound を得る、と限定した。
 
 7. **linear theorem の非正規な射程と fixed-window との位置関係**  
-   §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。さらに §10.1 で、Clark–Eyraud の substitutable language \(P=\{a^ncb^n:n>0\}\) と fresh separator \(d\) から \(L_\times=PdP\) を構成し、nonlinear な \((0,0)\)-substitutable CFL を与えた。これと \(L_{\pm,e}\) を合わせ、\(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs が比較不能であることを明示した。
+   §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。さらに §10.1 で、Clark–Eyraud の center-marker 例を踏まえた endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を直接証明し、fresh separator \(d\) から \(L_\times=PdP\) を構成して nonlinear な \((0,0)\)-substitutable CFL を与えた。これと \(L_{\pm,e}\) を合わせ、\(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs が比較不能であることを明示した。
 
 8. **polynomial claim の切り分け**  
    polynomial-time finite-sample reconstruction と characteristic-data bounds は維持するが、修正後の sequential learner 自体を de la Higuera 型の “polynomial time-and-data learner” とは呼ばない。Gold identification と batch complexity を明確に分ける。
@@ -170,7 +170,7 @@ L(\mathcal B_h(K))=L
 
 ## R1-28 boundary sections の統合
 
-**回答:** 旧 §§8–10 を現 §10 に統合し、不要な corollary と “block” terminology を削除した。\(\Delta^*\) は nonlinear witness として1 proposition に圧縮した。さらに class positioning を明確にするため、§10.1 に新しい subsection・lemma・proposition を作らず一段落だけ追加した。Clark–Eyraud の \(P=\{a^ncb^n:n>0\}\) と fresh separator から nonlinear な context-free fixed-window language を得て、Prop. 9.4 の反対向きの分離と合わせ、context-free fixed-window hierarchy と linear CFLs が比較不能であることを示した。
+**回答:** 旧 §§8–10 を現 §10 に統合し、不要な corollary と “block” terminology を削除した。\(\Delta^*\) は nonlinear witness として1 proposition に圧縮した。さらに class positioning を明確にするため、§10.1 に新しい subsection・lemma・proposition を作らず一段落だけ追加した。Clark–Eyraud の center-marker 例を踏まえた endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を本文で直接証明し、fresh separator から nonlinear な context-free fixed-window language を得て、Prop. 9.4 の反対向きの分離と合わせ、context-free fixed-window hierarchy と linear CFLs が比較不能であることを示した。
 
 ## R1-29 標準事実を再証明しすぎ
 
@@ -212,7 +212,7 @@ L(\mathcal B_h(K))=L
 
 ## R2-03 linear theorem の射程
 
-**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。さらに §10.1 の短い unnumbered paragraph で反対向きの分離も与え、nonlinear な Clark–Eyraud substitutable CFL がすでに \((0,0)\) fixed-window class に属することを示した。したがって \(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs は単純な包含関係ではなく比較不能である。
+**回答:** §9 に \(L_{\pm,e}\) を追加し、Prop. 9.4 で linear・nonregular・fixed-\(h\) substitutable かつ ordinary / fixed-window substitutable ではないことを示した。Thm. 9.3 には genuine nonregular linear content がある。さらに §10.1 の短い unnumbered paragraph で反対向きの分離も与え、endpoint-complete center-marker language \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を直接証明した上で、\(L_\times=PdP\) が nonlinear な \((0,0)\) fixed-window CFL であることを示した。したがって \(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs は単純な包含関係ではなく比較不能である。
 
 また §7 で general fixed-\(h\) の typed-thickness boundary、§8 で fixed-window quantitative compatibility、§10.1 で nonlinear witness \(\Delta^*\) を分けて提示する。
 
@@ -272,6 +272,7 @@ L(\mathcal B_h(K))=L
 - Lemma 8.2 は “has a terminal reaching context” ではなく canonical context \(\chi(X)=(u_X,v_X)\) の bound として記述。
 - §4.1 で observed nonterminal を明示的に定義。
 - §10.1 の reviewer が問題視した block は segment に変更。
+- §10.1 の center-marker witness は endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) に統一し、\(P\) の代入可能性を本文内で自己完結に証明した。これにより準同型像は直接 \(\Delta\Delta\) となり、非線形性の議論も簡潔化した。
 - Clark–Eyraud Def. 5 が all strings で書かれている一方、同論文 §6.1 の \(a^+\) と Clark 2013 が nonempty-fragment reading を支持することを本文で明示。
 - Data availability / 回答書の Lean 記述は full formalization と誤解されないよう “parts of the development” に弱めた。
 

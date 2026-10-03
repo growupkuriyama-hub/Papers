@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v87; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference version; the v85 bibliographic source audit is synchronized, while broader synchronization with the English manuscript remains pending.
+- `main.tex` — English major-revision manuscript, internal v88; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference version; the v88 Section 10.1 center-marker correction and the v85 bibliographic source audit are synchronized, while broader synchronization with the English manuscript remains pending.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision.
 
 ## Historical baseline
@@ -41,7 +41,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 
 - The current public archive is `tcs1-v87-formalization-2.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23114558`. The immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 was synchronized against that theorem surface by `V86FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V86.md`.
-- The current v87 source is synchronized by `V87FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V87.md`. A direct v86-to-v87 comparison found 34 theorem/proposition/lemma/corollary environments in each version and no changes to their contents. The later Data availability update records the public Zenodo/GitHub artifact and changes no theorem-facing mathematics.
+- The v87 theorem-facing source is synchronized by `V87FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V87.md`. A direct v86-to-v87 comparison found 34 theorem/proposition/lemma/corollary environments in each version and no changes to their contents. Internal v88 changes only the unnumbered Section 10.1 center-marker comparison argument: it uses the endpoint-complete language $P=\{a^ncb^n:n\ge0\}$, proves its substitutability directly, and simplifies the homomorphic nonlinearity argument. No numbered theorem/proposition/lemma/corollary statement is changed, so the theorem-facing Lean baseline remains v87.
 - The v87 synchronization merge is `cefe7e904fc1e16174761b726008363666fe8b71`. TCS1 Lean CI run #308 passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates.
 
 The manuscript proofs remain self-contained; the Lean development is a reproducibility and verification artifact, not a substitute for the paper proofs.
