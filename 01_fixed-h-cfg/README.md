@@ -39,9 +39,9 @@ for this TCS revision because it changes every page/line locator in the response
 The theorem-facing Lean 4 formalization is maintained separately in
 `growupkuriyama-hub/tcs1-lean-formalization`.
 
-- The immutable historical release is `tcs1-v79-formalization-1.0.0`, archived on Zenodo at DOI `10.5281/zenodo.22939434`.
+- The current public archive is `tcs1-v87-formalization-2.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23114558`. The immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 was synchronized against that theorem surface by `V86FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V86.md`.
-- The current v87 source is now exactly synchronized by `V87FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V87.md`. A direct v86-to-v87 comparison found 34 theorem/proposition/lemma/corollary environments in each version and no changes to any of those environment contents; the v87 edits are proof-exposition clarifications only.
-- The v87 synchronization is merged at `cefe7e904fc1e16174761b726008363666fe8b71`. TCS1 Lean CI run #308 passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates.
+- The current v87 source is synchronized by `V87FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V87.md`. A direct v86-to-v87 comparison found 34 theorem/proposition/lemma/corollary environments in each version and no changes to their contents. The later Data availability update records the public Zenodo/GitHub artifact and changes no theorem-facing mathematics.
+- The v87 synchronization merge is `cefe7e904fc1e16174761b726008363666fe8b71`. TCS1 Lean CI run #308 passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates.
 
 The manuscript proofs remain self-contained; the Lean development is a reproducibility and verification artifact, not a substitute for the paper proofs.
