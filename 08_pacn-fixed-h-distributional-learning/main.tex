@@ -31,7 +31,7 @@ We connect fixed finite-monoid substitutability in grammatical inference with hi
 \end{abstract}
 
 \paragraph{Status.}
-Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. Effective grammar-valued PAC learning and a formal exact-vs-statistical separation theorem remain research tasks.
+Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. Effective grammar-valued PAC learning and sharper quantitative PAC bounds remain research tasks; the fixed-observer exact-vs-statistical separation is proved below.
 
 \section{Setup}
 
@@ -333,12 +333,12 @@ common context fixes every variable \(i_r\) whose \(X_r\) position lies outside
 the holes. It also fixes \(i_0\) whenever at least one of the context-specific
 marker positions \(C,S_1,\ldots,S_{d-1},R\) lies outside the holes.
 
-Consider two such tuples with equal componentwise \(h\)-types. If an interval
-contains at most \(d-1\) variable positions and \(i_0\) is already fixed, equality
-of its \(h\)-type determines all variable values inside that interval, because
-the corresponding subset of the \(a_r\) is linearly independent. For a
-multi-interval occurrence, this applies component by component whenever a
-variable remains in the common context.
+Consider two such tuples with equal componentwise \(h\)-types. Once \(i_0\)
+is known, every component containing at most \(d-1\) variable positions is
+determined by its \(h\)-type, because the corresponding subset of the
+\(a_r\) is linearly independent. Thus all selected variable values are
+recovered component by component unless one single interval contains all
+\(d\) variable positions.
 
 It remains only to justify recovery of \(i_0\) when all context-specific markers
 lie inside the holes. With at least two holes, a nonempty gap must then
@@ -425,21 +425,56 @@ higher-arity sample complexity linearly.
 
 \section{Exact reconstruction versus statistical complexity}
 
-The companion fixed-\(h\) CFG manuscript shows that even for one fixed
-two-element typing, characteristic data for exact set-driven positive-data
-reconstruction cannot in general be bounded polynomially by reduced CFG
-size and ordinary grammar thickness. In contrast, the same observer gives
+The companion fixed-\(h\) CFG manuscript contains an operator-independent
+lower bound for one fixed two-element zero-monoid observer \(h_\circ\).
+Its nested finite targets \(\mathcal T_n^-\subsetneq\mathcal T_n\) have reduced
+CFG representations of polynomial size and ordinary thickness \(O(n)\), while
+every characteristic sample for \(\mathcal T_n\), for any set-driven operator
+having characteristic samples for both targets, has encoded size at least
 \[
-\VC_2\le2.
+  5\cdot 2^n-1.
 \]
-This suggests a separation between exact exposure/reconstruction cost and
-higher-arity statistical dimension. The observation geometries differ:
-positive-data identification receives target strings, while \(PAC_n\)
-observes labelled coordinate slices of a product-domain relation.
+The typed-box theorem gives a qualitatively different complexity statement
+for the incidence-relation view of the very same fixed observer.
 
-A formal separation theorem should instantiate the exact lower-bound family,
-form its incidence relations, and state both conclusions under one fixed
-observer. This remains a current task.
+\begin{theorem}[Fixed-observer observation-geometry separation]
+\label{thm:observation-separation}
+There is a fixed two-element monoid homomorphism \(h_\circ\) such that:
+
+\begin{enumerate}
+\item the incidence-relation class induced by
+\(\mathcal C_{h_\circ}^{\mathrm{cf}}\) satisfies
+\[
+  \VC_2\le2,
+\]
+and is therefore properly \(PAC_2\)-learnable in the
+Chernikov--Towsner framework, with a sample-complexity function depending
+only on \(\eps,\delta\) and the constant dimension bound;
+
+\item no set-driven exact positive-data reconstruction operator having
+characteristic samples throughout
+\(\mathcal C_{h_\circ}^{\mathrm{cf}}\) admits a characteristic-data bound
+polynomial in reduced CFG size and ordinary grammar thickness.  More
+concretely, the companion lower-bound family forces characteristic-sample
+size at least \(5\cdot2^n-1\) while both grammar size and ordinary thickness
+are polynomial in \(n\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part (1) is Corollary~\ref{cor:cfg-upper} with
+\(|h_\circ(\Sigma^+)|\le2\), followed by the finite-\(VC_2\) to proper
+\(PAC_2\) implication.  Part (2) is exactly the set-driven
+ordinary-thickness lower bound of the companion fixed-\(h\) CFG manuscript.
+\end{proof}
+
+Thus under one fixed finite observer, exact positive-data reconstruction can
+require exponentially large characteristic exposure even though the
+higher-arity statistical dimension of the induced incidence class is
+uniformly constant.  There is no contradiction: the observation geometries
+are different.  Exact identification receives positive target strings,
+whereas \(PAC_2\) receives labelled coordinate slices of the
+context--factor incidence relation.
 
 \section{Next problems}
 
@@ -453,9 +488,10 @@ asymptotic exponent.
 relation-valued PAC learner into a computable, preferably polynomial-time,
 grammar-valued learner under explicit representation assumptions.
 
-\item \textbf{Exact-vs-statistical separation.} Combine the fixed
-two-element exact-reconstruction obstruction with the constant \(VC_2\)
-upper bound.
+\item \textbf{Quantitative separation.} Strengthen
+Theorem~\ref{thm:observation-separation} by extracting explicit upper
+sample-complexity bounds for the proper \(PAC_2\) learner and comparing them
+numerically with the exact characteristic-sample lower bound.
 
 \item \textbf{Observer refinement.} Compare the monotonic behavior of
 \(VC_{d+1}\) under typing refinement with exact reconstruction cost.
@@ -484,6 +520,12 @@ structural chain
 together with its comparison to exact reconstruction under the same observer.
 
 \begin{thebibliography}{99}
+
+\bibitem{KuriyamaCFG2026}
+T.~Kuriyama.
+\newblock Distributional learning of context-free languages under fixed finite-monoid typing.
+\newblock arXiv:1409.6247v4, 2026; revised manuscript under major revision at
+\emph{Theoretical Computer Science}.
 
 \bibitem{KT2015}
 T.~Kuriyama and K.~Takeuchi.
