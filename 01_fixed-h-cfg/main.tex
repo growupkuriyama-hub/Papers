@@ -8,6 +8,7 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{propositionstar}{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
@@ -94,9 +95,14 @@ Yoshinaka's hierarchy.
 This separates choosing a useful finite typing from learning once it is
 specified.  More importantly, fixed finite-monoid typing goes beyond a single
 prefix--suffix window while retaining one uniform learning mechanism:
-independent finite features can be combined by a product homomorphism, and
-Sections~\ref{sec:linear}--\ref{sec:boundaries} give regular, nonregular
-linear, and nonlinear context-free examples outside every fixed-window class.
+independent finite features can be combined by a product homomorphism.  This
+compositionality makes $\mathsf{RS}$ closed under intersection and arbitrary
+inverse homomorphism, and regular filtering preserves context-free fixed-$h$
+slices after passing to a product typing.  Yoshinaka's fixed-window hierarchy
+has counterexamples to closure under regular filtering and arbitrary inverse
+homomorphism~\cite[Proposition~1]{yoshinaka2008}.  Sections~\ref{sec:linear}--\ref{sec:boundaries}
+then give regular, nonregular linear, and nonlinear context-free examples
+outside every fixed-window class.
 The same sections also show a boundary: unbounded counter/Dyck behavior can
 force infinitely many contextually distinct factors and therefore cannot be
 captured by any finite typing.  The viewpoint is methodologically related to
@@ -133,9 +139,12 @@ thickness suffices for every fixed prefix--suffix window $(k,\ell)$, and linear 
 under every fixed $h$ admit characteristic data polynomial in linear-grammar
 size.
 
-\item \emph{Expressive position.}  Suitable fixed homomorphisms admit
-regular, nonregular linear, and nonlinear context-free targets outside every
-fixed-window class.  The one-bracket Dyck language lies outside
+\item \emph{Structural and expressive position.}  Product typings make
+$\mathsf{RS}$ closed under intersection and arbitrary inverse homomorphism;
+in particular, regular filtering preserves context-free fixed-$h$ slices.
+This contrasts with the fixed-window hierarchy.  Suitable fixed homomorphisms
+also admit regular, nonregular linear, and nonlinear context-free targets
+outside every fixed-window class.  The one-bracket Dyck language lies outside
 $\mathsf{RS}$, while $\mathsf{RS}\cap\mathrm{CFL}$ is properly contained
 in Clark's congruential family.
 \end{enumerate}
@@ -280,6 +289,72 @@ $\ker(h\times g)=\ker h\cap\ker g$, hence
 $\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$;
 in particular, window information and another finite feature can be combined
 without making the typing target-specific.
+
+\begin{propositionstar}[closure under finite information]
+Let $h:\Sigma^*\to M$ and $g:\Sigma^*\to N$ be finite-monoid
+homomorphisms.
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item If $L\in\mathsf{RS}_h$ and $K\in\mathsf{RS}_g$, then
+$L\cap K\in\mathsf{RS}_{h\times g}$.
+\item If $R=g^{-1}(F)$ is regular and $L\in\Ccf{h}$, then
+$L\cap R\in\Ccf{h\times g}$.
+\item Let $\varphi:\Gamma^*\to\Sigma^*$ be any homomorphism, possibly
+erasing.  Let $E=\{1,\zeta\}$ be the two-element monoid with zero
+$\zeta$, define $e_\varphi(w)=1$ iff $\varphi(w)=\lambda$ and
+$e_\varphi(w)=\zeta$ otherwise, and put
+$\widehat h=(h\circ\varphi)\times e_\varphi$.
+If $L\in\mathsf{RS}_h$, then
+$\varphi^{-1}(L)\in\mathsf{RS}_{\widehat h}$; if moreover
+$L\in\Ccf{h}$, then
+$\varphi^{-1}(L)\in\Ccf{\widehat h}$.
+\end{enumerate}
+\end{propositionstar}
+
+\begin{proof}
+For (i), suppose nonempty $x,y$ have equal $(h\times g)$-type and share a
+context in $L\cap K$.  They then have equal $h$-type and a common context in
+$L$, and equal $g$-type and a common context in $K$.  Hence
+$\D_L(x)=\D_L(y)$ and $\D_K(x)=\D_K(y)$, so
+$\D_{L\cap K}(x)=\D_{L\cap K}(y)$.  Item~(ii) follows from (i),
+Proposition~\ref{prop:regular-auto}, and closure of CFLs under intersection
+with regular languages.
+
+For (iii), $e_\varphi$ is a homomorphism because
+$\varphi(uv)=\lambda$ iff both $\varphi(u)$ and $\varphi(v)$ are empty.
+Let equal-$\widehat h$-type nonempty $x,y$ share a context in
+$\varphi^{-1}(L)$.  If $e_\varphi(x)=e_\varphi(y)=1$, then
+$\varphi(x)=\varphi(y)=\lambda$, so the two factors have identical
+distributions in the inverse image.  Otherwise both images are nonempty,
+have equal $h$-type, and the shared inverse-image context maps to a common
+context of $\varphi(x),\varphi(y)$ in $L$.  Fixed-$h$ substitutability in
+$L$ gives equal distributions there, and pulling contexts back through
+$\varphi$ gives
+$\D_{\varphi^{-1}(L)}(x)=\D_{\varphi^{-1}(L)}(y)$.
+The context-free statement uses closure of CFLs under inverse homomorphism.
+\end{proof}
+
+Yoshinaka~\cite[Proposition~1]{yoshinaka2008} shows that the fixed-window
+hierarchy is not closed under intersection with regular languages or under
+inverse homomorphism in general, although each fixed $(k,\ell)$ class is
+closed under ordinary intersection and under $\lambda$-free inverse
+homomorphism.  Thus product typing gives a structural gain over fixed windows:
+independent finite information, including a regular filter or the erasure
+pattern of a homomorphism, can be absorbed into one finite typing.  We do not
+claim that $\mathsf{RS}$ is exactly the closure of the fixed-window hierarchy
+under these operations.
+
+\paragraph{When is a typing useful?}
+For correctness relative to a target $L$, Definition~\ref{def:hsubst} says
+exactly that $h$ must not identify two nonempty factors that share a context
+but have different distributions.  This adequacy condition is preserved by
+typing refinement, by the monotonicity above.  Lemma~\ref{lem:finite-monoid-obstruction}
+later gives a simple obstruction: an infinite pairwise family of such
+conflicting factors cannot be separated by any finite typing.  Quantitative
+usefulness is a separate issue.  Refinement can enlarge the typed grammar used
+by the reconstruction bound; Remark~\ref{rem:typed-thickness-gap} exhibits an
+exponential source-to-typed thickness gap, whereas
+Sections~\ref{sec:fixed-window-thick} and~\ref{sec:linear} give sufficient
+regimes in which that cost is controlled.
 
 If $\ker h$ restricted to $\Sigma^+$ refines the syntactic congruence
 $\equiv_L$, then $L\in\mathsf{RS}_h$.  The converse already fails for
@@ -1512,7 +1587,13 @@ control this general reconstruction bound.  Ordinary thickness again suffices
 for every fixed prefix--suffix window, while linear fixed-$h$ targets admit a
 grammar-size bound.
 
-The framework contains regular, nonregular linear, and nonlinear
+Structurally, product typings make $\mathsf{RS}$ closed under intersection
+and arbitrary inverse homomorphism, and regular filtering preserves
+context-free fixed-$h$ slices.  This is one concrete advantage over the
+fixed-window hierarchy, which has counterexamples to both regular filtering
+and arbitrary inverse homomorphism.
+
+The framework also contains regular, nonregular linear, and nonlinear
 context-free targets outside every fixed-window class, over
 $\{\uparrow,\downarrow,\#\}$, $\{a,b,c,d,e\}$, and $\{a,b\}$,
 respectively.  Restricting the typing codomain to finite groups already loses
