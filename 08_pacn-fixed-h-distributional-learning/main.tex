@@ -27,11 +27,11 @@
 \maketitle
 
 \begin{abstract}
-We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern, and the resulting bound is sharpened by a rectangular product capacity of the observer. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. The relation to \(PAC_n\) learning requires a directional model audit. Takeuchi's 2020 counterexample invalidates the original full-slice implication \(PAC_2\Rightarrow VC_2<\infty\), while Chernikov--Towsner's 2025 Theorem~6.5 proves the opposite direction, finite \(VC_k\Rightarrow\) proper \(PAC_k\), from their packing lemma. The latter is the only PAC direction used here. Thus the fixed-typing VC bounds still yield proper higher-arity PAC learnability on the countable incidence domains, while the converse/equivalence and the 2015 sample lower bound are not used.
+We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern, and the resulting bound is sharpened by a rectangular product capacity of the observer. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. The relation to \(PAC_n\) learning requires a directional model audit. Takeuchi's 2020 counterexample invalidates the original full-slice implication \(PAC_2\Rightarrow VC_2<\infty\), while Chernikov--Towsner's 2025 Theorem~6.5 proves the opposite direction, finite \(VC_k\Rightarrow\) proper \(PAC_k\), from their packing lemma. The latter gives the full-slice sufficiency direction. For finite or countable product domains we then extend Takeuchi's support-sensitive repair to arbitrary arity and combine it with the 2025 packing theorem, obtaining a repaired equivalence between finite (VC_k) and proper support-(PAC_k) learnability. In this repaired model the Kuriyama--Takeuchi finite-box sample lower bound is valid again.
 \end{abstract}
 
 \paragraph{Status.}
-Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. The finite-VC-to-PAC transfer is taken from Chernikov--Towsner's Theorem~6.5 only; the disputed reverse implication is quarantined. The fixed-observer exact-vs-PAC separation and the equal-size observer VC-capacity separation are both recorded below.
+Exploratory project note. The typed-box upper bound and fan-out-one sharpness construction below are complete arguments. The optimal higher-arity exponent is also established below on a prime-power family of observer sizes. The old full-slice reverse implication remains quarantined, but the support-sensitive countable-domain model is shown to satisfy both directions. The fixed-observer exact-vs-PAC separation and the equal-size observer VC-capacity separation are both recorded below.
 
 \section{Setup}
 
@@ -833,6 +833,158 @@ here.  They remain quarantined until the 2020 counterexample is reconciled
 with the later formulation.
 \end{remark}
 
+
+\subsection{A support-sensitive repair on countable product domains}
+
+Takeuchi's 2020 repair can be extended to arbitrary arity and combined with
+Chernikov--Towsner's sufficiency theorem.  This removes the infinite-domain
+pathology without losing the higher-arity VC characterization.
+
+Let \(k\ge2\) and
+\[
+ X=X_1\times\cdots\times X_k
+\]
+with each \(X_i\) finite or countable.  For a product probability measure
+\(\mu=\mu_1\otimes\cdots\otimes\mu_k\), put
+\[
+ S_i(\mu):=\{a\in X_i:\mu_i(\{a\})>0\},
+ \qquad
+ S_\mu:=\prod_{i=1}^k S_i(\mu).
+\]
+Since the coordinate spaces are countable, \(S_\mu\) has full \(\mu\)-measure.
+For an anchor \(\bar a\in X\), define the support-sensitive slice observation
+\[
+ D_{k,\mu}(\bar a):=D_k(\bar a)\cap S_\mu.
+\]
+For \(k=2\), this is exactly Takeuchi's
+\[
+ D_\mu(x)=\{y\in D(x):\mu(\{y\})>0\}.
+\]
+
+\begin{definition}[Support-sensitive \(PAC_k\)]
+\label{def:support-pac}
+A concept class \(F\subseteq\mathcal P(X)\) is
+\emph{properly support-\(PAC_k\)-learnable} if there is one learning function
+with image in \(F\) which, for every product probability measure \(\mu\),
+learns from the restrictions to unions of the sets
+\(D_{k,\mu}(\bar a)\), with the usual \((\eps,\delta)\) error guarantee and a
+sample bound independent of \(\mu\) and of the target.
+\end{definition}
+
+\begin{theorem}[Repaired higher-arity VC/PAC equivalence on countable domains]
+\label{thm:support-pac-equivalence}
+Let \(k\ge2\) and let each \(X_i\) be finite or countable.  For every
+\(F\subseteq\mathcal P(X_1\times\cdots\times X_k)\), the following are
+equivalent:
+\[
+ \VC_k(F)<\infty
+ \quad\Longleftrightarrow\quad
+ F\text{ is properly support-}PAC_k\text{-learnable}.
+\]
+Moreover, if \(\VC_k(F)\le d\), the upper sample complexity can be bounded by
+a function
+\[
+ N_k(d,\eps,\delta)
+\]
+depending only on \(k,d,\eps,\delta\).  Conversely, if \(\VC_k(F)\ge D\),
+the finite-support argument of Kuriyama--Takeuchi gives
+\[
+ N_{\eps,\delta}
+ \ge
+ D\left(1-\sqrt[k]{2(\eps+\delta)}\right)
+\]
+whenever the right-hand side is positive.
+\end{theorem}
+
+\begin{proof}
+Assume first that \(\VC_k(F)\le d\).  Fix a product measure \(\mu\) and write
+\(S=S_\mu\).  For every sampled anchor \(\bar a\in S\),
+\[
+ D_{k,\mu}(\bar a)=D_k^S(\bar a),
+\]
+the ordinary full coordinate-slice set computed inside the product domain
+\(S\).  Let
+\[
+ F|S:=\{A\cap S:A\in F\}.
+\]
+Restriction cannot increase \(VC_k\), so \(\VC_k(F|S)\le d\).
+Chernikov--Towsner's Theorem~6.5 therefore provides a proper full-slice
+\(PAC_k\) learner for \(F|S\), with a sample bound depending only on
+\(k,d,\eps,\delta\).
+
+The learner can be made uniform over the unknown measure.  Indeed, for
+\(k\ge2\) the domain of one nonempty support-sensitive slice sample recovers
+the whole coordinate support:
+\[
+ \pi_i(D_{k,\mu}(\bar a))=S_i(\mu)
+ \qquad(1\le i\le k).
+\]
+Fix, once and for all, a proper Chernikov--Towsner learner for every possible
+support product \(S\), and fix a section
+\[
+ \sigma_S:F|S\to F
+\]
+choosing one global concept extending each restricted concept.  From the
+observed labelled slice data, recover \(S\), apply the learner for \(F|S\),
+and then apply \(\sigma_S\).  Since \(\mu(S)=1\), this extension does not
+change the error.  The same uniform bound \(N_k(d,\eps,\delta)\) works for
+all \(\mu\).
+
+Conversely, suppose \(\VC_k(F)\ge D\).  Choose a shattered box
+\[
+ A_1\times\cdots\times A_k,\qquad |A_i|=D,
+\]
+and let each \(\mu_i\) be uniform on \(A_i\).  Then
+\(S_\mu=A_1\times\cdots\times A_k\), and the support-sensitive observation
+is exactly the full-slice observation on this finite box.  The
+Kuriyama--Takeuchi finite-box counting argument therefore applies without
+the support-restriction defect identified by Takeuchi in 2020, yielding the
+displayed lower bound.  Letting \(D\) grow shows that infinite
+\(VC_k\)-dimension precludes support-\(PAC_k\) learnability.
+\end{proof}
+
+\begin{corollary}[Takeuchi's 2020 Problem 11]
+\label{cor:takeuchi-problem11}
+For \(k=2\), Theorem~\ref{thm:support-pac-equivalence} supplies the function
+asked for in Takeuchi's Problem~11: every finite- or countable-domain class
+of \(VC_2\)-dimension at most \(d\) is learnable in Takeuchi's repaired
+Definition~10 with a sample bound depending only on
+\((\eps,\delta,d)\).
+\end{corollary}
+
+\begin{corollary}[Repaired \(PAC_{d+1}\) theorem for fixed typing]
+\label{cor:support-pac-fixed-h}
+For the countable incidence domains of this paper,
+\(\Rclass_{f,h}^{(d)}\) is properly support-\(PAC_{d+1}\)-learnable.
+For \(d\ge2\), its sample-complexity parameter may be taken to depend on
+\[
+ \operatorname{rpc}_{d-1}(h)
+ \le \left\lfloor t_h^{1/(d-1)}\right\rfloor,
+\]
+and for \(d=1\) on \(t_h\).
+\end{corollary}
+
+\begin{corollary}[Restored lower bound for the sharp CFG family]
+\label{cor:sharp-support-pac-lower}
+For the sharp family in Proposition~\ref{prop:sharp-cfg}, where
+\(\VC_2=t\), every support-sensitive \(PAC_2\) learner satisfies
+\[
+ N_{\eps,\delta}
+ \ge
+ t\left(1-\sqrt{2(\eps+\delta)}\right)
+\]
+whenever the right-hand side is positive.
+\end{corollary}
+
+\begin{remark}
+Thus the 2020 counterexample does not force us to abandon the
+\(VC_n/PAC_n\) program on formal-language domains.  It identifies the
+correct observation geometry.  On countable products, restricting every
+observed slice to the atomic support restores both directions: the necessity
+argument becomes valid again, while the sufficiency direction is inherited
+from the 2025 packing theorem after restricting to the support.
+\end{remark}
+
 \begin{remark}[Representation versus statistical properness]
 Properness here means that the output relation belongs to the same concept
 class.  It does not yet provide a polynomial-time procedure that outputs a
@@ -962,9 +1114,10 @@ Determine \(\operatorname{rpc}_r(h)\) for natural finite groups, aperiodic
 monoids, and product observers, and identify which pseudovariety properties
 control its asymptotic growth.
 
-\item \textbf{Repaired higher arity.} Determine the correct
-support-sensitive or otherwise repaired \(PAC_n\) definition for \(n>2\),
-and test whether finite \(VC_n\) is sufficient as well as necessary.
+\item \textbf{Quantitative repaired \(PAC_n\).} Extract explicit
+closed-form upper bounds from the Chernikov--Towsner packing proof for the
+support-sensitive learner, and compare them with the restored finite-box
+lower bound.
 \end{enumerate}
 
 \section{Relation to earlier grammatical-inference work}
