@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v101; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v100 English source on 2026-10-04.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v100. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v103; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v103 English source.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v103. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v103 Literature-grounded quantitative limitation
+
+To reduce review risk, the revision removes the post-submission operator-independent ordinary-thickness lower-bound theorem and its level-coded-tree Appendix D. Section 6 now keeps only the direct source-to-typed thickness gap needed for the paper's reconstruction analysis, and explicitly positions the representation-sensitivity issue against Clark--Eyraud (2007), Yoshinaka (2008), and Eyraud--Heinz--Yoshinaka (2016). The abstract, contribution summary, conclusion, Japanese reference translation, and reviewer response are synchronized. The manuscript now has three technical appendices (A--C) and 30 numbered theorem-like environments. No new theorem claim is introduced by this pass.
 
 ## v101 Reviewer-response audit
 
@@ -89,7 +93,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 
 - The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v98 manuscript contains later presentation, notation, source-attribution, and response-consistency revisions; no separate v98 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v98.
+- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v103 manuscript contains later presentation, notation, source-attribution, and response-consistency revisions; the v103 pass also removes the later operator-independent lower-bound construction. No separate v103 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v98.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
 - The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
