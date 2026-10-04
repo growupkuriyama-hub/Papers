@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern, and the resulting bound is sharpened by a rectangular product capacity of the observer. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. The relation to \(PAC_n\) learning requires a directional model audit. Takeuchi's 2020 counterexample invalidates the original full-slice implication \(PAC_2\Rightarrow VC_2<\infty\), while Chernikov--Towsner's 2025 Theorem~6.5 proves the opposite direction, finite \(VC_k\Rightarrow\) proper \(PAC_k\), from their packing lemma. The latter gives the full-slice sufficiency direction. For finite or countable product domains we then extend Takeuchi's support-sensitive repair to arbitrary arity and combine it with the 2025 packing theorem, obtaining a repaired equivalence between finite \(VC_k\) and proper support-\(PAC_k\) learnability. In this repaired model the Kuriyama--Takeuchi finite-box sample lower bound is valid again.
+We connect fixed finite-monoid substitutability in grammatical inference with higher-arity VC dimension and \(PAC_n\) learning. For each arity \(d\), a language induces a \((d+1)\)-ary incidence relation between a sentence context and \(d\) nonempty factors. The fixed-typing substitutability axiom forbids a labelled box pattern, and the resulting bound is sharpened by a rectangular product capacity of the observer. Consequently, if \(h:\Sigma^*\to M\) is fixed and \(t_h=|h(\Sigma^+)|\), then the induced relation class has \(VC_2\)-dimension at most \(t_h\), while for arity \(d\ge2\) the stronger bound \(VC_{d+1}^{d-1}\le t_h\) holds. At fan-out one this bound is sharp, already for finite regular languages. The relation to \(PAC_n\) learning requires a directional model audit. Takeuchi's 2020 counterexample invalidates the original full-slice implication \(PAC_2\Rightarrow VC_2<\infty\), while Chernikov--Towsner's 2025 Theorem~6.5 proves the opposite direction, finite \(VC_k\Rightarrow\) proper \(PAC_k\), from their packing lemma. The latter gives the full-slice sufficiency direction. For finite or countable product domains we then extend Takeuchi's support-sensitive repair to arbitrary arity and combine it with the 2025 packing theorem, obtaining a repaired equivalence between finite \(VC_k\) and proper support-\(PAC_k\) learnability. In this repaired model the Kuriyama--Takeuchi finite-box sample lower bound is valid again; a self-contained averaging proof is included.
 \end{abstract}
 
 \paragraph{Status.}
@@ -997,6 +997,63 @@ learns from the restrictions to unions of the sets
 sample bound independent of \(\mu\) and of the target.
 \end{definition}
 
+\begin{proposition}[Finite-support information lower bound]
+\label{prop:finite-support-lower}
+Let \(F\) shatter a \(k\)-box
+\[
+ A_1\times\cdots\times A_k,\qquad |A_i|=D,
+\]
+and put the uniform product measure on this finite box.  Consider any learner
+whose observations from \(m\) sampled anchors are restricted to the union of
+the support-sensitive coordinate slices through those anchors.  If, for every
+target in \(F\), the learner has error at most \(\eps\) with probability at
+least \(1-\delta\), then
+\[
+ m\ge
+ D\left(1-\sqrt[k]{2(\eps+\delta)}\right)
+\]
+whenever the right-hand side is positive.
+\end{proposition}
+
+\begin{proof}
+It is enough to consider \(m<D\).  Choose one target concept for each of the
+\(2^{D^k}\) traces on the shattered box, and then choose the trace uniformly
+at random.  Also draw the \(m\) anchors independently from the uniform
+product measure.
+
+For coordinate \(i\), let \(U_i\subseteq A_i\) be the set of values that
+appear in the sampled anchors.  Then \(|U_i|\le m\).  The rectangle
+\[
+ W:=(A_1\setminus U_1)\times\cdots\times(A_k\setminus U_k)
+\]
+is completely unobserved by the support-sensitive slice sample and satisfies
+\[
+ |W|\ge(D-m)^k.
+\]
+Conditional on the anchors and on all observed labels, the random target
+labels on \(W\) remain independent unbiased bits.  Whatever hypothesis the
+learner outputs, its conditional expected number of mistakes on \(W\) is
+therefore \(|W|/2\).  Averaging gives
+\[
+ \mathbb E[\operatorname{err}]
+ \ge
+ \frac12\left(\frac{D-m}{D}\right)^k.
+\]
+
+On the other hand, the assumed PAC guarantee for every target implies the
+same guarantee after averaging over the random target.  Since the error is
+always at most \(1\),
+\[
+ \mathbb E[\operatorname{err}]
+ \le \eps+\delta.
+\]
+Combining the inequalities yields
+\[
+ \frac12\left(1-\frac mD\right)^k\le\eps+\delta,
+\]
+which rearranges to the claimed bound.
+\end{proof}
+
 \begin{theorem}[Repaired higher-arity VC/PAC equivalence on countable domains]
 \label{thm:support-pac-equivalence}
 Let \(k\ge2\) and let each \(X_i\) be finite or countable.  For every
@@ -1060,13 +1117,11 @@ Conversely, suppose \(\VC_k(F)\ge D\).  Choose a shattered box
 \[
  A_1\times\cdots\times A_k,\qquad |A_i|=D,
 \]
-and let each \(\mu_i\) be uniform on \(A_i\).  Then
-\(S_\mu=A_1\times\cdots\times A_k\), and the support-sensitive observation
-is exactly the full-slice observation on this finite box.  The
-Kuriyama--Takeuchi finite-box counting argument therefore applies without
-the support-restriction defect identified by Takeuchi in 2020, yielding the
-displayed lower bound.  Letting \(D\) grow shows that infinite
-\(VC_k\)-dimension precludes support-\(PAC_k\) learnability.
+and let each \(\mu_i\) be uniform on \(A_i\).  Then the support-sensitive
+observation is exactly the coordinate-slice observation inside this finite
+support.  Proposition~\ref{prop:finite-support-lower} gives the displayed
+lower bound.  Letting \(D\) grow shows that infinite \(VC_k\)-dimension
+precludes support-\(PAC_k\) learnability.
 \end{proof}
 
 \begin{corollary}[Takeuchi's 2020 Problem 11]
