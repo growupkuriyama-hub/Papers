@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v98; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v98 English source on 2026-10-04.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v98. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v99; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v99 English source on 2026-10-04.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v99. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v99 de la Higuera comparison clarification
+
+The v99 pass corrects the explanatory paragraph after the linear characteristic-data theorem. De la Higuera (1997, Theorem 2) concerns the full representation class of linear grammars. The manuscript now states instead that the present positive result is restricted to the fixed-$h$ substitutable subclass $\mathcal C_h^{\mathrm{lin}}$ and uses the paper's positive-data characteristic-sample notion for $\mathcal B_h$; it therefore makes no polynomial time-and-data claim for the full LIN representation class. The Response to Reviewer 2.3 and the Japanese reference translation are synchronized.
 
 ## v98 Source and response audit
 
