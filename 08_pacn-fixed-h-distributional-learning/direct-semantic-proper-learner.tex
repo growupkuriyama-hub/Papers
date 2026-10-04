@@ -1,0 +1,213 @@
+
+\subsection{A proper learner for the full semantic substitution class}
+\label{subsec:direct-semantic-proper}
+
+The preceding rectangle learner produces a relation, not necessarily the
+incidence relation of any word-language.  At the semantic level this
+defect can be repaired by taking the \emph{least typed-substitutable
+language containing the observed positive words}.  The repair is
+conservative, uses no unknown distribution, and preserves the same
+anchor-sample bound.  It does not, by itself, impose CFG/MCFG
+presentability on the result.
+
+\begin{definition}[Semantic class and positive Horn closure]
+\label{def:semantic-horn}
+Let \(\mathcal S_{f,h}\) be the class of \emph{all} languages
+\(L\subseteq\Sigma^*\) satisfying \((f,h)\)-tuple
+substitutability, without imposing any grammar representation.
+For \(T\subseteq\Sigma^*\) define
+\[
+ \operatorname{Cl}_{f,h}(T)
+ :=
+ \bigcap\{K\in\mathcal S_{f,h}:T\subseteq K\}.
+\]
+Equivalently, \(\operatorname{Cl}_{f,h}(T)\) is the least
+superset of \(T\) closed under the following positive Horn rules,
+for every \(1\le r\le f\):
+\[
+ \frac{E[\vec x],\ E[\vec y],\ F[\vec y]}
+      {F[\vec x]},
+ \qquad
+ h^{(r)}(\vec x)=h^{(r)}(\vec y),
+ \quad E,F\in\mathcal E_r.
+\]
+\end{definition}
+
+\begin{lemma}[Existence and conservativity of closure]
+\label{lem:semantic-horn}
+The class \(\mathcal S_{f,h}\) is closed under arbitrary
+intersections.  Hence \(\operatorname{Cl}_{f,h}(T)\) belongs
+to \(\mathcal S_{f,h}\) and is the least member containing \(T\).
+Moreover,
+\[
+ T\subseteq L\in\mathcal S_{f,h}
+ \quad\Longrightarrow\quad
+ T\subseteq\operatorname{Cl}_{f,h}(T)\subseteq L.
+\]
+\end{lemma}
+\begin{proof}
+Suppose \(\{K_i:i\in I\}\subseteq\mathcal S_{f,h}\), and
+put \(K=\bigcap_iK_i\).  If \(E[\vec x],E[\vec y],F[\vec y]\)
+belong to \(K\), and \(h^{(r)}(\vec x)=h^{(r)}(\vec y)\),
+then those three words belong to each \(K_i\).  The
+substitutability implication in \(K_i\) yields
+\(F[\vec x]\in K_i\) for every \(i\), hence
+\(F[\vec x]\in K\).  The converse implication is obtained
+by interchanging \(\vec x,\vec y\).  Thus \(K\in\mathcal
+S_{f,h}\).  The family of supersets in the definition is
+nonempty because \(\Sigma^*\in\mathcal S_{f,h}\).
+All claims now follow from the intersection definition.
+\end{proof}
+
+\begin{theorem}[Distribution-free proper semantic \(PAC_{d+1}\)]
+\label{thm:direct-proper-semantic-pac}
+Let \(1\le d\le f\), \(h:\Sigma^*\to M\) be fixed, and set
+\[
+ t_h:=|h(\Sigma^+)|,\qquad Q:=t_h^d.
+\]
+On the countable incidence domain
+\(\mathcal E_d\times(\Sigma^+)^d\), there is a single
+distribution-independent, one-sided, \emph{proper} learner
+for the concept class
+\[
+ \{R_L^{(d)}:L\in\mathcal S_{f,h}\}
+\]
+under arbitrary product probability measures.  It works
+both with the original full-coordinate-slice observation
+and with support-sensitive slices.
+
+Specifically, after \(m\) i.i.d.\ anchors, let \(P_m\)
+be the set of all words \(E[\vec x]\) whose positive labels
+are revealed by the observed slices, and output
+\[
+ \widehat L_m:=\operatorname{Cl}_{f,h}(P_m),
+ \qquad
+ \widehat R_m:=R_{\widehat L_m}^{(d)}.
+\]
+Then for every \(L\in\mathcal S_{f,h}\),
+\[
+ \widehat L_m\subseteq L
+ \quad\text{and}\quad
+ \Pr\!\left[
+ \mu(R_L^{(d)}\triangle\widehat R_m)>\eps
+ \right]\le\delta
+\]
+whenever
+\[
+ m\ge
+ \left\lceil\frac{4Q}{e\eps}\right\rceil
+ \left\lceil\log_2\frac1\delta\right\rceil,
+ \qquad 0<\eps,\delta<1.
+\]
+\end{theorem}
+
+\begin{proof}
+The class closure and the inclusion
+\(\widehat L_m\subseteq L\) follow from
+Lemma~\ref{lem:semantic-horn}, since all positive observed
+words belong to \(L\).  In particular the learner has
+no false positives and its hypothesis is a member of the
+\emph{same semantic language class} \(\mathcal S_{f,h}\).
+
+It remains to establish the distribution-free risk
+bound.  Restrict attention to the product \(S\) of the
+atomic coordinate supports, which has full measure.
+For any type \(\tau\), the positive incidence relation
+restricted to \(S\) has the complete-rectangle decomposition
+\[
+ R_L^{(d)}|_{\tau,S}
+ =\mathop{\dot\bigcup}_{j\in J_\tau}C_{\tau,j}\times
+ B_{\tau,j}
+\]
+from Lemma~\ref{lem:typed-rectangles}.
+
+Suppose that one of these rectangles is \emph{captured}:
+some sampled context \(E_s\) belongs to \(C_{\tau,j}\)
+and some sampled first-factor value \(a\) belongs to
+the first-coordinate projection \(\pi_1(B_{\tau,j})\).
+Choose \(\vec y\in B_{\tau,j}\) with \(y_1=a\).
+For every \((E,\vec x)\in C_{\tau,j}\times B_{\tau,j}\)
+on the support, the full context slice at \(E_s\)
+reveals the two positive words
+\[
+ E_s[\vec x],\quad E_s[\vec y]\in P_m.
+\]
+The first-factor slice at \(a=y_1\) reveals
+\[
+ E[\vec y]\in P_m.
+\]
+Since \(\vec x,\vec y\) share the type \(\tau\), the
+Horn rule in Definition~\ref{def:semantic-horn}
+therefore implies
+\[
+ E[\vec x]\in\operatorname{Cl}_{f,h}(P_m)
+              =\widehat L_m.
+\]
+Thus \(\widehat R_m\) contains \emph{every captured
+rectangle}, while still satisfying
+\(\widehat R_m\subseteq R_L^{(d)}\).
+
+For a batch of \(n\) anchors the probability of missing
+rectangle \(j\) is bounded by
+\[
+ e^{-n p_{\tau,j}}+e^{-n q_{\tau,j}},
+ \quad
+ p_{\tau,j}:=\mu_0(C_{\tau,j}),
+ \quad
+ q_{\tau,j}:=(\otimes_{i=1}^d\mu_i)(B_{\tau,j}).
+\]
+Indeed, the probability that the sampled first-factor
+value lies in \(\pi_1(B_{\tau,j})\) is at least
+\(q_{\tau,j}\).  The typewise context sides are
+pairwise disjoint, the tuple sides are disjoint
+globally, and there are at most \(Q\) types.
+Using \(z e^{-nz}\le (en)^{-1}\) gives
+\[
+ \mathbb E[\mu(R_L^{(d)}\setminus\widehat R_n)]
+ \le\frac{2Q}{en}.
+\]
+For \(n=\lceil4Q/(e\eps)\rceil\), Markov's inequality
+makes the failure probability at most \(1/2\).
+
+Finally partition the \(m\) anchors into
+\(b=\lceil\log_2(1/\delta)\rceil\) independent
+batches of size \(n\).
+The closure of all observed positives contains
+the closure from \emph{each} batch by monotonicity.
+Consequently its one-sided error is no larger than
+the error of any individual batch.  All batches
+must fail for the final hypothesis to fail.
+Independence gives probability at most \(2^{-b}\le\delta\).
+The proof is independent of any theorem of
+Chernikov--Towsner.
+\end{proof}
+
+\begin{corollary}[A precise grammar-subclass consequence]
+\label{cor:grammar-subclass-semantic-proper}
+For targets in the fixed-\(h\) CFG class
+\(\mathcal C_h^{\mathrm{cf}}\) and the fixed-\(h\)
+MCFG class \(\mathcal C_{f,h}^{\mathrm{mcf}}\),
+the same procedure gives a one-sided
+support-\(PAC_{d+1}\) predictor with the displayed
+sample bound.  Its output is proper with respect to
+\(\mathcal S_{f,h}\), but is \emph{not} asserted to lie
+in the target grammar-representable subclass.
+\end{corollary}
+
+\begin{remark}[What this does and does not resolve]
+\label{rem:semantic-vs-grammar-proper}
+The direct semantic theorem closes a logical gap in the
+relation-only output of
+Theorem~\ref{thm:direct-improper-pac}: the output is now a
+\emph{genuine word-language} and obeys all typed
+substitutability axioms simultaneously, in every arity
+\(1,\ldots,f\).  It remains a set-theoretic construction
+from entire labelled slices.  We do not claim that the
+closure \(\operatorname{Cl}_{f,h}(P_m)\) always has a
+finite CFG or MCFG presentation, or that its representation
+can be computed effectively from finitely encoded data.
+Consequently the existence of a proper, effective
+\(\mathcal C_h^{\mathrm{cf}}\)- or
+\(\mathcal C_{f,h}^{\mathrm{mcf}}\)-valued PAC learner
+is still an open problem.
+\end{remark}
