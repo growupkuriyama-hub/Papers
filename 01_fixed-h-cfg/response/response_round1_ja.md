@@ -259,7 +259,7 @@ L(\mathcal B_h(K))=L
 # 今回の round-2 precheck で追加した修正
 
 - §4.2 に Clark–Eyraud SGL Algorithm 2 と Yoshinaka \((k,\ell)\)-SGL Algorithm 1 と同型の conservative wrapper であることを明記。
-- §4.2 に stabilized grammar が presentation order に依存しうることを明記。査読者の \(a^ncb^n\) 例は order-dependence の証明としては使わず、batch grammar を毎回再計算すると構文的に安定しないことの例として位置づける、と回答書でも明確化。
+- §4.2 の学習器の説明中に、独立した見出しを設けず stabilized grammar の提示順序依存性を短く記述。査読者の \(a^ncb^n\) 例は order-dependence の証明としては使わず、batch grammar を毎回再計算すると構文的に安定しないことの例として位置づける、と回答書でも明確化。
 - 新 §7 typed thickness / Prop. 7.3 を response letter の Overview と Reviewer 2 回答に追加。
 - fixed-window を §8、linear を §9、boundary を §10 とする現行 numbering に response letter を同期。
 - 本 preflight では本文をさらに編集したため、response letter の page / numbered-line locator は一旦「final frozen PDF から再生成」に戻した。structural locator は維持し、提出直前の freeze 後に全 locator を再付与する。
