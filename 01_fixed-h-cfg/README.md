@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v91; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v91 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
+- `main.tex` — English major-revision manuscript, internal v92; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v92 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision; final PDF page/line locators remain to be regenerated after freeze.
 
 ## Historical baseline
@@ -16,6 +16,10 @@
 - SHA-256 of that historical source: `fcdcff7fc09140e7f3e83982d6cd57fa297f30ece0bc607f7f7859bb91c71b0d`.
 
 The historical file is preserved as an immutable archival baseline and should not be edited in place.
+
+## v92 SGL motivation inline
+
+In Section 4.2, the footnote illustrating syntactic instability of naive batch rebuilding with the center-marker language was folded into the running prose and joined to the conservative SGL wrapper motivation, retaining the Eyraud--Heinz--Yoshinaka Appendix citation. This removes one footnote in both English and Japanese without changing any theorem, proof, or citation key. The Response to Reviewers remains applicable as written.
 
 ## v91 Order-dependence compression
 
