@@ -1,0 +1,202 @@
+
+\subsection{Grammar-proper PAC for finite targets}
+\label{subsec:finite-target-proper}
+
+The semantic closure need not have a known finite CFG or
+MCFG presentation when the target is infinite.
+For a finite target, however, semantic properness
+automatically upgrades to \emph{grammar-subclass}
+properness and admits a terminating saturation
+procedure on an explicit finite positive list.
+
+\begin{theorem}[Finite-target proper grammar PAC]
+\label{thm:finite-target-proper-pac}
+Fix \(f\ge1\) and \(h:\Sigma^*\to M\), and
+let \(1\le d\le f\) and \(q=|h(\Sigma^+)|\).
+For the class
+\[
+ \mathcal S^{\mathrm{fin}}_{f,h}
+ :=\{L\subseteq\Sigma^*:L\text{ finite and }
+             (f,h)\text{-tuple-substitutable}\},
+\]
+there exists a single one-sided \emph{proper}
+support-\(PAC_{d+1}\) learner, valid also for
+original full coordinate slices, which outputs a
+finite regular word-language
+\[
+ \widehat L_m\in\mathcal S^{\mathrm{fin}}_{f,h},
+ \qquad \widehat L_m\subseteq L,
+\]
+with
+\[
+ m\ge
+ \left\lceil\frac{4q^d}{e\eps}\right\rceil
+ \left\lceil\log_2\frac1\delta\right\rceil
+\]
+sufficient for the \((\eps,\delta)\) guarantee.
+In particular, for finite targets in the fixed-\(h\)
+CFG and fixed-\(h\) MCFG classes, the learner is
+proper in those respective \emph{grammar} classes:
+every output is a finite regular language, hence
+has a CFG and a fan-out-one MCFG presentation.
+
+Given an \emph{explicit finite list} of all positive
+word labels seen on the observed slices, the output
+grammar is constructible by a terminating
+finite-rule saturation algorithm, without knowing
+the target size or maximum word length.
+This computational claim assumes that the finite
+positive list is supplied in complete form; it does
+not assert that a membership oracle for infinite
+labelled slices reveals the end of that list in
+finite time.
+\end{theorem}
+
+\begin{proof}
+Let \(L\in\mathcal S^{\mathrm{fin}}_{f,h}\)
+be the unknown target.  The set \(P_m\) of
+positive words extracted from any finite number
+of observed coordinate slices is finite:
+each \(w\in L\) has only finitely many
+arity-\(d\) decompositions \((E,\vec x)\)
+with \(E[\vec x]=w\), and \(L\) itself is
+finite.  Define
+\[
+ \widehat L_m:=\operatorname{Cl}_{f,h}(P_m).
+\]
+By Lemma~\ref{lem:semantic-horn},
+\[
+ P_m\subseteq\widehat L_m\subseteq L,
+ \qquad\widehat L_m\in\mathcal S_{f,h}.
+\]
+Since \(L\) is finite, \(\widehat L_m\) is finite.
+Every finite language is regular and therefore
+has a finite CFG and a fan-out-one MCFG
+presentation.  This proves both versions of
+properness claimed in the theorem.  The PAC
+risk bound follows unchanged from
+Theorem~\ref{thm:direct-proper-semantic-pac}.
+
+For the terminating algorithm, initialize the
+finite working set \(T:=P_m\).  Enumerate every
+arity \(1\le r\le f\), every two factor tuples
+\(\vec x,\vec y\in(\Sigma^+)^r\) with equal
+componentwise \(h\)-type, and contexts
+\(E,F\in\mathcal E_r\) for which
+\[
+ E[\vec x],\ E[\vec y],\ F[\vec y]\in T.
+\]
+Add every missing conclusion \(F[\vec x]\)
+to \(T\), and repeat until a complete pass
+adds no new word.
+
+Each pass is finite: all participating words
+are finite, and each admits only finitely
+many factor/context decompositions.
+Every generated word belongs to \(L\),
+by induction using the Horn rules and
+the target's substitutability.
+As \(L\) is finite, at most \(|L|-|P_m|\)
+genuinely new words can be added.  Hence
+saturation terminates, with final set exactly
+\(\operatorname{Cl}_{f,h}(P_m)\).
+Output the finite grammar
+\[
+ S\longrightarrow w
+ \qquad(w\in T).
+\]
+This is a proper finite grammar and uses
+only \(f,h\), and the supplied positive list.
+\end{proof}
+
+\begin{proposition}[The forced-positive version space]
+\label{prop:forced-positive-version-space}
+Let \(\mathcal O\) be any realizable
+collection of labelled full or support-sensitive
+slice observations, and let \(P(\mathcal O)\)
+be the set of words occurring at positive
+observed coordinates.  Consider all semantic
+targets in \(\mathcal S_{f,h}\) consistent
+with every positive and negative observed label.
+Then
+\[
+ \bigcap_{\substack{K\in\mathcal S_{f,h}\\
+                   K\text{ agrees with }\mathcal O}}
+  K
+ =\operatorname{Cl}_{f,h}(P(\mathcal O)).
+\]
+Thus the Horn closure describes \emph{exactly}
+the word memberships logically forced by the
+observed labelled slices; negative labels
+do not force additional positive words.
+\end{proposition}
+
+\begin{proof}
+Every consistent \(K\) contains \(P(\mathcal O)\),
+so by minimality it contains
+\(H:=\operatorname{Cl}_{f,h}(P(\mathcal O))\).
+Conversely, realizability provides a target
+\(L\in\mathcal S_{f,h}\) agreeing with the
+observations.  By conservativity
+\(H\subseteq L\).  Every observed positive
+word lies in \(H\) by construction, and no
+observed negative word can lie in \(H\),
+since it is absent from \(L\).
+Thus \(H\) itself agrees with all observed
+labels, belongs to \(\mathcal S_{f,h}\),
+and occurs among the \(K\) in the
+intersection.  The asserted equality follows.
+\end{proof}
+
+\begin{example}[Finite seeds can have infinite closure]
+\label{ex:finite-seed-infinite-closure}
+The finite-target assumption above cannot
+simply be dropped from the termination proof.
+Take \(\Sigma=\{a\}\), trivial typing \(h\),
+\(f=1\), and
+\[
+ P=\{a^2,a^3,a^4\}.
+\]
+With \(E=a\Box\), the words
+\(E[a]=a^2\) and \(E[a^2]=a^3\)
+are both in \(P\).
+The Horn rule with \(F=\Box\) and \(F[a^2]=a^2\)
+forces \(a\).  Reversing the same factor
+pair, if \(a^n\) is present for \(n\ge4\)
+and \(F=a^{n-1}\Box\), then \(F[a]=a^n\)
+forces \(F[a^2]=a^{n+1}\).
+Induction yields
+\[
+ \operatorname{Cl}_{1,h}(P)=a^+.
+\]
+The reverse inclusion holds because \(a^+\)
+is trivially \(h\)-substitutable and
+contains \(P\).  Hence a finite seed need
+not have finite closure, even when its
+closure happens to be regular.
+
+Likewise, the naive finite truncation of
+\(a^+\) at length two,
+\(\{a,a^2\}\), is \emph{not}
+trivially \(h\)-substitutable:
+the factors \(a\) and \(a^2\)
+share the empty context, but their
+distributions differ at \(a\Box\).
+Thus grammar-properness for infinite
+targets cannot be obtained merely by
+truncating the semantic hypothesis.
+\end{example}
+
+\begin{remark}[Exact scope]
+The finite-target theorem does not yield
+an effective proper learner for
+arbitrary infinite fixed-\(h\)
+CFG/MCFG targets.  Nor does it collapse
+the distinction between PAC anchor
+complexity and finite-bit access to
+an infinite labelled slice.  It does,
+however, give a uniform, target-size
+independent sample bound and a concrete
+finite CFG/MCFG construction in every
+finite-target instance.
+\end{remark}
