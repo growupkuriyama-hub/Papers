@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v99; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v99 English source on 2026-10-04.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v99. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v100; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v100 English source on 2026-10-04.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v100. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v100 Section consolidation and final exposition cleanup
+
+The v100 pass folds the former standalone complexity section into Section 5, reducing the main-text section count from 11 to 10 while leaving the four appendices as repositories for displaced technical proofs. It also removes redundant productivity/reachability qualifiers from Appendix A.1, makes the conjunction spacing in $\mathcal E(x)$ explicit, rewrites the ordinary-thickness lower-bound theorem statement as one sentence, removes an abstract-level forward reference to an undefined refinement parameter, and repairs the occurrence-recognition argument in Appendix D by using bracket matching directly rather than an unstated induction hypothesis. English, Japanese, and the reviewer-response numbering are synchronized.
 
 ## v99 de la Higuera comparison clarification
 
