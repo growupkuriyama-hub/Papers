@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v94; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v94 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
+- `main.tex` — English major-revision manuscript, internal v95; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v95 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision; final PDF page/line locators remain to be regenerated after freeze.
 
 ## Historical baseline
@@ -16,6 +16,10 @@
 - SHA-256 of that historical source: `fcdcff7fc09140e7f3e83982d6cd57fa297f30ece0bc607f7f7859bb91c71b0d`.
 
 The historical file is preserved as an immutable archival baseline and should not be edited in place.
+
+## v95 Display-math editorial pass
+
+Reviewed all standalone display equations in the English main manuscript and Japanese reference translation. Converted 22 English and 32 Japanese unnecessary displays to inline math, preserving multi-line grammars, long or structurally important definitions and inequalities, and all numbered/labeled equations. The ordinary-thickness lower-bound theorem has smoother prose around its inline target identities. Claims, equation labels, theorem numbers, bibliography, and proofs are unchanged.
 
 ## v94 Explicit shortcut grammar
 
