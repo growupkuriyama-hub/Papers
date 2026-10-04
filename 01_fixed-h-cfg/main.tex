@@ -39,9 +39,9 @@ set-driven reconstruction operator that recovers every context-free
 $\sim_h$-substitutable target exactly from finitely many positive witnesses,
 and a conservative sequential learner that identifies every nonempty such
 target in the limit; reconstruction and updates take polynomial time.  The
-size of the canonical witnesses is controlled by a finite target-side
-refinement parameter introduced later, and this parameter can be exponentially
-larger than ordinary grammar thickness.  For one fixed two-element typing, no
+size of the canonical witnesses is controlled by the shortest yields obtained
+after target nonterminals are split according to their finite $h$-values; these
+lengths can be exponentially larger than ordinary grammar thickness.  For one fixed two-element typing, no
 set-driven reconstruction operator valid for the whole fixed-$h$ class admits
 characteristic data bounded polynomially in reduced CFG size and ordinary
 grammar thickness.  By contrast, such characteristic data
@@ -540,7 +540,7 @@ before $T$, every hypothesis after the first rebuild contains this
 nonterminal.  Thus the two texts yield different stabilized grammars
 for the same target.
 
-\section{Completeness via Yield-Typed Refinement and Finite Witnesses}
+\section{Finite Witnesses, Exact Reconstruction, and Complexity}
 \label{sec:typing}
 
 
@@ -763,7 +763,7 @@ forces a rebuild from an accumulated sample that already contains the
 characteristic data.  The proof above spells out this stabilization argument
 for $\mathcal B_h$.
 
-\section{Complexity of the Reconstruction Step}
+\subsection{Complexity of the reconstruction step}
 \label{sec:complexity}
 
 \begin{theorem}\label{thm:poly-build}
@@ -1020,8 +1020,8 @@ See Appendix~\ref{app:level-coded-substitutability}.
 \begin{theorem}[set-driven ordinary-thickness lower bound]
 \label{thm:ordinary-thickness-lower}
 For the fixed homomorphism $h_\circ$ above, there is a polynomial $p$
-such that for every $n\ge1$ there are reduced CFGs $R_n,R_n^-$.
-With $\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$, they satisfy
+such that for every $n\ge1$ there are reduced CFGs $R_n,R_n^-$ which, with
+$\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$, satisfy
 $L(R_n)=\mathcal T_n$, $L(R_n^-)=\mathcal T_n^-$, and
 \[
  \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},\qquad
@@ -1452,7 +1452,8 @@ For nonempty $x$, define
 \[
  \mathcal E(x):=
  \{q\in\mathbb Z:
- q+\underline\beta(x)\ge0\ \text{and} q+\eta=0\ \text{for every height $\eta$ of an internal $ba$ in $x$}\}.
+ q+\underline\beta(x)\ge0\quad\text{and}\quad
+ q+\eta=0\ \text{for every height $\eta$ of an internal $ba$ in $x$}\}.
 \]
 
 \begin{proposition}[a nonlinear fixed-$h_\star$ target]
@@ -1762,11 +1763,11 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-When $k+\ell=0$, $h_{0,0}$ is constant on $\Sigma^+$, so a productive typed
-nonterminal $A_\mu$ has the same nonempty yields as its underlying nonterminal
-$A$ and hence $|\omega(A_\mu)|\le\tau_G$.
+When $k+\ell=0$, $h_{0,0}$ is constant on $\Sigma^+$, so a non-start typed
+symbol $A_\mu$ of $\widetilde G$ has the same nonempty yields as its
+underlying nonterminal $A$ and hence $|\omega(A_\mu)|\le\tau_G$.
 
-Assume $k+\ell>0$ and let $A_\mu$ be productive.  If $\mu$ is a short-word
+Assume $k+\ell>0$.  If $\mu$ is a short-word
 element of $M_{k,\ell}$, then every word of type $\mu$ is that very word, of
 length $<k+\ell$, and the required bound is immediate.  It remains to consider a
 long-word summary element $\mu=\langle p,q\rangle$.  Choose any derivation
@@ -1796,9 +1797,10 @@ still has prefix $p$ and suffix $q$, and therefore has the same
 $h_{k,\ell}$-type $\mu$, while
 $|w'|\le (k+\ell)+(2(k+\ell)-1)N\tau_G$.
 By the same yield-type annotation used in
-Proposition~\ref{prop:typed-core}, this derivation lifts to
-$A_\mu\Rightarrow_{\widetilde G}^*w'$; since $A_\mu$ is reachable and the tree
-is successful, all typed symbols on it survive trimming.  Therefore $w'$ is
+Proposition~\ref{prop:typed-core}, the derivation lifts in the untrimmed
+yield-typed grammar.  Because $A_\mu$ belongs to the reduced refinement
+$\widetilde G$ and the derivation is successful, every typed symbol on the
+annotated tree survives trimming.  Therefore $w'$ is
 a typed yield of $A_\mu$, and the shortlex-minimal typed yield $\omega(A_\mu)$ obeys
 the same length bound.
 \end{proof}
@@ -1978,13 +1980,15 @@ that in a valid serialization, every literal occurrence of either $s_i$ or
 $b_i$ is exactly the body of a level-$i$ parsed node.  This is immediate for
 $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$, because it contains no brackets
 and its zero run records $i$, and it is immediate for $b_0$.  For $i\ge1$,
-the first $z_{i-1}$ in a literal occurrence of
-$b_i=z_{i-1}z_{i-1}$ is, by induction, a level-$(i-1)$ parsed subtree.
-It cannot be the root because a second $z_{i-1}$ follows, and it cannot be a
-right child because the next symbol after a right child would close its
-parent.  It is therefore the left child of a level-$i$ binary node, and
-uniqueness of the remaining level-$(i-1)$ parse forces the following
-$z_{i-1}$ to be its right sibling.  Thus the replacement
+consider a literal occurrence
+$b_i=z_{i-1}z_{i-1}$.  Each word $z_{i-1}$ starts with $\mathtt l$, ends
+with its matching $\mathtt r$, and has positive bracket balance at every
+proper prefix.  Hence bracket matching in the unique parse forces the first
+occurrence of $z_{i-1}$ to be exactly one parsed subtree; its shape identifies
+that subtree as level $i-1$.  It cannot be a right child, because then its
+parent's closing $\mathtt r$ would occur before the second $z_{i-1}$.
+Therefore it is the left child of a level-$i$ binary node, and the immediately
+following $z_{i-1}$ is forced to be its right sibling.  Thus the replacement
 $s_i\leftrightarrow b_i$ can be performed precisely at a level-$i$ node and
 preserves membership in $\mathcal T_n$.
 
