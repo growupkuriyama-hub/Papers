@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v92; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v92 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
+- `main.tex` — English major-revision manuscript, internal v93; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v93 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision; final PDF page/line locators remain to be regenerated after freeze.
 
 ## Historical baseline
@@ -16,6 +16,10 @@
 - SHA-256 of that historical source: `fcdcff7fc09140e7f3e83982d6cd57fa297f30ece0bc607f7f7859bb91c71b0d`.
 
 The historical file is preserved as an immutable archival baseline and should not be edited in place.
+
+## v93 Typed-thickness exposition
+
+Section 7's exponential source-to-typed thickness gap remark now explicitly explains why the untyped grammar has ordinary thickness 1 and why the type-1 branch must generate words of length 2^n. It links the exponential gap to the failure of polynomial bounds in grammar size and ordinary thickness, while preserving the limitation to full-refinement witnesses. Both language versions are synchronized; the response letter needs no change in numbering or substance.
 
 ## v92 SGL motivation inline
 
