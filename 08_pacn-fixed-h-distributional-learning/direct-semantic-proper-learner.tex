@@ -95,7 +95,9 @@ Then for every \(L\in\mathcal S_{f,h}\),
 whenever
 \[
  m\ge
- \left\lceil\frac{4Q}{e\eps}\right\rceil
+ \left\lceil
+ \frac{2}{e\eps}\left(1+\frac{Q}{d}\right)
+ \right\rceil
  \left\lceil\log_2\frac1\delta\right\rceil,
  \qquad 0<\eps,\delta<1.
 \]
@@ -123,16 +125,16 @@ from Lemma~\ref{lem:typed-rectangles}.
 
 Suppose that one of these rectangles is \emph{captured}:
 some sampled context \(E_s\) belongs to \(C_{\tau,j}\)
-and some sampled first-factor value \(a\) belongs to
-the first-coordinate projection \(\pi_1(B_{\tau,j})\).
-Choose \(\vec y\in B_{\tau,j}\) with \(y_1=a\).
+and, for at least one coordinate \(i\), some sampled
+factor value \(a\) belongs to \(\pi_i(B_{\tau,j})\).
+Choose \(\vec y\in B_{\tau,j}\) with \(y_i=a\).
 For every \((E,\vec x)\in C_{\tau,j}\times B_{\tau,j}\)
 on the support, the full context slice at \(E_s\)
 reveals the two positive words
 \[
  E_s[\vec x],\quad E_s[\vec y]\in P_m.
 \]
-The first-factor slice at \(a=y_1\) reveals
+The \(i\)-th factor slice at \(a=y_i\) reveals
 \[
  E[\vec y]\in P_m.
 \]
@@ -147,27 +149,39 @@ Thus \(\widehat R_m\) contains \emph{every captured
 rectangle}, while still satisfying
 \(\widehat R_m\subseteq R_L^{(d)}\).
 
-For a batch of \(n\) anchors the probability of missing
-rectangle \(j\) is bounded by
+For a batch of \(n\) anchors put
 \[
- e^{-n p_{\tau,j}}+e^{-n q_{\tau,j}},
- \quad
- p_{\tau,j}:=\mu_0(C_{\tau,j}),
- \quad
- q_{\tau,j}:=(\otimes_{i=1}^d\mu_i)(B_{\tau,j}).
+ p_{\tau,j}:=\mu_0(C_{\tau,j}),\qquad
+ q_{\tau,j}:=(\otimes_{i=1}^d\mu_i)(B_{\tau,j}),
 \]
-Indeed, the probability that the sampled first-factor
-value lies in \(\pi_1(B_{\tau,j})\) is at least
-\(q_{\tau,j}\).  The typewise context sides are
-pairwise disjoint, the tuple sides are disjoint
-globally, and there are at most \(Q\) types.
-Using \(z e^{-nz}\le (en)^{-1}\) gives
+and
+\[
+ c_{i,\tau,j}:=\mu_i(\pi_i(B_{\tau,j})).
+\]
+Then \(c_{i,\tau,j}\ge q_{\tau,j}\) for every \(i\).
+Exactly as in Theorem~\ref{thm:direct-improper-pac},
+the probability of missing the rectangle is bounded by
+\[
+ e^{-n p_{\tau,j}}
+ +\exp\!\left(-n\sum_{i=1}^d c_{i,\tau,j}\right)
+ \le e^{-n p_{\tau,j}}+e^{-ndq_{\tau,j}}.
+\]
+The tuple sides are disjoint globally, so their masses
+sum to at most \(1\); the context sides are disjoint
+within each of the at most \(Q\) tuple types, so their
+masses sum to at most \(Q\).  Thus
 \[
  \mathbb E[\mu(R_L^{(d)}\setminus\widehat R_n)]
- \le\frac{2Q}{en}.
+ \le\frac{1+Q/d}{en}.
 \]
-For \(n=\lceil4Q/(e\eps)\rceil\), Markov's inequality
-makes the failure probability at most \(1/2\).
+For
+\[
+ n=
+ \left\lceil
+ \frac{2}{e\eps}\left(1+\frac{Q}{d}\right)
+ \right\rceil,
+\]
+Markov's inequality makes the failure probability at most \(1/2\).
 
 Finally partition the \(m\) anchors into
 \(b=\lceil\log_2(1/\delta)\rceil\) independent
