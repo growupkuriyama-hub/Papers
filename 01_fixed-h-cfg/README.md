@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v104; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v104 English source.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v104. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v105; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v105 English source.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v105. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v105 Round-2 preflight synchronization
+
+The v105 pass incorporates the final preflight corrections identified after the v104 reviewer-response audit. Proposition 3.1 (regular languages via finite monoids) is moved before its first use, the finite-information closure result is promoted from an unnumbered statement to Proposition 3.2, and the fixed-window correspondence becomes Proposition 3.3. The Yoshinaka (2008) comparison now distinguishes the full `(k,l)`-substitutable class from its context-free subfamily and points to Theorem 9.2 as the manuscript's own regular-filter counterexample. The doubling-family attribution is corrected to Clark--Eyraud Example 2 and Eyraud--Heinz--Yoshinaka Example 2.3, with de la Higuera Theorem 3 described as a related variant. The optional `L_x` comparison is removed, the nonlinear `Delta^*` substitutability proof is made explicit at both factor boundaries, and the pushdown connection is stated as an open direction. The Japanese reference translation and response letter are synchronized with these changes. The revised English manuscript has 31 numbered theorem-like environments and compiles to 22 pages under the current preamble.
 
 ## v104 R2.1 structural-closure response
 
@@ -97,7 +101,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 
 - The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v104 manuscript contains later presentation, notation, source-attribution, and response-consistency revisions; v103 removed the later operator-independent lower-bound construction and v104 adds only an unnumbered closure consequence of the existing product-typing framework. No separate v104 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v104.
+- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v105 manuscript contains later presentation, notation, source-attribution, numbering, and response-consistency revisions; v103 removed the later operator-independent lower-bound construction, v104 added the product-typing closure argument, and v105 numbers that result, tightens the nonlinear boundary proof, and removes the optional `L_x` comparison. No separate v105 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v105.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
 - The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
