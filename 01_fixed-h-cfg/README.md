@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v103; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v103 English source.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v103. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v104; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v104 English source.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v104. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v104 R2.1 structural-closure response
+
+The v104 pass answers Reviewer 2.1 with a low-risk structural consequence of the existing product-typing framework rather than a new large theorem. An unnumbered proposition in Section 3 proves closure of `RS` under intersection and arbitrary inverse homomorphism, and shows that regular filtering preserves context-free fixed-`h` slices after passing to a product typing. This is contrasted explicitly with Yoshinaka (2008, Proposition 1), whose fixed-window hierarchy has counterexamples to closure under regular filtering and arbitrary inverse homomorphism. Section 3 also separates correctness of a typing (it must separate shared-context factors with unequal distributions) from quantitative efficiency (typed-thickness control). The English manuscript, Japanese reference translation, and R2.1 response are synchronized. The proposition is intentionally unnumbered, so downstream theorem numbering remains unchanged and the manuscript still has 30 numbered theorem-like environments.
 
 ## v103 Literature-grounded quantitative limitation
 
@@ -93,7 +97,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 
 - The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v103 manuscript contains later presentation, notation, source-attribution, and response-consistency revisions; the v103 pass also removes the later operator-independent lower-bound construction. No separate v103 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v98.
+- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v104 manuscript contains later presentation, notation, source-attribution, and response-consistency revisions; v103 removed the later operator-independent lower-bound construction and v104 adds only an unnumbered closure consequence of the existing product-typing framework. No separate v104 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v98.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
 - The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
