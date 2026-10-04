@@ -69,7 +69,7 @@ The v90 preflight defines RNF and letter-count notation, expands SGL and the ini
 
 The current revision tightens three literature attributions without changing any theorem or proof:
 
-- Kanazawa (1998) is replaced by Kanazawa (1996); the current v98 wording cites it only for positive-data learnability results for categorial grammars, avoiding a more specific theorem claim that was not directly rechecked in this audit.
+- Kanazawa (1998) is not directly held in the project library. The current manuscript therefore cites the available Kanazawa (1993) CWI Report CS-R9351 for the general positive-data categorial-grammar learning background. The 1996 JoLLI article is not used as a source claim in the current manuscript.
 - The standard finite-monoid characterization is cited to the directly checked modern source Pin (2025) rather than relying on Eilenberg (1974).
 - The thickness attribution to Wakatsuki--Tomita is made through Yoshinaka (2008); the 1993 paper is no longer presented as independently checked support.
 
