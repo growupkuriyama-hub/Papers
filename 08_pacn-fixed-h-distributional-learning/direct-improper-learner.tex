@@ -1,0 +1,198 @@
+
+\subsection{Direct, unconditional improper \(PAC_{d+1}\) learning}
+\label{subsec:direct-improper-pac}
+
+The typing condition gives more than a VC bound: within any fixed
+tuple type, the context-versus-tuple relation is a disjoint union of
+complete bipartite rectangles.  The following proof builds a learner
+using only observed slices.  It does not invoke the disputed
+Chernikov--Towsner sufficiency theorem.
+
+\begin{lemma}[Typed rectangular decomposition]
+\label{lem:typed-rectangles}
+Let \(R\subseteq Y\times X_1\times\cdots\times X_d\),
+where all coordinate sets are countable, and let
+\(g_i:X_i\to T_i\) map to finite sets.  Suppose that
+\[
+ g^{(d)}(\vec x)=g^{(d)}(\vec y),\quad
+ R_{\vec x}\cap R_{\vec y}\ne\emptyset
+ \quad\Longrightarrow\quad R_{\vec x}=R_{\vec y},
+\]
+where \(R_{\vec x}=\{E\in Y:R(E,\vec x)\}\) and
+\(g^{(d)}(\vec x)=(g_i(x_i))_i\).
+For each \(\tau\in\prod_iT_i\), its nonempty incidence fiber
+decomposes as
+\[
+ R|_{\tau}=\mathop{\dot\bigcup}_{j\in J_\tau}
+ C_{\tau,j}\times B_{\tau,j},
+\]
+where the context sets \(C_{\tau,j}\) are pairwise disjoint
+and nonempty and the tuple sets \(B_{\tau,j}\) are pairwise
+disjoint and nonempty, with every tuple in \(B_{\tau,j}\)
+having type \(\tau\).
+\end{lemma}
+\begin{proof}
+Group tuples having the same nonempty column support
+\(C=R_{\vec x}\).  Different groups have disjoint tuple
+sets by construction.  If distinct same-type column supports
+intersected, the assumed substitutability condition would
+make them equal, a contradiction.  Each resulting block
+is complete by definition.
+\end{proof}
+
+\begin{theorem}[Direct improper PAC from typed substitution]
+\label{thm:direct-improper-pac}
+In the setting of Lemma~\ref{lem:typed-rectangles}, set
+\(Q=\prod_{i=1}^{d}|g_i(X_i)|\).
+A single distribution-independent, one-sided learning function,
+given all labels on the full coordinate slices through \(m\)
+i.i.d.\ anchors from any product probability measure, produces
+an arbitrary relation \(\widehat R\subseteq R\) satisfying
+\[
+ \Pr\bigl[\mu(R\triangle\widehat R)>\eps\bigr]\le\delta
+\]
+provided
+\[
+ m\ge
+ \left\lceil\frac{4Q}{e\eps}\right\rceil
+ \left\lceil\log_2\frac1\delta\right\rceil,
+ \qquad 0<\eps,\delta<1.
+\]
+The same conclusion holds with support-sensitive
+coordinate slices on finite or countable domains.
+The output need not belong to a prescribed grammar-induced
+incidence class.
+\end{theorem}
+\begin{proof}
+Work first on the product \(S\) of atomic coordinate supports,
+which has full measure.  The domain of any nonempty
+support-sensitive slice reveals all supports by coordinate
+projection, so this restriction is observable and does not
+require knowledge of the probabilities.
+Put
+\[
+ \mu=\mu_0\otimes\mu_1\otimes\cdots\otimes\mu_d,
+ \qquad \nu=\mu_1\otimes\cdots\otimes\mu_d.
+\]
+Take the decomposition from
+Lemma~\ref{lem:typed-rectangles} restricted to \(S\) and write
+\[
+ a_{\tau,j}=\mu_0(C_{\tau,j}),\qquad
+ b_{\tau,j}=\nu(B_{\tau,j}).
+\]
+For every \(\tau\), disjointness implies
+\[
+ \sum_j a_{\tau,j}\le 1,\qquad
+ \sum_j b_{\tau,j}\le 1.
+\]
+
+For one batch of \(n\) anchors
+\((E_s,x_{1,s},\ldots,x_{d,s})\), declare a block
+\(C_{\tau,j}\times B_{\tau,j}\) captured when
+a sampled context \(E_s\) lies in \(C_{\tau,j}\)
+and some sampled first-factor coordinate \(x_{1,r}\)
+lies in \(\pi_1(B_{\tau,j})\).  The observed
+context slice at \(E_s\), restricted to type \(\tau\),
+reveals \(B_{\tau,j}\) exactly.  Select
+\(\vec x\in B_{\tau,j}\) with \(x_1=x_{1,r}\).
+The observed first-factor slice at \(x_{1,r}\)
+reveals the entire column
+\[
+ C_{\tau,j}=\{E:R(E,\vec x)\}.
+\]
+The learner returns the union \(H_n\) of these
+captured rectangles, zero outside \(S\).
+It is determined by the observed labelled slices,
+and \(H_n\subseteq R\).
+
+Since \(B_{\tau,j}\) lies inside the cylinder over
+its first-coordinate projection,
+\[
+ \mu_1(\pi_1(B_{\tau,j}))\ge b_{\tau,j}.
+\]
+A block is missed only if either its context set
+or the first projection of its tuple set is
+missed by the corresponding samples.  Hence
+\[
+ \Pr[\text{block }(\tau,j)\text{ missed}]
+ \le e^{-n a_{\tau,j}}+e^{-n b_{\tau,j}}.
+\]
+With \(u e^{-nu}\le 1/(en)\), monotone convergence,
+and the disjointness inequalities,
+\begin{align*}
+ \mathbb E[\mu(R\setminus H_n)]
+ &\le \sum_{\tau,j}a_{\tau,j}b_{\tau,j}
+       (e^{-na_{\tau,j}}+e^{-nb_{\tau,j}})\\
+ &\le \sum_\tau\frac{2}{en}
+ \le\frac{2Q}{en}.
+\end{align*}
+Take \(n=\lceil4Q/(e\eps)\rceil\).
+Markov's inequality gives
+\[
+ \Pr[\mu(R\setminus H_n)>\eps]\le\tfrac12.
+\]
+
+Divide the overall sample into
+\(b=\lceil\log_2(1/\delta)\rceil\)
+independent batches of size \(n\).
+Return the union of their one-sided hypotheses.
+Its error cannot exceed that of any individual
+batch, so it fails only if all independent
+batches fail, with probability at most
+\(2^{-b}\le\delta\).  The learning function
+uses no target-specific or measure-specific
+parameters.
+\end{proof}
+
+\begin{corollary}[Unconditional fixed-\(h\) incidence PAC upper bound]
+\label{cor:fixed-h-improper-pac}
+Let \(h:\Sigma^*\to M\) be fixed and write
+\(q=|h(\Sigma^+)|\).  For every \(1\le d\le f\),
+the class of arity-\(d\) incidence relations of
+\((f,h)\)-tuple-substitutable languages is
+improperly support-\(PAC_{d+1}\)-learnable,
+with
+\[
+ N_{\eps,\delta}\le
+ \left\lceil\frac{4q^d}{e\eps}\right\rceil
+ \left\lceil\log_2\frac1\delta\right\rceil.
+\]
+This includes the fixed-\(h\) CFG/MCFG incidence
+classes and also applies to original full-slice
+observations.  It is independent of any proof
+of Chernikov--Towsner Theorem~6.5.
+\end{corollary}
+\begin{proof}
+In Lemma~\ref{lem:typed-rectangles}, take
+\(Y=\mathcal E_d\), \(X_i=\Sigma^+\),
+and \(g_i=h|_{\Sigma^+}\).  The hypothesis is
+exactly the arity-\(d\) instance of
+tuple substitutability.  Then \(Q=q^d\).
+\end{proof}
+
+\begin{remark}[The precise properness gap]
+\label{rem:improper-not-incidence}
+The output union of captured rectangles satisfies
+the typed column-overlap rule, but need not
+be the incidence relation of any word-language:
+incidence labels must agree across all decompositions
+of the same word.  For instance, with the
+trivial typing, \(L=\{ab\}\) is substitutable.
+Its positive arity-one incidence entries include
+\[
+ ((\epsilon,b),a),\quad
+ ((a,\epsilon),b),\quad
+ ((\epsilon,\epsilon),ab).
+\]
+If just the first rectangle is captured, the
+learner's relation labels the first entry one
+and the others zero, although all three
+concatenate to \(ab\).  No string language has
+this incidence relation.  Hence this theorem
+does not establish proper grammar-valued
+PAC learning or resolve Takeuchi's general
+Problem~11.  Making the relation output
+concatenation-consistent and grammar-presentable
+without introducing substantial false-positive
+mass is the remaining task.
+\end{remark}
