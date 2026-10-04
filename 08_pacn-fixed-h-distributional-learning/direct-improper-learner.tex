@@ -54,7 +54,9 @@ an arbitrary relation \(\widehat R\subseteq R\) satisfying
 provided
 \[
  m\ge
- \left\lceil\frac{4Q}{e\eps}\right\rceil
+ \left\lceil
+ \frac{2}{e\eps}\left(1+\frac{Q}{d}\right)
+ \right\rceil
  \left\lceil\log_2\frac1\delta\right\rceil,
  \qquad 0<\eps,\delta<1.
 \]
@@ -90,13 +92,14 @@ For one batch of \(n\) anchors
 \((E_s,x_{1,s},\ldots,x_{d,s})\), declare a block
 \(C_{\tau,j}\times B_{\tau,j}\) captured when
 a sampled context \(E_s\) lies in \(C_{\tau,j}\)
-and some sampled first-factor coordinate \(x_{1,r}\)
-lies in \(\pi_1(B_{\tau,j})\).  The observed
-context slice at \(E_s\), restricted to type \(\tau\),
-reveals \(B_{\tau,j}\) exactly.  Select
-\(\vec x\in B_{\tau,j}\) with \(x_1=x_{1,r}\).
-The observed first-factor slice at \(x_{1,r}\)
-reveals the entire column
+and, for at least one factor coordinate \(i\),
+some sampled value \(x_{i,r}\) lies in
+\(\pi_i(B_{\tau,j})\).  The observed context slice
+at \(E_s\), restricted to type \(\tau\), reveals
+\(B_{\tau,j}\) exactly.  Choose
+\(\vec x\in B_{\tau,j}\) with \(x_i=x_{i,r}\).
+The observed \(i\)-th factor slice at \(x_{i,r}\)
+then reveals the entire column
 \[
  C_{\tau,j}=\{E:R(E,\vec x)\}.
 \]
@@ -105,28 +108,54 @@ captured rectangles, zero outside \(S\).
 It is determined by the observed labelled slices,
 and \(H_n\subseteq R\).
 
-Since \(B_{\tau,j}\) lies inside the cylinder over
-its first-coordinate projection,
+Put
 \[
- \mu_1(\pi_1(B_{\tau,j}))\ge b_{\tau,j}.
+ c_{i,\tau,j}:=\mu_i(\pi_i(B_{\tau,j})).
 \]
-A block is missed only if either its context set
-or the first projection of its tuple set is
-missed by the corresponding samples.  Hence
+Since \(B_{\tau,j}\) lies inside the cylinder over
+each of its coordinate projections,
+\[
+ c_{i,\tau,j}\ge b_{\tau,j}
+ \qquad(1\le i\le d).
+\]
+The factor coordinates are independent under the
+product measure.  Hence a block is missed only if
+either no sampled context hits \(C_{\tau,j}\), or
+none of the \(d\) sampled factor-coordinate streams
+hits its corresponding projection.  Therefore
 \[
  \Pr[\text{block }(\tau,j)\text{ missed}]
- \le e^{-n a_{\tau,j}}+e^{-n b_{\tau,j}}.
+ \le e^{-n a_{\tau,j}}
+   +\exp\!\left(-n\sum_{i=1}^d c_{i,\tau,j}\right)
+ \le e^{-n a_{\tau,j}}+e^{-nd b_{\tau,j}}.
 \]
-With \(u e^{-nu}\le 1/(en)\), monotone convergence,
-and the disjointness inequalities,
+
+The tuple blocks \(B_{\tau,j}\) are disjoint
+globally, including across distinct types, so
+\[
+ \sum_{\tau,j}b_{\tau,j}\le1.
+\]
+The context blocks are disjoint only within one
+type, whence
+\[
+ \sum_{\tau,j}a_{\tau,j}\le Q.
+\]
+Using \(u e^{-\lambda u}\le1/(e\lambda)\) gives
 \begin{align*}
  \mathbb E[\mu(R\setminus H_n)]
  &\le \sum_{\tau,j}a_{\tau,j}b_{\tau,j}
-       (e^{-na_{\tau,j}}+e^{-nb_{\tau,j}})\\
- &\le \sum_\tau\frac{2}{en}
- \le\frac{2Q}{en}.
+       \bigl(e^{-na_{\tau,j}}+e^{-ndb_{\tau,j}}\bigr)\\
+ &\le \frac{1}{en}\sum_{\tau,j}b_{\tau,j}
+      +\frac{1}{end}\sum_{\tau,j}a_{\tau,j}\\
+ &\le \frac{1+Q/d}{en}.
 \end{align*}
-Take \(n=\lceil4Q/(e\eps)\rceil\).
+Take
+\[
+ n=
+ \left\lceil
+ \frac{2}{e\eps}\left(1+\frac{Q}{d}\right)
+ \right\rceil.
+\]
 Markov's inequality gives
 \[
  \Pr[\mu(R\setminus H_n)>\eps]\le\tfrac12.
@@ -154,7 +183,9 @@ improperly support-\(PAC_{d+1}\)-learnable,
 with
 \[
  N_{\eps,\delta}\le
- \left\lceil\frac{4q^d}{e\eps}\right\rceil
+ \left\lceil
+ \frac{2}{e\eps}\left(1+\frac{q^d}{d}\right)
+ \right\rceil
  \left\lceil\log_2\frac1\delta\right\rceil.
 \]
 This includes the fixed-\(h\) CFG/MCFG incidence
@@ -223,7 +254,7 @@ the context--factor incidence domain,
 whenever
 \[
  m\ge
- \left\lceil\frac{4q}{e\eps}\right\rceil
+ \left\lceil\frac{2(1+q)}{e\eps}\right\rceil
  \left\lceil\log_2\frac1\delta\right\rceil.
 \]
 The output is a CFG language, but is not asserted to satisfy
