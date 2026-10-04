@@ -17,7 +17,7 @@
 - Support-sensitive repaired PAC: on finite/countable product domains, the Takeuchi support restriction extends to every arity `k`; combining finite-support necessity with Chernikov–Towsner sufficiency gives `finite VC_k <=> proper support-PAC_k`. This resolves Takeuchi 2020 Problem 11 in the countable setting and restores the KKT finite-box sample lower bound.
 - Repaired PAC lower bounds: the sharp higher-arity families force `N = Omega_d(t_h^{1/(d-1)})` for fixed `(epsilon,delta)`, and the padded construction gives the same order for every sufficiently large observer budget up to constants.
 - Higher-arity sharpness: an abstract MDS-type direct-factor system in an abelian observer yields exact `VC_{d+1}=q` at observer size `q^{d-1}`. Extended Vandermonde/finite-field systems instantiate this for prime powers (`q>=d` for `d>=3`; all prime powers for `d=2`).
-- Arbitrary observer budgets: the optimum is `Theta_d(T^{1/(d-1)})`, via monoid padding of the finite-field construction.
+- Worst-case observer-budget law: if `V_d(T)` is the largest possible `VC_{d+1}` under `|h(Sigma^+)|<=T`, then `V_1(T)=V_2(T)=T`, while for every fixed `d>=3`, `V_d(T)=Theta_d(T^{1/(d-1)})`; exact attainment holds on the direct-factor sizes.
 - Cyclic observers: `rpc_r(C_N)=floor(N^{1/r})` when all group elements are nonempty-realizable.
 - Group factorization form: for full group observers, `rpc_r` is exactly the largest equal-side unique `r`-fold product factorization.
 - Semilattice extremes: at the same observer size, a chain semilattice has `rpc_r=1` while a Boolean semilattice can attain the cardinality root bound; even commutative idempotent observers of equal size can therefore have maximally different rectangular capacities.
