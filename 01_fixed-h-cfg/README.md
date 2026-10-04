@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v100; this is the source of truth.
+- `main.tex` — English major-revision manuscript, internal v101; this is the source of truth.
 - `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v100 English source on 2026-10-04.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v100. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v101 Reviewer-response audit
+
+The manuscript sources remain at the v100 mathematical/expository state. The v101 project pass revises the English Round-1 response letter: newly added material is mapped explicitly to the reviewer comments that motivated it; Section 6.2 and Appendix D are acknowledged as genuinely new lower-bound material; R2.1 now corrects the reading that a separate morphism is required for each target and states instead that one homomorphism h is fixed for the entire slice, exactly as one pair (k,l) is fixed in Yoshinaka's hierarchy; and three claims withdrawn or narrowed from the submitted manuscript are listed near the opening. The old Japanese response memo has been replaced by an archival stub and is not authoritative.
 
 ## v100 Section consolidation and final exposition cleanup
 
