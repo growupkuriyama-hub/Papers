@@ -14,6 +14,7 @@
 - Fan-out-one sharpness: the `VC_2` bound is attained by an explicit family of finite regular fixed-`h` substitutable languages.
 - PAC direction audit: Takeuchi 2020 refutes the old full-slice necessity direction `PAC_2 => finite VC_2`. Chernikov–Towsner 2025 Theorem 6.5 proves the opposite direction `finite VC_k => proper PAC_k` from packing, independently of that disputed necessity claim.
 - Support-sensitive repaired PAC: on finite/countable product domains, the Takeuchi support restriction extends to every arity `k`; combining finite-support necessity with Chernikov–Towsner sufficiency gives `finite VC_k <=> proper support-PAC_k`. This resolves Takeuchi 2020 Problem 11 in the countable setting and restores the KKT finite-box sample lower bound.
+- Repaired PAC lower bounds: the sharp higher-arity families force `N = Omega_d(t_h^{1/(d-1)})` for fixed `(epsilon,delta)`, and the padded construction gives the same order for every sufficiently large observer budget up to constants.
 - Higher-arity sharpness: the root exponent is attained on a prime-power family of observer sizes by explicit finite regular `(d,h)`-tuple-substitutable targets.
 - Arbitrary observer budgets: the optimum is `Theta_d(T^{1/(d-1)})`, via monoid padding of the finite-field construction.
 - Cyclic observers: `rpc_r(C_N)=floor(N^{1/r})` when all group elements are nonempty-realizable.
