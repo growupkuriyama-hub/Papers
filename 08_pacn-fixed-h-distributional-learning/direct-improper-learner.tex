@@ -196,3 +196,172 @@ concatenation-consistent and grammar-presentable
 without introducing substantial false-positive
 mass is the remaining task.
 \end{remark}
+
+
+\subsection{CFG-valued output from full slices at fan-out one}
+
+For context-free targets, the direct incidence learner can be
+converted into a genuine context-free \emph{word-language} hypothesis.
+It remains improper relative to the fixed-\(h\) substitutable
+subclass, but it no longer outputs an arbitrary non-language
+relation.
+
+\begin{theorem}[One-sided CFG-valued improper \(PAC_2\)]
+\label{thm:cfg-valued-improper-pac}
+Fix \(h:\Sigma^*\to M\), and put \(q=|h(\Sigma^+)|\).
+For every target \(L\in\mathcal C_h^{\mathrm{cf}}\),
+there is one (not necessarily effective) distribution-independent
+learning function receiving the original \emph{full-slice}
+\(PAC_2\) observations and outputting a context-free language
+\(\widehat L\subseteq L\).  Under any product measure on
+the context--factor incidence domain,
+\[
+ \Pr\left[
+  \mu\bigl(R_L^{(1)}\triangle R_{\widehat L}^{(1)}\bigr)
+       >\eps\right]\le\delta
+\]
+whenever
+\[
+ m\ge
+ \left\lceil\frac{4q}{e\eps}\right\rceil
+ \left\lceil\log_2\frac1\delta\right\rceil.
+\]
+The output is a CFG language, but is not asserted to satisfy
+the fixed-\(h\) substitutability condition.
+\end{theorem}
+
+\begin{proof}
+Use the captured rectangles \(C_j\times B_j\) from
+Theorem~\ref{thm:direct-improper-pac} with \(d=1\),
+now recovered over the \emph{entire} context and factor
+domains rather than only over atomic supports.
+For a captured block of type \(t\), pick
+\[
+ (u_0,v_0)\in C_j,\qquad x_0\in B_j.
+\]
+Its factor language can be written
+\[
+ B_j=\{x\in\Sigma^+:h(x)=t,\;u_0xv_0\in L\}.
+\]
+This is context-free: inverse fixed-word context
+insertion (equivalently, quotients by singleton regular
+languages), intersection with the regular type fiber
+\(h^{-1}(t)\), and restriction to \(\Sigma^+\)
+preserve context-freeness.
+
+Introduce a fresh separator \(\#\).  The encoded
+context language
+\[
+ C_j^\#:=\{u\#v:(u,v)\in C_j\}
+       =\{u\#v:ux_0v\in L\}
+\]
+is also context-free, being the inverse image of
+\(L\) under the homomorphism sending
+\(\#\) to \(x_0\), intersected with
+\(\Sigma^*\#\Sigma^*\).
+Substituting the context-free language \(B_j\)
+for the single terminal \(\#\) gives
+\[
+ K_j=\{uxv:u\#v\in C_j^\#,\ x\in B_j\},
+\]
+which is context-free by closure under
+context-free substitution.  By the complete-rectangle
+property, \(K_j\subseteq L\).
+
+Only finitely many typed blocks are captured
+by finitely many anchor rows.  Return
+\[
+ \widehat L:=\bigcup_{\text{captured }j}K_j.
+\]
+It is a context-free sublanguage of \(L\).
+Moreover, every positive incidence entry in
+a captured rectangle concatenates to a word
+in \(\widehat L\).  Consequently,
+\[
+ H_m\subseteq R_{\widehat L}^{(1)}
+       \subseteq R_L^{(1)},
+\]
+where \(H_m\) denotes the one-sided rectangular
+hypothesis constructed in the preceding theorem.
+Thus the error of \(R_{\widehat L}^{(1)}\) cannot
+exceed the error of \(H_m\), and the same
+distribution-free bound applies.
+
+The output function is well defined at the
+conceptual level: every observed row/factor
+language is guaranteed to be context-free,
+so one can choose the first CFG for it in a
+fixed enumeration of all grammars and carry
+out finite CFG substitutions and unions.
+Recognizing that CFG from an arbitrary
+\emph{infinite} labelled slice is not claimed
+to be an effective finite-input procedure.
+\end{proof}
+
+\begin{proposition}[Capturing complete blocks need not preserve fixed typing]
+\label{prop:captured-not-substitutable}
+Let \(\Sigma=\{a,b\}\) and use the fixed finite monoid
+\[
+ M=\{0,1,2,3,4\},\qquad
+ i\cdot j:=\min(4,i+j),\qquad
+ h(w):=\min(4,|w|).
+\]
+The finite language
+\[
+ L=\{aa,bb,aaa,bba,abb\}
+\]
+is \(h\)-substitutable, but the word-language image
+of its complete factor-\(a\) incidence rectangle is
+\[
+ K=\{aa,aaa,bba,abb\},
+\]
+which is not \(h\)-substitutable.
+\end{proposition}
+
+\begin{proof}
+For \(L\), factors of differing length below four
+have disjoint context sets.  Among one-letter
+factors, the distributions of \(a\) and \(b\)
+are disjoint.  At length two, \(aa\) and \(bb\)
+have the same distribution
+\[
+ \{(\epsilon,\epsilon),(\epsilon,a),(a,\epsilon)\};
+\]
+the distributions of \(ab\) and \(ba\) are
+disjoint from each other and from that set.
+At length three, each whole-word factor has
+the singleton context distribution
+\(\{(\epsilon,\epsilon)\}\).  Hence \(L\) is
+\(h\)-substitutable.
+
+No letter \(b\) shares a context with the
+factor \(a\), so its typed incidence block
+has factor side \(\{a\}\).  The corresponding
+context side represents precisely the words
+of \(L\) containing \(a\), yielding the stated
+\(K=L\setminus\{bb\}\).
+
+In \(K\), however, the length-two factors
+\(aa\) and \(bb\) share the contexts
+\((\epsilon,a)\) and \((a,\epsilon)\), whereas
+\((\epsilon,\epsilon)\) is a context of
+\(aa\) but not \(bb\).  They have identical
+\(h\)-type and intersecting, unequal
+distributions.  Thus \(K\) fails
+\(h\)-substitutability.
+\end{proof}
+
+\begin{remark}
+This strengthens the distinction between
+the three goals: one-sided relation-valued
+PAC, one-sided CFG-valued PAC, and
+\emph{proper} fixed-\(h\) CFG-valued PAC.
+The first two now have direct uniform
+full-slice upper bounds; the third remains
+open.  The CFG construction above is
+not automatically valid for arbitrary
+support-sensitive observations: intersection
+of a context-free slice language with an
+arbitrary atomic support need not be
+context-free.
+\end{remark}
