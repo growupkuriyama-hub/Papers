@@ -90,11 +90,9 @@ order-independence の主張は撤回し、set-driven なのは batch operator �
 
 **回答:** batch constructor と sequential learner を分離した。§4.2 に、batch operator は set-driven だが stabilized grammar は presentation order に依存しうることを明記した。主張するのは target language を生成する文法への eventual syntactic stabilization だけである。
 
-v90 の提出前点検では RNF・出現回数記号 $|w|_a$ を定義し，SGL・受理集合・短語の接頭辞／接尾辞の説明を補った．自明な命題2件と多項式更新の系，未使用の記号とマクロを削除し，中心記号付き言語を $P$ に統一した．主要な数学的主張は変えていない．
-
 ## R1-08 基本用語の定義
 
-**回答:** CFG, derivation, reachable, productive, reduced, linear, binarization, encoding size, thickness などを §2 にまとめた。
+**回答:** CFG, derivation, reachable, productive, reduced, linear, binarization, encoding size, thickness などを §2 にまとめた。v90 点検で出現回数記号 $|w|_a$ も定義し、SGL と RNF を初出で展開、受理集合 $\mathsf{Acc}\subseteq M$ を明記した。未使用の $[x]_{\equiv_L}$ も削除した。
 
 ## R1-09 “finite typed reconstruction basis”
 
@@ -110,7 +108,7 @@ v90 の提出前点検では RNF・出現回数記号 $|w|_a$ を定義し，SGL
 
 ## R1-12 fixed-window morphism の定義
 
-**回答:** prefix/suffix の意味と finite monoid の multiplication を明示し、Prop. 3.2 で Yoshinaka の fixed-window condition との同値性を両方向で証明した。
+**回答:** 短い語の場合も含め prefix/suffix の意味を明示し、Prop. 3.2 の証明で finite monoid の multiplication を与え、Yoshinaka の fixed-window condition との同値性を両方向で証明した。
 
 ## R1-13 “\(h\) is given as data” と linear CFG
 
@@ -160,7 +158,7 @@ L(\mathcal B_h(K))=L
 
 ## R1-25 §6 complexity
 
-**回答:** 定義的な議論を削り、finite sample size に対する reconstruction complexity の数え上げだけを残した。
+**回答:** 定義的な議論を削り、finite sample size に対する reconstruction complexity の数え上げを残した。多項式時間更新についての自明な独立した系は削除し、直後の短い本文説明に統合した。
 
 ## R1-26 linear section が長い
 
@@ -168,7 +166,7 @@ L(\mathcal B_h(K))=L
 
 ## R1-27 capped counter の記号
 
-**回答:** \(\{d,u,;\}\) を \(\{\uparrow,\downarrow,\#\}\) に変更し、CCL\(_p\) を CTR\(_\rho\) に改名した。§10.2 の fixed-window exclusion は2語だけを使う短い witness にした。
+**回答:** \(\{d,u,;\}\) を \(\{\uparrow,\downarrow,\#\}\) に変更し、CCL\(_p\) を CTR\(_\rho\) に改名した。§10.2 の fixed-window exclusion は2語だけを使う短い witness にした。また capped counter の正則性を述べる自明な命題は、DFA の説明とともに本文へ統合した。
 
 ## R1-28 boundary sections の統合
 
