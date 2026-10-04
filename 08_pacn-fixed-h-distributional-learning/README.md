@@ -37,6 +37,10 @@
 
 This note links the fixed-observer CFG/MCFG program (#1/#2) to the Kuriyama–Takeuchi `PAC_n` line and modern higher-arity VC/packing theory. It remains separate from the degree-critical manuscripts until the theorem package stabilizes.
 
+## Proof-audit status
+
+- Manual audit: `DIRECT_PAC_PROOF_AUDIT.md` checks the direct improper, semantic-proper, and finite-target grammar-proper PAC routes independently of CT25. It also records the sharpened all-factor-slices bound and the remaining representation/effectivity gaps.
+
 ## Research utility
 
 - Brute-force utility: `tools/rpc_bruteforce.py` exactly searches `rpc_r` for small marked monoids (built-in cyclic groups, chain semilattices, and Boolean semilattices).
