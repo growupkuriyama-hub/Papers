@@ -17,6 +17,7 @@
 - Support-sensitive repaired PAC: on finite/countable product domains, the Takeuchi support restriction extends to every arity `k`; combining finite-support necessity with Chernikov–Towsner sufficiency gives `finite VC_k <=> proper support-PAC_k`. This resolves Takeuchi 2020 Problem 11 in the countable setting and restores the KKT finite-box sample lower bound.
 - Repaired PAC lower bounds: the sharp higher-arity families force `N = Omega_d(t_h^{1/(d-1)})` for fixed `(epsilon,delta)`, and the padded construction gives the same order for every sufficiently large observer budget up to constants.
 - Higher-arity sharpness: an abstract MDS-type direct-factor system in an abelian observer yields exact `VC_{d+1}=q` at observer size `q^{d-1}`. Extended Vandermonde/finite-field systems instantiate this for prime powers (`q>=d` for `d>=3`; all prime powers for `d=2`).
+- Arcs-over-groups relation: subgroup-valued direct-factor systems are exactly in the regular MODS / orthogonal-array / arc-over-groups regime of Bailey–Cameron–Kinyon–Praeger. Their Hall–Paige/fixed-point-free-automorphism obstructions show that several remaining congruence classes cannot be solved by subgroup witnesses; any positive solution there must use genuinely non-subgroup factors.
 - Worst-case observer-budget law: if `V_d(T)` is the largest possible `VC_{d+1}` under `|h(Sigma^+)|<=T`, then `V_1(T)=V_2(T)=T`, while for every fixed `d>=3`, `V_d(T)=Theta_d(T^{1/(d-1)})`; exact attainment holds on the direct-factor sizes.
 - Cyclic observers: `rpc_r(C_N)=floor(N^{1/r})` when all group elements are nonempty-realizable.
 - Group factorization form: for full group observers, `rpc_r` is exactly the largest equal-side unique `r`-fold product factorization.
@@ -33,3 +34,9 @@ This note links the fixed-observer CFG/MCFG program (#1/#2) to the Kuriyama–Ta
 ## Research utility
 
 - Brute-force utility: `tools/rpc_bruteforce.py` exactly searches `rpc_r` for small marked monoids (built-in cyclic groups, chain semilattices, and Boolean semilattices).
+
+## Exact-spectrum test cases
+
+- `d=3, q≡2 (mod 4)`: subgroup witnesses are impossible; the first flagship case is `q=6`.
+- `d>=4`: subgroup witnesses are excluded whenever the common order-`q` base group violates the Bailey–Cameron–Kinyon–Praeger fixed-point-free automorphism condition, in particular for `q≡2 (mod 4)` or `q≡±3 (mod 9)`.
+- These exclusions do **not** rule out the broader non-subgroup direct-factor systems used in this project.
