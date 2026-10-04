@@ -88,7 +88,7 @@ order-independence の主張は撤回し、set-driven なのは batch operator �
 
 ## R1-07 order-independence と constructor / learner の混同
 
-**回答:** batch constructor と sequential learner を分離した。§4.2 に、batch operator は set-driven だが stabilized grammar は presentation order に依存しうることを明記した。主張するのは target language を生成する文法への eventual syntactic stabilization だけである。
+**回答:** batch constructor と sequential learner を分離した。§4.2 では、batch operator のみが set-driven であることを明示し、無限標的での提示順序依存性を独立した `\paragraph` を設けず、学習器の説明中に短く示した。長い語を先頭に加えると、同じ標的言語に収束しても極限文法の非終端記号集合が異なりうる。主張するのは標的言語を生成する文法への eventual syntactic stabilization である。
 
 ## R1-08 基本用語の定義
 
