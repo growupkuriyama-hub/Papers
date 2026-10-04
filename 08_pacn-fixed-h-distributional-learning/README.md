@@ -15,17 +15,17 @@
 - Fan-out-one sharpness: the `VC_2` bound is attained by an explicit family of finite regular fixed-`h` substitutable languages.
 - PAC direction audit: Takeuchi 2020 refutes the old full-slice necessity direction `PAC_2 => finite VC_2`. Chernikov–Towsner 2025 Theorem 6.5 proves the opposite direction `finite VC_k => proper PAC_k` from packing, independently of that disputed necessity claim.
 - Support-sensitive repaired PAC: on finite/countable product domains, the Takeuchi support restriction extends to every arity `k`; combining finite-support necessity with Chernikov–Towsner sufficiency gives `finite VC_k <=> proper support-PAC_k`. This resolves Takeuchi 2020 Problem 11 in the countable setting and restores the KKT finite-box sample lower bound.
-- Repaired PAC lower bounds: the sharp higher-arity families force `N = Omega_d(t_h^{1/(d-1)})` for fixed `(epsilon,delta)`, and the padded construction gives the same order for every sufficiently large observer budget up to constants.
-- Higher-arity sharpness: an abstract MDS-type direct-factor system in an abelian observer yields exact `VC_{d+1}=q` at observer size `q^{d-1}`. Extended Vandermonde/finite-field systems instantiate this for prime powers (`q>=d` for `d>=3`; all prime powers for `d=2`).
+- Repaired PAC lower bounds: for every observer budget `T`, the exact padded sharp family has `VC_{d+1}=floor(T^{1/(d-1)})`, giving the explicit lower bound `N >= floor(T^{1/(d-1)})(1-(2(epsilon+delta))^{1/(d+1)})` whenever positive.
+- Higher-arity sharpness for every integer `q`: the exact grammar-relevant object is a cyclic interval direct-factor system. A unimodular cyclic frame over `(Z/qZ)^{d-1}` exists for every `q>=2`, yielding `VC_{d+1}=q` at observer size `q^{d-1}`. MDS/all-subset direct-factor systems are a stronger special case.
 - Arcs-over-groups relation: subgroup-valued direct-factor systems are exactly in the regular MODS / orthogonal-array / arc-over-groups regime of Bailey–Cameron–Kinyon–Praeger. Their Hall–Paige/fixed-point-free-automorphism obstructions show that several remaining congruence classes cannot be solved by subgroup witnesses; any positive solution there must use genuinely non-subgroup factors.
-- Worst-case observer-budget law: if `V_d(T)` is the largest possible `VC_{d+1}` under `|h(Sigma^+)|<=T`, then `V_1(T)=V_2(T)=T`, while for every fixed `d>=3`, `V_d(T)=Theta_d(T^{1/(d-1)})`; exact attainment holds on the direct-factor sizes.
+- Exact worst-case observer-budget law: `V_1(T)=T`, and for every `d>=2`, `V_d(T)=floor(T^{1/(d-1)})`. The upper bound is attained for every `T`, not merely asymptotically or on prime-power sizes.
 - Cyclic observers: `rpc_r(C_N)=floor(N^{1/r})` when all group elements are nonempty-realizable.
 - Group factorization form: for full group observers, `rpc_r` is exactly the largest equal-side unique `r`-fold product factorization.
 - Semilattice extremes: at the same observer size, a chain semilattice has `rpc_r=1` while a Boolean semilattice can attain the cardinality root bound; even commutative idempotent observers of equal size can therefore have maximally different rectangular capacities.
 - Boundary-window collapse: for the prefix/suffix observer `h^{k,l}`, `rpc_r=1` whenever `ceil(k/2)+ceil(l/2)<r`; hence small boundary windows force `VC_{d+1}<=1` at sufficiently high tuple arity.
 - Fixed-observer separation: the two-element observer from #1 has `VC_2 <= 2`, hence proper `PAC_2` learnability via Chernikov–Towsner Theorem 6.5, while exact set-driven characteristic exposure has an exponential lower bound.
 - Architecture-vs-VC separation: under the trivial observer, the ambient CFG and fan-out-two MCFG incidence classes have `VC_2 <= 1` and `VC_3 <= 1`, yet the same `X_{k,r}` targets require `k^r` vs `1+r(k-1)` exact positive examples for the two reconstruction architectures.
-- Current research tasks: exact arbitrary-size spectrum, explicit quantitative bounds for repaired support-PAC_n, effective grammar-valued reconstruction, and the old full-slice necessity discrepancy as a separate historical/model issue.
+- Current research tasks: fixed-observer sharpness (`VC_{d+1}` versus `rpc_{d-1}(h)` for one marked monoid), explicit quantitative upper bounds for repaired support-PAC_n, effective grammar-valued reconstruction, and the old full-slice necessity discrepancy as a separate historical/model issue.
 
 ## Relation to the project
 
@@ -35,8 +35,9 @@ This note links the fixed-observer CFG/MCFG program (#1/#2) to the Kuriyama–Ta
 
 - Brute-force utility: `tools/rpc_bruteforce.py` exactly searches `rpc_r` for small marked monoids (built-in cyclic groups, chain semilattices, and Boolean semilattices).
 
-## Exact-spectrum test cases
+## MDS/direct-factor comparison
 
-- `d=3, q≡2 (mod 4)`: subgroup witnesses are impossible; the first flagship case is `q=6`.
-- `d>=4`: subgroup witnesses are excluded whenever the common order-`q` base group violates the Bailey–Cameron–Kinyon–Praeger fixed-point-free automorphism condition, in particular for `q≡2 (mod 4)` or `q≡±3 (mod 9)`.
-- These exclusions do **not** rule out the broader non-subgroup direct-factor systems used in this project.
+- The stronger all-pairs MDS/direct-factor route is **not necessary** for grammar sharpness.
+- At `d=3,q=6`, exhaustive search over all four abelian groups of order `36` finds no four 6-subsets forming a pairwise exact-factorization `K4`, yet the cyclic-interval construction over `(Z/6Z)^2` attains `VC_4=6`.
+- Reproduction: `tools/q6_k4_factorization_search.py`; recorded output: `computations/q6_k4_factorization.txt`.
+- Bailey–Cameron–Kinyon–Praeger still describes the subgroup/MODS special case and its congruence obstructions; those obstructions concern the stronger MDS geometry, not the exact grammar VC spectrum.
