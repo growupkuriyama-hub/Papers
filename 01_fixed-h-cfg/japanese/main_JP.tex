@@ -39,9 +39,9 @@ $\sim_h$-代入可能標的を有限個の正例証拠から厳密に再構成�
 逐次学習器はすべての非空標的を Gold の意味で極限同定する．再構成と各更新は
 多項式時間である．標準証拠の大きさは，標的非終端記号を有限な $h$-値で
 分割した後に得られる最短生成語によって制御され，その長さは通常の文法厚みより
-指数的に大きくなり得る．一つの固定二元型付けに対しては，固定-$h$ クラス
-全体で妥当な集合駆動型再構成作用素の特徴データを，縮約済み CFG サイズと
-通常の文法厚みの多項式で一様に抑えることはできない．これに対し，任意の
+指数的に大きくなり得る．従って一般の固定 $h$ では，特徴データ上界は
+通常の文法厚みだけでなく，この型付き厚みによって自然に記述される．
+これに対し，任意の
 固定接頭辞--接尾辞窓 $(k,\ell)$ では，対応する型付けが Yoshinaka の
 $(k,\ell)$-代入可能性をちょうど表し，縮約済み CFG サイズと通常の厚みに
 関して多項式の特徴データを得る．任意の固定 $h$ の線形標的では，線形 CFG
@@ -113,10 +113,9 @@ $\mathsf{Acc}\subseteq M$ に対して $L=h^{-1}(\mathsf{Acc})$ が有限モノ�
 \item \emph{定量的境界．}
 任意の固定 $h$ では，標的非終端記号を有限 $h$-型で分割した後の最短生成語は，
 元の文法より指数的に長くなり得る．
-一つの固定二元型付け $h_\circ$ に対し，$\Ccf{h_\circ}$ 全体で特徴標本をもつ
-集合駆動型再構成作用素には，縮約済み CFG サイズと元の文法の最短生成語長の
-多項式による特徴データ上界は存在しない．一方，任意の固定窓 $(k,\ell)$ では
-そのような上界が成立し，任意の固定 $h$ の線形標的では線形文法サイズに関して
+従って，通常の元文法の厚みだけでは，一般の fixed-$h$ 再構成で用いる
+型付き精密化パラメータを制御できない．一方，任意の固定窓 $(k,\ell)$ では
+通常の厚みで十分であり，任意の固定 $h$ の線形標的では線形文法サイズに関して
 多項式の特徴データが得られる．
 
 \item \emph{表現力上の位置．}
@@ -651,6 +650,13 @@ $\WitnessSet(\widetilde G)$ は $\mathcal B_h$ に対する特徴標本であり
 \end{proof}
 
 型付き精密化による議論では，型付き厚みを一般に元文法の通常の厚みへ置き換えられない．
+このような表現依存性自体は CFG 学習で既知の現象である．Clark--Eyraud
+\cite[Example~2]{clark-eyraud2007} は，小さい文法でも正の特徴データに指数長の語が
+必要となる例を与えている．Yoshinaka~\cite{yoshinaka2008} は fixed-window 設定で
+通常の文法厚みを明示的なパラメータとし，Eyraud--Heinz--Yoshinaka
+\cite{eyraud-heinz-yoshinaka2016} も特徴データ基準の表現依存性を論じている．
+ここで必要なのはより限定された点であり，通常の元文法厚みを記録しても，
+本論文の fixed-$h$ 再構成で用いる型付き精密化の最短生成語は大幅に長くなり得る．
 
 \begin{remark}[元文法と型付き厚みの指数ギャップ]
 \label{rem:typed-thickness-gap}
@@ -698,187 +704,11 @@ $\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})
 元文法のサイズと通常の厚みによる多項式上界は存在しない．
 
 ただし，標的言語 $\{\mathtt a,\mathtt c\}^+$ 自体は
-$n$ に依存しない．従って，ここで示したのは
-完全な型付き精密化に基づく証拠構成の限界である．
-学習作用素に依存しない下界は
-定理~\ref{thm:ordinary-thickness-lower} で与える．
+$n$ に依存しない．従って，これは特徴データに対する学習作用素非依存の下界ではない．
+ここでの役割は，通常の元文法厚みでは
+系~\ref{cor:typed-thickness-data} に現れる型付き精密化パラメータを制御できないことを
+示すことだけである．このため，一般 fixed-$h$ の上界は型付き厚みによって記述する．
 \end{remark}
-
-\subsection{集合駆動型特徴標本に対する通常厚み下界}
-\label{subsec:ordinary-thickness-lower}
-
-まず二つの初等的観察を用いる．
-
-\begin{lemma}[型集合による制限]\label{lem:fibre-restriction}
-$h:\Sigma^*\to M$ をモノイド準同型，$L$ を $\sim_h$-代入可能とする．
-任意の $F\subseteq M$ に対し，$L\cap h^{-1}(F)$ も
-$\sim_h$-代入可能である．
-\end{lemma}
-\begin{proof}
-$L_F:=L\cap h^{-1}(F)$ とする．同型の非空因子 $x,y$ が $L_F$ で共通文脈を
-もてば，$L$ でも共通文脈をもつので $\D_L(x)=\D_L(y)$ である．任意の $u,v$ について
-$uxv\in L_F \iff uxv\in L\ \text{かつ}\ h(u)h(x)h(v)\in F$
-であり，$x$ を $y$ に置き換えても二条件とも変わらない．
-\end{proof}
-
-\begin{lemma}[入れ子標的に対する特徴標本障害]
-\label{lem:nested-characteristic-obstruction}
-$\mathcal B$ を任意の集合駆動型作用素，$L'\subsetneq L$ とする．同じ $\mathcal B$ に
-対し $C,C'$ がそれぞれ $L,L'$ の特徴標本なら
-$C\cap(L\setminus L')\ne\varnothing$.
-\end{lemma}
-\begin{proof}
-そうでなければ $C\subseteq L'$ である．$K:=C\cup C'$ とおけば
-$C\subseteq K\subseteq L$ かつ $C'\subseteq K\subseteq L'$ なので，
-特徴標本性は $L(\mathcal B(K))=L$ と $L(\mathcal B(K))=L'$ を同時に強制し矛盾する．
-\end{proof}
-
-\[
- \Sigma_\circ:=\{\mathtt l,\mathtt r,\mathtt a,\mathtt c,
-                    \mathtt 0,\mathtt d\}
-\]
-とし，$M_\circ:=\{1,\zeta\}$ を単位元 $1$ と零元 $\zeta$ をもつ二元モノイドとする．
-これは備考~\ref{rem:typed-thickness-gap} と同じ抽象的二元零モノイドだが，
-アルファベットと文字像が異なるため準同型には別名を用いる．
-$h_\circ:\Sigma_\circ^*\to M_\circ$ を
-$h_\circ(\mathtt c)=\zeta$，その他のすべての文字を $1$ に送る準同型とする．
-従って $h_\circ(w)=\zeta$ であることと $w$ が $\mathtt c$ を含むことは同値である．
-
-$i\ge0$ に対し $s_i:=\mathtt c\mathtt 0^{\,i+1}\mathtt d$ とし，
-有限言語を
-\[
- \mathcal T_0:=\{\mathtt l\mathtt a\mathtt r,\,
-                    \mathtt l s_0\mathtt r\},
- \qquad
- \mathcal T_i:=\{\mathtt l s_i\mathtt r\}
- \cup\{\mathtt lxy\mathtt r:x,y\in\mathcal T_{i-1}\}
- \quad(i\ge1)
-\]
-で定める．また
-$z_0:=\mathtt l\mathtt a\mathtt r$,
-$z_i:=\mathtt l z_{i-1}z_{i-1}\mathtt r$
-とおく．$z_i$ は $\mathcal T_i$ の中で $\mathtt c$ を含まない唯一の語であり，
-\begin{equation}
- |z_i|=5\cdot2^i-2.
- \label{eq:clean-tree-length}
-\end{equation}
-
-下界に必要な木構文解析は初等的だが，本論の流れに比べ記法が長いので
-付録~\ref{app:level-coded-substitutability} に回す．要点は，
-$\mathcal T_n$ の各語がレベル $n$ の一意な木構文解析をもち，$z_n$ の
-互いに祖先・子孫関係をもたない節点の部分木を対応する $s_i$ で置換して
-得られることである．レベル符号により置換位置が一意に認識できる．
-
-\begin{lemma}[level-coded tree language の代入可能性]
-\label{lem:level-coded-substitutable}
-任意の $n\ge0$ に対し，$\mathcal T_n$ は Clark--Eyraud の意味で代入可能である．
-\end{lemma}
-\begin{proof}
-付録~\ref{app:level-coded-substitutability} を参照されたい．
-\end{proof}
-
-\begin{theorem}[集合駆動型特徴標本に対する通常厚み下界]
-\label{thm:ordinary-thickness-lower}
-上で固定した準同型 $h_\circ$ に対し，ある多項式 $p$ が存在し，任意の $n\ge1$ に
-ついて，$\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$ とおいたとき
-$L(R_n)=\mathcal T_n$, $L(R_n^-)=\mathcal T_n^-$ を満たす縮約済み CFG
-$R_n,R_n^-$ が存在し，さらに
-\[
- \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},\qquad
- |R_n|+|R_n^-|\le p(n),\qquad
- \tau_{R_n},\tau_{R_n^-}\le n+5
-\]
-を満たす．
-両標的に特徴標本をもつ任意の集合駆動型作用素 $\mathcal B$ をとる．
-このとき $\mathcal T_n$ の任意の特徴標本 $C_n$ は
-\[
- \|C_n\|\ge5\cdot2^n-1
-\]
-を満たす．従って $\Ccf{h_\circ}$ の全標的に特徴標本をもつ集合駆動型作用素には，
-縮約済み CFG サイズと通常の厚みに関する多項式特徴データ上界は存在しない．
-特にこれは $\mathcal B_{h_\circ}$ にも適用される．
-\end{theorem}
-
-\begin{proof}
-$\mathcal T_n$ をちょうど生成する縮約済み CFG $R_n$ を
-\[
-\begin{aligned}
- S&\to B_n,&
- U_0&\to\mathtt0,&
- U_i&\to U_{i-1}\mathtt0 &&(1\le i\le n),\\
- B_0&\to\mathtt l\mathtt a\mathtt r
-       \mid\mathtt l\mathtt cU_0\mathtt d\mathtt r,\\
- B_i&\to\mathtt lB_{i-1}B_{i-1}\mathtt r
-       \mid\mathtt l\mathtt cU_i\mathtt d\mathtt r
-       &&(1\le i\le n)
-\end{aligned}
-\]
-とする．すべての表示した記号は到達可能かつ生産的である．より具体的に
-\[
- U_i\Rightarrow^*\mathtt 0^{\,i+1},\qquad
- B_i\Rightarrow
- \mathtt l\mathtt cU_i\mathtt d\mathtt r
- \Rightarrow^*
- \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r
-\]
-なので，$U_i,B_i$ はそれぞれ長さ $i+1,i+5$ の終端生成語をもつ．
-$S\Rightarrow B_n$ なので開始記号にも長さ $n+5$ の証拠がある．従って全非終端記号は
-長さ $n+5$ 以下の終端生成語をもち，$\tau_{R_n}\le n+5$ である．
-生成規則記号数は $O(n)$ だから，固定した符号化の下で符号化サイズは $n$ の多項式である．
-
-$R_n^-$ は開始記号を $S^-$ とし，生成規則をすべて明示して
-次のように定める．
-\[
-\begin{aligned}
- S^-&\to B_n^-,\\
- U_0&\to\mathtt0, &
- U_i&\to U_{i-1}\mathtt0
- &&(1\le i\le n),\\
- B_0&\to\mathtt l\mathtt a\mathtt r
-       \mid\mathtt l\mathtt cU_0\mathtt d\mathtt r,\\
- B_i&\to\mathtt lB_{i-1}B_{i-1}\mathtt r
-       \mid\mathtt l\mathtt cU_i\mathtt d\mathtt r
- &&(1\le i<n),\\
- B_0^-&\to\mathtt l\mathtt cU_0\mathtt d\mathtt r,\\
- B_i^-&\to\mathtt l\mathtt cU_i\mathtt d\mathtt r\\
- &\quad\mid\mathtt lB_{i-1}^-B_{i-1}\mathtt r
-       \mid\mathtt lB_{i-1}B_{i-1}^-\mathtt r
- &&(1\le i\le n).
-\end{aligned}
-\]
-ここで $B_i$（$0\le i<n$）はレベル $i$ のすべての語を生成し，
-$B_i^-$（$0\le i\le n$）はそのうち少なくとも一つの $s_j$ の出現を
-含む語をちょうど生成する（帰納法による）．
-開始規則が $S^-\to B_n^-$ なので，
-$L(R_n^-)=\mathcal T_n^-$ である．
-$S^-\to B_n^-$ から二項規則をたどればすべての $B_i^-$ が到達可能であり，
-各 $B_i$ は $B_{i+1}^-$ の規則で通常の兄弟として現れ，各 $U_i$ は $s_i$ を含む規則に
-現れる．従って表示したすべての非終端記号が到達可能である．生産性と厚みも
-\[
- U_i\Rightarrow^*\mathtt 0^{\,i+1},\qquad
- B_i^-\Rightarrow
- \mathtt l\mathtt cU_i\mathtt d\mathtt r
- \Rightarrow^*
- \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r
-\]
-で明示できる．各 $B_i$ も表示した規則から長さ $i+5$ の
-終端語を生成でき，$S^-\Rightarrow B_n^-$ が開始記号の証拠を与える．従ってすべての非終端記号は
-生産的で長さ $n+5$ 以下の終端生成語をもち，$R_n^-$ は縮約済みかつ
-$\tau_{R_n^-}\le n+5$ である．これも生成規則記号数 $O(n)$，符号化サイズは多項式である．
-
-補題~\ref{lem:level-coded-substitutable} により $\mathcal T_n$ は
-$\sim_{h_\circ}$-代入可能である．さらに
-$\mathcal T_n^-=\mathcal T_n\cap h_\circ^{-1}(\{\zeta\})$
-なので，補題~\ref{lem:fibre-restriction} から $\mathcal T_n^-$ も同じ性質をもつ．
-両言語は有限だから $\Ccf{h_\circ}$ に属する．
-
-$C_n,C_n^-$ を同じ $\mathcal B$ に関する二標的の特徴標本とする．
-$\mathcal T_n\setminus\mathcal T_n^-=\{z_n\}$ なので，
-補題~\ref{lem:nested-characteristic-obstruction} は $z_n\in C_n$ を強制する．
-式~\eqref{eq:clean-tree-length} より
-$\|C_n\|\ge|z_n|+1=5\cdot2^n-1$ であり，これは $n$ に指数的である一方，
-文法サイズは $n$ の多項式，厚みは $n$ に線形である．
-\end{proof}
 
 \section{固定窓に対する厚み付きデータ}
 \label{sec:fixed-window-thick}
@@ -965,23 +795,6 @@ $\mathcal B_{h_{k,\ell}}$ に対して $|R|$ と $\tau_R$ の多項式サイズ�
 多項式は固定した窓とアルファベットに依存し，可変な $k,\ell$ に関する一様上界は
 主張しない．これはバッチ再構成の特徴データに関する主張であり，保守的逐次学習器の
 Gold 安定化は系~\ref{cor:ilt} で別途与える．
-
-\paragraph{一般下界との整合性．}
-定理~\ref{thm:ordinary-thickness-lower} は固定窓の結果と矛盾しない．
-大きい方の標的 $\mathcal T_n$ は Clark--Eyraud 代入可能なので，自明型付けからの
-型付け精密化により，任意の固定 $(k,\ell)$ について $\Ccf{h_{k,\ell}}$ に属する．
-しかし $n\ge1$ では，入れ子標的 $\mathcal T_n^-$ は通常の意味ですら代入可能でない．
-$z_n=p_n\mathtt a q_n$ と書き，$p_n:=\mathtt l^{\,n+1}$ とする．別の高さ $0$ の
-body $\mathtt a$ を一つ $s_0$ に置き換えて $\bar q_n$ を得る．すると
-$p_n\mathtt a$ と $p_ns_0$ は $\mathcal T_n^-$ で文脈
-$(\lambda,\bar q_n)$ を共有するが，$(\lambda,q_n)$ は $p_ns_0$ の文脈であって
-$p_n\mathtt a$ の文脈ではない．さらに一般に，任意の固定 $(k,\ell)$ について，
-十分大きい $n$ では $\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ である．
-そうでなければ入れ子標的補題と系~\ref{cor:window-transfer} により，指数長の $z_n$ が
-多項式サイズに抑えられる固定窓特徴標本へ入ることを強制される．一般下界は任意の
-縮約済み CFG 表現に対して測られるので，Coste--Nicolas~\cite{coste-nicolas2019} の
-reduced normal form (RNF) で表現された $k,\ell$-local substitutable language に対する IPTtD 結果とも矛盾しない．
-そこでは言語条件も表現クラスも異なる．
 
 \section{線形部分クラス}
 \label{sec:linear}
@@ -1423,9 +1236,9 @@ $\mathsf{GRS}(\{a\})\subsetneq\mathsf{RS}(\{a\})$
 
 任意の固定有限モノイド型付け $h$ に対し，有限個の標準正例証拠からの
 多項式時間の集合駆動型再構成と，それとは別の保守的 Gold 学習器を与えた．
-特徴データは文法サイズと型付き厚みに関して多項式であるが，一つの固定二元型付けでは，
-fixed-$h$ slice 全体を対象とする集合駆動型作用素に，縮約済み CFG サイズと通常の厚みに
-関する多項式上界は存在しない．一方，任意の固定接頭辞--接尾辞窓では通常の厚みで十分であり，
+特徴データは文法サイズと型付き厚みに関して多項式である．上の元文法厚みから
+型付き厚みへの指数ギャップは，通常の元文法厚みだけでは一般の再構成上界を
+制御できない理由を示す．一方，任意の固定接頭辞--接尾辞窓では通常の厚みで十分であり，
 線形 fixed-$h$ 標的では文法サイズに関する上界が得られる．
 
 本枠組みには，それぞれ
@@ -1589,67 +1402,6 @@ $X=X_0,X_1,\ldots,X_t$ と書く．$X_t$ は終端規則を用い，生成語長
 $|\omega(X)|\le N_t$ が従う．
 \end{proof}
 
-\section{level-coded tree language の代入可能性}
-\label{app:level-coded-substitutability}
-
-\begin{proof}[補題~\ref{lem:level-coded-substitutable} の証明]
-$\mathtt l,\mathtt r$ を対応する木括弧とみなす．レベル $0$ の節点の body は
-$\mathtt a$ または $s_0$ であり，レベル $i\ge1$ の節点は body $s_i$ をもつか，
-レベル $i-1$ の順序付き二子をもつ．直列化では各節点を
-$\mathtt l,\mathtt r$ で囲む．従って $\mathcal T_i$ はちょうどレベル $i$ の
-木の直列化全体であり，$z_i$ はどの $s_j$ も含まない唯一の直列化である．
-
-$\mathcal T_n$ の各語は一意な構文解析をもつ．レベル $0$ では body の最初の記号が
-一方では $\mathtt a$，他方では $\mathtt c$ である．正のレベルでは，
-二分節点の場合は $\mathtt l$，$s_i$ の場合は $\mathtt c$ である．二分の場合は
-括弧対応が二つの子を一意に分離するので，帰納法により木全体が決まる．
-
-$i\ge1$ に対し $b_i:=z_{i-1}z_{i-1}$，また $b_0:=\mathtt a$ とおく．
-有効な直列化における $s_i$ または $b_i$ の literal occurrence は，
-ちょうどレベル $i$ の解析済み節点の body であることを示す．
-$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ は括弧を含まず 0 の run が $i$ を記録するので
-明らかであり，$b_0$ も明らかである．$i\ge1$ では
-$b_i=z_{i-1}z_{i-1}$ の literal occurrence を考える．各 $z_{i-1}$ は
-$\mathtt l$ で始まり，対応する $\mathtt r$ で終わり，その真の接頭辞では括弧 balance が
-常に正である．従って一意な構文解析における括弧対応から，最初の $z_{i-1}$ の出現は
-ちょうど一つの解析済み部分木であり，その形からレベル $i-1$ と分かる．
-これが右子なら親を閉じる $\mathtt r$ が二個目の $z_{i-1}$ より先に現れるはずなので，
-右子ではない．従ってこれはレベル $i$ の二分節点の左子であり，直後の $z_{i-1}$ は
-その右の兄弟に強制される．したがって $s_i\leftrightarrow b_i$ という置換は
-レベル $i$ の節点でちょうど実行でき，$\mathcal T_n$ の内部にとどまる．
-
-任意の語文脈の中で $s_i\leftrightarrow b_i$ という置換を有限回行って
-$\alpha$ から $\beta$ を得られるとき $\alpha\rightsquigarrow\beta$ と書く．
-前段落から，$p\alpha q\in\mathcal T_n$ かつ
-$\alpha\rightsquigarrow\beta$ なら $p\beta q\in\mathcal T_n$ である．
-
-次の帰納的主張を用いる．レベル $n$ の相異なる二つの直列化 $w,w'$ に対し，
-ある語 $p,q,\xi,\eta$ が存在して
-$w=p\xi q$, $w'=p\eta q$, $\xi\rightsquigarrow\eta$
-であり，$\xi,\eta$ は非空で，最初の記号どうしも最後の記号どうしも異なる．
-レベル $0$ では二つの body $\mathtt a$ と $s_0$ を取ればよい．
-レベル $i\ge1$ で，一方の root が $s_i$ を用い他方が二分なら，
-まず $s_i$ を $b_i=z_{i-1}z_{i-1}$ に置き換え，その後異なる子の内部で帰納法を用いる．
-両 root が二分で一方の順序付き子だけが異なるなら，その子の内部で帰納法を適用し，
-一致する外側部分を $p,q$ に吸収する．両子が異なるなら，左子，次に右子で帰納法を適用する．
-いずれの場合も，最初の差は最も左の変更部分から，最後の差は最も右の変更部分から継承されるので，
-主張が従う．
-
-いま $uxv,uyv\in\mathcal T_n$ とする．一意な解析が等しければ cancellation により
-$x=y$ である．そうでなければ上の主張を適用し，
-$uxv=p\xi q$, $uyv=p\eta q$ とする．$u$ は共通接頭辞で
-$\xi,\eta$ の最初の記号が異なるので，ある語 $\gamma$ に対し $p=u\gamma$ である．
-同様に $v$ は共通接尾辞で $\xi,\eta$ の最後の記号が異なるので，
-ある語 $\delta$ に対し $q=\delta v$ である．従って
-$x=\gamma\xi\delta$, $y=\gamma\eta\delta$ であり，
-$\xi\rightsquigarrow\eta$ から $x$ を $y$ へ移す有限置換列が得られる．
-
-最後に $u'xv'\in\mathcal T_n$ とする．上で示した文脈閉包性により同じ有限列を
-$x$ の出現内で実行でき，$u'yv'\in\mathcal T_n$ を得る．よって
-$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$ であり，
-置換列を逆向きにすれば逆包含も従う．従って $\mathcal T_n$ は代入可能である．
-\end{proof}
-
 \begin{thebibliography}{99}
 
 \bibitem{kanazawa1993}
@@ -1741,14 +1493,6 @@ R.~Eyraud, J.~Heinz, and R.~Yoshinaka.
 \newblock In J.~Heinz and J.~M.~Sempere (Eds.),
 \emph{Topics in Grammatical Inference}, Springer, 2016.
 doi:10.1007/978-3-662-48395-4\_2.
-
-\bibitem{coste-nicolas2019}
-F.~Coste and J.~Nicolas.
-\newblock Learning local substitutable context-free languages from positive
-examples in polynomial time and data by reduction.
-\newblock In \emph{Proceedings of the International Conference on
-Grammatical Inference (ICGI 2018)}, \emph{Proceedings of Machine Learning
-Research}, 93:155--168, 2019.
 
 \bibitem{autebert1997}
 J.-M.~Autebert, J.~Berstel, and L.~Boasson.
