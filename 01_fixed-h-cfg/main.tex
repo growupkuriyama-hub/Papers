@@ -8,7 +8,6 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
-\newtheorem*{propositionstar}{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
@@ -117,7 +116,10 @@ further restrict such controls~\cite{koshiba-makinen-takada1997}.  Here the
 fixed homomorphism instead types terminal factors and restricts which factors
 may be compared.  We use this distinction only for positioning and claim no
 equivalence, subsumption, or general class separation between the two
-methodologies.
+methodologies.  Since linear languages admit one-turn pushdown
+characterizations, a more direct account of how finite factor typings interact
+with pushdown finite control is a natural next step; we leave such a
+characterization open.
 
 \subsection{Contributions and main results}
 
@@ -151,7 +153,7 @@ in Clark's congruential family.
 
 \subsection{Organization of the paper}
 Sections~\ref{sec:prelim}--\ref{sec:framework} set up the framework,
-Sections~\ref{sec:algo}--\ref{sec:complexity} prove learnability,
+Sections~\ref{sec:algo}--\ref{sec:typing} prove learnability,
 Sections~\ref{sec:typed-thickness}--\ref{sec:linear} give the quantitative
 results, and Section~\ref{sec:boundaries} gives the expressiveness
 comparisons.  Long normalization proofs are deferred to the appendices.
@@ -276,6 +278,22 @@ $\mathsf{RS}:=\bigcup_h\mathsf{RS}_h$, where $h$ ranges over finite-monoid
 homomorphisms on $\Sigma^*$.  We write $\mathsf{RS}_h(\Gamma)$ and
 $\mathsf{RS}(\Gamma)$ when the alphabet matters; all inclusions below are
 alphabetwise.  The learning results always concern one fixed $h$.
+
+\begin{proposition}\label{prop:regular-auto}
+A language is regular iff it has the form $h^{-1}(\mathsf{Acc})$ for some
+homomorphism $h:\Sigma^*\to M$ into a finite monoid and some
+$\mathsf{Acc}\subseteq M$.  For every fixed $h$ and
+$\mathsf{Acc}\subseteq M$, the language $h^{-1}(\mathsf{Acc})$ is
+$\sim_h$-substitutable.  Thus every regular language belongs to
+$\mathsf{RS}$.
+\end{proposition}
+
+\begin{proof}
+The first statement is the standard finite-monoid characterization
+\cite{pin2025}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
+$h(uxv)=h(uyv)$ for all $u,v$, so $\D_L(x)=\D_L(y)$.
+\end{proof}
+
 Neither $\mathsf{RS}$ nor $\mathsf{RS}\cap\mathrm{CFL}$ is identifiable
 from positive data on a nonempty alphabet: by
 Proposition~\ref{prop:regular-auto} both contain all finite languages and
@@ -290,7 +308,7 @@ $\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$;
 in particular, window information and another finite feature can be combined
 without making the typing target-specific.
 
-\begin{propositionstar}[closure under finite information]
+\begin{proposition}[closure under finite information]\label{prop:finite-info-closure}
 Let $h:\Sigma^*\to M$ and $g:\Sigma^*\to N$ be finite-monoid
 homomorphisms.
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
@@ -308,7 +326,7 @@ $\varphi^{-1}(L)\in\mathsf{RS}_{\widehat h}$; if moreover
 $L\in\Ccf{h}$, then
 $\varphi^{-1}(L)\in\Ccf{\widehat h}$.
 \end{enumerate}
-\end{propositionstar}
+\end{proposition}
 
 \begin{proof}
 For (i), suppose nonempty $x,y$ have equal $(h\times g)$-type and share a
@@ -333,15 +351,21 @@ $\D_{\varphi^{-1}(L)}(x)=\D_{\varphi^{-1}(L)}(y)$.
 The context-free statement uses closure of CFLs under inverse homomorphism.
 \end{proof}
 
-Yoshinaka~\cite[Proposition~1]{yoshinaka2008} shows that the fixed-window
-hierarchy is not closed under intersection with regular languages or under
-inverse homomorphism in general, although each fixed $(k,\ell)$ class is
-closed under ordinary intersection and under $\lambda$-free inverse
-homomorphism.  Thus product typing gives a structural gain over fixed windows:
-independent finite information, including a regular filter or the erasure
-pattern of a homomorphism, can be absorbed into one finite typing.  We do not
-claim that $\mathsf{RS}$ is exactly the closure of the fixed-window hierarchy
-under these operations.
+Yoshinaka~\cite[Proposition~1]{yoshinaka2008} shows that the class of
+all $(k,\ell)$-substitutable languages is not closed under intersection with
+regular languages or under inverse homomorphism in general, while it is closed
+under ordinary intersection and under $\lambda$-free inverse homomorphism.
+Immediately after that proposition, he notes that the context-free subfamily
+of $(k,\ell)$-substitutable languages is not closed under intersection.
+Theorem~\ref{thm:ctr-non-kl} below also gives the regular-filter failure in
+the present notation: $\Sigma_c^*$ belongs to every fixed-window class,
+$\mathrm{CTR}_\rho$ is regular, and
+$\Sigma_c^*\cap\mathrm{CTR}_\rho=\mathrm{CTR}_\rho$ lies outside every
+fixed-window class for $\rho\ge2$.  Thus product typing gives a structural
+gain over fixed windows: independent finite information, including a regular
+filter or the erasure pattern of a homomorphism, can be absorbed into one
+finite typing.  We do not claim that $\mathsf{RS}$ is exactly the closure of
+the fixed-window hierarchy under these operations.
 
 \paragraph{When is a typing useful?}
 For correctness relative to a target $L$, Definition~\ref{def:hsubst} says
@@ -364,21 +388,6 @@ convention adopted below, $L_{\mathrm c}$ is Clark--Eyraud substitutable,
 but $\equiv_{L_{\mathrm c}}$ has infinite index: for $1\le i<j$ the
 context $(a,cb^{i+1})$ distinguishes $a^i$ from $a^j$.  The restriction to $\Sigma^+$ is essential: with the trivial monoid,
 comparing $\lambda$ as well would wrongly exclude examples such as $a^+$.
-
-\begin{proposition}\label{prop:regular-auto}
-A language is regular iff it has the form $h^{-1}(\mathsf{Acc})$ for some
-homomorphism $h:\Sigma^*\to M$ into a finite monoid and some
-$\mathsf{Acc}\subseteq M$.  For every fixed $h$ and
-$\mathsf{Acc}\subseteq M$, the language $h^{-1}(\mathsf{Acc})$ is
-$\sim_h$-substitutable.  Thus every regular language belongs to
-$\mathsf{RS}$.
-\end{proposition}
-
-\begin{proof}
-The first statement is the standard finite-monoid characterization
-\cite{pin2025}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
-$h(uxv)=h(uyv)$ for all $u,v$, so $\D_L(x)=\D_L(y)$.
-\end{proof}
 
 \subsection{Classical special cases}
 
@@ -585,7 +594,7 @@ $\lambda\in K\subseteq L$.
 \subsection{The sequential learner}
 
 Recomputing $\mathcal B_h$ after every datum need not stabilize
-syntactically: for $L=\{a^ncb^n:n\ge0\}$, longer examples
+syntactically: for $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$, longer examples
 introduce new triples such as $[a^ncb^n:\lambda,\lambda]$.
 We therefore use the conservative wrapper of Clark--Eyraud's
 Substitutable Grammar Learner (SGL, Algorithm~2) and Yoshinaka's
@@ -867,12 +876,13 @@ Theorem~\ref{thm:reconstruction-fixed-h} and Corollary~\ref{cor:ilt}, this
 proves Theorem~\ref{thm:main}(i)--(iii).  The quantitative bounds in
 items~(iv)--(v) are proved in Sections~\ref{sec:fixed-window-thick}--\ref{sec:linear}.
 No bound in grammar size alone is possible: the standard doubling family
-(cf. de~la~Higuera~\cite{higuera1997} and
-Eyraud--Heinz--Yoshinaka~\cite[Example~2.3]{eyraud-heinz-yoshinaka2016})
+used by Clark--Eyraud~\cite[Example~2]{clark-eyraud2007} and
+Eyraud--Heinz--Yoshinaka~\cite[Example~2.3]{eyraud-heinz-yoshinaka2016}
 has reduced SSBNF grammars
 $S_0\to D_n$, $D_0\to a$, $D_i\to D_{i-1}D_{i-1}$ with $O(n)$
-production symbols but singleton language $\{a^{2^n}\}$.  Every singleton
-language is $\sim_h$-substitutable for every $h$.
+production symbols but singleton language $\{a^{2^n}\}$.  De~la~Higuera's
+Theorem~3~\cite{higuera1997} uses a closely related simple-deterministic
+variant.  Every singleton language is $\sim_h$-substitutable for every $h$.
 
 \section{Typed Thickness for General Fixed Typings}
 \label{sec:typed-thickness}
