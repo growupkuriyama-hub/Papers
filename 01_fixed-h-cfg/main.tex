@@ -41,10 +41,10 @@ and a conservative sequential learner that identifies every nonempty such
 target in the limit; reconstruction and updates take polynomial time.  The
 size of the canonical witnesses is controlled by the shortest yields obtained
 after target nonterminals are split according to their finite $h$-values; these
-lengths can be exponentially larger than ordinary grammar thickness.  For one fixed two-element typing, no
-set-driven reconstruction operator valid for the whole fixed-$h$ class admits
-characteristic data bounded polynomially in reduced CFG size and ordinary
-grammar thickness.  By contrast, such characteristic data
+lengths can be exponentially larger than ordinary grammar thickness.  For
+general fixed typings, our characteristic-data bound is therefore naturally
+expressed through this target-side typed-thickness parameter rather than through
+ordinary grammar thickness alone.  By contrast, such characteristic data
 are polynomially bounded for every fixed
 prefix--suffix window $(k,\ell)$, whose typing captures Yoshinaka's
 $(k,\ell)$-substitutability exactly, and polynomial in the size of a linear
@@ -126,11 +126,10 @@ reconstruction and updates take time polynomial in the accumulated sample.
 
 \item \emph{Quantitative boundary.}  For arbitrary fixed $h$, canonical
 witnesses can require exponentially longer shortest yields after splitting
-target nonterminals by their finite $h$-types than in the original grammar.  For one fixed two-element typing $h_\circ$,
-no set-driven reconstruction operator having characteristic samples throughout
-$\Ccf{h_\circ}$ admits characteristic-data bounds polynomial in reduced CFG
-size and the original grammar's shortest-yield lengths.  Such a bound does
-hold for every fixed prefix--suffix window $(k,\ell)$, and linear targets
+target nonterminals by their finite $h$-types than in the original grammar.
+Thus ordinary source thickness does not by itself control the typed-refinement
+parameter used by the general fixed-$h$ reconstruction.  By contrast, ordinary
+thickness suffices for every fixed prefix--suffix window $(k,\ell)$, and linear targets
 under every fixed $h$ admit characteristic data polynomial in linear-grammar
 size.
 
@@ -880,7 +879,17 @@ Theorem~\ref{thm:reconstruction-fixed-h} gives the characteristic-sample propert
 \end{proof}
 
 The typed thickness cannot in general be replaced by the ordinary grammar
-thickness through the typed-refinement argument.
+thickness through the typed-refinement argument.  This kind of representation
+sensitivity is already familiar in CFG learning: Clark--Eyraud
+\cite[Example~2]{clark-eyraud2007} exhibit compact grammars for which positive
+characteristic data must contain exponentially long words; Yoshinaka
+\cite{yoshinaka2008} makes ordinary grammar thickness an explicit parameter in
+the fixed-window setting; and Eyraud--Heinz--Yoshinaka
+\cite{eyraud-heinz-yoshinaka2016} discuss further representation-sensitive
+limitations of characteristic-data criteria.  The point needed here is
+narrower: even after ordinary source thickness is recorded, the typed
+refinement used by the present fixed-$h$ reconstruction can have much longer
+shortest yields.
 
 \begin{remark}[exponential source-to-typed thickness gap]
 \label{rem:typed-thickness-gap}
@@ -927,208 +936,12 @@ polynomial bound in source grammar size and ordinary thickness
 exists even for this fixed typing.
 
 However, the target language $\{\mathtt a,\mathtt c\}^+$
-does not depend on $n$.  This establishes only a gap for
-the canonical typed-refinement witness construction; the
-operator-independent lower bound is given by
-Theorem~\ref{thm:ordinary-thickness-lower}.
+does not depend on $n$.  Thus this is not an algorithm-independent lower bound
+on characteristic data.  Its role is only to show that ordinary source
+thickness does not control the typed-refinement parameter appearing in
+Corollary~\ref{cor:typed-thickness-data}; accordingly, the general fixed-$h$
+bound is stated in terms of typed thickness.
 \end{remark}
-
-\subsection{A set-driven ordinary-thickness lower bound}
-\label{subsec:ordinary-thickness-lower}
-
-We use two elementary observations.
-
-\begin{lemma}[restriction by a set of types]
-\label{lem:fibre-restriction}
-Let $h:\Sigma^*\to M$ be a monoid homomorphism and let $L$ be
-$\sim_h$-substitutable.  For every $F\subseteq M$, the language
-$L\cap h^{-1}(F)$ is also $\sim_h$-substitutable.
-\end{lemma}
-
-\begin{proof}
-If $L_F:=L\cap h^{-1}(F)$ and equal-type nonempty factors $x,y$ share a
-context in $L_F$, then they share one in $L$, so $\D_L(x)=\D_L(y)$.  For
-all $u,v$,
-$uxv\in L_F \iff uxv\in L\ \text{and}\ h(u)h(x)h(v)\in F$,
-and both conditions are unchanged when $x$ is replaced by $y$.
-\end{proof}
-
-\begin{lemma}[nested-target characteristic-sample obstruction]
-\label{lem:nested-characteristic-obstruction}
-Let $\mathcal B$ be any set-driven operator and let $L'\subsetneq L$.  If
-$C$ and $C'$ are characteristic samples for $L$ and $L'$, respectively,
-with respect to the same $\mathcal B$, then
-$C\cap(L\setminus L')\ne\varnothing$.
-\end{lemma}
-
-\begin{proof}
-Otherwise $C\subseteq L'$.  For $K:=C\cup C'$ we have
-$C\subseteq K\subseteq L$ and $C'\subseteq K\subseteq L'$, so
-the characteristic-sample property forces both $L(\mathcal B(K))=L$ and
-$L(\mathcal B(K))=L'$, a contradiction.
-\end{proof}
-
-Fix
-\[
- \Sigma_\circ:=\{\mathtt l,\mathtt r,\mathtt a,\mathtt c,
-                    \mathtt 0,\mathtt d\}
-\]
-and the two-element monoid $M_\circ:=\{1,\zeta\}$ with identity $1$ and
-zero $\zeta$.  This is the same abstract two-element zero monoid used in
-Remark~\ref{rem:typed-thickness-gap}; the homomorphism is given a new
-name because its alphabet and letter map are different.  Define
-$h_\circ:\Sigma_\circ^*\to M_\circ$ by
-$h_\circ(\mathtt c)=\zeta$ and by sending every other letter to $1$; thus
-$h_\circ(w)=\zeta$ exactly when $w$ contains $\mathtt c$.
-
-For $i\ge0$ put $s_i:=\mathtt c\mathtt 0^{\,i+1}\mathtt d$ and define
-finite languages
-\[
- \mathcal T_0:=\{\mathtt l\mathtt a\mathtt r,\,
-                    \mathtt l s_0\mathtt r\},
- \qquad
- \mathcal T_i:=\{\mathtt l s_i\mathtt r\}
- \cup\{\mathtt lxy\mathtt r:x,y\in\mathcal T_{i-1}\}
- \quad(i\ge1).
-\]
-Let
-$z_0:=\mathtt l\mathtt a\mathtt r$
-and $z_i:=\mathtt l z_{i-1}z_{i-1}\mathtt r$.
-Then $z_i$ is the unique $\mathtt c$-free word of $\mathcal T_i$, and
-\begin{equation}
- |z_i|=5\cdot2^i-2.
- \label{eq:clean-tree-length}
-\end{equation}
-
-The tree-parsing argument needed for the lower bound is elementary but
-notationally longer than the main line of the proof, so we defer its details to
-Appendix~\ref{app:level-coded-substitutability}.  The key point is that every word of $\mathcal T_n$ has a unique level-$n$
-tree parse and is obtained from $z_n$ by replacing subtrees at nodes none of
-which is an ancestor of another, using the corresponding words $s_i$.  The
-level code makes the replacement sites unambiguous.
-
-\begin{lemma}[level-coded tree languages are substitutable]
-\label{lem:level-coded-substitutable}
-For every $n\ge0$, $\mathcal T_n$ is substitutable in the
-Clark--Eyraud sense.
-\end{lemma}
-
-\begin{proof}
-See Appendix~\ref{app:level-coded-substitutability}.
-\end{proof}
-
-\begin{theorem}[set-driven ordinary-thickness lower bound]
-\label{thm:ordinary-thickness-lower}
-For the fixed homomorphism $h_\circ$ above, there is a polynomial $p$
-such that for every $n\ge1$ there are reduced CFGs $R_n,R_n^-$ which, with
-$\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$, satisfy
-$L(R_n)=\mathcal T_n$, $L(R_n^-)=\mathcal T_n^-$, and
-\[
- \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},\qquad
- |R_n|+|R_n^-|\le p(n),\qquad
- \tau_{R_n},\tau_{R_n^-}\le n+5.
-\]
-Let $\mathcal B$ be any set-driven operator for which both targets have
-characteristic samples.  Then every characteristic sample $C_n$ for
-$\mathcal T_n$ satisfies
-\[
- \|C_n\|\ge5\cdot2^n-1.
-\]
-Consequently no set-driven operator admitting characteristic samples for all
-targets in $\Ccf{h_\circ}$ has a characteristic-data bound polynomial in
-reduced CFG size and ordinary thickness.  In particular this applies to
-$\mathcal B_{h_\circ}$.
-\end{theorem}
-
-\begin{proof}
-A compact reduced CFG $R_n$ is
-\[
-\begin{aligned}
- S&\to B_n,&
- U_0&\to\mathtt0,&
- U_i&\to U_{i-1}\mathtt0 &&(1\le i\le n),\\
- B_0&\to\mathtt l\mathtt a\mathtt r
-       \mid\mathtt l\mathtt cU_0\mathtt d\mathtt r,\\
- B_i&\to\mathtt lB_{i-1}B_{i-1}\mathtt r
-       \mid\mathtt l\mathtt cU_i\mathtt d\mathtt r
-       &&(1\le i\le n).
-\end{aligned}
-\]
-It generates exactly $\mathcal T_n$.  Every displayed symbol is reachable
-and productive.  More explicitly,
-\[
- U_i\Rightarrow^*\mathtt 0^{\,i+1},
- \qquad
- B_i\Rightarrow
- \mathtt l\mathtt cU_i\mathtt d\mathtt r
- \Rightarrow^*
- \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r,
-\]
-so $U_i$ and $B_i$ have terminal yields of lengths $i+1$ and $i+5$,
-respectively.  Since $S\Rightarrow B_n$, the start symbol has the same
-$n+5$ witness.  Hence every nonterminal has a terminal yield of length at
-most $n+5$, and therefore $\tau_{R_n}\le n+5$.  The production-symbol
-count is $O(n)$, so the encoded size is polynomial in $n$ under our fixed
-convention.
-
-Define $R_n^-$ independently by the following complete list of
-productions (with start symbol $S^-$):
-\[
-\begin{aligned}
- S^-&\to B_n^-,\\
- U_0&\to\mathtt0, &
- U_i&\to U_{i-1}\mathtt0
- &&(1\le i\le n),\\
- B_0&\to\mathtt l\mathtt a\mathtt r
-       \mid\mathtt l\mathtt cU_0\mathtt d\mathtt r,\\
- B_i&\to\mathtt lB_{i-1}B_{i-1}\mathtt r
-       \mid\mathtt l\mathtt cU_i\mathtt d\mathtt r
- &&(1\le i<n),\\
- B_0^-&\to\mathtt l\mathtt cU_0\mathtt d\mathtt r,\\
- B_i^-&\to\mathtt l\mathtt cU_i\mathtt d\mathtt r\\
- &\quad\mid\mathtt lB_{i-1}^-B_{i-1}\mathtt r
-       \mid\mathtt lB_{i-1}B_{i-1}^-\mathtt r
- &&(1\le i\le n).
-\end{aligned}
-\]
-Here $B_i$ ($0\le i<n$) generates all level-$i$ words, whereas
-$B_i^-$ ($0\le i\le n$) generates exactly those containing at least one
-occurrence of some $s_j$, by induction.
-Since the start symbol derives $B_n^-$, we have
-$L(R_n^-)=\mathcal T_n^-$.  From
-$S^-\to B_n^-$ the binary rules make every $B_i^-$ reachable; each
-$B_i$ ($i<n$) occurs as a sibling in a $B_{i+1}^-$ rule, and each $U_i$
-occurs in a rule containing $s_i$.  Thus every displayed nonterminal is reachable.
-Productivity and the thickness bound can again be witnessed explicitly:
-\[
- U_i\Rightarrow^*\mathtt 0^{\,i+1},
- \qquad
- B_i^-\Rightarrow
- \mathtt l\mathtt cU_i\mathtt d\mathtt r
- \Rightarrow^*
- \mathtt l\mathtt c\mathtt 0^{\,i+1}\mathtt d\mathtt r.
-\]
-Each $B_i$ has the displayed terminal yield of length $i+5$, and
-$S^-\Rightarrow B_n^-$ supplies the start-symbol witness.  Consequently all
-nonterminals are productive and have terminal yields of length at most $n+5$,
-so $R_n^-$ is reduced and $\tau_{R_n^-}\le n+5$.  Again it has $O(n)$
-production symbols and polynomial encoded size.
-
-By Lemma~\ref{lem:level-coded-substitutable}, $\mathcal T_n$ is
-$\sim_{h_\circ}$-substitutable.  Moreover
-$\mathcal T_n^- =\mathcal T_n\cap h_\circ^{-1}(\{\zeta\})$,
-so Lemma~\ref{lem:fibre-restriction} gives the same property for
-$\mathcal T_n^-$.  Both languages are finite and therefore belong to
-$\Ccf{h_\circ}$.
-
-Let $C_n$ and $C_n^-$ be characteristic samples for the two targets with
-respect to $\mathcal B$.  Since
-$\mathcal T_n\setminus\mathcal T_n^-=\{z_n\}$,
-Lemma~\ref{lem:nested-characteristic-obstruction} forces $z_n\in C_n$.
-Equation~\eqref{eq:clean-tree-length} gives
-$\|C_n\|\ge|z_n|+1=5\cdot2^n-1$, which is exponential in $n$, while the
-grammar sizes are polynomial in $n$ and the thicknesses are linear in $n$.
-\end{proof}
 
 \section{Fixed-Window Thick Data}
 \label{sec:fixed-window-thick}
@@ -1222,27 +1035,6 @@ The polynomial depends on the fixed window and alphabet; no uniform bound in
 variable $k,\ell$ is asserted.  This is a characteristic-data statement for
 the batch reconstruction; Gold stabilization of the conservative sequential
 learner is Corollary~\ref{cor:ilt}.
-
-\paragraph{Consistency with the general lower bound.}
-Theorem~\ref{thm:ordinary-thickness-lower} does not conflict with the
-fixed-window result.  The larger target $\mathcal T_n$ is ordinarily
-substitutable and hence, by typing refinement from the trivial typing, belongs
-to $\Ccf{h_{k,\ell}}$ for every fixed $(k,\ell)$.  For $n\ge1$, however,
-the nested target $\mathcal T_n^-$ is not even Clark--Eyraud substitutable:
-write $z_n=p_n\mathtt a q_n$ with $p_n:=\mathtt l^{\,n+1}$ and obtain
-$\bar q_n$ by replacing one other height-$0$ body $\mathtt a$ by $s_0$.
-Then $p_n\mathtt a$ and $p_ns_0$ share the context
-$(\lambda,\bar q_n)$ in $\mathcal T_n^-$, whereas $(\lambda,q_n)$ is
-a context of $p_ns_0$ but not of $p_n\mathtt a$.  More generally, for
-every fixed $(k,\ell)$, $\mathcal T_n^-\notin\Ccf{h_{k,\ell}}$ for all
-sufficiently large $n$: otherwise the nested-target lemma together with
-Corollary~\ref{cor:window-transfer} would force the exponentially long
-$z_n$ into a polynomially bounded fixed-window characteristic sample.
-The general lower bound is measured against arbitrary reduced CFG
-representations and therefore also does not conflict with the IPTtD result
-of Coste--Nicolas~\cite{coste-nicolas2019} for $k,\ell$-local
-substitutable languages represented in reduced normal form (RNF), where both
-the language condition and representation class are different.
 
 \section{The Linear Subclass}
 \label{sec:linear}
@@ -1714,11 +1506,10 @@ for some regular targets.
 
 For every fixed finite-monoid typing $h$, the paper gives polynomial-time
 set-driven reconstruction from finite canonical positive witnesses and a
-separate conservative Gold learner.  Characteristic data are polynomial in
-grammar size and typed thickness, but for one fixed two-element typing no
-set-driven operator over the whole fixed-$h$ slice admits a polynomial bound in reduced
-CFG size and ordinary thickness.  Ordinary thickness again suffices for every
-fixed prefix--suffix window, while linear fixed-$h$ targets admit a
+separate conservative Gold learner.  Characteristic data are polynomial in grammar size and typed thickness.  The
+source-to-typed gap above shows why ordinary source thickness alone does not
+control this general reconstruction bound.  Ordinary thickness again suffices
+for every fixed prefix--suffix window, while linear fixed-$h$ targets admit a
 grammar-size bound.
 
 The framework contains regular, nonregular linear, and nonlinear
@@ -1958,78 +1749,6 @@ $t+1$ typed spine symbols are distinct non-start symbols, so
 $t+1\le N_t$.  Hence $|\omega(X)|\le N_t$ in all cases.
 \end{proof}
 
-\section{Substitutability of the level-coded tree languages}
-\label{app:level-coded-substitutability}
-
-\begin{proof}[Proof of Lemma~\ref{lem:level-coded-substitutable}]
-View $\mathtt l,\mathtt r$ as matching tree brackets.  At level $0$ a node
-has body $\mathtt a$ or $s_0$; at level $i\ge1$ it has body $s_i$ or two
-ordered children of level $i-1$.  Serialization surrounds every node by
-$\mathtt l,\mathtt r$.  Hence $\mathcal T_i$ is exactly the set of
-serializations of level-$i$ trees, and $z_i$ is the unique serialization
-containing no occurrence of any $s_j$.
-
-Every word in $\mathcal T_n$ has a unique parse.  At level $0$, the first
-body symbol is $\mathtt a$ in one case and $\mathtt c$ in the other; at
-positive level it is $\mathtt l$ in the binary case and $\mathtt c$ in the
-$s_i$ case.  In the binary case bracket matching uniquely separates the two
-children, so induction determines the whole tree.
-
-For $i\ge1$ put $b_i:=z_{i-1}z_{i-1}$ and put $b_0:=\mathtt a$.  We claim
-that in a valid serialization, every literal occurrence of either $s_i$ or
-$b_i$ is exactly the body of a level-$i$ parsed node.  This is immediate for
-$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$, because it contains no brackets
-and its zero run records $i$, and it is immediate for $b_0$.  For $i\ge1$,
-consider a literal occurrence
-$b_i=z_{i-1}z_{i-1}$.  Each word $z_{i-1}$ starts with $\mathtt l$, ends
-with its matching $\mathtt r$, and has positive bracket balance at every
-proper prefix.  Hence bracket matching in the unique parse forces the first
-occurrence of $z_{i-1}$ to be exactly one parsed subtree; its shape identifies
-that subtree as level $i-1$.  It cannot be a right child, because then its
-parent's closing $\mathtt r$ would occur before the second $z_{i-1}$.
-Therefore it is the left child of a level-$i$ binary node, and the immediately
-following $z_{i-1}$ is forced to be its right sibling.  Thus the replacement
-$s_i\leftrightarrow b_i$ can be performed precisely at a level-$i$ node and
-preserves membership in $\mathcal T_n$.
-
-Write $\alpha\rightsquigarrow\beta$ if $\beta$ is obtained from $\alpha$
-by finitely many replacements $s_i\leftrightarrow b_i$ in arbitrary word
-contexts.  The preceding paragraph gives contextual closure: if
-$p\alpha q\in\mathcal T_n$ and $\alpha\rightsquigarrow\beta$, then
-$p\beta q\in\mathcal T_n$.
-
-We use the following inductive claim.  For two distinct serializations
-$w,w'$ of level-$n$ trees, there are words $p,q,\xi,\eta$ such that
-$w=p\xi q$, $w'=p\eta q$, $\xi\rightsquigarrow\eta$, and
-$\xi,\eta$ are nonempty with different first symbols and different last
-symbols.  At level $0$, take the two bodies $\mathtt a$ and $s_0$.  For
-level $i\ge1$, if one root uses $s_i$ and the other is binary, first replace
-$s_i$ by $b_i=z_{i-1}z_{i-1}$ and then apply the induction hypothesis inside
-the children that differ.  If both roots are binary and only one ordered
-child differs, apply the induction hypothesis in that child and absorb the
-common material into $p$ and $q$.  If both children differ, apply the
-induction hypothesis first in the left child and then in the right child.
-In all cases the first difference is inherited from the leftmost changed
-part and the last difference from the rightmost changed part, proving the
-claim.
-
-Now suppose $uxv,uyv\in\mathcal T_n$.  If their unique parses are equal,
-then cancellation gives $x=y$.  Otherwise apply the claim:
-$uxv=p\xi q$ and $uyv=p\eta q$.  Because $u$ is a common prefix and the
-first symbols of $\xi,\eta$ differ, there is a word $\gamma$ with
-$p=u\gamma$.  Dually, because $v$ is a common suffix and the last symbols
-of $\xi,\eta$ differ, there is a word $\delta$ with $q=\delta v$.
-Hence $x=\gamma\xi\delta$ and $y=\gamma\eta\delta$, so
-$\xi\rightsquigarrow\eta$ yields a finite replacement sequence from $x$
-to $y$.
-
-Finally let $u'xv'\in\mathcal T_n$.  Contextual closure transports the same
-sequence inside the occurrence of $x$, giving $u'yv'\in\mathcal T_n$.
-Thus $\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$; reversing the
-sequence gives the opposite inclusion.  Therefore $\mathcal T_n$ is
-substitutable.
-\end{proof}
-
 \begin{thebibliography}{99}
 
 \bibitem{kanazawa1993}
@@ -2121,14 +1840,6 @@ R.~Eyraud, J.~Heinz, and R.~Yoshinaka.
 \newblock In J.~Heinz and J.~M.~Sempere (Eds.),
 \emph{Topics in Grammatical Inference}, Springer, 2016.
 doi:10.1007/978-3-662-48395-4\_2.
-
-\bibitem{coste-nicolas2019}
-F.~Coste and J.~Nicolas.
-\newblock Learning local substitutable context-free languages from positive
-examples in polynomial time and data by reduction.
-\newblock In \emph{Proceedings of the International Conference on
-Grammatical Inference (ICGI 2018)}, \emph{Proceedings of Machine Learning
-Research}, 93:155--168, 2019.
 
 \bibitem{autebert1997}
 J.-M.~Autebert, J.~Berstel, and L.~Boasson.
