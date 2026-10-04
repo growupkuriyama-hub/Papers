@@ -284,7 +284,7 @@ without making the typing target-specific.
 
 If $\ker h$ restricted to $\Sigma^+$ refines the syntactic congruence
 $\equiv_L$, then $L\in\mathsf{RS}_h$.  The converse already fails for
-ordinary substitutability.  Consider
+Clark--Eyraud substitutability.  Consider
 $L_{\mathrm c}:=\{a^ncb^n:n\ge0\}$.  Under the nonempty-fragment
 convention adopted below, $L_{\mathrm c}$ is Clark--Eyraud substitutable,
 but $\equiv_{L_{\mathrm c}}$ has infinite index: for $1\le i<j$ the
@@ -1147,15 +1147,14 @@ $(k,\ell)$-substitutability~\cite{yoshinaka2008}.  We prove the corresponding
 bound for $\mathcal B_{h_{k,\ell}}$; neither the same normal form nor the
 same polynomial degree is claimed.
 
-Fix $k,\ell\ge0$, put $r:=k+\ell$, and let $G=(V,\Sigma,P,S_0)$ be a
-reduced SSBNF grammar.  Write
+Fix $k,\ell\ge0$, and let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar.  Write
 \[
  N:=|V\setminus\{S_0\}|,\qquad
  N_t:=|\widetilde V\setminus\{\widetilde S\}|,\qquad
  \theta_{k,\ell}(G):=
  \begin{cases}
-   \tau_G, & r=0,\\[1mm]
-   r+(2r-1)N\tau_G, & r>0,
+   \tau_G, & k+\ell=0,\\[1mm]
+   (k+\ell)+(2(k+\ell)-1)N\tau_G, & k+\ell>0,
  \end{cases}
 \]
 where $\widetilde G$ is the reduced $h_{k,\ell}$-typed refinement.
@@ -1228,7 +1227,7 @@ Theorem~\ref{thm:ordinary-thickness-lower} does not conflict with the
 fixed-window result.  The larger target $\mathcal T_n$ is ordinarily
 substitutable and hence, by typing refinement from the trivial typing, belongs
 to $\Ccf{h_{k,\ell}}$ for every fixed $(k,\ell)$.  For $n\ge1$, however,
-the nested target $\mathcal T_n^-$ is not even ordinarily substitutable:
+the nested target $\mathcal T_n^-$ is not even Clark--Eyraud substitutable:
 write $z_n=p_n\mathtt a q_n$ with $p_n:=\mathtt l^{\,n+1}$ and obtain
 $\bar q_n$ by replacing one other height-$0$ body $\mathtt a$ by $s_0$.
 Then $p_n\mathtt a$ and $p_ns_0$ share the context
@@ -1387,17 +1386,18 @@ has the form $(a^m,b^n)$, and
 \end{array}
 \]
 Thus an $e$-factor's distribution is determined by $i-j$, and a $c/d$-factor's
-by $(i-j,\operatorname{par}(\xi)-i\bmod2)$.  A shared context makes the
-corresponding invariant equal for $x$ and $y$; equal $h_{\pm,e}$-types place
-them on the same branch.  Hence $\D_L(x)=\D_L(y)$.
+by $(i-j,\operatorname{par}(\xi)-i\bmod2)$.  A shared context makes the corresponding invariant equal for $x$ and $y$;
+equality of $h_{\pm,e}$-types ensures that either both are $e$-factors or
+both are $c/d$-factors.  Hence $\D_L(x)=\D_L(y)$.
 
 The language is not Clark--Eyraud substitutable because $c,e\in L$ share the
 empty context but $(a,b)\in\D_L(e)\setminus\D_L(c)$.  Finally fix
-$k,\ell$ and put $N:=2\max\{1,k+\ell\}$,
+$k,\ell$ and put $m_0:=\max\{1,k+\ell\}$,
 $w_e:=a^keb^\ell$, $w_c:=a^kcb^\ell$.  These factors have the same
 length-$k$ prefix and length-$\ell$ suffix and share
-$(a^{N-k},b^{N-\ell})$, whereas
-$(a^{N+1-k},b^{N+1-\ell}) \in\D_L(w_e)\setminus\D_L(w_c)$.
+$(a^{2m_0-k},b^{2m_0-\ell})$, whereas
+$(a^{2m_0+1-k},b^{2m_0+1-\ell})
+ \in\D_L(w_e)\setminus\D_L(w_c)$.
 The \hyperref[crit:kl]{fixed-window counterexample criterion} therefore gives
 $L_{\pm,e}\notin\mathsf{KL}$.
 \end{proof}
@@ -1415,8 +1415,11 @@ context-free families.
 \subsection{A nonlinear target inside \texorpdfstring{$\mathsf{RS}$}{RS}}
 
 Let $\Delta:=\{a^nb^n:n\ge0\}$ and consider $\Delta^*$.  For
-$z\in\{a,b\}^*$ put $\beta(z):=|z|_a-|z|_b$ and let
-$\underline\beta(z)$ be the minimum prefix balance.  Call an occurrence of
+$z\in\{a,b\}^*$ put $\beta(z):=|z|_a-|z|_b$ and define
+\[
+ \underline\beta(z):=
+ \min\{\beta(p):p\text{ is a prefix of }z\}.
+\]  Call an occurrence of
 $ba$ to have the height of the prefix ending at its $b$.  We use:
 \textup{($\star$)} $w\in\Delta^*$ iff
 $\underline\beta(w)\ge0$, $\beta(w)=0$, and every occurrence of $ba$
@@ -1438,10 +1441,12 @@ $M_\star:=h_\star(\{a,b\}^*)$ carries the product
 $h_\star(x)h_\star(y):=h_\star(xy)$, making $h_\star$ a finite-monoid
 homomorphism.
 
-For nonempty $x$ and $d\in\mathbb Z$, call $d$ an
-\emph{admissible entry height} if
-$d+\underline\beta(x)\ge0$ and $d+\eta=0$ for every height $\eta$ of an
-internal $ba$ in $x$; write $\mathcal E(x)$ for the set of such $d$.
+For nonempty $x$, define
+\[
+ \mathcal E(x):=
+ \{q\in\mathbb Z:
+ q+\underline\beta(x)\ge0\ \text{and} q+\eta=0\ \text{for every height $\eta$ of an internal $ba$ in $x$}\}.
+\]
 
 \begin{proposition}[a nonlinear fixed-$h_\star$ target]
 \label{prop:nonlinear-rs-example}
@@ -1471,7 +1476,7 @@ If both contain $ba$, any internal $ba$ forces the unique possible entry
 height, and the common context supplies it; hence
 $\mathcal E(x)=\{\beta(u)\}=\mathcal E(y)$.  If neither contains
 $ba$, then $x,y\in a^*b^*$ and
-$\mathcal E(z)=\{d:d\ge-\min\{0,\beta(z)\}\}$, so equality follows
+$\mathcal E(z)=\{q:q\ge-\min\{0,\beta(z)\}\}$, so equality follows
 from $\beta(x)=\beta(y)$.  Thus
 $\D_{\Delta^*}(x)=\D_{\Delta^*}(y)$.
 
@@ -1490,20 +1495,23 @@ language $\Delta^*$ beyond the fixed-window hierarchy.  No separation from
 control-set methods in general is claimed.
 
 For comparison, even the context-free part of the fixed-window hierarchy is
-not confined to linear languages.  Over $\Gamma:=\{a,b,c,d,e\}$, recall the center-marker language $P$
-from Section~\ref{sec:framework}, and let
-$L_\times:=PdP =\{a^ncb^nd\,a^mcb^m:n,m\ge0\}$.
-The center-marker language $P$ is substitutable: a nonempty factor avoiding
-$c$ is a pure power of $a$ or of $b$, and a shared $P$-context forces the
-same balance $|\cdot|_a-|\cdot|_b$, hence the same factor; a factor
-containing $c$ has the form $a^icb^j$, and its $P$-contexts depend only on
-$i-j$.  The language $P$ is also prefix- and suffix-free.  Since every word
+not confined to linear languages.  Over $\Gamma:=\{a,b,c,d,e\}$, recall
+$L_{\mathrm c}=\{a^ncb^n:n\ge0\}$ from Section~\ref{sec:framework}, and
+let
+$L_\times:=L_{\mathrm c}dL_{\mathrm c}
+ =\{a^ncb^nd\,a^mcb^m:n,m\ge0\}$.
+The language $L_{\mathrm c}$ is Clark--Eyraud substitutable: a nonempty
+factor avoiding $c$ is a pure power of $a$ or of $b$, and a shared
+$L_{\mathrm c}$-context forces the same balance $|\cdot|_a-|\cdot|_b$,
+hence the same factor; a factor containing $c$ has the form $a^icb^j$, and
+its $L_{\mathrm c}$-contexts depend only on $i-j$.  The language
+$L_{\mathrm c}$ is also prefix- and suffix-free.  Since every word
 of $L_\times$ contains exactly one $d$, a common context for two factors
 places $d$ either outside both factors or inside both.  In the first case,
-substitutability of $P$ transfers the relevant one-sided $P$-context; in the
+Clark--Eyraud substitutability of $L_{\mathrm c}$ transfers the relevant one-sided $L_{\mathrm c}$-context; in the
 second, prefix/suffix-freeness fixes the empty-side cases and substitutability
-of $P$ transfers the left and right pieces independently.  Hence
-$L_\times$ is ordinarily substitutable, so it belongs to the $(0,0)$
+of $L_{\mathrm c}$ transfers the left and right pieces independently.  Hence
+$L_\times$ is Clark--Eyraud substitutable, so it belongs to the $(0,0)$
 fixed-window class.  It is context-free via
 $S\to XdX$, $X\to aXb\mid c$.
 
@@ -1528,7 +1536,8 @@ For $\rho\ge1$, put
 \text{ for all }0\le i\le|w|\}.
 \]
 
-For every $\rho\ge1$, $\mathrm{CTR}_\rho$ is regular: a DFA records
+For every $\rho\ge1$, $\mathrm{CTR}_\rho$ is regular: a deterministic
+finite automaton records
 heights $0,\ldots,\rho$, uses one sink outside the range, and resets to $0$
 on $\#$.  Hence $\mathrm{CTR}_\rho\in\mathsf{RS}(\Sigma_c)$ by
 Proposition~\ref{prop:regular-auto}.
@@ -1682,8 +1691,8 @@ Let
 $L_{\ge2}:=\{a^m:m\ge2\}$.
 This language is regular, hence belongs to $\mathsf{RS}(\{a\})$ by
 Proposition~\ref{prop:regular-auto}.  Suppose instead that
-$h:\{a\}^*\to G$ is a homomorphism into a finite group, put $g=h(a)$,
-and let $n\ge1$ be the order of $g$.  Then
+$h:\{a\}^*\to\mathsf G$ is a homomorphism into a finite group
+$\mathsf G$, put $g=h(a)$, and let $n\ge1$ be the order of $g$.  Then
 $h(a)=h(a^{n+1})$.  The two nonempty factors $a$ and $a^{n+1}$ share the
 context $(a,\lambda)$ because $a^2,a^{n+2}\in L_{\ge2}$, but their
 distributions differ: $(\lambda,\lambda)\notin\D_{L_{\ge2}}(a)$ whereas
@@ -1744,21 +1753,21 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-When $r=0$, $h_{0,0}$ is constant on $\Sigma^+$, so a productive typed
+When $k+\ell=0$, $h_{0,0}$ is constant on $\Sigma^+$, so a productive typed
 nonterminal $A_\mu$ has the same nonempty yields as its underlying nonterminal
 $A$ and hence $|\omega(A_\mu)|\le\tau_G$.
 
-Assume $r>0$ and let $A_\mu$ be productive.  If $\mu$ is a short-word
+Assume $k+\ell>0$ and let $A_\mu$ be productive.  If $\mu$ is a short-word
 element of $M_{k,\ell}$, then every word of type $\mu$ is that very word, of
-length $<r$, and the required bound is immediate.  It remains to consider a
+length $<k+\ell$, and the required bound is immediate.  It remains to consider a
 long-word summary element $\mu=\langle p,q\rangle$.  Choose any derivation
 tree of $A$ whose terminal yield $w$ has this type.  Mark the first $k$
-terminal leaves and the last $\ell$ terminal leaves; there are exactly $r$
-marked leaves, and their labels are $p$ and $q$ in the required order.
+terminal leaves and the last $\ell$ terminal leaves; there are exactly
+$k+\ell$ marked leaves, and their labels are $p$ and $q$ in the required order.
 
-Let $T_0$ be the union of the root-to-marked-leaf paths.  Consider each
-maximal chain of nonterminal nodes in $T_0$ along which exactly one child
-remains in $T_0$.  If the same underlying nonterminal label occurs twice on
+Let $\mathcal U$ be the union of the root-to-marked-leaf paths.  Consider each
+maximal chain of nonterminal nodes in $\mathcal U$ along which exactly one child
+remains in $\mathcal U$.  If the same underlying nonterminal label occurs twice on
 such a chain, replace the derivation rooted at the upper occurrence by the
 subtree rooted at the lower occurrence.  This is a valid derivation from the
 same nonterminal and deletes only sibling subtrees containing no marked leaf,
@@ -1766,17 +1775,17 @@ so all marked boundary terminals and their order are preserved.  Repeating
 the shortcut leaves at most $N$ nonterminal nodes on each maximal one-child
 chain.
 
-Contract every maximal one-child chain.  The resulting branching skeleton
-connects the $r$ marked leaves and has at most $2r-1$ vertices, so there are
-at most $2r-1$ maximal one-child chains (including a possible initial chain
+Contract every maximal one-child chain.  The resulting rooted binary tree
+connects the $k+\ell$ marked leaves and has at most $2(k+\ell)-1$ vertices,
+so there are at most $2(k+\ell)-1$ maximal one-child chains (including a possible initial chain
 above the first branching vertex).  An omitted sibling subtree can occur only
 at a node on one of these chains; branching nodes have both children in
-$T_0$.  Hence there are at most $(2r-1)N$ omitted sibling subtrees.  Replace
+$\mathcal U$.  Hence there are at most $(2(k+\ell)-1)N$ omitted sibling subtrees.  Replace
 each by a shortest terminal yield of its root, contributing at most $\tau_G$
 terminals per subtree.  The resulting word $w'$ is still derived from $A$,
 still has prefix $p$ and suffix $q$, and therefore has the same
 $h_{k,\ell}$-type $\mu$, while
-$|w'|\le r+(2r-1)N\tau_G$.
+$|w'|\le (k+\ell)+(2(k+\ell)-1)N\tau_G$.
 By the same yield-type annotation used in
 Proposition~\ref{prop:typed-core}, this derivation lifts to
 $A_\mu\Rightarrow_{\widetilde G}^*w'$; since $A_\mu$ is reachable and the tree
@@ -1911,8 +1920,8 @@ $\Theta_2,\ldots,\Theta_m$ and use
 therefore either terminal or binary with exactly one wrapper child and one
 other nonterminal child.  By construction, a wrapper $W_a$ occurs only in the
 wrapper-child position of a binary rule and never as its continuing
-nonterminal child; the terminal-only construction ends instead in a fresh
-non-wrapper chain symbol with a terminal rule.  Final trimming preserves this property,
+nonterminal child; the terminal-only construction ends instead in a fresh non-wrapper
+nonterminal with a terminal rule.  Final trimming preserves this property,
 the separated start form, and reducedness.  The wrapper and chain
 factorizations are linear in the already polynomial total right-hand-side
 length, so the whole construction has polynomial size and runs in polynomial
@@ -1942,102 +1951,70 @@ $t+1\le N_t$.  Hence $|\omega(X)|\le N_t$ in all cases.
 \label{app:level-coded-substitutability}
 
 \begin{proof}[Proof of Lemma~\ref{lem:level-coded-substitutable}]
-View $\mathtt l,\mathtt r$ as matching tree brackets.  A residual-height-$0$
-node is either the clean leaf with body $\mathtt a$ or the shortcut with body
-$s_0$; a residual-height-$i\ge1$ node is either the shortcut with body $s_i$
-or a binary node with two ordered children of residual height $i-1$.
-Serialization surrounds each node by $\mathtt l,\mathtt r$.  Hence
-$\mathcal T_i$ is exactly the set of serializations of residual-height-$i$
-trees, and $z_i$ is the unique serialization containing no shortcut.
+View $\mathtt l,\mathtt r$ as matching tree brackets.  At level $0$ a node
+has body $\mathtt a$ or $s_0$; at level $i\ge1$ it has body $s_i$ or two
+ordered children of level $i-1$.  Serialization surrounds every node by
+$\mathtt l,\mathtt r$.  Hence $\mathcal T_i$ is exactly the set of
+serializations of level-$i$ trees, and $z_i$ is the unique serialization
+containing no occurrence of any $s_j$.
 
-Every word in $\mathcal T_n$ has a unique parse.  At height $0$, the first
-body symbol is $\mathtt a$ in the clean case and $\mathtt c$ in the shortcut
-case; at positive height it is $\mathtt l$ in the binary case and
-$\mathtt c$ in the shortcut case.  In the binary case bracket matching
-uniquely separates the two children, so induction determines the whole tree.
-The shortcut nodes therefore form a uniquely determined antichain: choosing a
-shortcut removes the entire subtree rooted there.
+Every word in $\mathcal T_n$ has a unique parse.  At level $0$, the first
+body symbol is $\mathtt a$ in one case and $\mathtt c$ in the other; at
+positive level it is $\mathtt l$ in the binary case and $\mathtt c$ in the
+$s_i$ case.  In the binary case bracket matching uniquely separates the two
+children, so induction determines the whole tree.
 
-For $i\ge1$ put $b_i:=z_{i-1}z_{i-1}$ and put $b_0:=\mathtt a$.
-Thus $s_i=\mathtt c\mathtt0^{i+1}\mathtt d$ is the shortcut body and
-$b_i$ is the clean body of a residual-height-$i$ node.  In a valid
-serialization, a literal occurrence of either body is the body of a genuine
-residual-height-$i$ parsed node.  For $s_i$, this follows because shortcut
-bodies contain no brackets and the zero run records the level.  For $b_0$ the
-claim is immediate, since $b_0=\mathtt a$ is exactly the clean leaf body.
-For $i\ge1$, consider first the initial occurrence of
-$z_{i-1}$ in $b_i=z_{i-1}z_{i-1}$.  By induction it is a genuine
-residual-height-$(i-1)$ parsed subtree.  Inspecting its immediate parent frame,
-it cannot be the root, because a second $z_{i-1}$ follows, and it cannot be a
-right child, because the next symbol after a right child would close its
-parent.  Hence it is the left child of a residual-height-$i$ binary node.
-Uniqueness of the residual-height-$(i-1)$ parse of the remaining suffix then
-forces the following $z_{i-1}$ to be its right sibling.  Thus the whole
-literal occurrence of $b_i$ is exactly the clean body of that parsed node.
-Consequently
-the literal body replacement
-$s_i\longleftrightarrow b_i$
-is legal exactly at a residual-height-$i$ node, with the common surrounding
-$\mathtt l,\mathtt r$ left in place, and stays inside $\mathcal T_n$.
+For $i\ge1$ put $b_i:=z_{i-1}z_{i-1}$ and put $b_0:=\mathtt a$.  We claim
+that in a valid serialization, every literal occurrence of either $s_i$ or
+$b_i$ is exactly the body of a level-$i$ parsed node.  This is immediate for
+$s_i=\mathtt c\mathtt0^{i+1}\mathtt d$, because it contains no brackets
+and its zero run records $i$, and it is immediate for $b_0$.  For $i\ge1$,
+the first $z_{i-1}$ in a literal occurrence of
+$b_i=z_{i-1}z_{i-1}$ is, by induction, a level-$(i-1)$ parsed subtree.
+It cannot be the root because a second $z_{i-1}$ follows, and it cannot be a
+right child because the next symbol after a right child would close its
+parent.  It is therefore the left child of a level-$i$ binary node, and
+uniqueness of the remaining level-$(i-1)$ parse forces the following
+$z_{i-1}$ to be its right sibling.  Thus the replacement
+$s_i\leftrightarrow b_i$ can be performed precisely at a level-$i$ node and
+preserves membership in $\mathcal T_n$.
 
-Write $r\rightsquigarrow s$ when $r$ can be transformed into
-$s$ by a finite sequence of literal body replacements
-$s_i\leftrightarrow b_i$, performed in arbitrary word contexts.  The
-preceding occurrence-recognition argument implies that every such step is
-replay-admissible: if $prq\in\mathcal T_n$ and $r\rightsquigarrow s$ by
-one literal body-replacement step, then the corresponding replacement yields
-$psq\in\mathcal T_n$.
+Write $\alpha\rightsquigarrow\beta$ if $\beta$ is obtained from $\alpha$
+by finitely many replacements $s_i\leftrightarrow b_i$ in arbitrary word
+contexts.  The preceding paragraph gives contextual closure: if
+$p\alpha q\in\mathcal T_n$ and $\alpha\rightsquigarrow\beta$, then
+$p\beta q\in\mathcal T_n$.
 
-We next isolate the locality needed for substitutability.  For two distinct
-residual-height-$n$ parse trees $S,T$, let $w_S,w_T$ denote their
-serializations.  Induction on the residual height, with case analysis on the
-two root constructors, gives a \emph{difference core}: there are words $p,q,\xi,\eta$ such that
-$w_S=p\xi q$, $w_T=p\eta q$,
-and $\xi\rightsquigarrow\eta$,
-where $\xi,\eta$ are nonempty, their first symbols differ, and their last
-symbols differ.  We prove this claim by induction on the residual height.
-At height $0$ there are only the clean leaf and the shortcut; if they differ,
-take their two bodies $\mathtt a$ and $s_0$, which are related by one body
-replacement and differ at both endpoints.
+We use the following inductive claim.  For two distinct serializations
+$w,w'$ of level-$n$ trees, there are words $p,q,\xi,\eta$ such that
+$w=p\xi q$, $w'=p\eta q$, $\xi\rightsquigarrow\eta$, and
+$\xi,\eta$ are nonempty with different first symbols and different last
+symbols.  At level $0$, take the two bodies $\mathtt a$ and $s_0$.  For
+level $i\ge1$, if one root uses $s_i$ and the other is binary, first replace
+$s_i$ by $b_i=z_{i-1}z_{i-1}$ and then apply the induction hypothesis inside
+the children that differ.  If both roots are binary and only one ordered
+child differs, apply the induction hypothesis in that child and absorb the
+common material into $p$ and $q$.  If both children differ, apply the
+induction hypothesis first in the left child and then in the right child.
+In all cases the first difference is inherited from the leftmost changed
+part and the last difference from the rightmost changed part, proving the
+claim.
 
-Now let the residual height be $i\ge1$.  If one root is a shortcut and the
-other is binary, take the two root bodies.  First replace the shortcut body
-$s_i$ by the clean body $b_i=z_{i-1}z_{i-1}$; then transform the two clean
-children independently into the target left and right children, using the
-induction hypothesis wherever a child differs.  This gives a finite
-body-replacement sequence between the two root bodies, whose first and last
-symbols differ.  If both roots are binary and exactly one ordered child
-differs, apply the induction hypothesis inside that child and absorb the
-identical material outside its difference core into $p$ and $q$.  If both
-ordered children differ, apply the induction hypothesis to each child and
-concatenate the left difference core, the unchanged material between the two
-child cores, and the right difference core.  The resulting replacement
-sequence changes the left child and then the right child, so
-$\xi\rightsquigarrow\eta$; its first symbols differ in the left child and
-its last symbols differ in the right child.  These cases exhaust the two root
-constructors and complete the induction.
+Now suppose $uxv,uyv\in\mathcal T_n$.  If their unique parses are equal,
+then cancellation gives $x=y$.  Otherwise apply the claim:
+$uxv=p\xi q$ and $uyv=p\eta q$.  Because $u$ is a common prefix and the
+first symbols of $\xi,\eta$ differ, there is a word $\gamma$ with
+$p=u\gamma$.  Dually, because $v$ is a common suffix and the last symbols
+of $\xi,\eta$ differ, there is a word $\delta$ with $q=\delta v$.
+Hence $x=\gamma\xi\delta$ and $y=\gamma\eta\delta$, so
+$\xi\rightsquigarrow\eta$ yields a finite replacement sequence from $x$
+to $y$.
 
-Now suppose $uxv,uyv\in\mathcal T_n$ and take their unique parse trees.
-If the trees are equal, cancellation gives $x=y$.  Otherwise choose a
-difference core as above:
-$uxv=p\xi q$ and $uyv=p\eta q$.
-Because $u$ is a common prefix, it cannot extend strictly into both
-$\xi$ and $\eta$: the next symbols there are different.  Hence
-$p=u\alpha$ for some word $\alpha$.  Dually, since $v$ is a common suffix
-and the last symbols of $\xi,\eta$ differ, $q=\beta v$ for some word
-$\beta$.  Cancelling the common outer factors gives
-$x=\alpha\xi\beta$ and $y=\alpha\eta\beta$.
-Thus the entire difference core lies inside the displayed factor.
-Contextualizing the finite sequence $\xi\rightsquigarrow\eta$ by
-$\alpha,\beta$ therefore gives a finite legal body-replacement sequence
-from $x$ to $y$.
-
-Finally let $rxs\in\mathcal T_n$.  Replay admissibility transports this
-same finite sequence inside the occurrence of $x$, yielding
-$rys\in\mathcal T_n$.  Hence
-$\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$; reversing the
-body-replacement sequence gives the opposite inclusion.  Therefore
-$\mathcal T_n$ is substitutable.
+Finally let $u'xv'\in\mathcal T_n$.  Contextual closure transports the same
+sequence inside the occurrence of $x$, giving $u'yv'\in\mathcal T_n$.
+Thus $\D_{\mathcal T_n}(x)\subseteq\D_{\mathcal T_n}(y)$; reversing the
+sequence gives the opposite inclusion.  Therefore $\mathcal T_n$ is
+substitutable.
 \end{proof}
 
 \begin{thebibliography}{99}
