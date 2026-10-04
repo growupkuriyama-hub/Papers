@@ -21,7 +21,6 @@
 \newcommand{\Clin}[1]{\mathcal C_{#1}^{\lin}}
 \newcommand{\pref}{\mathrm{pref}}
 \newcommand{\suf}{\mathrm{suf}}
-\newcommand{\keywords}[1]{\smallskip\noindent{\bfseries keywords:} #1}
 \title{Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing}
 \author{Takayuki Kuriyama\\
 Independent Researcher\\
@@ -84,9 +83,9 @@ $\sim_h$-substitutable languages, and call this the \emph{fixed-$h$ slice}.
 Thus full distributional equality is required only after a fixed finite
 algebraic comparison.
 
-Recognizable congruences provide a natural finite typing.  If
-$L=h^{-1}(\mathsf{Acc})$ for a finite monoid homomorphism, equal $h$-values
-have identical distributions, so every regular language lies in the broader
+Recognizable congruences provide a natural finite typing.  If $L=h^{-1}(\mathsf{Acc})$ for a finite monoid homomorphism
+$h:\Sigma^*\to M$ and $\mathsf{Acc}\subseteq M$, equal $h$-values have
+identical distributions, so every regular language lies in the broader
 class $\mathsf{RS}$ defined in Section~\ref{sec:framework}.  Our learning
 results, however, use the \emph{fixed-$h$} regime: one homomorphism is fixed
 uniformly over the class $\Ccf{h}$, just as one pair $(k,\ell)$ is fixed in
@@ -160,8 +159,10 @@ $\D_L(x):=\{(u,v)\in\Sigma^*\times\Sigma^*:uxv\in L\}$.
 The \emph{syntactic congruence} of $L$ is defined by $x\equiv_L y$ iff
 $\D_L(x)=\D_L(y)$, for $x,y\in\Sigma^*$.
 We say that $x$ and $y$ are \emph{syntactically congruent} when
-$x\equiv_L y$, and write $[x]_{\equiv_L}$ for the $\equiv_L$-equivalence
-class of $x$.
+$x\equiv_L y$.
+
+For a word $w\in\Sigma^*$ and a letter $a\in\Sigma$, let $|w|_a$ denote
+the number of occurrences of $a$ in $w$.
 
 A context-free grammar (CFG) is a tuple $G=(V,\Sigma,P,S)$ with finite
 nonterminal set $V$, start symbol $S\in V$, and productions
@@ -282,8 +283,8 @@ without making the typing target-specific.
 If $\ker h$ restricted to $\Sigma^+$ refines the syntactic congruence
 $\equiv_L$, then $L\in\mathsf{RS}_h$.  The converse already fails for
 ordinary substitutability.  Consider the center-marker language
-$L_0:=\{a^ncb^n:n\ge0\}$.  Under the nonempty-fragment convention adopted
-below, $L_0$ is Clark--Eyraud substitutable, but $\equiv_{L_0}$ has infinite
+$P:=\{a^ncb^n:n\ge0\}$.  Under the nonempty-fragment convention adopted
+below, $P$ is Clark--Eyraud substitutable, but $\equiv_P$ has infinite
 index: for $1\le r<s$ the context $(a,cb^{r+1})$ distinguishes $a^r$ from
 $a^s$.  The restriction to $\Sigma^+$ is essential: with the trivial monoid,
 comparing $\lambda$ as well would wrongly exclude examples such as $a^+$.
@@ -315,15 +316,12 @@ $\D_L(x)=\D_L(y)$ for all $x,y\in\Sigma^+$.  This is exactly the
 trivial-monoid case of Definition~\ref{def:hsubst}, and hence also
 Yoshinaka's $(0,0)$ case.
 
-\begin{proposition}[Clark--Eyraud special case]\label{prop:ce-special}
-Every Clark--Eyraud substitutable language belongs to $\mathsf{RS}$.
-\end{proposition}
-\begin{proof}
-Use the one-element monoid.
-\end{proof}
+In particular, every Clark--Eyraud substitutable language belongs to
+$\mathsf{RS}$, by taking the one-element monoid.
 
 For $k,\ell\ge0$, let $\pref_k(w)$ and $\suf_\ell(w)$ denote the
-corresponding prefix and suffix, with
+prefix and suffix of lengths $\min\{k,|w|\}$ and
+$\min\{\ell,|w|\}$, respectively; in particular,
 $\pref_0(w)=\suf_0(w)=\lambda$.  Renaming Yoshinaka's window variables to
 avoid collision with our context notation, $L$ is
 \emph{$(k,\ell)$-substitutable} if, for
@@ -516,9 +514,9 @@ syntactically.\footnote{For $L=\{a^ncb^n:n\ge0\}$, longer examples add
 new triples such as $[a^ncb^n:\lambda,\lambda]$; see also
 Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016} on the
 gap between set-based and incremental learning.}
-We therefore use the conservative wrapper of Clark--Eyraud's SGL
-(Algorithm~2) and Yoshinaka's $(k,\ell)$-SGL
-(Algorithm~1)~\cite{clark-eyraud2007,yoshinaka2008}.  Starting from the fixed
+We therefore use a conservative wrapper following Clark--Eyraud's
+Substitutable Grammar Learner (SGL, Algorithm~2) and Yoshinaka's
+$(k,\ell)$-SGL (Algorithm~1)~\cite{clark-eyraud2007,yoshinaka2008}.  Starting from the fixed
 empty grammar $H_0$, after reading $w_n$ put
 \[
  H_n:=
@@ -790,17 +788,10 @@ has encoding length $O(n_K)$, so the grammar can
 be checked and written explicitly in $O(n_K^5)$ time.
 \end{proof}
 
-\begin{corollary}\label{cor:poly-update}
-At each stage the conservative learner $\mathcal A_h$ can process the next
-positive example in time polynomial in the encoded size of the data seen so
-far.
-\end{corollary}
-
-\begin{proof}
-CFG membership is polynomial in the grammar and input sizes, and every current
-hypothesis has polynomial size by Theorem~\ref{thm:poly-build}; a triggered
-rebuild is polynomial by the same theorem.
-\end{proof}
+Each update of the conservative learner $\mathcal A_h$ is also polynomial
+in the encoded data seen so far: CFG membership is polynomial in the grammar
+and input sizes, and both the hypothesis size and any triggered rebuild are
+polynomial by Theorem~\ref{thm:poly-build}.
 
 Together with Lemma~\ref{lem:sample-consistency},
 Theorem~\ref{thm:reconstruction-fixed-h} and Corollary~\ref{cor:ilt}, this
@@ -1031,15 +1022,16 @@ See Appendix~\ref{app:level-coded-substitutability}.
 
 \begin{theorem}[set-driven ordinary-thickness lower bound]
 \label{thm:ordinary-thickness-lower}
-For the fixed homomorphism $h_\circ$ above and every $n\ge1$ there are
-reduced CFGs $R_n,R_n^-$ such that, with
+For the fixed homomorphism $h_\circ$ above, there is a polynomial $p$
+such that for every $n\ge1$ there are reduced CFGs $R_n,R_n^-$ such that,
+with
 $\mathcal T_n^-:=\mathcal T_n\setminus\{z_n\}$,
 \[
  L(R_n)=\mathcal T_n,\qquad L(R_n^-)=\mathcal T_n^-,
 \]
 \[
  \mathcal T_n,\mathcal T_n^-\in\Ccf{h_\circ},\qquad
- |R_n|+|R_n^-|=\operatorname{poly}(n),\qquad
+ |R_n|+|R_n^-|\le p(n),\qquad
  \tau_{R_n},\tau_{R_n^-}\le n+5.
 \]
 Let $\mathcal B$ be any set-driven operator for which both targets have
@@ -1253,8 +1245,8 @@ $z_n$ into a polynomially bounded fixed-window characteristic sample.
 The general lower bound is measured against arbitrary reduced CFG
 representations and therefore also does not conflict with the IPTtD result
 of Coste--Nicolas~\cite{coste-nicolas2019} for $k,\ell$-local
-substitutable languages represented in RNF, where both the language
-condition and representation class are different.
+substitutable languages represented in reduced normal form (RNF), where both
+the language condition and representation class are different.
 
 \section{The Linear Subclass}
 \label{sec:linear}
@@ -1507,9 +1499,9 @@ language $\Delta^*$ beyond the fixed-window hierarchy.  No separation from
 control-set methods in general is claimed.
 
 For comparison, even the context-free part of the fixed-window hierarchy is
-not confined to linear languages.  Over $\Gamma:=\{a,b,c,d,e\}$, let
+not confined to linear languages.  Over $\Gamma:=\{a,b,c,d,e\}$, recall the center-marker language $P$
+from Section~\ref{sec:framework}, and let
 \[
- P:=\{a^ncb^n:n\ge0\},\qquad
  L_\times:=PdP
  =\{a^ncb^nd\,a^mcb^m:n,m\ge0\}.
 \]
@@ -1548,14 +1540,10 @@ For $\rho\ge1$, put
 \text{ for all }0\le i\le|w|\}.
 \]
 
-\begin{proposition}\label{prop:ctr-regular}
-For every $\rho\ge1$, $\mathrm{CTR}_\rho$ is regular and hence belongs
-to $\mathsf{RS}(\Sigma_c)$.
-\end{proposition}
-\begin{proof}
-A DFA records heights $0,\ldots,\rho$, uses one sink outside the range, and
-resets to $0$ on $\#$.  Apply Proposition~\ref{prop:regular-auto}.
-\end{proof}
+For every $\rho\ge1$, $\mathrm{CTR}_\rho$ is regular: a DFA records
+heights $0,\ldots,\rho$, uses one sink outside the range, and resets to $0$
+on $\#$.  Hence $\mathrm{CTR}_\rho\in\mathsf{RS}(\Sigma_c)$ by
+Proposition~\ref{prop:regular-auto}.
 
 \begin{theorem}\label{thm:ctr-non-kl}
 For every $\rho\ge2$, $\mathrm{CTR}_\rho$ is not
