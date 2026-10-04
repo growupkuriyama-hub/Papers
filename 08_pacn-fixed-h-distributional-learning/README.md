@@ -11,7 +11,7 @@
 - Type-level form: `rpc_r` depends only on the finite marked image monoid `(im h, h(Sigma^+))`, hence is effectively computable from finite algebra data.
 - Kernel invariance/refinement: equal observer kernels give equal `rpc_r`; product typing can only increase capacity.
 - Product law: for a full direct-product marked observer, `rpc_r` is supermultiplicative.
-- Same-cardinality observer separation: for every `d>=3` and prime power `q>=d+1`, two observers of the same size `q^{d-1}` can have `VC_{d+1}=q` versus `VC_{d+1}<=1`.
+- Same-cardinality observer separation: for every `d>=3` and every integer `q>=2`, two observers of the same size `q^{d-1}` can have `VC_{d+1}=q` versus `VC_{d+1}<=1`.
 - Fan-out-one sharpness: the `VC_2` bound is attained by an explicit family of finite regular fixed-`h` substitutable languages.
 - **Independent PAC sufficiency:** A direct one-sided relation-valued learner, using only observed full or support-sensitive coordinate slices and exploiting all factor-coordinate projections, achieves `N(eps,delta) <= ceil((2/(e eps))(1+q^d/d)) * ceil(log_2(1/delta))` for `q=|h(Sigma^+)|`. No Chernikov–Towsner Theorem 6.5 is used. Proof: `direct-improper-learner.tex`.
 - **Semantic proper PAC via Horn closure (new):** Closing all observed positive words under the full `(f,h)`-tuple substitutability axioms yields a genuine, conservative, `(f,h)`-substitutable **word-language** hypothesis with the **same PAC bound**. This is proper for the unrestricted semantic class of all typed-substitutable languages, but need not be CFG/MCFG-presentable. Proof: `direct-semantic-proper-learner.tex`.
@@ -39,7 +39,8 @@ This note links the fixed-observer CFG/MCFG program (#1/#2) to the Kuriyama–Ta
 
 ## Proof-audit status
 
-- Manual audit: `DIRECT_PAC_PROOF_AUDIT.md` checks the direct improper, semantic-proper, and finite-target grammar-proper PAC routes independently of CT25. It also records the sharpened all-factor-slices bound and the remaining representation/effectivity gaps.
+- Manual PAC audit: `DIRECT_PAC_PROOF_AUDIT.md` checks the direct improper, semantic-proper, and finite-target grammar-proper PAC routes independently of CT25. It also records the sharpened all-factor-slices bound and the remaining representation/effectivity gaps.
+- Manual sharpness audit: `INTERVAL_SHARPNESS_PROOF_AUDIT.md` checks the arbitrary-sublanguage step, the universal cyclic interval frame, and the exact observer-budget law. `tools/interval_sharpness_audit.py` exhaustively searches all legal tuple-hole patterns in representative small cases; output is in `computations/interval_sharpness_audit.txt`.
 
 ## Research utility
 
