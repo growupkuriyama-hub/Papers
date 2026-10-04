@@ -6,9 +6,21 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v95; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v95 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision; final PDF page/line locators remain to be regenerated after freeze.
+- `main.tex` — English major-revision manuscript, internal v98; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v98 English source on 2026-10-04.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v98. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v98 Source and response audit
+
+The v98 pass aligns the manuscript and response letter with the final source audit before resubmission. It corrects the IPTtD attribution to Yoshinaka (2008), cites Eyraud--Heinz--Yoshinaka (2016) as a later formulation, adds an explicit explanation of why the fixed-$h$ linear result does not contradict de la Higuera's negative result for the full linear-grammar representation class, clarifies the $\rho\ge2$ endpoint, and weakens source claims that had not been directly verified at the required level of specificity. The response letter now matches the actual manuscript: the unsupported bounded-advice paragraph is removed, the Section 10 description is corrected, the reduction in numbered theorem-like environments (86 to 34) is recorded, and a selected renumbering guide is included.
+
+## v97 Metavariable and terminology audit
+
+The v97 pass removes the metavariable collisions identified in the round-2 precheck, including competing uses of $P$, $r$, $N$, $d$, $A_i$, and $Z_i$, and unifies $N_t$. Proof-local labels such as `anchor`, `rule witness`, `residual height`, `difference core`, and `replay-admissible` were removed or replaced by direct descriptions. Appendix D was rewritten with a smaller vocabulary while preserving its mathematical claim. English and Japanese sources were synchronized.
+
+## v96 Data-availability cleanup
+
+The manuscript Data availability statement now says only that no empirical data were used. The Lean/Zenodo archive is no longer mentioned in the manuscript itself; formalization metadata remain project-internal.
 
 ## Historical baseline
 
@@ -45,7 +57,7 @@ The v90 preflight defines RNF and letter-count notation, expands SGL and the ini
 
 The current revision tightens three literature attributions without changing any theorem or proof:
 
-- Kanazawa (1998) is replaced in the current manuscript by Kanazawa (1996) for the positive-data learnability result for $k$-valued categorial grammars.
+- Kanazawa (1998) is replaced by Kanazawa (1996); the current v98 wording cites it only for positive-data learnability results for categorial grammars, avoiding a more specific theorem claim that was not directly rechecked in this audit.
 - The standard finite-monoid characterization is cited to the directly checked modern source Pin (2025) rather than relying on Eilenberg (1974).
 - The thickness attribution to Wakatsuki--Tomita is made through Yoshinaka (2008); the 1993 paper is no longer presented as independently checked support.
 
@@ -65,7 +77,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 
 - The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v89 working manuscript is a preflight/presentation revision: it moves the canonical-yield definition before first use, moves the parity motivation into the main text, compresses the unnumbered Section 10.1 comparison, and clarifies the $\rho=1$ endpoint. No numbered theorem/proposition/lemma/corollary statement was added or removed in this preflight, so no separate v89 Lean archive has been minted; v88 remains the theorem-facing verification baseline.
+- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v98 manuscript contains later presentation, notation, source-attribution, and response-consistency revisions; no separate v98 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v98.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
 - The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
