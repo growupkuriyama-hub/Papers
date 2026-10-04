@@ -6,8 +6,8 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v93; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v93 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
+- `main.tex` — English major-revision manuscript, internal v94; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v94 English source on 2026-10-04; section structure, labels, theorem environments, citations, and previously missing material were audited against `main.tex`.
 - `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the current revision; final PDF page/line locators remain to be regenerated after freeze.
 
 ## Historical baseline
@@ -16,6 +16,10 @@
 - SHA-256 of that historical source: `fcdcff7fc09140e7f3e83982d6cd57fa297f30ece0bc607f7f7859bb91c71b0d`.
 
 The historical file is preserved as an immutable archival baseline and should not be edited in place.
+
+## v94 Explicit shortcut grammar
+
+In the ordinary-thickness lower-bound proof (Section 7), the grammar `R_n^-` now has its complete production list written out, including `S^-`, all `Z_i`, the ordinary `A_i` for `0 <= i < n`, and shortcut-bearing `A_i^-` for `0 <= i <= n`. The follow-up witness argument is self-contained. Both English and Japanese texts are synchronized; theorem claims and numbering are unchanged.
 
 ## v93 Typed-thickness exposition
 
