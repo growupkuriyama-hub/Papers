@@ -6,9 +6,13 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v105; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v105 English source.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v105. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v106; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v106 English source.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v106. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+
+## v106 Yoshinaka prior-art correction
+
+This pass corrects the positioning of the regular fixed-window separation against Yoshinaka (2008, Proposition 1). Yoshinaka's proof already gives the regular language `L0 = ae*ce*a ∪ ae*de*a ∪ be*ce*b`, which is not `(k,l)`-substitutable for any `k,l`. The abstract, Introduction, contribution summary, Section 3, Section 9.2, Conclusion, Japanese translation, and reviewer response now state this explicitly. Ordinary intersection is also no longer presented as a contrast with the fixed-window hierarchy; the relevant structural differences are regular filtering and erasing inverse homomorphisms. The capped family `CTR_rho` is retained only as the finite-state companion to the uncapped counter obstruction. Two small wording issues were also fixed: the nonempty-fragment convention now points back to Definition 2.1, and the height of a `ba` occurrence is defined grammatically. No theorem statement or learning result is strengthened by this pass.
 
 ## v105 Round-2 preflight synchronization
 
