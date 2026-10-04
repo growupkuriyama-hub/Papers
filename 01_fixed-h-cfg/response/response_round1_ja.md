@@ -22,7 +22,7 @@
    新しい §7 で typed thickness を導入した。一般の fixed-\(h\) では canonical witness の大きさを source grammar の ordinary thickness だけで抑えられるとは限らず、固定2元モノイドでも full yield typing により指数的ギャップが生じうることを Prop. 7.3 で示した。
 
 6. **fixed-window との正確な対応**  
-   Prop. 3.3 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では Yoshinaka と同じ polynomial degree や normal form を主張せず、同じ2つのパラメータ（文法サイズと ordinary thickness）に関して polynomial な characteristic-data bound を得る、と限定した。
+   Prop. 3.2 で \(h_{k,\ell}\) による fixed-monoid typing と Yoshinaka の \((k,\ell)\)-substitutability が正確に一致することを示した。§8 では Yoshinaka と同じ polynomial degree や normal form を主張せず、同じ2つのパラメータ（文法サイズと ordinary thickness）に関して polynomial な characteristic-data bound を得る、と限定した。
 
 7. **linear theorem の非正規な射程と fixed-window との位置関係**  
    §9 に非正規 linear language \(L_{\pm,e}\) を追加し、fixed-\(h\) substitutable でありながら ordinary substitutable でも fixed-window substitutable でもない例を与えた。さらに §10.1 で、Clark–Eyraud の center-marker 例を踏まえた endpoint-complete variant \(P=\{a^ncb^n:n\ge0\}\) の代入可能性を直接証明し、fresh separator \(d\) から \(L_\times=PdP\) を構成して nonlinear な \((0,0)\)-substitutable CFL を与えた。これと \(L_{\pm,e}\) を合わせ、\(\Gamma=\{a,b,c,d,e\}\) 上で context-free fixed-window hierarchy と linear CFLs が比較不能であることを明示した。
@@ -90,6 +90,8 @@ order-independence の主張は撤回し、set-driven なのは batch operator �
 
 **回答:** batch constructor と sequential learner を分離した。§4.2 に、batch operator は set-driven だが stabilized grammar は presentation order に依存しうることを明記した。主張するのは target language を生成する文法への eventual syntactic stabilization だけである。
 
+v90 の提出前点検では RNF・出現回数記号 $|w|_a$ を定義し，SGL・受理集合・短語の接頭辞／接尾辞の説明を補った．自明な命題2件と多項式更新の系，未使用の記号とマクロを削除し，中心記号付き言語を $P$ に統一した．主要な数学的主張は変えていない．
+
 ## R1-08 基本用語の定義
 
 **回答:** CFG, derivation, reachable, productive, reduced, linear, binarization, encoding size, thickness などを §2 にまとめた。
@@ -108,7 +110,7 @@ order-independence の主張は撤回し、set-driven なのは batch operator �
 
 ## R1-12 fixed-window morphism の定義
 
-**回答:** prefix/suffix の意味と finite monoid の multiplication を明示し、Prop. 3.3 で Yoshinaka の fixed-window condition との同値性を両方向で証明した。
+**回答:** prefix/suffix の意味と finite monoid の multiplication を明示し、Prop. 3.2 で Yoshinaka の fixed-window condition との同値性を両方向で証明した。
 
 ## R1-13 “\(h\) is given as data” と linear CFG
 
@@ -178,11 +180,11 @@ L(\mathcal B_h(K))=L
 
 ## R1-30 quotient lemma の配置
 
-**回答:** 一般的な closure section を復活させず、実際に使う fixed-word right quotient の形だけを Lemma 10.8 として残し、その唯一の適用直前に置いた。
+**回答:** 一般的な closure section を復活させず、実際に使う fixed-word right quotient の形だけを Lemma 10.6 として残し、その唯一の適用直前に置いた。
 
 ## R1-31 Clark congruential family
 
-**回答:** Prop. 10.8 を追加した。Clark (2010) が ordinary substitutable と fixed-window substitutable classes を congruential family に含め、Dyck language を既知例として用いていることを本文で明示した。その上で、本稿では各 fixed-\(h\) slice に対して
+**回答:** Prop. 10.7 を追加した。Clark (2010) が ordinary substitutable と fixed-window substitutable classes を congruential family に含め、Dyck language を既知例として用いていることを本文で明示した。その上で、本稿では各 fixed-\(h\) slice に対して
 \[
 \mathcal C_h^{cf}\subseteq\mathsf{CONG}
 \]
