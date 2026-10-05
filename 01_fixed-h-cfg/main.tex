@@ -109,22 +109,25 @@ uncapped obstruction, and give nonregular linear and nonlinear context-free
 examples outside every fixed-window class.
 The same sections also show a boundary: unbounded counter/Dyck behavior can
 force infinitely many contextually distinct factors and therefore cannot be
-captured by any finite typing.  The viewpoint is methodologically related to
-externally supplied typing or domain biases in automata
-inference~\cite{coste-typing2004}, but the present $h$ acts compositionally
-on terminal factors rather than on occurrence-level automaton states.
+captured by any finite typing.  Concretely, a fixed homomorphism
+$h:\Sigma^*\to M$ is itself a finite-state factor feature: the right action
+$\delta(m,a)=m h(a)$ computes $h(w)$ from the identity state, and product
+typing is the synchronous product of such finite-state features.  This is
+methodologically related to externally supplied typing or domain biases in
+automata inference~\cite{coste-typing2004}, but Coste et al. type symbol
+occurrences using left and right context, whereas the present $h$ types an
+entire terminal factor independently of its occurrence and compositionally
+under concatenation.
 
 A complementary comparison is with control-set learning.  Takada's approach
 encodes a target by a regular control language over production sequences of a
 fixed grammar~\cite{takada1988,takada1995}; related positive-data results
-further restrict such controls~\cite{koshiba-makinen-takada1997}.  Here the
-fixed homomorphism instead types terminal factors and restricts which factors
-may be compared.  We use this distinction only for positioning and claim no
-equivalence, subsumption, or general class separation between the two
-methodologies.  Since linear languages admit one-turn pushdown
-characterizations, a more direct account of how finite factor typings interact
-with pushdown finite control is a natural next step; we leave such a
-characterization open.
+further restrict such controls~\cite{koshiba-makinen-takada1997}.  Section~\ref{sec:linear}
+gives a direct bridge in the linear case: for any labeled linear grammar and
+any set of $h$-types, the successful production-label sequences whose terminal
+yields have those types form a regular control set.  Thus fixed-$h$ yield
+typing induces finite-state control on linear derivations.  We claim neither
+equivalence nor subsumption between the two learning frameworks.
 
 \subsection{Contributions and main results}
 
@@ -389,10 +392,13 @@ the fixed-window hierarchy under these operations.
 
 \paragraph{When is a typing useful?}
 For correctness relative to a target $L$, Definition~\ref{def:hsubst} says
-exactly that $h$ must not identify two nonempty factors that share a context
-but have different distributions.  This adequacy condition is preserved by
-typing refinement, by the monotonicity above.  Lemma~\ref{lem:finite-monoid-obstruction}
-later gives a simple obstruction: an infinite pairwise family of such
+exactly that $h$ must separate every pair of nonempty factors that share a
+context but have different distributions.  Equivalently, choosing a useful
+typing is a finite-index monoid-congruence separation problem: no such
+distributional conflict may be collapsed by $\ker h$.  Typing refinement is
+therefore safe, and product typing combines independent finite features because
+a conflicting pair need only be separated by one component.  Lemma~\ref{lem:finite-monoid-obstruction}
+later gives the corresponding obstruction: an infinite pairwise family of
 conflicting factors cannot be separated by any finite typing.  Quantitative
 usefulness is a separate issue.  Refinement can enlarge the typed grammar used
 by the reconstruction bound; Remark~\ref{rem:typed-thickness-gap} exhibits an
@@ -1150,6 +1156,40 @@ automata~\cite{ginsburg-spanier1966,autebert1997}.  The normalization below
 gives the grammatical counterpart: every successful derivation has one
 continuing nonterminal path, which we call its \emph{spine}.
 
+\paragraph{Finite-state control induced by yield typing.}
+There is a direct connection here with Takada's control-set viewpoint.
+Temporarily give each production of a linear grammar $G=(V,\Sigma,P,S)$
+a distinct label from an alphabet $\Pi$, and write
+$A\Rightarrow_G^\alpha w$ when $\alpha\in\Pi^*$ is the production-label
+word of a derivation from $A$ to $w$.  For $F\subseteq M$, put
+\[
+ C_{h,F}(G):=
+ \{\alpha\in\Pi^*: S\Rightarrow_G^\alpha w
+   \text{ for some }w\in\Sigma^*\text{ with }h(w)\in F\}.
+\]
+Then $C_{h,F}(G)$ is regular.  Indeed, a finite automaton with states
+$V\times M\times M$ tracks the current nonterminal together with the
+$h$-types accumulated on its left and right.  Starting from $(S,1,1)$, a
+labeled linear rule $A\to uBv$ induces
+\[
+ (A,p,q)\longmapsto(B,p\,h(u),h(v)\,q),
+\]
+and a terminal rule $A\to w$ is accepted exactly when
+$p\,h(w)\,q\in F$.  After a derivation
+\[
+ S\Rightarrow u_1A_1v_1\Rightarrow\cdots\Rightarrow
+ u_1\cdots u_k w v_k\cdots v_1,
+\]
+the two monoid registers are
+$h(u_1\cdots u_k)$ and $h(v_k\cdots v_1)$, so the final test is exactly
+the $h$-type of the terminal yield.  Consequently, restricting derivations
+of $G$ to this regular control set generates precisely
+$L(G)\cap h^{-1}(F)$.  The same construction, started from any nonterminal
+$A$ with $F=\{\mu\}$, shows that the derivations represented by a typed
+copy $A_\mu$ are selected by a regular control set.  This gives a finite-state
+bridge to Takada's regular control languages~\cite{takada1995}; it does not
+claim that arbitrary Takada control sets arise from terminal yield typings.
+
 \begin{proposition}[linear-spine SSBNF normalization]\label{prop:linear-normal}
 There is a fixed polynomial $q_{\mathrm{lin}}$ such that every linear CFG
 $G$ generating a nonempty language can be converted in polynomial time into
@@ -1584,7 +1624,9 @@ Structurally, product typings give closure under arbitrary inverse
 homomorphism; under regular filtering, a target in $\Ccf{h}$ is mapped to
 the refined slice $\Ccf{h\times g}$ when the filter is recognized by $g$.
 These, rather than ordinary intersection, are the relevant advantages over
-fixed windows.
+fixed windows.  For linear grammars, fixed-$h$ yield typing also induces a
+regular control language on production sequences, giving a direct finite-state
+point of contact with Takada's control-set representation.
 
 Yoshinaka already supplied a regular separator.  Here $\mathrm{CTR}_\rho$
 is retained only as the capped companion to the uncapped counter obstruction,
@@ -1594,10 +1636,9 @@ $D_1\notin\mathsf{RS}$ and
 $\mathsf{RS}(\Gamma)\cap\mathrm{CFL}$ is properly contained in Clark's
 congruential family.  Open problems include characterizing
 $\mathsf{RS}\cap\mathrm{CFL}$, choosing or learning useful typings,
-identifying structural criteria for when a typing is informative, clarifying
-the relation with pushdown finite control and control-set methods, and
-extending the framework and its efficiency criteria to richer grammar
-formalisms.
+identifying structural criteria for when a typing is informative, obtaining a
+more direct pushdown characterization, and extending the framework and its
+efficiency criteria to richer grammar formalisms.
 
 \section*{Data availability}
 No empirical data were used for the research described in this article.
