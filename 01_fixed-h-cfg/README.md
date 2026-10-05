@@ -1,5 +1,14 @@
 # #1 — fixed-h CFG
 
+## v107 — Source-verified Wakatsuki primary-source positioning (2026-10-05)
+
+- Citation-source improvement only: replace the indirect Wakatsuki--Tomita thickness attribution via Yoshinaka (2008) with directly examined primary-source passages in Wakatsuki--Tomita (1992, p. 951) and (1993, Definition 3.1, p. 1226).
+- **Model boundary:** the DPDA stack-configuration shortest-accepting-input parameter is historically related, but not identical as a mathematical object, to Yoshinaka's shortest-CFG-yield thickness; this manuscript's *typed* thickness after finite-monoid splitting is separate again.
+- Note the distinct **membership/equivalence-query plus representative-sample** assumptions of Tajima--Tomita--Wakatsuki (2000), not a result for positive-text-only characteristic data.
+- Main theorems, algorithm, definitions of ordinary/typed thickness, proofs and separation examples are unchanged. EN/JP source edits are synchronized.
+- A byte-exact v106 EN/JP/PAPER.yaml source snapshot is kept in `archive/pre-wakatsuki-v106/`. The response letter remains at its previous revision and hard-coded page/line locators must be checked before using a newly compiled v107 PDF in a journal upload. **No claim is made that v107 has been submitted.**
+
+
 **Title:** Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing  
 **Journal:** Theoretical Computer Science  
 **Manuscript ID:** TCS-D-26-00494
