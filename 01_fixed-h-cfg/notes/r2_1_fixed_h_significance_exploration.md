@@ -1,6 +1,6 @@
 # R2.1 exploration: why fixed finite-monoid typing is substantive
 
-Status: exploratory note only; **not yet part of the TCS manuscript**.
+Status: Sections 1--3 were integrated in v110--v111. The additional locally-trivial fixed-window characterization and its ordinary-thickness corollary were integrated in v112. This file remains an exploratory/reasoning note, not a submission artifact.
 
 Purpose: address Reviewer 2.1 without adding a large post-submission theorem.  The three
 directions below are checked against Takada's control-set formulation, Coste--Fredouille--
@@ -230,3 +230,34 @@ The strongest low-risk R2.1 package would be:
 
 This package directly addresses all three directions named by Reviewer 2.1 while avoiding
 a new large expressiveness theorem or a new learning claim.
+
+
+## 4. Locally trivial positive images and the exact fixed-window boundary
+
+Integrated in v112 as Proposition 3.5 and Corollary 7.5.
+
+Let (S=h(Sigma^+)) and (n=|S|).  The positive image semigroup is locally
+trivial iff some fixed prefix--suffix window determines (h) on nonempty
+words, equivalently iff
+[
+  ker h_{k,ell}|_{Sigma^+}subseteq ker h|_{Sigma^+}
+]
+for some (k,ell).  If (S) is locally trivial, (k=ell=n) works.  If it
+is not locally trivial, an idempotent witness (ese
+e e) yields, for every
+window, words (w^{2N+1}) and (w^Nzw^N) with identical windows but different
+(h)-values.
+
+Each (h_{k,ell}(Sigma^+)) is locally trivial, so
+[
+  mathsf{KL}(Sigma)
+  =
+  igcup_{h(Sigma^+)	ext{ locally trivial}}mathsf{RS}_h(Sigma).
+]
+For locally trivial fixed (h), refinement by (h_{n,n}) also transfers the
+existing fixed-window typed-yield bound to (mathcal B_h), giving ordinary
+source-thickness polynomial characteristic data.  No converse thickness claim
+is made for non-locally-trivial typings.
+
+The finite-semigroup step is source-checked against Pin (2025), Propositions
+XI.4.17 and XIV.1.20.
