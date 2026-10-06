@@ -31,29 +31,25 @@ Independent Researcher\\
 \maketitle
 
 \begin{abstract}
-We study distributional learning of context-free languages under a fixed
-recognizable congruence $\sim_h$, the kernel of a homomorphism
-$h:\Sigma^*\to M$ into a finite monoid: nonempty factors with equal $h$-values
-that share one context must share all contexts.  We define a
-set-driven reconstruction operator that recovers every context-free
-$\sim_h$-substitutable target exactly from finitely many positive witnesses,
-and a conservative sequential learner that identifies every nonempty such
-target in the limit; reconstruction and updates take polynomial time.  The
-size of the canonical witnesses is controlled by the shortest yields obtained
-after target nonterminals are split according to their finite $h$-values; these
-lengths can be exponentially larger than ordinary grammar thickness in some
-presentations, without implying an algorithm-independent data lower bound.
-For general typings, our characteristic-data bound therefore uses these
-refined shortest-yield lengths rather than ordinary grammar thickness alone.
-By contrast, ordinary thickness suffices when a fixed prefix--suffix window
-determines the type of every nonempty factor.  We characterize this condition
-algebraically and recover Yoshinaka's fixed-window hierarchy at the level of
-language classes.  Characteristic
-data are also polynomial in the size of a linear CFG for linear targets under
-every such $h$.  Beyond Yoshinaka's earlier regular separation, we exhibit nonregular linear
-and nonlinear context-free targets that lie outside every fixed-window class,
-and we show that the one-bracket Dyck language lies outside every fixed-typing
-class.
+We study positive-data learning of context-free languages under a fixed
+homomorphism $h:\Sigma^*\to M$ into a finite monoid. A language is
+$\sim_h$-substitutable if nonempty factors of the same $h$-type that share
+one context have identical sets of contexts. For each fixed $h$, we define
+a set-driven reconstruction operator that recovers every context-free
+$\sim_h$-substitutable target from finitely many positive witnesses, and a
+separate conservative sequential learner that identifies every nonempty
+target in the limit; reconstruction and updates take polynomial time.
+Our characteristic-data bound depends on shortest yields in a target grammar
+refined by $h$-values, which can be exponentially larger than ordinary
+grammar thickness in some presentations. Using the classical characterization
+of locally trivial finite semigroups, we identify when $h$ is determined
+on nonempty factors by a fixed prefix--suffix window. In this regime ordinary
+grammar thickness suffices, and the resulting union of language classes
+coincides with Yoshinaka's fixed-window hierarchy. For linear targets we
+obtain characteristic data polynomial in linear grammar size under every
+fixed $h$. We also exhibit nonregular linear and nonlinear context-free
+targets outside every fixed-window class, while the one-bracket Dyck language
+lies outside every fixed-typing class.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Grammatical inference; Context-free languages;
@@ -104,12 +100,18 @@ prefix--suffix window while retaining one uniform learning mechanism:
 independent finite features can be combined by a product homomorphism.  Product typing makes $\mathsf{RS}$ closed under intersection and arbitrary
 inverse homomorphism; if a regular filter $Q$ is recognized by $g$, then
 $L\in\Ccf{h}$ implies $L\cap Q\in\Ccf{h\times g}$.  The relation with
-Yoshinaka's uniform window parameter is algebraically exact.  Call the finite \emph{positive image semigroup} $h(\Sigma^+)$
+Yoshinaka's uniform window parameter follows from the classical
+characterization of locally trivial finite semigroups
+\cite[Proposition~XI.4.17]{pin2025}. Call the finite
+\emph{positive image semigroup} $h(\Sigma^+)$
 \emph{locally trivial} if $ete=e$ for every idempotent
-$e\in h(\Sigma^+)$ and every $t\in h(\Sigma^+)$.  A fixed prefix--suffix window determines $h$ on
-nonempty factors exactly when $h(\Sigma^+)$ is locally trivial.  Consequently, the
-union of these fixed-$h$ classes is Yoshinaka's fixed-window hierarchy,
-denoted $\mathsf{KL}$ in Section~\ref{sec:framework}.
+$e\in h(\Sigma^+)$ and every $t\in h(\Sigma^+)$. By this classical
+criterion, a fixed prefix--suffix window determines $h$ on nonempty
+factors exactly when $h(\Sigma^+)$ is locally trivial. Applying the
+criterion to the learning classes gives Yoshinaka's fixed-window
+union $\mathsf{KL}$, as recorded in Proposition~\ref{prop:li-window};
+the ordinary-thickness consequence for our reconstruction operator is
+Corollary~\ref{cor:li-thickness}.
 Sections~\ref{sec:linear}--\ref{sec:boundaries} give nonregular linear and
 nonlinear context-free examples outside every fixed-window class and also show
 a boundary: unbounded counter/Dyck behavior can
@@ -156,9 +158,11 @@ exponentially longer than those in the source grammar.
 
 \item \emph{Structural and expressive position.}  Product typings give
 closure under intersection and arbitrary inverse homomorphism, and they
-combine a target typing with the finite information of a regular filter.  We
-characterize exactly when an arbitrary finite typing is already determined on
-nonempty factors by some fixed prefix--suffix window.  For linear grammars,
+combine a target typing with the finite information of a regular filter.  The classical
+locally trivial-semigroup criterion identifies the fixed-window typings;
+within our learning framework it yields the language-class union and the
+ordinary-thickness guarantee of Corollary~\ref{cor:li-thickness}.
+For linear grammars,
 fixed-$h$ yield typing also induces a regular control language on
 production-label sequences.  We provide nonregular linear and nonlinear
 context-free targets outside every fixed-window class, exhibit natural
@@ -561,6 +565,12 @@ factors $x,y$ share the empty context but $(z,\lambda)$ is a context of
 $x$ only.
 
 \paragraph{Algebraic position of fixed windows.}
+The equivalence below is the positive-image/kernel formulation of the
+classical locally trivial-semigroup criterion, rather than a new
+semigroup characterization; compare
+Pin~\cite[Proposition~XI.4.17 and Proposition~XIV.1.20]{pin2025}.
+We record its consequences for the present fixed-$h$ language classes;
+the learning-specific thickness bound is Corollary~\ref{cor:li-thickness}.
 
 \begin{proposition}[locally trivial typings and fixed windows]
 \label{prop:li-window}
@@ -583,60 +593,32 @@ The same equality holds after intersecting both sides with $\mathrm{CFL}$.
 \end{proposition}
 
 \begin{proof}
-Suppose first that $S:=h(\Sigma^+)$ is locally trivial; write $n=|S|$.
-Every product of $n$ elements of $S$ has a factorization $aeb$ with
-$a,b\in S^1$ and an idempotent $e\in S$.  Indeed, among its $n$ nonempty
-prefix products, a repetition $u=uv$ permits insertion of $v^\omega$
-after $u$ without changing the product.  If all prefixes are distinct,
-they exhaust $S$, so one prefix is itself idempotent.
+Put $S=h(\Sigma^+)$ and $n=|S|$. The standard finite-semigroup facts
+$S^n=SE(S)S$ and $esf=ef$ for idempotents $e,f\in S$ and
+$s\in S$ follow from Pin~\cite[Corollary~II.6.35 and
+Proposition~XI.4.17]{pin2025}. Thus for $p,q\in\Sigma^n$
+we may write $h(p)=aeb$, $h(q)=cfd$, with $e,f$ idempotent, and obtain
+$h(prq)=a\,e\,(b\,h(r)\,c)\,f\,d=aefd=h(pq)$
+for every $r\in\Sigma^*$. The definition of $h_{n,n}$, which
+distinguishes short positive words individually, gives (ii).
 
-For idempotents $e,f\in S$ and $z\in S^1$, local triviality gives
-$efe=e$ and $fef=f$, and therefore $(ef)^2=ef$.
-Since $(ef)(ezf)(ef)=ezf$, local triviality applied to the
-idempotent $ef$ yields $ezf=ef$.
-For any $p,q\in\Sigma^n$, write
-$h(p)=aeb$ and $h(q)=cfd$ by the factorization above.
-Then for all $r\in\Sigma^*$,
-\[
- h(prq)=a\,e\,(b\,h(r)\,c)\,f\,d
-       =aefd=h(pq).
-\]
-Hence the value on words of length at least $2n$ is determined by
-their length-$n$ prefixes and suffixes.  Since $h_{n,n}$ records
-short nonempty words individually and those two windows on longer
-words, $\ker h_{n,n}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$ follows.
+Conversely, if $S$ is not locally trivial, choose an idempotent
+$e\in S$ and $m\in S$ with $eme\ne e$, represented by nonempty
+words $r,z$, respectively. Given $k,\ell$, take
+$j\ge1$ with $j|r|\ge\max\{k,\ell\}$.
+Then $x=r^{2j+1}$ and $y=r^jzr^j$ have the same
+$h_{k,\ell}$-value, but $h(x)=e\ne eme=h(y)$. Hence (ii) fails.
 
-Conversely, suppose that $h(\Sigma^+)$ is not locally trivial.  Choose an idempotent
-$e\in h(\Sigma^+)$ and $m\in h(\Sigma^+)$ with $eme\ne e$, and nonempty words $r,z$ such that
-$h(r)=e$ and $h(z)=m$.  Given any $k,\ell$, choose $j\ge1$ with
-$j|r|\ge\max\{k,\ell\}$ and put
-\[
- x:=r^{2j+1},\qquad y:=r^jzr^j.
-\]
-The two words have the same length-$k$ prefix and length-$\ell$ suffix and
-are both in the long-word part of $h_{k,\ell}$, so
-$h_{k,\ell}(x)=h_{k,\ell}(y)$.  But
-$h(x)=e$ while $h(y)=eme\ne e$.  Thus no fixed-window kernel can refine
-$\ker h$ on $\Sigma^+$.
-
-It remains to identify the union of classes.  In the construction of
-$h_{k,\ell}$, no short positive element is idempotent, whereas every
-idempotent long element has the form $\langle p,q\rangle$.  The multiplication
-defined in Proposition~\ref{prop:yl-special} gives
-\[
- \langle p,q\rangle\,t\,\langle p,q\rangle
- =\langle p,q\rangle
-\]
-for every positive-image element $t$.  Hence
-$h_{k,\ell}(\Sigma^+)$ is locally trivial.  Conversely, if
-$h(\Sigma^+)$ is locally trivial, the first part gives
-$\ker h_{n,n}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$, and the
-refinement monotonicity above yields
-$\mathsf{RS}_h\subseteq\mathsf{RS}_{h_{n,n}}\subseteq\mathsf{KL}$.
-Since every fixed-window class is itself one of the locally trivial
-fixed-$h$ slices, the displayed equality follows.
+Finally, the multiplication in Proposition~\ref{prop:yl-special}
+shows that every idempotent of the positive image of $h_{k,\ell}$
+has the form $\langle p,q\rangle$ and satisfies
+$\langle p,q\rangle t\langle p,q\rangle=\langle p,q\rangle$
+for every positive-image element $t$; thus that semigroup is locally
+trivial. The forward implication and the kernel-refinement monotonicity
+give $\mathsf{RS}_h\subseteq\mathsf{RS}_{h_{n,n}}$ whenever
+$h(\Sigma^+)$ is locally trivial. Taking unions yields the stated
+equality, also after restriction to $\mathrm{CFL}$.
 \end{proof}
-
 \section{Reconstruction Operator and Sequential Learner}
 \label{sec:algo}
 
