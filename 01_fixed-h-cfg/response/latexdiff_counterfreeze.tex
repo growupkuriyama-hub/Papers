@@ -1,0 +1,44 @@
+% Keep revised-manuscript numbering stable inside the marked-up latexdiff PDF.
+% Deleted material remains visible, but its structural counters are restored
+% when the deleted block ends so that surviving revised sections/results retain
+% the numbering of main.tex.
+\newcounter{DIFsaveSection}
+\newcounter{DIFsaveSubsection}
+\newcounter{DIFsaveSubsubsection}
+\newcounter{DIFsaveTheorem}
+\newcounter{DIFsaveEquation}
+\newcounter{DIFsaveFigure}
+\newcounter{DIFsaveTable}
+\newcounter{DIFsaveFootnote}
+
+\let\DIForigdelbegin\DIFdelbegin
+\let\DIForigdelend\DIFdelend
+
+\renewcommand{\DIFdelbegin}{%
+  \setcounter{DIFsaveSection}{\value{section}}%
+  \setcounter{DIFsaveSubsection}{\value{subsection}}%
+  \setcounter{DIFsaveSubsubsection}{\value{subsubsection}}%
+  \setcounter{DIFsaveTheorem}{\value{theorem}}%
+  \setcounter{DIFsaveEquation}{\value{equation}}%
+  \setcounter{DIFsaveFigure}{\value{figure}}%
+  \setcounter{DIFsaveTable}{\value{table}}%
+  \setcounter{DIFsaveFootnote}{\value{footnote}}%
+  \DIForigdelbegin
+}
+
+\renewcommand{\DIFdelend}{%
+  \DIForigdelend
+  \setcounter{section}{\value{DIFsaveSection}}%
+  \setcounter{subsection}{\value{DIFsaveSubsection}}%
+  \setcounter{subsubsection}{\value{DIFsaveSubsubsection}}%
+  \setcounter{theorem}{\value{DIFsaveTheorem}}%
+  \setcounter{equation}{\value{DIFsaveEquation}}%
+  \setcounter{figure}{\value{DIFsaveFigure}}%
+  \setcounter{table}{\value{DIFsaveTable}}%
+  \setcounter{footnote}{\value{DIFsaveFootnote}}%
+}
+
+% Deleted and surviving material can otherwise create duplicate PDF
+% destinations under hyperref. The marked-up file is for visual review, so
+% disable link destinations while preserving printed reference text.
+\hypersetup{draft}
