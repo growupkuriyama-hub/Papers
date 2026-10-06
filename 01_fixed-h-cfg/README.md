@@ -1,5 +1,16 @@
 # #1 — fixed-h CFG
 
+## v117 — Post-v116 source audit (2026-10-07)
+
+- Corrected the explanatory sentence after Theorem 9.2: for $\rho=1$, the proposed distinguishing context $(\uparrow,\lambda)$ fails because $\uparrow s$ itself already violates the cap; the common context is not the issue.
+- Rechecked the Wakatsuki--Tomita originals supplied by M. Wakatsuki. The manuscript now cites 1992 p.951 for the stack-symbol thickness parameter and 1993 p.1229 for the later inclusion algorithm's explicit computation/use of those thicknesses.
+- Cleaned Section 3.1 notation: $p,q$ are the fixed prefix/suffix windows, $r,s$ the variable interiors, and the compared factors are $prq,psq$. The duplicate local definition of $m_0$ in the fixed-window counterexample criterion was removed.
+- Replaced the broad Pin citation by the exact finite-monoid recognition result, Theorem IV.3.21.
+- Synchronized the Japanese reference manuscript and Round-1 response. The English source remains 2143 lines and the clean revised PDF remains 24 pages, so the audited response's page/line locator table remains valid.
+- Removed stale repository metadata claiming that `archive/pre-wakatsuki-v106/` exists. That temporary snapshot had been intentionally deleted; the first-submission baseline `archive/tcs-round1-arxiv-v4/` remains the historical archive.
+- Main theorem statements and the v116 substring-indexed learning construction are unchanged. The Lean v88 archive remains the theorem-facing formalization baseline.
+- **No claim is made that v117 has been submitted.**
+
 ## v116 — Substring-indexed reconstruction and round-2 preflight (2026-10-07)
 
 - Collapsed the occurrence/context-indexed hypothesis states `[x:u,v]` to one state `[x]` per observed nonempty factor. The old and new batch constructors are language-equivalent for every finite sample; the exact two-way simulation is recorded in `revision/v115_to_v116_context_index_collapse.md`.
@@ -15,11 +26,11 @@
 
 ## v107 — Source-verified Wakatsuki primary-source positioning (2026-10-05)
 
-- Citation-source improvement only: replace the indirect Wakatsuki--Tomita thickness attribution via Yoshinaka (2008) with directly examined primary-source passages in Wakatsuki--Tomita (1992, p. 951) and (1993, Definition 3.1, p. 1226).
+- Citation-source improvement only: the Wakatsuki--Tomita originals were directly examined. The later v117 audit refined the exact locators to 1992 p. 951 for the stack-symbol thickness parameter and 1993 p. 1229 for its explicit use in the inclusion algorithm.
 - **Model boundary:** the DPDA stack-configuration shortest-accepting-input parameter is historically related, but not identical as a mathematical object, to Yoshinaka's shortest-CFG-yield thickness; this manuscript's *typed* thickness after finite-monoid splitting is separate again.
 - Note the distinct **membership/equivalence-query plus representative-sample** assumptions of Tajima--Tomita--Wakatsuki (2000), not a result for positive-text-only characteristic data.
 - Main theorems, algorithm, definitions of ordinary/typed thickness, proofs and separation examples are unchanged. EN/JP source edits are synchronized.
-- A byte-exact v106 EN/JP/PAPER.yaml source snapshot is kept in `archive/pre-wakatsuki-v106/`. The response letter remains at its previous revision and hard-coded page/line locators must be checked before using a newly compiled v107 PDF in a journal upload. **No claim is made that v107 has been submitted.**
+- The temporary `archive/pre-wakatsuki-v106/` snapshot mentioned in the original v107 note was later intentionally deleted and is not part of the current repository. **No claim is made that v107 has been submitted.**
 
 
 **Title:** Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing  
@@ -28,9 +39,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v116; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v116 theorem/label surface.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the v116 reconstruction and re-audited against the actual TCS decision letter. The final response includes editor-required page/paragraph/line locators regenerated from the frozen 24-page clean manuscript.
+- `main.tex` — English major-revision manuscript, internal v117; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v117 theorem/label surface.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v117 and re-audited against the actual TCS decision letter. The editor-required page/paragraph/line locators remain valid because the v117 English source retains the v116 line count and 24-page pagination.
 
 ## v106 Yoshinaka prior-art correction
 
