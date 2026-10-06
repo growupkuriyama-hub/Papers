@@ -125,3 +125,41 @@ jobs:
           path: 01_fixed-h-cfg/japanese/main_JP.pdf
           if-no-files-found: error
           retention-days: 30
+
+
+  build-marked-up:
+    name: "pdfLaTeX — 01 fixed-h CFG marked-up revision"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install latexdiff
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y latexdiff
+
+      - name: Generate marked-up revised manuscript
+        working-directory: 01_fixed-h-cfg
+        run: |
+          latexdiff --type=UNDERLINE --disable-citation-markup \
+            archive/tcs-round1-arxiv-v4/main.tex \
+            main.tex > main_marked_round1.tex
+
+      - name: Compile marked-up revised manuscript
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_marked_round1.tex
+          working_directory: 01_fixed-h-cfg
+          texlive_version: 2026
+
+      - name: Upload marked-up manuscript
+        uses: actions/upload-artifact@v7
+        with:
+          name: 01-fixed-h-cfg-marked-up-round1
+          path: |
+            01_fixed-h-cfg/main_marked_round1.pdf
+            01_fixed-h-cfg/main_marked_round1.tex
+          if-no-files-found: error
+          retention-days: 30
