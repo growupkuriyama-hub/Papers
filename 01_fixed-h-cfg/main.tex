@@ -217,11 +217,11 @@ nonterminals.
 We write $\mathrm{CFL}$ for the class of context-free languages.  For any
 finite representation $\mathcal R$, $|\mathcal R|$ denotes the length of a fixed reasonable
 encoding; for a grammar this is polynomially equivalent to the usual symbol
-count of its productions.  Earlier work on simple deterministic pushdown automata used
-\emph{thickness} to measure shortest inputs that empty stack symbols,
-taking the maximum over the symbols as an algorithmic parameter
-\cite[pp.~1224--1225]{wakatsuki-tomita1993}; see also a related
-shortest distinguishing-input bound~\cite[p.~951]{wakatsuki-tomita1992}.
+count of its productions.  Earlier work on simple deterministic pushdown automata used a stack-symbol
+\emph{thickness} parameter based on shortest inputs associated with stack
+symbols~\cite[p.~951]{wakatsuki-tomita1992}; the later inclusion algorithm
+explicitly computes and uses these thicknesses
+\cite[p.~1229]{wakatsuki-tomita1993}.
 These machine-side inclusion and equivalence problems are distinct from
 positive-data CFG learning.  In the latter setting, following Yoshinaka's
 fixed-window analysis~\cite{yoshinaka2008} and its later exposition
@@ -319,7 +319,7 @@ $\mathsf{RS}$.
 
 \begin{proof}
 The first statement is the standard finite-monoid characterization of
-regular languages~\cite[Chapters~III--IV]{pin2025}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
+regular languages~\cite[Theorem~IV.3.21]{pin2025}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
 $h(uxv)=h(uyv)$ for all $u,v$, so $\D_L(x)=\D_L(y)$.
 \end{proof}
 
@@ -439,17 +439,16 @@ $\mathsf{RS}$, by taking the one-element monoid.
 For $k,\ell\ge0$, let $\pref_k(w)$ and $\suf_\ell(w)$ denote the
 prefix and suffix of lengths $\min\{k,|w|\}$ and
 $\min\{\ell,|w|\}$, respectively; in particular,
-$\pref_0(w)=\suf_0(w)=\lambda$.  Renaming Yoshinaka's variables to follow our convention that $u,v$ denote
-outer contexts and $x,y$ denote compared fragments, $L$ is
-\emph{$(k,\ell)$-substitutable} if, for
-$p\in\Sigma^k$, $q\in\Sigma^\ell$ and
-$u_1,u_2,v_1,v_2,x,y\in\Sigma^*$ with
-$pxq,pyq\ne\lambda$,
+$\pref_0(w)=\suf_0(w)=\lambda$.  Renaming Yoshinaka's variables so that $u_i,v_i$ denote outer contexts,
+let $p\in\Sigma^k$ and $q\in\Sigma^\ell$ be the fixed windows.
+Then $L$ is \emph{$(k,\ell)$-substitutable} if, for
+$u_1,u_2,v_1,v_2,r,s\in\Sigma^*$ with
+$prq,psq\ne\lambda$,
 \[
 \begin{split}
-&u_1pxqv_1\in L,\quad u_1pyqv_1\in L,\quad
-u_2pxqv_2\in L\\
-&\hspace{35mm}\Longrightarrow\quad u_2pyqv_2\in L.
+&u_1prqv_1\in L,\quad u_1psqv_1\in L,\quad
+u_2prqv_2\in L\\
+&\hspace{35mm}\Longrightarrow\quad u_2psqv_2\in L.
 \end{split}
 \]
 
@@ -491,9 +490,9 @@ substitutability transfers the third context and yields the fourth word.
 
 \phantomsection\label{crit:kl}
 \paragraph{Fixed-window counterexample criterion.}
-Let $m_0:=\max\{1,k+\ell\}$.  If $s,t$ have length at least $m_0$, the
-same length-$k$ prefix and length-$\ell$ suffix, a common context, and
-unequal distributions, then $L$ is not $(k,\ell)$-substitutable: the first
+If $s,t$ have length at least $\max\{1,k+\ell\}$, the same length-$k$
+prefix and length-$\ell$ suffix, a common context, and unequal
+distributions, then $L$ is not $(k,\ell)$-substitutable: the first
 three conditions give equal $h_{k,\ell}$-types and a shared context, while
 the last contradicts $\sim_{h_{k,\ell}}$-substitutability.
 
@@ -1623,7 +1622,8 @@ $\rho+1$.  Hence their distributions differ, and the criterion applies.
 The restriction $\rho\ge2$ ensures that $s$ is nonempty when $k=\ell=0$.
 It is also needed for this witness when $k\ge1$: the initial
 $\uparrow(\uparrow\downarrow)^k$ of $\uparrow s$ reaches height $2$,
-so for $\rho=1$ the claimed common context would already violate the cap.
+so for $\rho=1$ the proposed distinguishing context $(\uparrow,\lambda)$
+fails because $\uparrow s$ itself already violates the cap.
 
 Let $h_\rho:\Sigma_c^*\to M_\rho$ be the transition-monoid morphism
 induced by the DFA above.  It recognizes $\mathrm{CTR}_\rho$, and hence

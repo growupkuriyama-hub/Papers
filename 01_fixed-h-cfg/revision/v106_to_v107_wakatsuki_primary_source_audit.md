@@ -18,6 +18,6 @@ Original PDFs are kept privately in Research-Library as REF-09-12, REF-09-11, RE
 ## Submission and version guard
 
 - Baseline: v106; current source v107.
-- Immutable pre-update EN, JP and PAPER metadata are archived at `archive/pre-wakatsuki-v106/`.
+- At the time of the v107 pass, pre-update EN, JP and PAPER metadata were temporarily stored under `archive/pre-wakatsuki-v106/`; that temporary snapshot was later intentionally deleted and is not part of the current repository.
 - `response/response_round1.tex` is deliberately unchanged. Its page/line locators may not match the v107 PDF; re-audit before journal submission. No v107 submission/approval is asserted here.
 - Lean v88 theorem-facing baseline remains the same; this editorial change is not a new theorem/proof formalization.
