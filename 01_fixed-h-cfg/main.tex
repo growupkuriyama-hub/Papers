@@ -142,28 +142,25 @@ many canonical positive witnesses, and a separate conservative sequential
 learner $\mathcal A_h$ identifies every nonempty target in Gold's sense;
 reconstruction and updates take time polynomial in the accumulated sample.
 
-\item \emph{Quantitative guarantees.}  For arbitrary fixed $h$, canonical
-characteristic data are polynomial in grammar size and typed thickness.
-Ordinary grammar thickness suffices whenever $h(\Sigma^+)$ is locally trivial;
-this includes every fixed prefix--suffix window.  Linear fixed-$h$ targets
-admit characteristic data polynomial in the size of a linear CFG.  The same
-analysis shows that typed thickness can be exponentially larger than ordinary
-source thickness outside this sufficient regime, so the present general
-fixed-$h$ bound cannot in general be reduced to ordinary thickness through the
-typed-refinement argument.
+\item \emph{Quantitative guarantees.}  For arbitrary fixed $h$, we bound
+the characteristic data by grammar size and by the shortest terminal yields
+after target nonterminals are split according to their $h$-values.  When the
+finite typing is already determined by a fixed prefix--suffix window, this
+bound reduces to the ordinary shortest-yield parameter of the source grammar.
+Linear fixed-$h$ targets admit characteristic data polynomial in the size of a
+linear CFG.  We also show that the shortest yields after splitting can be
+exponentially longer than those in the source grammar.
 
-\item \emph{Structural and expressive position.}  Product typings make
-$\mathsf{RS}$ closed under intersection and arbitrary inverse homomorphism,
-and regular filtering maps $\Ccf{h}$ into the refined slice
-$\Ccf{h\times g}$ when the filter is recognized by $g$.  The fixed-window
-hierarchy is exactly the union of those $\mathsf{RS}_h$ for which
-$h(\Sigma^+)$ is locally trivial.  For linear grammars, fixed-$h$ yield typing
-also induces a regular control language on production-label sequences.  We
-provide nonregular linear and nonlinear context-free targets outside every
-fixed-window class.  The one-bracket Dyck
-language lies outside $\mathsf{RS}$, while
-$\mathsf{RS}\cap\mathrm{CFL}$ is properly contained in Clark's congruential
-family.
+\item \emph{Structural and expressive position.}  Product typings give
+closure under intersection and arbitrary inverse homomorphism, and they
+combine a target typing with the finite information of a regular filter.  We
+characterize exactly when an arbitrary finite typing is already determined on
+nonempty factors by some fixed prefix--suffix window.  For linear grammars,
+fixed-$h$ yield typing also induces a regular control language on
+production-label sequences.  We provide nonregular linear and nonlinear
+context-free targets outside every fixed-window class, exhibit natural
+deterministic context-free languages outside the finite-typing framework, and
+compare its context-free part with Clark's broader family.
 \end{enumerate}
 
 \subsection{Organization of the paper}
@@ -698,8 +695,9 @@ Recomputing $\mathcal B_h$ after every datum need not stabilize
 syntactically: for $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$, longer examples
 introduce new triples such as $[a^ncb^n:\lambda,\lambda]$.
 We therefore use the conservative wrapper of Clark--Eyraud's
-Substitutable Grammar Learner (SGL, Algorithm~2) and Yoshinaka's
-$(k,\ell)$-SGL (Algorithm~1)~\cite{clark-eyraud2007,yoshinaka2008};
+Substitution Graph Learner (SGL, Algorithm~2) and Yoshinaka's
+$(k,\ell)$-Substitutable Grammar Learner ($(k,\ell)$-SGL, Algorithm~1)
+~\cite{clark-eyraud2007,yoshinaka2008};
 see also Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016}
 for the distinction between set-driven reconstruction and incremental learning.
 Starting from the fixed empty grammar $H_0$, after reading $w_n$ put
@@ -1501,8 +1499,8 @@ For nonempty $x$, define
 
 \begin{proposition}[a nonlinear fixed-$h_\star$ target]
 \label{prop:nonlinear-rs-example}
-The language $\Delta^*$ is context-free, nonregular, and non-linear, and it is
-$\sim_{h_\star}$-substitutable.  Moreover it is not
+The language $\Delta^*$ is deterministic context-free, nonregular, and
+non-linear, and it is $\sim_{h_\star}$-substitutable.  Moreover it is not
 $(k,\ell)$-substitutable for any fixed $k,\ell\ge0$.  Hence
 $\Delta^*\in\mathsf{RS}_{h_\star}(\{a,b\})\cap\mathrm{CFL}$ and
 $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$.
@@ -1510,7 +1508,10 @@ $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$.
 
 \begin{proof}
 The grammar $S\to TS\mid\lambda$, $T\to aTb\mid\lambda$ generates
-$\Delta^*$.  Nonregularity follows from
+$\Delta^*$.  It is deterministic context-free: a DPDA pushes while reading
+the $a$-part of a block, pops during the following $b$-part, and permits a new
+block only after the stack has returned to its bottom marker.  Nonregularity
+follows from
 $\Delta^*\cap a^*b^*=\Delta$, and nonlinearity from closure of linear
 languages under regular intersection together with
 $\Delta^*\cap a^*b^*a^*b^*=\Delta\Delta$, which is not linear
@@ -1593,7 +1594,8 @@ $\rho+1$.  Hence their distributions differ, and the criterion applies.
 The restriction $\rho\ge2$ ensures that the witness $s$ above is nonempty
 also in the boundary case $k=\ell=0$.
 
-A finite recognizing homomorphism $h_\rho$ therefore gives
+Let $h_\rho:\Sigma_c^*\to M_\rho$ be the transition-monoid morphism
+induced by the DFA above.  It recognizes $\mathrm{CTR}_\rho$, and hence
 $\mathrm{CTR}_\rho\in\Ccf{h_\rho}\setminus\mathsf{KL}$.
 Its role here is not a new regular separation, but to serve as the capped
 companion to the uncapped language $\mathrm{CTR}$ below.
@@ -1662,10 +1664,14 @@ distributions in $L$ then transfers every context $(s,t)$ by appending $z$.
 \end{proof}
 
 The language generated by $S\to aSS\mid b$ is the
-\emph{{\fontencoding{T1}\selectfont\L{}}ukasiewicz language}.  In the notation used here,
-$L_{\mathrm{Luk}}=D_1b$~\cite{autebert1997}, and it is deterministic
-context-free~\cite{ginsburg-greibach1966}.  If it belonged to
-$\mathsf{RS}(\{a,b\})$, Lemma~\ref{lem:rs-fixed-quotient} would put
+\emph{{\fontencoding{T1}\selectfont\L{}}ukasiewicz language}.
+Yoshinaka~\cite[Section~3]{yoshinaka2008} already observed that this language
+is not $(k,\ell)$-substitutable for any fixed $k,\ell$.  In the notation used
+here, $L_{\mathrm{Luk}}=D_1b$~\cite{autebert1997}, and it is deterministic
+context-free~\cite{ginsburg-greibach1966}.  The quotient argument gives the
+stronger conclusion that it lies outside the present finite-typing union: if
+$L_{\mathrm{Luk}}\in\mathsf{RS}(\{a,b\})$, then
+Lemma~\ref{lem:rs-fixed-quotient} would put
 $D_1=L_{\mathrm{Luk}}/b$ in $\mathsf{RS}$, contradicting
 Corollary~\ref{cor:dyck-not-rs}.
 
