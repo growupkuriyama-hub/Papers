@@ -146,6 +146,20 @@ jobs:
           latexdiff --type=UNDERLINE --disable-citation-markup \
             archive/tcs-round1-arxiv-v4/main.tex \
             main.tex > main_marked_round1.tex
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("main_marked_round1.tex")
+          s = p.read_text()
+          needle = r"\usepackage[switch]{lineno}"
+          if needle not in s:
+              raise SystemExit("lineno package marker not found in latexdiff output")
+          s = s.replace(
+              needle,
+              needle + "\n" + r"\input{response/latexdiff_compat.tex}",
+              1,
+          )
+          p.write_text(s)
+          PY
 
       - name: Compile marked-up revised manuscript
         uses: xu-cheng/latex-action@v4
