@@ -164,26 +164,32 @@ jobs:
           pre, body = s.split(doc, 1)
 
           def strip_deleted_blocks(text):
-              pos = 0
-              while True:
-                  candidates = []
-                  for begin, end in [
-                      (r"\DIFdelbeginFL", r"\DIFdelendFL"),
-                      (r"\DIFdelbegin", r"\DIFdelend"),
-                  ]:
-                      k = text.find(begin, pos)
-                      while k >= 0 and begin == r"\DIFdelbegin" and text.startswith(r"\DIFdelbeginFL", k):
-                          k = text.find(begin, k + 1)
-                      if k >= 0:
-                          candidates.append((k, begin, end))
-                  if not candidates:
-                      return text
-                  k, begin, end = min(candidates, key=lambda x: x[0])
-                  j = text.find(end, k + len(begin))
-                  if j < 0:
-                      raise SystemExit(f"unmatched {begin}")
-                  text = text[:k] + text[j + len(end):]
-                  pos = max(0, k - 20)
+              # latexdiff may nest FL and non-FL deletion blocks.  Pairing each
+              # begin marker with the first following end marker is therefore
+              # unsafe; scan the markers as a properly nested stream instead.
+              begin_tokens = (r"\DIFdelbeginFL", r"\DIFdelbegin")
+              end_tokens = (r"\DIFdelendFL", r"\DIFdelend")
+              tokens = begin_tokens + end_tokens
+              out = []
+              stack = []
+              i = 0
+              while i < len(text):
+                  tok = next((t for t in tokens if text.startswith(t, i)), None)
+                  if tok is None:
+                      if not stack:
+                          out.append(text[i])
+                      i += 1
+                      continue
+                  if tok in begin_tokens:
+                      stack.append(tok)
+                  else:
+                      if not stack:
+                          raise SystemExit(f"unmatched {tok}")
+                      stack.pop()
+                  i += len(tok)
+              if stack:
+                  raise SystemExit(f"unclosed deletion block(s): {stack}")
+              return "".join(out)
 
           def remove_macro_argument(text, macro):
               pos = 0
