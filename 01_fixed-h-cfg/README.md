@@ -9,6 +9,7 @@
 - Narrowed the parity toy example to the role of yield-type splitting in the present completeness proof; promoted the exponential typed-thickness gap from a remark to a proposition; moved formula-adjacent footnote markers; reduced metavariable collisions and singleton subsection fragmentation.
 - Added one sentence explaining the design of the nonregular linear separator: `c` and `d` deliberately share one `h`-value, so the example does not merely encode center-symbol names as types.
 - English manuscript, Japanese reference translation, and Round-1 response are synchronized at the theorem/label level. Source-level preflight finds balanced environments/braces, no duplicate labels, and no unresolved internal references. GitHub Actions also passes the English, Japanese, response, and marked-up-revision builds; all four generated PDFs pass basic PDF preflight.
+- Final response audit: corrected the stale v115 terminal-rule response to use v116 Rules `(U)` and `(L)`, replaced the overstrong congruence-class wording by the proved soundness invariant, clarified the precise Clark (2013) relationship, corrected the main-text subsection count to 16, and added a complete E.1/R1.1–R1.37/R2.1–R2.11 locator table.
 - The archived Lean v88 release remains the theorem-facing verification baseline; v116 is not claimed to be an exact separately formalized artifact.
 - **No claim is made that v116 has been submitted.**
 
@@ -29,7 +30,7 @@
 
 - `main.tex` — English major-revision manuscript, internal v116; this is the source of truth.
 - `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v116 theorem/label surface.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the v116 reconstruction. The substantive responses and selected renumbering guide are current; brittle hard-coded page/paragraph/line locators were removed in favor of direct section/statement references.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the v116 reconstruction and re-audited against the actual TCS decision letter. The final response includes editor-required page/paragraph/line locators regenerated from the frozen 24-page clean manuscript.
 
 ## v106 Yoshinaka prior-art correction
 
