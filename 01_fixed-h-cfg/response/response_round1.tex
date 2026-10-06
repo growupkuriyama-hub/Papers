@@ -96,10 +96,13 @@ from the submitted and revised sources is supplied together with this response.
 The revision makes four central corrections.  First, it separates the
 set-driven reconstruction operator $\mathcal B_h$ from the conservative
 sequential learner $\mathcal A_h$, so that the Gold learner now stabilizes
-syntactically.  Second, the unused outer-context type annotations are removed;
-only yield typing remains.  Third, the terminal-rule completeness gap is
-repaired by adding witnesses for typed terminal rules and using Rule~(R3)
-before Rule~(R4) when necessary.  Fourth, fixed-$h$ substitutability is stated
+syntactically.  Second, the unused outer-context type annotations are removed,
+and the occurrence-indexed hypothesis symbols are quotiented to one
+substring-indexed symbol $[x]$ per observed factor.  The resulting batch
+construction is Clark's substring grammar with its unary rules filtered by
+$h$.  Third, the terminal-rule completeness gap is repaired by adding
+witnesses for typed terminal rules and using the unary Rule~\textup{(U)}
+before the lexical Rule~\textup{(L)} when necessary.  Fourth, fixed-$h$ substitutability is stated
 for nonempty internal fragments, with $\lambda$ handled separately at the
 start symbol.
 
@@ -108,7 +111,8 @@ independence is claimed only for the batch operator, not for the sequential
 learner.  Polynomial characteristic-data bounds are stated for the batch
 operator, while the sequential learner is stated separately to have Gold
 convergence and polynomial-time updates.  The former claim that outer-context
-types are necessary has been withdrawn.
+types are necessary has been withdrawn, and the separate context-transport
+rule is no longer needed in the quotient construction.
 
 The manuscript has also been substantially shortened and reorganized.  Basic definitions are consolidated in Section~2, the reconstruction operator is now defined before the target-side
 refinement used in the completeness proof, the former three boundary
@@ -582,10 +586,11 @@ presentation. Section 4 first defines the batch reconstruction operator
 introduces the yield-typed target grammar specifically for the
 completeness proof and states explicitly that the purpose is to show
 that the already-defined hypothesis grammar can mimic typed target
-derivations. Outer-context typing has been removed. The remaining yield typing is visible at the two Rule~(R3) steps in that
+derivations. Outer-context typing has been removed. The remaining yield
+typing is visible at the two unary Rule~\textup{(U)} steps in that
 simulation.  For a typed terminal rule $X\to a$, it gives
-$h(\omega(X))=h(a)$; for a typed binary rule, Rule~(R3) moves from the
-canonical yield \(\omega(X)\) to \(\omega(Y)\omega(Z)\), and the typed
+$h(\omega(X))=h(a)$; for a typed binary rule, Rule~\textup{(U)} moves from
+the canonical yield \(\omega(X)\) to \(\omega(Y)\omega(Z)\), and the typed
 refinement gives
 \(h(\omega(X))=h(\omega(Y))h(\omega(Z))\). No outer-context annotation is
 used.
@@ -732,16 +737,17 @@ deploying adjectives that carry no mathematical definition.''
 ``Lemmas 5.3 and 5.4 merely repeat definitions and should be deleted.''
 
 \textbf{Response:} The remark and definition-restating lemmas are
-deleted. In place of the old informal remark, immediately after Rules
-(R1)--(R5) we now give the simple intended reading suggested by the
-reviewer: \([x:u,v]\) represents possible replacements
-for the observed factor \(x\) in context (\(u\), \(v\)); the following
-soundness invariant makes precise that derived replacements retain
-the same \(h\)-type and distributional behavior. The revised order is now: batch grammar, sample consistency and soundness,
+deleted.  We also simplified the reconstruction further than the submitted
+notation: the hypothesis now has one symbol $[x]$ for each observed nonempty
+factor, rather than a separate symbol for each occurrence context.  Its
+intended language is the syntactic-congruence class of $x$ within the target,
+subject to the fixed $h$-type invariant.  The four displayed rule families are
+branching, $h$-filtered unary substitution, lexical emission, and start entry.
+The revised order is now: batch grammar, sample consistency and soundness,
 sequential learner, then target-side yield refinement and completeness.
 
-\textbf{Revision location:} Section 4 (Rules (R1)--(R5) and the soundness
-invariant).
+\textbf{Revision location:} Section 4 (Rules \textup{(B)}, \textup{(U)},
+\textup{(L)}, \textup{(S)} and the soundness invariant).
 \textit{Page/paragraph/line (numbered marked-up revised manuscript): p.~8, paragraphs accompanying Rules~(R1)--(R5) (ll.~312--318); pp.~8--9, soundness-invariant proof (ll.~324--339).}
 
 \textbf{R1.27. Comment (quoted excerpt):} ``Lemma 5.2. In the second sentence,
@@ -751,14 +757,15 @@ following `More precisely' is unclear.''
 
 \textbf{Response:} Agreed. The former Lemma 5.2 and the undefined
 ``corresponding local configuration'' terminology have been removed.
-Their role is replaced in the proof of Theorem~4.2 by the explicit invariant
+Their role is replaced in the proof of Theorem~4.2 by the simpler invariant
 \[
- [x:u,v]\Rightarrow^* w \;\Longrightarrow\; uwv\in L
+ [x]\Rightarrow^* w \;\Longrightarrow\; x\equiv_L w
  \text{ and } h(w)=h(x),
 \]
-proved by induction on derivation-tree height with a case analysis on the root
-reconstruction rule.  The theorem then obtains hypothesis soundness from this
-invariant.
+proved by induction on derivation-tree height.  The unary case uses one shared
+sample context and fixed-$h$ substitutability; the branching case uses that
+$\equiv_L$ is a monoid congruence.  Start rules then give hypothesis
+soundness.
 
 \textbf{Revision location:} Theorem 4.2 and its displayed soundness invariant.
 \textit{Page/paragraph/line (numbered marked-up revised manuscript): pp.~8--9, Theorem~4.2 statement and invariant (ll.~324--325); p.~9, remaining soundness proof (ll.~326--339).}
@@ -793,10 +800,11 @@ could be presented in a single paragraph.''
 
 \textbf{Response:} The former standalone complexity section is now a short
 subsection in Section~5.3, centered on one counting argument with
-\(n_K=\sum_{w\in K}(|w|+1)\): \(O(n_K^2)\) observed nonterminals,
-\(O(n_K^3)\) factorization rules, at most \(O(n_K^4)\) candidate
-transport/type pairs, and a conservative explicit worst-case bound
-\(O(n_K^5)\) when string keys are copied.  The update consequence is now stated directly in prose, rather than as a
+\(n_K=\sum_{w\in K}(|w|+1)\): \(O(n_K^2)\) factor nonterminals,
+\(O(n_K^3)\) branching candidates, and \(O(n_K^3)\) unary candidates
+after grouping observed factors by sample context and $h$-type.  Even when
+factor strings are copied literally, this gives a conservative explicit
+worst-case bound \(O(n_K^4)\).  The update consequence is now stated directly in prose, rather than as a
 separate corollary, followed by a brief limitation example.  The size
 convention also counts \(\lambda\) correctly.
 
@@ -1089,28 +1097,27 @@ cannot be established by any example. The yield typing, which is genuinely
 essential and is what becomes vacuous under the trivial monoid, should not
 be left in a footnote.''
 
-\textbf{Response:} We agree on all points. Transport without
-any condition on outer-context types is intended
-and sound. As the reviewer observed, no proof in
-the \emph{submitted version} consulted the outer
-components: $A^{m,n}_p$ can be replaced by
-yield-typed $A_p$ throughout. We have accordingly
-removed the outer annotations, the announcement
-of typed transport in the former Section~1.1,
-and the claim that outer types are necessary.
+\textbf{Response:} We agree, and the observation permits a
+stronger simplification than merely deleting the outer type annotations.
+No proof in the \emph{submitted version} consulted the outer components, so
+$A^{m,n}_p$ has been replaced by the yield-typed $A_p$ on the target side.
+On the hypothesis side, the context index is also inessential: submitted
+Rule~(2) made all symbols $[x:u,v]$ with the same factor $x$ mutually
+derivable.  Quotienting those symbols therefore gives one nonterminal $[x]$
+per observed factor.  Submitted Rule~(3) then becomes exactly the unary rule
+$[x]\to[y]$ when $x$ and $y$ share an observed context and
+$h(x)=h(y)$.  The separate transport rule disappears.
 
-In the Rule~(R2) case of the proof of Theorem~4.2,
-the observed factor $x$ and the derived nonempty
-word $w$ share a context and have equal $h$-types;
-target substitutability then transfers every
-context without any outer-type guard.
-Yield typing \emph{is} necessary for Rule~(R3)
-in the completeness argument, where canonical
-parent and combined child yields must have equal
-types. Section~4 defines the reconstruction
-rules before Section~5 introduces precisely
-this target-side typing; the parity example
-is now in the main text.
+The revised batch reconstruction is consequently the standard
+substring-indexed construction of Clark (2013, Algorithm~1), with the unary
+relation filtered by $h$ and with $\lambda$ handled separately at the start
+symbol.  Soundness now uses the invariant
+$[x]\Rightarrow^*w\Rightarrow x\equiv_L w$ and $h(w)=h(x)$.
+Yield typing remains necessary only for the present witness-based completeness
+argument: it licenses the unary steps from a canonical parent yield to a
+typed terminal yield or to the concatenation of typed child yields.  The
+parity example is worded explicitly as an illustration of this proof
+requirement, not as an algorithm-independent necessity.
 
 \textbf{Revision location:} Section 4; Section 5.1 and Theorem 5.3.
 \textit{Page/paragraph/line (numbered marked-up revised manuscript): pp.~8--9, Rule~(R2) and its soundness proof (ll.~312--339); p.~10, yield-typing explanation and invariant (ll.~376--395); p.~11, completeness induction (ll.~417--426).}
