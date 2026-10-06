@@ -143,30 +143,103 @@ jobs:
       - name: Generate marked-up revised manuscript
         working-directory: 01_fixed-h-cfg
         run: |
-          latexdiff --type=CHANGEBAR --disable-citation-markup --math-markup=0 \
+          latexdiff --type=UNDERLINE --disable-citation-markup --math-markup=0 \
             archive/tcs-round1-arxiv-v4/main.tex \
             main.tex > main_marked_round1.tex
           python3 - <<'PY'
           from pathlib import Path
+
           p = Path("main_marked_round1.tex")
           s = p.read_text()
-          needle = r"\theoremstyle{plain}"
-          if needle not in s:
-              raise SystemExit("theoremstyle marker not found in latexdiff output")
-          s = s.replace(
-              needle,
-              needle + "\n" + r"\input{response/latexdiff_compat.tex}",
-              1,
-          )
+
+          # Deleted material from the submitted manuscript is omitted from the
+          # marked-up revised copy; additions remain visibly marked by
+          # latexdiff. This keeps the revised manuscript's pagination and
+          # numbering usable in the response letter.
           doc = r"\begin{document}"
           if doc not in s:
-              raise SystemExit("begin-document marker not found in latexdiff output")
-          s = s.replace(
-              doc,
-              r"\input{response/latexdiff_counterfreeze.tex}" + "\n" + doc,
+              raise SystemExit("begin-document marker not found")
+          pre, body = s.split(doc, 1)
+
+          def strip_deleted_blocks(text):
+              pos = 0
+              while True:
+                  candidates = []
+                  for begin, end in [
+                      (r"\DIFdelbeginFL", r"\DIFdelendFL"),
+                      (r"\DIFdelbegin", r"\DIFdelend"),
+                  ]:
+                      k = text.find(begin, pos)
+                      while k >= 0 and begin == r"\DIFdelbegin" and text.startswith(r"\DIFdelbeginFL", k):
+                          k = text.find(begin, k + 1)
+                      if k >= 0:
+                          candidates.append((k, begin, end))
+                  if not candidates:
+                      return text
+                  k, begin, end = min(candidates, key=lambda x: x[0])
+                  j = text.find(end, k + len(begin))
+                  if j < 0:
+                      raise SystemExit(f"unmatched {begin}")
+                  text = text[:k] + text[j + len(end):]
+                  pos = max(0, k - 20)
+
+          def remove_macro_argument(text, macro):
+              pos = 0
+              while True:
+                  k = text.find(macro, pos)
+                  if k < 0:
+                      return text
+                  if macro == r"\DIFdel" and text.startswith(r"\DIFdelFL", k):
+                      pos = k + 1
+                      continue
+                  j = k + len(macro)
+                  while j < len(text) and text[j].isspace():
+                      j += 1
+                  if j >= len(text) or text[j] != "{":
+                      pos = j
+                      continue
+                  depth = 0
+                  q = j
+                  while q < len(text):
+                      ch = text[q]
+                      if ch == "\\":
+                          q += 2
+                          continue
+                      if ch == "{":
+                          depth += 1
+                      elif ch == "}":
+                          depth -= 1
+                          if depth == 0:
+                              q += 1
+                              break
+                      q += 1
+                  if depth != 0:
+                      raise SystemExit(f"unbalanced argument of {macro}")
+                  text = text[:k] + text[q:]
+                  pos = max(0, k - 20)
+
+          body = strip_deleted_blocks(body)
+          for macro in (r"\DIFdelFL", r"\DIFdel"):
+              body = remove_macro_argument(body, macro)
+          for token in (
+              r"\DIFdelbeginFL", r"\DIFdelendFL",
+              r"\DIFdelbegin", r"\DIFdelend",
+          ):
+              body = body.replace(token, "")
+
+          # Deleted round-1 material used packages/macros no longer present in
+          # the revised paper. Keep a small compatibility preamble so the
+          # latexdiff-generated source remains robust.
+          marker = r"\theoremstyle{plain}"
+          if marker not in pre:
+              raise SystemExit("theoremstyle marker not found")
+          pre = pre.replace(
+              marker,
+              marker + "\n" + r"\input{response/latexdiff_compat.tex}",
               1,
           )
-          p.write_text(s)
+
+          p.write_text(pre + doc + body)
           PY
 
       - name: Compile marked-up revised manuscript
