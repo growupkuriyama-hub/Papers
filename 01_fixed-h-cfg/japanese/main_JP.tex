@@ -156,7 +156,7 @@ Clark のより広い言語族と比較する．
 
 $\Sigma$ を有限アルファベットとし，$\Sigma^*$ を単位元 $\lambda$ をもつ自由モノイドとする．また $\Sigma^+:=\Sigma^*\setminus\{\lambda\}$ とおく．対 $(u,v)\in\Sigma^*\times\Sigma^*$ を \emph{終端文脈} と呼ぶ．$L\subseteq\Sigma^*$ と $x\in\Sigma^*$ に対し，$L$ における $x$ の \emph{分布} を
 $\D_L(x):=\{(u,v)\in\Sigma^*\times\Sigma^*:uxv\in L\}$
-と定める．$L$ の \emph{構文合同関係} は，$x,y\in\Sigma^*$ に対して $x\equiv_L y \Longleftrightarrow \D_L(x)=\D_L(y)$ により定める．$x\equiv_L y$ のとき，$x$ と $y$ は \emph{構文合同} であるという．
+と定める．$L$ の \emph{構文合同関係} は，$x,y\in\Sigma^*$ に対して $x\equiv_L y \Longleftrightarrow \D_L(x)=\D_L(y)$ により定める．$x\equiv_L y$ のとき，$x$ と $y$ は \emph{構文合同} であるという．通常通り，$\equiv_L$ はモノイド合同であり，$x\equiv_L x'$ かつ $y\equiv_L y'$ ならば $xy\equiv_L x'y'$ である．
 
 語 $w\in\Sigma^*$ と文字 $a\in\Sigma$ に対し，$|w|_a$ は $w$ における $a$ の出現回数を表す．
 
@@ -496,54 +496,90 @@ $\mathsf{RS}_h\subseteq\mathsf{RS}_{h_{n,n}}\subseteq\mathsf{KL}$ を得る．
 
 \subsection{有限標本からの再構成}
 有限標本 $K\subseteq\Sigma^*$ に対し，
-$\widehat V(K):=\{[x:u,v]:uxv\in K,\ x\in\Sigma^+\}$
-とおく．これらは構文的三つ組である．すなわち規約として，$[x:u,v]=[x':u',v'] \Longleftrightarrow x=x',\ u=u',\ v=v'$ とする．特に，同じ標本語から生じる場合であっても，因子文字列または文脈文字列が異なる二つの出現は，異なる仮説非終端記号である．文法 $\mathcal B_h(K)=\widehat G(K)$ は，非終端記号集合 $\widehat V(K)\cup\{\widehat S\}$ と開始記号 $\widehat S$ をもつ．表示されるすべての角括弧付き非終端記号が $\widehat V(K)$ に属する場合に，次の生成規則をもつ．
+\[
+ \widehat V(K):=
+ \{[x]:x\in\Sigma^+,\ \exists u,v\in\Sigma^*\text{ with }uxv\in K\}
+\]
+とおく．したがって，標本中で観測された相異なる非空因子ごとに
+仮説非終端記号を一つだけ置く．角括弧は非終端記号名の一部であり，
+商類を表す記号ではない．観測された非空因子 $x,y$ に対し
+\[
+ x\approx_{K,h}y
+ \quad\Longleftrightarrow\quad
+ h(x)=h(y)\ \text{かつ}\ \D_K(x)\cap\D_K(y)\ne\emptyset
+\]
+と書く．文法 $\mathcal B_h(K)=\widehat G(K)$ は
+非終端記号集合 $\widehat V(K)\cup\{\widehat S\}$ と開始記号
+$\widehat S$ をもち，表示されたすべての角括弧付き非終端記号が
+$\widehat V(K)$ に属する場合に，次の規則をもつ：
 \[
 \begin{array}{rll}
-(R1)&[xy:u,v]\to[x:u,yv][y:ux,v],&x,y\in\Sigma^+,\\[1mm]
-(R2)&[x:u,v]\to[x:u',v'],&uxv,u'xv'\in K,\\[1mm]
-(R3)&[x:u,v]\to[x':u,v],&h(x)=h(x'),\\[1mm]
-(R4)&[a:u,v]\to a,&a\in\Sigma,\\[1mm]
-(R5)&\widehat S\to[w:\lambda,\lambda],&w\in K\cap\Sigma^+.
+\textup{(B)}&[xy]\to[x][y],&x,y\in\Sigma^+,\\[1mm]
+\textup{(U)}&[x]\to[y],&x\approx_{K,h}y,\\[1mm]
+\textup{(L)}&[a]\to a,&a\in\Sigma,\\[1mm]
+\textup{(S)}&\widehat S\to[w],&w\in K\cap\Sigma^+.
 \end{array}
 \]
-$\lambda\in K$ のときは，規則~(R5) に $\widehat S\to\lambda$ も含める．直観的には，$[x:u,v]$ は観測された因子 $x$ を文脈 $(u,v)$ の中で置き換える候補を表す．$\sim_h$-代入可能な標的に対しては，以下の健全性不変量により，導出されるすべての語が $x$ と同じ $h$-型をもち，分布的に交換可能であることが保証される．規則~(R2) は文脈輸送規則である．同じ観測因子は，その因子自身が観測された任意の文脈で表現できる．二つの周囲文脈の $h$-型に関する条件は不要である．規則~(R3) は，一つの固定生成語型の内部で代表元を変更する．その条件 $h(x)=h(x')$ は，健全性不変量の生成語型部分を保存するためにまさに用いられる．その不変量はその後規則~(R1) および~(R2) で代入可能性を適用するときに用いられる．
+$\lambda\in K$ のときは，規則~\textup{(S)} に
+$\widehat S\to\lambda$ も含める．
+
+明示的な開始記号と規則~\textup{(U)} の $h$-フィルタを除けば，
+これは Clark~\cite[Algorithm~1]{clark2013} の部分文字列添字付き文法構成であり，
+Clark--Eyraud の構成を Yoshinaka 流に簡約した形である．
+ここでの $h$-フィルタが fixed-$h$ 代入可能性に対応する追加条件であり，
+二つの観測因子が同じ標本文脈を共有し，かつ同じ $h$-型をもつ場合に限って
+単位規則で結ぶ．
 
 \begin{lemma}[標本整合性]\label{lem:sample-consistency}
 任意の有限正例標本 $K$ に対して，$K\subseteq L(\mathcal B_h(K))$ が成り立つ．
 \end{lemma}
 \begin{proof}
-$w=a_1\cdots a_m\in K\cap\Sigma^+$ とする．規則~(R5) により $[w:\lambda,\lambda]$ に入る．この $w$ の出現を任意に二分木分解し，それに沿って規則~(R1) を繰り返し適用すると，一文字因子へ到達する．中間で必要となる観測非終端記号はすべて，同じ標本語の因子と，それによって誘導される文脈から生じるため存在する．最後に規則~(R4) が $a_1\cdots a_m$ を出力する．$\lambda\in K$ の場合は，開始規則がこれを直接出力する．
+$w=a_1\cdots a_m\in K\cap\Sigma^+$ とする．規則~\textup{(S)} により
+$[w]$ に入る．$w$ の任意の二分木分解に沿って規則~\textup{(B)} を繰り返すと
+一文字因子へ到達し，それらはすべて同じ標本語中に現れるので観測済みである．
+最後に規則~\textup{(L)} が $a_1\cdots a_m$ を生成する．
+$\lambda\in K$ の場合は開始規則が直接生成する．
 \end{proof}
 
-また $K\subseteq K'$ ならば，$K$ から作られたすべての観測非終端記号と規則~(R1)--(R5) のすべてのインスタンスは $K'$ に対しても残る．したがって $\widehat G(K)$ は $\widehat G(K')$ の部分文法であり，
-$L(\mathcal B_h(K))\subseteq L(\mathcal B_h(K'))$.
-ゆえに保守的学習器が再構成を行うとき，仮説言語は拡大することしかない．
-
 \begin{theorem}[健全性]\label{thm:soundness}
-$K\subseteq L$ かつ $L$ が $\sim_h$-代入可能ならば，$L(\widehat G(K))\subseteq L$ である．
+$K\subseteq L$ かつ $L$ が $\sim_h$-代入可能ならば，
+$L(\widehat G(K))\subseteq L$ である．
 \end{theorem}
 
 \begin{proof}
-$[x:u,v]$ を根とする導出木の高さについて帰納法を行い，次を同時に証明する．
+$[x]$ を根とする導出木の高さについて帰納法を行い，
 \begin{equation}\label{eq:soundness-invariant}
- [x:u,v]\Rightarrow_{\widehat G(K)}^*w
+ [x]\Rightarrow_{\widehat G(K)}^*w
  \quad\Longrightarrow\quad
- uwv\in L\ \text{かつ}\ h(w)=h(x).
+ x\equiv_L w\ \text{かつ}\ h(w)=h(x)
 \end{equation}
-規則~(R1)--(R4) から開始記号以外の仮説非終端記号が空語を導出することはなく，規則~(R4) は一つの終端記号を出力する．したがって，開始記号以外の仮説非終端記号から導出されるすべての終端語は非空である．特に，以下で定義~\ref{def:hsubst} を適用する語 $w,w_1,w_2$ は $\Sigma^+$ に属する．規則~(R4) の場合は明らかである．規則~(R3) については，帰納法の仮定から $h(w)=h(x')=h(x)$ が得られ，またすでに $uwv\in L$ が得られる．規則~(R2) については，帰納法の仮定から $u'wv'\in L$ および $h(w)=h(x)$ が得られる．さらに $[x:u',v']$ と $[x:u,v]$ は $\widehat V(K)$ に属するので，その定義から $u'xv',uxv\in K\subseteq L$ である．したがって $x$ と $w$ は文脈 $(u',v')$ を共有し，代入可能性により $\D_L(x)=\D_L(w)$ を得る．よって $uwv\in L$ である．
+を示す．規則~\textup{(B)}--\textup{(L)} から因子非終端記号が空語を
+導出することはないので，定義~\ref{def:hsubst} を適用する語は常に非空である．
+規則~\textup{(L)} は明らかである．規則~\textup{(U)} で
+$[x]\to[y]$ とする．定義から，ある標本文脈 $(u,v)$ が存在して
+$uxv,uyv\in K\subseteq L$ かつ $h(x)=h(y)$ である．
+fixed-$h$ 代入可能性により $x\equiv_L y$ であり，
+帰納法の仮定から $y\equiv_L w$ と $h(w)=h(y)$ が従うので
+~\eqref{eq:soundness-invariant} を得る．
 
-規則~(R1) について，導出語を $w_1w_2$ と書く．二つの帰納法の仮定から
-$uw_1yv\in L$, $uxw_2v\in L$,
-$h(w_1)=h(x)$, $h(w_2)=h(y)$
-が得られる．$uxyv\in K$ なので，$x$ と $w_1$ は文脈 $(u,yv)$ を共有し，同じ型をもつ．したがって両者の分布は一致する．第二の帰納法の仮定により $(u,w_2v)\in\D_L(x)$ である．この文脈に分布の等しさを適用すると $uw_1w_2v\in L$ を得る．さらに帰納法の仮定から $h(w_1w_2)=h(xy)$ である．これで~\eqref{eq:soundness-invariant} が証明された．開始規則を用いれば $L(\widehat G(K))$ に対する主張が従う．$\lambda$ は $\lambda\in K\subseteq L$ の場合にのみ存在する．
+規則~\textup{(B)} について，$[xy]\to[x][y]$ から得られる終端語を
+$w_1w_2$ と書く．帰納法の仮定より
+$x\equiv_L w_1$, $y\equiv_L w_2$,
+$h(w_1)=h(x)$, $h(w_2)=h(y)$ である．
+$\,\equiv_L\,$ はモノイド合同なので $xy\equiv_L w_1w_2$ であり，
+準同型性から $h(w_1w_2)=h(xy)$ である．
+
+最後に開始規則 $\widehat S\to[x]$ を用いたなら
+$x\in K\subseteq L$ なので $(\lambda,\lambda)\in\D_L(x)$ である．
+不変量から $\D_L(w)=\D_L(x)$ だから $w\in L$ を得る．
+$\lambda$ の直接規則は $\lambda\in K\subseteq L$ の場合にしか存在しない．
 \end{proof}
 
 \subsection{逐次学習器}
 
 $\mathcal B_h$ を各データ到着時に再計算しても，文法表現は一般には安定しない．
 たとえば $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$ では，長い正例から
-$[a^ncb^n:\lambda,\lambda]$ のような新しい三つ組が生じる．
+$[a^ncb^n]$ のような新しい因子非終端記号が生じる．
 そこで Clark--Eyraud の Substitution Graph Learner (SGL, Algorithm~2)
 および Yoshinaka の $(k,\ell)$-Substitutable Grammar Learner
 ($(k,\ell)$-SGL, Algorithm~1) と同じ保守的ラッパーを用いる
@@ -564,7 +600,7 @@ Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016} も参照�
 主張するのは，標的言語を生成する文法への最終的な構文的安定化だけである
 （系~\ref{cor:ilt}）．実際，無限な $L\in\Ccf{h}$ のテキスト $T$ で
 学習器が安定するとき，その時点までの標本語より長い $w\in L$ を選べる．
-$T$ 上の極限文法は $[w:\lambda,\lambda]$ を含まないが，
+$T$ 上の極限文法は $[w]$ を含まないが，
 $w$ を先頭に追加したテキストでは，最初の再構成以降の全仮説が
 この非終端記号を含む．従って，同じ標的に対して異なる極限文法が得られる．
 Clark~\cite[Section~4]{clark2013} も，代入可能な中心記号付き言語について
