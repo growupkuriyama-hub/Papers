@@ -137,5 +137,9 @@ preflight checks confirm balanced LaTeX environments/braces, no duplicate
 labels, no unresolved internal references, and synchronization of theorem
 labels between the English and Japanese sources.
 
-The archived Lean v88 artifact remains the theorem-facing formalization
-baseline. v116 has not been minted as a separate Lean archive.
+GitHub Actions successfully compiles the v116 English manuscript, Japanese
+reference translation, Round-1 response, and marked-up revision. Basic PDF
+preflight reports all four generated PDFs as openable, unencrypted,
+text-based documents with no XFA. The archived Lean v88 artifact remains the
+theorem-facing formalization baseline; v116 has not been minted as a separate
+Lean archive.
