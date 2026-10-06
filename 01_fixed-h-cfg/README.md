@@ -8,7 +8,7 @@
 - Tightened the explicit reconstruction bound from `O(n_K^5)` to `O(n_K^4)`.
 - Narrowed the parity toy example to the role of yield-type splitting in the present completeness proof; promoted the exponential typed-thickness gap from a remark to a proposition; moved formula-adjacent footnote markers; reduced metavariable collisions and singleton subsection fragmentation.
 - Added one sentence explaining the design of the nonregular linear separator: `c` and `d` deliberately share one `h`-value, so the example does not merely encode center-symbol names as types.
-- English manuscript, Japanese reference translation, and Round-1 response are synchronized at the theorem/label level. Source-level preflight finds balanced environments/braces, no duplicate labels, and no unresolved internal references.
+- English manuscript, Japanese reference translation, and Round-1 response are synchronized at the theorem/label level. Source-level preflight finds balanced environments/braces, no duplicate labels, and no unresolved internal references. GitHub Actions also passes the English, Japanese, response, and marked-up-revision builds; all four generated PDFs pass basic PDF preflight.
 - The archived Lean v88 release remains the theorem-facing verification baseline; v116 is not claimed to be an exact separately formalized artifact.
 - **No claim is made that v116 has been submitted.**
 
