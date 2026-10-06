@@ -164,32 +164,35 @@ jobs:
           pre, body = s.split(doc, 1)
 
           def strip_deleted_blocks(text):
-              # latexdiff may nest FL and non-FL deletion blocks.  Pairing each
-              # begin marker with the first following end marker is therefore
-              # unsafe; scan the markers as a properly nested stream instead.
-              begin_tokens = (r"\DIFdelbeginFL", r"\DIFdelbegin")
-              end_tokens = (r"\DIFdelendFL", r"\DIFdelend")
-              tokens = begin_tokens + end_tokens
-              out = []
-              stack = []
-              i = 0
-              while i < len(text):
-                  tok = next((t for t in tokens if text.startswith(t, i)), None)
-                  if tok is None:
-                      if not stack:
-                          out.append(text[i])
-                      i += 1
-                      continue
-                  if tok in begin_tokens:
-                      stack.append(tok)
-                  else:
-                      if not stack:
-                          raise SystemExit(f"unmatched {tok}")
-                      stack.pop()
-                  i += len(tok)
-              if stack:
-                  raise SystemExit(f"unclosed deletion block(s): {stack}")
-              return "".join(out)
+              # latexdiff can mix ordinary and FL deletion boundary variants
+              # around large environment-level rewrites. For this
+              # additions-only marked manuscript, pair the earliest deletion
+              # start with the earliest deletion end of either variant.
+              pos = 0
+              begins = (r"\DIFdelbeginFL", r"\DIFdelbegin")
+              ends = (r"\DIFdelendFL", r"\DIFdelend")
+              while True:
+                  starts = []
+                  for begin in begins:
+                      k = text.find(begin, pos)
+                      while k >= 0 and begin == r"\DIFdelbegin" and text.startswith(r"\DIFdelbeginFL", k):
+                          k = text.find(begin, k + 1)
+                      if k >= 0:
+                          starts.append((k, begin))
+                  if not starts:
+                      return text
+                  k, begin = min(starts, key=lambda x: x[0])
+
+                  finishes = []
+                  for end_token in ends:
+                      q = text.find(end_token, k + len(begin))
+                      if q >= 0:
+                          finishes.append((q, end_token))
+                  if not finishes:
+                      raise SystemExit(f"unmatched deletion block starting with {begin}")
+                  q, end_token = min(finishes, key=lambda x: x[0])
+                  text = text[:k] + text[q + len(end_token):]
+                  pos = max(0, k - 20)
 
           def remove_macro_argument(text, macro):
               pos = 0
