@@ -41,13 +41,14 @@ and a conservative sequential learner that identifies every nonempty such
 target in the limit; reconstruction and updates take polynomial time.  The
 size of the canonical witnesses is controlled by the shortest yields obtained
 after target nonterminals are split according to their finite $h$-values; these
-lengths can be exponentially larger than ordinary grammar thickness.  For
-general fixed typings, our characteristic-data bound is therefore naturally
-expressed through this target-side typed-thickness parameter rather than through
-ordinary grammar thickness alone.  By contrast, ordinary thickness suffices
-whenever the positive image semigroup $h(\Sigma^+)$ is locally trivial; this
-regime contains every fixed prefix--suffix window and, at the level of language
-classes, exactly recovers Yoshinaka's fixed-window hierarchy.  Characteristic
+lengths can be exponentially larger than ordinary grammar thickness in some
+presentations, without implying an algorithm-independent data lower bound.
+For general fixed typings, our characteristic-data bound therefore uses these
+refined shortest-yield lengths rather than ordinary grammar thickness alone.
+By contrast, ordinary thickness suffices when a fixed prefix--suffix window
+determines the type of every nonempty factor.  We characterize this condition
+algebraically and recover Yoshinaka's fixed-window hierarchy at the level of
+language classes.  Characteristic
 data are also polynomial in the size of a linear CFG for linear targets under
 every fixed $h$.  Beyond Yoshinaka's earlier regular separation, we exhibit nonregular linear
 and nonlinear context-free targets that lie outside every fixed-window class,
@@ -94,7 +95,9 @@ identical distributions, so every regular language lies in the broader
 class $\mathsf{RS}$ defined in Section~\ref{sec:framework}.  Our learning
 results, however, use the \emph{fixed-$h$} regime: one homomorphism is fixed
 uniformly over the class $\Ccf{h}$, just as one pair $(k,\ell)$ is fixed in
-Yoshinaka's hierarchy.
+Yoshinaka's hierarchy.  Only in the expressive union $\mathsf{RS}$ may the
+witnessing homomorphism vary by target, and no learner is claimed for that
+union.
 
 This separates choosing a useful finite typing from learning once it is
 specified.  More importantly, fixed finite-monoid typing goes beyond a single
@@ -102,11 +105,13 @@ prefix--suffix window while retaining one uniform learning mechanism:
 independent finite features can be combined by a product homomorphism.  Product typing makes $\mathsf{RS}$ closed under intersection and arbitrary
 inverse homomorphism; if a regular filter $R$ is recognized by $g$, then
 $L\in\Ccf{h}$ implies $L\cap R\in\Ccf{h\times g}$.  The relation with
-Yoshinaka's uniform window parameter is algebraically exact.  If
-$S=h(\Sigma^+)$, then a fixed prefix--suffix window determines $h$ on
-nonempty factors if and only if the finite semigroup $S$ is locally trivial.
-Consequently, the union of the fixed-$h$ classes with locally trivial positive
-image is exactly the fixed-window hierarchy $\mathsf{KL}$.
+Yoshinaka's uniform window parameter is algebraically exact.  Write
+$S=h(\Sigma^+)$ for the finite \emph{positive image semigroup} of $h$.
+Call $S$ \emph{locally trivial} if $ete=e$ for every idempotent $e\in S$
+and every $t\in S$.  A fixed prefix--suffix window determines $h$ on
+nonempty factors exactly when $S$ is locally trivial.  Consequently, the
+union of these fixed-$h$ classes is Yoshinaka's fixed-window hierarchy,
+denoted $\mathsf{KL}$ in Section~\ref{sec:framework}.
 Sections~\ref{sec:linear}--\ref{sec:boundaries} give nonregular linear and
 nonlinear context-free examples outside every fixed-window class and also show
 a boundary: unbounded counter/Dyck behavior can
@@ -214,12 +219,14 @@ We write $\mathrm{CFL}$ for the class of context-free languages.  For any
 finite representation $\mathcal R$, $|\mathcal R|$ denotes the length of a fixed reasonable
 encoding; for a grammar this is polynomially equivalent to the usual symbol
 count of its productions.  Earlier work on simple deterministic pushdown automata used
-\emph{thickness} to measure the length of a shortest accepting input
-from a stack configuration and took the maximum over stack symbols
-as an algorithmic parameter~\cite[p.~951]{wakatsuki-tomita1992}.
-Those are machine-side equivalence and inclusion problems, not
-positive-data CFG learning results.  In the distinct setting of reduced
-CFGs, following Yoshinaka's fixed-window analysis~\cite{yoshinaka2008},
+\emph{thickness} to measure shortest inputs that empty stack symbols,
+taking the maximum over the symbols as an algorithmic parameter
+\cite[pp.~1224--1225]{wakatsuki-tomita1993}; see also a related
+shortest distinguishing-input bound~\cite[p.~951]{wakatsuki-tomita1992}.
+These machine-side inclusion and equivalence problems are distinct from
+positive-data CFG learning.  In the latter setting, following Yoshinaka's
+fixed-window analysis~\cite{yoshinaka2008} and its later exposition
+\cite[Definition~2.12]{eyraud-heinz-yoshinaka2016},
 for a reduced grammar $G=(V,\Sigma,P,S)$ we use the analogous
 shortest-yield \emph{thickness} parameter
 \[
@@ -313,8 +320,8 @@ $\mathsf{RS}$.
 \end{proposition}
 
 \begin{proof}
-The first statement is the standard finite-monoid characterization
-\cite{eilenberg1974,pin2025}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
+The first statement is the standard finite-monoid characterization of
+regular languages~\cite[Chapters~III--IV]{pin2025}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
 $h(uxv)=h(uyv)$ for all $u,v$, so $\D_L(x)=\D_L(y)$.
 \end{proof}
 
@@ -1509,8 +1516,8 @@ $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$.
 \begin{proof}
 The grammar $S\to TS\mid\lambda$, $T\to aTb\mid\lambda$ generates
 $\Delta^*$.  It is deterministic context-free: a DPDA pushes while reading
-the $a$-part of a block, pops during the following $b$-part, and permits a new
-block only after the stack has returned to its bottom marker.  Nonregularity
+the $a$-part of a factor $a^nb^n$, pops during its $b$-part, and
+permits a new such factor only after the stack returns to its bottom marker.  Nonregularity
 follows from
 $\Delta^*\cap a^*b^*=\Delta$, and nonlinearity from closure of linear
 languages under regular intersection together with
@@ -1591,8 +1598,10 @@ $\uparrow t\notin\mathrm{CTR}_\rho$, the latter reaching height
 $\rho+1$.  Hence their distributions differ, and the criterion applies.
 \end{proof}
 
-The restriction $\rho\ge2$ ensures that the witness $s$ above is nonempty
-also in the boundary case $k=\ell=0$.
+The restriction $\rho\ge2$ ensures that $s$ is nonempty when $k=\ell=0$.
+It is also needed for this witness when $k\ge1$: the initial
+$\uparrow(\uparrow\downarrow)^k$ of $\uparrow s$ reaches height $2$,
+so for $\rho=1$ the claimed common context would already violate the cap.
 
 Let $h_\rho:\Sigma_c^*\to M_\rho$ be the transition-monoid morphism
 induced by the DFA above.  It recognizes $\mathrm{CTR}_\rho$, and hence
@@ -1986,11 +1995,6 @@ E.\,M.~Gold.
 Language identification in the limit.
 \textit{Information and Control}, 10(5):447--474, 1967.
 
-\bibitem{eilenberg1974}
-S.~Eilenberg.
-\newblock \emph{Automata, Languages, and Machines}, Vol.~A.
-\newblock Pure and Applied Mathematics, Vol.~58-A, Academic Press, 1974.
-
 \bibitem{pin2025}
 J.-E.~Pin.
 \newblock \emph{Mathematical Foundations of Automata Theory}.
@@ -2014,6 +2018,13 @@ Polynomial identification in the limit of substitutable
 context-free languages.
 \textit{Journal of Machine Learning Research},
 8:1725--1745, 2007.
+
+\bibitem{wakatsuki-tomita1993}
+M.~Wakatsuki and E.~Tomita.
+\newblock A fast algorithm for checking the inclusion for very simple
+deterministic pushdown automata.
+\newblock \emph{IEICE Transactions on Information and Systems},
+E76-D(10):1224--1233, 1993.
 
 \bibitem{wakatsuki-tomita1992}
 M.~Wakatsuki and E.~Tomita.
