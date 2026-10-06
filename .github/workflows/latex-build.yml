@@ -164,25 +164,34 @@ jobs:
           pre, body = s.split(doc, 1)
 
           def strip_deleted_blocks(text):
+              # latexdiff can mix ordinary and FL deletion boundary variants
+              # around large environment-level rewrites. For this
+              # additions-only marked manuscript, pair the earliest deletion
+              # start with the earliest deletion end of either variant.
               pos = 0
+              begins = (r"\DIFdelbeginFL", r"\DIFdelbegin")
+              ends = (r"\DIFdelendFL", r"\DIFdelend")
               while True:
-                  candidates = []
-                  for begin, end in [
-                      (r"\DIFdelbeginFL", r"\DIFdelendFL"),
-                      (r"\DIFdelbegin", r"\DIFdelend"),
-                  ]:
+                  starts = []
+                  for begin in begins:
                       k = text.find(begin, pos)
                       while k >= 0 and begin == r"\DIFdelbegin" and text.startswith(r"\DIFdelbeginFL", k):
                           k = text.find(begin, k + 1)
                       if k >= 0:
-                          candidates.append((k, begin, end))
-                  if not candidates:
+                          starts.append((k, begin))
+                  if not starts:
                       return text
-                  k, begin, end = min(candidates, key=lambda x: x[0])
-                  j = text.find(end, k + len(begin))
-                  if j < 0:
-                      raise SystemExit(f"unmatched {begin}")
-                  text = text[:k] + text[j + len(end):]
+                  k, begin = min(starts, key=lambda x: x[0])
+
+                  finishes = []
+                  for end_token in ends:
+                      q = text.find(end_token, k + len(begin))
+                      if q >= 0:
+                          finishes.append((q, end_token))
+                  if not finishes:
+                      raise SystemExit(f"unmatched deletion block starting with {begin}")
+                  q, end_token = min(finishes, key=lambda x: x[0])
+                  text = text[:k] + text[q + len(end_token):]
                   pos = max(0, k - 20)
 
           def remove_macro_argument(text, macro):

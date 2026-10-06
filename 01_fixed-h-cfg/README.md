@@ -1,5 +1,17 @@
 # #1 — fixed-h CFG
 
+## v116 — Substring-indexed reconstruction and round-2 preflight (2026-10-07)
+
+- Collapsed the occurrence/context-indexed hypothesis states `[x:u,v]` to one state `[x]` per observed nonempty factor. The old and new batch constructors are language-equivalent for every finite sample; the exact two-way simulation is recorded in `revision/v115_to_v116_context_index_collapse.md`.
+- The resulting reconstruction is Clark (2013, Algorithm 1)'s substring-indexed architecture with unary rules filtered by the fixed `h`-type, plus the paper's explicit start/empty-word convention.
+- Replaced the old context-sensitive soundness invariant by `[x] =>* w => x ≡_L w and h(w)=h(x)`. The existing canonical witness set still proves completeness without change.
+- Tightened the explicit reconstruction bound from `O(n_K^5)` to `O(n_K^4)`.
+- Narrowed the parity toy example to the role of yield-type splitting in the present completeness proof; promoted the exponential typed-thickness gap from a remark to a proposition; moved formula-adjacent footnote markers; reduced metavariable collisions and singleton subsection fragmentation.
+- Added one sentence explaining the design of the nonregular linear separator: `c` and `d` deliberately share one `h`-value, so the example does not merely encode center-symbol names as types.
+- English manuscript, Japanese reference translation, and Round-1 response are synchronized at the theorem/label level. Source-level preflight finds balanced environments/braces, no duplicate labels, and no unresolved internal references. GitHub Actions also passes the English, Japanese, response, and marked-up-revision builds; all four generated PDFs pass basic PDF preflight.
+- The archived Lean v88 release remains the theorem-facing verification baseline; v116 is not claimed to be an exact separately formalized artifact.
+- **No claim is made that v116 has been submitted.**
+
 ## v107 — Source-verified Wakatsuki primary-source positioning (2026-10-05)
 
 - Citation-source improvement only: replace the indirect Wakatsuki--Tomita thickness attribution via Yoshinaka (2008) with directly examined primary-source passages in Wakatsuki--Tomita (1992, p. 951) and (1993, Definition 3.1, p. 1226).
@@ -15,9 +27,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v106; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v106 English source.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v106. The substantive responses and a selected old-to-new renumbering guide are current; exact final page/paragraph/line locators still have to be inserted after the manuscript PDF is frozen.
+- `main.tex` — English major-revision manuscript, internal v116; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v116 theorem/label surface.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the v116 reconstruction. The substantive responses and selected renumbering guide are current; brittle hard-coded page/paragraph/line locators were removed in favor of direct section/statement references.
 
 ## v106 Yoshinaka prior-art correction
 
@@ -114,7 +126,7 @@ The theorem-facing Lean 4 formalization is maintained separately in
 
 - The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
 - The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v105 manuscript contains later presentation, notation, source-attribution, numbering, and response-consistency revisions; v103 removed the later operator-independent lower-bound construction, v104 added the product-typing closure argument, and v105 numbers that result, tightens the nonlinear boundary proof, and removes the optional `L_x` comparison. No separate v105 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v105.
+- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v116 manuscript contains later presentation, notation, source-attribution, numbering, reconstruction-simplification, and response-consistency revisions; v103 removed the later operator-independent lower-bound construction, v104 added the product-typing closure argument, and v105 numbers that result, tightens the nonlinear boundary proof, and removes the optional `L_x` comparison. No separate v116 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v105.
 - The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
 - The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
 
