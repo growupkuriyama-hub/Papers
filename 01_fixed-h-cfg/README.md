@@ -29,7 +29,7 @@
 
 - `main.tex` — English major-revision manuscript, internal v116; this is the source of truth.
 - `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v116 theorem/label surface.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the v116 reconstruction. The substantive responses and selected renumbering guide are current; exact final page/paragraph/line locators still require a final compiled-PDF pass.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with the v116 reconstruction. The substantive responses and selected renumbering guide are current; brittle hard-coded page/paragraph/line locators were removed in favor of direct section/statement references.
 
 ## v106 Yoshinaka prior-art correction
 
