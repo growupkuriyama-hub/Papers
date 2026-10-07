@@ -68,7 +68,7 @@ compared across contexts; classical examples are Clark--Eyraud
 substitutability~\cite{clark-eyraud2007} and Yoshinaka's
 $(k,\ell)$-substitutability~\cite{yoshinaka2008}.  See
 de~la~Higuera~\cite{higuera2010} for general background and
-Kanazawa~\cite{kanazawa1993} for positive-data learnability results
+Kanazawa~\cite{kanazawa1996} for positive-data learnability results
 for categorial grammars.
 
 We study a recognizable-congruence version of this program.  Let
@@ -212,9 +212,10 @@ $A,B\in V$ is a \emph{unit production} (or \emph{unit rule}).  The
 \emph{unit closure} is the reflexive-transitive closure of the relation on
 nonterminals induced by unit productions.  A grammar is \emph{reduced} if
 every nonterminal is reachable and productive.  For a grammar generating a
-nonempty language, its \emph{trim} (or \emph{reduced part}) is the subgrammar
-obtained by deleting all useless nonterminals together with their incident
-productions.  A CFG is \emph{linear} if every right-hand side contains at
+nonempty language, its \emph{trim} (or \emph{reduced part}) is obtained by
+first deleting all nonproductive nonterminals and their incident productions,
+then deleting from the remaining grammar all nonterminals unreachable from
+the start symbol, together with their incident productions.  A CFG is \emph{linear} if every right-hand side contains at
 most one nonterminal.  By \emph{binarization} we mean replacement of longer
 right-hand sides by equivalent chains of binary productions using fresh
 nonterminals.
@@ -553,7 +554,8 @@ fixed-window typing $h_{k,\ell}$;
 \item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can
 be chosen polynomial in $|G_*|$ for any linear CFG $G_*$ representing $L$.
 \end{enumerate}
-The quantitative mechanism behind items~(iv)--(v), together with its
+The polynomials in~(iv)--(v) may depend on the fixed $h$ and $\Sigma$,
+but not on the chosen target grammar $G_*$. The quantitative mechanism behind items~(iv)--(v), together with its
 limitation for arbitrary fixed typings, is developed in
 Sections~\ref{sec:typed-thickness}--\ref{sec:linear}.
 \end{theorem}
@@ -569,8 +571,12 @@ The equivalence below is the positive-image/kernel formulation of the
 classical locally trivial-semigroup criterion, rather than a new
 semigroup characterization; compare
 Pin~\cite[Proposition~XI.4.17 and Proposition~XIV.1.20]{pin2025}.
-We record its consequences for the present fixed-$h$ language classes;
-the learning-specific thickness bound is Corollary~\ref{cor:li-thickness}.
+For context, locally trivial syntactic semigroups characterize the
+\emph{generalized definite} (prefix--suffix testable) regular languages
+\cite[Proposition~5.18]{pin1997}.
+We record the consequences for arbitrary fixed typings and their
+language classes; the learning-specific thickness bound is
+Corollary~\ref{cor:li-thickness}.
 
 \begin{proposition}[locally trivial typings and fixed windows]
 \label{prop:li-window}
@@ -1194,7 +1200,7 @@ Fix $k,\ell\ge0$, and let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar.  Writ
    (k+\ell)+(2(k+\ell)-1)N\tau_G, & k+\ell>0,
  \end{cases}
 \]
-where $\widetilde G$ is the reduced $h_{k,\ell}$-typed refinement.
+Let $\widetilde G$ be the reduced $h_{k,\ell}$-typed refinement of $G$.
 
 \begin{lemma}[bounded fixed-window typed yields]
 \label{lem:window-typed-yield}
@@ -1303,8 +1309,8 @@ gives the grammatical counterpart: every successful derivation has one
 continuing nonterminal path, which we call its \emph{spine}.
 
 \paragraph{Finite-state control induced by yield typing.}
-There is a direct connection here with Takada's control-set viewpoint.
-Give each production of a linear grammar $G=(V,\Sigma,P,S)$ a distinct label
+The following straightforward product construction gives a limited
+connection with Takada's control-set viewpoint. Give each production of a linear grammar $G=(V,\Sigma,P,S)$ a distinct label
 from $\Pi$, and write $A\Rightarrow_G^\alpha w$ when
 $\alpha\in\Pi^*$ is the production-label word of a derivation.  For
 $F\subseteq M$, let
@@ -1655,17 +1661,21 @@ $\uparrow y\notin\mathrm{CTR}_\rho$, the latter reaching height
 $\rho+1$.  Hence their distributions differ, and the criterion applies.
 \end{proof}
 
-The restriction $\rho\ge2$ ensures that $x$ is nonempty when $k=\ell=0$.
-It is also needed for this witness when $k\ge1$: the initial
-$\uparrow(\uparrow\downarrow)^k$ of $\uparrow x$ reaches height $2$,
-so for $\rho=1$ the proposed distinguishing context $(\uparrow,\lambda)$
-fails because $\uparrow x$ itself already violates the cap.
+The boundary $\rho\ge2$ is sharp: $\mathrm{CTR}_1$ is
+$(1,1)$-substitutable. Indeed, membership is characterized by the
+initial letter not being $\downarrow$ and the absence of the
+length-two factors $\uparrow\uparrow$, $\downarrow\downarrow$,
+and $\#\downarrow$. Hence admissible nonempty factors with the same
+first and last letters have identical contextual distributions whenever
+they share a context.
 
-Let $h_\rho:\Sigma_c^*\to M_\rho$ be the transition-monoid morphism
-induced by the DFA above.  It recognizes $\mathrm{CTR}_\rho$, and hence
-$\mathrm{CTR}_\rho\in\Ccf{h_\rho}\setminus\mathsf{KL}$.
-Its role here is not a new regular separation, but to serve as the capped
-companion to the uncapped language $\mathrm{CTR}$ below.
+For each $\rho\ge1$, let $h_\rho:\Sigma_c^*\to M_\rho$ be the
+transition-monoid morphism induced by the DFA above; it recognizes
+$\mathrm{CTR}_\rho$. Thus $\mathrm{CTR}_\rho\in\Ccf{h_\rho}$ for
+all $\rho\ge1$, while the stronger conclusion
+$\mathrm{CTR}_\rho\notin\mathsf{KL}$ holds for $\rho\ge2$.
+The capped family serves as a companion to the uncapped language
+$\mathrm{CTR}$ below, not as a new regular separation.
 
 \subsection{Natural deterministic context-free languages outside \texorpdfstring{$\mathsf{RS}$}{RS}}
 
@@ -2046,16 +2056,24 @@ $t+1\le N_t$.  Hence $|\omega(X)|\le N_t$ in all cases.
 
 \begin{thebibliography}{99}
 
-\bibitem{kanazawa1993}
+\bibitem{kanazawa1996}
 M.~Kanazawa.
 \newblock Identification in the limit of categorial grammars.
-\newblock CWI Report CS-R9351, July 1993.
+\newblock \textit{Journal of Logic, Language and Information},
+5(2):115--155, 1996. doi:10.1007/BF00173697.
 
 
 \bibitem{gold1967}
 E.\,M.~Gold.
 Language identification in the limit.
 \textit{Information and Control}, 10(5):447--474, 1967.
+
+\bibitem{pin1997}
+J.-E.~Pin.
+\newblock Syntactic semigroups.
+\newblock In G.~Rozenberg and A.~Salomaa (eds.),
+\textit{Handbook of Formal Languages}, Vol.~1, pp.~679--746,
+Springer, 1997.
 
 \bibitem{pin2025}
 J.-E.~Pin.
