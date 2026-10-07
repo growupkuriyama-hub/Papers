@@ -82,20 +82,24 @@ $\sim_h$-substitutable languages, and call this the \emph{fixed-$h$ slice}.
 Thus full distributional equality is required only after a fixed finite
 algebraic comparison.
 
-Recognizable congruences provide finite typings.  Every regular
-language belongs to the expressive union $\mathsf{RS}$ because
-a finite recognizing monoid gives equal distributions to equal-type
-factors.  Learning, however, concerns only the \emph{fixed-$h$ slice}
-$\Ccf{h}$, with one homomorphism shared by every target; no learner
-is claimed for the union over variable typings.
+Recognizable congruences provide finite typings.  For expressive
+comparison, let
+\[
+\mathsf{RS}:=\bigcup_h
+\{L\subseteq\Sigma^*:L\text{ is }\sim_h\text{-substitutable}\},
+\]
+where $h$ ranges over finite-monoid homomorphisms on $\Sigma^*$.
+Every regular language belongs to this union.  Our learning results,
+however, concern only $\Ccf{h}$ for one fixed $h$; no learner is
+claimed for $\mathsf{RS}$.
 
 Unlike one fixed prefix--suffix window, $h$ can combine independent
 finite-state factor features by a product.  Product typing permits
 regular filtering and inverse homomorphisms
-(Proposition~\ref{prop:finite-info-closure}).  The classical locally
-trivial-semigroup criterion characterizes typings determined by fixed
-windows on nonempty factors (Proposition~\ref{prop:li-window}), with an
-ordinary-thickness consequence (Corollary~\ref{cor:li-thickness}).
+(Proposition~\ref{prop:finite-info-closure}).  An algebraic criterion identifies the typings determined by fixed
+prefix--suffix windows on nonempty factors
+(Proposition~\ref{prop:li-window}) and yields a corresponding
+characteristic-data bound (Corollary~\ref{cor:li-thickness}).
 Examples below establish nonregular linear and nonlinear reach
 beyond fixed windows, and counter/Dyck obstructions bound that reach.
 
@@ -103,8 +107,9 @@ Specifying $h$ is a prior choice, related to typing or domain bias in
 automata inference~\cite{coste-typing2004}; here types apply to entire
 terminal factors, not to occurrences with their outer contexts.
 For linear grammars, yield typing also induces a regular control set
-of production-label sequences, giving a precise connection with
-Takada's approach~\cite{takada1988,takada1995}
+of production-label sequences, giving a limited but concrete
+connection with Takada's regular control-set approach
+\cite{takada1988,takada1995}
 (Section~\ref{sec:linear}), without an equivalence claim.
 
 
@@ -231,11 +236,17 @@ $\|K\|:=\sum_{w\in K}(|w|+1)$,
 so $\lambda$ contributes one unit.\footnote{The $+1$ prevents a nonempty sample such as $K=\{\lambda\}$ from having size $0$; it also gives $|K|\le\|K\|$, so the number of examples is controlled by the same measure.}  We use \emph{characteristic data} only
 as shorthand for the encoded size $\|C\|$ of a characteristic sample $C$;
 the quantitative results below combine polynomial-time reconstruction
-with polynomial characteristic-data size.  In the terminology of
-Eyraud--Heinz--Yoshinaka~\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016},
-these are \emph{set-based} guarantees, not an incremental
-polynomial-data guarantee for the sequential learner.  Gold
-stabilization is established separately in Corollary~\ref{cor:ilt}.
+with polynomial characteristic-data size.  Eyraud--Heinz--Yoshinaka
+\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016}
+distinguish incremental polynomial time-and-data identification from
+its set-based counterpart.  The incremental criterion requires a correct
+and stable hypothesis as soon as a characteristic sample has appeared
+in the presentation; the set-based criterion requires correct
+reconstruction from any finite sample containing a characteristic sample.
+Our polynomial characteristic-data guarantees concern the set-driven
+operator $\mathcal B_h$, not the incremental polynomial-data behavior of
+$\mathcal A_h$.  Gold stabilization of the latter is established
+separately in Corollary~\ref{cor:ilt}.
 
 \subsection{Fixed finite-monoid typing}\label{sec:fixed-typing}
 
@@ -354,14 +365,19 @@ $\D_{\varphi^{-1}(L)}(x)=\D_{\varphi^{-1}(L)}(y)$.
 The context-free statement uses closure of CFLs under inverse homomorphism.
 \end{proof}
 
-Yoshinaka~\cite[Proposition~1]{yoshinaka2008} establishes
-nonclosure of fixed-window substitutability under regular filtering and
-arbitrary inverse homomorphism; a regular separator is
+Yoshinaka~\cite[Proposition~1]{yoshinaka2008} shows that fixed-window
+substitutability is not closed under intersection with regular languages
+or inverse images under arbitrary homomorphisms.  The latter counterexample
+uses an erasing homomorphism; the same proposition establishes closure
+under inverse images of nonerasing homomorphisms.  A regular separator is
 \[
 L_0=ae^*ce^*a\cup ae^*de^*a\cup be^*ce^*b.
 \]
-Product typing permits regular filtering and erasing inverse
-homomorphisms, but no exact closure characterization is claimed.
+By contrast, product typing accommodates regular filtering and erasing
+inverse homomorphisms by changing the finite typing as in
+Proposition~\ref{prop:finite-info-closure}.
+No closure claim for an unchanged $h$ or exact closure
+characterization is made here.
 
 \paragraph{When is a typing useful?}
 For correctness relative to a target $L$, Definition~\ref{def:hsubst} says
@@ -392,7 +408,11 @@ context $(a,cb^{i+1})$ distinguishes $a^i$ from $a^j$.
 
 Clark--Eyraud's original Definition~5 includes all fragments
 \cite{clark-eyraud2007}; we follow Clark~\cite{clark2013}
-in excluding $\lambda$, so $a^+$ is substitutable.
+in excluding $\lambda$.  This distinction matters even for $L=a^+$:
+$(a,\lambda)$ belongs to both $\D_L(\lambda)$ and $\D_L(a)$,
+whereas $(\lambda,\lambda)$ belongs to $\D_L(a)$ but not to
+$\D_L(\lambda)$.  Thus comparing $\lambda$ with nonempty factors
+would exclude $a^+$.
 Call $L$
 \emph{Clark--Eyraud substitutable} when
 $\D_L(x)\cap\D_L(y)\ne\emptyset$ implies
@@ -595,14 +615,17 @@ $\widehat V(K)$:
 If $\lambda\in K$, Rule~\textup{(S)} also contains
 $\widehat S\to\lambda$.
 
-Apart from encoding Clark's initial set by an explicit single start symbol,
-handling $\lambda$ separately (Clark's formalism excludes the empty string),
-and the $h$-filter in Rule~\textup{(U)}, this is the substring-indexed grammar
-construction of Clark~\cite[Algorithm~1]{clark2013}, which presents the
-simplified Clark--Eyraud/Yoshinaka reconstruction.  The filter is exactly the additional
-evidence required by fixed-$h$ substitutability: two observed factors may be
-joined by a unary rule only when they share a sample context and have the same
-$h$-type.
+The construction follows the substring-indexed grammar scheme of
+Yoshinaka~\cite[Section~4, Algorithm~1]{yoshinaka2008}, also recalled
+by Clark~\cite[Section~4, Algorithm~1]{clark2013}.
+For $h=h_{k,\ell}$, the nontrivial instances of Rule~\textup{(U)}
+coincide with Yoshinaka's unary rules: distinct observed nonempty factors
+are connected when they share a sample context and have the same
+length-$k$ prefix and length-$\ell$ suffix.
+The constructions agree up to redundant identity rules, the
+representation of initial productions by a separate start symbol, and
+the treatment of $\lambda$.  For general fixed $h$, the
+prefix--suffix test is replaced by equality of $h$-types.
 
 \begin{lemma}[sample consistency]\label{lem:sample-consistency}
 For every finite sample $K$, $K\subseteq L(\mathcal B_h(K))$.
@@ -679,8 +702,12 @@ This order dependence is genuine: for any infinite target and a
 convergent text $T$, choose $w\in L$ longer than all examples at
 the last rebuild.  The limiting grammar for $T$ omits $[w]$,
 but prepending $w$ to $T$ puts $[w]$ in every rebuilt grammar,
-so the two limiting grammars differ.  Compare
-Clark~\cite[Section~4]{clark2013}.
+so the two limiting grammars differ.
+Clark~\cite[Section~4, Example~1]{clark2013} illustrates the same
+presentation-order dependence for
+$L_{\mathrm c}=\{a^ncb^n:n\ge0\}$: different initial positive
+examples can lead a conservative learner to stabilize on distinct
+substring-indexed grammars.
 
 \section{Finite Witnesses, Exact Reconstruction, and Complexity}
 \label{sec:typing}
@@ -696,8 +723,10 @@ the following normal form as a proof device.
 A CFG $G=(V,\Sigma,P,S_0)$ is in \emph{start-separated binary normal form}
 (SSBNF) if $S_0$ never occurs on a right-hand side,
 every start rule is $S_0\to A$ or $S_0\to\lambda$, and every non-start rule
-is either $A\to a$ or $A\to BC$.\footnote{This isolates whole-sentence entry from internal nonterminals, simplifying the typed refinement and the special treatment of $\lambda$.}
+is either $A\to a$ or $A\to BC$.
 \end{definition}
+The start separation isolates whole-sentence entry from internal
+nonterminals and allows $\lambda$ to be handled at the start symbol.
 
 Every nonempty context-free language has an equivalent reduced SSBNF grammar by
 the standard start-separation, useless-symbol elimination, $\lambda$/unit elimination
@@ -1096,7 +1125,9 @@ We obtain polynomial batch characteristic-data bounds in the
 IPTtD sense of Yoshinaka~\cite{yoshinaka2008}
 and Eyraud--Heinz--Yoshinaka
 \cite[Definition~2.12]{eyraud-heinz-yoshinaka2016},
-without asserting the same normal form or polynomial degree.
+which adds grammar thickness as a parameter for characteristic-data
+size in the set-based criterion.  We do not assert the same normal
+form or polynomial degree.
 
 Fix $k,\ell\ge0$, and let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar.  Write
 \[
@@ -1239,13 +1270,14 @@ Corollary~\ref{cor:typed-thickness-data} yields a characteristic sample
 polynomial in $|G_0|\le q_{\mathrm{lin}}(|G|)$.
 \end{proof}
 
-Together with Theorem~\ref{thm:poly-build}, this yields
+Together with Theorem~\ref{thm:poly-build}, this gives
 polynomial-time batch reconstruction and polynomial characteristic data
-relative to a chosen linear CFG only for $\Clin{h}$.
-This does not conflict with de~la~Higuera's negative result for
-unrestricted linear representations~\cite[Theorem~2]{higuera1997};
-$\mathcal B_h$ need not return a linear grammar and no incremental
-polynomial-data guarantee is claimed.
+relative to a chosen linear CFG for targets in $\Clin{h}$.
+This does not contradict de~la~Higuera's negative result for
+the unrestricted class of linear languages
+\cite[Theorem~2]{higuera1997}: our theorem concerns only the
+fixed-$h$ substitutable subclass.  Moreover, no incremental
+polynomial-data guarantee for $\mathcal A_h$ is asserted.
 
 \paragraph{A nonregular linear \texorpdfstring{fixed-$h$}{fixed-h} example.}
 
@@ -1979,11 +2011,7 @@ Y.~Takada.
 for Knowledge-Based Systems}, LNAI 961, pp.~316--339, Springer, 1995.
 doi:10.1007/3-540-60217-8\_15.
 
-\bibitem{koshiba-makinen-takada1997}
-T.~Koshiba, E.~M\"akinen, and Y.~Takada.
-\newblock Learning deterministic even linear languages from positive examples.
-\newblock \textit{Theoretical Computer Science}, 185(1):63--79, 1997.
-doi:10.1016/S0304-3975(97)00016-9.
+
 
 \bibitem{ginsburg-spanier1966}
 S.~Ginsburg and E.~H.~Spanier.
