@@ -108,12 +108,13 @@ characterization of locally trivial finite semigroups
 $e\in h(\Sigma^+)$ and every $t\in h(\Sigma^+)$. By this classical
 criterion, a fixed prefix--suffix window determines $h$ on nonempty
 factors exactly when $h(\Sigma^+)$ is locally trivial. Applying the
-criterion to the learning classes gives exactly Yoshinaka's fixed-window
+criterion to the classes $\mathsf{RS}_h$ gives exactly Yoshinaka's fixed-window
 hierarchy, as recorded in Proposition~\ref{prop:li-window};
 the ordinary-thickness consequence for our reconstruction operator is
 Corollary~\ref{cor:li-thickness}.
 Sections~\ref{sec:linear}--\ref{sec:boundaries} give nonregular linear and
-nonlinear context-free examples outside every fixed-window class and also show
+nonlinear context-free examples (Propositions~\ref{prop:linear-separator-example}
+and~\ref{prop:nonlinear-rs-example}) outside every fixed-window class and also show
 a boundary: unbounded counter/Dyck behavior can
 force infinitely many contextually distinct factors and therefore cannot be
 captured by any finite typing.  Concretely, a fixed homomorphism
@@ -156,9 +157,11 @@ Linear fixed-$h$ targets admit characteristic data polynomial in the size of a
 linear CFG.  We also show that the shortest yields after splitting can be
 exponentially longer than those in the source grammar.
 
-\item \emph{Structural and expressive position.}  Product typings give
-closure under intersection and arbitrary inverse homomorphism, and they
-combine a target typing with the finite information of a regular filter.  The classical
+\item \emph{Structural and expressive position.}  Product typing makes
+$\mathsf{RS}$ closed under intersection and arbitrary inverse homomorphism.
+For the context-free slices, intersection with regular filters and arbitrary
+inverse homomorphism preserve context-freeness under appropriately refined
+typings.  The classical
 locally trivial-semigroup criterion identifies the fixed-window typings;
 within our learning framework it yields the language-class union and the
 ordinary-thickness guarantee of Corollary~\ref{cor:li-thickness}.
@@ -167,7 +170,8 @@ fixed-$h$ yield typing also induces a regular control language on
 production-label sequences.  We provide nonregular linear and nonlinear
 context-free targets outside every fixed-window class, exhibit natural
 deterministic context-free languages outside the finite-typing framework, and
-compare its context-free part with Clark's broader family.
+compare its context-free part with Clark's broader family
+(Proposition~\ref{prop:clark-congruential-comparison}).
 \end{enumerate}
 
 \subsection{Organization of the paper}
@@ -263,14 +267,13 @@ so $\lambda$ contributes one unit.\footnote{The $+1$ prevents a nonempty sample 
 as shorthand for the encoded size $\|C\|$ of a characteristic sample $C$;
 the quantitative results below combine polynomial-time construction of
 $\mathcal B(K)$ with polynomial characteristic-data size.  In the
-terminology of Eyraud--Heinz--Yoshinaka
-~\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016},
+terminology of Eyraud--Heinz--Yoshinaka~\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016},
 these are \emph{set-based} characteristic-data guarantees for $\mathcal B$
 in the quantitative regimes explicitly stated below, not an
 \emph{incremental} polynomial-time-and-data guarantee for
 $\mathcal A_h$: after a characteristic sample is seen, the
 conservative sequential learner may still await a missed positive
-example before rebuilding (Section~\ref{sec:algo}).
+example before rebuilding (see Corollary~\ref{cor:ilt} and its proof).
 \subsection{Fixed finite-monoid typing}\label{sec:fixed-typing}
 
 Fix a finite monoid $M$ and a homomorphism $h:\Sigma^*\to M$, represented
@@ -530,7 +533,9 @@ sense, each update taking time polynomial in the data seen so far;
 \item if the positive image semigroup $h(\Sigma^+)$ is locally trivial,
 the sample in~(ii) can be chosen polynomial in $|G_*|$ and $\tau_{G_*}$ for any
 reduced CFG $G_*$ representing the target; in particular this applies to every
-fixed-window typing $h_{k,\ell}$;
+fixed-window typing $h_{k,\ell}$ (also directly by
+Theorem~\ref{thm:window-thick} and
+Proposition~\ref{prop:thick-ssbnf-normal});
 \item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can
 be chosen polynomial in $|G_*|$ for any linear CFG $G_*$ representing $L$.
 \end{enumerate}
@@ -703,8 +708,7 @@ syntactically: for $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$, longer examples
 introduce new factor nonterminals such as $[a^ncb^n]$.
 We therefore use the conservative wrapper of Clark--Eyraud's
 Substitution Graph Learner (SGL, Algorithm~2) and Yoshinaka's
-$(k,\ell)$-Substitutable Grammar Learner ($(k,\ell)$-SGL, Algorithm~1)
-~\cite{clark-eyraud2007,yoshinaka2008};
+$(k,\ell)$-Substitutable Grammar Learner ($(k,\ell)$-SGL, Algorithm~1)~\cite{clark-eyraud2007,yoshinaka2008};
 see also Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016}
 for the distinction between set-driven reconstruction and incremental learning.
 Starting from the fixed empty grammar $H_0$, after reading $w_n$ put
@@ -768,7 +772,7 @@ A_{\mu\nu}\to B_\mu C_\nu & (A\to BC\in P,\ \mu,\nu\in M).
 \]
 The reduced part of this grammar is denoted
 $\widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S)$ and called
-the \emph{typed refinement}.  By convention, every symbol of
+the \emph{typed refinement}.  By construction, every symbol of
 $\widetilde G$ is therefore reachable and productive.
 
 Fix an order on $\Sigma$ and use the induced \emph{shortlex} order:
@@ -794,8 +798,8 @@ The role of this split in the present completeness argument can already be seen
 before typing.  Let
 $h(w)=|w|\bmod 2$ and let $G$ be the SSBNF grammar with start symbol $S_0$
 and rules
-$S_0\to A$, $A\to a\mid BC$, $B\to a$, and $C\to a$.  A shortest yield of $A$
-may be $a$, of odd type, while the concatenation of shortest yields of
+$S_0\to A$, $A\to a\mid BC$, $B\to a$, and $C\to a$.  The shortest yield of $A$
+is $a$, of odd type, while the concatenation of shortest yields of
 $B$ and $C$ is $aa$, of even type.  Without separating $A$ by yield type,
 the corresponding unary-rule step is therefore not licensed.
 Splitting by yield type makes the required equality an invariant.  By
@@ -803,9 +807,12 @@ contrast, no types are attached to the surrounding left or right contexts,
 because the reconstruction operator never tests such types.
 
 \begin{proposition}[typed lifting and yield invariant]\label{prop:typed-core}
-The typed refinement satisfies $L(\widetilde G)=L(G)$.  Moreover, if
-$X=A_\mu$ is a non-start symbol of $\widetilde G$, then
-$X\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$.
+The typed refinement satisfies $L(\widetilde G)=L(G)$.  For every retained
+non-start symbol $A_\mu$,
+\[
+L_{\widetilde G}(A_\mu)=L_G(A)\cap h^{-1}(\{\mu\}).
+\]
+In particular, $A_\mu\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$.
 \end{proposition}
 \begin{proof}
 Erase type annotations to map every typed derivation to a derivation of $G$.
@@ -813,8 +820,20 @@ Conversely, annotate each non-start node of a successful derivation tree of
 $G$ by the $h$-type of its terminal yield.  The terminal and binary rules
 above are exactly the bottom-up propagation laws for those types, so the
 annotated tree is a derivation of the untrimmed yield-typed grammar above;
-all symbols on a successful tree survive trimming.  The invariant follows by induction on a
-typed derivation.
+all symbols on a successful tree survive trimming.
+
+For a retained non-start $A_\mu$, erasing annotations proves
+$L_{\widetilde G}(A_\mu)\subseteq L_G(A)\cap h^{-1}(\{\mu\})$.
+Conversely, fix $w\in L_G(A)$ with $h(w)=\mu$.
+Since $A_\mu$ survives trimming, there is a successful typed derivation
+tree containing an occurrence of $A_\mu$.  Annotate a source derivation
+$A\Rightarrow_G^*w$ bottom-up by the $h$-types of its subtree yields and
+graft the resulting typed subtree at that occurrence.  Its root has type
+$\mu$, so the graft is valid; the resulting global typed tree is successful.
+Consequently all symbols and rules of the grafted subtree survive trimming,
+and $A_\mu\Rightarrow_{\widetilde G}^*w$.
+The yield-type invariant also follows directly by induction on a typed
+derivation.
 \end{proof}
 
 For every non-start symbol $X$ of $\widetilde G$, choose
@@ -915,7 +934,7 @@ with respect to $\mathcal B_h$ in the sense of Section~\ref{sec:learning}.
 
 Theorem~\ref{thm:reconstruction-fixed-h} covers every nonempty target,
 including $\{\lambda\}$.  For the remaining endpoint $L=\emptyset$, take
-$C_L=\emptyset$; then $\mathcal B_h(\emptyset)$ has no start production.
+the empty sample; then $\mathcal B_h(\emptyset)$ has no start production.
 Together these cases establish item~(ii) of Theorem~\ref{thm:main}.
 
 \begin{corollary}[Gold identification]\label{cor:ilt}
@@ -1243,9 +1262,11 @@ For a reduced SSBNF grammar $G$, let $A_\mu$ be any symbol retained in the
 reduced $h$-refinement.  Choose a successful derivation tree passing through
 an occurrence of $A_\mu$ and annotate the same source tree by
 $h_{n,n}$-yield types.  The corresponding copy $A_\nu$ lies on a successful
-tree, hence is both reachable and productive and survives trimming.  Its
-terminal yields are contained in those of $A_\mu$ because
-$\ker h_{n,n}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$.  Consequently
+tree, hence is both reachable and productive and survives trimming.  By Proposition~\ref{prop:typed-core}, the yield languages of these symbols
+are $L_G(A)\cap h_{n,n}^{-1}(\{\nu\})$ and
+$L_G(A)\cap h^{-1}(\{\mu\})$, respectively.  The kernel refinement
+$\ker h_{n,n}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$ makes the first
+language a subset of the second.  Consequently
 \[
  \tau_h^{\mathrm{typ}}(G)
  \le \tau_{h_{n,n}}^{\mathrm{typ}}(G)
@@ -1258,9 +1279,14 @@ Proposition~\ref{prop:thick-ssbnf-normal} transfers the bound to the
 original reduced CFG $G_*$.
 \end{proof}
 
-Taking $h=h_{k,\ell}$ recovers the fixed-window case: every context-free
-$(k,\ell)$-substitutable target represented by a reduced CFG $G_*$ has
-characteristic data polynomial in $|G_*|$ and $\tau_{G_*}$.
+For the fixed-window case, Theorem~\ref{thm:window-thick} together with
+Proposition~\ref{prop:thick-ssbnf-normal} directly gives characteristic
+data polynomial in $|G_*|$ and $\tau_{G_*}$ for every context-free
+$(k,\ell)$-substitutable target represented by a reduced CFG $G_*$.
+This route retains the explicit window-dependent typed-yield estimate
+$\theta_{k,\ell}$ from Lemma~\ref{lem:window-typed-yield}, while
+Corollary~\ref{cor:li-thickness} extends the ordinary-thickness
+conclusion to every locally trivial positive-image typing.
 
 The polynomial depends on the fixed typing (and hence on its finite positive
 image); no converse is claimed for non-locally-trivial typings.  In
@@ -1334,8 +1360,8 @@ return a linear grammar.
 
 \paragraph{A nonregular linear \texorpdfstring{fixed-$h$}{fixed-h} example.}
 
-The preceding theorem is not confined to regular targets or to previously
-known linear substitutable classes.  Define
+The preceding theorem is not confined to regular targets, nor to the
+Clark--Eyraud or fixed-window classes.  Define
 \[
 \begin{split}
 L_{\pm,e}:={}&
@@ -1543,7 +1569,7 @@ of $ba$ measured from the beginning of $x$, and define
 \begin{proposition}[a nonlinear fixed-$h_\star$ target]
 \label{prop:nonlinear-rs-example}
 The language $\Delta^*$ is deterministic context-free, nonregular, and
-non-linear, and it is $\sim_{h_\star}$-substitutable.  Moreover it is not
+nonlinear, and it is $\sim_{h_\star}$-substitutable.  Moreover it is not
 $(k,\ell)$-substitutable for any fixed $k,\ell\ge0$.  Hence
 $\Delta^*\in\mathsf{RS}_{h_\star}(\{a,b\})\cap\mathrm{CFL}$ and
 $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$.
@@ -1599,9 +1625,8 @@ control-set methods in general is claimed.
 
 \subsection{A capped regular counter family}
 
-Yoshinaka's $L_0$ already gives the regular separation
-~\cite[Proposition~1]{yoshinaka2008}.  The following family is retained as
-the finite-state capped counterpart of the uncapped counter in Section~9.3.
+Yoshinaka's $L_0$ already gives the regular separation~\cite[Proposition~1]{yoshinaka2008}.  The following family is retained as
+the finite-state capped counterpart of the uncapped counter in Section~\ref{sec:outside-rs}.
 
 Let $\Sigma_c:=\{\uparrow,\downarrow,\#\}$.  For
 $w=\delta_1\cdots\delta_n\in\Sigma_c^*$, let $\mathrm{ht}_i(w)$
@@ -1651,7 +1676,7 @@ $\mathrm{CTR}_\rho\notin\mathsf{KL}$ holds for $\rho\ge2$.
 The capped family serves as a companion to the uncapped language
 $\mathrm{CTR}$ below, not as a new regular separation.
 
-\subsection{Natural deterministic context-free languages outside \texorpdfstring{$\mathsf{RS}$}{RS}}
+\subsection{Natural deterministic context-free languages outside \texorpdfstring{$\mathsf{RS}$}{RS}}\label{sec:outside-rs}
 
 \begin{lemma}[finite-monoid obstruction]\label{lem:finite-monoid-obstruction}
 Let $L\subseteq\Sigma^*$.  Suppose an infinite
@@ -1864,17 +1889,20 @@ above the first branching vertex).  An omitted sibling subtree can occur only
 at a node on one of these chains; branching nodes have both children in
 $\mathcal U$.  Hence there are at most $(2(k+\ell)-1)N$ omitted sibling subtrees.  Replace
 each by a shortest terminal yield of its root, contributing at most $\tau_G$
-terminals per subtree.  The resulting word $w'$ is still derived from $A$,
+terminals per subtree.  Since the marked leaves are exactly the first $k$
+and last $\ell$ leaves, no unmarked sibling subtree lies before the marked
+prefix (when $k>0$) or after the marked suffix (when $\ell>0$).
+Every non-start yield in SSBNF is nonempty.  Thus shortcuts and sibling
+replacements preserve the marked boundary blocks, even though they may
+alter the material between them; if $k=0$ or $\ell=0$, the corresponding
+boundary condition is vacuous.  The resulting word $w'$ is still derived from $A$,
 still has prefix $p$ and suffix $q$, and therefore has the same
 $h_{k,\ell}$-type $\mu$, while
 $|w'|\le (k+\ell)+(2(k+\ell)-1)N\tau_G$.
-By the same yield-type annotation used in
-Proposition~\ref{prop:typed-core}, the derivation lifts in the untrimmed
-yield-typed grammar.  Because $A_\mu$ belongs to the reduced refinement
-$\widetilde G$ and the derivation is successful, every typed symbol on the
-annotated tree survives trimming.  Therefore $w'$ is
-a typed yield of $A_\mu$, and the shortlex-minimal typed yield $\omega(A_\mu)$ obeys
-the same length bound.
+By the exact lifting equality in Proposition~\ref{prop:typed-core},
+$w'\in L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$ is a typed yield of the
+retained $A_\mu$ in $\widetilde G$.  Hence the shortlex-minimal typed yield
+$\omega(A_\mu)$ obeys the same length bound.
 \end{proof}
 
 \subsection{Thickness-preserving SSBNF normalization}
