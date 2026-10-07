@@ -1,0 +1,41 @@
+name: One-time refresh of the Japanese TCS PDF
+
+on:
+  push:
+    paths:
+      - ".github/workflows/refresh-japanese-tcs-pdf-once.yml"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  refresh-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Retrieve verified Japanese PDF artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/tcs-jp-latest
+          gh run download 37584511678 \
+            --name 01-fixed-h-cfg-japanese-pdf \
+            --dir /tmp/tcs-jp-latest
+          PDF="$(find /tmp/tcs-jp-latest -type f -name main_JP.pdf -print -quit)"
+          test -n "$PDF" && test -s "$PDF"
+          cp "$PDF" 01_fixed-h-cfg/japanese/main_JP.pdf
+
+      - name: Commit only the Japanese PDF
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f 01_fixed-h-cfg/japanese/main_JP.pdf
+          if git diff --cached --quiet; then
+            echo "Japanese PDF already up to date"
+            exit 0
+          fi
+          git commit -m "Refresh Japanese fixed-h TCS PDF from verified build"
+          git push origin "HEAD:main"
