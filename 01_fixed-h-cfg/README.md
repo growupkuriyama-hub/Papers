@@ -1,5 +1,14 @@
 # #1 — fixed-h CFG
 
+## 2026-10-09 — R1 prior-art and response synchronization (working draft)
+
+- Updated \`main.tex\`, \`japanese/main_JP.tex\`, and \`response/response_round1.tex\` with the 2014 Kuriyama preprint chronology, the general many-sorted signature perspective of Yoshinaka (2015), and explicit distinctions between qualitative learner existence and finite-monoid-specific quantitative/algebraic results.
+- Added citations for Clark--Yoshinaka (2016), Coste--Garet--Nicolas (2012), and Coste--Nicolas (2019), and corrected the response to R2.5 to cite Eilenberg (1974), matching the manuscript.
+- These are **working source changes, not an already submitted R1 revision**. The reviewer-response page/line locator table is **stale** after insertion and MUST be regenerated from the final marked PDF. Verify clean and marked PDFs, bibliography and CI before resubmission.
+- The 2014 historical draft remains an earlier formulation, not a claim that all its older proofs and polynomial-data assertions were correct.
+
+
+
 ## v117 — Post-v116 source audit (2026-10-07)
 
 - Corrected the explanatory sentence after Theorem 9.2: for $\rho=1$, the proposed distinguishing context $(\uparrow,\lambda)$ fails because $\uparrow s$ itself already violates the cap; the common context is not the issue.
