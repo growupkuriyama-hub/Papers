@@ -1,13 +1,15 @@
 # #1 — fixed-h CFG
 
-## Always-latest English clean PDF (automatic)
+## Always-latest English and Japanese PDFs (automatic)
 
-- **View in GitHub:** [TCS-D-26-00494_Manuscript_Clean.pdf](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf)
-- **Direct PDF URL:** https://raw.githubusercontent.com/growupkuriyama-hub/Papers/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf
-- Source: `main.tex` (byte-identical to `TCS-D-26-00494_Manuscript_Clean.tex`).
-- The `publish-tcs1-clean-pdf.yml` workflow compiles the English PDF and commits it to `main` whenever the English manuscript changes. It does not publish marked or referee-response PDFs.
-- The PDF is updated after the workflow finishes; each URL remains unchanged across later versions.
-
+- **English clean manuscript (GitHub viewer):** [TCS-D-26-00494_Manuscript_Clean.pdf](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf)
+- **Japanese reference translation (GitHub viewer):** [main_JP.pdf](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/japanese/main_JP.pdf)
+- **Direct English PDF:** https://raw.githubusercontent.com/growupkuriyama-hub/Papers/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf
+- **Direct Japanese PDF:** https://raw.githubusercontent.com/growupkuriyama-hub/Papers/main/01_fixed-h-cfg/japanese/main_JP.pdf
+- English source: `main.tex`, byte-identical to `TCS-D-26-00494_Manuscript_Clean.tex`.
+- Japanese source: `japanese/main_JP.tex`, a reference translation; mathematical/source synchronization remains an editorial responsibility.
+- The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
+- The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
 ## v135 — 2026-10-09 concise Yoshinaka comparison and L0 placement
 

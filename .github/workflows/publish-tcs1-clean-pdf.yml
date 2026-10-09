@@ -1,4 +1,4 @@
-name: Publish TCS #1 clean PDF
+name: Publish TCS #1 English and Japanese PDFs
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "01_fixed-h-cfg/main.tex"
+      - "01_fixed-h-cfg/japanese/main_JP.tex"
       - "01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex"
       - "01_fixed-h-cfg/**/*.sty"
       - "01_fixed-h-cfg/**/*.cls"
@@ -22,7 +23,7 @@ concurrency:
 
 jobs:
   publish:
-    name: Build and publish the latest TCS #1 clean manuscript
+    name: Build and publish the latest TCS #1 English and Japanese PDFs
     runs-on: ubuntu-latest
     steps:
       - name: Check out main
@@ -43,22 +44,37 @@ jobs:
           working_directory: 01_fixed-h-cfg
           texlive_version: 2026
 
-      - name: Update tracked PDF at stable GitHub URL
+      - name: Force a fresh Japanese PDF build
+        shell: bash
+        run: rm -f 01_fixed-h-cfg/japanese/main_JP.pdf
+
+      - name: Build Japanese PDF with LuaLaTeX
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 01_fixed-h-cfg/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Update both tracked PDFs at stable GitHub URLs
         shell: bash
         run: |
           set -euo pipefail
-          source_pdf="01_fixed-h-cfg/main.pdf"
-          public_pdf="01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf"
-          test -s "$source_pdf"
-          test "$(head -c 4 "$source_pdf")" = "%PDF"
-          cp "$source_pdf" "$public_pdf"
-          git add "$public_pdf"
+          english_source="01_fixed-h-cfg/main.pdf"
+          english_public="01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf"
+          japanese_public="01_fixed-h-cfg/japanese/main_JP.pdf"
+          test -s "$english_source"
+          test -s "$japanese_public"
+          test "$(head -c 4 "$english_source")" = "%PDF"
+          test "$(head -c 4 "$japanese_public")" = "%PDF"
+          cp "$english_source" "$english_public"
+          git add "$english_public" "$japanese_public"
           if git diff --cached --quiet; then
             echo "Published PDF is already up to date."
             exit 0
           fi
           git -c user.name="github-actions[bot]" \
               -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-              commit -m "Publish latest TCS #1 clean PDF [skip ci]"
+              commit -m "Publish latest TCS #1 English and Japanese PDFs [skip ci]"
           # Only fast-forward main. A concurrent manuscript edit cannot be overwritten.
           git push origin HEAD:main
