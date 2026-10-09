@@ -1,5 +1,12 @@
 # #1 — fixed-h CFG
 
+## v135 — 2026-10-09 concise Yoshinaka comparison and L0 placement
+
+- Section 3 now states only Yoshinaka (2008, Proposition 1)'s regular-intersection and erasing-inverse-image nonclosure, his nonerasing inverse-image closure, and the contrast with Proposition 3.2 under a changed finite typing.
+- Moved the regular counterexample's **inline definition** `L0=ae*ce*a ∪ ae*de*a ∪ be*ce*b` to Section 9.2, where it is first used for the regular counter separation comparison.
+- Synchronized English, Japanese, canonical Clean TeX, Round-1 referee replies R1.34/R2.1, and SHA-256 metadata; no theorem or proof changed.
+- **Pre-resubmission:** rebuild clean/marked/JP/response PDFs and re-audit all response page/line locators against the v135 marked manuscript. No journal resubmission has been made.
+
 ## v134 — 2026-10-09 minimal typing example in the Introduction
 
 - Added the concise example `L={a,aa}` immediately after the fixed-`h` definition in Section 1.1 in English and Japanese. Trivial typing fails due to overlapping but unequal distributions; the parity morphism separates the factors.
@@ -71,9 +78,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v134; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v134.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized in text to v134; page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v135; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v135.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized in text to v135; page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
