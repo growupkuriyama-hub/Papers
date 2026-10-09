@@ -1,5 +1,12 @@
 # #1 — fixed-h CFG
 
+## v134 — 2026-10-09 minimal typing example in the Introduction
+
+- Added the concise example `L={a,aa}` immediately after the fixed-`h` definition in Section 1.1 in English and Japanese. Trivial typing fails due to overlapping but unequal distributions; the parity morphism separates the factors.
+- No early introduction of substring-grammar inference rules and no claim of a new separation from fixed-window classes.
+- Synchronized Round-1 reviewer answers R1.5 and R2.1, the English clean TeX mirror, and `PAPER.yaml` hashes. No theorem or proof changed.
+- Before journal resubmission, rebuild clean, marked, Japanese and response PDFs and check response page/line references against the new marked PDF. No journal submission has been made.
+
 ## v133 — 2026-10-09 Yoshinaka comparison before Proposition 3.2
 
 - Moved the existing Yoshinaka (2008, Proposition 1) paragraph and known regular language `L0` directly before Proposition 3.2 in English and Japanese.
@@ -64,9 +71,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v133; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v133.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized in text to v133; page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v134; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v134.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized in text to v134; page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
