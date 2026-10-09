@@ -1,5 +1,12 @@
 # #1 — fixed-h CFG
 
+## v133 — 2026-10-09 Yoshinaka comparison before Proposition 3.2
+
+- Moved the existing Yoshinaka (2008, Proposition 1) paragraph and known regular language `L0` directly before Proposition 3.2 in English and Japanese.
+- The transition distinguishes regular-filter and erasing-inverse-image closure under **refinement of finite typing** from nonclosure of an unchanged fixed-window or fixed-`h` class.
+- Updated Round-1 referee responses R1.34 and R2.1; the clean TeX mirror remains identical to canonical `main.tex`. No theorem/proof was changed.
+- Updated `PAPER.yaml` SHA-256 checksums and metadata. Before TCS resubmission, rebuild English clean/marked, Japanese, and referee-response PDFs and re-audit marked-PDF page/line locators: the v132 25-page/971-line audit is historical. No journal resubmission has been made.
+
 ## v132 — 2026-10-09 final R1 pre-submission source sync
 
 - Corrected the 2014 preprint title to *Learning Algorithm for Relation-Substitutable Context-Free Languages* and the Coste--Garet--Nicolas (2012) title to *Locally Substitutable Languages for Enhanced Inductive Leaps*; synchronized English and Japanese citations.
@@ -57,9 +64,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v117; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to the current v117 theorem/label surface.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized with v117 and re-audited against the actual TCS decision letter. The editor-required page/paragraph/line locators remain valid because the v117 English source retains the v116 line count and 24-page pagination.
+- `main.tex` — English major-revision manuscript, internal v133; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v133.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized in text to v133; page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
