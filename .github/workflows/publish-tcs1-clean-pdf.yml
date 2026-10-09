@@ -1,0 +1,64 @@
+name: Publish TCS #1 clean PDF
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "01_fixed-h-cfg/main.tex"
+      - "01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex"
+      - "01_fixed-h-cfg/**/*.sty"
+      - "01_fixed-h-cfg/**/*.cls"
+      - ".github/workflows/publish-tcs1-clean-pdf.yml"
+  workflow_dispatch:
+
+# Only this main-branch build can push the generated PDF.
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-tcs1-clean-pdf
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Build and publish the latest TCS #1 clean manuscript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+
+      - name: Verify English source of truth and clean mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp 01_fixed-h-cfg/main.tex 01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex
+
+      - name: Build clean English PDF
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: 01_fixed-h-cfg
+          texlive_version: 2026
+
+      - name: Update tracked PDF at stable GitHub URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_pdf="01_fixed-h-cfg/main.pdf"
+          public_pdf="01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf"
+          test -s "$source_pdf"
+          test "$(head -c 4 "$source_pdf")" = "%PDF"
+          cp "$source_pdf" "$public_pdf"
+          git add "$public_pdf"
+          if git diff --cached --quiet; then
+            echo "Published PDF is already up to date."
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Publish latest TCS #1 clean PDF [skip ci]"
+          # Only fast-forward main. A concurrent manuscript edit cannot be overwritten.
+          git push origin HEAD:main

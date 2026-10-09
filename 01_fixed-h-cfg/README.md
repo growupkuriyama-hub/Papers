@@ -1,5 +1,14 @@
 # #1 — fixed-h CFG
 
+## Always-latest English clean PDF (automatic)
+
+- **View in GitHub:** [TCS-D-26-00494_Manuscript_Clean.pdf](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf)
+- **Direct PDF URL:** https://raw.githubusercontent.com/growupkuriyama-hub/Papers/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf
+- Source: `main.tex` (byte-identical to `TCS-D-26-00494_Manuscript_Clean.tex`).
+- The `publish-tcs1-clean-pdf.yml` workflow compiles the English PDF and commits it to `main` whenever the English manuscript changes. It does not publish marked or referee-response PDFs.
+- The PDF is updated after the workflow finishes; each URL remains unchanged across later versions.
+
+
 ## v135 — 2026-10-09 concise Yoshinaka comparison and L0 placement
 
 - Section 3 now states only Yoshinaka (2008, Proposition 1)'s regular-intersection and erasing-inverse-image nonclosure, his nonerasing inverse-image closure, and the contrast with Proposition 3.2 under a changed finite typing.
