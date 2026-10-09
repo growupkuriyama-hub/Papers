@@ -1,5 +1,14 @@
 # #1 — fixed-h CFG
 
+## v132 — 2026-10-09 final R1 pre-submission source sync
+
+- Corrected the 2014 preprint title to *Learning Algorithm for Relation-Substitutable Context-Free Languages* and the Coste--Garet--Nicolas (2012) title to *Locally Substitutable Languages for Enhanced Inductive Leaps*; synchronized English and Japanese citations.
+- Aligned the 49 editor/reviewer response locators with the freshly compiled **25-page** additions-only marked PDF (margin lines 1--971), including corrected locations for Proposition 5.2, Theorem 5.6, Proposition 8.4, and Lemma 9.6. Removed obsolete 24-page/929-line notice.
+- Added marked-only `\\AtBeginDocument{\\sloppy}` in `response/latexdiff_compat.tex` to eliminate marked-up overfull boxes without altering the clean or Japanese manuscript typography.
+- Local builds: English clean 24 pages, marked 25 pages, Japanese 28 pages, response 14 pages; all compiled. The first-submission source remains unchanged in `archive/tcs-round1-arxiv-v4/`.
+- `TCS-D-26-00494_Manuscript_Clean.tex` mirrors canonical `main.tex` exactly. This is a working **unsubmitted** revision; journal upload must be performed separately.
+
+
 ## 2026-10-09 — R1 prior-art and response synchronization (working draft)
 
 - Updated \`main.tex\`, \`japanese/main_JP.tex\`, and \`response/response_round1.tex\` with the 2014 Kuriyama preprint chronology, the general many-sorted signature perspective of Yoshinaka (2015), and explicit distinctions between qualitative learner existence and finite-monoid-specific quantitative/algebraic results.
