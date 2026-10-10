@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v148 — 2026-10-10 remove unused entry-height recursion
+
+- Removed the displayed one-letter recurrence for `Q(lambda)`, `Q(xa)`, and `Q(xb)` and the immediately following explanation from both English and Japanese. After the canonical-completion definition and seven examples, the text now directly presents the concatenation identity (star-star).
+- Kept the complete star-star formula and its separate boundary-condition explanation, the star membership criterion, all seven examples, and the nonlinear substitutability and fixed-window proofs unchanged.
+- English canonical/clean TeX are byte-identical, JP reference synchronized, SHA256 metadata updated. Reviewer response unchanged; PDF build and marked-response locators need a final check before TCS resubmission.
+
 ## v147 — 2026-10-10 canonical-completion definition of admissible entry heights
 
 - Changed the definition of `Q(x)` in English and Japanese directly to `{q in Z_{>=0}: q+beta(x)>=0 and a^q x b^(q+beta(x)) in Delta^*}`.
@@ -160,9 +166,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v147; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v147.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v148; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v148.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
