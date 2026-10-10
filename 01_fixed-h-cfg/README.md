@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v141 — 2026-10-10 direct enumeration proof for polynomial-time reconstruction
+
+- Replaced the proof of `thm:poly-build` in English and Japanese with direct enumeration. Rule (U) pairs each observed nonempty factor occurrence `(u,x,v)` with every sample word `w`; when `w=uyv` with nonempty `y` and the `h`-values agree, emit `[x] -> [y]`.
+- Removed buckets, tries and identifier sorting from the proof, and used no displayed equations. The bounds remain `O(n_K^3)` rule candidates and `O(n_K^4)` explicit construction. Japanese proof matches the user's supplied TeX; English source and Clean TeX are byte-identical.
+- Reviewer response unchanged. Verify PDF workflows and re-audit response page/line references against the final marked PDF before TCS resubmission; journal resubmission not performed.
+
 ## v140 — 2026-10-10 formal reconstruction-complexity proof
 
 - Theorem `thm:poly-build` now defines the observed occurrence set `O_K`, the prefix-extended `h`-value cache `H_w(i,j)`, context/type buckets `B_{u,v,mu}`, and the nonempty-bucket index set `I_K`. The bucket sum is explicitly indexed; each EN/JP proof has just one display.
@@ -119,9 +125,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v140; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v140.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v140); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v141; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v141.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v141); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
