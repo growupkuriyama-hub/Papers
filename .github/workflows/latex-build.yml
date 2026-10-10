@@ -131,6 +131,81 @@ jobs:
           retention-days: 30
 
 
+  publish-tcs-pdfs:
+    name: "Publish TCS #1 English and Japanese PDFs to fixed URLs"
+    needs: [build-pdflatex, build-japanese]
+    # Other papers in the pdfLaTeX matrix must not block publication when
+    # the TCS #1 English artifact and the Japanese build are both available.
+    if: >-
+      ${{ !cancelled() &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      needs.build-japanese.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout the exact source revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+
+      - name: Download compiled English PDF
+        uses: actions/download-artifact@v7
+        with:
+          name: 01-fixed-h-cfg-pdf
+          path: _tcs_english
+
+      - name: Download compiled Japanese PDF
+        uses: actions/download-artifact@v7
+        with:
+          name: 01-fixed-h-cfg-japanese-pdf
+          path: _tcs_japanese
+
+      - name: Verify both PDFs and copy to permanent paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          copies = (
+              (Path("_tcs_english/main.pdf"),
+               Path("01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf")),
+              (Path("_tcs_japanese/main_JP.pdf"),
+               Path("01_fixed-h-cfg/japanese/main_JP.pdf")),
+          )
+          # Complete validation before replacing either published file.
+          for source, _ in copies:
+              if not source.is_file() or source.stat().st_size < 1024:
+                  raise SystemExit(f"Missing or suspicious PDF: {source}")
+              with source.open("rb") as stream:
+                  if stream.read(5) != b"%PDF-":
+                      raise SystemExit(f"Invalid PDF header: {source}")
+          for source, destination in copies:
+              destination.write_bytes(source.read_bytes())
+              print(f"Ready to publish: {destination}")
+          PY
+
+      - name: Commit and push updated PDF files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf \
+            01_fixed-h-cfg/japanese/main_JP.pdf
+          if git diff --cached --quiet; then
+            echo "Both public PDF files are already up to date."
+            exit 0
+          fi
+          git commit -m "docs(tcs1): refresh fixed English and Japanese PDF URLs"
+          # A fast-forward-only push prevents an older build from replacing
+          # PDFs after a newer TeX source revision reaches main.
+          git push origin HEAD:main
+
   build-marked-up:
     name: "pdfLaTeX — 01 fixed-h CFG marked-up revision"
     runs-on: ubuntu-latest
