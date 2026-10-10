@@ -991,29 +991,35 @@ For fixed $h$, $\mathcal B_h(K)$ is constructible in time polynomial in
 $\|K\|$.
 \end{theorem}
 \begin{proof}
-Put $n_K:=\|K\|$.  Across all sample words there are $O(n_K^2)$ nonempty
-factor occurrences, hence at most $O(n_K^2)$ distinct factor nonterminals.
-All factor $h$-values can be cached with $O(n_K^2)$ multiplications in the
-fixed monoid by extending factors one symbol at a time.
+Put $n_K:=\|K\|$ and let
+$\mathcal O_K:=\{(u,x,v)\in\Sigma^*\times\Sigma^+\times\Sigma^*:uxv\in K\}$
+be the observed factor occurrences. Since
+$|\mathcal O_K|=O(n_K^2)$, there are at most $O(n_K^2)$ factor nonterminals.
+For each $w=a_1\cdots a_d\in K$, cache
+$H_w(i,j):=h(a_{i+1}\cdots a_j)$ for $0\le i\le j\le d$.
+Starting from $H_w(i,i)=1_M$, compute
+$H_w(i,j+1)=H_w(i,j)h(a_{j+1})$; altogether this uses
+$O(n_K^2)$ multiplications in the fixed monoid.
 
-Rule~\textup{(B)} has at most $O(n_K^3)$ candidates: choose an observed
-factor occurrence and a split point.  To enumerate Rule~\textup{(U)}, group
-observed factor occurrences by their surrounding context $(u,v)$ and
-$h$-value.  The total number of bucket entries is $O(n_K^2)$, while a fixed
-context contains at most one factor from each sample word and therefore each
-bucket has size at most $|K|\le n_K$.  Thus the total number of ordered pairs
-emitted from all buckets is at most
+Rule~\textup{(B)} has $O(n_K^3)$ candidates, choosing an observed
+factor occurrence and a split point. For Rule~\textup{(U)}, put
+$B_{u,v,\mu}:=\{x:(u,x,v)\in\mathcal O_K,\ h(x)=\mu\}$
+for contexts $(u,v)$ and $\mu\in M$, using the cached $h$-values,
+and let $\mathcal I_K:=\{(u,v,\mu):B_{u,v,\mu}\ne\emptyset\}$.
+Each sample word contributes at most one factor to a fixed context,
+so $|B_{u,v,\mu}|\le|K|\le n_K$, while
+$\sum_{(u,v,\mu)\in\mathcal I_K}|B_{u,v,\mu}|=|\mathcal O_K|$.
+Thus the ordered-pair candidates emitted from all buckets number at most
 \[
- \sum_B |B|^2
- \le n_K\sum_B |B|
- =O(n_K^3).
+ \sum_{(u,v,\mu)\in\mathcal I_K}|B_{u,v,\mu}|^2
+ \le n_K\sum_{(u,v,\mu)\in\mathcal I_K}|B_{u,v,\mu}|
+ =n_K|\mathcal O_K|=O(n_K^3).
 \]
-Lexical and start rules contribute only lower-order terms.  With canonical
-identifiers for equal factors and context components, all equality and type
-tests after preprocessing are constant-time for fixed $h$.  Even if factor
-strings are written literally in productions, each production has encoding
-length $O(n_K)$, so the grammar can be checked and written explicitly in
-$O(n_K^4)$ time.
+Lexical and start rules are lower-order. Canonical identifiers for equal
+factors and context components can be assigned within $O(n_K^4)$ time;
+subsequent equality and cached-type tests are constant-time for fixed $h$.
+Even with factor strings written literally, each production has encoding
+length $O(n_K)$, so explicit construction and output take $O(n_K^4)$ time.
 \end{proof}
 
 Each update of the conservative learner $\mathcal A_h$ is also polynomial

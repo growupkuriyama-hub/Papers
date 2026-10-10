@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v140 — 2026-10-10 formal reconstruction-complexity proof
+
+- Theorem `thm:poly-build` now defines the observed occurrence set `O_K`, the prefix-extended `h`-value cache `H_w(i,j)`, context/type buckets `B_{u,v,mu}`, and the nonempty-bucket index set `I_K`. The bucket sum is explicitly indexed; each EN/JP proof has just one display.
+- Rule (B)/(U) enumeration stays `O(n_K^3)` and full explicit reconstruction remains `O(n_K^4)`. English canonical source, Clean TeX mirror, Japanese reference, and SHA-256 metadata are synchronized. The referee response is unchanged.
+- **Pre-resubmission:** verify PDF builds and re-audit all response references against the final marked PDF; no journal resubmission has been performed.
+
 ## v139 — 2026-10-10 short-word idempotent explanation in footnote
 
 - Added brief English and Japanese footnotes to the locally trivial positive-image argument, explaining why short-word types in `h_{k,l}(Sigma+)` cannot be idempotent: a large enough positive power is encoded as a distinct long-word type.
@@ -113,9 +119,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v139; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v139.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v139); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v140; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v140.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v140); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
