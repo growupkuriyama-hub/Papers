@@ -1802,85 +1802,115 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-Fix a retained non-start typed symbol $A_\mu$, and put
+Fix a retained non-start typed symbol $A_\mu$ and put
 $m:=k+\ell$ and $N:=|V\setminus\{S_0\}|$.
-By Proposition~\ref{prop:typed-core},
-$L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$;
-in particular, this set is nonempty.
+Proposition~\ref{prop:typed-core} gives the nonempty set
+$L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$.
 If $m=0$, the map $h_{0,0}$ is constant on nonempty words,
-so $|\omega(A_\mu)|\le\tau_G$.
+and non-start symbols generate no empty word; hence
+$|\omega(A_\mu)|\le\tau_G$.
 Assume $m>0$. If $\mu$ is a short-word type, its fiber
-consists of a single word of length less than $m$, and the
-claimed bound is immediate.
+consists of one word of length less than $m$, so the claim is immediate.
 
-It remains to consider a long-word type
-$\mu=\langle u,v\rangle$ with $|u|=k$ and $|v|=\ell$.
-Choose a word $w=uxv\in L_G(A)$ of minimum length among
-words of type $\mu$, and fix a binary SSBNF derivation tree
-$T$ for $A\Rightarrow_G^*w$.
-Mark the $k$ leftmost and $\ell$ rightmost terminal leaves
-of $T$. Since $|w|\ge m$, these are exactly $m$ distinct
-leaves, and every unmarked terminal leaf lies in the middle
-factor $x$.
+Suppose $\mu=\langle u,v\rangle$ is a long-word type with
+$|u|=k$ and $|v|=\ell$. Choose a shortest word
+$w=uxv\in L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$ and let
+$n:=|w|\ge m$. Fix an SSBNF derivation tree $T$ for
+$A\Rightarrow_G^*w$, and denote its set of nonterminal
+occurrences by $\operatorname{Occ}(T)$.
+For $z\in\operatorname{Occ}(T)$, write $B(z)$ for its
+nonterminal label, $y(z)\in\Sigma^+$ for its terminal yield,
+and $I(z)\subseteq\{1,\ldots,n\}$ for the consecutive interval
+of positions occupied by that yield in $w$.
+An occurrence of a terminal rule has no children and
+$|I(z)|=1$. An occurrence of a binary rule has two ordered
+children, whose disjoint consecutive intervals partition $I(z)$.
 
-Let $C$ be the subtree of $T$ consisting of precisely those
-nonterminal occurrences that have a marked terminal leaf
-among their descendants (equivalently, the union of the
-root-to-marked-leaf paths). Its leaves are precisely the $m$
-marked terminal-production occurrences. Each internal node
-of $C$ has either one or two children in $C$.
-Write $F$ for its leaves, $U$ for its nodes with exactly one
-child in $C$, and $J$ for its nodes with two children in $C$.
-For $z\in U$, write $s(z)$ for the other child of $z$ in $T$.
-The subtrees rooted at the $s(z)$ are pairwise disjoint,
-contain no marked leaves, and together contain every
-unmarked terminal leaf of $T$. Thus, writing $y(t)$ for
-the terminal yield at an occurrence $t$, we have
-\begin{equation}\label{eq:fixed-window-core-partition}
- |w|=m+\sum_{z\in U}|y(s(z))|.
+Let
+$P:=\{1,\ldots,k\}\cup\{n-\ell+1,\ldots,n\}$,
+interpreting a side as empty when its parameter is zero.
+Then $|P|=m$, and the positions outside $P$ are exactly
+those of the middle factor $x$.
+Put $C:=\{z\in\operatorname{Occ}(T):I(z)\cap P\ne\varnothing\}$.
+Partition $C$ into $F$, the terminal-rule occurrences;
+$D$, the binary-rule occurrences having exactly one child in $C$;
+and $J$, those having both children in $C$.
+Thus $C=F\mathbin{\dot\cup}D\mathbin{\dot\cup}J$ and $|F|=m$.
+For each $z\in D$, let $s(z)$ be its unique child outside $C$.
+We claim the disjoint partition
+\begin{equation}\label{eq:fixed-window-position-partition}
+ \{1,\ldots,n\}=P\mathbin{\dot\cup}
+ \mathop{\dot\bigcup}_{z\in D} I(s(z)).
+\end{equation}
+Indeed, for any terminal position outside $P$, consider the
+highest occurrence on its root-to-leaf path whose interval
+is disjoint from $P$. Its parent belongs to $C$, and its
+other child belongs to $C$; hence its parent lies in $D$,
+and this occurrence is some $s(z)$.
+Different $s(z)$ have disjoint subtrees: none can be an
+ancestor of another because its interval misses $P$ whereas
+the parent of the other belongs to $C$.
+Moreover, $I(s(z))\cap P=\varnothing$; since this is an
+interval, $I(s(z))\subseteq\{k+1,\ldots,n-\ell\}$.
+Consequently,
+\begin{equation}\label{eq:fixed-window-yield-partition}
+ |w|=m+\sum_{z\in D}|y(s(z))|.
 \end{equation}
 
-First, every $s(z)$ generates a shortest terminal word of
-its nonterminal label. Indeed, replacing that subtree by
-any shorter terminal derivation from the same nonterminal
-would change only the middle factor $x$. The resulting
-word would still have prefix $u$, suffix $v$, and length
-at least $m$; hence it would still have type $\mu$,
-contrary to the choice of $w$. Since every such label is
-a non-start symbol, it follows that
-$|y(s(z))|\le\tau_G$ for all $z\in U$.
+First, $|y(s(z))|\le\tau_G$ for every $z\in D$.
+Otherwise replace the subtree at $s(z)$ by a strictly
+shorter terminal derivation from its same label $B(s(z))$.
+The replacement is a valid derivation from $A$. It changes
+only letters in the middle factor, preserving the prefix
+$u$ and suffix $v$. The new word therefore has the form
+$ux'v$, has length at least $m$, and satisfies
+$h_{k,\ell}(ux'v)=\langle u,v\rangle=\mu$.
+This contradicts the minimality of $w$. Therefore
+$y(s(z))$ is a shortest yield of its label, and its length
+is at most $\tau_G$.
 
-Second, no two nodes on the same maximal one-child segment
-of $C$ have the same nonterminal label. More precisely,
-suppose $z$ is a proper ancestor of $z'$ and every node on
-the path from $z$ to the parent of $z'$ lies in $U$.
-If $z$ and $z'$ had the same label, we could replace the
-subtree rooted at $z$ by the subtree rooted at $z'$.
-This is a valid derivation from the same nonterminal. It
-deletes the nonempty yields of one or more off-$C$ children,
-while retaining all marked leaves in their original order.
-Consequently the new yield is a strictly shorter word
-$ux'v$ of the same type $\mu$, a contradiction.
-Every such one-child segment therefore contains at most
-$N$ nodes.
+Next we bound $|D|$. Let $z$ be a proper ancestor of $z'$
+such that every occurrence on the path from $z$ through
+the parent of $z'$ belongs to $D$.
+At each such node the path follows the unique child in $C$.
+Thus $y(z)=p\,y(z')\,q$, where $p,q\in\Sigma^*$ are the
+concatenated terminal yields of the sibling subtrees removed
+along this path. All their positions avoid $P$, so the
+letters of $p$ and $q$ lie in the middle factor $x$.
+At least the sibling of $z$ is removed and its yield is
+nonempty, so $|p|+|q|>0$.
+If $B(z)=B(z')$, replace the subtree rooted at $z$ by
+the subtree rooted at $z'$. The root label of the
+replacement agrees with $B(z)$, so this is a valid
+$A$-derivation. It deletes only the positions contributed
+by $p$ and $q$, yielding $w'=ux'v$ with $|w'|<|w|$.
+Since $|w'|\ge m$, we still have $h_{k,\ell}(w')=\mu$,
+a contradiction. Hence labels cannot repeat along such a
+chain of occurrences in $D$.
 
-It remains to count the segments. Since $C$ is a finite
-rooted tree with $m$ leaves and all internal degrees one
-or two, counting its edges yields
-$|U|+2|J|=|F|+|U|+|J|-1$, so $|J|=m-1$.
-Every node $z\in U$ lies on the unique one-child segment
-leading down to the first node of $F\cup J$ reached by
-following the unique child in $C$.
-These segments partition $U$ and are indexed by nodes of
-$F\cup J$, of which there are $m+(m-1)=2m-1$.
-Thus $|U|\le(2m-1)N$. Combining this with~\eqref{eq:fixed-window-core-partition} gives
+Let $E:=F\cup J$. For each $z\in D$, follow its unique
+child in $C$ repeatedly until reaching the first occurrence
+in $E$, and denote it by $\phi(z)$. Since $T$ is finite,
+this defines $\phi:D\to E$.
+For fixed $e\in E$, the occurrences of $\phi^{-1}(\{e\})$
+lie on one ancestor chain and satisfy the shortening condition
+between any two distinct occurrences. Their labels are
+therefore pairwise distinct, and
+$|\phi^{-1}(\{e\})|\le N$.
+On the other hand, $C$ is a connected rooted finite tree.
+Counting its edges by parents gives $|C|-1=|D|+2|J|$;
+using $|C|=|F|+|D|+|J|$ yields
+$|J|=|F|-1=m-1$. Therefore $|E|=2m-1$ and
+\[
+ |D|=\sum_{e\in E}|\phi^{-1}(\{e\})|\le N(2m-1).
+\]
+Finally, Equation~\eqref{eq:fixed-window-yield-partition} gives
 \[
  |\omega(A_\mu)|=|w|
- \le m+|U|\tau_G
- \le m+(2m-1)N\tau_G
- =\theta_{k,\ell}(G),
+ \le m+|D|\tau_G
+ \le m+(2m-1)N\tau_G=\theta_{k,\ell}(G),
 \]
-as claimed.
+as required.
 \end{proof}
 
 
