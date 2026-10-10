@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v153 — 2026-10-10 explain zero height at ba
+
+- In EN/JP nonlinear substitutability proof, explicitly state that in every word of `Delta^*`, after the `b` in each occurrence of `ba`, the prefix height is zero. Thus `q+beta(rb)=0` follows directly when `x=rbat`.
+- Retain the explicit at-most-singleton argument and common-entry-height conclusion, seven examples, definitions, (star)/(star-star), other proof cases, and fixed-window witnesses. English canonical/Clean TeX identical, JP synced, SHA256 refreshed, reviewer response unchanged.
+- Verify automatic PDF builds and marked-PDF response page/line locators before journal resubmission.
+
 ## v152 — 2026-10-10 explicit singleton argument for Q
 
 - Clarified the `ba` case of nonlinear substitutability: `x=rbat` forces `q+beta(rb)=0` for each `q in Q(x)`, so `Q(x)` is at most singleton; likewise `Q(y)`. Their common `beta(u)` then gives `Q(x)={beta(u)}=Q(y)`.
@@ -188,9 +194,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v152; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v152.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v153; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v153.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152/v153); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
