@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v157 — 2026-10-10 footnote on capped-counter sharpness
+
+- Moved the explanation that `CTR_1` is `(1,1)`-substitutable from the main text into a footnote attached to the statement that `rho>=2` is the sharp bound, in English and Japanese.
+- The footnote states the initial-letter restriction and three forbidden adjacent pairs and explains why common-context nonempty factors with equal endpoints have identical distribution. No theorem or proof changed. English canonical/Clean TeX byte-identical, JP synced and hashes refreshed; reviewer response unchanged.
+- Verify PDF rebuilds and marked reviewer-response line locators before resubmission.
+
 ## v156 — 2026-10-10 clarify right-concatenation restriction
 
 - Revised the lead-in to the admissible entry-height concatenation identity in EN/JP to state that appending a word on the right cannot enlarge `Q(s)`; equivalently, `Q(st) subseteq Q(s)`.
@@ -212,9 +218,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v156; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v156.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152/v153/v154/v155/v156); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v157; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v157.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152/v153/v154/v155/v156/v157); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
