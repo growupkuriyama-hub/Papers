@@ -1311,29 +1311,24 @@ $F=\{\mu\}$ とすれば，型付きコピー $A_\mu$ についても同じ解�
 \subsection{\texorpdfstring{$\mathsf{RS}$}{RS} 内の非線形標的}
 
 $\Delta:=\{a^nb^n:n\ge0\}$ とし $\Delta^*$ を考える．
-$z\in\{a,b\}^*$ に対し $\beta(z):=|z|_a-|z|_b$ と定める．
-接頭辞 $p$ を読み終えた時点の\emph{高さ}を $\beta(p)$ と呼び，
-\[
- \underline\beta(z):=
- \min\{\beta(p):p\text{ は }z\text{ の接頭辞}\}
-\]
-とおく．空接頭辞も含める．
-
-任意の語 $x$ に対し，$ba$ の\emph{出現集合}を
-$\operatorname{Occ}_{ba}(x):=
-\{(u,v)\in\{a,b\}^*\times\{a,b\}^*:x=ubav\}$
-と定め，各 $o=(u,v)\in\operatorname{Occ}_{ba}(x)$
-について，その出現高さを
-$\eta_x(o):=\beta(ub)$ とする．
-さらに，$x$ の\emph{許容進入高さ集合}を
+$z\in\{a,b\}^*$ に対し $\beta(z):=|z|_a-|z|_b$ と定め，
+接頭辞 $p$ を読み終えた時点の\emph{高さ}を $\beta(p)$ と呼ぶ．
+語 $x$ の\emph{許容進入高さ集合}を
 \[
  \mathcal Q(x):=
- \{q\in\mathbb Z:
- q+\underline\beta(x)\ge0\quad\text{かつ}\quad
- q+\eta_x(o)=0\
- \text{がすべての }o\in\operatorname{Occ}_{ba}(x)\text{について成り立つ}\}
+ \{\beta(u):u,v\in\{a,b\}^*,\ uxv\in\Delta^*\}
 \]
-と定める．例えば，
+と定める．すなわち，$\Delta^*$ の語中に $x$ が現れる際の，
+$x$ の直前の高さの集合である．
+より正確には，$q\in\mathcal Q(x)$ であることと，
+$q\ge0$，$q+\beta(x)\ge0$，かつ
+$a^qxb^{q+\beta(x)}\in\Delta^*$ であることは同値である．
+実際，$\Delta^*$ の語では途中の高さが負にならず，
+各 $ba$ の $b$ の直後の高さは $0$ である．
+前後の文脈をこの形に置き換えても，
+$x$ 内の高さは変わらず，新たな $ba$ も生じない．
+
+例えば，
 $\mathcal Q(ab)=\mathbb Z_{\ge0}$，
 $\mathcal Q(aa)=\mathbb Z_{\ge0}$，
 $\mathcal Q(\lambda)=\mathbb Z_{\ge0}$，
@@ -1343,14 +1338,11 @@ $\mathcal Q(bbaa)=\{2\}$，
 $\mathcal Q(baaba)=\varnothing$
 である．
 
-次の所属条件が成り立つ：
+この標準補完から，次の所属条件を得る：
 \begin{equation}\tag{$\star$}
  w\in\Delta^*
  \iff \beta(w)=0\ \text{かつ}\ 0\in\mathcal Q(w).
 \end{equation}
-実際，右辺を満たす語を各 $b|a$ 境界で分割すると，
-高さ $0$ から $0$ までの $a^*b^*$ 因子が得られる．
-逆向きは直ちに従う．
 
 $\operatorname{fst}(w),\operatorname{lst}(w)\in\{\bot,a,b\}$
 を最初と最後の記号（$\lambda$ では $\bot$）とし，
@@ -1365,7 +1357,24 @@ $M_\star:=h_\star(\{a,b\}^*)$ に
 $h_\star(x)h_\star(y):=h_\star(xy)$ と積を入れれば，
 $h_\star$ は有限モノイド準同型になる．
 
-許容進入高さ集合について，次の\emph{連接公式}が成り立つ：
+許容進入高さ集合は，次の再帰式を満たす：
+\[
+\begin{aligned}
+ \mathcal Q(\lambda)&=\mathbb Z_{\ge0},\\
+ \mathcal Q(xa)&=
+ \begin{cases}
+ \mathcal Q(x)\cap\{-\beta(x)\},&
+ \operatorname{lst}(x)=b,\\
+ \mathcal Q(x),&\text{それ以外},
+ \end{cases}\\
+ \mathcal Q(xb)&=\mathcal Q(x)\cap
+ \{q\in\mathbb Z:q+\beta(x)\ge1\}.
+\end{aligned}
+\]
+実際，$b$ の追加では新しい高さが非負でなければならず，
+$b$ の直後に $a$ を追加すると，新たな $ba$ の出現高さが
+$0$ でなければならない．
+従って $st$ を $s$ と $t$ に分けて読めば，次の連接公式を得る：
 \begin{equation}\tag{$\star\star$}
 \begin{aligned}
  \mathcal Q(st)
@@ -1379,11 +1388,9 @@ $h_\star$ は有限モノイド準同型になる．
  \end{cases}
 \end{aligned}
 \end{equation}
-実際，
-$\underline\beta(st)=
-\min\{\underline\beta(s),\beta(s)+\underline\beta(t)\}$
-であり，$st$ 内の $ba$ は $s$ 内部，$t$ 内部，
-またはその連接境界に現れるものに尽きる．
+右辺は，$s$ 内の条件，進入高さを $q+\beta(s)$ とした
+$t$ 内の条件，および境界 $s|t$ に新たな $ba$ が現れる場合の
+条件をちょうど表している．
 
 \begin{proposition}[非線形 fixed-$h_\star$ 標的]
 \label{prop:nonlinear-rs-example}
@@ -1404,7 +1411,7 @@ $\Delta^*\cap a^*b^*a^*b^*=\Delta\Delta$
 ~\cite[Section~6.1, Theorem~6.1 の直前]{autebert1997} に明記されている．
 
 代入可能性を示す．同じ $h_\star$-型をもつ非空語 $x,y$ が
-共通文脈 $(u,v)$ をもつとする．\textup{($\star$)} と
+共通文脈 $(u,v)$ をもつとする．$\mathcal Q$ の定義と
 $\beta$ の加法性より，$uxv,uyv\in\Delta^*$ から
 \[
  \beta(x)=\beta(y),\qquad
@@ -1412,8 +1419,11 @@ $\beta$ の加法性より，$uxv,uyv\in\Delta^*$ から
 \]
 が従う．$h_\star(x)=h_\star(y)$ だから，
 $x,y$ はともに $ba$ を含むか，ともに含まない．
-前者では，$ba$ の出現が許容進入高さを一意に定めるため，
-$\mathcal Q(x)=\{q_0\}=\mathcal Q(y)$ である．
+前者では，$x=rbat$ ($r,t\in\{a,b\}^*$) と分解すると，
+任意の $q\in\mathcal Q(x)$ は $q+\beta(rb)=0$ を満たす．
+$q_0\in\mathcal Q(x)\cap\mathcal Q(y)$ だから，
+$y$ についても同様に考えて
+$\mathcal Q(x)=\{q_0\}=\mathcal Q(y)$ を得る．
 後者では $x,y\in a^*b^*$ であり，
 \[
  \mathcal Q(z)=

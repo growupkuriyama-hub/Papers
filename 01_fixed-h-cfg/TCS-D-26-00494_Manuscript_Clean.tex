@@ -1468,28 +1468,23 @@ context-free families.
 \subsection{A nonlinear target inside \texorpdfstring{$\mathsf{RS}$}{RS}}
 
 Let $\Delta:=\{a^nb^n:n\ge0\}$ and consider $\Delta^*$.
-For $z\in\{a,b\}^*$ put $\beta(z):=|z|_a-|z|_b$.
-The \emph{height} after reading a prefix $p$ is $\beta(p)$.
-Define
-\[
- \underline\beta(z):=
- \min\{\beta(p):p\text{ is a prefix of }z\},
-\]
-including the empty prefix.
-
-For any word $x$, define its \emph{$ba$-occurrence set}
-$\operatorname{Occ}_{ba}(x):=
-\{(u,v)\in\{a,b\}^*\times\{a,b\}^*:x=ubav\}$.
-For $o=(u,v)\in\operatorname{Occ}_{ba}(x)$, its occurrence
-height is $\eta_x(o):=\beta(ub)$.
-The \emph{admissible entry-height set} of $x$ is
+For $z\in\{a,b\}^*$ put $\beta(z):=|z|_a-|z|_b$;
+the \emph{height} after reading a prefix $p$ is $\beta(p)$.
+For any word $x$, define its \emph{admissible entry-height set} by
 \[
  \mathcal Q(x):=
- \{q\in\mathbb Z:
- q+\underline\beta(x)\ge0\ \text{and}\
- q+\eta_x(o)=0
- \text{ for every }o\in\operatorname{Occ}_{ba}(x)\}.
+ \{\beta(u):u,v\in\{a,b\}^*,\ uxv\in\Delta^*\}.
 \]
+Thus $\mathcal Q(x)$ consists of the heights immediately before
+occurrences of $x$ in words of $\Delta^*$.
+More precisely, $q\in\mathcal Q(x)$ iff $q\ge0$,
+$q+\beta(x)\ge0$, and
+$a^qxb^{q+\beta(x)}\in\Delta^*$.
+Indeed, in a word of $\Delta^*$ all prefix heights are nonnegative,
+and every $ba$ occurs at height $0$ just after its $b$;
+replacing the surrounding context by these two runs preserves
+the heights within $x$ and creates no new $ba$ across its boundaries.
+
 For example,
 $\mathcal Q(ab)=\mathbb Z_{\ge0}$,
 $\mathcal Q(aa)=\mathbb Z_{\ge0}$,
@@ -1499,13 +1494,11 @@ $\mathcal Q(ba)=\{1\}$,
 $\mathcal Q(bbaa)=\{2\}$, and
 $\mathcal Q(baaba)=\varnothing$.
 
-We have the membership criterion
+The canonical completion gives the membership criterion
 \begin{equation}\tag{$\star$}
  w\in\Delta^*
  \iff \beta(w)=0\ \text{and}\ 0\in\mathcal Q(w).
 \end{equation}
-Indeed, a word on the right splits at each $b|a$ boundary
-into balanced $a^*b^*$ factors; the converse is immediate.
 
 Let $\operatorname{fst}(w),\operatorname{lst}(w)\in\{\bot,a,b\}$ be
 the first and last symbols, with $\bot$ on $\lambda$, and let
@@ -1521,7 +1514,25 @@ $M_\star:=h_\star(\{a,b\}^*)$ carries the product
 $h_\star(x)h_\star(y):=h_\star(xy)$, making $h_\star$ a finite-monoid
 homomorphism.
 
-The admissible entry-height sets satisfy the concatenation identity
+The admissible entry-height sets satisfy the recursion
+\[
+\begin{aligned}
+ \mathcal Q(\lambda)&=\mathbb Z_{\ge0},\\
+ \mathcal Q(xa)&=
+ \begin{cases}
+ \mathcal Q(x)\cap\{-\beta(x)\},&
+ \operatorname{lst}(x)=b,\\
+ \mathcal Q(x),&\text{otherwise},
+ \end{cases}\\
+ \mathcal Q(xb)&=\mathcal Q(x)\cap
+ \{q\in\mathbb Z:q+\beta(x)\ge1\}.
+\end{aligned}
+\]
+Indeed, appending $b$ requires the new height to be nonnegative,
+while appending $a$ after $b$ creates a $ba$ and requires the
+height after that $b$ to be $0$.
+Consequently, splitting the reading of $st$ into the two factors
+gives the concatenation identity
 \begin{equation}\tag{$\star\star$}
 \begin{aligned}
  \mathcal Q(st)
@@ -1535,11 +1546,9 @@ The admissible entry-height sets satisfy the concatenation identity
  \end{cases}
 \end{aligned}
 \end{equation}
-Indeed,
-$\underline\beta(st)=
-\min\{\underline\beta(s),\beta(s)+\underline\beta(t)\}$,
-and every $ba$ in $st$ occurs within $s$, within $t$,
-or across their boundary.
+The conditions are exactly those within $s$, those within $t$
+entered at height $q+\beta(s)$, and the possible $ba$ across
+the boundary $s|t$.
 
 \begin{proposition}[a nonlinear fixed-$h_\star$ target]
 \label{prop:nonlinear-rs-example}
@@ -1563,15 +1572,17 @@ The nonlinearity of $\Delta\Delta$ is explicitly recorded by
 Autebert--Berstel--Boasson~\cite[Section~6.1, before Theorem~6.1]{autebert1997}.
 
 For substitutability, let nonempty $x,y$ have equal $h_\star$-type
-and a common context $(u,v)$. By \textup{($\star$)} and additivity
-of $\beta$, the memberships $uxv,uyv\in\Delta^*$ imply
+and a common context $(u,v)$. By the definition of $\mathcal Q$ and additivity of $\beta$,
+the memberships $uxv,uyv\in\Delta^*$ imply
 \[
  \beta(x)=\beta(y),\qquad
  q_0:=\beta(u)\in\mathcal Q(x)\cap\mathcal Q(y).
 \]
 Since $h_\star(x)=h_\star(y)$, either both contain $ba$ or neither does.
-In the former case, every occurrence of $ba$ prescribes a unique
-entry height; hence
+In the former case, fix a factorization $x=rbat$ with
+$r,t\in\{a,b\}^*$. Every $q\in\mathcal Q(x)$ then satisfies
+$q+\beta(rb)=0$; since $q_0\in\mathcal Q(x)\cap\mathcal Q(y)$,
+the same argument for $y$ yields
 $\mathcal Q(x)=\{q_0\}=\mathcal Q(y)$.
 In the latter case, $x,y\in a^*b^*$ and
 \[
