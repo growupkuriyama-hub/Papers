@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v142 — 2026-10-10 regular-filter proof of the nonregular linear example
+
+- The main proof of `prop:linear-separator-example` now derives a fixed finite typing from the Clark--Eyraud substitutable linear language `L_all` intersected with regular `Q`, using Proposition 3.2(ii) and the linear regular-intersection closure. Linearity, nonregularity, and separation from Clark--Eyraud and all fixed-window classes are retained.
+- The four-element `h_{pm,e}` is retained in a short, unnumbered paragraph after the proof with a concise verification. No theorem numbering is changed; the former long direct proof and membership equation are removed.
+- English canonical and Clean TeX are identical, Japanese reference matches the new organization, and R2.3 reviewer-response wording is synchronized. All three SHA-256 metadata fields updated. Recompile PDFs and audit page/line locators before TCS resubmission; not yet submitted.
+
 ## v141 — 2026-10-10 direct enumeration proof for polynomial-time reconstruction
 
 - Replaced the proof of `thm:poly-build` in English and Japanese with direct enumeration. Rule (U) pairs each observed nonempty factor occurrence `(u,x,v)` with every sample word `w`; when `w=uyv` with nonempty `y` and the `h`-values agree, emit `[x] -> [y]`.
@@ -125,9 +131,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v141; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v141.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v141); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v142; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v142.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (other answers remain as in v136); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
