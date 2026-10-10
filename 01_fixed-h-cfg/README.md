@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v138 — 2026-10-10 explicit short-word bound in the fixed-window product
+
+- In the proof constructing $M_{k,\ell}$, English and Japanese manuscript text now states that the short-word factors satisfy $|x|,|y|<m_0$, where $m_0=\max\{1,k+\ell\}$; the case $|w|=m_0$ remains in the long-word tag.
+- Synchronized canonical `main.tex`, Clean TeX mirror, Japanese reference TeX, and source SHA-256 metadata. The theorem and proof argument, as well as the existing reviewer response, are unchanged.
+- **Before TCS resubmission:** check PDF builds and re-audit response page/line references against the final marked PDF. No journal resubmission has been made.
+
 ## v137 — 2026-10-10 explicit universal idempotent quantifier
 
 - English and Japanese proofs of the locally trivial typing/fixed-window criterion now explicitly state the identity for **all `e,f` in `E(S)`** and all middle elements of `S`, following Pin (2025, Proposition XI.4.17).
@@ -101,9 +107,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v137; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v137.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v137); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v138; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v138.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v138); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
