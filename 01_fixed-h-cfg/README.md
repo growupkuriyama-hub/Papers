@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v154 — 2026-10-10 compact nonlinear substitutability proof
+
+- Explicitly connect `beta(x)=beta(y)` (established from the shared context) to `Q(x)=Q(y)` in the `x,y in a*b*` case, using the existing `Q(z)` formula.
+- Recast five displayed formula blocks in this proof as inline mathematics in both EN and JP; retain logical steps, short paragraphs, the `ba` zero-height explanation, the common-entry-height singleton argument, and both context-persistence equalities.
+- Seven examples, the standalone (star)/(star-star) identities, theorem and other proof sections remain unchanged; English canonical and Clean TeX match byte-for-byte. EN/JP SHA256 refreshed; reviewer response unchanged. Audit PDFs and marked line locators before resubmission.
+
 ## v153 — 2026-10-10 explain zero height at ba
 
 - In EN/JP nonlinear substitutability proof, explicitly state that in every word of `Delta^*`, after the `b` in each occurrence of `ba`, the prefix height is zero. Thus `q+beta(rb)=0` follows directly when `x=rbat`.
@@ -194,9 +200,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v153; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v153.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152/v153); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v154; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v154.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152/v153/v154); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
