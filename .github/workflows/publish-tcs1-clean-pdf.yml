@@ -61,20 +61,49 @@ jobs:
         run: |
           set -euo pipefail
           english_source="01_fixed-h-cfg/main.pdf"
+          japanese_source="01_fixed-h-cfg/japanese/main_JP.pdf"
           english_public="01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf"
           japanese_public="01_fixed-h-cfg/japanese/main_JP.pdf"
           test -s "$english_source"
-          test -s "$japanese_public"
+          test -s "$japanese_source"
           test "$(head -c 4 "$english_source")" = "%PDF"
-          test "$(head -c 4 "$japanese_public")" = "%PDF"
-          cp "$english_source" "$english_public"
-          git add "$english_public" "$japanese_public"
-          if git diff --cached --quiet; then
-            echo "Published PDF is already up to date."
-            exit 0
-          fi
-          git -c user.name="github-actions[bot]" \
-              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-              commit -m "Publish latest TCS #1 English and Japanese PDFs [skip ci]"
-          # Only fast-forward main. A concurrent manuscript edit cannot be overwritten.
-          git push origin HEAD:main
+          test "$(head -c 4 "$japanese_source")" = "%PDF"
+
+          # Keep the freshly compiled PDFs outside the repository while
+          # updating the branch, so a hard reset cannot discard them.
+          cp "$english_source" "$RUNNER_TEMP/tcs-english-publish.pdf"
+          cp "$japanese_source" "$RUNNER_TEMP/tcs-japanese-publish.pdf"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # A concurrent metadata or unrelated commit must not prevent
+          # publication.  However, NEVER publish a stale compilation when
+          # any manuscript input has changed after this workflow started.
+          for attempt in 1 2 3 4 5; do
+            git fetch --no-tags origin main
+            if ! git diff --quiet "$GITHUB_SHA" origin/main -- \
+              01_fixed-h-cfg/main.tex \
+              01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex \
+              01_fixed-h-cfg/japanese/main_JP.tex \
+              ':(glob)01_fixed-h-cfg/**/*.sty' \
+              ':(glob)01_fixed-h-cfg/**/*.cls'; then
+              echo "::error::TCS source changed while building; refusing to publish stale PDFs."
+              exit 1
+            fi
+            git reset --hard origin/main
+            cp "$RUNNER_TEMP/tcs-english-publish.pdf" "$english_public"
+            cp "$RUNNER_TEMP/tcs-japanese-publish.pdf" "$japanese_public"
+            git add "$english_public" "$japanese_public"
+            if git diff --cached --quiet; then
+              echo "Both fixed PDF URLs already serve this build."
+              exit 0
+            fi
+            git commit -m "Publish latest TCS #1 English and Japanese PDFs [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Successfully published both PDFs to main."
+              exit 0
+            fi
+            echo "Branch advanced during publication; retry $attempt/5."
+          done
+          echo "::error::Could not publish after five guarded attempts."
+          exit 1
