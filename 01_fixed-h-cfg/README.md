@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v147 — 2026-10-10 canonical-completion definition of admissible entry heights
+
+- Changed the definition of `Q(x)` in English and Japanese directly to `{q in Z_{>=0}: q+beta(x)>=0 and a^q x b^(q+beta(x)) in Delta^*}`.
+- Removed the duplicate "more precisely, iff" exposition. Retained a short proof that these are exactly the entry heights of contextual occurrences; the substitutability proof cites this characterization instead of the former definition.
+- Kept the seven examples, one-letter recurrence, (star) membership criterion, (star-star) concatenation identity, theorem and fixed-window separation intact. English canonical and Clean TeX match, JP reference synced, SHA256 updated, reviewer response unchanged; final PDFs and marked reviewer-response locators still require verification.
+
 ## v146 — 2026-10-10 direct admissible entry-height definition
 
 - Redefined `Q(x)` directly as the set of realized heights `beta(u)` over contexts `uxv in Delta^*`. Canonical completion `a^q x b^(q+beta(x))` gives a concrete witness without auxiliary `Occ_ba`, `eta`, or prefix-minimum notation.
@@ -154,9 +160,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v146; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v146.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v147; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v147.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
