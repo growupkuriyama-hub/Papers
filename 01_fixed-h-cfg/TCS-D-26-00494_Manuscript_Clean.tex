@@ -1802,49 +1802,72 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-When $k+\ell=0$, $h_{0,0}$ is constant on $\Sigma^+$, so a non-start typed
-symbol $A_\mu$ of $\widetilde G$ has the same nonempty yields as its
-underlying nonterminal $A$ and hence $|\omega(A_\mu)|\le\tau_G$.
+Fix a retained non-start typed symbol $A_\mu$.  By
+Proposition~\ref{prop:typed-core},
+$L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$.
+It therefore suffices to bound the length of the shortest word in this
+intersection.  Put $m:=k+\ell$.
 
-Assume $k+\ell>0$.  If $\mu$ is a short-word
-element of $M_{k,\ell}$, then every word of type $\mu$ is that very word, of
-length $<k+\ell$, and the required bound is immediate.  It remains to consider a
-long-word summary element $\mu=\langle p,q\rangle$.  Choose any derivation
-tree of $A$ whose terminal yield $w$ has this type.  Mark the first $k$
-terminal leaves and the last $\ell$ terminal leaves; there are exactly
-$k+\ell$ marked leaves, and their labels are $p$ and $q$ in the required order.
+If $m=0$, the map $h_{0,0}$ is constant on $\Sigma^+$.
+Since a non-start symbol of an SSBNF grammar generates no empty word,
+$|\omega(A_\mu)|=\min\{|v|:v\in L_G(A)\}\le\tau_G$.
+Assume henceforth that $m>0$.  If $\mu$ is a short-word element,
+its only possible yield is the represented word itself, of length
+less than $m$.  We may thus assume that
+$\mu=\langle p,q\rangle$ is a long-word summary element.
 
-Let $\mathcal U$ be the union of the root-to-marked-leaf paths.  Consider each
-maximal chain of nonterminal nodes in $\mathcal U$ along which exactly one child
-remains in $\mathcal U$.  If the same underlying nonterminal label occurs twice on
-such a chain, replace the derivation rooted at the upper occurrence by the
-subtree rooted at the lower occurrence.  This is a valid derivation from the
-same nonterminal and deletes only sibling subtrees containing no marked leaf,
-so all marked boundary terminals and their order are preserved.  Repeating
-the shortcut leaves at most $N$ nonterminal nodes on each maximal one-child
-chain.
+Let $w:=\omega(A_\mu)$, and choose a derivation tree $T$ of $A$
+with yield $w$.  Since $|w|\ge m$, the first $k$ and last $\ell$
+terminal leaves are disjoint; mark these $m$ leaves.  Let
+$\mathcal U$ be the union of the paths from the root to the marked
+leaves.  A nonterminal node of $\mathcal U$ with exactly one child
+in $\mathcal U$ is called a unary node.  At a binary production,
+the other child, if any, roots a \emph{side subtree}.  Every side
+subtree contains no marked leaf.  All non-start subtrees have
+nonempty terminal yields.
 
-Contract every maximal one-child chain.  The resulting rooted binary tree
-connects the $k+\ell$ marked leaves and has at most $2(k+\ell)-1$ vertices,
-so there are at most $2(k+\ell)-1$ maximal one-child chains (including a possible initial chain
-above the first branching vertex).  An omitted sibling subtree can occur only
-at a node on one of these chains; branching nodes have both children in
-$\mathcal U$.  Hence there are at most $(2(k+\ell)-1)N$ omitted sibling subtrees.  Replace
-each by a shortest terminal yield of its root, contributing at most $\tau_G$
-terminals per subtree.  Since the marked leaves are exactly the first $k$
-and last $\ell$ leaves, no unmarked sibling subtree lies before the marked
-prefix (when $k>0$) or after the marked suffix (when $\ell>0$).
-Every non-start yield in SSBNF is nonempty.  Thus shortcuts and sibling
-replacements preserve the marked prefix and suffix, even though they may
-alter the material between them; if $k=0$ or $\ell=0$, the corresponding
-boundary condition is vacuous.  The resulting word $w'$ is still derived from $A$,
-still has prefix $p$ and suffix $q$, and therefore has the same
-$h_{k,\ell}$-type $\mu$, while
-$|w'|\le (k+\ell)+(2(k+\ell)-1)N\tau_G$.
-By the exact lifting equality in Proposition~\ref{prop:typed-core},
-$w'\in L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$ is a typed yield of the
-retained $A_\mu$ in $\widetilde G$.  Hence the shortlex-minimal typed yield
-$\omega(A_\mu)$ obeys the same length bound.
+We use the following observation.  Any valid replacement of a side
+subtree by a nonempty terminal derivation, or of a subtree at an
+ancestor by a descendant subtree with the same nonterminal label
+along a unary path in $\mathcal U$, preserves all marked leaves
+in their order.  Consequently, the marked first $k$ leaves remain
+the first $k$ leaves when $k>0$, and the marked last $\ell$ leaves
+remain the last $\ell$ leaves when $\ell>0$; the other cases impose
+no corresponding boundary condition.  The resulting word has
+length at least $m$ and still has prefix $p$ and suffix $q$.
+Hence its $h_{k,\ell}$-type remains $\mu$.
+
+Consider a maximal consecutive chain of unary nodes in $\mathcal U$.
+No underlying nonterminal can occur twice on this chain.
+Indeed, if two nodes $u$ and $v$, with $u$ above $v$, had the
+same label $B$, replacing the subtree at $u$ by that at $v$
+would give a valid derivation from $A$ of the same type $\mu$.
+At least the nonempty side yield at $u$ would be deleted, so
+the new word would be strictly shorter than $w$, a contradiction.
+Thus each unary chain has at most
+$N=|V\setminus\{S_0\}|$ nodes.
+
+Similarly, every side subtree already yields a shortest terminal
+word of its root nonterminal.  Otherwise replacing it by such a
+shortest derivation would produce a shorter word of type $\mu$,
+again contradicting the choice of $w$.  Each side subtree
+therefore contributes at most $\tau_G$ terminals.
+
+Suppress all unary nodes of $\mathcal U$.  The resulting rooted
+full binary tree has exactly $m$ marked leaves, hence $m-1$
+branching nodes and $2m-2$ edges (also when $m=1$).
+Each maximal unary chain lies on one of these edges or above
+the root of the suppressed tree.  There are therefore at most
+$2m-1$ such chains.  Since each has at most $N$ nodes, and
+each unary node roots at most one side subtree, the number $r$
+of side subtrees satisfies $r\le(2m-1)N$.
+
+All unmarked terminal leaves belong to side subtrees.  If their
+yields are $v_1,\ldots,v_r$, the preceding bounds give
+$|w|=m+\sum_{i=1}^r|v_i|
+\le m+r\tau_G
+\le m+(2m-1)N\tau_G=\theta_{k,\ell}(G)$.
+Since $w=\omega(A_\mu)$, this proves the lemma.
 \end{proof}
 
 \subsection{Thickness-preserving SSBNF normalization}
