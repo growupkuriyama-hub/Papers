@@ -1802,88 +1802,117 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-Fix a retained non-start typed symbol $A_\mu$.  By
-Proposition~\ref{prop:typed-core},
+Fix a retained non-start typed symbol $A_\mu$, and put $m:=k+\ell$.
+By Proposition~\ref{prop:typed-core},
 $L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$.
-It therefore suffices to bound the length of the shortest word in this
-intersection.  Put $m:=k+\ell$.
+We bound the minimum length in this nonempty set.
 
-If $m=0$, the map $h_{0,0}$ is constant on $\Sigma^+$.
-Since a non-start symbol of an SSBNF grammar generates no empty word,
+If $m=0$, $h_{0,0}$ is constant on $\Sigma^+$.  All yields of
+non-start symbols in SSBNF are nonempty, so
 $|\omega(A_\mu)|=\min\{|v|:v\in L_G(A)\}\le\tau_G$.
-Assume henceforth that $m>0$.  If $\mu$ is a short-word element,
-its only possible yield is the represented word itself, of length
-less than $m$.  We may thus assume that
-$\mu=\langle p,q\rangle$ is a long-word summary element.
+Suppose $m>0$.  If $\mu$ is a short-word element, its fiber consists
+of that word alone, of length less than $m$; the bound follows.
+Thus let $\mu=\langle p,q\rangle$ be a long-word summary element,
+where $|p|=k$ and $|q|=\ell$, and set $w:=\omega(A_\mu)$.
+Then $|w|\ge m$ and $w=pzq$ for some $z\in\Sigma^*$.
 
-Let $w:=\omega(A_\mu)$, and choose a derivation tree $T$ of $A$
-with yield $w$.  Regard each terminal production $B\to a$ as a
-leaf labelled by its output $a$; thus every non-leaf node has two
-children.  Address the root by $\varepsilon$ and the left and right
-children of an address $u$ by $u0$ and $u1$, respectively.
-Write $\operatorname{Pos}(T)\subseteq\{0,1\}^*$ for the node addresses,
-and $u\preceq v$ when $u$ is a prefix of $v$.  Let $F$ be the addresses
-of the first $k$ and last $\ell$ leaves, in left-to-right order.
-These sets are disjoint since $|w|\ge m$, so $|F|=m$.  Define
+Choose a derivation tree $T$ of $A$ with yield $w$.
+Represent a terminal production $X\to a$ by a leaf carrying
+nonterminal label $X$ and output $a$; a node using $X\to YZ$
+has two ordered children.  Thus all internal nodes have exactly
+two children.  Give the root address $\varepsilon$, and denote
+the left and right children of $u$ by $u0$ and $u1$.
+Let $\operatorname{Pos}(T)\subseteq\{0,1\}^*$ be the set of node
+addresses, let $X(u)$ be the nonterminal label at $u$, and let
+$y(u)\in\Sigma^+$ be the terminal yield of the subtree rooted at $u$.
+Write $u\preceq v$ if $u$ is a prefix of $v$.
+Order the leaf addresses from left to right, and let $F$ consist
+of the addresses of the first $k$ and last $\ell$ leaves.
+As $|w|\ge m$, these groups do not overlap and $|F|=m$.
+Define
 \[
 \begin{aligned}
 \mathcal U&:=\{u\in\operatorname{Pos}(T):
-   \exists t\in F,\ u\preceq t\},\\
+                     \exists t\in F,\ u\preceq t\},\\
 \mathcal D&:=\{u\in\mathcal U:
-   |\{i\in\{0,1\}:ui\in\mathcal U\}|=1\},\\
+                     |\{i\in\{0,1\}:ui\in\mathcal U\}|=1\},\\
+\mathcal J&:=\{u\in\mathcal U:u0,u1\in\mathcal U\},\\
 \mathcal R&:=\{ui\in\operatorname{Pos}(T)\setminus\mathcal U:
-   u\in\mathcal D,\ i\in\{0,1\}\}.
+                     u\in\mathcal D,\ i\in\{0,1\}\}.
 \end{aligned}
 \]
-Thus $\mathcal U$ consists exactly of the marked leaves and their
-ancestors.  A node $u\in\mathcal D$ has exactly one child in
-$\mathcal U$ and, by binary branching, exactly one other child in
-$\mathcal R$.  For each $v\in\mathcal R$, call the subtree $T|_v$
-a \emph{side subtree}.  No side subtree contains a marked leaf,
-and every unmarked leaf belongs to exactly one side subtree.
-All these subtrees have nonempty terminal yields.
+The leaves of $\mathcal U$ are exactly $F$.  Every other node
+of $\mathcal U$ lies in exactly one of $\mathcal D$ and $\mathcal J$.
+For each $u\in\mathcal D$, exactly one child belongs to
+$\mathcal U$ and its other child belongs to $\mathcal R$;
+this correspondence is a bijection between $\mathcal D$
+and $\mathcal R$.  Every leaf outside $F$ belongs to exactly
+one subtree rooted at $r\in\mathcal R$: take its shortest
+prefix outside $\mathcal U$, whose parent lies in $\mathcal D$.
+In particular, the subtrees rooted at $\mathcal R$ are pairwise
+disjoint, contain no marked leaf, and account for all
+unmarked terminal leaves.
 
-We use the following observation.  Any valid replacement of a side
-subtree by a nonempty terminal derivation, or of a subtree at an
-ancestor by a descendant subtree with the same nonterminal label
-along a unary path in $\mathcal U$, preserves all marked leaves
-in their order.  Consequently, the marked first $k$ leaves remain
-the first $k$ leaves when $k>0$, and the marked last $\ell$ leaves
-remain the last $\ell$ leaves when $\ell>0$; the other cases impose
-no corresponding boundary condition.  The resulting word has
-length at least $m$ and still has prefix $p$ and suffix $q$.
-Hence its $h_{k,\ell}$-type remains $\mu$.
+We record precisely why the following two subtree replacements
+preserve the type $\mu$.
+First, a subtree at $r\in\mathcal R$ may be replaced by any
+terminal derivation from $X(r)$.  Second, let $u$ be a proper
+ancestor of $v$ such that every node on the path from $u$
+up to but excluding $v$ belongs to $\mathcal D$ and
+$X(u)=X(v)$.  The subtree at $u$ may then be replaced by
+the subtree at $v$.  Both are valid grammar derivations because
+the nonterminal at the replaced root is unchanged.
+In the first operation, only leaves outside $F$ are changed.
+In the second, each node along the deleted path has its unique
+$\mathcal U$-child on the path to $v$; hence every marked
+descendant of $u$ lies below $v$, and only unmarked leaves
+are deleted.  In either operation, the marked letters survive
+in the same order, and every changed letter lies between the
+marked prefix and marked suffix (with the appropriate side
+unrestricted when $k=0$ or $\ell=0$).  The new yield is therefore
+$pz'q$ for some $z'\in\Sigma^*$, so it has length at least $m$
+and $h_{k,\ell}$-type $\langle p,q\rangle=\mu$.
 
-Consider a maximal chain of nodes of $\mathcal D$ connected by parent-child edges.
-No underlying nonterminal can occur twice on this chain.
-Indeed, if two nodes $u$ and $v$, with $u$ above $v$, had the
-same label $B$, replacing the subtree at $u$ by that at $v$
-would give a valid derivation from $A$ of the same type $\mu$.
-At least the nonempty side yield at $u$ would be deleted, so
-the new word would be strictly shorter than $w$, a contradiction.
-Thus each unary chain has at most
-$N=|V\setminus\{S_0\}|$ nodes.
+Minimality of $|w|$ now gives two restrictions.
+For each $r\in\mathcal R$, replacing its subtree by a shortest
+terminal derivation from $X(r)$ cannot shorten $w$.
+Hence $|y(r)|=\min\{|v|:v\in L_G(X(r))\}\le\tau_G$.
 
-Similarly, every side subtree already yields a shortest terminal
-word of its root nonterminal.  Otherwise replacing it by such a
-shortest derivation would produce a shorter word of type $\mu$,
-again contradicting the choice of $w$.  Each side subtree
-therefore contributes at most $\tau_G$ terminals.
+Next put $\mathcal E:=F\cup\mathcal J$.
+For every $u\in\mathcal D$, repeatedly follow the unique child
+that remains in $\mathcal U$, and let $\phi(u)\in\mathcal E$ be
+the first node reached in $\mathcal E$.
+The map $\phi:\mathcal D\to\mathcal E$ is well-defined because
+$T$ is finite and each node of $\mathcal U$ is either in
+$\mathcal D$ or in $\mathcal E$.
+For a fixed $e\in\mathcal E$, all nodes of
+$\phi^{-1}(\{e\})$ lie on the ancestor path to $e$,
+and all nodes between any two of them belong to $\mathcal D$.
+If two such nodes $u\prec v$ had $X(u)=X(v)$, the second
+replacement above would be valid and would delete at least
+the nonempty yield of the child of $u$ outside $\mathcal U$.
+It would therefore give a strictly shorter word of type $\mu$,
+contrary to the definition of $w$.
+Thus the nonterminal labels on each fiber of $\phi$ are distinct,
+and $|\phi^{-1}(\{e\})|\le N$ for every $e\in\mathcal E$.
 
-Suppress all nodes of $\mathcal D$ in the rooted tree $\mathcal U$.  The resulting rooted
-full binary tree has exactly $m$ marked leaves, hence $m-1$
-branching nodes and $2m-2$ edges (also when $m=1$).
-Each maximal unary chain lies on one of these edges or above
-the root of the suppressed tree.  There are therefore at most
-$2m-1$ such chains.  Since each has at most $N$ nodes, and
-each unary node roots at most one side subtree, their number $r:=|\mathcal R|$ satisfies $r\le(2m-1)N$.
-
-All unmarked terminal leaves belong to side subtrees.  If their
-yields are $v_1,\ldots,v_r$, the preceding bounds give
-$|w|=m+\sum_{i=1}^r|v_i|
-\le m+r\tau_G
+Finally, since $\mathcal U$ is a finite rooted tree with $m$
+leaves, $|\mathcal U|=m+|\mathcal D|+|\mathcal J|$.
+Counting its edges by their parents also gives
+$|\mathcal U|-1=|\mathcal D|+2|\mathcal J|$.
+Consequently $|\mathcal J|=m-1$ and
+$|\mathcal E|=|F|+|\mathcal J|=2m-1$.
+Since $\phi$ has domain $\mathcal D$ and
+$|\mathcal R|=|\mathcal D|$, it follows that
+$|\mathcal R|=|\mathcal D|
+=\sum_{e\in\mathcal E}|\phi^{-1}(\{e\})|
+\le(2m-1)N$.
+The marked leaves and the disjoint side subtrees partition
+all terminal leaves of $T$.  Hence
+$|w|=m+\sum_{r\in\mathcal R}|y(r)|
+\le m+|\mathcal R|\tau_G
 \le m+(2m-1)N\tau_G=\theta_{k,\ell}(G)$.
-Since $w=\omega(A_\mu)$, this proves the lemma.
+This is the asserted bound on $|\omega(A_\mu)|$.
 \end{proof}
 
 \subsection{Thickness-preserving SSBNF normalization}
