@@ -11,6 +11,11 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v150 — 2026-10-10 shorten entry-height explanation
+
+- Removed redundant explanation about replacing external context without changing internal heights or creating a boundary `ba` in EN/JP. The direct definition of `Q(x)` and concise realized-height interpretation remain.
+- Seven examples, star/star-star identities, proposition and proof unaffected. EN Clean mirror synchronized, EN/JP hashes refreshed; reviewer response unchanged. PDF builds and marked line references require review.
+
 ## v149 — 2026-10-10 remove redundant Japanese completion sentence
 
 - In `japanese/main_JP.tex`, deleted the explicit `uxv in Delta^* => a^q x b^(q+beta(x)) in Delta^*` sentence just after the canonical-completion definition. The concise interpretation as realizable entry heights and its boundary-replacement justification remain.
@@ -172,9 +177,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v149; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v149.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v150; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v150.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
