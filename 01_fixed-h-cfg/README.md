@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v158 — 2026-10-10 Round-1 reviewer-response synchronization
+
+- Updated `response/response_round1.tex` to match the latest v157 English manuscript: revised the Section 9 overview and Reviewer 1 answers R1.33--R1.35 to describe the canonical-completion entry-height argument, footnoted concatenation formula, and footnoted sharpness of the capped-counter boundary.
+- Replaced the obsolete 49-entry v132 marked-PDF page/line table with a verified map to exact v157 `main.tex` source lines and statement/section anchors. These are **not PDF margin-line locators**. The marked PDF was confirmed to build as 25 pages and the clean PDF as 24 pages, but editorial page/paragraph/margin-line references require final PDF-level re-audit before TCS resubmission.
+- All 49 response items retained, current response SHA256 updated. Manuscript EN/JP source unchanged from v157; English canonical/Clean TeX remain byte-identical. This response update does not constitute journal resubmission.
+
 ## v157 — 2026-10-10 footnote on capped-counter sharpness
 
 - Moved the explanation that `CTR_1` is `(1,1)`-substitutable from the main text into a footnote attached to the statement that `rho>=2` is the sharp bound, in English and Japanese.
@@ -218,9 +224,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v157; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v157.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145/v146/v147/v148/v149/v150/v151/v152/v153/v154/v155/v156/v157); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v158 (manuscript text v157); this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation manuscript text synchronized to v157; response package v158.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v158 to synchronize with manuscript v157; 49 source-line/statement locators checked, but marked-PDF page/paragraph/line locators still require final pre-submission audit.
 
 ## v106 Yoshinaka prior-art correction
 
