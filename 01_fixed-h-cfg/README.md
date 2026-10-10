@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v137 — 2026-10-10 explicit universal idempotent quantifier
+
+- English and Japanese proofs of the locally trivial typing/fixed-window criterion now explicitly state the identity for **all `e,f` in `E(S)`** and all middle elements of `S`, following Pin (2025, Proposition XI.4.17).
+- `main.tex`, the canonical Clean TeX mirror, the Japanese reference manuscript, and `PAPER.yaml` SHA-256 metadata are synchronized. No theorem or proof argument changed; reviewer-response text is unchanged.
+- **Pre-resubmission:** rebuild the clean/marked/JP PDFs and re-audit response page/line locators against the final marked PDF. No journal resubmission performed.
+
 ## v136 — 2026-10-10 fixed-h fiber attribution in Yoshinaka framework
 
 - The EN/JP Introduction explicitly attributes nonempty fibers `h^{-1}(m) ∩ Σ+` to the **finite-monoid homomorphism fixed in this paper**, represented as sorts within Yoshinaka (2015)'s general signature framework.
@@ -95,9 +101,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v136; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v136.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, synchronized in text to v136; page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v137; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v137.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, unchanged from v136 (still mathematically aligned with v137); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
