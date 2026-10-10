@@ -11,6 +11,11 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v145 — 2026-10-10 seven admissible entry-height examples
+
+- Expanded the `Q(x)` examples immediately before the membership criterion in both EN and JP: `ab, aa, lambda` give `Z_{>=0}`, `bb` gives `Z_{>=2}`, `ba` gives `{1}`, `bbaa` gives `{2}`, and `baaba` gives the empty set.
+- Checked all seven against the defining prefix-minimum and `ba`-occurrence conditions. No mathematical theorem, formula, or proof was changed. English main and Clean TeX remain byte-identical, Japanese synced, EN/JP checksums refreshed; reviewer response unchanged. Verify PDF builds and marked response line locators before journal resubmission.
+
 ## v144 — 2026-10-10 algebraic concatenation proof for nonlinear Delta-star example
 
 - Define the named concepts height, `ba` occurrence set, and admissible entry-height set `Q(x)` for every word (including the empty word). Preserve `Q(ab)=Z_{>=0}` and `Q(ba)={1}`.
@@ -143,9 +148,9 @@
 
 ## Current working baseline
 
-- `main.tex` — English major-revision manuscript, internal v144; this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation synchronized to v144.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
+- `main.tex` — English major-revision manuscript, internal v145; this is the source of truth.
+- `japanese/main_JP.tex` — Japanese reference translation synchronized to v145.
+- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v142 for R2.3 (unchanged in v143/v144/v145); page/paragraph/line locators require re-audit against the new marked PDF before resubmission.
 
 ## v106 Yoshinaka prior-art correction
 
