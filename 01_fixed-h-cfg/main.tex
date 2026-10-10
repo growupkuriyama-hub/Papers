@@ -1802,132 +1802,87 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-Fix a retained non-start typed symbol $A_\mu$, and put $m:=k+\ell$.
+Fix a retained non-start typed symbol $A_\mu$, and put
+$m:=k+\ell$ and $N:=|V\setminus\{S_0\}|$.
 By Proposition~\ref{prop:typed-core},
-$L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$.
-We bound the minimum length in this nonempty set.
+$L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})$;
+in particular, this set is nonempty.
+If $m=0$, the map $h_{0,0}$ is constant on nonempty words,
+so $|\omega(A_\mu)|\le\tau_G$.
+Assume $m>0$. If $\mu$ is a short-word type, its fiber
+consists of a single word of length less than $m$, and the
+claimed bound is immediate.
 
-If $m=0$, $h_{0,0}$ is constant on $\Sigma^+$; because non-start
-symbols of an SSBNF grammar generate no empty word,
-$|\omega(A_\mu)|=\min\{|y|:y\in L_G(A)\}\le\tau_G$.
-Suppose $m>0$.  If $\mu$ is a short-word element, its fiber
-consists of that word alone, of length less than $m$.
-We may therefore assume that $\mu$ is a long-word summary.
-Set $w:=\omega(A_\mu)$.  By the definition of $h_{k,\ell}$,
-there are words $u,x,v$ such that
-$w=uxv$, $|u|=k$, $|v|=\ell$, and $\mu=\langle u,v\rangle$.
-In particular, $n:=|w|\ge m$.
+It remains to consider a long-word type
+$\mu=\langle u,v\rangle$ with $|u|=k$ and $|v|=\ell$.
+Choose a word $w=uxv\in L_G(A)$ of minimum length among
+words of type $\mu$, and fix a binary SSBNF derivation tree
+$T$ for $A\Rightarrow_G^*w$.
+Mark the $k$ leftmost and $\ell$ rightmost terminal leaves
+of $T$. Since $|w|\ge m$, these are exactly $m$ distinct
+leaves, and every unmarked terminal leaf lies in the middle
+factor $x$.
 
-Fix a binary SSBNF derivation of $A\Rightarrow_G^*w$.
-Its nonterminal \emph{occurrences} form a finite set
-$\operatorname{Occ}(T)$.  For each occurrence $z$, let $B(z)$
-be its nonterminal label, let $y(z)\in\Sigma^+$ be its
-terminal yield, and let $I(z)\subseteq\{1,\ldots,n\}$
-be the interval of positions in $w$ occupied by $y(z)$.
-A terminal production $B\to a$ gives an occurrence with
-$|I(z)|=1$ and no children; a binary production $B\to CD$
-gives an occurrence with two ordered children whose
-intervals are consecutive and partition $I(z)$.
-Write $\operatorname{Ch}(z)$ for the set of these children.
+Let $C$ be the subtree of $T$ consisting of precisely those
+nonterminal occurrences that have a marked terminal leaf
+among their descendants (equivalently, the union of the
+root-to-marked-leaf paths). Its leaves are precisely the $m$
+marked terminal-production occurrences. Each internal node
+of $C$ has either one or two children in $C$.
+Write $F$ for its leaves, $U$ for its nodes with exactly one
+child in $C$, and $J$ for its nodes with two children in $C$.
+For $z\in U$, write $s(z)$ for the other child of $z$ in $T$.
+The subtrees rooted at the $s(z)$ are pairwise disjoint,
+contain no marked leaves, and together contain every
+unmarked terminal leaf of $T$. Thus, writing $y(t)$ for
+the terminal yield at an occurrence $t$, we have
+\begin{equation}\label{eq:fixed-window-core-partition}
+ |w|=m+\sum_{z\in U}|y(s(z))|.
+\end{equation}
 
-The positions of the letters that must be preserved are
-$P:=\{1,\ldots,k\}\cup\{n-\ell+1,\ldots,n\}$, with an
-empty set on either side when the corresponding parameter
-is zero.  Thus $|P|=m$ and the positions outside $P$
-are exactly those occupied by $x$.
-Define
+First, every $s(z)$ generates a shortest terminal word of
+its nonterminal label. Indeed, replacing that subtree by
+any shorter terminal derivation from the same nonterminal
+would change only the middle factor $x$. The resulting
+word would still have prefix $u$, suffix $v$, and length
+at least $m$; hence it would still have type $\mu$,
+contrary to the choice of $w$. Since every such label is
+a non-start symbol, it follows that
+$|y(s(z))|\le\tau_G$ for all $z\in U$.
+
+Second, no two nodes on the same maximal one-child segment
+of $C$ have the same nonterminal label. More precisely,
+suppose $z$ is a proper ancestor of $z'$ and every node on
+the path from $z$ to the parent of $z'$ lies in $U$.
+If $z$ and $z'$ had the same label, we could replace the
+subtree rooted at $z$ by the subtree rooted at $z'$.
+This is a valid derivation from the same nonterminal. It
+deletes the nonempty yields of one or more off-$C$ children,
+while retaining all marked leaves in their original order.
+Consequently the new yield is a strictly shorter word
+$ux'v$ of the same type $\mu$, a contradiction.
+Every such one-child segment therefore contains at most
+$N$ nodes.
+
+It remains to count the segments. Since $C$ is a finite
+rooted tree with $m$ leaves and all internal degrees one
+or two, counting its edges yields
+$|U|+2|J|=|F|+|U|+|J|-1$, so $|J|=m-1$.
+Every node $z\in U$ lies on the unique one-child segment
+leading down to the first node of $F\cup J$ reached by
+following the unique child in $C$.
+These segments partition $U$ and are indexed by nodes of
+$F\cup J$, of which there are $m+(m-1)=2m-1$.
+Thus $|U|\le(2m-1)N$. Combining this with~\eqref{eq:fixed-window-core-partition} gives
 \[
-\begin{aligned}
-\mathcal A&:=\{z\in\operatorname{Occ}(T):I(z)\cap P\ne\varnothing\},\\
-\mathcal D&:=\{z\in\mathcal A:
-  |\{z'\in\operatorname{Ch}(z):I(z')\cap P\ne\varnothing\}|=1\},\\
-\mathcal J&:=\{z\in\mathcal A:
-  |\{z'\in\operatorname{Ch}(z):I(z')\cap P\ne\varnothing\}|=2\},\\
-\mathcal R&:=\{z'\in\operatorname{Occ}(T):
-  \exists z\in\mathcal D,\ z'\in\operatorname{Ch}(z),\
-  I(z')\cap P=\varnothing\}.
-\end{aligned}
+ |\omega(A_\mu)|=|w|
+ \le m+|U|\tau_G
+ \le m+(2m-1)N\tau_G
+ =\theta_{k,\ell}(G),
 \]
-Let $\mathcal F$ be the occurrences of terminal productions
-whose intervals meet $P$.  Each such interval is a singleton,
-so $|\mathcal F|=m$ and
-$\mathcal A=\mathcal F\mathbin{\dot\cup}\mathcal D
-\mathbin{\dot\cup}\mathcal J$.
-Every $z\in\mathcal D$ has one child in $\mathcal A$
-and exactly one other child in $\mathcal R$.
-Consequently $|\mathcal R|=|\mathcal D|$.
-Moreover, for any terminal occurrence outside $\mathcal F$,
-the first occurrence on its ancestor chain whose interval
-does not meet $P$ has its parent in $\mathcal D$ and belongs
-to $\mathcal R$.  This occurrence is unique.
-Thus the derivations at the occurrences in $\mathcal R$
-are pairwise disjoint; their terminal yields, together
-with the $m$ distinguished letters, partition $w$.
-For every $r\in\mathcal R$,
-$I(r)\subseteq\{k+1,\ldots,n-\ell\}$.
-
-There are two shortening operations.  First, for
-$r\in\mathcal R$, replace its derivation by any terminal
-derivation from the same nonterminal $B(r)$.
-This changes a factor occurring wholly inside $x$.
-Second, let $z$ be a proper ancestor of $z'$ such that
-all occurrences on the path from $z$ to the parent of $z'$
-belong to $\mathcal D$ and $B(z)=B(z')$.
-Replace the derivation at $z$ by that at $z'$.
-This is again a valid derivation from the same nonterminal.
-Each removed sibling along this path has an interval
-disjoint from $P$, because the parent has exactly one
-child in $\mathcal A$.  Thus only factors inside $x$
-are deleted.  Both operations therefore change
-$w=uxv$ into a word $ux'v$ with $x'\in\Sigma^*$.
-Since $|ux'v|\ge m$, the definition of the long-word
-type gives $h_{k,\ell}(ux'v)=\langle u,v\rangle=\mu$.
-
-The minimality of $|w|$ first implies that every
-$r\in\mathcal R$ already generates a shortest
-terminal yield of $B(r)$.  Otherwise the first
-operation would shorten $w$ without changing its type.
-Hence $|y(r)|=\min\{|t|:t\in L_G(B(r))\}\le\tau_G$.
-
-To bound $|\mathcal R|$, put
-$\mathcal E:=\mathcal F\cup\mathcal J$.
-For each $z\in\mathcal D$, repeatedly follow the
-unique child in $\mathcal A$ until reaching the
-first occurrence in $\mathcal E$, and denote it by
-$\phi(z)$.  The process terminates because the
-derivation is finite, and each active occurrence
-belongs to exactly one of $\mathcal F,\mathcal D,\mathcal J$.
-Thus $\phi:\mathcal D\to\mathcal E$ is a function.
-For fixed $e\in\mathcal E$, the occurrences of
-$\phi^{-1}(\{e\})$ lie on the same ancestor chain,
-and every occurrence between any two of them,
-excluding the lower endpoint, belongs to $\mathcal D$.
-If two distinct occurrences $z$ and $z'$ in this
-fiber, with $z$ above $z'$, had $B(z)=B(z')$,
-the second operation would delete at least one
-nonempty sibling yield and hence strictly shorten $w$,
-while preserving $\mu$.  This is impossible.
-Therefore the labels on each fiber are pairwise
-distinct, giving $|\phi^{-1}(\{e\})|\le N$.
-
-The occurrences in $\mathcal A$ form a connected,
-finite rooted substructure of the derivation.
-Its number of occurrences is
-$|\mathcal A|=m+|\mathcal D|+|\mathcal J|$.
-Counting its parent--child links instead gives
-$|\mathcal A|-1=|\mathcal D|+2|\mathcal J|$.
-Hence $|\mathcal J|=m-1$ and
-$|\mathcal E|=|\mathcal F|+|\mathcal J|=2m-1$.
-Using the fibers of $\phi$, we obtain
-$|\mathcal R|=|\mathcal D|
-=\sum_{e\in\mathcal E}|\phi^{-1}(\{e\})|
-\le(2m-1)N$.
-Finally, by the partition of terminal positions above,
-$|w|=m+\sum_{r\in\mathcal R}|y(r)|
-\le m+|\mathcal R|\tau_G
-\le m+(2m-1)N\tau_G=\theta_{k,\ell}(G)$.
-Since $w=\omega(A_\mu)$, the lemma follows.
+as claimed.
 \end{proof}
+
 
 \subsection{Thickness-preserving SSBNF normalization}
 \label{app:thick-ssbnf}
