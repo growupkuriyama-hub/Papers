@@ -79,11 +79,11 @@ research: here the learning bias instead fixes a finite-monoid typing
 of terminal factors and requires distributional substitutability.
 
 \paragraph{Historical priority and general signature learning.}
-This paper is a substantially corrected and extended version of the author's
-2014 preprint~\cite{kuriyama2014}, which introduced substitutability
+This paper substantially corrects and extends the author's 2014 preprint
+(versions v1--v3)~\cite{kuriyama2014}, which introduced substitutability
 relative to recognizable equivalence relations and proposed positive-data
 learning in that setting. The 2014 preprint predates the publication of
-Yoshinaka's general many-sorted signature account~\cite{yoshinaka2015};
+Yoshinaka's general framework of signatures with disjoint sorts~\cite{yoshinaka2015};
 this chronology concerns the earlier formulation, not the validity of all
 proofs or quantitative claims in that preliminary version.
 In Yoshinaka's framework, for the finite-monoid homomorphism
@@ -96,10 +96,11 @@ Consequently, the \emph{existence} of a positive-data learner for a fixed
 $h$ is also covered by the qualitative signature-based result of
 \cite[Theorem~1]{yoshinaka2015}; our particular batch and sequential
 constructions are analyzed directly here.
-The finite-monoid-specific contributions are the algebraic fixed-window
-criterion and closure-by-retyping results, the \emph{encoded size} bounds
-for characteristic data (rather than only witness cardinality), and the
-linear and expressive-boundary results. The broader distributional
+The finite-monoid-specific contributions are closure under finite retyping,
+the \emph{encoded size} bounds for characteristic data (rather than only
+witness cardinality), their extension from fixed windows to window--finite-group
+typings, and the linear and expressive-boundary results. The locally trivial
+semigroup criterion underlying fixed windows is classical. The broader distributional
 learning setting is surveyed by Clark and Yoshinaka~\cite{clark-yoshinaka2016};
 local substitutability is studied by Coste, Garet, and
 Nicolas~\cite{coste-garet-nicolas2012} and Coste and Nicolas~\cite{coste-nicolas2019}.
@@ -385,10 +386,11 @@ fixed-window substitutable languages are not closed under intersection
 with regular languages or inverse images under homomorphisms that may erase.
 In contrast, they are closed under inverse images of nonerasing
 homomorphisms: for such a morphism $\varphi$, equality of fixed
-$k$-prefixes and $\ell$-suffixes is preserved by $\varphi$
-(for factors shorter than the window threshold, equality of types
-already forces equality of words). Hence the fixed-window
-substitutability implication pulls back along $\varphi$.
+$k$-prefixes and $\ell$-suffixes is preserved by $\varphi$.
+Indeed, $|\varphi(p)|\ge k$ for $p\in\Sigma^k$, so the first $k$
+letters of $\varphi(prq)$ depend only on $p$, and the suffix case
+is symmetric; short factors of equal window type are identical.
+Thus the fixed-window substitutability implication pulls back along $\varphi$.
 The following proposition shows that regular filtering
 and erasing inverse images can be accommodated by changing the finite typing.
 
@@ -522,6 +524,11 @@ coding, hence have equal $h_{k,\ell}$-type; fixed-$h_{k,\ell}$
 substitutability transfers the third context and yields the fourth word.
 \end{proof}
 
+Yoshinaka~\cite[Example~4]{yoshinaka2015} already represented
+$(k,\ell)$-substitutability by the sorted signature $\Sigma_{k,\ell}$.
+Proposition~\ref{prop:yl-special} makes the inducing finite-monoid
+morphism explicit; no priority for the window-signature encoding is claimed.
+
 \phantomsection\label{crit:kl}
 \paragraph{Fixed-window counterexample criterion.}
 If $x,y$ have length at least $\max\{1,k+\ell\}$, the same length-$k$
@@ -560,7 +567,7 @@ sense, each update taking time polynomial in the data seen so far;
 homomorphic image of a subsemigroup of the direct product of
 a finite locally trivial semigroup and a finite group,
 then for every nonempty target the sample in~(ii) can be chosen polynomial in $|G_*|$
-and $\tau_{G_*}$ for any reduced CFG $G_*$ representing that target;
+and $\tau_{G_*}+1$ for any reduced CFG $G_*$ representing that target;
 this includes every fixed-window and every finite-group typing;
 \item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can
 be chosen polynomial in $|G_*|$ for any linear CFG $G_*$ representing $L$.
@@ -608,8 +615,10 @@ The same equality holds after intersecting both sides with $\mathrm{CFL}$.
 Assume (i) and put $S=h(\Sigma^+)$, $n=|S|+1$. Then
 $S^n=SE(S)S$, and local triviality also implies $esf=ef$ for
 all $e,f\in E(S)$ and every $s\in S$
-\cite[Corollary~II.6.35 and Proposition~XI.4.17]{pin2025}:
-indeed, $fef=f$ and $e(sf)e=e$, whence
+\cite[Corollary~II.6.35 and Proposition~XI.4.17]{pin2025}.
+In the factorization $S^n=SE(S)S$, an empty terminal suffix
+may be replaced by the idempotent itself ($e=e^2$).
+For the latter identity, indeed, $fef=f$ and $e(sf)e=e$, whence
 $esf=es(fef)=(esfe)f=ef$.
 Thus for $p,q\in\Sigma^n$
 we may write $h(p)=aeb$, $h(q)=cfd$, with $e,f$ idempotent, and obtain
@@ -1352,7 +1361,12 @@ Proposition~\ref{prop:linear-normal}.  Lemma~\ref{lem:linear-short} gives
 $\tau_h^{\mathrm{typ}}(G_0)\le N_t\le
 |V_0\setminus\{S_0\}|\,|M|$, and
 Corollary~\ref{cor:typed-thickness-data} yields a characteristic sample
-polynomial in $|G_0|\le q_{\mathrm{lin}}(|G|)$.
+polynomial in $|G_0|\le q_{\mathrm{lin}}(|G|)$. More explicitly, with
+$N_0:=|V_0\setminus\{S_0\}|$, the bound in
+Lemma~\ref{lem:typed-thickness-bound} gives
+$\|\WitnessSet(\widetilde G_0)\|=O(|G_0|^3|M|^4)$;
+the polynomial dependence on the original $|G|$ also uses
+the normalization bound $q_{\mathrm{lin}}$.
 \end{proof}
 
 Together with Theorem~\ref{thm:poly-build}, this gives
@@ -1517,7 +1531,10 @@ Applying this characterization to the canonical completion
 $a^qxb^{q+\beta(x)}$ (whose boundaries with $x$ introduce no new
 $ba$ factor) shows that $\mathcal Q(x)$ is exactly
 the set of heights $\beta(u)$ at which $x$ occurs in a word
-$uxv\in\Delta^*$.
+$uxv\in\Delta^*$. For the converse direction, reading $x$ from
+height $\beta(u)$ in such a word preserves all internal nonnegativity
+and $ba$-boundary conditions; its canonical completion therefore
+belongs to $\Delta^*$.
 
 For example,
 $\mathcal Q(ab)=\mathbb Z_{\ge0}$,
@@ -1889,7 +1906,8 @@ $N$ and $q$ choices. Hence every node has depth less than $H$.
 Call $z$ \emph{essential} if $M(z)\ne\varnothing$ or
 $|y(z)|>\tau_G$, and let $E$ be the set of essential nodes.
 At any fixed depth, at most $m$ nodes of $E$ meet $\Pi$.
-Suppose $q$ further essential nodes $z_1,\ldots,z_q$ occur,
+If a depth contains at least $m+q$ essential nodes, at least $q$
+of them do not meet $\Pi$; choose $z_1,\ldots,z_q$ among these,
 ordered from left to right. Their disjoint yields
 $a_i:=y(z_i)$ lie inside $\beta$ and satisfy $|a_i|>\tau_G$.
 Choose $b_i\in L_G(B(z_i))$ with $|b_i|\le\tau_G$, and write
@@ -2147,8 +2165,8 @@ E76-D(10):1224--1233, 1993.
 \bibitem{kuriyama2014}
 T.~Kuriyama.
 \newblock \emph{Learning Algorithm for Relation-Substitutable Context-Free Languages}.
-\newblock arXiv:1409.6247, originally posted in 2014 (v3: November 2014).
-\newblock \url{https://arxiv.org/abs/1409.6247}.
+\newblock arXiv:1409.6247v3, November 2014 (historical version).
+\newblock \url{https://arxiv.org/abs/1409.6247v3}.
 
 \bibitem{yoshinaka2015}
 R.~Yoshinaka.
