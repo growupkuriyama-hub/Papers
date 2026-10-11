@@ -46,13 +46,35 @@ def locate(section_or_statement):
             number = "1"
         else:
             return None
-        heading = re.compile(r"^\s*(?:\d{1,4}\s+)?"
-                             + re.escape(number) + r"(?![.\d])\s+[A-Za-z]")
+        # Match known titles, not incidental prose such as "A separate".
+        titles = {
+            "1": "Introduction", "2": "Preliminaries",
+            "3": "Fixed Recognizable Substitutability",
+            "4": "Reconstruction Operator", "5": "Finite Witnesses",
+            "6": "Typed Thickness", "7": "Polynomial Thick Data",
+            "8": "The Linear Subclass", "9": "Expressiveness",
+            "A": "Fixed-window", "B": "Proof of the linear-spine",
+            "C": "Proof of the short",
+        }
+        prefix = titles.get(number)
+        if prefix:
+            heading = re.compile(r"^\s*(?:\d{1,4}\s+)?"
+                                 + re.escape(number) + r"\s+"
+                                 + re.escape(prefix), re.I)
+        else:
+            heading = re.compile(r"^\s*(?:\d{1,4}\s+)?"
+                                 + re.escape(number) + r"(?![.\d])\s+[A-Za-z]")
     for page_number, lines in enumerate(pages, 1):
         for j, line in enumerate(lines):
             if not heading.search(line):
                 continue
             number_at_anchor = margin_number(line)
+            # Distinguish a heading's section number (e.g. "9 Expressiveness")
+            # from an actual PDF margin line number.
+            if (not statement and number.isdigit()
+                    and number_at_anchor == int(number)
+                    and not re.search(r"\s{2,}\d{1,4}\s*$", line)):
+                number_at_anchor = None
             if number_at_anchor is None:
                 # pdftotext sometimes emits a displayed heading and its
                 # margin number on different consecutive text lines.
