@@ -48,8 +48,8 @@ def locate(section_or_statement):
             return None
         # Match known titles, not incidental prose such as "A separate".
         titles = {
-            "A": "Fixed-window", "B": "Proof of the linear-spine",
-            "C": "Proof of the short",
+            "A": "Fixed-window", "B": "Proof",
+            "C": "Proof",
         }
         prefix = titles.get(number)
         if prefix:
