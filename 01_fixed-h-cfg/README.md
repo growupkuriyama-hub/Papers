@@ -11,6 +11,14 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v176 — 2026-10-11 Appendix A.1 shortest-fiber pruning proof (EN/JP)
+
+- Reworked the Lemma 7.1 Appendix proof around a single shortest-fiber replacement principle, a strict full-tree height bound, a finite-group width argument, and a maximal nonessential-subtree count.
+- Replaced the old conjugated group corrections with paired prefix products `r_j,s_j` and `x_j=s_j r_j^{-1}`; the equality of two `x_j` yields equality of group values for a consecutive replacement block by cancellation, without commutativity.
+- Explicitly justified shorter ancestor-to-descendant replacements using SSBNF binary branching and separated the small-window case.
+- Preserved all theorem statements, group assumptions, labels, and the precise thickness bound `m+[1+2(m+q-1)(m+1)Nq] tau_G`.
+- Synchronized English Clean source, Japanese proof, response 49 items / 73 source-line spans and SHA-256 metadata. Additions-marked PDF page/paragraph/margin-line audit remains pending.
+
 ## v175 — 2026-10-11 concise elementary proof (EN/JP)
 
 - Condensed Corollary 7.4's proof without omitting the letterwise product definition, the reason it is a semigroup homomorphism, the convention for S union {1}, or the kernel inclusion.
