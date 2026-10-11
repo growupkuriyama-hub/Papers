@@ -18,6 +18,7 @@
 - The linear-subclass proof now displays the normalized-grammar encoded witness bound O(|G_0|^3 |M|^4), without asserting that degree for unnormalized input grammars.
 - Revised main theorem item (iv) to use tau_{G_*}+1 for nullable-presentation clarity; no theorem scope or bound is strengthened.
 - Updated the reviewer response overview, and modified marked-reviewer package generation to require observed PDF page/margin-line anchors for all 49 response items. Do not treat the journal package as final until the workflows and PDF locator audit succeed.
+- Automated checks passed: English and Japanese clean PDFs, additions-marked revised PDF, and reviewer-response PDF. The 49 response items have 73 checked marked-PDF page/margin-line anchors; final Editorial Manager selection and upload remain separate.
 - No arXiv version change and no Editorial Manager resubmission.
 
 ## v176 — 2026-10-11 Appendix A.1 shortest-fiber pruning proof (EN/JP)
