@@ -11,6 +11,14 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v170 — 2026-10-11 concise typing-adequacy discussion (EN/JP)
+
+- Compressed the Section 3 "When is a typing useful?" discussion into one paragraph on finite-index congruence separation and quantitative cost.
+- Removed repeated refinement/product explanation and the local Clark--Eyraud language example; strengthened the final contrast by noting that refining the entire syntactic congruence would force regularity.
+- The finite-monoid obstruction lemma, exponential typed-thickness gap, and Sections 7--8 sufficient-regime references remain explicit, preserving R2.1 typing-bias coverage.
+- Main theorems, hypotheses, proofs, examples elsewhere, and typed-thickness bounds unchanged. English Clean mirror identical to source; Japanese source and hashes refreshed.
+- R2.1 reviewer response synchronized; 73 TeX source-line spans remapped against v170. Final additions-marked PDF page/paragraph/margin-line audit is still pending.
+
 ## v169 — 2026-10-11 Claude-review clarity corrections (EN/JP)
 
 - Clarified SSBNF lexical leaves, essential-set ancestor closure and depth levels, and coverage of unprotected positions.
