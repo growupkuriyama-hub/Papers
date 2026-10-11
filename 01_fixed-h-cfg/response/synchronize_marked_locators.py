@@ -64,32 +64,53 @@ for line, number, title in start_points:
     if p:
         number_pages[number] = p
 
+# Use the actual compiled LaTeX .aux page references whenever available.
+# These are more reliable than matching headings in a text extraction
+# (added markup may interrupt PDF text or a heading may be quoted earlier).
+aux_path = root / "main_marked_round1.aux"
+if not aux_path.exists():
+    raise SystemExit("No marked PDF auxiliary file to validate section pages")
+aux_text = aux_path.read_text(errors="replace")
+label_pages = {
+    lab: int(pg)
+    for lab, pg in re.findall(
+        r"\\newlabel\{([^}]+)\}\{\{[^}]*\}\{(\d+)\}",
+        aux_text
+    )
+}
+for lino, number, title in start_points:
+    # Section labels can occur on the heading line or the following line.
+    neighborhood = "\n".join(source_lines[lino - 1:lino + 2])
+    for label in re.findall(r"\\label\{([^}]+)\}", neighborhood):
+        if label in label_pages:
+            number_pages[number] = label_pages[label]
+            break
+
 def near_source_page(lno):
     previous = [number_pages[num] for i, num, title in start_points if i <= lno and num in number_pages]
     return previous[-1] if previous else None
 
-def resolve_row(row):
-    # Find the first explicitly named statement in the cited revision location.
-    refs = re.findall(r"(?:Definition|Theorem|Proposition|Lemma|Corollary)\s+\d+\.\d+", row)
+def resolve_segment(segment):
+    refs = re.findall(
+        r"(?:Definition|Theorem|Proposition|Lemma|Corollary)\s+\d+\.\d+",
+        segment
+    )
     for ref in refs:
-        # Require a declaration-like occurrence, not a mention in prose.
-        pattern = r"^\s*(?:\d{1,4}\s+)?"+re.escape(ref)+r"(?:\.|\s|\()"
+        pattern = r"^\s*(?:\d{1,4}\s+)?" + re.escape(ref) + r"(?:\.|\s|\()"
         p = where_page(pattern, True)
         if p:
             return p
-    sections = re.findall(r"Sections?\s+(\d+(?:\.\d+)?)", row)
-    for sec in sections:
-        if sec in number_pages:
-            return number_pages[sec]
-    ranges = re.findall(r"\(source ll?\.~(\d+)(?:--\d+)?\)", row)
-    for start in ranges:
-        p = near_source_page(int(start))
-        if p:
-            return p
-    if "Introduction" in row:
+    sec = re.search(r"Sections?\s+(\d+(?:\.\d+)?)", segment)
+    if sec and sec.group(1) in number_pages:
+        return number_pages[sec.group(1)]
+    app = re.search(r"Appendices?\s+([A-C])", segment)
+    if app and app.group(1) in number_pages:
+        return number_pages[app.group(1)]
+    if "Introduction" in segment:
         return number_pages.get("1", 1)
-    if "Appendix" in row:
-        return number_pages.get("A")
+    source = re.search(r"\(source ll?\.~(\d+)(?:--\d+)?\)", segment)
+    if source:
+        return near_source_page(int(source.group(1)))
     return None
 
 s = response.read_text()
@@ -99,16 +120,18 @@ s = re.sub(
     "% Response synchronized to the compiled additions-marked manuscript PDF.\n"
     "% Locator pages are verified PDF page anchors, not guessed margin lines.\n",
     s, count=1)
-anchor = s.index(r"\noindent\textbf{Revised-manuscript locator (")
+old_header = r"\noindent\textbf{Revised-manuscript locator ("
+new_header = r"\noindent\textbf{Locator guide for the additions-marked revised PDF.}"
+anchor = s.index(old_header) if old_header in s else s.index(new_header)
 endtable = s.index(r"\end{longtable}", anchor)
 table_start = s.index(r"\begingroup", anchor)
 prefix = (
     r"\noindent\textbf{Locator guide for the additions-marked revised PDF.}" "\n"
-    "Each row gives a stable revised section/statement reference and a PDF page\n"
-    "on which the first listed anchor occurs. The page refers to the compiled\n"
-    r"\texttt{TCS-D-26-00494\_Manuscript\_Marked.pdf}, not source TeX lines."
-    " Pagination can differ from the clean manuscript; PDF margin-line\n"
-    "numbers are deliberately not asserted without a separate audit.\n"
+    "Each cited section or theorem-like statement below is accompanied by\n"
+    "the page on which its anchor appears in the compiled additions-marked\n"
+    r"\texttt{TCS-D-26-00494\_Manuscript\_Marked.pdf}. "
+    "Pages are PDF pages, not TeX source lines. Margin-line numbers are not\n"
+    "asserted without a separate audit.\n"
 )
 s = s[:anchor] + prefix + s[table_start:]
 anchor = s.index(r"\noindent\textbf{Locator guide")
@@ -122,13 +145,23 @@ resolved = 0
 def subrow(m):
     global resolved
     key, details = m.groups()
-    page = resolve_row(details)
-    # Remove stale *source* line spans while keeping all stable anchors.
-    details = re.sub(r"\s*\(source ll?\.~\d+--\d+\)", "", details)
-    if page is not None:
+    # Idempotence: the checked-in response may already have an earlier
+    # marked-PDF page mapping from the preceding generation.
+    details = re.sub(r";?\s*marked PDF p\.~\d+", "", details)
+    chunks = [c.strip() for c in details.split(";") if c.strip()]
+    rendered = []
+    mapped = False
+    for chunk in chunks:
+        page = resolve_segment(chunk)
+        chunk = re.sub(r"\s*\(source ll?\.~\d+--\d+\)", "", chunk).strip()
+        if page is not None:
+            chunk += rf" (marked PDF p.~{page})"
+            mapped = True
+        rendered.append(chunk)
+    if mapped:
         resolved += 1
-        details = details.rstrip() + rf"; marked PDF p.~{page}"
-    return key + " & " + details + r"\\"
+    return key + " & " + "; ".join(rendered) + r"\\"
+
 region = rpat.sub(subrow, region)
 if resolved < 44:
     raise SystemExit(f"Only {resolved}/49 marked PDF locator anchors resolved")
