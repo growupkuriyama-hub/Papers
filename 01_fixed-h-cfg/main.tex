@@ -48,8 +48,8 @@ when the positive image is a homomorphic image of a subsemigroup of
 a product of a locally trivial finite semigroup and a finite group.
 The union of locally trivial slices coincides with Yoshinaka's
 fixed-window hierarchy.
-For linear targets, characteristic data are polynomial in linear
-grammar size for every fixed $h$. We also exhibit nonregular linear
+For linear targets, characteristic data for the set-driven operator are
+polynomial in linear grammar size for every fixed $h$. We also exhibit nonregular linear
 and nonlinear context-free targets outside every fixed-window class,
 while the one-bracket Dyck language lies outside every fixed-typing class.
 \end{abstract}
@@ -163,7 +163,10 @@ connection with Takada's regular control-set approach
 The paper has three main contributions.
 
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
-\item \emph{Learning for fixed $h$.}  A set-driven reconstruction operator
+\item \emph{Learning for fixed $h$.}  The qualitative existence of a
+positive-data learner follows also from Yoshinaka's general many-sorted
+framework; it is not claimed as a new consequence of finite-monoid typing.
+Here a set-driven reconstruction operator
 $\mathcal B_h$ reconstructs every target in $\Ccf{h}$ exactly from finitely
 many canonical positive witnesses, and a separate conservative sequential
 learner $\mathcal A_h$ identifies every nonempty target in Gold's sense;
@@ -172,15 +175,18 @@ reconstruction and updates take time polynomial in the accumulated sample.
 \item \emph{Quantitative guarantees.}  For arbitrary fixed $h$, we bound
 the characteristic data by grammar size and by the shortest terminal yields
 after target nonterminals are split according to their $h$-values.  When the finite typing is refined by a fixed prefix--suffix window
-and a finite-group value, ordinary source-grammar thickness suffices.
+and a finite-group value, ordinary source-grammar thickness suffices,
+recovering Yoshinaka's fixed-window regime and extending the bound
+to finite-group refinements.
 Linear fixed-$h$ targets admit characteristic data polynomial in the size of a
 linear CFG.  We also show that the shortest yields after splitting can be
 exponentially longer than those in the source grammar.
 
 \item \emph{Structural and expressive position.}  We establish
 closure properties obtained by finite refinement and product of typings
-(rather than closure of a single fixed-$h$ slice), characterize finite
-typings determined by fixed prefix--suffix windows, and relate
+(rather than closure of a single fixed-$h$ slice), record the classical
+criterion for finite typings determined by fixed prefix--suffix windows,
+and relate
 linear yield typing to regular control sets.  Explicit
 nonregular linear and nonlinear examples lie beyond fixed windows;
 counter/Dyck obstructions and comparison with Clark's congruential
@@ -378,7 +384,12 @@ Yoshinaka~\cite[Proposition~1]{yoshinaka2008} showed that
 fixed-window substitutable languages are not closed under intersection
 with regular languages or inverse images under homomorphisms that may erase.
 In contrast, they are closed under inverse images of nonerasing
-homomorphisms.  The following proposition shows that regular filtering
+homomorphisms: for such a morphism $\varphi$, equality of fixed
+$k$-prefixes and $\ell$-suffixes is preserved by $\varphi$
+(for factors shorter than the window threshold, equality of types
+already forces equality of words). Hence the fixed-window
+substitutability implication pulls back along $\varphi$.
+The following proposition shows that regular filtering
 and erasing inverse images can be accommodated by changing the finite typing.
 
 \begin{proposition}[closure under finite information]\label{prop:finite-info-closure}
@@ -597,7 +608,9 @@ The same equality holds after intersecting both sides with $\mathrm{CFL}$.
 Assume (i) and put $S=h(\Sigma^+)$, $n=|S|+1$. Then
 $S^n=SE(S)S$, and local triviality also implies $esf=ef$ for
 all $e,f\in E(S)$ and every $s\in S$
-\cite[Corollary~II.6.35 and Proposition~XI.4.17]{pin2025}.
+\cite[Corollary~II.6.35 and Proposition~XI.4.17]{pin2025}:
+indeed, $fef=f$ and $e(sf)e=e$, whence
+$esf=es(fef)=(esfe)f=ef$.
 Thus for $p,q\in\Sigma^n$
 we may write $h(p)=aeb$, $h(q)=cfd$, with $e,f$ idempotent, and obtain
 $h(prq)=a\,e\,(b\,h(r)\,c)\,f\,d=aefd=h(pq)$
@@ -644,7 +657,7 @@ not denote a quotient class.  For observed nonempty factors $x,y$, write
 \]
 The grammar $\mathcal B_h(K)$ has nonterminal set
 $\widehat V(K)\cup\{\widehat S\}$, start symbol $\widehat S$, and the following
-productions whenever every displayed bracketed nonterminal belongs to
+\emph{set} of productions whenever every displayed bracketed nonterminal belongs to
 $\widehat V(K)$:
 \[
 \begin{array}{rll}
@@ -1007,8 +1020,10 @@ $|\mathcal O_K||K|=O(n_K^3)$ of them.
 Lexical and start rules are lower-order.
 For each candidate, string matching and explicit encoding and
 output of the production take $O(n_K)$ time.
-Duplicate productions need not be removed during enumeration,
-as they do not affect the generated language.
+Repeated candidate productions are represented by a single rule in
+the output set, so the grammar depends only on $K$, not on an
+occurrence-enumeration order.  Duplicate insertion can be eliminated
+within the same bound using a trie of the explicit rule encodings.
 Thus $\mathcal B_h(K)$ is constructible in $O(n_K^4)$ time.
 \end{proof}
 
@@ -1263,11 +1278,34 @@ Apply Theorem~\ref{thm:window-thick} and
 Proposition~\ref{prop:thick-ssbnf-normal}.
 \end{proof}
 
+For clarity, let $\mathbf{LI}$ be the pseudovariety of finite locally
+trivial semigroups and $\mathbf G$ that of finite groups, regarded as
+finite semigroups.  Since both classes are closed under finite direct
+products, their pseudovariety join $\mathbf{LI}\vee\mathbf G$
+consists exactly of the divisors (homomorphic images of subsemigroups)
+of products $S\times Q$ with $S\in\mathbf{LI}$ and $Q\in\mathbf G$.
+Joins involving locally trivial semigroups have been studied by
+Costa~\cite{costa2002li,costa2002lig}; our contribution here concerns
+the quantitative grammar-learning consequence.
+For this \emph{fixed typing} $h$, the existence of $k,\ell,g$ in the
+kernel-refinement hypothesis of Theorem~\ref{thm:window-thick}
+is equivalent to $h(\Sigma^+)\in\mathbf{LI}\vee\mathbf G$.
+In the forward direction $h(\Sigma^+)$ is a quotient of
+$(h_{k,\ell}\times g)(\Sigma^+)$, a subsemigroup of a product
+of a locally trivial semigroup and a group; in the reverse direction
+the lift in the proof of Corollary~\ref{cor:li-thickness} supplies
+$k,\ell,g$.  Thus the corollary reformulates the same typing
+condition and, using Proposition~\ref{prop:thick-ssbnf-normal},
+extends the quantitative conclusion from SSBNF grammars to arbitrary
+reduced CFG presentations.  This does \emph{not} characterize the
+typings admitting polynomial data bounds in general.
+
 The empty target has the empty characteristic sample.
 Polynomials may depend on the fixed typing and alphabet.
-We do not claim that this sufficient condition is necessary,
-nor bounds uniform in variable windows or groups,
-nor an incremental polynomial-data guarantee for the sequential learner.
+We claim neither necessity of the displayed algebraic condition
+for polynomial data bounds, nor bounds uniform in variable windows
+or groups, nor an incremental polynomial-data guarantee for the
+sequential learner.
 
 \section{The Linear Subclass}
 \label{sec:linear}
@@ -1468,8 +1506,18 @@ For any word $x$, define its \emph{admissible entry-height set} by
  q+\beta(x)\ge0,\quad
  a^qxb^{q+\beta(x)}\in\Delta^*\}.
 \]
-This is exactly the set of heights $\beta(u)$ at which $x$ occurs
-in a word $uxv\in\Delta^*$.
+A useful local characterization is that $w\in\Delta^*$ if and only if
+all prefix heights of $w$ are nonnegative, $\beta(w)=0$, and
+immediately after the $b$ in every occurrence of $ba$ the height is
+zero.  Indeed, the $ba$ boundaries split $w$ into blocks of the
+form $a^ib^j$; the stated conditions force each block to start and
+end at height zero and hence to have $i=j$.  Conversely,
+every concatenation of such blocks has the stated properties.
+Applying this characterization to the canonical completion
+$a^qxb^{q+\beta(x)}$ (whose boundaries with $x$ introduce no new
+$ba$ factor) shows that $\mathcal Q(x)$ is exactly
+the set of heights $\beta(u)$ at which $x$ occurs in a word
+$uxv\in\Delta^*$.
 
 For example,
 $\mathcal Q(ab)=\mathbb Z_{\ge0}$,
@@ -1620,9 +1668,9 @@ The bound $\rho\ge2$ is sharp\footnote{Indeed,
 $\mathrm{CTR}_1$ is $(1,1)$-substitutable. Membership is characterized
 by the initial symbol not being $\downarrow$ and the absence
 of the length-$2$ factors $\uparrow\uparrow$,
-$\downarrow\downarrow$, and $\#\downarrow$. Thus, for nonempty
-admissible factors with a common context, equality of their
-first and last symbols ensures equal membership under every context.}.
+$\downarrow\downarrow$, and $\#\downarrow$. Thus, for nonempty factors occurring in words of $\mathrm{CTR}_1$
+with a common context, equality of their first and last symbols
+ensures equal membership under every context.}.
 The DFA transition monoid gives a typing $h_\rho$
 recognizing each regular $\mathrm{CTR}_\rho$; only $\rho\ge2$
 lies outside the fixed-window hierarchy.
@@ -2051,6 +2099,19 @@ Springer, 1997.
 S.~Eilenberg.
 \newblock \emph{Automata, Languages, and Machines}, Vol.~A.
 \newblock Academic Press, 1974.
+
+\bibitem{costa2002li}
+J.~C.~Costa.
+\newblock Some pseudovariety joins involving locally trivial semigroups.
+\newblock \textit{Semigroup Forum}, 64(1):12--28, 2002.
+\newblock doi:10.1007/s002330010060.
+
+\bibitem{costa2002lig}
+J.~C.~Costa.
+\newblock Some pseudovariety joins involving groups and locally trivial semigroups.
+\newblock In \textit{Semigroups, Algorithms, Automata and Languages},
+pp.~341--348, World Scientific, 2002.
+\newblock doi:10.1142/9789812776884\_0013.
 
 \bibitem{pin2025}
 J.-E.~Pin.
