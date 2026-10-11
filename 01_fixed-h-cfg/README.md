@@ -11,16 +11,22 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v173 — 2026-10-11 uniform subsemigroup-image terminology (EN/JP)
+
+- Standardized all live statements and explanations to **homomorphic image of a subsemigroup** (EN) / **部分半群の準同型像** (JP), including Main Theorem (iv), Corollary 7.4 and its proof, scope limitations, conclusion, and referee response.
+- The algebraic condition and all mathematical results remain unchanged; removed the alternative technical term rather than weakening the hypothesis.
+- Synchronized English Clean mirror, Japanese translation, reviewer-response 49 items / 73 source-line spans, and SHA-256 metadata. Marked PDF margin/page audit remains pending.
+
 ## v172 — 2026-10-11 explicit window–group product notation (EN/JP)
 
 - Dropped the local shorthand `t := h_{k,ell} × g` throughout Lemma 7.1 and Appendix A.1, consistently writing `h_{k,ell} × g`, including its fibers.
-- Defined `eta := (h_{k,ell}(w_0),g(w_0))` in the Appendix. Other unrelated semigroup variables and the divisor lift `t_a` are unchanged.
+- Defined `eta := (h_{k,ell}(w_0),g(w_0))` in the Appendix. Other unrelated semigroup variables and the letter-image lift `t_a` are unchanged.
 - Bounds, mathematical reasoning, and numbered results are unchanged. EN Clean mirror remains identical to `main.tex` and Japanese reference text is synchronized.
 - Reviewer-response 49 items / 73 source-line ranges remain valid without renumbering; version and SHA-256 metadata refreshed. Additions-marked PDF audit still pending.
 
-## v171 — 2026-10-11 short divisor reduction proof (EN/JP)
+## v171 — 2026-10-11 short subsemigroup-image reduction proof (EN/JP)
 
-- Compressed Corollary 7.4 (locally trivial semigroup x finite group typing) proof to its logical core: a divisor representation lifts letter images, projected morphisms induce a window-group refinement, and Theorem 7.2 plus SSBNF normalization applies.
+- Compressed Corollary 7.4 (locally trivial semigroup x finite group typing) proof to its logical core: a subsemigroup-image representation lifts letter images, projected morphisms induce a window-group refinement, and Theorem 7.2 plus SSBNF normalization applies.
 - Kept the corollary statement, assumptions, generalized finite-group conclusion, and Appendix A.1 proof unchanged. Did not restrict the result to Yoshinaka's fixed-window case.
 - Updated English main.tex and its byte-identical Clean mirror, Japanese translation, reviewer-response v171 source-line ranges, and current SHA256 metadata.
 - Additions-marked PDF page/paragraph/margin-line audit remains pending before the TCS resubmission.
@@ -37,23 +43,23 @@
 
 - Clarified SSBNF lexical leaves, essential-set ancestor closure and depth levels, and coverage of unprotected positions.
 - Explicitly fixed the increasing-index product order for simultaneous finite-group subtree replacements, including noncommutative groups.
-- Replaced the vague retained h-typed occurrence with an explicit witness word; spelled out the lifting morphism from Sigma+ to the semigroup divisor and its extension to the empty word.
+- Replaced the vague retained h-typed occurrence with an explicit witness word; spelled out the lifting morphism from Sigma+ to the source subsemigroup and its extension to the empty word.
 - No change to the Main Theorem (iv), lemma assumptions, typed-thickness formula, or shortening argument.
 - English/Japanese source synchronization, byte-identical Clean English mirror, v169 SHA-256 metadata and 49-item/73-span response source audit refreshed.
 - Final additions-marked PDF page/paragraph/margin-line audit remains necessary before TCS resubmission.
 
 ## v168 — 2026-10-11 editorial alignment while external review is pending
 
-- Expanded the initial semigroup 'divides' wording in Main Theorem (iv) as 'a homomorphic image of a subsemigroup'; synchronized English/Japanese abstract and Conclusion with the wider group--window bound.
+- Expanded the initial semigroup homomorphic-image wording in Main Theorem (iv) as 'a homomorphic image of a subsemigroup'; synchronized English/Japanese abstract and Conclusion with the wider group--window bound.
 - Synchronized the reviewer response (including R1.2, R1.3, R2.1, R2.4) with the new Section 7. Reviewer quotations were not altered.
 - Re-audited all 73 original source-line spans in the 49-item locator table against v168 English TeX. Marked-PDF page/paragraph/margin-line locators remain pending and must not be inferred from source lines.
 - Theorem statements and Appendix proof unchanged pending independent Claude review. Clean English TeX mirror remains byte-identical and SHA-256 metadata refreshed.
 
 ## v167 — 2026-10-11 group--window typed-thickness generalization (EN/JP)
 
-- Independently checked the noncommutative finite-group simultaneous pruning identity, essential-node antichain and path bounds, and semigroup divisor reduction.
+- Independently checked the noncommutative finite-group simultaneous pruning identity, essential-node antichain and path bounds, and semigroup homomorphic-image reduction.
 - Replaced Appendix A.1 with the unified group × window argument: `tau_h^typ(G) <= m + [1 + 2(m+q-1)(m+1)Nq] tau_G` under `ker(h_{k,l} × g)|Sigma+ <= ker h|Sigma+`.
-- Main Theorem (iv) and Section 7 now cover positive-image semigroups dividing a direct product of a finite locally trivial semigroup and a finite group. The fixed-window case is the trivial-group specialization, though its coefficient is less sharp than v166.
+- Main Theorem (iv) and Section 7 now cover positive-image semigroups that are homomorphic images of subsemigroups of a direct product of a finite locally trivial semigroup and a finite group. The fixed-window case is the trivial-group specialization, though its coefficient is less sharp than v166.
 - Explicitly acknowledged Yoshinaka (2008) fixed-window IPTtD, preserving all existing separation examples, legacy labels and EN/JP source synchronization.
 - The tracked English Clean TeX mirrors main.tex; EN/JP PDFs are rebuilt by workflow. Marked-reviewer PDF page/line locators must be re-audited before journal resubmission.
 
