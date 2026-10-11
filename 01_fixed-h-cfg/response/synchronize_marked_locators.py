@@ -48,11 +48,6 @@ def locate(section_or_statement):
             return None
         # Match known titles, not incidental prose such as "A separate".
         titles = {
-            "1": "Introduction", "2": "Preliminaries",
-            "3": "Fixed Recognizable Substitutability",
-            "4": "Reconstruction Operator", "5": "Finite Witnesses",
-            "6": "Typed Thickness", "7": "Polynomial Thick Data",
-            "8": "The Linear Subclass", "9": "Expressiveness",
             "A": "Fixed-window", "B": "Proof of the linear-spine",
             "C": "Proof of the short",
         }
