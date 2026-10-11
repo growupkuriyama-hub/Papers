@@ -11,6 +11,15 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v169 — 2026-10-11 Claude-review clarity corrections (EN/JP)
+
+- Clarified SSBNF lexical leaves, essential-set ancestor closure and depth levels, and coverage of unprotected positions.
+- Explicitly fixed the increasing-index product order for simultaneous finite-group subtree replacements, including noncommutative groups.
+- Replaced the vague retained h-typed occurrence with an explicit witness word; spelled out the lifting morphism from Sigma+ to the semigroup divisor and its extension to the empty word.
+- No change to the Main Theorem (iv), lemma assumptions, typed-thickness formula, or shortening argument.
+- English/Japanese source synchronization, byte-identical Clean English mirror, v169 SHA-256 metadata and 49-item/73-span response source audit refreshed.
+- Final additions-marked PDF page/paragraph/margin-line audit remains necessary before TCS resubmission.
+
 ## v168 — 2026-10-11 editorial alignment while external review is pending
 
 - Expanded the initial semigroup 'divides' wording in Main Theorem (iv) as 'a homomorphic image of a subsemigroup'; synchronized English/Japanese abstract and Conclusion with the wider group--window bound.
