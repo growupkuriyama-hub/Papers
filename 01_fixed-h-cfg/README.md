@@ -11,6 +11,14 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v167 — 2026-10-11 group--window typed-thickness generalization (EN/JP)
+
+- Independently checked the noncommutative finite-group simultaneous pruning identity, essential-node antichain and path bounds, and semigroup divisor reduction.
+- Replaced Appendix A.1 with the unified group × window argument: `tau_h^typ(G) <= m + [1 + 2(m+q-1)(m+1)Nq] tau_G` under `ker(h_{k,l} × g)|Sigma+ <= ker h|Sigma+`.
+- Main Theorem (iv) and Section 7 now cover positive-image semigroups dividing a direct product of a finite locally trivial semigroup and a finite group. The fixed-window case is the trivial-group specialization, though its coefficient is less sharp than v166.
+- Explicitly acknowledged Yoshinaka (2008) fixed-window IPTtD, preserving all existing separation examples, legacy labels and EN/JP source synchronization.
+- The tracked English Clean TeX mirrors main.tex; EN/JP PDFs are rebuilt by workflow. Marked-reviewer PDF page/line locators must be re-audited before journal resubmission.
+
 ## v166 — 2026-10-11 Appendix A.1 clarity (EN/JP)
 
 - Defined the protected word-position set explicitly as `P={1,...,k} ∪ {n-ell+1,...,n}`, interpreting either side as empty when its window length is zero. This removes ambiguity at `k=0` or `ell=0`.

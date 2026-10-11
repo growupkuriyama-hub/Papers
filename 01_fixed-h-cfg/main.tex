@@ -44,9 +44,10 @@ refined by $h$-values, which can be exponentially larger than ordinary
 grammar thickness in some presentations. The classical characterization
 of locally trivial finite semigroups gives an exact criterion: $h$ is
 determined on nonempty factors by a fixed prefix--suffix window exactly when
-$h(\Sigma^+)$ is locally trivial. In this regime ordinary grammar thickness
-suffices, and the resulting union of language classes coincides with
-Yoshinaka's fixed-window hierarchy. For linear targets we
+$h(\Sigma^+)$ is locally trivial. In this regime, and more generally when the positive image divides a
+product of a locally trivial finite semigroup and a finite group, ordinary
+grammar thickness suffices. The union of locally trivial slices coincides
+with Yoshinaka's fixed-window hierarchy. For linear targets we
 obtain characteristic data polynomial in linear grammar size under every
 fixed $h$. We also exhibit nonregular linear and nonlinear context-free
 targets outside every fixed-window class, while the one-bracket Dyck language
@@ -142,8 +143,8 @@ and arbitrary inverse homomorphisms, including erasing ones
 (Proposition~\ref{prop:finite-info-closure}).  This is a
 change-of-typing statement, not closure of one fixed-$h$ slice.  An algebraic criterion identifies the typings determined by fixed
 prefix--suffix windows on nonempty factors
-(Proposition~\ref{prop:li-window}) and yields a corresponding
-characteristic-data bound (Corollary~\ref{cor:li-thickness}).
+(Proposition~\ref{prop:li-window}); combining windows with finite groups
+yields a broader characteristic-data bound (Corollary~\ref{cor:li-thickness}).
 Examples below establish nonregular linear and nonlinear reach
 beyond fixed windows, and counter/Dyck obstructions bound that reach.
 
@@ -170,9 +171,8 @@ reconstruction and updates take time polynomial in the accumulated sample.
 
 \item \emph{Quantitative guarantees.}  For arbitrary fixed $h$, we bound
 the characteristic data by grammar size and by the shortest terminal yields
-after target nonterminals are split according to their $h$-values.  When the
-finite typing is already determined by a fixed prefix--suffix window, this
-bound reduces to the ordinary shortest-yield parameter of the source grammar.
+after target nonterminals are split according to their $h$-values.  When the finite typing is refined by a fixed prefix--suffix window
+and a finite-group value, ordinary source-grammar thickness suffices.
 Linear fixed-$h$ targets admit characteristic data polynomial in the size of a
 linear CFG.  We also show that the shortest yields after splitting can be
 exponentially longer than those in the source grammar.
@@ -551,13 +551,11 @@ constructible in time polynomial in $\|K\|$;
 $\mathcal B_h$;
 \item $\mathcal A_h$ identifies every nonempty $L\in\Ccf{h}$ in Gold's
 sense, each update taking time polynomial in the data seen so far;
-\item if the positive image semigroup $h(\Sigma^+)$ is locally trivial,
-then for every nonempty target the sample in~(ii) can be chosen polynomial
-in $|G_*|$ and $\tau_{G_*}$ for any reduced CFG $G_*$ representing that
-target; in particular this applies to every
-fixed-window typing $h_{k,\ell}$ (also directly by
-Theorem~\ref{thm:window-thick} and
-Proposition~\ref{prop:thick-ssbnf-normal});
+\item if the positive image semigroup $h(\Sigma^+)$ divides a product
+of a finite locally trivial semigroup and a finite group, then for every
+nonempty target the sample in~(ii) can be chosen polynomial in $|G_*|$
+and $\tau_{G_*}$ for any reduced CFG $G_*$ representing that target;
+this includes every fixed-window and every finite-group typing;
 \item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can
 be chosen polynomial in $|G_*|$ for any linear CFG $G_*$ representing $L$.
 \end{enumerate}
@@ -1169,60 +1167,59 @@ thickness does not control the typed-refinement parameter appearing in
 Corollary~\ref{cor:typed-thickness-data}; accordingly, the general fixed-$h$
 bound is stated in terms of typed thickness.
 
-\section{Fixed-Window and Locally Trivial Thick Data}
+\section{Polynomial Thick Data Beyond Fixed Windows}
 \label{sec:fixed-window-thick}
 
-For fixed windows, preserving a bounded prefix and suffix controls
-typed thickness by source thickness; this does not hold for arbitrary
-$h$ (Proposition~\ref{prop:typed-thickness-gap}).
-We obtain polynomial batch characteristic-data bounds in the sense of
-identification in polynomial time and thick data (IPTtD) used by
-Yoshinaka~\cite{yoshinaka2008} and Eyraud--Heinz--Yoshinaka
-\cite[Definition~2.12]{eyraud-heinz-yoshinaka2016},
-which adds grammar thickness as a parameter for characteristic-data
-size in the set-based criterion.  We do not assert the same normal
-form or polynomial degree.
+Yoshinaka~\cite[Theorem~1]{yoshinaka2008} already established
+polynomial thick-data learnability for fixed $(k,\ell)$-substitutable
+context-free languages using $(k,\ell)$-Greibach normal form
+and characteristic-set bounds~\cite[Lemmas~2 and~7]{yoshinaka2008}.
+Here we instead bound the shortest yields of the typed refinement used by
+$\mathcal B_h$.  One argument covers both fixed windows and
+typings that additionally track finite-group values.
+The corresponding batch bounds are in the polynomial-time-and-thick-data
+(IPTtD) sense of~\cite{yoshinaka2008} and
+\cite[Definition~2.12]{eyraud-heinz-yoshinaka2016};
+we claim no improvement in Yoshinaka's polynomial degree.
+For general $h$, ordinary thickness cannot bound typed thickness
+polynomially (Proposition~\ref{prop:typed-thickness-gap}).
 
-Fix $k,\ell\ge0$, and let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar.  Write
-\[
- N:=|V\setminus\{S_0\}|,\qquad
- \theta_{k,\ell}(G):=
- \begin{cases}
-   \tau_G, & k+\ell=0,\\[1mm]
-   (k+\ell)+(2(k+\ell)-1)N\tau_G, & k+\ell>0,
- \end{cases}
-\]
-Let $\widetilde G$ be the reduced $h_{k,\ell}$-typed refinement of $G$.
+Fix $k,\ell\ge0$ and a morphism $g:\Sigma^*\to Q$ into a finite group.
+Put $m:=k+\ell$, $q:=|Q|$ and $t:=h_{k,\ell}\times g$.
 
-\begin{lemma}[bounded fixed-window typed yields]
+\begin{lemma}[window--group typed-yield bound]
 \label{lem:window-typed-yield}
-Every non-start typed symbol $A_\mu$ of $\widetilde G$ satisfies
-$|\omega(A_\mu)|\le\theta_{k,\ell}(G)$.
+Let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar and
+$N:=|V\setminus\{S_0\}|\ge1$. If a finite typing $h$ satisfies
+$\ker t|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$, then
+\[
+ \tau_h^{\mathrm{typ}}(G)
+ \le m+\bigl[1+2(m+q-1)(m+1)Nq\bigr]\tau_G.
+\]
 \end{lemma}
-
 \begin{proof}
 See Appendix~\ref{app:fixed-window-bounds}.
 \end{proof}
 
-\begin{theorem}[polynomial thick data for fixed windows]
+\begin{theorem}[polynomial thick data under window--group refinement]
 \label{thm:window-thick}
-For every fixed pair $(k,\ell)$ and ambient alphabet $\Sigma$, there is a
-polynomial $q_{k,\ell}$ such that every reduced SSBNF grammar $G$ with
-$L(G)\in\Ccf{h_{k,\ell}}$ satisfies
-$\|\WitnessSet(\widetilde G)\| \le q_{k,\ell}(|G|,\tau_G)$,
-and $\WitnessSet(\widetilde G)$ is a characteristic sample for
-$\mathcal B_{h_{k,\ell}}$.
+Fix $h,\Sigma$ and suppose that
+$\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$
+for some fixed $k,\ell$ and finite-group morphism $g$.
+Every nonempty $L\in\Ccf{h}$ represented by a reduced SSBNF grammar
+$G$ with a non-start symbol has a characteristic sample
+$\WitnessSet(\widetilde G)$ for $\mathcal B_h$ whose encoded size
+is polynomial in $|G|$ and $\tau_G$.
 \end{theorem}
-
 \begin{proof}
-Lemma~\ref{lem:window-typed-yield} gives
-$\tau_{h_{k,\ell}}^{\mathrm{typ}}(G)\le\theta_{k,\ell}(G)$, and for
-fixed $k,\ell,\Sigma$ this is polynomial in $|G|$ and $\tau_G$.
-Corollary~\ref{cor:typed-thickness-data} now gives the claim.
+Apply Lemma~\ref{lem:window-typed-yield} and
+Corollary~\ref{cor:typed-thickness-data}.
+The singleton target $\{\lambda\}$ is handled separately.
 \end{proof}
 
-The theorem is stated for reduced SSBNF representations.  The following
-normalization transfers it to arbitrary reduced CFGs.
+Theorem~\ref{thm:window-thick} includes fixed windows by taking
+$Q$ trivial.  The following normalization transfers the bound
+to arbitrary reduced CFG presentations.
 
 \begin{proposition}[polynomial thickness-preserving SSBNF normalization]
 \label{prop:thick-ssbnf-normal}
@@ -1237,46 +1234,39 @@ The proof is in Appendix~\ref{app:thick-ssbnf}; terminal isolation and
 binarization precede non-start $\lambda$-elimination so that grammar size and
 shortest nonempty yields remain polynomially bounded.
 
-\begin{corollary}[ordinary-thickness bound for locally trivial typings]
+\begin{corollary}[ordinary-thickness bounds for locally trivial--group typings]
 \label{cor:li-thickness}
-Fix $h:\Sigma^*\to M$ and suppose that
-$h(\Sigma^+)$ is locally trivial.  Then every nonempty
-$L\in\Ccf{h}$ represented by a reduced CFG $G_*$ has characteristic data for
-$\mathcal B_h$ whose encoded size is polynomial in $|G_*|$ and $\tau_{G_*}$.
+Fix $h:\Sigma^*\to M$. Suppose $h(\Sigma^+)$ divides a direct
+product of a finite locally trivial semigroup and a finite group.
+Then every nonempty $L\in\Ccf{h}$ represented by a reduced CFG $G_*$
+has characteristic data for $\mathcal B_h$ of encoded size
+polynomial in $|G_*|$ and $\tau_{G_*}$.
+This includes all locally trivial positive-image typings and
+all finite-group typings.
 \end{corollary}
-
 \begin{proof}
-Put $n:=|h(\Sigma^+)|+1$.  By Proposition~\ref{prop:li-window},
-$\ker h_{n,n}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$.
-For a reduced SSBNF grammar $G$, let $A_\mu$ be any symbol retained in the
-reduced $h$-refinement.  Choose a successful derivation tree passing through
-an occurrence of $A_\mu$ and annotate the same source tree by
-$h_{n,n}$-yield types.  The corresponding copy $A_\nu$ lies on a successful
-tree, hence is both reachable and productive and survives trimming.  By Proposition~\ref{prop:typed-core}, the yield languages of these symbols
-are $L_G(A)\cap h_{n,n}^{-1}(\{\nu\})$ and
-$L_G(A)\cap h^{-1}(\{\mu\})$, respectively.  The kernel refinement
-$\ker h_{n,n}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$ makes the first
-language a subset of the second.  Consequently
-\[
- \tau_h^{\mathrm{typ}}(G)
- \le \tau_{h_{n,n}}^{\mathrm{typ}}(G)
- \le 2n+(4n-1)|V\setminus\{S_0\}|\tau_G
-\]
-by Lemma~\ref{lem:window-typed-yield}.  Since $h$ is fixed, $n$ is a
-constant, and Corollary~\ref{cor:typed-thickness-data} gives a polynomial
-characteristic-data bound for $G$.  Applying
-Proposition~\ref{prop:thick-ssbnf-normal} transfers the bound to the
-original reduced CFG $G_*$.
+Write $h(\Sigma^+)$ as the image of a subsemigroup
+$T\le S\times Q$ under a surjective homomorphism
+$\pi:T\twoheadrightarrow h(\Sigma^+)$, where $S$ is locally trivial
+and $Q$ is a finite group. Choose a lift $t_a\in T$ for every
+$h(a)$, $a\in\Sigma$.
+The projections define morphisms $s:\Sigma^*\to S^1$
+and $g:\Sigma^*\to Q$, with
+$h(w)=\pi(s(w),g(w))$ for all $w\in\Sigma^+$.
+Since $s(\Sigma^+)$ is locally trivial,
+Proposition~\ref{prop:li-window} gives fixed $k,\ell$ satisfying
+$\ker h_{k,\ell}|_{\Sigma^+}\subseteq\ker s|_{\Sigma^+}$.
+Hence
+$\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$.
+Apply Theorem~\ref{thm:window-thick} and
+Proposition~\ref{prop:thick-ssbnf-normal}.
 \end{proof}
 
-The empty target is handled separately by the empty sample.
-
-Theorem~\ref{thm:window-thick} and
-Proposition~\ref{prop:thick-ssbnf-normal} also give the
-fixed-window bound directly.  Polynomials may depend on the
-fixed typing and alphabet; no uniform bound for variable
-$k,\ell$, converse for non-locally-trivial typings, or
-incremental polynomial-data guarantee is asserted.
+The empty target has the empty characteristic sample.
+Polynomials may depend on the fixed typing and alphabet.
+We assert neither a converse for the divisor condition,
+nor bounds uniform in variable windows or groups,
+nor an incremental polynomial-data guarantee for the sequential learner.
 
 \section{The Linear Subclass}
 \label{sec:linear}
@@ -1800,91 +1790,93 @@ responsibility.
 \label{app:fixed-window-bounds}
 
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
-
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-Let $A_\mu$ be a non-start typed symbol of $\widetilde G$ and put $m:=k+\ell$.
-By Proposition~\ref{prop:typed-core},
-$L_{\widetilde G}(A_\mu)=L_G(A)\cap h_{k,\ell}^{-1}(\{\mu\})\ne\varnothing$;
-let $w$ be a shortest word of this set, so that $n:=|w|=|\omega(A_\mu)|$.
-Since $A\ne S_0$ and $S_0$ occurs on no right-hand side, every node of an
-$A$-derivation tree is labelled in $V\setminus\{S_0\}$ and has a nonempty yield.
+Put $m=k+\ell$, $q=|Q|$ and $N=|V\setminus\{S_0\}|$.
+It suffices first to bound a shortest word $w$ in each nonempty
+$L_G(A)\cap t^{-1}(\{\eta\})$, for non-start $A$.
+Every node in an $A$-derivation tree has a non-start label and
+a nonempty yield. If $m>0$ and $\eta$ has a short-word window type,
+then $|w|<m$. Otherwise $|w|\ge m$, including when $m=0$.
+Fix a binary derivation tree $T$ for $w$.
+Protect the first $k$ and last $\ell$ positions, allowing either
+side to be empty, and denote their union by $P$, $|P|=m$.
+For each node $z$ write $I(z)$ for its yield interval,
+$y(z)$ for its yield, $B(z)$ for its nonterminal label and
+$M(z):=I(z)\cap P$. Call $z$ \emph{essential} if
+$M(z)\ne\varnothing$ or $|y(z)|>\tau_G$, and let $E$ be
+the ancestor-closed set of essential nodes.
 
-\emph{Trivial cases.}
-If $m=0$, then $h_{0,0}$ is constant on $\Sigma^+\supseteq L_G(A)$, so $w$ is a
-shortest word of $L_G(A)$ and $n\le\tau_G$.
-If $m>0$ and $\mu$ is a short-word type, then $n<m\le\theta_{k,\ell}(G)$.
-
-\emph{Main case.}
-Let $m>0$ and $\mu=\langle u,v\rangle$ with $|u|=k$ and $|v|=\ell$.  Then
-$w=uxv$ and $n\ge m$.  Minimality of $w$ is used only in the form
-\begin{equation}\label{eq:fw-min}
- ux'v\in L_G(A)\ \Longrightarrow\ |x'|\ge|x|,
-\end{equation}
-which holds because $|ux'v|\ge m$ gives $h_{k,\ell}(ux'v)=\langle u,v\rangle=\mu$.
-
-Fix an SSBNF derivation tree $T$ of $w$ from $A$ whose nodes are the
-nonterminal occurrences: a node using a rule $B\to a$ is a leaf, and a node
-using $B\to CD$ has two children.  For a node $z$ write $B(z)$ for its label,
-$y(z)$ for its yield, and $I(z)\subseteq\{1,\ldots,n\}$ for the interval of
-positions of $y(z)$ in $w$.  The leaves occupy one position each, and the
-intervals of the two children of an inner node $z$ split $I(z)$ into two
-nonempty parts.  Hence a proper descendant has a strictly shorter yield, and
-the intervals of two nodes meet if and only if one node is an ancestor of the
-other.  Put
-$P:=\{1,\ldots,k\}\cup\{n-\ell+1,\ldots,n\}$,
-interpreting each side as empty when its corresponding parameter is zero.
-Then $|P|=m$.  Put $M(z):=I(z)\cap P$, call $z$ \emph{marked} if
-$M(z)\ne\varnothing$, and let $C$ be the set of marked nodes.
-
-\smallskip\noindent
-(a) \emph{Unmarked yields are short.}
-If $z\notin C$, then $I(z)$ lies within $x$.  Replace the subtree at $z$ by a
-derivation from $B(z)$ of a word of length at most $\tau_G$.  This gives
-$ux'v\in L_G(A)$ with $|x'|\le|x|-|y(z)|+\tau_G$, so
-\eqref{eq:fw-min} yields $|y(z)|\le\tau_G$.
-
-\smallskip\noindent
-(b) \emph{Equal marks force distinct labels.}
-Let $z$ be a proper ancestor of $z'$ with $M(z)=M(z')$.  If $B(z)=B(z')$,
-replace the subtree at $z$ by the subtree at $z'$.  This deletes the positions
-in $I(z)\setminus I(z')$, a nonempty set disjoint from $P$ and hence inside
-$x$.  The result is $ux'v\in L_G(A)$ with $|x'|<|x|$, contradicting
-\eqref{eq:fw-min}.  Hence $B(z)\ne B(z')$.
-
-\smallskip\noindent
-(c) \emph{$|C|\le(2m-1)N$.}
-Nodes $z\in C$ with a common value $M(z)=X$ have intervals meeting in $X$.
-They therefore lie on one root-to-leaf path, and by (b) their labels are
-pairwise distinct.  So each value is taken by at most $N$ marked nodes.
-
-It remains to see that $M$ takes at most $2m-1$ values on $C$.  The set $C$
-contains the root and is closed under parents, so it is a tree.  A marked inner
-node has a marked child, because $M(z)$ is the union of the children's
-$M$-values.  Hence the leaves of $C$ are the $m$ leaves of $T$ at positions
-in $P$.  By the chain property just established, for each value $X$ there is
-a unique lowest node $z$ satisfying $M(z)=X$.  If $z$ had exactly one
-marked child $c$, then $M(c)=X$, contradicting the choice of $z$.  So $z$ is a leaf of $C$ or has two children in $C$.  A finite tree with
-$m$ leaves in which every node has at most two children has exactly $m-1$
-nodes with two children (count edges).  Hence there are at most $2m-1$ values.
-
-\smallskip\noindent
-(d) \emph{Length.}
-Let $H$ be the set of unmarked nodes whose parent is marked.  Fix
-$p\notin P$.  The nodes whose interval contains $p$ form the path from the
-root to the leaf at $p$.  On this path the marked nodes form an initial
-segment, which contains the root but not the leaf, so exactly one node of the
-path lies in $H$.  Positions in $P$ lie in no interval of a node of $H$.
-Therefore
-$\{1,\ldots,n\}=P\mathbin{\dot\cup}\mathop{\dot\bigcup}_{z\in H}I(z)$.
-A marked node has at most one unmarked child, so $|H|\le|C|$.  By (a)
-and (c),
+\emph{Height.}
+On any ancestor chain $M(z)$ decreases by inclusion and takes
+at most $m+1$ values. If two comparable distinct essential
+nodes have the same triple $(M(z),B(z),g(y(z)))$, replace the
+upper subtree by the lower one. Proper descent strictly
+decreases yield length; equal marks preserve the protected
+positions and equal group values preserve $g(w)$.
+This contradicts shortestness in the $t$-fiber.
+Every essential-node chain thus has at most
 \[
- n=m+\sum_{z\in H}|y(z)|
- \le m+|C|\,\tau_G
- \le m+(2m-1)N\tau_G=\theta_{k,\ell}(G).\qedhere
+ H:=(m+1)Nq
 \]
-\end{proof}
+nodes.
 
+\emph{Width.}
+Let $F$ be an antichain in $E$.
+At most $m$ of its nodes meet $P$.
+If $q$ further nodes existed, order them left to right as
+$z_1,\ldots,z_q$. Their disjoint unprotected yields
+$a_i:=y(z_i)$ all have length greater than $\tau_G$.
+Choose $b_i\in L_G(B(z_i))$ with $|b_i|\le\tau_G$.
+If $g(a_i)=g(b_i)$ for any $i$, replacing that subtree
+alone contradicts minimality. Thus
+\[
+ d_i:=g(p_i)\,g(b_i)g(a_i)^{-1}g(p_i)^{-1}\ne1_Q,
+\]
+where $p_i$ is the prefix of the \emph{original} $w$
+preceding $a_i$.
+For any index set $J$, simultaneous replacement
+multiplies $g(w)$ on the left by the ordered product
+$\prod_{i\in J}^{\longrightarrow}d_i$:
+expand from right to left so that each original prefix $p_i$
+is unaffected when its factor is replaced.
+This does not require commutativity.
+Among the $q+1$ prefix products
+$1_Q,d_1,d_1d_2,\ldots,d_1\cdots d_q$, two coincide.
+Their quotient gives a nonempty consecutive index interval $J$
+with $\prod_{i\in J}^{\longrightarrow}d_i=1_Q$.
+Replacing precisely those subtrees preserves the window and
+group values while shortening the word, a contradiction.
+Hence every antichain has at most
+\[
+ W:=m+q-1
+\]
+nodes.
+
+\emph{Count.}
+The ancestor-closed tree $E$ has depth at most $H$,
+and each depth level is an antichain, so $|E|\le WH$.
+If $E$ is nonempty, positions outside $P$ are partitioned
+among maximal nonessential subtrees, each with yield length
+at most $\tau_G$. There are at most $2|E|$ such subtrees,
+since each is a child of an essential node; all protected
+terminal leaves lie in $E$.
+If $E$ is empty, the root yield has length at most $\tau_G$.
+In both cases,
+\[
+ |w|\le m+(1+2|E|)\tau_G
+ \le m+\bigl[1+2(m+q-1)(m+1)Nq\bigr]\tau_G.
+\]
+Taking the maximum bounds the retained $t$-typed symbols.
+For a retained $h$-typed symbol $A_\mu$, choose a successful
+occurrence with $t$-value $\eta$.
+The kernel inclusion gives
+\[
+ L_G(A)\cap t^{-1}(\{\eta\})
+ \subseteq L_G(A)\cap h^{-1}(\{\mu\}),
+\]
+so the shortest yield in the latter set is no longer than
+that in the former. This proves the lemma.
+\end{proof}
 
 \subsection{Thickness-preserving SSBNF normalization}
 \label{app:thick-ssbnf}
