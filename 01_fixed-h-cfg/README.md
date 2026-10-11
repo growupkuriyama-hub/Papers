@@ -11,6 +11,14 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v174 — 2026-10-11 elementary letterwise proof of Corollary 7.4 (EN/JP)
+
+- Expanded the proof to explicitly choose a pair `(s_a,q_a)` mapping to `h(a)` for each letter, and define `varphi(a_1...a_n)` as the product of those chosen pairs.
+- Explained why the definition is unambiguous (unique spelling, semigroup closure and associativity), why it is a semigroup morphism, and why its image under `pi` recovers `h(w)`.
+- Wrote `S union {1}` instead of `S^1`, explicitly distinguishing the case of an existing identity from adjoining one, and defined both coordinate maps on the empty word.
+- Kept the corollary, finite-group theorem, algebraic assumption and polynomial-thickness bound unchanged. Synced English Clean mirror, Japanese text, referee response 73 source-line ranges and SHA-256 metadata.
+- Additions-marked PDF page/paragraph/margin-line audit remains outstanding before TCS resubmission.
+
 ## v173 — 2026-10-11 uniform subsemigroup-image terminology (EN/JP)
 
 - Standardized all live statements and explanations to **homomorphic image of a subsemigroup** (EN) / **部分半群の準同型像** (JP), including Main Theorem (iv), Corollary 7.4 and its proof, scope limitations, conclusion, and referee response.
