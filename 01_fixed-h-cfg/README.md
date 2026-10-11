@@ -11,6 +11,13 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v168 — 2026-10-11 editorial alignment while external review is pending
+
+- Expanded the initial semigroup 'divides' wording in Main Theorem (iv) as 'a homomorphic image of a subsemigroup'; synchronized English/Japanese abstract and Conclusion with the wider group--window bound.
+- Synchronized the reviewer response (including R1.2, R1.3, R2.1, R2.4) with the new Section 7. Reviewer quotations were not altered.
+- Re-audited all 73 original source-line spans in the 49-item locator table against v168 English TeX. Marked-PDF page/paragraph/margin-line locators remain pending and must not be inferred from source lines.
+- Theorem statements and Appendix proof unchanged pending independent Claude review. Clean English TeX mirror remains byte-identical and SHA-256 metadata refreshed.
+
 ## v167 — 2026-10-11 group--window typed-thickness generalization (EN/JP)
 
 - Independently checked the noncommutative finite-group simultaneous pruning identity, essential-node antichain and path bounds, and semigroup divisor reduction.
