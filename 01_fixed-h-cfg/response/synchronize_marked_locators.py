@@ -19,7 +19,7 @@ if len(pages) < 12:
     raise SystemExit("Unexpected marked-manuscript page count")
 
 def margin_number(line):
-    for pat in (r"^\s*(\d{1,4})\s+(?:[^\d]|$)", r"\s{2,}(\d{1,4})\s*$"):
+    for pat in (r"\s{2,}(\d{1,4})\s*$", r"^\s*(\d{1,4})\s+(?:[^\d]|$)"):
         m = re.search(pat, line)
         if m:
             return int(m.group(1))
