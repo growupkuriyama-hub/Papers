@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v165 — 2026-10-11 shorter proof of Lemma 7.1 (Appendix A.1)
+
+- Rewrote the proof of Lemma `window-typed-yield` in EN/JP around the marked sets `M(z)=I(z) ∩ P`. Minimality of the shortest typed yield is isolated once as `ux'v ∈ L_G(A) ⇒ |x'| ≥ |x|` (`eq:fw-min`); the proof then shows (a) unmarked yields are at most `tau_G`, (b) equal marks along an ancestor chain force distinct labels, (c) marks take at most `2m-1` values, hence `|C| ≤ (2m-1)N`, and (d) positions outside `P` are partitioned by unmarked nodes with marked parents.
+- Removes the F/D/J partition, the map `phi` and the labels `eq:fixed-window-*` (not referenced elsewhere). Lemma statement and `theta_{k,l}` unchanged. English canonical/Clean TeX byte-identical; EN/JP SHA256 refreshed. Local pdfLaTeX and LuaLaTeX builds succeeded with no errors or undefined references.
+- Reviewer-response source/margin line locators were not changed and still require re-audit before resubmission.
+
 ## v158 — 2026-10-10 Round-1 reviewer-response synchronization
 
 - Updated `response/response_round1.tex` to match the latest v157 English manuscript: revised the Section 9 overview and Reviewer 1 answers R1.33--R1.35 to describe the canonical-completion entry-height argument, footnoted concatenation formula, and footnoted sharpness of the capped-counter boundary.
