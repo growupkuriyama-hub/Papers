@@ -11,6 +11,13 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v171 — 2026-10-11 short divisor reduction proof (EN/JP)
+
+- Compressed Corollary 7.4 (locally trivial semigroup x finite group typing) proof to its logical core: a divisor representation lifts letter images, projected morphisms induce a window-group refinement, and Theorem 7.2 plus SSBNF normalization applies.
+- Kept the corollary statement, assumptions, generalized finite-group conclusion, and Appendix A.1 proof unchanged. Did not restrict the result to Yoshinaka's fixed-window case.
+- Updated English main.tex and its byte-identical Clean mirror, Japanese translation, reviewer-response v171 source-line ranges, and current SHA256 metadata.
+- Additions-marked PDF page/paragraph/margin-line audit remains pending before the TCS resubmission.
+
 ## v170 — 2026-10-11 concise typing-adequacy discussion (EN/JP)
 
 - Compressed the Section 3 "When is a typing useful?" discussion into one paragraph on finite-index congruence separation and quantitative cost.
