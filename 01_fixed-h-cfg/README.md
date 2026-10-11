@@ -11,6 +11,15 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v177 — 2026-10-12 Independent referee audit integration (EN/JP)
+
+- Reconciled English and Japanese revisions: pinned the 2014 priority source to arXiv v3 and expressly attributed the sorted window signature to Yoshinaka (2015, Example 4).
+- Added concise checks for nonerasing inverse images, the locally trivial semigroup factorization, entry-height realizability in the nonlinear example, and Appendix A.1's width counting.
+- The linear-subclass proof now displays the normalized-grammar encoded witness bound O(|G_0|^3 |M|^4), without asserting that degree for unnormalized input grammars.
+- Revised main theorem item (iv) to use tau_{G_*}+1 for nullable-presentation clarity; no theorem scope or bound is strengthened.
+- Updated the reviewer response overview, and modified marked-reviewer package generation to require observed PDF page/margin-line anchors for all 49 response items. Do not treat the journal package as final until the workflows and PDF locator audit succeed.
+- No arXiv version change and no Editorial Manager resubmission.
+
 ## v176 — 2026-10-11 Appendix A.1 shortest-fiber pruning proof (EN/JP)
 
 - Reworked the Lemma 7.1 Appendix proof around a single shortest-fiber replacement principle, a strict full-tree height bound, a finite-group width argument, and a maximal nonessential-subtree count.
