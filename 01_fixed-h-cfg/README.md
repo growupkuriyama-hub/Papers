@@ -11,6 +11,11 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v166 — 2026-10-11 Appendix A.1 clarity (EN/JP)
+
+- Defined the protected word-position set explicitly as `P={1,...,k} ∪ {n-ell+1,...,n}`, interpreting either side as empty when its window length is zero. This removes ambiguity at `k=0` or `ell=0`.
+- In the `2m-1` count, made explicit that nodes with the same nonempty mark `X=M(z)` form an ancestor chain, so their lowest carrier exists uniquely. English `main.tex` and Clean mirror are byte-identical; Japanese text has the corresponding clarification. Lemma statement and quantitative bound unchanged. EN/JP PDFs are rebuilt by the existing workflow; marked-reviewer line locators still require a separate re-audit.
+
 ## v165 — 2026-10-11 shorter proof of Lemma 7.1 (Appendix A.1)
 
 - Rewrote the proof of Lemma `window-typed-yield` in EN/JP around the marked sets `M(z)=I(z) ∩ P`. Minimality of the shortest typed yield is isolated once as `ux'v ∈ L_G(A) ⇒ |x'| ≥ |x|` (`eq:fw-min`); the proof then shows (a) unmarked yields are at most `tau_G`, (b) equal marks along an ancestor chain force distinct labels, (c) marks take at most `2m-1` values, hence `|C| ≤ (2m-1)N`, and (d) positions outside `P` are partitioned by unmarked nodes with marked parents.
