@@ -12,6 +12,24 @@ root = Path(__file__).resolve().parents[1]
 marked = root / "TCS-D-26-00494_Manuscript_Marked.pdf"
 response = root / "response/response_round1.tex"
 manuscript = root / "main.tex"
+
+# Stable-anchor response mode (TCS R1 second-round revision).
+# The source's section and theorem references are independent of PDF
+# pagination. Validate all 49 entries but do not overwrite the response
+# with page numbers when generating the submission artifacts.
+response_source = response.read_text()
+stable_header = r"\noindent\textbf{Locator guide for the revised manuscript.}"
+if stable_header in response_source:
+    start = response_source.index(stable_header)
+    end = response_source.index(r"\end{longtable}", start)
+    locator_table = response_source[start:end]
+    entries = re.findall(r"(?m)^(?:E\.1|R[12]\.\d+) & ", locator_table)
+    if len(entries) != 49:
+        raise SystemExit(f"Expected 49 stable response locators, found {len(entries)}")
+    if re.search(r"marked PDF p\.~\d+", locator_table):
+        raise SystemExit("Stable response locators unexpectedly contain PDF page references")
+    print("Validated 49 stable manuscript locators; no response rewriting needed.")
+    raise SystemExit(0)
 if not marked.is_file() or marked.stat().st_size < 10000:
     raise SystemExit("Marked PDF is missing or too small")
 raw = subprocess.check_output(["pdftotext", "-layout", str(marked), "-"], text=True)
