@@ -92,10 +92,11 @@ def near_source_page(lno):
 
 def resolve_segment(segment):
     refs = re.findall(
-        r"(?:Definition|Theorem|Proposition|Lemma|Corollary)\s+\d+\.\d+",
+        r"(?:Definition|Theorems?|Proposition|Lemma|Corollary)\s+\d+\.\d+",
         segment
     )
     for ref in refs:
+        ref = ref.replace("Theorems ", "Theorem ")
         pattern = r"^\s*(?:\d{1,4}\s+)?" + re.escape(ref) + r"(?:\.|\s|\()"
         p = where_page(pattern, True)
         if p:
