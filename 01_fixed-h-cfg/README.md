@@ -11,6 +11,13 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v172 — 2026-10-11 explicit window–group product notation (EN/JP)
+
+- Dropped the local shorthand `t := h_{k,ell} × g` throughout Lemma 7.1 and Appendix A.1, consistently writing `h_{k,ell} × g`, including its fibers.
+- Defined `eta := (h_{k,ell}(w_0),g(w_0))` in the Appendix. Other unrelated semigroup variables and the divisor lift `t_a` are unchanged.
+- Bounds, mathematical reasoning, and numbered results are unchanged. EN Clean mirror remains identical to `main.tex` and Japanese reference text is synchronized.
+- Reviewer-response 49 items / 73 source-line ranges remain valid without renumbering; version and SHA-256 metadata refreshed. Additions-marked PDF audit still pending.
+
 ## v171 — 2026-10-11 short divisor reduction proof (EN/JP)
 
 - Compressed Corollary 7.4 (locally trivial semigroup x finite group typing) proof to its logical core: a divisor representation lifts letter images, projected morphisms induce a window-group refinement, and Theorem 7.2 plus SSBNF normalization applies.
