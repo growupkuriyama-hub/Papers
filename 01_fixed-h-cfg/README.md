@@ -11,6 +11,12 @@
 - The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
 - The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
 
+## v175 — 2026-10-11 concise elementary proof (EN/JP)
+
+- Condensed Corollary 7.4's proof without omitting the letterwise product definition, the reason it is a semigroup homomorphism, the convention for S union {1}, or the kernel inclusion.
+- Retained the original algebraic hypothesis, finite-group generalization and all quantitative conclusions; synchronized the English Clean source and Japanese translation.
+- Refreshed the reviewer-response source-line map (73 spans). Final additions-marked PDF page/margin-line audit remains pending.
+
 ## v174 — 2026-10-11 elementary letterwise proof of Corollary 7.4 (EN/JP)
 
 - Expanded the proof to explicitly choose a pair `(s_a,q_a)` mapping to `h(a)` for each letter, and define `varphi(a_1...a_n)` as the product of those chosen pairs.
