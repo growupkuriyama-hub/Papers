@@ -60,11 +60,11 @@ def write_locator(en: str) -> tuple[int, int]:
     if len(rows) != 49:
         raise ValueError(f"Expected 49 locator rows, got {len(rows)}")
     anchors = table_en.count("marked PDF p.~")
-    if anchors != 75:
-        raise ValueError(f"Expected 75 anchors, got {anchors}")
+    if anchors != 77:
+        raise ValueError(f"Expected 77 anchors, got {anchors}")
     lines = [
         r"\subsection*{修正表示PDFに対する参照表}",
-        "以下の49項目・75参照は、英語版査読回答の検証済み参照表から自動的に転記される。",
+        "以下の49項目・77参照は、英語版査読回答の検証済み参照表から自動的に転記される。",
         r"\begingroup\small",
         r"\setlength{\LTpre}{4pt}\setlength{\LTpost}{6pt}",
         r"\begin{longtable}{@{}p{0.09\linewidth}p{0.83\linewidth}@{}}",
