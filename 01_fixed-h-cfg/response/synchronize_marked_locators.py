@@ -79,6 +79,17 @@ def locate(section_or_statement):
                         number_at_anchor = margin_number(lines[k])
                         if number_at_anchor is not None:
                             break
+            if number_at_anchor is None and statement:
+                # With additions marking, a long statement heading may wrap
+                # across many pdftotext lines before its margin-line number.
+                # Search only the consecutive nonblank heading lines.
+                for distance in range(4, 15):
+                    k = j + distance
+                    if k >= len(lines) or not lines[k].strip():
+                        break
+                    number_at_anchor = margin_number(lines[k])
+                    if number_at_anchor is not None:
+                        break
             if number_at_anchor is not None:
                 return page_number, number_at_anchor
     return None
