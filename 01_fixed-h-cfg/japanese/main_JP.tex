@@ -37,8 +37,10 @@
 集合駆動型作用素は文脈自由な $\sim_h$-代入可能標的を
 有限個の正例証拠から再構成する．別の保守的逐次学習器は
 すべての非空標的を極限同定し，再構成と各更新は多項式時間である．
-特徴データ上界は型付き精密化文法の最短生成語長に依存し，
-これは通常の文法厚みより指数的に大きくなり得る．
+特徴データ上界には型付き精密化文法の最短生成語長が現れる．
+二元半束による固定型付けでは，サイズと通常厚みが $O(n)$ の
+有限 Clark--Eyraud 代入可能標的でも，集合駆動型作用素は
+指数長の正例を必要とすることを示す．
 局所自明有限半群の古典的特徴づけにより，
 非空因子の $h$-型が固定接頭辞--接尾辞窓で決まることと
 $h(\Sigma^+)$ が局所自明であることは同値である．
@@ -168,8 +170,9 @@ Gold の意味で同定し，再構成と各更新は蓄積標本のサイズに
 元文法の通常の最短生成語パラメータで上界を表せる．
 これは Yoshinaka の固定窓の場合を再現し，有限群による精密化へ
 上界を拡張する．線形 fixed-$h$ 標的では，線形 CFG のサイズに関する
-多項式特徴データ上界が得られる．また，型分割後の最短生成語が
-元文法のものより指数的に長くなり得ることも示す．
+多項式特徴データ上界が得られる．さらに型付けの精密化が，有限の Clark--Eyraud 代入可能標的でも
+再構成作用素の特徴データを指数的に増大させ得ることを示す
+（命題~\ref{prop:typed-thickness-gap}）．
 
 \item \emph{構造上・表現力上の位置．}
 単一の fixed-$h$ slice の閉包性ではなく，有限型付けの精密化と積によって
@@ -361,7 +364,7 @@ context-free の主張は CFL の逆準同型に関する閉包性による．
 $\ker h$ が同一視しないことである．
 従って，型付けの選択は有限指数モノイド合同による分離問題となる．
 精密化と積型付けはこの条件を保つが，
-型付き厚みを増大させ得る
+バッチ再構成の特徴データ要求を指数的に増大させ得る
 （命題~\ref{prop:typed-thickness-gap}）．
 補題~\ref{lem:finite-monoid-obstruction} は
 有限型付けによる分離の障害を与え，
@@ -999,67 +1002,106 @@ $\WitnessSet(\widetilde G)$ は $\mathcal B_h$ に対する特徴標本であり
 定理~\ref{thm:reconstruction-fixed-h} による．
 \end{proof}
 
-型付き精密化による議論では，型付き厚みを一般に元文法の通常の厚みへ置き換えられない．
-このような表現依存性自体は CFG 学習で既知の現象である．Clark--Eyraud
-\cite[Example~2]{clark-eyraud2007} は，小さい文法でも正の特徴データに指数長の語が
-必要となる例を与えている．Yoshinaka~\cite{yoshinaka2008} は fixed-window 設定で
-通常の文法厚みを明示的なパラメータとし，Eyraud--Heinz--Yoshinaka
-\cite{eyraud-heinz-yoshinaka2016} も特徴データ基準の表現依存性を論じている．
-ここで必要なのはより限定された点であり，通常の元文法厚みを記録しても，
-本論文の fixed-$h$ 再構成で用いる型付き精密化の最短生成語は大幅に長くなり得る．
+型付き厚みを用いた上界は，一般の固定型付けについては
+通常厚みだけから導くことができない．さらに次の例は，
+再構成作用素そのものに指数長の正例が必要となることを示す．
 
-\begin{proposition}[元文法と型付き厚みの指数ギャップ]
-\label{prop:typed-thickness-gap}
-固定された二元型付け $h_{\mathtt c}$ と，サイズ $O(n)$，通常の厚み $1$ の
-縮約済み SSBNF 文法族 $G_n^{\mathtt c}$ が存在し，
-$\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge2^n$
-となる．従って，一つの固定型付けに限っても，型付き厚みを元文法サイズと
-通常の厚みの多項式で一般に上から抑えることはできない．
-\end{proposition}
-\begin{proof}
-
-$M_{\mathtt c}=\{1,\zeta\}$ を零元 $\zeta$ をもつ二元モノイドとし，
-$h_{\mathtt c}(\mathtt a)=1$, $h_{\mathtt c}(\mathtt c)=\zeta$
-とする．$n\ge1$ に対し，文法 $G_n^{\mathtt c}$ を
+\paragraph{括弧付き倍増言語族．}
+$\Gamma_{\mathrm{br}}=\{\mathtt a,\mathtt{(},\mathtt{)},\mathtt{[},\mathtt{]}\}$ とし，
+$U_1=\{1,\zeta\}$ を零元 $\zeta$ をもつ二元モノイドとする．
+$h_{\mathrm U}:\Gamma_{\mathrm{br}}^*\to U_1$ は
+$\mathtt a,\mathtt{(},\mathtt{)}$ を $1$ に，
+$\mathtt{[},\mathtt{]}$ を $\zeta$ に写すものとし，
+$h_0$ を自明な型付けとする．
+$h_{\mathrm U}(x)=1$ であることと $x$ が角括弧を含まないことは同値で，
+$h_{\mathrm U}(\Gamma_{\mathrm{br}}^+)=U_1$ である．
+$n\ge1$ に対し縮約済み CFG $G_n$ を
 \[
-\begin{aligned}
- S_0&\to U, &
- U&\to \mathtt a\mid\mathtt c\mid UU\mid E_nD, &
- D&\to\mathtt c,\\
- E_0&\to\mathtt a, &
- E_i&\to E_{i-1}E_{i-1}\mid\mathtt c
+ S_0\to E_n,\qquad E_0\to\mathtt a,\qquad
+ E_i\to\mathtt{(}E_{i-1}E_{i-1}\mathtt{)}
+       \mid\mathtt{[}E_{i-1}\mathtt{]}
  \quad(1\le i\le n)
-\end{aligned}
 \]
-で定める．これはサイズ $O(n)$ の縮約済み SSBNF 文法であり，
-$L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+
-\in\Ccf{h_{\mathtt c}}$ である．
+で定義し，$L_n=L(G_n)$ とおく．
+$|G_n|=O(n)$，$\tau_{G_n}=2n+1$ である．
+$w^*_0=\mathtt a$，
+$w^*_i=\mathtt{(}w^*_{i-1}w^*_{i-1}\mathtt{)}$
+とおく．$L_n$ で角括弧を含まない語は $w^*_n$ のみで，
+$|w^*_n|=3\cdot2^n-2$ である．これは単項の角括弧節点を除けば，
+高さ $n$ の完全二分木に一意に定まるからである．
 
-まず，$S_0,U,E_0$ は $\mathtt a$ を，
-$D,E_i$ ($i\ge1$) は $\mathtt c$ を生成できる．
-つまり，すべての非終端記号が長さ $1$ の語を生成できるため，
-通常の厚みは $\tau_{G_n^{\mathtt c}}=1$ である．
+\begin{proposition}[精密化による特徴データの指数的増大]
+\label{prop:typed-thickness-gap}
+任意の $n\ge1$ に対して以下が成り立つ．
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $L_n$ は Clark--Eyraud 代入可能であり，
+$L_n\in\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$ である．
+\item $L_n$ は $\mathcal B_{h_0}$ に対し，
+符号化サイズが $n$ の多項式で抑えられる特徴標本をもつ．
+\item 有限 $K\subseteq L_n$ に対し
+$w^*_n\in L(\mathcal B_{h_{\mathrm U}}(K))$ ならば
+$w^*_n\in K$ である．従って
+$\mathcal B_{h_{\mathrm U}}$ に対する任意の特徴標本 $C$ は
+$\|C\|\ge3\cdot2^n-1$ を満たす．
+\end{enumerate}
+特に固定型付け $h_{\mathrm U}$ では，
+$\Ccf{h_{\mathrm U}}$ の標的を表す縮約済み CFG に対して，
+$\mathcal B_{h_{\mathrm U}}$ の特徴データ量を
+元文法サイズと通常厚みの多項式で一様に上から抑えることはできない．
+\end{proposition}
 
-一方，型付き精密化で型 $1$ に制限すると，
-$h_{\mathtt c}(\mathtt c)=\zeta\ne1$ なので，
-$E_i\to\mathtt c$ は使えない．
-また，積が $1$ になるのは $1\cdot1$ だけである．
-従って帰納法により
-$L((E_i)_1)=\{\mathtt a^{2^i}\}$
-となる．さらに
-$\widetilde S\to U_\zeta\to(E_n)_1D_\zeta$
-により $(E_n)_1$ はトリミング後も残る．
-よって型付き厚みは
-$\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})
-\ge 2^n$ である．
+\begin{proof}
+(i) の代入可能性は付録~\ref{app:bracketed-substitutability} で示す．
+(ii) について，自明な正の像半群は
+$\mathbf{LI}\vee\mathbf G$ に属する（自明群でもある）．
+系~\ref{cor:li-thickness} を $G_n$ に適用すると，
+$|G_n|=O(n)$ と $\tau_{G_n}+1=2n+2$ の多項式サイズの特徴標本が得られる．
 
+(iii) を示す．$K\subseteq L_n$ とし，
+$\mathcal B_{h_{\mathrm U}}(K)$ で
+$\widehat S\Rightarrow^*w^*_n$ とする．
+非空語の導出はある $k\in K\cap\Gamma_{\mathrm{br}}^+$ に対する
+開始規則 $\widehat S\to[k]$ で始まる．
+$L_n$ の $\sim_{h_{\mathrm U}}$-代入可能性と
+型保存不変量~\eqref{eq:soundness-invariant} より
+$h_{\mathrm U}(k)=h_{\mathrm U}(w^*_n)=1$ である．
+$L_n$ の型 $1$ の語は $w^*_n$ のみなので，$k=w^*_n\in K$．
+特徴標本 $C$ なら
+$w^*_n\in L(\mathcal B_{h_{\mathrm U}}(C))=L_n$ だから
+$\|C\|\ge|w^*_n|+1=3\cdot2^n-1$ となる．
+$G_n$ のサイズと通常厚みはいずれも $O(n)$ なので，
+最後の主張が従う．
 \end{proof}
 
-この文法族の標的言語 $\{\mathtt a,\mathtt c\}^+$ 自体は
-$n$ に依存しない．従って，この命題は特徴データに対する学習作用素非依存の下界ではない．
-ここでの役割は，通常の元文法厚みでは
-系~\ref{cor:typed-thickness-data} に現れる型付き精密化パラメータを制御できないことを
-示すことだけである．このため，一般 fixed-$h$ の上界は型付き厚みによって記述する．
+\begin{corollary}[文法表示によらない型付き厚みの指数下界]
+\label{cor:typed-gap-intrinsic}
+$G=(V,\Gamma_{\mathrm{br}},P,S_0)$ を $L_n$ の任意の
+縮約済み SSBNF 文法とし，$N=|V\setminus\{S_0\}|$ とおく．
+このとき
+\[
+ \tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)
+ \ge\frac{3\cdot2^n-2}{2N+1}
+\]
+である．従ってサイズが $n$ の多項式である任意のそのような文法は，
+$2^n/n^{O(1)}$ 以上の型付き厚みをもつ．
+他方，命題~\ref{prop:thick-ssbnf-normal} を $G_n$ に適用すれば，
+サイズも通常厚みも $n$ の多項式となる縮約済み
+SSBNF 表示が存在する．
+\end{corollary}
+
+\begin{proof}
+定理~\ref{thm:reconstruction-fixed-h} により
+$\WitnessSet(\widetilde G)$ は
+$\mathcal B_{h_{\mathrm U}}$ の特徴標本である．
+命題~\ref{prop:typed-thickness-gap}(iii) より
+$w^*_n\in\WitnessSet(\widetilde G)$ でなければならない．
+補題~\ref{lem:typed-thickness-bound} からその長さは
+$(N_t+1)\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)$ 以下であり，
+$N_t\le2N$ である．
+また，命題~\ref{prop:thick-ssbnf-normal} の正規化を
+$G_n$ に施せば，通常厚みと文法サイズについて
+述べた多項式評価が得られる．
+\end{proof}
 
 \section{固定窓を超える多項式厚み付きデータ}
 \label{sec:fixed-window-thick}
@@ -1076,7 +1118,8 @@ Eyraud--Heinz--Yoshinaka
 ~\cite[Definition~2.12]{eyraud-heinz-yoshinaka2016} の
 多項式時間・厚み付きデータ同定（IPTtD）の意味であり，
 Yoshinaka の多項式次数の改善は主張しない．
-一般の $h$ についてはこの制御が成り立たない
+一般の固定 $h$ では，通常厚みだけでは
+$\mathcal B_h$ の特徴データを多項式で抑えられない
 （命題~\ref{prop:typed-thickness-gap}）．
 
 $k,\ell\ge0$ と有限群 $Q$ への準同型 $g:\Sigma^*\to Q$ を固定し，
@@ -1724,8 +1767,11 @@ $D_1\notin\mathsf{RS}(\{a,b\})$ である．
 正の像半群が局所自明有限半群と有限群の直積の
 部分半群の準同型像である場合は通常の文法厚みで十分であり，
 線形標的では文法サイズによる上界が得られる．
-型付き厚みの指数ギャップが制限するのは，この精密化に基づく解析であり，
-一般の学習アルゴリズムそのものではない．
+命題~\ref{prop:typed-thickness-gap} は，
+$\mathbf{LI}\vee\mathbf G$ の外側の二元半束型付けでは，
+自明な型付けの下で多項式特徴データをもつ標的でも，
+$\mathcal B_h$ には指数長の正例が必要になり得ることを示す．
+ただし学習作用素に依存しない下界は主張しない．
 
 有限型付けを精密化してよいなら，積型付けによって正則フィルタと
 消去を許す任意の逆準同型像を扱える．これは単一の fixed-$h$ slice の
@@ -1736,7 +1782,9 @@ $D_1\notin\mathsf{RS}(\{a,b\})$ である．
 Clark の congruential family への真の包含が本枠組みの限界を示す．
 未解決問題として，$\mathsf{RS}\cap\mathrm{CFL}$ の特徴づけ，
 非正則標的に対する $\Clin{h}$ の範囲，
-有用な型付けの選択方法，およびプッシュダウンオートマトンによる
+有用な型付けの選択方法，$\mathbf{LI}\vee\mathbf G$ への所属が
+$\mathcal B_h$ の通常厚みに関する多項式特徴データ保証を
+正確に特徴づけるかという問題，およびプッシュダウンオートマトンによる
 直接的な特徴づけが挙げられる．
 
 \section*{データ利用可能性}
