@@ -1,0 +1,107 @@
+name: TCS Reviewer Response Japanese Full Translation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "01_fixed-h-cfg/response/response_round1.tex"
+      - "01_fixed-h-cfg/response/japanese/main_JP.tex"
+      - "01_fixed-h-cfg/response/japanese/parts/**"
+      - "01_fixed-h-cfg/response/japanese/scripts/**"
+      - "01_fixed-h-cfg/response/japanese/english_body_fingerprint.txt"
+      - ".github/workflows/publish-tcs1-response-japanese.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tcs-response-ja-publisher
+  cancel-in-progress: true
+
+jobs:
+  build-and-publish:
+    name: Verify the 49-item translation, build and publish Japanese PDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+
+      - name: Check English source freshness and rebuild locator table
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 01_fixed-h-cfg/response/japanese/scripts/sync_and_check.py
+
+      - name: Build standalone Japanese TeX with LuaLaTeX
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: TCS-D-26-00494_Response_to_Reviewers_JP.tex
+          working_directory: 01_fixed-h-cfg/response/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Confirm result PDF and text
+        shell: bash
+        run: |
+          set -euo pipefail
+          F="01_fixed-h-cfg/response/japanese/TCS-D-26-00494_Response_to_Reviewers_JP.pdf"
+          test -s "$F"
+          test "$(head -c 4 "$F")" = "%PDF"
+          pdfinfo "$F" | grep Pages || true
+
+      - name: Publish Japanese PDF and standalone TeX at stable GitHub URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="01_fixed-h-cfg/response/japanese"
+          pdf="$folder/TCS-D-26-00494_Response_to_Reviewers_JP.pdf"
+          tex="$folder/TCS-D-26-00494_Response_to_Reviewers_JP.tex"
+          loc="$folder/locator_table_JP.tex"
+          cp "$pdf" "$RUNNER_TEMP/response-ja.pdf"
+          cp "$tex" "$RUNNER_TEMP/response-ja.tex"
+          cp "$loc" "$RUNNER_TEMP/response-ja-locators.tex"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch --no-tags origin main
+            if ! git diff --quiet "$GITHUB_SHA" origin/main -- \
+              01_fixed-h-cfg/response/response_round1.tex \
+              01_fixed-h-cfg/response/japanese/main_JP.tex \
+              01_fixed-h-cfg/response/japanese/parts \
+              01_fixed-h-cfg/response/japanese/scripts \
+              01_fixed-h-cfg/response/japanese/english_body_fingerprint.txt; then
+              echo "::error::English response or translation inputs changed during build; refuse to publish stale Japanese translation."
+              exit 1
+            fi
+            git reset --hard origin/main
+            cp "$RUNNER_TEMP/response-ja.pdf" "$pdf"
+            cp "$RUNNER_TEMP/response-ja.tex" "$tex"
+            cp "$RUNNER_TEMP/response-ja-locators.tex" "$loc"
+            git add "$pdf" "$tex" "$loc"
+            if git diff --cached --quiet; then
+              echo "Japanese response PDF and TeX already current."
+              break
+            fi
+            git commit -m "Publish synchronized TCS reviewer-response Japanese TeX and PDF [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Japanese response is published at stable URLs."
+              break
+            fi
+            if test "$attempt" = 5; then
+              echo "::error::Failed to publish Japanese response after retries."
+              exit 1
+            fi
+          done
+
+      - name: Upload Japanese response PDF and TeX as artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: tcs-response-ja-current
+          path: |
+            01_fixed-h-cfg/response/japanese/TCS-D-26-00494_Response_to_Reviewers_JP.tex
+            01_fixed-h-cfg/response/japanese/TCS-D-26-00494_Response_to_Reviewers_JP.pdf
+          if-no-files-found: error
+          retention-days: 90
