@@ -38,9 +38,10 @@ For each fixed $h$, a set-driven operator reconstructs every context-free
 $\sim_h$-substitutable target from finitely many positive witnesses.
 A separate conservative sequential learner identifies every nonempty
 target in the limit, with polynomial-time reconstruction and updates.
-Characteristic-data bounds depend on shortest yields in a type-refined
-target grammar, which may be exponentially larger than ordinary grammar
-thickness. The classical characterization of locally trivial finite
+Characteristic-data bounds involve type-refined shortest yields. A fixed
+two-element semilattice typing can force exponentially long positive
+characteristic data for the batch operator, even for finite Clark--Eyraud
+substitutable targets with grammar size and ordinary thickness $O(n)$. The classical characterization of locally trivial finite
 semigroups shows that positive $h$-types are determined by a fixed
 prefix--suffix window exactly when $h(\Sigma^+)$ is locally trivial.
 Ordinary grammar thickness suffices in this case and, more generally,
@@ -183,9 +184,9 @@ When the fixed typing is refined by a fixed prefix--suffix window
 and a finite-group value, ordinary source-grammar thickness suffices.
 This recovers Yoshinaka's fixed-window regime and extends the bound to
 finite-group refinements.  Linear fixed-$h$ targets admit characteristic
-data polynomial in the size of a linear CFG.  We also show that shortest
-yields after type splitting can be exponentially longer than those in
-the source grammar.
+data polynomial in the size of a linear CFG.  We also show that refining the typing can force exponentially long
+characteristic data for the reconstruction operator, even for finite
+Clark--Eyraud substitutable targets (Proposition~\ref{prop:typed-thickness-gap}).
 
 \item \emph{Structural and expressive position.}
 We establish closure properties obtained by refinement and products of
@@ -452,8 +453,8 @@ nonempty factors having a common context but
 different distributions. Thus typing adequacy
 is a finite-index monoid-congruence separation
 condition. Refinement and product typing preserve
-this condition, although refinement may increase
-typed thickness
+this condition, although refinement may exponentially increase
+characteristic-data requirements for the batch operator
 (Proposition~\ref{prop:typed-thickness-gap}).
 Lemma~\ref{lem:finite-monoid-obstruction} gives
 an obstruction to finite separation, while
@@ -1152,62 +1153,105 @@ Lemma~\ref{lem:typed-thickness-bound} gives the quantitative bound, and
 Theorem~\ref{thm:reconstruction-fixed-h} gives the characteristic-sample property.
 \end{proof}
 
-The following example shows a limitation of this
-typed-refinement bound: typed thickness can grow exponentially
-relative to source thickness even for a fixed $h$.
+The dependence on typed thickness in Corollary~\ref{cor:typed-thickness-data}
+cannot in general be replaced by ordinary thickness, even for the
+reconstruction operator itself under a single fixed typing.
 
-\begin{proposition}[exponential source-to-typed thickness gap]
-\label{prop:typed-thickness-gap}
-There is a fixed two-element typing $h_{\mathtt c}$ and a family of reduced
-SSBNF grammars $G_n^{\mathtt c}$ of size $O(n)$ and ordinary thickness $1$
-such that
-$\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})\ge2^n$.
-Consequently typed thickness cannot in general be bounded by a polynomial in
-source grammar size and ordinary thickness, even for one fixed typing.
-\end{proposition}
-\begin{proof}
-
-Let $M_{\mathtt c}=\{1,\zeta\}$ be the two-element monoid with
-zero $\zeta$, with $h_{\mathtt c}(\mathtt a)=1$ and
-$h_{\mathtt c}(\mathtt c)=\zeta$.  For $n\ge1$, define
-$G_n^{\mathtt c}$ by
+\paragraph{A bracketed doubling family.}
+Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\mathtt{(},\mathtt{)},\mathtt{[},\mathtt{]}\}$ and
+$U_1=\{1,\zeta\}$ be the two-element monoid with zero $\zeta$.
+Define $h_{\mathrm U}:\Gamma_{\mathrm{br}}^*\to U_1$ by mapping
+$\mathtt a,\mathtt{(},\mathtt{)}$ to $1$ and
+$\mathtt{[},\mathtt{]}$ to $\zeta$, and let $h_0$ be the trivial typing.
+Thus $h_{\mathrm U}(x)=1$ exactly when $x$ has no square bracket, and
+$h_{\mathrm U}(\Gamma_{\mathrm{br}}^+)=U_1$.
+For $n\ge1$, define the reduced CFG $G_n$ by
 \[
-\begin{aligned}
- S_0&\to U, &
- U&\to \mathtt a\mid\mathtt c\mid UU\mid E_nD, &
- D&\to\mathtt c,\\
- E_0&\to\mathtt a, &
- E_i&\to E_{i-1}E_{i-1}\mid\mathtt c
- \quad(1\le i\le n).
-\end{aligned}
+ S_0\to E_n,\qquad E_0\to\mathtt a,\qquad
+ E_i\to\mathtt{(}E_{i-1}E_{i-1}\mathtt{)}
+       \mid\mathtt{[}E_{i-1}\mathtt{]}
+ \quad(1\le i\le n),
 \]
-These are reduced SSBNF grammars of size $O(n)$ with
-$L(G_n^{\mathtt c})=\{\mathtt a,\mathtt c\}^+
-\in\Ccf{h_{\mathtt c}}$.
+and put $L_n=L(G_n)$. Then $|G_n|=O(n)$ and
+$\tau_{G_n}=2n+1$.
+Write $w^*_0=\mathtt a$ and
+$w^*_i=\mathtt{(}w^*_{i-1}w^*_{i-1}\mathtt{)}$.
+The only word of $L_n$ without square brackets is $w^*_n$, of length
+$|w^*_n|=3\cdot2^n-2$: without unary square-bracket nodes the
+derivation is the unique complete binary tree of height $n$.
 
-Every nonterminal has a terminal yield of length $1$:
-$S_0,U,E_0$ derive $\mathtt a$, and
-$D,E_i$ ($i\ge1$) derive $\mathtt c$.
-Hence the ordinary thickness is $\tau_{G_n^{\mathtt c}}=1$.
+\begin{proposition}[refinement can force exponential characteristic data]
+\label{prop:typed-thickness-gap}
+For every $n\ge1$ the following hold.
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $L_n$ is Clark--Eyraud substitutable, and hence
+$L_n\in\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$.
+\item $L_n$ has a characteristic sample for $\mathcal B_{h_0}$
+of encoded size polynomial in $n$.
+\item Every finite $K\subseteq L_n$ such that
+$w^*_n\in L(\mathcal B_{h_{\mathrm U}}(K))$ contains $w^*_n$.
+Consequently, every characteristic sample $C$ of $L_n$ for
+$\mathcal B_{h_{\mathrm U}}$ satisfies
+$\|C\|\ge 3\cdot 2^n-1$.
+\end{enumerate}
+In particular, for the fixed typing $h_{\mathrm U}$ no bound on
+characteristic-data size for $\mathcal B_{h_{\mathrm U}}$
+polynomial in source grammar size and ordinary thickness holds over
+all reduced CFG presentations of targets in $\Ccf{h_{\mathrm U}}$.
+\end{proposition}
 
-In contrast, after refinement to type $1$,
-$E_i\to\mathtt c$ is unavailable because
-$h_{\mathtt c}(\mathtt c)=\zeta\ne1$.
-Since $1\cdot1$ is the only product equal to $1$,
-induction gives $L((E_i)_1)=\{\mathtt a^{2^i}\}$.
-Moreover, $\widetilde S\to U_\zeta\to(E_n)_1D_\zeta$
-shows that $(E_n)_1$ survives trimming.
-Thus $\tau_{h_{\mathtt c}}^{\mathrm{typ}}(G_n^{\mathtt c})
-\ge2^n$.
+\begin{proof}
+The substitutability assertion (i) is proved in
+Appendix~\ref{app:bracketed-substitutability}.
+For (ii), the trivial positive-image semigroup belongs to
+$\mathbf{LI}\vee\mathbf G$ (equivalently, it is a trivial group),
+so Corollary~\ref{cor:li-thickness} applied to $G_n$ gives a
+characteristic sample polynomial in $|G_n|=O(n)$ and
+$\tau_{G_n}+1=2n+2$.
 
+For (iii), suppose $\widehat S\Rightarrow^* w^*_n$ in
+$\mathcal B_{h_{\mathrm U}}(K)$, where $K\subseteq L_n$.
+The nonempty derivation begins with a start rule
+$\widehat S\to[k]$ for some $k\in K\cap\Gamma_{\mathrm{br}}^+$.
+Since $L_n$ is $\sim_{h_{\mathrm U}}$-substitutable, the
+yield-type invariant~\eqref{eq:soundness-invariant} gives
+$h_{\mathrm U}(k)=h_{\mathrm U}(w^*_n)=1$.
+The unique word of $L_n$ of type $1$ is $w^*_n$, so $k=w^*_n$.
+If $C$ is characteristic, taking $K=C$ gives
+$w^*_n\in L(\mathcal B_{h_{\mathrm U}}(C))=L_n$, and
+$\|C\|\ge |w^*_n|+1=3\cdot2^n-1$.
+The family $G_n$ has size and ordinary thickness $O(n)$,
+proving the final claim.
 \end{proof}
 
-The target language $\{\mathtt a,\mathtt c\}^+$ in this family does not
-depend on $n$.  Thus the proposition is not an algorithm-independent lower
-bound on characteristic data.  Its role is only to show that ordinary source
-thickness does not control the typed-refinement parameter appearing in
-Corollary~\ref{cor:typed-thickness-data}; accordingly, the general fixed-$h$
-bound is stated in terms of typed thickness.
+\begin{corollary}[presentation-independent typed-thickness gap]
+\label{cor:typed-gap-intrinsic}
+Let $G=(V,\Gamma_{\mathrm{br}},P,S_0)$ be any reduced SSBNF
+grammar for $L_n$, and let $N=|V\setminus\{S_0\}|$.
+Then
+\[
+ \tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)
+ \ge \frac{3\cdot2^n-2}{2N+1}.
+\]
+Consequently any such presentation of size polynomial in $n$
+has typed thickness at least $2^n/n^{O(1)}$.
+There also exist reduced SSBNF presentations of $L_n$ with
+both size and ordinary thickness polynomial in $n$,
+obtained by Proposition~\ref{prop:thick-ssbnf-normal}
+from $G_n$.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:reconstruction-fixed-h} makes
+$\WitnessSet(\widetilde G)$ a characteristic sample for
+$\mathcal B_{h_{\mathrm U}}$. By Proposition~\ref{prop:typed-thickness-gap}(iii),
+it must contain $w^*_n$. Lemma~\ref{lem:typed-thickness-bound}
+bounds its length by $(N_t+1)\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)$,
+where $N_t\le 2N$. The normalization of
+Proposition~\ref{prop:thick-ssbnf-normal} applied to $G_n$
+also gives the asserted polynomial bounds on size and
+ordinary thickness.
+\end{proof}
 
 \section{Polynomial Thick Data Beyond Fixed Windows}
 \label{sec:fixed-window-thick}
@@ -1223,8 +1267,9 @@ The corresponding batch bounds are in the polynomial-time-and-thick-data
 (IPTtD) sense of~\cite{yoshinaka2008} and
 \cite[Definition~2.12]{eyraud-heinz-yoshinaka2016};
 we claim no improvement in Yoshinaka's polynomial degree.
-For general $h$, ordinary thickness cannot bound typed thickness
-polynomially (Proposition~\ref{prop:typed-thickness-gap}).
+For general fixed $h$, ordinary thickness need not give a polynomial
+characteristic-data bound for $\mathcal B_h$
+(Proposition~\ref{prop:typed-thickness-gap}).
 
 Fix $k,\ell\ge0$ and a morphism $g:\Sigma^*\to Q$ into a finite group.
 Put $m:=k+\ell$ and $q:=|Q|$.
@@ -1364,6 +1409,37 @@ The corollary uses this algebraic condition to extend the
 quantitative result from SSBNF to arbitrary reduced CFG presentations.
 It does \emph{not} characterize all typings admitting polynomial
 characteristic-data bounds.
+
+\begin{lemma}[the two-element semilattice lies outside the window--group join]
+\label{lem:U1-outside}
+$U_1\notin\mathbf{LI}\vee\mathbf G$.
+\end{lemma}
+
+\begin{proof}
+Suppose there were a subsemigroup $T\subseteq S\times Q$ and a
+surjective morphism $\pi:T\to U_1$, with
+$S\in\mathbf{LI}$ and $Q$ a finite group.
+Each of $\pi^{-1}(1)$ and $\pi^{-1}(\zeta)$ is a
+nonempty finite subsemigroup, and so contains an idempotent.
+Choose $e,f$ in these respective preimages.
+Every idempotent of $S\times Q$ has group component $1_Q$,
+so the $S$-components of $e,f$ are idempotents.
+Local triviality of $S$ gives $efe=e$.
+Applying $\pi$ would yield
+$1\cdot\zeta\cdot1=1$, contradicting $\zeta\ne1$.
+\end{proof}
+
+\begin{remark}
+The positive image of $h_{\mathrm U}$ is $U_1$, which lies outside
+$\mathbf{LI}\vee\mathbf G$ by Lemma~\ref{lem:U1-outside}.
+Proposition~\ref{prop:typed-thickness-gap} shows that the
+ordinary-thickness characteristic-data bound in
+Corollary~\ref{cor:li-thickness} can fail for
+$\mathcal B_h$ when its algebraic hypothesis is removed.
+This does not establish that the hypothesis is necessary
+for every fixed typing, nor an algorithm-independent
+sample lower bound.
+\end{remark}
 
 The empty target has the empty characteristic sample.
 Polynomials may depend on the fixed typing and alphabet.
@@ -1889,8 +1965,12 @@ characteristic data bounded by typed thickness; ordinary thickness
 suffices when the positive image is a homomorphic image of a subsemigroup
 of the direct product of a finite locally trivial semigroup and a finite
 group, while linear targets admit a
-grammar-size bound.  The typed-thickness gap
-limits this refinement analysis, not learning algorithms in general.
+grammar-size bound. Proposition~\ref{prop:typed-thickness-gap}
+shows that a two-element semilattice typing outside
+$\mathbf{LI}\vee\mathbf G$ can force exponentially long
+characteristic data for $\mathcal B_h$, even for targets admitting
+polynomial data under the trivial typing. No algorithm-independent
+lower bound is claimed.
 
 After finite refinement of the typing, product typing accommodates regular
 filtering and arbitrary inverse homomorphisms; this is a compositionality
@@ -1900,7 +1980,9 @@ Nonregular linear and nonlinear examples reach beyond fixed windows;
 counter/Dyck obstructions and strict containment in Clark's
 congruential family delimit the framework.  Open questions include
 characterizing $\mathsf{RS}\cap\mathrm{CFL}$, the extent of
-$\Clin{h}$ for nonregular targets, how to choose useful typings,
+$\Clin{h}$ for nonregular targets, how to choose useful typings, whether membership in
+$\mathbf{LI}\vee\mathbf G$ exactly characterizes typings admitting
+polynomial ordinary-thickness characteristic data for $\mathcal B_h$,
 and direct pushdown characterizations.
 
 \section*{Data availability}
@@ -2136,6 +2218,128 @@ the separated start form, and reducedness.  The wrapper and chain
 factorizations are linear in the already polynomial total right-hand-side
 length, so the whole construction has polynomial size and runs in polynomial
 time.
+\end{proof}
+
+\section{Substitutability of the bracketed doubling family}
+\label{app:bracketed-substitutability}
+
+\begin{proof}[Proof of Proposition~\ref{prop:typed-thickness-gap}(i)]
+Call a word generated by
+$D\to\mathtt a\mid\mathtt{(}DD\mathtt{)}
+  \mid\mathtt{[}D\mathtt{]}$
+an \emph{item}. Every item contains an occurrence of $\mathtt a$.
+The depth of a position is the number of as-yet-unmatched opening
+brackets preceding it. An induction on $n$ gives
+\[
+ L_n=\{\,w:w\text{ is an item and every }\mathtt a
+               \text{ in }w\text{ occurs at depth }n\,\}.
+\]
+We show that any two nonempty factors of $L_n$ sharing a context
+have equal distributions.
+
+Consider the deterministic partial stack device that checks the
+bracket kinds, the number of completed immediate subitems,
+and the depth of every $\mathtt a$. Its configurations have the form
+\[
+ \kappa=(c_0;(t_1,c_1),\ldots,(t_r,c_r)),
+\]
+where the open bracket types $t_j\in\{\mathtt{(},\mathtt{[}\}$
+are listed from outermost to innermost,
+$c_j$ is the number of completed direct children of the
+$j$th open bracket, and $c_0$ counts completed root items.
+Set $\operatorname{ar}(\mathtt{(})=2$,
+$\operatorname{ar}(\mathtt{[})=1$ and
+$\operatorname{ar}(\mathrm{root})=1$.
+All counts lie between zero and the corresponding arity.
+Reading a leaf $\mathtt a$ requires depth $r=n$ and free capacity
+in the innermost entry, and increments that count.
+An opening bracket requires free capacity and pushes $(t,0)$.
+A closing bracket must match the top bracket whose count
+is full; it pops that entry and increments the new top count.
+The word is accepted precisely when the run from $(0;)$
+is defined and terminates at $(1;)$.
+Each letter transition is injective on its domain:
+an increment can be reversed, a push can be undone,
+and a pop has a specified bracket kind and full count.
+Consequently any partial map $f_v$ induced by a suffix $v$
+is injective on its domain.
+
+For a factor $x$ occurring in an accepted word, its unmatched
+closing brackets precede its unmatched opening brackets.
+Removing the complete items between these unmatched brackets
+gives a unique decomposition
+\[
+ x=z_0\beta_1z_1\cdots\beta_pz_p\,
+   \gamma_1y_1\cdots\gamma_qy_q,
+\]
+where the $\beta_j$ are unmatched closers, the $\gamma_j$
+unmatched openers, and the $z_j,y_j$ are sequences of
+complete items. Write $|z_j|_{\mathrm{it}}$ and
+$|y_j|_{\mathrm{it}}$ for their numbers of items, not
+their string lengths.
+If $x$ contains $\mathtt a$, then its occurrences have a
+common depth offset relative to the beginning of $x$;
+there is therefore a unique initial stack depth $r_x$
+placing all of them at depth $n$. If it contains no
+$\mathtt a$, put $r_x=\bot$.
+
+The partial map $f_x$ on configurations is determined by
+\[
+ \Theta(x)=
+ \bigl(p,(\beta_j),(|z_j|_{\mathrm{it}})_{j=0}^p,\,
+       q,(\gamma_j),(|y_j|_{\mathrm{it}})_{j=1}^q,r_x\bigr).
+\]
+Indeed, starting at a configuration of depth $r\ge p$,
+one first completes $|z_0|_{\mathrm{it}}$ items and
+pops the frame matching $\beta_1$; for $j\ge2$,
+the frame popped by $\beta_j$ has previously received
+one child from the preceding pop and
+$|z_{j-1}|_{\mathrm{it}}$ further items.
+All these kinds and required initial counts are
+specified by $\Theta(x)$.
+At the remaining depth $e=r-p$, the count increases by
+$[p\ge1]+|z_p|_{\mathrm{it}}$, after which the unmatched
+openers push frames
+$(\gamma_1,|y_1|_{\mathrm{it}}),\ldots,
+ (\gamma_q,|y_q|_{\mathrm{it}})$.
+All intermediate capacity checks are determined by these counts,
+and if a leaf occurs the initial depth is required to equal $r_x$.
+Complete items are checked internally and have exactly the same
+effect of adding one child whenever their required depth is met.
+Hence $\Theta(x)$ fixes both the domain and the output of $f_x$.
+
+Suppose nonempty factors $x,y$ share a context $(u,v)$ in $L_n$,
+and write $\kappa=f_u((0;))$, of depth $r$.
+The two successful runs end at $(1;)$; injectivity of $f_v$
+therefore gives $f_x(\kappa)=f_y(\kappa)$.
+Let $p,q$ and $p',q'$ be the unmatched closing/opening
+counts for $x$ and $y$. Equality of the final depths yields
+$r-p+q=r-p'+q'$.
+If $p<p'$, then $p'\ge1$ and
+the run on $y$ increases the count in the original frame
+at depth $r-p'$, whereas the run on $x$ does not change
+that frame. This contradicts equality of their resulting
+configurations. Reversing the roles rules out $p'>p$,
+so $p=p'$ and hence $q=q'$.
+
+The initial configuration now determines the kinds
+$(\beta_j)$ and the counts
+$(|z_j|_{\mathrm{it}})_{j<p}$ from the required
+fullness of each popped frame. Equality of final
+configurations determines $|z_p|_{\mathrm{it}}$ and
+all pushed kinds $(\gamma_j)$ and counts
+$(|y_j|_{\mathrm{it}})$. Thus the item-count data
+for $x$ and $y$ agree. Since every complete item
+contains a leaf $\mathtt a$, either both factors
+contain a leaf or neither does. In the former case
+the common successful initial depth is
+$r_x=r=r_y$; in the latter both are $\bot$.
+Consequently $\Theta(x)=\Theta(y)$ and
+$f_x=f_y$, and therefore
+$\mathcal D_{L_n}(x)=\mathcal D_{L_n}(y)$.
+Since $L_n$ is finite and hence context-free, it lies in
+$\Ccf{h_0}$; kernel refinement then gives
+$L_n\in\Ccf{h_{\mathrm U}}$.
 \end{proof}
 
 \begin{thebibliography}{99}
