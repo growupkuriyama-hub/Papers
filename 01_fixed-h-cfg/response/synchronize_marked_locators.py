@@ -39,8 +39,8 @@ def locate(section_or_statement):
         section = re.search(r"Sections?\s+(\d+(?:\.\d+)?)", section_or_statement)
         if section:
             number = section.group(1)
-        elif "Appendic" in section_or_statement:
-            m = re.search(r"Appendic\w*\s+([ABC])", section_or_statement)
+        elif re.search(r"Append(?:ix|ices)\b", section_or_statement):
+            m = re.search(r"Append(?:ix|ices)\s+([ABC])", section_or_statement)
             number = m.group(1) if m else "A"
         elif "Introduction" in section_or_statement:
             number = "1"
