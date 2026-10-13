@@ -48,15 +48,15 @@ def locate_statement_bbox(kind, number):
             if (word.lower() != kind.lower()
                     or nxt.rstrip(".") != number
                     or not 55 <= x0 <= 100
-                    or abs((y0 + y1) - (ny0 + ny1)) > 6
-                    or nx0 - x1 > 22):
+                    or abs((y0 + y1) - (ny0 + ny1)) > 16
+                    or nx0 - x1 > 48):
                 continue
             center = (y0 + y1) / 2
             nearby = []
             for value, mx0, mx1, my0, my1 in words:
                 if (value.isdigit()
-                        and 1 <= int(value) <= 3000
-                        and (mx1 < 67 or mx0 > width - 100)
+                        and 100 <= int(value) <= 3000
+                        and (mx1 < 67 or mx0 > width - 85)
                         and abs((my0 + my1) / 2 - center) <= 8):
                     nearby.append((abs((my0 + my1)/2 - center), int(value)))
             if len(nearby) == 1:
@@ -157,25 +157,17 @@ def locate(section_or_statement):
                 return page_number, number_at_anchor
     return None
 
-def debug_heading(kind, number):
-    found = []
-    for page_number, (width, words) in enumerate(bbox_pages, 1):
-        for i in range(len(words)-1):
-            w, x0, x1, y0, y1 = words[i]
-            nxt, nx0, nx1, ny0, ny1 = words[i+1]
-            if w.lower() != kind.lower() or nxt.rstrip(".") != number:
-                continue
-            cx = (y0+y1)/2
-            margins = [(v, round(xx0), round((yy0+yy1)/2, 1))
-                       for v, xx0, xx1, yy0, yy1 in words
-                       if v.isdigit() and
-                       (xx1 < 67 or xx0 > width-100)
-                       and abs((yy0+yy1)/2-cx) < 13]
-            found.append((page_number, round(x0), round(cx,1), margins[:6]))
-    print(f"HEADING_DIAGNOSTIC {kind} {number}: {found[:12]}", flush=True)
-
-for dk,dn in [("Proposition","6.3"),("Lemma","7.6"),("Lemma","8.2"),("Theorem","8.3")]:
-    debug_heading(dk,dn)
+# Require theorem anchors in the mathematical order of the manuscript.
+ordered_statements = [
+    ("Proposition", "6.3"),
+    ("Lemma", "7.6"),
+    ("Lemma", "8.2"),
+    ("Theorem", "8.3"),
+]
+ordered_positions = [locate_statement_bbox(k, n) for k, n in ordered_statements]
+if any(p is None for p in ordered_positions) or ordered_positions != sorted(ordered_positions):
+    raise SystemExit(f"Statement locator order or coordinate matching failed: {list(zip(ordered_statements, ordered_positions))}")
+print(f"Verified ordered theorem coordinates: {list(zip(ordered_statements, ordered_positions))}")
 
 s = response.read_text()
 heading_re = re.compile(
