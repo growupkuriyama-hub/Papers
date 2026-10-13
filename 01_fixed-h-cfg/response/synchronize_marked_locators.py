@@ -157,6 +157,26 @@ def locate(section_or_statement):
                 return page_number, number_at_anchor
     return None
 
+def debug_heading(kind, number):
+    found = []
+    for page_number, (width, words) in enumerate(bbox_pages, 1):
+        for i in range(len(words)-1):
+            w, x0, x1, y0, y1 = words[i]
+            nxt, nx0, nx1, ny0, ny1 = words[i+1]
+            if w.lower() != kind.lower() or nxt.rstrip(".") != number:
+                continue
+            cx = (y0+y1)/2
+            margins = [(v, round(xx0), round((yy0+yy1)/2, 1))
+                       for v, xx0, xx1, yy0, yy1 in words
+                       if v.isdigit() and
+                       (xx1 < 67 or xx0 > width-100)
+                       and abs((yy0+yy1)/2-cx) < 13]
+            found.append((page_number, round(x0), round(cx,1), margins[:6]))
+    print(f"HEADING_DIAGNOSTIC {kind} {number}: {found[:12]}", flush=True)
+
+for dk,dn in [("Proposition","6.3"),("Lemma","7.6"),("Lemma","8.2"),("Theorem","8.3")]:
+    debug_heading(dk,dn)
+
 s = response.read_text()
 heading_re = re.compile(
     r"\\noindent\\textbf\{Locator guide for the [^}]*\.\}")
