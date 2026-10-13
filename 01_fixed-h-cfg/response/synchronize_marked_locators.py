@@ -70,6 +70,17 @@ def locate(section_or_statement):
                     and number_at_anchor == int(number)
                     and not re.search(r"\s{2,}\d{1,4}\s*$", line)):
                 number_at_anchor = None
+            if number_at_anchor is None and statement and kind == "Theorem" and number == "5.3":
+                # Theorem 5.3's marked heading wraps onto several lines.
+                # Its own margin anchor is l.439; the preceding l.438 belongs
+                # to Section 5.2 and must not be used.
+                for distance in range(1, 15):
+                    k = j + distance
+                    if k >= len(lines):
+                        break
+                    number_at_anchor = margin_number(lines[k])
+                    if number_at_anchor is not None:
+                        break
             if number_at_anchor is None:
                 # pdftotext sometimes emits a displayed heading and its
                 # margin number on different consecutive text lines.
