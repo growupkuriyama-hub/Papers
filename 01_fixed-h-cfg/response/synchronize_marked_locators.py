@@ -7,6 +7,7 @@ anchors at the beginning of named sections/statements, not fabricated ranges.
 from pathlib import Path
 import re
 import subprocess
+import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
 marked = root / "TCS-D-26-00494_Manuscript_Marked.pdf"
@@ -17,6 +18,54 @@ raw = subprocess.check_output(["pdftotext", "-layout", str(marked), "-"], text=T
 pages = [p.splitlines() for p in raw.split("\f") if p.strip()]
 if len(pages) < 12:
     raise SystemExit("Unexpected marked-manuscript page count")
+
+# Use word coordinates to associate theorem headings with their own
+# margin number rather than the previous/next line in pdftotext -layout.
+bbox_xml = subprocess.check_output(
+    ["pdftotext", "-bbox-layout", str(marked), "-"], text=True
+)
+bbox_root = ET.fromstring(bbox_xml)
+bbox_pages = []
+for page in bbox_root.findall(".//{*}page"):
+    words = []
+    for node in page.findall(".//{*}word"):
+        value = "".join(node.itertext()).strip()
+        if value:
+            words.append((
+                value,
+                float(node.attrib["xMin"]), float(node.attrib["xMax"]),
+                float(node.attrib["yMin"]), float(node.attrib["yMax"])
+            ))
+    bbox_pages.append((float(page.attrib["width"]), words))
+if len(bbox_pages) != len(pages):
+    raise SystemExit("BBox and layout page counts disagree")
+
+def locate_statement_bbox(kind, number):
+    for page_number, (width, words) in enumerate(bbox_pages, 1):
+        for i in range(len(words) - 1):
+            word, x0, x1, y0, y1 = words[i]
+            nxt, nx0, nx1, ny0, ny1 = words[i + 1]
+            if (word.lower() != kind.lower()
+                    or nxt.rstrip(".") != number
+                    or not 55 <= x0 <= 100
+                    or abs((y0 + y1) - (ny0 + ny1)) > 6
+                    or nx0 - x1 > 22):
+                continue
+            center = (y0 + y1) / 2
+            nearby = []
+            for value, mx0, mx1, my0, my1 in words:
+                if (value.isdigit()
+                        and 1 <= int(value) <= 3000
+                        and (mx1 < 67 or mx0 > width - 100)
+                        and abs((my0 + my1) / 2 - center) <= 8):
+                    nearby.append((abs((my0 + my1)/2 - center), int(value)))
+            if len(nearby) == 1:
+                return page_number, nearby[0][1]
+            if nearby:
+                nearby.sort()
+                if len(nearby) == 1 or nearby[0][0] + 2 < nearby[1][0]:
+                    return page_number, nearby[0][1]
+    return None
 
 def margin_number(line):
     for pat in (r"\s{2,}(\d{1,4})\s*$", r"^\s*(\d{1,4})\s+(?:[^\d]|$)"):
@@ -32,6 +81,9 @@ def locate(section_or_statement):
     if statement:
         kind = statement.group(1).replace("Theorems", "Theorem")
         number = statement.group(2)
+        exact = locate_statement_bbox(kind, number)
+        if exact is not None:
+            return exact
         heading = re.compile(r"^\s*(?:\d{1,4}\s+)?"
                              + re.escape(kind) + r"\s+" + re.escape(number)
                              + r"\b", re.I)
