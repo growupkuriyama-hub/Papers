@@ -2191,19 +2191,21 @@ time.
 \section{Substitutability of the bracketed doubling family}
 \label{app:bracketed-substitutability}
 
-Recall that $L_0=\{\mathtt a\}$ and
+Set $L_0=\{\mathtt a\}$. The languages $L_n=L(G_n)$ from
+Proposition~\ref{prop:typed-thickness-gap} satisfy
 $L_n=\mathtt{[}L_{n-1}\mathtt{]}\cup\mathtt{(}L_{n-1}L_{n-1}\mathtt{)}$
 for $n\geq1$.
-We read a word of $L_n$ as a tree in the obvious way:
+Following this recursion, we represent words of $L_n$ as ordered trees:
 $\mathtt a$ is a leaf, $\mathtt{[}w\mathtt{]}$ is a unary node and
 $\mathtt{(}w_1w_2\mathtt{)}$ is a binary node.
 Thus $L_n$ is the set of yields of such trees all of whose leaves
 have depth $n$.
 
 \paragraph{Matching brackets.}
-In a word $w$, the bracket matching an opening bracket at position $i$
-is at the least $j>i$ such that $w[i..j]$ contains equally many
-opening and closing brackets. This depends only on $w[i..j]$.
+In a well-bracketed word $w$, the closing bracket matching an opening
+bracket at position $i$ occurs at the least $j>i$ such that $w[i..j]$
+contains equally many opening and closing brackets, counting both bracket
+types together. This depends only on $w[i..j]$.
 Hence, if a factor $z$ of $w$ is well bracketed, then every opening
 bracket of $z$ has the same match in $z$ as in $w$.
 In a word of $L_n$, the internal nodes of its tree correspond exactly
@@ -2214,10 +2216,7 @@ of $\mathtt a$; in particular the tree is determined by the word.
 A subset $C\subseteq\Sigma^+$ is a \emph{prefix code} if no word
 of $C$ is a proper prefix of another; it is a \emph{suffix code} if
 the analogous condition holds for suffixes. A \emph{bifix code}
-satisfies both conditions. For example,
-$L_1=\{\mathtt{[a]},\mathtt{(aa)}\}$ is bifix. These conditions
-make boundaries between concatenated $C$-words uniquely
-recognizable from the left and from the right, respectively.
+satisfies both conditions.
 
 \begin{lemma}\label{lem:app-bifix}
 Each $L_n$ is a bifix code.
@@ -2238,7 +2237,8 @@ turned into $y$ by finitely many steps $spt\mapsto sqt$ with
 $p,q\in L_j$ and $j\leq k$. Clearly $\approx_{k-1}\subseteq\approx_k$.
 
 \begin{lemma}\label{lem:app-tree-swap}
-Let $w=spt\in L_n$ with $p\in L_k$. Then this occurrence of $p$ is the
+Let $0\leq k\leq n$ and $w=spt\in L_n$ with $p\in L_k$.
+Then this occurrence of $p$ is the
 yield of a node of depth $n-k$ in the tree of $w$, and $sqt\in L_n$ for
 every $q\in L_k$. Consequently, $x\approx_n y$ implies
 $\mathcal D_{L_n}(x)=\mathcal D_{L_n}(y)$.
@@ -2259,6 +2259,15 @@ $p,q\in L_j$. If $(u,v)\in\mathcal D_{L_n}(x)$, then
 $(us)p(tv)\in L_n$, hence $usqtv\in L_n$, that is,
 $(u,v)\in\mathcal D_{L_n}(y)$. The converse is symmetric.
 \end{proof}
+
+The key remaining step is to show that factors sharing a context are
+related by $\approx_n$. Such factors need not encode complete subtrees:
+a factor may cross the boundary between the two children of a binary
+node. The following lemma reduces comparisons in $CC$ to comparisons
+in $C$. The bifix property ensures that a fixed prefix contains the
+whole first codeword in both decompositions or in neither, and dually
+for the fixed suffix and the second codeword. Case~(d) handles a factor
+crossing the boundary.
 
 \begin{lemma}\label{lem:app-bifix-product}
 Let $C\subseteq\Sigma^+$ be a bifix code and $\approx$ a congruence on
@@ -2298,8 +2307,11 @@ $u,v,x,y\in\Gamma_{\mathrm{br}}^*$,
 (Equality of distributions would not serve as the induction invariant:
 $\mathcal D_{L_0}(\mathtt{a]})=\mathcal D_{L_0}(\mathtt{a)})=\varnothing$,
 but $\mathcal D_{L_1}(\mathtt{a]})\neq\mathcal D_{L_1}(\mathtt{a)})$.
-The congruences $\approx_n$ are nested and compatible with
-concatenation, which is exactly what the inductive step uses.)
+Thus equality of $\mathcal D_{L_{n-1}}$ does not in general imply
+equality of $\mathcal D_{L_n}$, whereas
+$\approx_{n-1}\subseteq\approx_n$ holds by definition.
+This inclusion, together with the congruence property,
+is exactly what the inductive step uses.)
 
 For $n=0$, both words equal $\mathtt a$, so $x=y$.
 Let $n\geq1$ and put $C=L_{n-1}$. By the induction hypothesis,
@@ -2310,7 +2322,8 @@ $\approx_{n-1}$ satisfies (H) for $C$; since $C$ is a bifix code
  \quad\Longrightarrow\quad x'\approx_{n-1}y'.
 \end{equation}
 
-Let $w=uxv$ and $w'=uyv$ lie in $L_n$, and assume $x\neq y$.
+Let $w=uxv$ and $w'=uyv$ lie in $L_n$.
+If $x=y$, the conclusion is immediate; hence assume $x\neq y$.
 If $u=v=\lambda$, then $x,y\in L_n$ and $x\approx_n y$ by definition.
 Otherwise the first letters of $w$ and $w'$ coincide: if $u\neq\lambda$
 both equal the first letter of $u$; if $u=\lambda$, then
@@ -2323,7 +2336,9 @@ bracket $o$ and its partner $\bar o$. Then
  \begin{cases} C & \text{if } o=\mathtt{[},\\
                CC & \text{if } o=\mathtt{(}.\end{cases}
 \]
-We now remove $o$ and $\bar o$ from the same parts of both words.
+We now remove the common root brackets from both words, taking
+each bracket from the fixed context when present and otherwise from
+the variable factor.
 
 \emph{Left end.} If $u\neq\lambda$, write $u=ou'$ and put $s=\lambda$.
 If $u=\lambda$, then $x,y\neq\lambda$: for instance, $x=\lambda$ would
@@ -2335,9 +2350,9 @@ $u'=\lambda$ and $s=o$.
 $t=\lambda$; if $v=\lambda$, then $x,y$ both end with $\bar o$, and we
 put $v'=\lambda$ and $t=\bar o$.
 
-Since $u$ and $v$ are not both empty, at most one letter is taken from
-each end of $x$ and of $y$, so $x=sx't$ and $y=sy't$ for words $x',y'$,
-and
+Since $u$ and $v$ are not both empty, at most one of $s,t$ is
+nonempty. When one is nonempty, both $x$ and $y$ are nonempty by the
+preceding argument. Thus $x=sx't$ and $y=sy't$ for words $x',y'$, and
 \[
  W=u'x'v',\qquad W'=u'y'v'.
 \]
