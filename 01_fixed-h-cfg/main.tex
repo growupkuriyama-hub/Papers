@@ -2218,6 +2218,9 @@ the diamond property. It shortens words, so every $W$ has a unique
 irreducible normal form $\mathrm{NF}(W)$; moreover
 $\mathrm{NF}(uxv)=\mathrm{NF}(u\,\mathrm{NF}(x)\,v)$, and
 $W\rightsquigarrow^*\mathtt a_n$ iff $\mathrm{NF}(W)=\mathtt a_n$.
+In particular, if $W\rightsquigarrow^*\mathtt a_n$ and
+$W\rightsquigarrow^*W'$, then $W'\rightsquigarrow^*\mathtt a_n$;
+we use this consequence of confluence repeatedly below.
 The map $W\mapsto\widetilde W$ that reverses $W$ and exchanges
 $\langle\leftrightarrow\rangle$, $\mathtt{[}\leftrightarrow\mathtt{]}$
 preserves redexes, so every statement below has a mirror image. The
@@ -2232,9 +2235,12 @@ $\D_{L_n}(x)=\{(u,v)\in\Gamma_{\mathrm{br}}^*\times\Gamma_{\mathrm{br}}^*:\
 depends only on $\mathrm{NF}(x)$, and $\widetilde{L_n}=L_n$.
 \end{lemma}
 \begin{proof}
-($\Rightarrow$) By induction on $n$: words of $L_n$ reduce to
+($\Rightarrow$) The case $n=0$ is immediate. For $n\geq1$,
+every redex for $n-1$ is also a redex for $n$, so by induction
+words of $L_n$ reduce to
 $\mathtt{[}\mathtt a_{n-1}\mathtt{]}$ or
-$\langle\mathtt a_{n-1}\mathtt a_{n-1}\rangle$. ($\Leftarrow$) Let
+$\langle\mathtt a_{n-1}\mathtt a_{n-1}\rangle$, and thence
+to $\mathtt a_n$. ($\Leftarrow$) Let
 $\sigma(W)$ replace each token $\mathtt a_h$ of $W$ by the set $L_h$. A
 redex $\rho$ reducing to $\mathtt a_{h+1}$ has
 $\sigma(\rho)\subseteq L_{h+1}$, so $W\rightsquigarrow W'$ gives
@@ -2270,10 +2276,13 @@ step $o\beta c$ is still a segment. Since $\rho$ begins with an opener
 and ends with a closer, while $o\beta c$ begins with $o$ and ends with
 $c$, neither ends with the bracket that begins the other; hence
 $\rho=o\beta c$.
-(d) Otherwise let $c$ be the first closer of $z$ preceded by an opener of
-$z$; the last bracket $o$ before $c$ is then an opener of $z$, and $o\beta
-c$ is a redex inside $z$ by (c). If $\alpha=\lambda$, a first closer of
-$z$ would thus be preceded only by tokens, contrary to (a).
+(d) Otherwise let $c$ be the first closer of $z$ preceded by an
+opener $o'$ of $z$. The last bracket $o$ before $c$ lies in $z$
+(at or after $o'$); it must be an opener, since a closer there would
+contradict the choice of $c$. Thus $o\beta c$ with $\beta\in T^*$
+is a redex inside $z$ by (c), contradicting irreducibility.
+If $\alpha=\lambda$, a first closer of $z$ would be preceded
+only by tokens, contrary to (a).
 \end{proof}
 
 By (d), an irreducible $z$ with
@@ -2288,14 +2297,21 @@ to $\mathtt a_n$, then $s=s'$.
 \begin{proof}
 Induction on the number $k$ of closers in $q$; by
 Lemma~\ref{lem:app-reduction-facts}(a), $s$ and $s'$ have $k$ openers.
-If $k=0$, then $sq\in T^*$ is irreducible, so $sq=\mathtt a_n=s'q$. If $k\geq1$, write $q=Qcq_1$ with
-$Q\in T^*$, $c\in C$, and $s=s_0oS$ with $o$ the last opener of $s$. By
-Lemma~\ref{lem:app-reduction-facts}(b),(c), $oSQc$ is a redex whose tokens
-are $\mathtt a_{n-k}$; so $o$ is determined by $c$, and $S$ by $c$ and
-$|Q|$. The same holds for $s'=s'_0o'S'$, so $o'S'=oS$, and both
-$s_0\mathtt a_{n-k+1}q_1$ and $s'_0\mathtt a_{n-k+1}q_1$ reduce to
-$\mathtt a_n$, where $\mathtt a_{n-k+1}q_1$ has $k-1$ closers. By
-induction $s_0=s'_0$.
+If $k=0$, then $sq\in T^*$ is irreducible, so
+$sq=\mathtt a_n=s'q$. If $k\geq1$, write $q=Qcq_1$ with
+$Q\in T^*$, $c\in C$, and $s=s_0oS$ with $o$ the last opener
+of $s$. By Lemma~\ref{lem:app-reduction-facts}(b),(c),
+$oSQc$ is a redex whose tokens are $\mathtt a_{n-k}$.
+Put $\ell=1$ if $c=\mathtt{]}$ and $\ell=2$ if $c=\rangle$.
+Thus $o$ is uniquely determined by $c$, and
+$S=\mathtt a_{n-k}^{\,\ell-|Q|}$; the exponent is nonnegative
+because $oSQc$ is a redex. For fixed $k$, this determines $oS$
+from $c$ and $|Q|$. The same holds for $s'=s'_0o'S'$,
+so $o'S'=oS$. Contracting these redexes and using confluence,
+both $s_0\mathtt a_{n-k+1}q_1$ and
+$s'_0\mathtt a_{n-k+1}q_1$ still reduce to $\mathtt a_n$.
+The common right factor $\mathtt a_{n-k+1}q_1$ has $k-1$
+closers, so induction gives $s_0=s'_0$.
 \end{proof}
 
 \begin{proposition}\label{prop:app-same-normal-form}
@@ -2306,18 +2322,33 @@ Let $p=\mathrm{NF}(u)$, $q=\mathrm{NF}(v)$, $\mathrm{NF}(x)=X^-MX^+$ and
 $\mathrm{NF}(y)=Y^-M'Y^+$. By Lemma~\ref{lem:app-reduction-language},
 $pX^-MX^+q$ reduces to $\mathtt a_n$, and by
 Lemma~\ref{lem:app-reduction-facts}(d) and its mirror image,
-$p\in(O\cup T)^*$ and
-$q\in(C\cup T)^*$. Let $r$ be the number of closers of $X^-$. Consume them from left to
-right. By induction on $1\le i\le r$, after the first $i$ closers
-have been consumed, the suffix of $p$ starting with its $i$th opener
-from the right, together with the processed prefix of $X^-$, has
-become a single token. Indeed, the next closer meets the rightmost
-unused opener of $p$ with only tokens between them; the current full
-word still reduces to $\mathtt a_n$, so
-Lemma~\ref{lem:app-reduction-facts}(a),(c) makes this segment a redex.
-Consequently $pX^-MX^+\rightsquigarrow^*s_x:=p_0ZMX^+$,
-where $p_0$ is the prefix of $p$ before its $r$th opener from the right
-($p_0=p$ if $r=0$) and $Z$ is one token if $r\geq1$ and empty if $r=0$.
+$p\in(O\cup T)^*$ and $q\in(C\cup T)^*$.
+Write $X^-=Q_1c_1\cdots Q_rc_r$ with $Q_j\in T^*$,
+$c_j\in C$, and $r$ the number of closers in $X^-$.
+Since $pX^-$ is a prefix of a word reducing to $\mathtt a_n$,
+Lemma~\ref{lem:app-reduction-facts}(a) implies that $p$
+has at least $r$ openers. Let $p_{(0)}=p$; for
+$1\le i\le r$, let $o_i$ be the $i$th opener of $p$
+from the right and $p_{(i)}$ the prefix preceding $o_i$.
+We claim that for $0\le i\le r$ there is
+$Z_i\in T^{\min(i,1)}$ such that
+\[
+pX^-MX^+q\rightsquigarrow^*
+p_{(i)}Z_iQ_{i+1}c_{i+1}\cdots Q_rc_rMX^+q.
+\]
+For $i=0$ take $Z_0=\lambda$. If $i<r$, write
+$p_{(i)}=p_{(i+1)}o_{i+1}S_{i+1}$ with
+$S_{i+1}\in T^*$, since $p\in(O\cup T)^*$.
+In the current word the factor
+$o_{i+1}S_{i+1}Z_iQ_{i+1}c_{i+1}$
+has only tokens between its brackets. The whole word
+still reduces to $\mathtt a_n$ by confluence, so
+Lemma~\ref{lem:app-reduction-facts}(c) makes this
+factor a redex. Contracting it produces a single token
+$Z_{i+1}$ and establishes the claim for $i+1$.
+At $i=r$ set $p_0:=p_{(r)}$ and $Z:=Z_r$;
+the same steps, restricted to the prefix, give
+$pX^-MX^+\rightsquigarrow^*s_x:=p_0ZMX^+$.
 Define $r'$ and $s_y=p'_0Z'M'Y^+$ likewise. Since $s_x,s_y\in(O\cup T)^*$
 and $s_xq$, $s_yq$ reduce to $\mathtt a_n$,
 Lemma~\ref{lem:app-left-complement} gives $s_x=s_y$. If $r<r'$, the
