@@ -2196,175 +2196,148 @@ time.
 Set $L_0=\{\mathtt a\}$. The languages $L_n=L(G_n)$ from
 Proposition~\ref{prop:typed-thickness-gap} satisfy
 $L_n=\mathtt{[}L_{n-1}\mathtt{]}\cup\langle{}L_{n-1}L_{n-1}\rangle$
-for $n\geq1$.
-Following this recursion, we represent words of $L_n$ as ordered trees:
-$\mathtt a$ is a leaf, $\mathtt{[}w\mathtt{]}$ is a unary node and
-$\langle{}w_1w_2\rangle$ is a binary node.
-Thus $L_n$ is the set of yields of such trees all of whose leaves
-have depth $n$.
+for $n\geq1$. We show that factors sharing a context in $L_n$ have the
+same normal form under a simple reduction, and that this normal form
+determines the distribution.
 
-\paragraph{Matching brackets.}
-In a well-bracketed word $w$, the closing bracket matching an opening
-bracket at position $i$ occurs at the least $j>i$ such that $w[i..j]$
-contains equally many opening and closing brackets, counting both bracket
-types together. This depends only on $w[i..j]$.
-Hence, if a factor $z$ of $w$ is well bracketed, then every opening
-bracket of $z$ has the same match in $z$ as in $w$.
-In a word of $L_n$, the internal nodes of its tree correspond exactly
-to the matching pairs of brackets, and the leaves to the occurrences
-of $\mathtt a$; in particular the tree is determined by the word.
+\paragraph{A reduction.}
+Put $\mathtt a_0:=\mathtt a$ and
+$\Delta=\Gamma_{\mathrm{br}}\cup\{\mathtt a_1,\dots,\mathtt a_n\}$ with new
+letters $\mathtt a_h$. Let $O=\{\langle,\mathtt{[}\}$ (\emph{openers}),
+$C=\{\rangle,\mathtt{]}\}$ (\emph{closers}) and
+$T=\{\mathtt a_0,\dots,\mathtt a_n\}$ (\emph{tokens}). A \emph{redex} is
+$\langle\mathtt a_h\mathtt a_h\rangle$ or $\mathtt{[}\mathtt a_h\mathtt{]}$
+with $h<n$; replacing an occurrence of it by $\mathtt a_{h+1}$ is a step
+$W\rightsquigarrow W'$, and $\rightsquigarrow^*$ is the
+reflexive--transitive closure. A \emph{segment} is a factor $b\beta b'$
+with brackets $b,b'$ and $\beta\in T^*$. Two segment occurrences sharing a
+letter coincide unless one ends with the bracket that begins the other.
+Since a redex is a segment beginning with an opener and ending with a
+closer, distinct redex occurrences are disjoint, so $\rightsquigarrow$ has
+the diamond property. It shortens words, so every $W$ has a unique
+irreducible normal form $\mathrm{NF}(W)$; moreover
+$\mathrm{NF}(uxv)=\mathrm{NF}(u\,\mathrm{NF}(x)\,v)$, and
+$W\rightsquigarrow^*\mathtt a_n$ iff $\mathrm{NF}(W)=\mathtt a_n$.
+The map $W\mapsto\widetilde W$ that reverses $W$ and exchanges
+$\langle\leftrightarrow\rangle$, $\mathtt{[}\leftrightarrow\mathtt{]}$
+preserves redexes, so every statement below has a mirror image. The
+\emph{depth} of a position is the number of openers minus the number of
+closers to its left.
 
-
-A subset $C\subseteq\Sigma^+$ is a \emph{prefix code} if no word
-of $C$ is a proper prefix of another; it is a \emph{suffix code} if
-the analogous condition holds for suffixes. A \emph{bifix code}
-satisfies both conditions.
-
-\begin{lemma}\label{lem:app-bifix}
-Each $L_n$ is a bifix code.
+\begin{lemma}\label{lem:app-reduction-language}
+For $w\in\Gamma_{\mathrm{br}}^*$, $w\in L_n$ iff
+$w\rightsquigarrow^*\mathtt a_n$. Hence
+$\D_{L_n}(x)=\{(u,v)\in\Gamma_{\mathrm{br}}^*\times\Gamma_{\mathrm{br}}^*:\
+ u\,\mathrm{NF}(x)\,v\rightsquigarrow^*\mathtt a_n\}$
+depends only on $\mathrm{NF}(x)$, and $\widetilde{L_n}=L_n$.
 \end{lemma}
 \begin{proof}
-For $n=0$ this is clear. Let $n\geq1$ and let $w,w'\in L_n$ with $w$ a
-prefix of $w'$. The first letter of $w$ is matched by the last letter of
-$w$, and the first letter of $w'$ by the last letter of $w'$. Since $w$
-is a well-bracketed prefix of $w'$, the first letter has the same match
-in $w$ as in $w'$; hence $|w|=|w'|$ and $w=w'$.
-Suffixes are symmetric.
+($\Rightarrow$) By induction on $n$: words of $L_n$ reduce to
+$\mathtt{[}\mathtt a_{n-1}\mathtt{]}$ or
+$\langle\mathtt a_{n-1}\mathtt a_{n-1}\rangle$. ($\Leftarrow$) Let
+$\sigma(W)$ replace each token $\mathtt a_h$ of $W$ by the set $L_h$. A
+redex $\rho$ reducing to $\mathtt a_{h+1}$ has
+$\sigma(\rho)\subseteq L_{h+1}$, so $W\rightsquigarrow W'$ gives
+$\sigma(W)\subseteq\sigma(W')$, and $W\rightsquigarrow^*\mathtt a_n$ gives
+$\sigma(W)\subseteq L_n$; for $w\in\Gamma_{\mathrm{br}}^*$,
+$\sigma(w)=\{w\}$. The rest follows from the properties of
+$\mathrm{NF}$ and of the mirror map.
 \end{proof}
 
-For $k\geq0$, let $\approx_k$ be the least congruence on
-$\Gamma_{\mathrm{br}}^*$ containing all pairs $(p,q)$ with
-$p,q\in L_j$ for some $j\leq k$. Thus $x\approx_k y$ iff $x$ can be
-turned into $y$ by finitely many steps $spt\mapsto sqt$ with
-$p,q\in L_j$ and $j\leq k$. Clearly $\approx_{k-1}\subseteq\approx_k$.
-
-\begin{lemma}\label{lem:app-tree-swap}
-Let $0\leq k\leq n$ and $w=spt\in L_n$ with $p\in L_k$.
-Then this occurrence of $p$ is the
-yield of a node of depth $n-k$ in the tree of $w$, and $sqt\in L_n$ for
-every $q\in L_k$. Consequently, $x\approx_n y$ implies
-$\mathcal D_{L_n}(x)=\mathcal D_{L_n}(y)$.
-\end{lemma}
-\begin{proof}
-If $k=0$, then $p=q=\mathtt a$. Let $k\geq1$. In $p$, the first letter
-is matched by the last letter; since $p$ is well bracketed, the same
-holds in $w$. So the first and last letters of the occurrence form a
-matching pair of $w$, and the occurrence is the yield of the
-corresponding node $\nu$. The subtree at $\nu$ is the tree of $p$,
-whose leaves lie at depth $k$ below $\nu$; as all leaves of $w$ have
-depth $n$, the node $\nu$ has depth $n-k$. Replacing this subtree by the
-tree of $q$ keeps every leaf at depth $n$ and changes no other node,
-so its yield $sqt$ lies in $L_n$.
-
-For the last claim it suffices to treat one step $x=spt$, $y=sqt$ with
-$p,q\in L_j$. If $(u,v)\in\mathcal D_{L_n}(x)$, then
-$(us)p(tv)\in L_n$, hence $usqtv\in L_n$, that is,
-$(u,v)\in\mathcal D_{L_n}(y)$. The converse is symmetric.
-\end{proof}
-
-The key remaining step is to show that factors sharing a context are
-related by $\approx_n$. Such factors need not encode complete subtrees:
-a factor may cross the boundary between the two children of a binary
-node. The following lemma reduces comparisons in $CC$ to comparisons
-in $C$. The bifix property ensures that a fixed prefix contains the
-whole first codeword in both decompositions or in neither, and dually
-for the fixed suffix and the second codeword. Case~(d) handles a factor
-crossing the boundary.
-
-\begin{lemma}\label{lem:app-bifix-product}
-Let $C\subseteq\Sigma^+$ be a bifix code and $\approx$ a congruence on
-$\Sigma^*$ such that, for all $u,v,x,y\in\Sigma^*$,
-\[
- uxv,\ uyv\in C\quad\Longrightarrow\quad x\approx y. \tag{H}
-\]
-Then $uxv,uyv\in CC$ implies $x\approx y$.
-\end{lemma}
-\begin{proof}
-Let $uxv=c_1c_2$ and $uyv=d_1d_2$ with $c_i,d_i\in C$.
-If $|u|\geq|c_1|$, then $c_1$ is a prefix of $u$ and hence of $d_1d_2$;
-as $d_1$ is also a prefix of $d_1d_2$, prefix-freeness gives $c_1=d_1$.
-Thus $|u|\geq|c_1|$ iff $|u|\geq|d_1|$, and in that case $c_1=d_1$.
-Symmetrically, $|v|\geq|c_2|$ iff $|v|\geq|d_2|$, and then $c_2=d_2$.
-\begin{enumerate}[label=(\alph*),nosep]
-\item $|u|\geq|c_1|$ and $|v|\geq|c_2|$. Then $uxv=c_1c_2=d_1d_2=uyv$,
-so $x=y$.
-\item $|u|\geq|c_1|$ and $|v|<|c_2|$. Write $u=c_1u_0$. Cancelling
-$c_1=d_1$ gives $u_0xv=c_2$ and $u_0yv=d_2$, so $x\approx y$ by (H).
-\item $|u|<|c_1|$ and $|v|\geq|c_2|$. Dual to (b).
-\item $|u|<|c_1|$ and $|v|<|c_2|$. Then $u$ is a proper prefix of
-$c_1$ and of $d_1$, and $v$ a proper suffix of $c_2$ and of $d_2$.
-Write $c_1=ua$, $d_1=ub$, $c_2=cv$, $d_2=dv$. Then $uxv=uacv$ and
-$uyv=ubdv$, so $x=ac$ and $y=bd$. Applying (H) with contexts
-$(u,\lambda)$ and $(\lambda,v)$ gives $a\approx b$ and $c\approx d$,
-hence $x=ac\approx bd=y$. \qedhere
+\begin{lemma}\label{lem:app-reduction-facts}
+Let $W\rightsquigarrow^*\mathtt a_n$.
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item Each prefix of $W$ has at least as many openers as closers, with
+equality for $W$.
+\item Each token of $W$ at depth $d$ is $\mathtt a_{n-d}$.
+\item If $W=\alpha\,o\beta c\,\gamma$ with $o\in O$, $\beta\in T^*$,
+$c\in C$, then $o\beta c$ is a redex.
+\item If $W=\alpha z\gamma$ with $z$ irreducible, then no opener of $z$
+precedes a closer of $z$; if $\alpha=\lambda$, then $z\in(O\cup T)^*$.
 \end{enumerate}
+\end{lemma}
+\begin{proof}
+(a),(b) hold for $\mathtt a_n$ and are inherited backwards along a step
+$W\rightsquigarrow W'$ that replaces an occurrence $\rho$ by a token $t$:
+$\rho$ has one opener and one closer, so other positions keep their
+depths and prefix balances, prefixes ending inside $\rho$ gain one
+opener, and if $t$ lies at depth $d$, then
+$t=\mathtt a_{n-d}$ and the tokens of $\rho$ are
+$\mathtt a_{n-d-1}$ at depth $d+1$.
+(c) As $c$ does not occur in $\mathtt a_n$, some step rewrites an
+occurrence $\rho$ sharing a letter with $o\beta c$; at the first such
+step $o\beta c$ is still a segment. Since $\rho$ begins with an opener
+and ends with a closer, while $o\beta c$ begins with $o$ and ends with
+$c$, neither ends with the bracket that begins the other; hence
+$\rho=o\beta c$.
+(d) Otherwise let $c$ be the first closer of $z$ preceded by an opener of
+$z$; the last bracket $o$ before $c$ is then an opener of $z$, and $o\beta
+c$ is a redex inside $z$ by (c). If $\alpha=\lambda$, a first closer of
+$z$ would thus be preceded only by tokens, contrary to (a).
 \end{proof}
+
+By (d), an irreducible $z$ with
+$\alpha z\gamma\rightsquigarrow^*\mathtt a_n$ factors uniquely as
+$z=z^-mz^+$, where $z^-\in(C\cup T)^*$ is empty or ends with a closer,
+$m\in T^*$, and $z^+\in(O\cup T)^*$ is empty or begins with an opener.
+
+\begin{lemma}\label{lem:app-left-complement}
+If $s,s'\in(O\cup T)^*$, $q\in(C\cup T)^*$ and both $sq$ and $s'q$ reduce
+to $\mathtt a_n$, then $s=s'$.
+\end{lemma}
+\begin{proof}
+Induction on the number $k$ of closers in $q$; by
+Lemma~\ref{lem:app-reduction-facts}(a), $s$ and $s'$ have $k$ openers.
+If $k=0$, then $sq\in T^*$ is irreducible, so $sq=\mathtt a_n=s'q$. If $k\geq1$, write $q=Qcq_1$ with
+$Q\in T^*$, $c\in C$, and $s=s_0oS$ with $o$ the last opener of $s$. By
+Lemma~\ref{lem:app-reduction-facts}(b),(c), $oSQc$ is a redex whose tokens
+are $\mathtt a_{n-k}$; so $o$ is determined by $c$, and $S$ by $c$ and
+$|Q|$. The same holds for $s'=s'_0o'S'$, so $o'S'=oS$, and both
+$s_0\mathtt a_{n-k+1}q_1$ and $s'_0\mathtt a_{n-k+1}q_1$ reduce to
+$\mathtt a_n$, where $\mathtt a_{n-k+1}q_1$ has $k-1$ closers. By
+induction $s_0=s'_0$.
+\end{proof}
+
+\begin{proposition}\label{prop:app-same-normal-form}
+If $uxv,uyv\in L_n$, then $\mathrm{NF}(x)=\mathrm{NF}(y)$.
+\end{proposition}
+\begin{proof}
+Let $p=\mathrm{NF}(u)$, $q=\mathrm{NF}(v)$, $\mathrm{NF}(x)=X^-MX^+$ and
+$\mathrm{NF}(y)=Y^-M'Y^+$. By Lemma~\ref{lem:app-reduction-language},
+$pX^-MX^+q$ reduces to $\mathtt a_n$, and by
+Lemma~\ref{lem:app-reduction-facts}(d) and its mirror image,
+$p\in(O\cup T)^*$ and
+$q\in(C\cup T)^*$. Let $r$ be the number of closers of $X^-$. Consume them from left to
+right. By induction on $1\le i\le r$, after the first $i$ closers
+have been consumed, the suffix of $p$ starting with its $i$th opener
+from the right, together with the processed prefix of $X^-$, has
+become a single token. Indeed, the next closer meets the rightmost
+unused opener of $p$ with only tokens between them; the current full
+word still reduces to $\mathtt a_n$, so
+Lemma~\ref{lem:app-reduction-facts}(a),(c) makes this segment a redex.
+Consequently $pX^-MX^+\rightsquigarrow^*s_x:=p_0ZMX^+$,
+where $p_0$ is the prefix of $p$ before its $r$th opener from the right
+($p_0=p$ if $r=0$) and $Z$ is one token if $r\geq1$ and empty if $r=0$.
+Define $r'$ and $s_y=p'_0Z'M'Y^+$ likewise. Since $s_x,s_y\in(O\cup T)^*$
+and $s_xq$, $s_yq$ reduce to $\mathtt a_n$,
+Lemma~\ref{lem:app-left-complement} gives $s_x=s_y$. If $r<r'$, the
+letter after the proper prefix $p'_0$ of $p_0$ is an opener in $s_x$ but
+the token $Z'$ in $s_y$; so $r=r'$ by symmetry, $p_0=p'_0$ and
+$ZMX^+=Z'M'Y^+$ with $|Z|=|Z'|$. As $X^+,Y^+$ are empty or begin with an
+opener, $M=M'$ and $X^+=Y^+$. The same argument for
+$\widetilde v\widetilde x\widetilde u,\widetilde v\widetilde y\widetilde u
+\in L_n$, where $\mathrm{NF}(\widetilde x)=
+\widetilde{X^+}\widetilde M\widetilde{X^-}$, gives $X^-=Y^-$.
+\end{proof}
+
+Thus, for factors $x,y$ of $L_n$,
+$\D_{L_n}(x)=\D_{L_n}(y)$ iff $\mathrm{NF}(x)=\mathrm{NF}(y)$.
 
 \begin{proof}[Proof of Proposition~\ref{prop:typed-thickness-gap}(i)]
-We prove by induction on $n\geq0$: for all
-$u,v,x,y\in\Gamma_{\mathrm{br}}^*$,
-\begin{equation}\label{eq:app-strong-swap}
- uxv,\ uyv\in L_n\quad\Longrightarrow\quad x\approx_n y .
-\end{equation}
-(Equality of distributions would not serve as the induction invariant:
-$\mathcal D_{L_0}(\mathtt{a]})=\mathcal D_{L_0}(\mathtt a\rangle)=\varnothing$,
-but $\mathcal D_{L_1}(\mathtt{a]})\neq\mathcal D_{L_1}(\mathtt a\rangle)$.
-Thus equality of $\mathcal D_{L_{n-1}}$ does not in general imply
-equality of $\mathcal D_{L_n}$, whereas
-$\approx_{n-1}\subseteq\approx_n$ holds by definition.
-This inclusion, together with the congruence property,
-is exactly what the inductive step uses.)
-
-For $n=0$, both words equal $\mathtt a$, so $x=y$.
-Let $n\geq1$ and put $C=L_{n-1}$. By the induction hypothesis,
-$\approx_{n-1}$ satisfies (H) for $C$; since $C$ is a bifix code
-(Lemma~\ref{lem:app-bifix}), Lemma~\ref{lem:app-bifix-product} gives
-\begin{equation}\label{eq:app-inner}
- u'x'v',\ u'y'v'\in C \ \text{ or }\ u'x'v',\ u'y'v'\in CC
- \quad\Longrightarrow\quad x'\approx_{n-1}y'.
-\end{equation}
-
-Let $w=uxv$ and $w'=uyv$ lie in $L_n$.
-If $x=y$, the conclusion is immediate; hence assume $x\neq y$.
-If $u=v=\lambda$, then $x,y\in L_n$ and $x\approx_n y$ by definition.
-Otherwise the first letters of $w$ and $w'$ coincide: if $u\neq\lambda$
-both equal the first letter of $u$; if $u=\lambda$, then
-$v\neq\lambda$, the last letters of $w,w'$ coincide, and the last letter
-of a word of $L_n$ determines its first. Call this common opening
-bracket $o$ and its partner $\bar o$. Then
-\[
- w=o\,W\,\bar o,\quad w'=o\,W'\,\bar o,\qquad
- W,W'\in
- \begin{cases} C & \text{if } o=\mathtt{[},\\
-               CC & \text{if } o=\langle.\end{cases}
-\]
-We now remove the common root brackets from both words, taking
-each bracket from the fixed context when present and otherwise from
-the variable factor.
-
-\emph{Left end.} If $u\neq\lambda$, write $u=ou'$ and put $s=\lambda$.
-If $u=\lambda$, then $x,y\neq\lambda$: for instance, $x=\lambda$ would
-make $v=w$ a proper suffix of $w'=yv$, contrary to
-Lemma~\ref{lem:app-bifix}. Hence $x,y$ both begin with $o$; put
-$u'=\lambda$ and $s=o$.
-
-\emph{Right end.} Dually, if $v\neq\lambda$ write $v=v'\bar o$ and put
-$t=\lambda$; if $v=\lambda$, then $x,y$ both end with $\bar o$, and we
-put $v'=\lambda$ and $t=\bar o$.
-
-Since $u$ and $v$ are not both empty, at most one of $s,t$ is
-nonempty. When one is nonempty, both $x$ and $y$ are nonempty by the
-preceding argument. Thus $x=sx't$ and $y=sy't$ for words $x',y'$, and
-\[
- W=u'x'v',\qquad W'=u'y'v'.
-\]
-By~\eqref{eq:app-inner}, $x'\approx_{n-1}y'$; as $\approx_{n-1}$ is a
-congruence contained in $\approx_n$, we obtain
-$x=sx't\approx_n sy't=y$. This proves~\eqref{eq:app-strong-swap}.
-
-Now let $x,y\in\Gamma_{\mathrm{br}}^+$ share a context in $L_n$.
-By~\eqref{eq:app-strong-swap}, $x\approx_n y$, and by
-Lemma~\ref{lem:app-tree-swap}, $\mathcal D_{L_n}(x)=\mathcal D_{L_n}(y)$.
+If $x,y\in\Gamma_{\mathrm{br}}^+$ share a context in $L_n$, then
+$\mathrm{NF}(x)=\mathrm{NF}(y)$ by
+Proposition~\ref{prop:app-same-normal-form}, so
+$\D_{L_n}(x)=\D_{L_n}(y)$ by Lemma~\ref{lem:app-reduction-language}.
 Thus $L_n$ is Clark--Eyraud substitutable. Since $L_n$ is finite and
 hence context-free, $L_n\in\Ccf{h_0}$, and since $h_{\mathrm U}$ only
 adds the requirement $h_{\mathrm U}(x)=h_{\mathrm U}(y)$, also
