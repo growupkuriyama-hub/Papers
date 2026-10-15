@@ -44,6 +44,7 @@ def jp_locator(segment: str) -> str:
     }
     for src, dest in names.items():
         segment = re.sub(r"\b" + re.escape(src) + r"\b", dest, segment)
+    segment = re.sub(r"\band\b", "および", segment)
     segment = re.sub(r"\bSections?\s+([\d.]+(?:--[\d.]+)?)", r"第\1節", segment)
     segment = re.sub(
         r"\(marked PDF p\.~(\d+), margin l\.~(\d+)\)",
