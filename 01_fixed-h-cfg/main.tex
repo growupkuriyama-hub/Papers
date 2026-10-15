@@ -2196,183 +2196,159 @@ time.
 Set $L_0=\{\mathtt a\}$. The languages $L_n=L(G_n)$ from
 Proposition~\ref{prop:typed-thickness-gap} satisfy
 $L_n=\mathtt{[}L_{n-1}\mathtt{]}\cup\langle{}L_{n-1}L_{n-1}\rangle$
-for $n\geq1$. We show that factors sharing a context in $L_n$ have the
-same normal form under a simple reduction, and that this normal form
-determines the distribution.
+for $n\ge1$, and $L_{G_n}(E_h)=L_h$ for $0\le h\le n$.
+Induction on $h$ shows that every word of $L_h$ starts with exactly
+$h$ opening brackets followed by $\mathtt a$.
+We prove substitutability directly by a deterministic, reversible
+top-down parser, without normal forms or a reduction system.
 
-\paragraph{A reduction.}
-Put $\mathtt a_0:=\mathtt a$ and
-$\Delta=\Gamma_{\mathrm{br}}\cup\{\mathtt a_1,\dots,\mathtt a_n\}$ with new
-letters $\mathtt a_h$. Let $O=\{\langle,\mathtt{[}\}$ (\emph{openers}),
-$C=\{\rangle,\mathtt{]}\}$ (\emph{closers}) and
-$T=\{\mathtt a_0,\dots,\mathtt a_n\}$ (\emph{tokens}). A \emph{redex} is
-$\langle\mathtt a_h\mathtt a_h\rangle$ or $\mathtt{[}\mathtt a_h\mathtt{]}$
-with $h<n$; replacing an occurrence of it by $\mathtt a_{h+1}$ is a step
-$W\rightsquigarrow W'$, and $\rightsquigarrow^*$ is the
-reflexive--transitive closure. A \emph{segment} is a factor $b\beta b'$
-with brackets $b,b'$ and $\beta\in T^*$. Two segment occurrences sharing a
-letter coincide unless one ends with the bracket that begins the other.
-Since a redex is a segment beginning with an opener and ending with a
-closer, distinct redex occurrences are disjoint, so $\rightsquigarrow$ has
-the diamond property. It shortens words, so every $W$ has a unique
-irreducible normal form $\mathrm{NF}(W)$; moreover
-$\mathrm{NF}(uxv)=\mathrm{NF}(u\,\mathrm{NF}(x)\,v)$, and
-$W\rightsquigarrow^*\mathtt a_n$ iff $\mathrm{NF}(W)=\mathtt a_n$.
-In particular, if $W\rightsquigarrow^*\mathtt a_n$ and
-$W\rightsquigarrow^*W'$, then $W'\rightsquigarrow^*\mathtt a_n$;
-we use this consequence of confluence repeatedly below.
-The map $W\mapsto\widetilde W$ that reverses $W$ and exchanges
-$\langle\leftrightarrow\rangle$, $\mathtt{[}\leftrightarrow\mathtt{]}$
-preserves redexes, so every statement below has a mirror image. The
-\emph{depth} of a position is the number of openers minus the number of
-closers to its left.
+\paragraph{Parser and stack properties.}
+Fix $n\ge1$. A stack is a word over $E_0,\ldots,E_n$ and the closing
+terminals $\mathtt{]}$ and $\rangle$, with its top on the left.
+The empty stack is $\lambda$. For an arbitrary stack $R$ and
+$1\le h\le n$, all transitions are
+\[
+\begin{aligned}
+E_0R&\xrightarrow{\mathtt a}R,&
+E_hR&\xrightarrow{\mathtt{[}}E_{h-1}\mathtt{]}R,&
+E_hR&\xrightarrow{\langle}E_{h-1}E_{h-1}\rangle R,\\
+\mathtt{]}R&\xrightarrow{\mathtt{]}}R,&
+\rangle R&\xrightarrow{\rangle}R.
+\end{aligned}
+\]
+Write $P\xrightarrow{w}Q$ for the run reading $w$ from $P$ to $Q$.
+These transitions are deterministic. For each fixed input letter they
+are also injective: its output either reveals the unique expanded
+$E_h$ and the untouched suffix, or results from deleting a top
+symbol determined by that input letter. Hence every word acts as a
+partial injection: if $P\xrightarrow{v}T$ and $Q\xrightarrow{v}T$,
+then $P=Q$.
 
-\begin{lemma}\label{lem:app-reduction-language}
-For $w\in\Gamma_{\mathrm{br}}^*$, $w\in L_n$ iff
-$w\rightsquigarrow^*\mathtt a_n$. Hence
-$\D_{L_n}(x)=\{(u,v)\in\Gamma_{\mathrm{br}}^*\times\Gamma_{\mathrm{br}}^*:\
- u\,\mathrm{NF}(x)\,v\rightsquigarrow^*\mathtt a_n\}$
-depends only on $\mathrm{NF}(x)$, and $\widetilde{L_n}=L_n$.
+Assign weight $4^h$ to $E_h$ and weight $1$ to either closing marker,
+and sum over stacks. Every transition strictly decreases weight:
+$4^0>0$ and $4^h>2\cdot4^{h-1}+1>4^{h-1}+1$ for $h\ge1$.
+In particular $P\xrightarrow{w}P$ implies $w=\lambda$.
+Two elementary stack facts will be used. First, in a run from $ST$
+with $S\ne\lambda$, until its first visit to $T$ the stack has the
+form $S'T$ with $S'\ne\lambda$ and its moves affect only $S'$.
+If it visits $T$, the run splits as $S\xrightarrow{w_1}\lambda$
+followed by $T\xrightarrow{w_2}Q$, where $w=w_1w_2$;
+otherwise it ends at $S'T$ with $S'\ne\lambda$.
+The visit to $T$ can occur at most once by strict weight decrease.
+Second, since only the top symbol is rewritten, a nonempty stack
+whose last symbol is $\mathtt{]}$ (respectively $\rangle$) retains
+that last symbol until the entire stack is popped.
+
+\begin{lemma}\label{lem:app-recognition}
+For $0\le h\le n$, every stack $R$ and $w\in\Gamma_{\mathrm{br}}^*$,
+$E_hR\xrightarrow{w}R$ if and only if $w\in L_h$.
+Moreover, if $P\xrightarrow{w}Q$ and $w\in L_h$, then
+$P=E_hR$ and $Q=R$ for some stack $R$.
 \end{lemma}
 \begin{proof}
-($\Rightarrow$) The case $n=0$ is immediate. For $n\geq1$,
-every redex for $n-1$ is also a redex for $n$, so by induction
-words of $L_n$ reduce to
-$\mathtt{[}\mathtt a_{n-1}\mathtt{]}$ or
-$\langle\mathtt a_{n-1}\mathtt a_{n-1}\rangle$, and thence
-to $\mathtt a_n$. ($\Leftarrow$) Let
-$\sigma(W)$ replace each token $\mathtt a_h$ of $W$ by the set $L_h$. A
-redex $\rho$ reducing to $\mathtt a_{h+1}$ has
-$\sigma(\rho)\subseteq L_{h+1}$, so $W\rightsquigarrow W'$ gives
-$\sigma(W)\subseteq\sigma(W')$, and $W\rightsquigarrow^*\mathtt a_n$ gives
-$\sigma(W)\subseteq L_n$; for $w\in\Gamma_{\mathrm{br}}^*$,
-$\sigma(w)=\{w\}$. The rest follows from the properties of
-$\mathrm{NF}$ and of the mirror map.
+If $E_hR\xrightarrow{w}R$, the suffix property forces a first
+visit to $R$ (otherwise the final stack would be $S'R$ with
+$S'\ne\lambda$). The remaining input must be empty by strict
+weight decrease. Thus this run is exactly a run
+$E_h\xrightarrow{w}\lambda$ with the suffix $R$ retained.
+Conversely, any such run from $E_h$ lifts to one from $E_hR$.
+
+We prove $E_h\xrightarrow{w}\lambda$ iff $w\in L_h$ by induction
+on $h$. For $h=0$, the only possible run is the single
+$\mathtt a$-transition. For $h\ge1$, a run must start with
+$\mathtt{[}$ or $\langle$. In the unary case the stack becomes
+$E_{h-1}\mathtt{]}$. The suffix property forces the child
+$E_{h-1}$ to be completely processed before the final
+$\mathtt{]}$ is popped. Hence $w=\mathtt{[}z\mathtt{]}$
+with $E_{h-1}\xrightarrow{z}\lambda$, equivalently
+$z\in L_{h-1}$ by induction. In the binary case the stack becomes
+$E_{h-1}E_{h-1}\rangle$. Applying the same suffix property
+successively to its first and second $E_{h-1}$ forces
+$w=\langle z_1z_2\rangle$ with $z_1,z_2\in L_{h-1}$.
+Both decompositions conversely give accepting runs, proving
+the equivalence.
+
+For the final assertion, the first $h$ letters of $w$ are openers,
+followed by $\mathtt a$. The first opener (or $\mathtt a$ if $h=0$)
+requires $P=E_kR$. Each opener decreases the exposed index by
+one, so the following $\mathtt a$ requires $k=h$.
+The established equivalence and determinism give $Q=R$.
 \end{proof}
 
-\begin{lemma}\label{lem:app-reduction-facts}
-Let $W\rightsquigarrow^*\mathtt a_n$.
-\begin{enumerate}[label=\textup{(\alph*)},nosep]
-\item Each prefix of $W$ has at least as many openers as closers, with
-equality for $W$.
-\item Each token of $W$ at depth $d$ is $\mathtt a_{n-d}$.
-\item If $W=\alpha\,o\beta c\,\gamma$ with $o\in O$, $\beta\in T^*$,
-$c\in C$, then $o\beta c$ is a redex.
-\item If $W=\alpha z\gamma$ with $z$ irreducible, then no opener of $z$
-precedes a closer of $z$; if $\alpha=\lambda$, then $z\in(O\cup T)^*$.
-\end{enumerate}
+\begin{lemma}\label{lem:app-complete-subtree-exchange}
+If $0\le h\le n$ and $w,w'\in L_h$, then
+$w\equiv_{L_n}w'$.
 \end{lemma}
 \begin{proof}
-(a),(b) hold for $\mathtt a_n$ and are inherited backwards along a step
-$W\rightsquigarrow W'$ that replaces an occurrence $\rho$ by a token $t$:
-$\rho$ has one opener and one closer, so other positions keep their
-depths and prefix balances, prefixes ending inside $\rho$ gain one
-opener, and if $t$ lies at depth $d$, then
-$t=\mathtt a_{n-d}$ and the tokens of $\rho$ are
-$\mathtt a_{n-d-1}$ at depth $d+1$.
-(c) As $c$ does not occur in $\mathtt a_n$, some step rewrites an
-occurrence $\rho$ sharing a letter with $o\beta c$; at the first such
-step $o\beta c$ is still a segment. Since $\rho$ begins with an opener
-and ends with a closer, while $o\beta c$ begins with $o$ and ends with
-$c$, neither ends with the bracket that begins the other; hence
-$\rho=o\beta c$.
-(d) Otherwise let $c$ be the first closer of $z$ preceded by an
-opener $o'$ of $z$. The last bracket $o$ before $c$ lies in $z$
-(at or after $o'$); it must be an opener, since a closer there would
-contradict the choice of $c$. Thus $o\beta c$ with $\beta\in T^*$
-is a redex inside $z$ by (c), contradicting irreducibility.
-If $\alpha=\lambda$, a first closer of $z$ would be preceded
-only by tokens, contrary to (a).
+In any run $E_n\xrightarrow{p}P\xrightarrow{w}Q
+\xrightarrow{q}\lambda$, Lemma~\ref{lem:app-recognition}
+forces $P=E_hR$ and $Q=R$.
+The same lemma permits $E_hR\xrightarrow{w'}R$.
+Thus $(p,q)\in\D_{L_n}(w)$ implies
+$(p,q)\in\D_{L_n}(w')$; symmetry gives equality.
 \end{proof}
 
-By (d), an irreducible $z$ with
-$\alpha z\gamma\rightsquigarrow^*\mathtt a_n$ factors uniquely as
-$z=z^-mz^+$, where $z^-\in(C\cup T)^*$ is empty or ends with a closer,
-$m\in T^*$, and $z^+\in(O\cup T)^*$ is empty or begins with an opener.
-
-\begin{lemma}\label{lem:app-left-complement}
-If $s,s'\in(O\cup T)^*$, $q\in(C\cup T)^*$ and both $sq$ and $s'q$ reduce
-to $\mathtt a_n$, then $s=s'$.
+\begin{lemma}[branch synchronization]\label{lem:app-branch-synchronization}
+If $P\xrightarrow{x}Q$ and $P\xrightarrow{y}Q$ for nonempty
+words with different first letters, then $P=E_hR$ for some
+$1\le h\le n$ and some stack $R$, and there are decompositions
+$x=wx'$ and $y=w'y'$ with $w,w'\in L_h$ such that
+$R\xrightarrow{x'}Q$ and $R\xrightarrow{y'}Q$.
 \end{lemma}
 \begin{proof}
-Induction on the number $k$ of closers in $q$; by
-Lemma~\ref{lem:app-reduction-facts}(a), $s$ and $s'$ have $k$ openers.
-If $k=0$, then $sq\in T^*$ is irreducible, so
-$sq=\mathtt a_n=s'q$. If $k\geq1$, write $q=Qcq_1$ with
-$Q\in T^*$, $c\in C$, and $s=s_0oS$ with $o$ the last opener
-of $s$. By Lemma~\ref{lem:app-reduction-facts}(b),(c),
-$oSQc$ is a redex whose tokens are $\mathtt a_{n-k}$.
-Put $\ell=1$ if $c=\mathtt{]}$ and $\ell=2$ if $c=\rangle$.
-Thus $o$ is uniquely determined by $c$, and
-$S=\mathtt a_{n-k}^{\,\ell-|Q|}$; the exponent is nonnegative
-because $oSQc$ is a redex. For fixed $k$, this determines $oS$
-from $c$ and $|Q|$. The same holds for $s'=s'_0o'S'$,
-so $o'S'=oS$. Contracting these redexes and using confluence,
-both $s_0\mathtt a_{n-k+1}q_1$ and
-$s'_0\mathtt a_{n-k+1}q_1$ still reduce to $\mathtt a_n$.
-The common right factor $\mathtt a_{n-k+1}q_1$ has $k-1$
-closers, so induction gives $s_0=s'_0$.
+Only $E_hR$ admits two initial moves, reading $\mathtt{[}$
+and $\langle$. Say these occur for $x$ and $y$, leaving
+$E_{h-1}\mathtt{]}R$ and $E_{h-1}E_{h-1}\rangle R$.
+Until the first visit to $R$, the suffix property and the
+last-marker property force the respective stacks to have the
+forms $A\mathtt{]}R$ and $B\rangle R$. Each then has weight
+strictly greater than that of $R$. At the first visit to $R$
+the weight equals that of $R$, and after any further move it
+is smaller. Thus, if both runs end at the same $Q$, either
+both visit $R$ or neither does. In the latter case
+$A\mathtt{]}R=B\rangle R$ at $Q$; right cancellation
+would give $A\mathtt{]}=B\rangle$, impossible because
+the last markers differ. Both runs therefore visit $R$.
+Their prefixes up to these visits are in $L_h$ by
+Lemma~\ref{lem:app-recognition}, and their remaining
+suffixes take $R$ to $Q$, as required.
 \end{proof}
 
-\begin{proposition}\label{prop:app-same-normal-form}
-If $uxv,uyv\in L_n$, then $\mathrm{NF}(x)=\mathrm{NF}(y)$.
+\begin{proposition}\label{prop:app-path-congruence}
+For arbitrary stacks $P,Q$ and words $x,y\in\Gamma_{\mathrm{br}}^*$,
+if $P\xrightarrow{x}Q$ and $P\xrightarrow{y}Q$, then
+$x\equiv_{L_n}y$.
 \end{proposition}
 \begin{proof}
-Let $p=\mathrm{NF}(u)$, $q=\mathrm{NF}(v)$, $\mathrm{NF}(x)=X^-MX^+$ and
-$\mathrm{NF}(y)=Y^-M'Y^+$. By Lemma~\ref{lem:app-reduction-language},
-$pX^-MX^+q$ reduces to $\mathtt a_n$, and by
-Lemma~\ref{lem:app-reduction-facts}(d) and its mirror image,
-$p\in(O\cup T)^*$ and $q\in(C\cup T)^*$.
-Write $X^-=Q_1c_1\cdots Q_rc_r$ with $Q_j\in T^*$,
-$c_j\in C$, and $r$ the number of closers in $X^-$.
-Since $pX^-$ is a prefix of a word reducing to $\mathtt a_n$,
-Lemma~\ref{lem:app-reduction-facts}(a) implies that $p$
-has at least $r$ openers. Let $p_{(0)}=p$; for
-$1\le i\le r$, let $o_i$ be the $i$th opener of $p$
-from the right and $p_{(i)}$ the prefix preceding $o_i$.
-We claim that for $0\le i\le r$ there is
-$Z_i\in T^{\min(i,1)}$ such that
-\[
-pX^-MX^+q\rightsquigarrow^*
-p_{(i)}Z_iQ_{i+1}c_{i+1}\cdots Q_rc_rMX^+q.
-\]
-For $i=0$ take $Z_0=\lambda$. If $i<r$, write
-$p_{(i)}=p_{(i+1)}o_{i+1}S_{i+1}$ with
-$S_{i+1}\in T^*$, since $p\in(O\cup T)^*$.
-In the current word the factor
-$o_{i+1}S_{i+1}Z_iQ_{i+1}c_{i+1}$
-has only tokens between its brackets. The whole word
-still reduces to $\mathtt a_n$ by confluence, so
-Lemma~\ref{lem:app-reduction-facts}(c) makes this
-factor a redex. Contracting it produces a single token
-$Z_{i+1}$ and establishes the claim for $i+1$.
-At $i=r$ set $p_0:=p_{(r)}$ and $Z:=Z_r$;
-the same steps, restricted to the prefix, give
-$pX^-MX^+\rightsquigarrow^*s_x:=p_0ZMX^+$.
-Define $r'$ and $s_y=p'_0Z'M'Y^+$ likewise. Since $s_x,s_y\in(O\cup T)^*$
-and $s_xq$, $s_yq$ reduce to $\mathtt a_n$,
-Lemma~\ref{lem:app-left-complement} gives $s_x=s_y$. If $r<r'$, the
-letter after the proper prefix $p'_0$ of $p_0$ is an opener in $s_x$ but
-the token $Z'$ in $s_y$; so $r=r'$ by symmetry, $p_0=p'_0$ and
-$ZMX^+=Z'M'Y^+$ with $|Z|=|Z'|$. As $X^+,Y^+$ are empty or begin with an
-opener, $M=M'$ and $X^+=Y^+$. The same argument for
-$\widetilde v\widetilde x\widetilde u,\widetilde v\widetilde y\widetilde u
-\in L_n$, where $\mathrm{NF}(\widetilde x)=
-\widetilde{X^+}\widetilde M\widetilde{X^-}$, gives $X^-=Y^-$.
+Induct on $|x|+|y|$. If $x=\lambda$, then $P=Q$, so
+$y=\lambda$ by strict weight decrease; the symmetric case
+is identical. If $x=cx'$ and $y=cy'$ share their first letter,
+determinism gives a common state after $c$, and induction
+gives $x'\equiv_{L_n}y'$, hence $x\equiv_{L_n}y$.
+Otherwise Lemma~\ref{lem:app-branch-synchronization}
+gives $x=wx'$ and $y=w'y'$ with $w,w'\in L_h$ and
+$R\xrightarrow{x'}Q$, $R\xrightarrow{y'}Q$.
+The removed prefixes are nonempty, so induction applies to
+$x',y'$. Lemma~\ref{lem:app-complete-subtree-exchange}
+gives $w\equiv_{L_n}w'$. The monoid congruence property
+then gives $wx'\equiv_{L_n}w'y'$, as desired.
 \end{proof}
 
-Thus, for factors $x,y$ of $L_n$,
-$\D_{L_n}(x)=\D_{L_n}(y)$ iff $\mathrm{NF}(x)=\mathrm{NF}(y)$.
-
 \begin{proof}[Proof of Proposition~\ref{prop:typed-thickness-gap}(i)]
-If $x,y\in\Gamma_{\mathrm{br}}^+$ share a context in $L_n$, then
-$\mathrm{NF}(x)=\mathrm{NF}(y)$ by
-Proposition~\ref{prop:app-same-normal-form}, so
-$\D_{L_n}(x)=\D_{L_n}(y)$ by Lemma~\ref{lem:app-reduction-language}.
-Thus $L_n$ is Clark--Eyraud substitutable. Since $L_n$ is finite and
-hence context-free, $L_n\in\Ccf{h_0}$, and since $h_{\mathrm U}$ only
-adds the requirement $h_{\mathrm U}(x)=h_{\mathrm U}(y)$, also
-$L_n\in\Ccf{h_{\mathrm U}}$.
+Let $x,y\in\Gamma_{\mathrm{br}}^+$ and
+$(u,v)\in\D_{L_n}(x)\cap\D_{L_n}(y)$.
+The two accepting runs from $E_n$ to $\lambda$
+reach the same stack $P$ after $u$ by determinism.
+Their stacks $Q_x,Q_y$ before $v$ satisfy
+$Q_x\xrightarrow{v}\lambda$ and
+$Q_y\xrightarrow{v}\lambda$. Partial injectivity of
+the word action gives $Q_x=Q_y=:Q$.
+Thus $P\xrightarrow{x}Q$ and $P\xrightarrow{y}Q$.
+Proposition~\ref{prop:app-path-congruence} gives
+$\D_{L_n}(x)=\D_{L_n}(y)$.
+Since $L_n$ is finite and hence context-free, it is
+Clark--Eyraud substitutable and belongs to
+$\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$.
 \end{proof}
 
 \begin{thebibliography}{99}
