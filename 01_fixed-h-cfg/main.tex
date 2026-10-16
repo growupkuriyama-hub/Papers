@@ -1106,28 +1106,28 @@ cannot in general be replaced by ordinary thickness, even for the
 reconstruction operator itself under a single fixed typing.
 
 \paragraph{A bracketed doubling family.}
-Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\triangleleft,\triangleright,\mathtt{[},\mathtt{]}\}$ and
+Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$ and
 recall the two-element monoid $U_1=\{1,\zeta\}$ with zero $\zeta$.
-Here $\triangleleft$ and $\triangleright$ are literal terminal symbols marking binary-node
-boundaries, not parentheses used to group expressions.
+Here $\lceil,\rceil$ mark unary nodes and $\lfloor,\rfloor$ mark binary
+nodes; all four are literal terminal symbols, not grouping delimiters.
 Define $h_{\mathrm U}:\Gamma_{\mathrm{br}}^*\to U_1$ by mapping
-$\mathtt a,\triangleleft,\triangleright$ to $1$ and
-$\mathtt{[},\mathtt{]}$ to $\zeta$, and let $h_0$ be the trivial typing.
-Thus $h_{\mathrm U}(x)=1$ exactly when $x$ has no square bracket, and
+$\mathtt a,\lfloor,\rfloor$ to $1$ and
+$\lceil,\rceil$ to $\zeta$, and let $h_0$ be the trivial typing.
+Thus $h_{\mathrm U}(x)=1$ exactly when $x$ has no ceiling bracket, and
 $h_{\mathrm U}(\Gamma_{\mathrm{br}}^+)=U_1$.
 For $n\ge1$, define the reduced CFG $G_n$ by
 \[
  S_0\to E_n,\qquad E_0\to\mathtt a,\qquad
- E_i\to\triangleleft{}E_{i-1}E_{i-1}\triangleright
-       \mid\mathtt{[}E_{i-1}\mathtt{]}
+ E_i\to\lfloor{}E_{i-1}E_{i-1}\rfloor
+       \mid\lceil{}E_{i-1}\rceil
  \quad(1\le i\le n),
 \]
 and put $L_n=L(G_n)$. Then $|G_n|=O(n)$ and
 $\tau_{G_n}=2n+1$.
 Write $w^*_0=\mathtt a$ and
-$w^*_i=\triangleleft{}w^*_{i-1}w^*_{i-1}\triangleright$.
-The only word of $L_n$ without square brackets is $w^*_n$, of length
-$|w^*_n|=3\cdot2^n-2$: without unary square-bracket nodes the
+$w^*_i=\lfloor{}w^*_{i-1}w^*_{i-1}\rfloor$.
+The only word of $L_n$ without ceiling brackets is $w^*_n$, of length
+$|w^*_n|=3\cdot2^n-2$: without unary ceiling-bracket nodes the
 derivation is the unique complete binary tree of height $n$.
 
 \begin{proposition}[refinement can force exponential characteristic data]
@@ -1168,14 +1168,14 @@ $\tau_{h_0}^{\mathrm{typ}}(G'_n)\le\max\{1,\tau_{G'_n}\}$,
 so Corollary~\ref{cor:typed-thickness-data} applies.
 
 An explicit sample is obtained by setting $u_0=\mathtt a$,
-$u_i=\mathtt{[}u_{i-1}\mathtt{]}$, and
+$u_i=\lceil{}u_{i-1}\rceil$, and
 \[
 \mathcal K_n=\{u_n\}\cup
-\{\mathtt{[}^{n-i}\triangleleft u_{i-1}u_{i-1}\triangleright
-\mathtt{]}^{n-i}:1\le i\le n\}.
+\{\lceil^{n-i}\lfloor u_{i-1}u_{i-1}\rfloor
+\rceil^{n-i}:1\le i\le n\}.
 \]
 For each $i$, the two sample words provide a common context for
-$u_i$ and $\triangleleft u_{i-1}u_{i-1}\triangleright$;
+$u_i$ and $\lfloor u_{i-1}u_{i-1}\rfloor$;
 Rules~\textup{(U)} and \textup{(B)} therefore recover both
 $E_i$ alternatives, so
 $L_n\subseteq L(\mathsf{Rec}_{h_0}(\mathcal K_n))$.
@@ -1218,8 +1218,8 @@ would have to generate both languages, a contradiction.
 
 For $n\ge2$, $L_n^-\notin\Ccf{h_0}$:
 $u_{n-1}$ and $w_{n-1}^*$ share the context
-$(\triangleleft,u_{n-1}\triangleright)$ in $L_n^-$, but only the former
-admits $(\triangleleft w_{n-1}^*,\triangleright)$.
+$(\lfloor,u_{n-1}\rfloor)$ in $L_n^-$, but only the former
+admits $(\lfloor w_{n-1}^*,\rfloor)$.
 Thus (iv) does not conflict with the $h_0$ upper bound in (ii).
 \end{proof}
 
@@ -2199,7 +2199,7 @@ time.
 
 Set $L_0=\{\mathtt a\}$. The languages $L_n=L(G_n)$ from
 Proposition~\ref{prop:typed-thickness-gap} satisfy
-$L_n=\mathtt{[}L_{n-1}\mathtt{]}\cup\triangleleft{}L_{n-1}L_{n-1}\triangleright$
+$L_n=\lceil{}L_{n-1}\rceil\cup\lfloor{}L_{n-1}L_{n-1}\rfloor$
 for $n\ge1$, and $L_{G_n}(E_i)=L_i$ for $0\le i\le n$.
 Induction on $i$ shows that every word of $L_i$ starts with exactly
 $i$ opening brackets followed by $\mathtt a$.
@@ -2208,16 +2208,16 @@ top-down parser.
 
 \paragraph{Parser and stack properties.}
 Fix $n\ge1$. A stack is a word over $E_0,\ldots,E_n$ and the closing
-terminals $\mathtt{]}$ and $\triangleright$, with its top on the left.
+terminals $\rceil$ and $\rfloor$, with its top on the left.
 The empty stack is $\lambda$. For an arbitrary stack $\psi$ and
 $1\le i\le n$, all transitions are
 \[
 \begin{aligned}
 E_0\psi&\xrightarrow{\mathtt a}\psi,&
-E_i\psi&\xrightarrow{\mathtt{[}}E_{i-1}\mathtt{]}\psi,&
-E_i\psi&\xrightarrow{\triangleleft}E_{i-1}E_{i-1}\triangleright \psi,\\
-\mathtt{]}\psi&\xrightarrow{\mathtt{]}}\psi,&
-\triangleright \psi&\xrightarrow{\triangleright}\psi.
+E_i\psi&\xrightarrow{\lceil}E_{i-1}\rceil\psi,&
+E_i\psi&\xrightarrow{\lfloor}E_{i-1}E_{i-1}\rfloor \psi,\\
+\rceil\psi&\xrightarrow{\rceil}\psi,&
+\rfloor \psi&\xrightarrow{\rfloor}\psi.
 \end{aligned}
 \]
 Write $\sigma\xrightarrow{w}\theta$ for the run reading $w$ from $\sigma$ to $\theta$.
@@ -2241,7 +2241,7 @@ followed by $\vartheta\xrightarrow{w_2}\theta$, where $w=w_1w_2$;
 otherwise it ends at $\upsilon'\vartheta$ with $\upsilon'\ne\lambda$.
 The visit to $\vartheta$ can occur at most once by strict weight decrease.
 Second, since only the top symbol is rewritten, a nonempty stack
-whose last symbol is $\mathtt{]}$ (respectively $\triangleright$) retains
+whose last symbol is $\rceil$ (respectively $\rfloor$) retains
 that last symbol until the entire stack is popped.
 
 \begin{lemma}\label{lem:app-recognition}
@@ -2261,15 +2261,15 @@ Conversely, any such run from $E_i$ lifts to one from $E_i\psi$.
 We prove $E_i\xrightarrow{w}\lambda$ iff $w\in L_i$ by induction
 on $i$. For $i=0$, the only possible run is the single
 $\mathtt a$-transition. For $i\ge1$, a run must start with
-$\mathtt{[}$ or $\triangleleft$. In the unary case the stack becomes
-$E_{i-1}\mathtt{]}$. The suffix property forces the child
+$\lceil$ or $\lfloor$. In the unary case the stack becomes
+$E_{i-1}\rceil$. The suffix property forces the child
 $E_{i-1}$ to be completely processed before the final
-$\mathtt{]}$ is popped. Hence $w=\mathtt{[}z\mathtt{]}$
+$\rceil$ is popped. Hence $w=\lceil{}z\rceil$
 with $E_{i-1}\xrightarrow{z}\lambda$, equivalently
 $z\in L_{i-1}$ by induction. In the binary case the stack becomes
-$E_{i-1}E_{i-1}\triangleright$. Applying the same suffix property
+$E_{i-1}E_{i-1}\rfloor$. Applying the same suffix property
 successively to its first and second $E_{i-1}$ forces
-$w=\triangleleft z_1z_2\triangleright$ with $z_1,z_2\in L_{i-1}$.
+$w=\lfloor z_1z_2\rfloor$ with $z_1,z_2\in L_{i-1}$.
 Both decompositions conversely give accepting runs, proving
 the equivalence.
 
@@ -2301,18 +2301,18 @@ $x=wx'$ and $y=w'y'$ with $w,w'\in L_i$ such that
 $\psi\xrightarrow{x'}\theta$ and $\psi\xrightarrow{y'}\theta$.
 \end{lemma}
 \begin{proof}
-Only $E_i\psi$ admits two initial moves, reading $\mathtt{[}$
-and $\triangleleft$. Say these occur for $x$ and $y$, leaving
-$E_{i-1}\mathtt{]}\psi$ and $E_{i-1}E_{i-1}\triangleright \psi$.
+Only $E_i\psi$ admits two initial moves, reading $\lceil$
+and $\lfloor$. Say these occur for $x$ and $y$, leaving
+$E_{i-1}\rceil\psi$ and $E_{i-1}E_{i-1}\rfloor \psi$.
 Until the first visit to $\psi$, the suffix property and the
 last-marker property force the respective stacks to have the
-forms $A\mathtt{]}\psi$ and $B\triangleright \psi$. Each then has weight
+forms $A\rceil\psi$ and $B\rfloor \psi$. Each then has weight
 strictly greater than that of $\psi$. At the first visit to $\psi$
 the weight equals that of $\psi$, and after any further move it
 is smaller. Thus, if both runs end at the same $\theta$, either
 both visit $\psi$ or neither does. In the latter case
-$A\mathtt{]}\psi=B\triangleright \psi$ at $\theta$; right cancellation
-would give $A\mathtt{]}=B\triangleright$, impossible because
+$A\rceil\psi=B\rfloor \psi$ at $\theta$; right cancellation
+would give $A\rceil=B\rfloor$, impossible because
 the last markers differ. Both runs therefore visit $\psi$.
 Their prefixes up to these visits are in $L_i$ by
 Lemma~\ref{lem:app-recognition}, and their remaining
