@@ -14,7 +14,7 @@
 \newtheorem{remark}[theorem]{備考}
 \theoremstyle{plain}
 \newcommand{\D}{\mathcal{D}}
-\newcommand{\WitnessSet}{\mathsf{W}}
+\newcommand{\WitnessSet}{\mathsf{Wit}}
 \newcommand{\cf}{\mathrm{cf}}
 \newcommand{\lin}{\mathrm{lin}}
 \newcommand{\Ccf}[1]{\mathcal C_{#1}^{\cf}}
@@ -73,7 +73,7 @@ $k$-valued 範疇文法の文字列言語族についての有限弾力性によ
 分布的代入可能性を要求する．
 
 \paragraph{先行研究との関係と一般signatureによる学習．}
-本稿は，著者の2014年公開プレプリント（v1--v3）~\cite{kuriyama2014} を
+本稿は，著者の2014年公開プレプリント（arXiv v3）~\cite{kuriyama2014} を
 証明と学習器の面で大幅に修正・拡張したものである．その初期稿にはすでに，
 可認識同値関係に相対化した代入可能性と正例による学習法が提案されていた．
 その公開は Yoshinaka~\cite{yoshinaka2015} の互いに素なソートを用いる
@@ -148,9 +148,9 @@ $h$ の指定は事前に与えるバイアスの選択であり，オートマ�
 Yoshinaka の一般的な多ソート枠組みからも導かれる．
 本論文では，固定有限モノイド型付けの下で文脈自由標的に対する
 具体的な学習構成を与え，その正しさを直接証明する．
-具体的には，集合駆動型再構成作用素 $\mathcal B_h$ は，
+具体的には，集合駆動型再構成作用素 $\mathsf{Rec}_h$ は，
 $\Ccf{h}$ の任意の標的を有限個の標準正例証拠から厳密に再構成する．
-別の保守的逐次学習器 $\mathcal A_h$ はすべての非空標的を
+別の保守的逐次学習器 $\mathsf{Learn}_h$ はすべての非空標的を
 Gold の意味で同定し，再構成と各更新は蓄積標本のサイズに関して
 多項式時間で実行できる．
 
@@ -217,33 +217,33 @@ Yoshinaka~\cite{yoshinaka2008} が採用した最短生成語に基づく
 
 \subsection{正例データからの学習}\label{sec:learning}
 
-Gold の explanatory model~\cite{gold1967} を用いる．$H_0$ を，一つの開始記号をもち生成規則をもたない固定 CFG とし，$L(H_0)=\emptyset$ とする．以下のテキスト規約は非空の標的言語に限定する．空言語はこのテキストに基づく Gold の記述から除外し，別途 $H_0$ により表す．同値に，通常の pause 記号をテキストに加えることで空標的を含めることもできるが，余分な記法を避けるためにここでは非空テキスト規約を用いる．非空言語 $L$ に対し，\emph{テキスト}とは，$L$ の各語が少なくとも一度は現れる $L$ 上の無限列 $T=(w_1,w_2,\ldots)$ である．$T[n]=(w_1,\ldots,w_n)$ および $K_n:=\{w_1,\ldots,w_n\}$ と書く．学習器 $\mathcal A$ が非空言語 $L$ を \emph{極限同定}するとは，$L$ の任意のテキスト $T$ に対して，ある $n_0$ と文法 $H$ が存在し，すべての $n\ge n_0$ について $\mathcal A(T[n])=H$ かつ $L(H)=L$ が成り立つことをいう．したがって，仮説表現そのものが最終的に安定する．逐次学習器が \emph{保守的} であるとは，新たに提示された正例データが現在の仮説によって生成されない場合にのみ，その現在の仮説を変更することをいう．
+Gold の explanatory model~\cite{gold1967} を用いる．$H_0$ を，一つの開始記号をもち生成規則をもたない固定 CFG とし，$L(H_0)=\emptyset$ とする．以下のテキスト規約は非空の標的言語に限定する．空言語はこのテキストに基づく Gold の記述から除外し，別途 $H_0$ により表す．同値に，通常の pause 記号をテキストに加えることで空標的を含めることもできるが，余分な記法を避けるためにここでは非空テキスト規約を用いる．非空言語 $L$ に対し，\emph{テキスト}とは，$L$ の各語が少なくとも一度は現れる $L$ 上の無限列 $T=(w_1,w_2,\ldots)$ である．$T[n]=(w_1,\ldots,w_n)$ および $K_n:=\{w_1,\ldots,w_n\}$ と書く．学習器 $\mathsf{Learn}$ が非空言語 $L$ を \emph{極限同定}するとは，$L$ の任意のテキスト $T$ に対して，ある $n_0$ と文法 $H$ が存在し，すべての $n\ge n_0$ について $\mathsf{Learn}(T[n])=H$ かつ $L(H)=L$ が成り立つことをいう．したがって，仮説表現そのものが最終的に安定する．逐次学習器が \emph{保守的} であるとは，新たに提示された正例データが現在の仮説によって生成されない場合にのみ，その現在の仮説を変更することをいう．
 
-この逐次学習器とは別に，\emph{集合駆動型再構成作用素} $\mathcal B$ を考える．これは有限語集合から文法への写像であり，とくにその出力は提示順序や重複回数に依存しない．任意の有限標本 $K$ に対して $K\subseteq L(\mathcal B(K))$ が成り立つとき，$\mathcal B$ は \emph{標本整合的} であるという．有限集合 $C\subseteq L$ が $L$ の $\mathcal B$ に対する \emph{特徴標本} であるとは，任意の有限 $K$ について $C\subseteq K\subseteq L$ ならば $L(\mathcal B(K))=L$ が成り立つことをいう．これは de~la~Higuera の多項式文法推論枠組み~\cite{higuera1997} の特徴標本に対応する．学習器に相対的な特徴標本とその符号化サイズについては\cite[Section~7.3.3, Definition~7.3.3]{higuera2010} も参照されたい．ただし同書の定義は逐次的提示に対するものであり，本論文の条件は明示的に集合駆動型である．標本サイズを
+この逐次学習器とは別に，\emph{集合駆動型再構成作用素} $\mathsf{Rec}$ を考える．これは有限語集合から文法への写像であり，とくにその出力は提示順序や重複回数に依存しない．任意の有限標本 $K$ に対して $K\subseteq L(\mathsf{Rec}(K))$ が成り立つとき，$\mathsf{Rec}$ は \emph{標本整合的} であるという．有限集合 $C\subseteq L$ が $L$ の $\mathsf{Rec}$ に対する \emph{特徴標本} であるとは，任意の有限 $K$ について $C\subseteq K\subseteq L$ ならば $L(\mathsf{Rec}(K))=L$ が成り立つことをいう．これは de~la~Higuera の多項式文法推論枠組み~\cite{higuera1997} の特徴標本に対応する．学習器に相対的な特徴標本とその符号化サイズについては\cite[Section~7.3.3, Definition~7.3.3]{higuera2010} も参照されたい．ただし同書の定義は逐次的提示に対するものであり，本論文の条件は明示的に集合駆動型である．標本サイズを
 $\|K\|:=\sum_{w\in K}(|w|+1)$
-で測る\footnote{$+1$ は，$K=\{\lambda\}$ のような非空標本のサイズが $0$ になることを防ぐ．また $|K|\le \|K\|$ となるため，正例数も同じサイズ尺度で抑えられる．}．したがって $\lambda$ も 1 を寄与する．以下では \emph{特徴データ} という語を，特徴標本 $C$ の符号化サイズ $\|C\|$ の略称としてのみ用いる．定量的結果では，$\mathcal B(K)$ の多項式時間構成と，多項式に抑えられる特徴データサイズを組み合わせる．
+で測る\footnote{$+1$ は，$K=\{\lambda\}$ のような非空標本のサイズが $0$ になることを防ぐ．また $|K|\le \|K\|$ となるため，正例数も同じサイズ尺度で抑えられる．}．したがって $\lambda$ も 1 を寄与する．以下では \emph{特徴データ} という語を，特徴標本 $C$ の符号化サイズ $\|C\|$ の略称としてのみ用いる．定量的結果では，$\mathsf{Rec}(K)$ の多項式時間構成と，多項式に抑えられる特徴データサイズを組み合わせる．
 多項式更新時間と多項式特徴標本サイズは別の評価基準であり~\cite[Sections~7.3.2--7.3.3]{higuera2010}，それらの一方だけから逐次的な多項式時間・データ同定は導けない．
 Eyraud--Heinz--Yoshinaka~\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016}
 は，逐次的な多項式時間・データ同定と集合ベースの基準を区別する．
 前者では特徴標本を観測した時点で正しい仮説に到達し，
 その後は仮説が安定しなければならない．後者は，
 特徴標本を含む任意の有限標本から正しく再構成できることを要求する．
-本論文の多項式特徴データ保証は集合駆動型の $\mathcal B_h$ に対するものであり，
-逐次学習器 $\mathcal A_h$ の多項式データ保証ではない．
+本論文の多項式特徴データ保証は集合駆動型の $\mathsf{Rec}_h$ に対するものであり，
+逐次学習器 $\mathsf{Learn}_h$ の多項式データ保証ではない．
 後者の Gold 安定化は系~\ref{cor:ilt} で別途示す．
 
 \subsection{固定有限モノイド型付け}\label{sec:fixed-typing}
 
 有限モノイド $M$ と準同型 $h:\Sigma^*\to M$ を固定する．これらは $M$ の乗法表および各 $a\in\Sigma$ に対する文字像 $h(a)$ によって表現される．したがって $h(w)$ は左から右への積によって $O(|w|)$ 時間で計算できる．以下で固定準同型が \emph{効率的に計算可能} であるというのはこの意味である．
 
-有限半群 $S$ の冪等元全体を $E(S)$ と書く．
-$e\in E(S)$ と $t\in S$ のすべてについて $ete=e$ が成り立つとき，
-$S$ は \emph{局所自明} であるという．
+有限半群 $\mathfrak S$ の冪等元全体を $E(\mathfrak S)$ と書く．
+$e\in E(\mathfrak S)$ と $t\in \mathfrak S$ のすべてについて $ete=e$ が成り立つとき，
+$\mathfrak S$ は \emph{局所自明} であるという．
 任意の非空な有限半群は冪等元をもつ．従って有限半群の
-全射準同型 $\pi:T\to S$ と $e\in E(S)$ に対し，
+全射準同型 $\pi:\mathfrak T\to \mathfrak S$ と $e\in E(\mathfrak S)$ に対し，
 部分半群 $\pi^{-1}(e)$ の中に冪等元 $f$ が存在する．
-$T$ が局所自明なら任意の $t\in T$ について
-$e\pi(t)e=\pi(ftf)=e$ なので，$S$ も局所自明である．
+$\mathfrak T$ が局所自明なら任意の $t\in \mathfrak T$ について
+$e\pi(t)e=\pi(ftf)=e$ なので，$\mathfrak S$ も局所自明である．
 $h$ の \emph{正の像半群}は $h(\Sigma^+)$ であり，
 これは $M$ の単位元を含むとは限らない．
 
@@ -321,10 +321,10 @@ $h:\Sigma^*\to M$ と $g:\Sigma^*\to N$ を有限モノイド準同型とする�
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
 \item $L\in\mathsf{RS}_h$ かつ $J\in\mathsf{RS}_g$ ならば
 $L\cap J\in\mathsf{RS}_{h\times g}$ である．
-\item $R=g^{-1}(F)$ が正規言語で $L\in\Ccf{h}$ ならば
-$L\cap R\in\Ccf{h\times g}$ である．
+\item $R_{\mathrm{reg}}=g^{-1}(\mathsf{Acc}_{g})$ が正規言語で $L\in\Ccf{h}$ ならば
+$L\cap R_{\mathrm{reg}}\in\Ccf{h\times g}$ である．
 \item $\varphi:\Gamma^*\to\Sigma^*$ を，消去的でもよい任意の準同型とする．
-$B_\varphi=\{1,\zeta\}$ を零元 $\zeta$ をもつ二元モノイドとし，
+$U_1=\{1,\zeta\}$ を零元 $\zeta$ をもつ二元モノイドとし，
 $\varphi(w)=\lambda$ のときかつそのときに限り $e_\varphi(w)=1$，
 それ以外では $e_\varphi(w)=\zeta$ と定め，
 $\widehat h=(h\circ\varphi)\times e_\varphi$ とおく．\footnote{%
@@ -471,12 +471,12 @@ $k=\ell=0$ では $h_{0,0}$ は $\lambda$ と非空語を区別するだけで�
 
 \begin{theorem}[固定-$h$ 学習定理]\label{thm:main}
 効率的に計算可能な有限モノイド準同型 $h:\Sigma^*\to M$ を固定する．
-集合駆動型再構成作用素 $\mathcal B_h$ と保守的逐次学習器 $\mathcal A_h$ が存在し，
+集合駆動型再構成作用素 $\mathsf{Rec}_h$ と保守的逐次学習器 $\mathsf{Learn}_h$ が存在し，
 次を満たす．
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $\mathcal B_h$ は標本整合的で，$\mathcal B_h(K)$ は $\|K\|$ の多項式時間で構成できる．
-\item すべての $L\in\Ccf{h}$ は $\mathcal B_h$ に対する有限特徴標本をもつ．
-\item $\mathcal A_h$ はすべての非空 $L\in\Ccf{h}$ を Gold の意味で同定し，
+\item $\mathsf{Rec}_h$ は標本整合的で，$\mathsf{Rec}_h(K)$ は $\|K\|$ の多項式時間で構成できる．
+\item すべての $L\in\Ccf{h}$ は $\mathsf{Rec}_h$ に対する有限特徴標本をもつ．
+\item $\mathsf{Learn}_h$ はすべての非空 $L\in\Ccf{h}$ を Gold の意味で同定し，
 各更新はそれまでに見たデータの多項式時間で行える．
 \item 正の像半群 $h(\Sigma^+)$ が有限な局所自明半群と有限群の
 直積の部分半群の準同型像なら，
@@ -532,15 +532,15 @@ $\ker h_{k,\ell}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$ が成り立つ．
 \end{proposition}
 
 \begin{proof}
-$S=h(\Sigma^+)$，$n=|S|+1$ とおく．
+$\mathfrak S=h(\Sigma^+)$，$n=|\mathfrak S|+1$ とおく．
 まず各 $h_{k,\ell}(\Sigma^+)$ は局所自明である．短語型は二乗で
 別の短語型または長語型になるため冪等元ではなく，
 命題~\ref{prop:yl-special} の積から，任意の長語型
 $\langle p,q\rangle$ と正の像の元 $t$ について
 $\langle p,q\rangle t\langle p,q\rangle=\langle p,q\rangle$ が成り立つ．
 
-(i)$\Rightarrow$(ii)．$S$ が局所自明なら，古典的な恒等式
-$S^n=SE(S)S$ と，任意の $e,f\in E(S)$，$s\in S$
+(i)$\Rightarrow$(ii)．$\mathfrak S$ が局所自明なら，古典的な恒等式
+$\mathfrak S^n=SE(\mathfrak S)\mathfrak S$ と，任意の $e,f\in E(\mathfrak S)$，$s\in \mathfrak S$
 に対する $esf=ef$ が成り立つ
 \cite[Corollary~II.6.35 and Proposition~XI.4.17]{pin2025}．
 $p,q\in\Sigma^n$ に対し，
@@ -556,9 +556,9 @@ $(k,\ell)=(n,n)$ として (ii) が従う．
 
 (ii)$\Rightarrow$(i)．核の包含により，
 $h_{k,\ell}(w)\mapsto h(w)$ は局所自明半群
-$h_{k,\ell}(\Sigma^+)$ から $S$ への全射準同型を定める．
+$h_{k,\ell}(\Sigma^+)$ から $\mathfrak S$ への全射準同型を定める．
 局所自明性は有限半群の準同型像で保存される
-（第~\ref{sec:fixed-typing}節）から，$S$ も局所自明である．
+（第~\ref{sec:fixed-typing}節）から，$\mathfrak S$ も局所自明である．
 最後に，核の精密化に関する単調性と合わせて言語クラスの合併等式が従い，
 $\mathrm{CFL}$ への制限後も成り立つ．
 \end{proof}
@@ -579,7 +579,7 @@ $\mathrm{CFL}$ への制限後も成り立つ．
  \quad\Longleftrightarrow\quad
  h(x)=h(y)\ \text{かつ}\ \D_K(x)\cap\D_K(y)\ne\emptyset
 \]
-と書く．文法 $\mathcal B_h(K)$ は
+と書く．文法 $\mathsf{Rec}_h(K)$ は
 非終端記号集合 $\widehat V(K)\cup\{\widehat S\}$ と開始記号
 $\widehat S$ をもち，表示されたすべての角括弧付き非終端記号が
 $\widehat V(K)$ に属する場合に，次の規則をもつ：
@@ -594,7 +594,7 @@ $\widehat V(K)$ に属する場合に，次の規則をもつ：
 $\lambda\in K$ のときは，規則~\textup{(S)} に
 $\widehat S\to\lambda$ も含める．
 ここで生成規則は集合として扱い，重複を除く．従って
-$\mathcal B_h(K)$ は標本 $K$ のみに依存し，因子出現の列挙順に依存しない．
+$\mathsf{Rec}_h(K)$ は標本 $K$ のみに依存し，因子出現の列挙順に依存しない．
 
 この文法は Yoshinaka~\cite[Section~4, Algorithm~1]{yoshinaka2008}
 の部分文字列添字付き構成に基づき，Clark~\cite[Section~4, Algorithm~1]{clark2013}
@@ -610,7 +610,7 @@ $\mathcal B_h(K)$ は標本 $K$ のみに依存し，因子出現の列挙順に
 $h$-型の一致で置き換える．
 
 \begin{lemma}[標本整合性]\label{lem:sample-consistency}
-任意の有限正例標本 $K$ に対して，$K\subseteq L(\mathcal B_h(K))$ が成り立つ．
+任意の有限正例標本 $K$ に対して，$K\subseteq L(\mathsf{Rec}_h(K))$ が成り立つ．
 \end{lemma}
 \begin{proof}
 $w=a_1\cdots a_m\in K\cap\Sigma^+$ とする．規則~\textup{(S)} により
@@ -622,13 +622,13 @@ $\lambda\in K$ の場合は開始規則が直接生成する．
 
 \begin{theorem}[健全性]\label{thm:soundness}
 $K\subseteq L$ かつ $L$ が $\sim_h$-代入可能ならば，
-$L(\mathcal B_h(K))\subseteq L$ である．
+$L(\mathsf{Rec}_h(K))\subseteq L$ である．
 \end{theorem}
 
 \begin{proof}
 $[x]$ を根とする導出木の高さについて帰納法を行い，
 \begin{equation}\label{eq:soundness-invariant}
- [x]\Rightarrow_{\mathcal B_h(K)}^*w
+ [x]\Rightarrow_{\mathsf{Rec}_h(K)}^*w
  \quad\Longrightarrow\quad
  x\equiv_L w\ \text{かつ}\ h(w)=h(x)
 \end{equation}
@@ -658,7 +658,7 @@ $\lambda$ の直接規則は $\lambda\in K\subseteq L$ の場合にしか存在�
 
 \subsection{逐次学習器}
 
-$\mathcal B_h$ を各データ到着時に再計算しても，文法表現は一般には安定しない．
+$\mathsf{Rec}_h$ を各データ到着時に再計算しても，文法表現は一般には安定しない．
 たとえば $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$ では，長い正例から
 $[a^ncb^n]$ のような新しい因子非終端記号が生じる．
 そこで Clark--Eyraud の Substitution Graph Learner (SGL, Algorithm~2)
@@ -671,13 +671,13 @@ Eyraud--Heinz--Yoshinaka~\cite[Appendix]{eyraud-heinz-yoshinaka2016} も参照�
  H_n:=
  \begin{cases}
  H_{n-1},&w_n\in L(H_{n-1}),\\
- \mathcal B_h(K_n),&w_n\notin L(H_{n-1}),
+ \mathsf{Rec}_h(K_n),&w_n\notin L(H_{n-1}),
  \end{cases}
  \qquad
- \mathcal A_h(T[n]):=H_n
+ \mathsf{Learn}_h(T[n]):=H_n
 \]
-とする．再構成は常に蓄積標本全体 $K_n$ を用いる．$\mathcal B_h$ は
-集合駆動型だが，$\mathcal A_h$ が最終的に安定する文法は提示順序に依存し得る．
+とする．再構成は常に蓄積標本全体 $K_n$ を用いる．$\mathsf{Rec}_h$ は
+集合駆動型だが，$\mathsf{Learn}_h$ が最終的に安定する文法は提示順序に依存し得る．
 主張するのは，標的言語を生成する文法への最終的な構文的安定化だけである
 （系~\ref{cor:ilt}）．実際，無限な $L\in\Ccf{h}$ のテキスト $T$ で
 学習器が安定するとき，極限仮説を構成した有限標本のすべての語より長い $w\in L$ を選べる．
@@ -705,7 +705,7 @@ $S_0\to A$ または $S_0\to\lambda$ の形であり，
 開始記号の分離により文全体への入口が内部非終端記号と区別され，
 $\lambda$ は開始記号で別途扱える．
 
-任意の非空文脈自由言語は，標準的な開始記号分離，無用記号除去，開始記号以外での $\lambda$/単位規則除去，および二分化の手続きにより，同値な縮約済み SSBNF 文法をもつ．従って以下の精密化は非空文脈自由言語について定義する．空標的は $H_0$ と $\mathcal B_h(\emptyset)$ により別途表す．
+任意の非空文脈自由言語は，標準的な開始記号分離，無用記号除去，開始記号以外での $\lambda$/単位規則除去，および二分化の手続きにより，同値な縮約済み SSBNF 文法をもつ．従って以下の精密化は非空文脈自由言語について定義する．空標的は $H_0$ と $\mathsf{Rec}_h(\emptyset)$ により別途表す．
 
 非空言語 $L$ に対する縮約済み SSBNF 文法を $G=(V,\Sigma,P,S_0)$ とする．
 開始記号 $\widetilde S$ と，$A\in V\setminus\{S_0\}$, $\mu\in M$ に対する非開始記号 $A_\mu$ をもつ次の生成語型付き文法を作る．以下，型添字の併置は $M$ における積を表す．すなわち $\mu\nu=\mu\cdot\nu$ とする．規則は次である．
@@ -802,7 +802,7 @@ $\WitnessSet(\widetilde G)$ の要素を \emph{標準正例証拠} と呼ぶ．
 \subsection{厳密再構成と Gold 収束}
 
 \begin{theorem}[有限証拠からの完全性]\label{thm:complete}
-非空言語 $L$ に対する任意の縮約済み SSBNF 文法を $G$ とし，固定準同型 $h$ に関するその型付き精密化を $\widetilde G$ とする．有限集合 $K$ が $\WitnessSet(\widetilde G)\subseteq K$ を満たすならば，$L\subseteq L(\mathcal B_h(K))$ である．
+非空言語 $L$ に対する任意の縮約済み SSBNF 文法を $G$ とし，固定準同型 $h$ に関するその型付き精密化を $\widetilde G$ とする．有限集合 $K$ が $\WitnessSet(\widetilde G)\subseteq K$ を満たすならば，$L\subseteq L(\mathsf{Rec}_h(K))$ である．
 \end{theorem}
 
 ここが標的型付けが登場する箇所である．学習器とバッチ作用素は第~\ref{sec:algo}節ですでに定義されており，以下の証明は，それらの仮説非終端記号が生成語型付き標的非終端記号を模倣できることを示す．それ以外では，この主張は純粋に組合せ論的である．型付き文法と包含 $\WitnessSet(\widetilde G)\subseteq K$ だけを用い，代入可能性も追加仮定 $K\subseteq L$ も必要としない．
@@ -811,7 +811,7 @@ $\WitnessSet(\widetilde G)$ の要素を \emph{標準正例証拠} と呼ぶ．
 各非開始記号 $X$ に対し，$\widehat X:=[\omega(X)]$ と書く．
 式~\eqref{eq:W} の第一族の対応する語により $\widehat X$ は存在する．
 型付き導出 $X\Rightarrow^*w$ について帰納法を行い，
-$\widehat X\Rightarrow_{\mathcal B_h(K)}^*w$ を示す．
+$\widehat X\Rightarrow_{\mathsf{Rec}_h(K)}^*w$ を示す．
 
 最初の規則が $X\to a$ の場合，第一族と第二族にはそれぞれ
 $u_X\omega(X)v_X$ と $u_Xav_X$ が含まれる．
@@ -840,18 +840,18 @@ $w=\lambda$ の場合も式~\eqref{eq:W} と規則~\textup{(S)} から直ちに�
 
 \begin{theorem}[厳密有限標本再構成]
 \label{thm:reconstruction-fixed-h}
-$L\in\Ccf{h}$ を非空とし，$G$ を $L$ の縮約済み SSBNF 文法，$\widetilde G$ をその型付き精密化とする．$\WitnessSet(\widetilde G)\subseteq K\subseteq L$ ならば，$L(\mathcal B_h(K))=L$ である．
+$L\in\Ccf{h}$ を非空とし，$G$ を $L$ の縮約済み SSBNF 文法，$\widetilde G$ をその型付き精密化とする．$\WitnessSet(\widetilde G)\subseteq K\subseteq L$ ならば，$L(\mathsf{Rec}_h(K))=L$ である．
 \end{theorem}
 \begin{proof}
 定理~\ref{thm:soundness} と~\ref{thm:complete} を合わせればよい．
 \end{proof}
 
-したがって，$L(G)\in\Ccf{h}$ が非空となる任意の縮約済み SSBNF 文法 $G$ に対し，集合 $\WitnessSet(\widetilde G)$ は第~\ref{sec:learning}節の意味で，$\mathcal B_h$ に関する $L(G)$ の特徴標本である．
+したがって，$L(G)\in\Ccf{h}$ が非空となる任意の縮約済み SSBNF 文法 $G$ に対し，集合 $\WitnessSet(\widetilde G)$ は第~\ref{sec:learning}節の意味で，$\mathsf{Rec}_h$ に関する $L(G)$ の特徴標本である．
 
-定理~\ref{thm:reconstruction-fixed-h} は $\{\lambda\}$ を含むすべての非空標的を覆う．残る端点 $L=\emptyset$ については $C_L=\emptyset$ とおけば，$\mathcal B_h(\emptyset)$ は開始生成規則をもたない．これにより定理~\ref{thm:main} の項目~(ii) が確立される．
+定理~\ref{thm:reconstruction-fixed-h} は $\{\lambda\}$ を含むすべての非空標的を覆う．残る端点 $L=\emptyset$ については $C_L=\emptyset$ とおけば，$\mathsf{Rec}_h(\emptyset)$ は開始生成規則をもたない．これにより定理~\ref{thm:main} の項目~(ii) が確立される．
 
 \begin{corollary}[Gold 同定]\label{cor:ilt}
-有限モノイド $M$ への固定準同型 $h:\Sigma^*\to M$ に対し，学習器 $\mathcal A_h$ は $\Ccf{h}$ のすべての非空言語を正例データから同定する．より具体的には，任意の縮約済み SSBNF 標的文法 $G$ とその型付き精密化 $\widetilde G$ に対し，$\WitnessSet(\widetilde G)\subseteq K_{n_0}$ となったとき，段階 $n\ge n_0$ の範囲で生じうる仮説変更は高々一回である．
+有限モノイド $M$ への固定準同型 $h:\Sigma^*\to M$ に対し，学習器 $\mathsf{Learn}_h$ は $\Ccf{h}$ のすべての非空言語を正例データから同定する．より具体的には，任意の縮約済み SSBNF 標的文法 $G$ とその型付き精密化 $\widetilde G$ に対し，$\WitnessSet(\widetilde G)\subseteq K_{n_0}$ となったとき，段階 $n\ge n_0$ の範囲で生じうる仮説変更は高々一回である．
 \end{corollary}
 
 \begin{proof}
@@ -859,7 +859,7 @@ $L$ を非空標的，$T$ をそのテキストとし，
 $\WitnessSet(\widetilde G)\subseteq K_{n_0}$ となる $n_0$ を選ぶ．
 初期仮説 $H_0$ は空であり，最初の正例は段階 $1$ の再構成を強制する．
 従って各 $n\ge1$ の仮説 $H_n$ は，直近の再構成段階
-$m\le n$ における $\mathcal B_h(K_m)$ の出力である．
+$m\le n$ における $\mathsf{Rec}_h(K_m)$ の出力である．
 再構成時の標本整合性と，その後に再構成しなかった各段階の更新規則から
 $K_n\subseteq L(H_n)$ が成り立ち，$K_m\subseteq L$ と
 健全性から $L(H_n)\subseteq L$ も成り立つ．
@@ -877,14 +877,14 @@ $K_n\subseteq L(H_{n_0})$ に含まれ，テキストは $L$ の
 が指摘する delayed-rebuild 現象である．特徴標本をすでに見終えた後でも，
 新しい各正例が以前の誤った仮説によって生成されている限り，保守的学習器はその仮説を
 保持し得る．その仮説の外にある後続の正例が現れたとき，すでに特徴データを含む
-蓄積標本全体から再構成が行われる．上の証明は $\mathcal A_h$ に対するこの安定化を
+蓄積標本全体から再構成が行われる．上の証明は $\mathsf{Learn}_h$ に対するこの安定化を
 明示している．
 
 \subsection{再構成ステップの計算量}
 \label{sec:complexity}
 
 \begin{theorem}[多項式時間再構成]\label{thm:poly-build}
-$h$ を固定すると，$\mathcal B_h(K)$ は $\|K\|$ に関して多項式時間で構成できる．
+$h$ を固定すると，$\mathsf{Rec}_h(K)$ は $\|K\|$ に関して多項式時間で構成できる．
 \end{theorem}
 \begin{proof}
 $n_K:=\|K\|$ とおき，観測因子出現の集合を
@@ -914,11 +914,11 @@ $|\mathcal O_K||K|=O(n_K^3)$ である．
 生成規則を集合として扱うため，重複は除去する．
 明示的な規則符号列の trie を使えば，重複の判定と除去は
 候補の総符号長に比例する時間で実行でき，上の上界を変えない．
-従って，$\mathcal B_h(K)$ は
+従って，$\mathsf{Rec}_h(K)$ は
 $O(n_K^4)$ 時間で構成できる．
 \end{proof}
 
-保守的学習器 $\mathcal A_h$ の各更新も，それまでに見たデータの符号化サイズに
+保守的学習器 $\mathsf{Learn}_h$ の各更新も，それまでに見たデータの符号化サイズに
 関して多項式時間で処理できる．CFG membership は文法と入力サイズに関して
 多項式時間であり，現在の仮説サイズと必要な再構成の計算量はいずれも
 定理~\ref{thm:poly-build} によって多項式に抑えられる．
@@ -996,7 +996,7 @@ $|w|+1$ を抑える．積をとれば主張が従う．
 \begin{corollary}[型付き厚みからの特徴データ]
 \label{cor:typed-thickness-data}
 $h$ を固定する．$G$ が非空な $L(G)\in\Ccf{h}$ の縮約済み SSBNF 文法なら，
-$\WitnessSet(\widetilde G)$ は $\mathcal B_h$ に対する特徴標本であり，
+$\WitnessSet(\widetilde G)$ は $\mathsf{Rec}_h$ に対する特徴標本であり，
 その符号化サイズは $|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式である．
 \end{corollary}
 \begin{proof}
@@ -1040,16 +1040,16 @@ $|w^*_n|=3\cdot2^n-2$ である．これは単項の角括弧節点を除けば�
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
 \item $L_n$ は Clark--Eyraud 代入可能であり，
 $L_n\in\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$ である．
-\item $L_n$ は $\mathcal B_{h_0}$ に対し，
+\item $L_n$ は $\mathsf{Rec}_{h_0}$ に対し，
 符号化サイズが $n$ の多項式で抑えられる特徴標本をもつ．
 \item 有限 $K\subseteq L_n$ に対し
-$w^*_n\in L(\mathcal B_{h_{\mathrm U}}(K))$ ならば
+$w^*_n\in L(\mathsf{Rec}_{h_{\mathrm U}}(K))$ ならば
 $w^*_n\in K$ である．従って
-$\mathcal B_{h_{\mathrm U}}$ に対する任意の特徴標本 $C$ は
+$\mathsf{Rec}_{h_{\mathrm U}}$ に対する任意の特徴標本 $C$ は
 $\|C\|\ge3\cdot2^n-1$ を満たす．
 \item $L^-_n:=L_n\setminus\{w_n^*\}$ とおくと
 $L^-_n\in\Ccf{h_{\mathrm U}}$ である．$L_n,L^-_n$ の
-両方に特徴標本をもつ任意の集合駆動型作用素 $\mathcal F$ について，
+両方に特徴標本をもつ任意の集合駆動型作用素 $\mathsf{Op}$ について，
 $L_n$ の任意の特徴標本 $C$ は $w_n^*$ を含み，
 $\|C\|\ge3\cdot2^n-1$ を満たす．特に，固定
 $h_{\mathrm U}$ クラス全体に特徴標本をもつ任意の
@@ -1057,7 +1057,7 @@ $h_{\mathrm U}$ クラス全体に特徴標本をもつ任意の
 \end{enumerate}
 特に固定型付け $h_{\mathrm U}$ では，
 $\Ccf{h_{\mathrm U}}$ の標的を表す縮約済み CFG に対して，
-$\mathcal B_{h_{\mathrm U}}$ の特徴データ量を
+$\mathsf{Rec}_{h_{\mathrm U}}$ の特徴データ量を
 元文法サイズと通常厚みの多項式で一様に上から抑えることはできない．
 \end{proposition}
 
@@ -1073,7 +1073,7 @@ $n$ の多項式サイズの特徴標本が得られる．
 
 (iii) まず，任意の有限標本 $K$ と観測因子 $x$ について
 \[
- [x]\Rightarrow_{\mathcal B_{h_{\mathrm U}}(K)}^*w
+ [x]\Rightarrow_{\mathsf{Rec}_{h_{\mathrm U}}(K)}^*w
  \quad\Longrightarrow\quad
  h_{\mathrm U}(w)=h_{\mathrm U}(x)
 \]
@@ -1084,7 +1084,7 @@ $n$ の多項式サイズの特徴標本が得られる．
 この不変量に代入可能性の仮定は不要である．
 
 いま $K\subseteq L_n$ かつ
-$w_n^*\in L(\mathcal B_{h_{\mathrm U}}(K))$ とする．
+$w_n^*\in L(\mathsf{Rec}_{h_{\mathrm U}}(K))$ とする．
 $w_n^*\ne\lambda$ なので，ある $k\in K$ に対して
 $\widehat S\to[k]\Rightarrow^*w_n^*$ である．
 従って
@@ -1095,7 +1095,7 @@ $L_n\cap h_{\mathrm U}^{-1}(\{1\})=\{w_n^*\}$
 $k=w_n^*\in K$ が従う．
 
 特に特徴標本 $C$ では
-$L(\mathcal B_{h_{\mathrm U}}(C))=L_n$ なので，
+$L(\mathsf{Rec}_{h_{\mathrm U}}(C))=L_n$ なので，
 $\|C\|\ge |w_n^*|+1=3\cdot2^n-1$.
 既述の $|G_n|,\tau_{G_n}=O(n)$ と合わせて，
 命題末尾の主張を得る．
@@ -1111,10 +1111,10 @@ $L^-_n$ は $\sim_{h_{\mathrm U}}$-代入可能である．
 さらに有限言語だから文脈自由であり，
 $L^-_n\in\Ccf{h_{\mathrm U}}$ が従う．
 
-$C$ を作用素 $\mathcal F$ に関する $L_n$ の特徴標本とし，
+$C$ を作用素 $\mathsf{Op}$ に関する $L_n$ の特徴標本とし，
 $w_n^*\notin C$ と仮定する．$L^-_n$ の特徴標本 $C'$ を取れば，
 $C\cup C'\subseteq L^-_n\subsetneq L_n$ である．
-しかし特徴標本性から，同じ文法 $\mathcal F(C\cup C')$ は
+しかし特徴標本性から，同じ文法 $\mathsf{Op}(C\cup C')$ は
 $L_n$ と $L^-_n$ の両方を生成しなければならず矛盾する．
 従って $w_n^*\in C$ であり，下界が成立する．
 \end{proof}
@@ -1161,7 +1161,7 @@ $\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)\ge|w_n^*|$ が従う．
 Yoshinaka~\cite[Theorem~1]{yoshinaka2008} により既に示されている．
 そこでは $(k,\ell)$-Greibach 正規形と特徴集合の評価
 ~\cite[Lemmas~2 and~7]{yoshinaka2008} を用いる．
-本節では代わりに，$\mathcal B_h$ で用いる型付き精密化の
+本節では代わりに，$\mathsf{Rec}_h$ で用いる型付き精密化の
 最短生成語長を抑える．固定窓と有限群値を併用する場合まで，
 同一の証明で扱える．
 特徴データの符号長評価は Yoshinaka~\cite{yoshinaka2008} と
@@ -1170,11 +1170,11 @@ Eyraud--Heinz--Yoshinaka
 多項式時間・厚み付きデータ同定（IPTtD）の意味であり，
 Yoshinaka の多項式次数の改善は主張しない．
 一般の固定 $h$ では，通常厚みだけでは
-$\mathcal B_h$ の特徴データを多項式で抑えられない
+$\mathsf{Rec}_h$ の特徴データを多項式で抑えられない
 （命題~\ref{prop:typed-thickness-gap}）．
 
-$k,\ell\ge0$ と有限群 $Q$ への準同型 $g:\Sigma^*\to Q$ を固定し，
-$m:=k+\ell$，$q:=|Q|$ とおく．
+$k,\ell\ge0$ と有限群 $\mathfrak K$ への準同型 $g:\Sigma^*\to \mathfrak K$ を固定し，
+$m:=k+\ell$，$q_{\mathrm{grp}}:=|\mathfrak K|$ とおく．
 
 \begin{lemma}[固定窓と有限群による型付き生成語の評価]
 \label{lem:window-typed-yield}
@@ -1183,7 +1183,7 @@ $N:=|V\setminus\{S_0\}|\ge1$ とする．有限型付け $h$ が
 $\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$ を満たすなら，
 \[
  \tau_h^{\mathrm{typ}}(G)
- \le m+\bigl[1+2(m+q-1)(m+1)Nq\bigr]\tau_G.
+ \le m+\bigl[1+2(m+q_{\mathrm{grp}}-1)(m+1)Nq\bigr]\tau_G.
 \]
 \end{lemma}
 \begin{proof}
@@ -1198,7 +1198,7 @@ $h,\Sigma$ を固定し，ある固定 $k,\ell$ と有限群準同型 $g$ が
 $\ker(h_{k,\ell}\times g)|_{\Sigma^+}
  \subseteq\ker h|_{\Sigma^+}$ を満たすとする．
 非開始記号をもつ縮約済み SSBNF 文法 $G$ で表される任意の
-非空 $L\in\Ccf{h}$ は，$\mathcal B_h$ に対し，
+非空 $L\in\Ccf{h}$ は，$\mathsf{Rec}_h$ に対し，
 $|G|$ と $\tau_G$ の多項式符号長の特徴標本
 $\WitnessSet(\widetilde G)$ をもつ．
 \end{theorem}
@@ -1208,7 +1208,7 @@ $\WitnessSet(\widetilde G)$ をもつ．
 $\{\lambda\}$ だけの標的は別途扱う．
 \end{proof}
 
-$Q$ を自明群とすれば固定窓の場合を含む．
+$\mathfrak K$ を自明群とすれば固定窓の場合を含む．
 次の正規化で任意の縮約済み CFG 表現へ移す．
 
 \begin{proposition}[厚みを多項式的に保存する SSBNF 正規化]
@@ -1228,29 +1228,29 @@ $\tau_G\le q_{\mathrm{thick}}(|G_*|,\tau_{G_*}+1)$
 $h:\Sigma^*\to M$ を有限モノイド準同型とし，
 $\Sigma$ は非空とする．次は同値である．
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $h(\Sigma^+)$ は，ある有限局所自明半群 $S$ と
-有限群 $Q$ の直積 $S\times Q$ の部分半群の
+\item $h(\Sigma^+)$ は，ある有限局所自明半群 $\mathfrak S$ と
+有限群 $\mathfrak K$ の直積 $\mathfrak S\times \mathfrak K$ の部分半群の
 準同型像である．
 \item ある $k,\ell\ge0$ と有限群への準同型
-$g:\Sigma^*\to Q$ が存在し，
+$g:\Sigma^*\to \mathfrak K$ が存在し，
 $\ker(h_{k,\ell}\times g)|_{\Sigma^+} \subseteq\ker h|_{\Sigma^+}$
 を満たす．
 \end{enumerate}
 \end{lemma}
 \begin{proof}
-(i) を仮定する．部分半群 $T\subseteq S\times Q$ と
-全射半群準同型 $\pi:T\twoheadrightarrow h(\Sigma^+)$ を取る．
+(i) を仮定する．部分半群 $\mathfrak T\subseteq \mathfrak S\times \mathfrak K$ と
+全射半群準同型 $\pi:\mathfrak T\twoheadrightarrow h(\Sigma^+)$ を取る．
 各 $a\in\Sigma$ に対し
-$\pi(s_a,q_a)=h(a)$ となる $(s_a,q_a)\in T$ を選び，
+$\pi(s_a,q_a)=h(a)$ となる $(s_a,q_a)\in \mathfrak T$ を選び，
 $a\mapsto(s_a,q_a)$ を積により
-$\varphi:\Sigma^+\to T$ に延長する．
+$\varphi:\Sigma^+\to \mathfrak T$ に延長する．
 二つの成分への射影を取り，$\lambda$ にはそれぞれの
 単位元を対応させると，モノイド準同型
-$s:\Sigma^*\to S^1$ と $g:\Sigma^*\to Q$ を得る．
-ここで $S^1$ は必要な場合に限って単位元を付加した
+$s:\Sigma^*\to \mathfrak S^1$ と $g:\Sigma^*\to \mathfrak K$ を得る．
+ここで $\mathfrak S^1$ は必要な場合に限って単位元を付加した
 モノイドである．任意の $w\in\Sigma^+$ について
 $h(w)=\pi(s(w),g(w))$ が成り立つ．
-$s(\Sigma^+)$ は局所自明半群 $S$ の部分半群なので，
+$s(\Sigma^+)$ は局所自明半群 $\mathfrak S$ の部分半群なので，
 命題~\ref{prop:li-window} より
 $\ker h_{k,\ell}|_{\Sigma^+}
 \subseteq\ker s|_{\Sigma^+}$
@@ -1275,7 +1275,7 @@ $h:\Sigma^*\to M$ を固定する．$h(\Sigma^+)$ が
 有限な局所自明半群と有限群の直積の
 部分半群の準同型像であるとする．このとき，
 縮約済み CFG $G_*$ で表される任意の非空 $L\in\Ccf{h}$ は，
-$\mathcal B_h$ に対して $|G_*|$ と $\tau_{G_*}+1$ の
+$\mathsf{Rec}_h$ に対して $|G_*|$ と $\tau_{G_*}+1$ の
 多項式符号長の特徴データをもつ．
 これには局所自明な正の像半群や有限群の型付けを含む．
 \end{corollary}
@@ -1290,17 +1290,17 @@ $\mathcal B_h$ に対して $|G_*|$ と $\tau_{G_*}+1$ の
 \end{proof}
 
 ここで $\mathbf{LI}$ を局所自明有限半群の擬多様体，
-$\mathbf G$ を有限群を半群とみなした擬多様体とする．
+$\mathbf{Grp}$ を有限群を半群とみなした擬多様体とする．
 両者は有限直積で閉じているので，その擬多様体としての結合
-$\mathbf{LI}\vee\mathbf G$ は，
-$S\in\mathbf{LI}$ と $Q\in\mathbf G$ の直積 $S\times Q$ の
+$\mathbf{LI}\vee\mathbf{Grp}$ は，
+$\mathfrak S\in\mathbf{LI}$ と $\mathfrak K\in\mathbf{Grp}$ の直積 $\mathfrak S\times \mathfrak K$ の
 除数（部分半群の準同型像）全体に正確に一致する．
 局所自明半群を含む擬多様体の結合は
 Costa~\cite{costa2002li,costa2002lig} らによって研究されてきた．
 本論文で扱うのは，そこから導く文法学習の定量的帰結である．
 固定型付け $h$ に関して，補題~\ref{lem:li-group-factor} は，
 定理~\ref{thm:window-thick} の核の精密化条件と
-$h(\Sigma^+)\in\mathbf{LI}\vee\mathbf G$ の同値性を与える．
+$h(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$ の同値性を与える．
 系はこの代数的条件から定量的結果を
 任意の縮約済み CFG 表現へ拡張する．
 これは多項式特徴データ上界をもつ型付けすべてを
@@ -1308,16 +1308,16 @@ $h(\Sigma^+)\in\mathbf{LI}\vee\mathbf G$ の同値性を与える．
 
 \begin{lemma}[二元半束は窓・群の結合の外にある]
 \label{lem:U1-outside}
-$U_1\notin\mathbf{LI}\vee\mathbf G$.
+$U_1\notin\mathbf{LI}\vee\mathbf{Grp}$.
 \end{lemma}
 \begin{proof}
-背理法で，$S\in\mathbf{LI}$ と有限群 $Q$ の直積の部分半群
-$T\subseteq S\times Q$ から $U_1$ への全射準同型
-$\pi:T\to U_1$ が存在するとする．
+背理法で，$\mathfrak S\in\mathbf{LI}$ と有限群 $\mathfrak K$ の直積の部分半群
+$\mathfrak T\subseteq \mathfrak S\times \mathfrak K$ から $U_1$ への全射準同型
+$\pi:\mathfrak T\to U_1$ が存在するとする．
 $\pi^{-1}(1)$ と $\pi^{-1}(\zeta)$ はそれぞれ空でない有限部分半群なので，
-冪等元 $e,f$ を含む．$S\times Q$ の冪等元の群成分は
-$1_Q$ であるから，$e,f$ の $S$ 成分も冪等元である．
-$S$ の局所自明性から $efe=e$ だが，
+冪等元 $e,f$ を含む．$\mathfrak S\times \mathfrak K$ の冪等元の群成分は
+$1_Q$ であるから，$e,f$ の $\mathfrak S$ 成分も冪等元である．
+$\mathfrak S$ の局所自明性から $efe=e$ だが，
 $\pi$ を作用させると $1\cdot\zeta\cdot1=1$ となり，
 $\zeta\ne1$ に矛盾する．
 \end{proof}
@@ -1325,10 +1325,10 @@ $\zeta\ne1$ に矛盾する．
 \begin{remark}
 $h_{\mathrm U}$ の正の像は $U_1$ であり，
 補題~\ref{lem:U1-outside} により
-$\mathbf{LI}\vee\mathbf G$ に属さない．
+$\mathbf{LI}\vee\mathbf{Grp}$ に属さない．
 命題~\ref{prop:typed-thickness-gap} は，
 系~\ref{cor:li-thickness} の代数的仮定を外すと
-$\mathcal B_h$ の通常厚みに関する特徴データ上界が
+$\mathsf{Rec}_h$ の通常厚みに関する特徴データ上界が
 成立しない場合を示す．
 これは任意の固定型付けについて条件の必要性を主張するものではない．
 命題~\ref{prop:typed-thickness-gap}(iv) は二つの標的を識別するための
@@ -1384,7 +1384,7 @@ $|\omega(X)|\le N_t$ が従う．
 \begin{theorem}[線形標的に対する多項式特徴データ]
 \label{thm:linear-poly}
 $h$ を固定する．線形 CFG $G$ で表される任意の
-$L\in\Clin{h}$ は，$\mathcal B_h$ に対し，
+$L\in\Clin{h}$ は，$\mathsf{Rec}_h$ に対し，
 $|G|$ の多項式で $\|\cdot\|$-サイズが抑えられる特徴標本をもつ．
 \end{theorem}
 \begin{proof}
@@ -1407,7 +1407,7 @@ $\|\WitnessSet(\widetilde G_0)\|=O(|G_0|^3|M|^4)$ である．
 これは de~la~Higuera~\cite[Theorem~2]{higuera1997} の
 線形言語全体についての否定結果とは矛盾しない．
 本定理は固定 $h$ に対する代入可能な部分クラスだけを対象とするからである．
-さらに逐次学習器 $\mathcal A_h$ に対する
+さらに逐次学習器 $\mathsf{Learn}_h$ に対する
 多項式データ保証は主張しない．
 
 \paragraph{非正則な線形 \texorpdfstring{fixed-$h$}{fixed-h} 例．}
@@ -1449,7 +1449,7 @@ $h$ に対して $\Clin{h}$ に属する．一方，Clark--Eyraud 代入可能�
 線形性は表示文法から従う．有限型付けに関する代入可能性を示すため，
 \[
  L_{\mathrm{all}}:=\{a^n\xi b^n:n\ge0,\ \xi\in\{c,d,e\}\},\qquad
- R:=(aa)^*c(bb)^*\cup a(aa)^*d\,b(bb)^*\cup a^*eb^*
+ R_{\mathrm{reg}}:=(aa)^*c(bb)^*\cup a(aa)^*d\,b(bb)^*\cup a^*eb^*
 \]
 とおく．線形言語 $L_{\mathrm{all}}$ は非空因子の規約で
 Clark--Eyraud 代入可能である．中心記号を含まない因子は
@@ -1457,7 +1457,7 @@ Clark--Eyraud 代入可能である．中心記号を含まない因子は
 $a^i\xi b^j$ の分布は $i-j$ のみに依存する．
 従って自明な型付け $h_0$ に対し
 $L_{\mathrm{all}}\in\Clin{h_0}$ である．
-$R$ は正規言語で $L_{\pm,e}=L_{\mathrm{all}}\cap R$ だから，
+$R$ は正規言語で $L_{\pm,e}=L_{\mathrm{all}}\cap R_{\mathrm{reg}}$ だから，
 命題~\ref{prop:finite-info-closure}(ii) と線形言語の
 正規交差に関する閉包性により，$R$ を認識するある有限モノイド準同型
 $g$ について $L_{\pm,e}\in\Clin{h_0\times g}$ が従う．
@@ -1509,12 +1509,12 @@ $c/d$-因子を区別する．従って，共通文脈をもつ同型の因子�
 
 \paragraph{生成語型付けが誘導する有限状態制御．}
 次の標準的な有限状態の直積構成は，Takada の control-set の見方との
-限定的な接点を与える．線形文法 $G=(V,\Sigma,P,S)$ の各生成規則にアルファベット $\Pi$ から相異なる
-ラベルを与え，$\alpha\in\Pi^*$ が導出の生成規則ラベル列であるとき
+限定的な接点を与える．線形文法 $G=(V,\Sigma,P,S)$ の各生成規則にアルファベット $\mathsf{ProdLab}$ から相異なる
+ラベルを与え，$\alpha\in\mathsf{ProdLab}^*$ が導出の生成規則ラベル列であるとき
 $A\Rightarrow_G^\alpha w$ と書く．$F\subseteq M$ に対し
 \[
  C_{h,F}(G):=
- \{\alpha\in\Pi^*:S\Rightarrow_G^\alpha w
+ \{\alpha\in\mathsf{ProdLab}^*:S\Rightarrow_G^\alpha w
    \text{ for some }w\in\Sigma^*,\ h(w)\in F\}
 \]
 とおく．これは正則制御集合である．実際，状態
@@ -1670,7 +1670,7 @@ control-set 法一般との分離は主張しない．
 
 \subsection{上限制約つき正則カウンタ族}
 
-正則言語 $L_0=ae^*ce^*a\cup ae^*de^*a\cup be^*ce^*b$ による
+正則言語 $L_{\mathrm{Yreg}}=ae^*ce^*a\cup ae^*de^*a\cup be^*ce^*b$ による
 固定窓階層からの分離は Yoshinaka~\cite[Proposition~1]{yoshinaka2008}
 によって既に示されている．以下の族は，第9.3節の無界カウンタに対する
 有限状態の capped 版として残す．
@@ -1876,8 +1876,8 @@ $\mathsf{RS}\cap\mathrm{CFL}$ の完全な特徴づけも未解決である．
 
 \subsection{補題~\ref{lem:window-typed-yield} の証明}
 \begin{proof}[補題~\ref{lem:window-typed-yield} の証明]
-$m:=k+\ell$，$q:=|Q|$，$N:=|V\setminus\{S_0\}|$，
-$H:=(m+1)Nq$，$W:=m+q-1$ とおく．
+$m:=k+\ell$，$q_{\mathrm{grp}}:=|\mathfrak K|$，$N:=|V\setminus\{S_0\}|$，
+$D_{\mathrm{bd}}:=(m+1)Nq$，$W_{\mathrm{bd}}:=m+q_{\mathrm{grp}}-1$ とおく．
 縮約済み SSBNF 文法 $G$ の各非開始記号は，長さ
 $\tau_G$ 以下の非空語を生成するので $\tau_G\ge1$ である．
 
@@ -1897,7 +1897,7 @@ $|\omega(A_\mu)|\le|w|$．$|w|<m$ なら評価は明らかである．
 それ以外では $w=\alpha\beta\gamma$，
 $|\alpha|=k$，$|\gamma|=\ell$ と書き，
 $\alpha,\gamma$ の計 $m$ 個の位置を保護位置とし，
-その集合を $\Pi$ とする（空集合でもよい）．
+その集合を $\mathsf{GuardPos}$ とする（空集合でもよい）．
 $w'=\alpha\beta'\gamma\in L_G(A)$ が
 $g(w')=g(w)$ を満たせば $|w'|\ge|w|$ である．
 実際，これらの生成語は非空であり，$w$ と同じ
@@ -1905,46 +1905,46 @@ $(h_{k,\ell}\times g)$-型を持つ．以下，この最短性を用いる．
 
 $A\Rightarrow_G^*w$ の導出木を固定し，非終端記号の出現を
 節点，終端規則 $B\to a$ を葉とする．節点 $z$ の
-非開始ラベルを $B(z)$，非空生成語を $y(z)$，
-その位置区間を $I(z)$，$\operatorname{Mark}(z):=I(z)\cap\Pi$ と書く．
+非開始ラベルを $\operatorname{nt}(z)$，非空生成語を $y(z)$，
+その位置区間を $\operatorname{span}(z)$，$\operatorname{Mark}(z):=\operatorname{span}(z)\cap\mathsf{GuardPos}$ と書く．
 互いに比較不能な節点の部分木は，各ラベルからの導出木で
 独立に置換できる．
 
 \emph{深さ．}
 異なる祖先・子孫節点で
-$(\operatorname{Mark}(z),B(z),g(y(z)))$ が一致することはない．
+$(\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))$ が一致することはない．
 一致すれば，上側の部分木を下側の部分木で置換して，
 保護文字と群値を保ったまま語長を真に短くできる．
 真の短縮は SSBNF の非開始規則が二分規則か終端規則
 だけであることによる．両節点のマークが一致するので，
-削除される位置は $\Pi$ と交わらず，置換後の語の
+削除される位置は $\mathsf{GuardPos}$ と交わらず，置換後の語の
 接頭部 $\alpha$ と接尾部 $\gamma$ は保存される．
 これは最短性に反する．
 根から葉への経路上で $\operatorname{Mark}(z)$ は包含に関して単調で，
 高々 $m+1$ 種類の値しか取らず，
-非開始ラベルと群値の選択肢はそれぞれ高々 $N$，$q$ 個である．
-従って全節点の深さは $H$ 未満である．
+非開始ラベルと群値の選択肢はそれぞれ高々 $N$，$q_{\mathrm{grp}}$ 個である．
+従って全節点の深さは $D_{\mathrm{bd}}$ 未満である．
 
 \emph{幅．}
 $\operatorname{Mark}(z)\ne\varnothing$ または $|y(z)|>\tau_G$ の節点を
-\emph{重要節点}とし，その集合を $E$ とする．
-同じ深さの重要節点のうち，$\Pi$ と交わるものは高々 $m$ 個である．
-ある深さに $m+q$ 個以上の重要節点があれば，$\Pi$ と交わらない
-重要節点が少なくとも $q$ 個存在する．そのうち $q$ 個を
+\emph{重要節点}とし，その集合を $\mathsf{Ess}$ とする．
+同じ深さの重要節点のうち，$\mathsf{GuardPos}$ と交わるものは高々 $m$ 個である．
+ある深さに $m+q_{\mathrm{grp}}$ 個以上の重要節点があれば，$\mathsf{GuardPos}$ と交わらない
+重要節点が少なくとも $q_{\mathrm{grp}}$ 個存在する．そのうち $q_{\mathrm{grp}}$ 個を
 左から $z_1,\ldots,z_q$ とする．生成語
 $a_i:=y(z_i)$ は互いに交わらず，$\beta$ 内にあり，
 $|a_i|>\tau_G$ を満たす．
 $|b_i|\le\tau_G$ を満たす
-$b_i\in L_G(B(z_i))$ を選び，
+$b_i\in L_G(\operatorname{nt}(z_i))$ を選び，
 $w=c_0a_1c_1\cdots a_qc_q$ と書く．
-$1\le j\le q$ について
+$1\le j\le q_{\mathrm{grp}}$ について
 \[
 r_j:=g(a_1c_1\cdots a_jc_j),\quad
 s_j:=g(b_1c_1\cdots b_jc_j),\quad
 x_j:=s_jr_j^{-1}
 \]
 とし，$r_0=s_0=x_0=1_Q$ とおく．
-$q+1$ 個の群元 $x_0,\ldots,x_q$ のうち
+$q_{\mathrm{grp}}+1$ 個の群元 $x_0,\ldots,x_q$ のうち
 $x_i=x_j$ ($i<j$) となる二つが存在する．
 区間 $a_{i+1}c_{i+1}\cdots a_jc_j$ と
 $b_{i+1}c_{i+1}\cdots b_jc_j$ の群値をそれぞれ $R,S$ とおく．
@@ -1953,20 +1953,20 @@ $s_ir_i^{-1}=s_iSR^{-1}r_i^{-1} \Longrightarrow S=R$.
 従って $z_{i+1},\ldots,z_j$ の部分木を
 対応する $b$-語の導出木で置換すると，
 群値と保護位置を変えずに語長を真に短縮でき，矛盾する．
-ここでは $Q$ の可換性を仮定しない．
-よって各深さの重要節点は高々 $W=m+q-1$ 個である．
+ここでは $\mathfrak K$ の可換性を仮定しない．
+よって各深さの重要節点は高々 $W_{\mathrm{bd}}=m+q_{\mathrm{grp}}-1$ 個である．
 
 \emph{個数．}
-$E$ は祖先閉なので $|E|\le WH$ である．
+$\mathsf{Ess}$ は祖先閉なので $|\mathsf{Ess}|\le W_{\mathrm{bd}}D_{\mathrm{bd}}$ である．
 保護位置以外の各位置は，長さ $1\le\tau_G$ の
 非重要な終端規則の葉の下にある．
 極大な非重要部分木は互いに交わらず，
 その生成語長は各々 $\tau_G$ 以下である．
-その根の個数は $E\ne\varnothing$ なら高々 $2|E|$，
-$E=\varnothing$ なら $1$ 個である．従って
+その根の個数は $\mathsf{Ess}\ne\varnothing$ なら高々 $2|\mathsf{Ess}|$，
+$\mathsf{Ess}=\varnothing$ なら $1$ 個である．従って
 \[
-|w|\le m+(1+2|E|)\tau_G
-\le m+\bigl[1+2(m+q-1)(m+1)Nq\bigr]\tau_G.
+|w|\le m+(1+2|\mathsf{Ess}|)\tau_G
+\le m+\bigl[1+2(m+q_{\mathrm{grp}}-1)(m+1)Nq\bigr]\tau_G.
 \]
 すべての $A_\mu$ について最大を取れば補題が従う．
 \end{proof}
@@ -2010,19 +2010,19 @@ $S$ を元の開始記号とする．右辺に決して現れない新しい $S_
 規則
 $A\to a_1\cdots a_m B b_1\cdots b_n$ に対し，
 単位規則を消去済みなので $m+n>0$ である．
-まず $R_0:=B$ とおき，$n>0$ のとき右側の鎖
-$R_j\to R_{j-1}W_{b_j}\ (1\le j\le n)$
-を作る．途中の $R_j$ は新しい記号とする．
-$m=0$ の場合は $R_n:=A$ として，表示した最後の規則の左辺を
-$A$ とする．$m>0$ の場合には $n>0$ なら $R_n$ は新しい記号とし，
-$n=0$ なら $R_0=B$ のままとする．
-次に $m>0$ なら $L_m:=R_n$ とおき，
-新たな $L_1,\ldots,L_{m-1}$ を導入して
+まず $Z_0^{\mathrm R}:=B$ とおき，$n>0$ のとき右側の鎖
+$Z_j^{\mathrm R}\to Z_{j-1}^{\mathrm R}W_{b_j}\ (1\le j\le n)$
+を作る．途中の $Z_j^{\mathrm R}$ は新しい記号とする．
+$m=0$ の場合は $Z_n^{\mathrm R}:=A$ として，表示した最後の規則の左辺を
+$A$ とする．$m>0$ の場合には $n>0$ なら $Z_n^{\mathrm R}$ は新しい記号とし，
+$n=0$ なら $Z_0^{\mathrm R}=B$ のままとする．
+次に $m>0$ なら $Z_m^{\mathrm L}:=Z_n^{\mathrm R}$ とおき，
+新たな $Z_1^{\mathrm L},\ldots,Z_{m-1}^{\mathrm L}$ を導入して
 \[
- A\to W_{a_1}L_1,\qquad
- L_i\to W_{a_{i+1}}L_{i+1}\quad(1\le i<m)
+ A\to W_{a_1}Z_1^{\mathrm L},\qquad
+ Z_i^{\mathrm L}\to W_{a_{i+1}}Z_{i+1}^{\mathrm L}\quad(1\le i<m)
 \]
-とする．$m=1$ の場合には $L_1=R_n$ である．
+とする．$m=1$ の場合には $Z_1^{\mathrm L}=Z_n^{\mathrm R}$ である．
 すべての規則は二項規則で，ちょうど一つの子が新鮮な終端ラッパーとなる．
 元の記号 $B$ はラッパーではない．
 
@@ -2077,7 +2077,7 @@ $\sigma\xrightarrow{w}\theta$ は $\sigma$ から $w$ を読んで $\theta$ に�
 実際，開き括弧の遷移の出力から展開前の $E_i$ と残りのスタックが
 一意に復元でき，他の遷移では入力文字が決める頂記号だけが削除される．
 よって任意の語 $v$ の作用は部分単射であり，
-$\sigma\xrightarrow{v}\vartheta$ と $\theta\xrightarrow{v}\vartheta$ から $\sigma=\theta$ が従う．
+$\sigma\xrightarrow{v}\theta_{\mathrm{out}}$ と $\theta\xrightarrow{v}\theta_{\mathrm{out}}$ から $\sigma=\theta$ が従う．
 
 $E_i$ の重みを $4^i$，閉じ記号の重みを $1$ とし，
 スタック全体の重みをその総和とする．
@@ -2206,64 +2206,10 @@ $L_n\in\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$ が従う．
 
 \begin{thebibliography}{99}
 
-\bibitem{kanazawa1998}
-M.~Kanazawa.
-\newblock \emph{Learnable Classes of Categorial Grammars}.
-\newblock CSLI Publications, 1998.
-
-\bibitem{kanazawa1996}
-M.~Kanazawa.
-\newblock Identification in the limit of categorial grammars.
-\newblock \textit{Journal of Logic, Language and Information},
-5(2):115--155, 1996. doi:10.1007/BF00173697.
-
-
 \bibitem{gold1967}
 E.\,M.~Gold.
 Language identification in the limit.
 \textit{Information and Control}, 10(5):447--474, 1967.
-
-\bibitem{pin1997}
-J.-E.~Pin.
-\newblock Syntactic semigroups.
-\newblock In G.~Rozenberg and A.~Salomaa (eds.),
-\textit{Handbook of Formal Languages}, Vol.~1, pp.~679--746,
-Springer, 1997.
-
-\bibitem{eilenberg1974}
-S.~Eilenberg.
-\newblock \emph{Automata, Languages, and Machines}, Vol.~A.
-\newblock Academic Press, 1974.
-
-\bibitem{costa2002li}
-J.~C.~Costa.
-\newblock Some pseudovariety joins involving locally trivial semigroups.
-\newblock \textit{Semigroup Forum}, 64(1):12--28, 2002.
-\newblock doi:10.1007/s002330010060.
-
-\bibitem{costa2002lig}
-J.~C.~Costa.
-\newblock Some pseudovariety joins involving groups and locally trivial semigroups.
-\newblock In \textit{Semigroups, Algorithms, Automata and Languages},
-pp.~341--348, World Scientific, 2002.
-\newblock doi:10.1142/9789812776884\_0013.
-
-\bibitem{pin2025}
-J.-E.~Pin.
-\newblock \emph{Mathematical Foundations of Automata Theory}.
-\newblock Lecture notes, version of March 24, 2025.
-\newblock \url{https://www.irif.fr/~jep/PDF/MPRI/MPRI.pdf}.
-
-\bibitem{higuera1997}
-C.~de la Higuera.
-Characteristic sets for polynomial grammatical inference.
-\textit{Machine Learning}, 27:125--138, 1997.
-
-\bibitem{higuera2010}
-C.~de la Higuera.
-\textit{Grammatical Inference: Learning Automata and Grammars}.
-Cambridge University Press, 2010.
-
 
 \bibitem{clark-eyraud2007}
 A.~Clark and R.~Eyraud.
@@ -2272,12 +2218,29 @@ context-free languages.
 \textit{Journal of Machine Learning Research},
 8:1725--1745, 2007.
 
-\bibitem{wakatsuki-tomita1993}
-M.~Wakatsuki and E.~Tomita.
-\newblock A fast algorithm for checking the inclusion for very simple
-deterministic pushdown automata.
-\newblock \textit{IEICE Transactions on Information and Systems},
-E76-D(10):1224--1233, 1993.
+\bibitem{yoshinaka2008}
+R.~Yoshinaka.
+Identification in the limit of $k, l$-substitutable
+context-free languages.
+In \textit{Grammatical Inference: Algorithms and Applications -- ICGI 2008},
+LNCS 5278, pp.~266--279, Springer, 2008.
+doi:10.1007/978-3-540-88009-7\_21.
+
+\bibitem{higuera2010}
+C.~de la Higuera.
+\textit{Grammatical Inference: Learning Automata and Grammars}.
+Cambridge University Press, 2010.
+
+\bibitem{kanazawa1996}
+M.~Kanazawa.
+\newblock Identification in the limit of categorial grammars.
+\newblock \textit{Journal of Logic, Language and Information},
+5(2):115--155, 1996. doi:10.1007/BF00173697.
+
+\bibitem{kanazawa1998}
+M.~Kanazawa.
+\newblock \emph{Learnable Classes of Categorial Grammars}.
+\newblock CSLI Publications, 1998.
 
 \bibitem{kuriyama2014}
 T.~Kuriyama.
@@ -2310,14 +2273,11 @@ positive examples in polynomial time and data by reduction.
 \newblock In \emph{Proceedings of the 14th International Conference
 on Grammatical Inference}, PMLR 93:155--168, 2019.
 
-\bibitem{yoshinaka2008}
-R.~Yoshinaka.
-Identification in the limit of $k, l$-substitutable
-context-free languages.
-In \textit{Grammatical Inference: Algorithms and Applications -- ICGI 2008},
-LNCS 5278, pp.~266--279, Springer, 2008.
-doi:10.1007/978-3-540-88009-7\_21.
-
+\bibitem{coste-typing2004}
+F.~Coste, D.~Fredouille, C.~Kermorvant, and C.~de~la~Higuera.
+\newblock Introducing domain and typing bias in automata inference.
+\newblock In \textit{ICGI 2004}, LNAI 3264, pp.~115--126, Springer, 2004.
+doi:10.1007/978-3-540-30195-0\_11.
 
 \bibitem{takada1988}
 Y.~Takada.
@@ -2332,25 +2292,17 @@ Y.~Takada.
 for Knowledge-Based Systems}, LNAI 961, pp.~316--339, Springer, 1995.
 doi:10.1007/3-540-60217-8\_15.
 
-\bibitem{ginsburg-spanier1966}
-S.~Ginsburg and E.~H.~Spanier.
-\newblock Finite-turn pushdown automata.
-\newblock \textit{SIAM Journal on Control}, 4(3):429--453, 1966.
-doi:10.1137/0304034.
+\bibitem{eilenberg1974}
+S.~Eilenberg.
+\newblock \emph{Automata, Languages, and Machines}, Vol.~A.
+\newblock Academic Press, 1974.
 
-\bibitem{coste-typing2004}
-F.~Coste, D.~Fredouille, C.~Kermorvant, and C.~de~la~Higuera.
-\newblock Introducing domain and typing bias in automata inference.
-\newblock In \textit{ICGI 2004}, LNAI 3264, pp.~115--126, Springer, 2004.
-doi:10.1007/978-3-540-30195-0\_11.
-
-\bibitem{clark2013}
-A.~Clark.
-\newblock Learning trees from strings: A strong learning algorithm for some context-free grammars.
-\newblock \textit{Journal of Machine Learning Research}, 14:3537--3559, 2013.
-
-
-
+\bibitem{wakatsuki-tomita1993}
+M.~Wakatsuki and E.~Tomita.
+\newblock A fast algorithm for checking the inclusion for very simple
+deterministic pushdown automata.
+\newblock \textit{IEICE Transactions on Information and Systems},
+E76-D(10):1224--1233, 1993.
 
 \bibitem{eyraud-heinz-yoshinaka2016}
 R.~Eyraud, J.~Heinz, and R.~Yoshinaka.
@@ -2358,6 +2310,48 @@ R.~Eyraud, J.~Heinz, and R.~Yoshinaka.
 \newblock In J.~Heinz and J.~M.~Sempere (Eds.),
 \emph{Topics in Grammatical Inference}, Springer, 2016.
 doi:10.1007/978-3-662-48395-4\_2.
+
+\bibitem{higuera1997}
+C.~de la Higuera.
+Characteristic sets for polynomial grammatical inference.
+\textit{Machine Learning}, 27:125--138, 1997.
+
+\bibitem{clark2013}
+A.~Clark.
+\newblock Learning trees from strings: A strong learning algorithm for some context-free grammars.
+\newblock \textit{Journal of Machine Learning Research}, 14:3537--3559, 2013.
+
+\bibitem{pin2025}
+J.-E.~Pin.
+\newblock \emph{Mathematical Foundations of Automata Theory}.
+\newblock Lecture notes, version of March 24, 2025.
+\newblock \url{https://www.irif.fr/~jep/PDF/MPRI/MPRI.pdf}.
+
+\bibitem{pin1997}
+J.-E.~Pin.
+\newblock Syntactic semigroups.
+\newblock In G.~Rozenberg and A.~Salomaa (eds.),
+\textit{Handbook of Formal Languages}, Vol.~1, pp.~679--746,
+Springer, 1997.
+
+\bibitem{costa2002li}
+J.~C.~Costa.
+\newblock Some pseudovariety joins involving locally trivial semigroups.
+\newblock \textit{Semigroup Forum}, 64(1):12--28, 2002.
+\newblock doi:10.1007/s002330010060.
+
+\bibitem{costa2002lig}
+J.~C.~Costa.
+\newblock Some pseudovariety joins involving groups and locally trivial semigroups.
+\newblock In \textit{Semigroups, Algorithms, Automata and Languages},
+pp.~341--348, World Scientific, 2002.
+\newblock doi:10.1142/9789812776884\_0013.
+
+\bibitem{ginsburg-spanier1966}
+S.~Ginsburg and E.~H.~Spanier.
+\newblock Finite-turn pushdown automata.
+\newblock \textit{SIAM Journal on Control}, 4(3):429--453, 1966.
+doi:10.1137/0304034.
 
 \bibitem{autebert1997}
 J.-M.~Autebert, J.~Berstel, and L.~Boasson.
@@ -2378,8 +2372,6 @@ minimally adequate teacher.
 \newblock In \emph{Proceedings of ICGI 2010}, LNCS 6339, pp.~24--37,
 Springer, 2010.
 doi:10.1007/978-3-642-15488-1\_4.
-
-
 
 \end{thebibliography}
 \end{document}
