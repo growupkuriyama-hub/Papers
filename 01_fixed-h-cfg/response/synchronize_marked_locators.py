@@ -51,6 +51,17 @@ def locate_statement_bbox(kind, number):
                     or abs((y0 + y1) - (ny0 + ny1)) > 16
                     or nx0 - x1 > 48):
                 continue
+            # Corollary 5.5 is also mentioned earlier as a forward
+            # reference. Its actual heading includes "Gold identification".
+            # Require that heading text rather than selecting the first
+            # in-prose mention on an earlier page.
+            if kind.lower() == "corollary" and number == "5.5":
+                if not any(
+                    "gold" in value.lower()
+                    and abs((my0 + my1) - (y0 + y1)) < 28
+                    for value, _, _, my0, my1 in words[i + 2:i + 10]
+                ):
+                    continue
             center = (y0 + y1) / 2
             nearby = []
             for value, mx0, mx1, my0, my1 in words:
