@@ -36,6 +36,7 @@ theorem filter_distributions_eq
       Distributions (L ∩ {w | h w ∈ F}) y := by
   ext p
   have hcontext : h (p.1 ++ x ++ p.2) = h (p.1 ++ y ++ p.2) := by
+    change h (p.1 * x * p.2) = h (p.1 * y * p.2)
     simp only [map_mul, hxy]
   change (p.1 ++ x ++ p.2 ∈ L ∧ h (p.1 ++ x ++ p.2) ∈ F) ↔
     (p.1 ++ y ++ p.2 ∈ L ∧ h (p.1 ++ y ++ p.2) ∈ F)
