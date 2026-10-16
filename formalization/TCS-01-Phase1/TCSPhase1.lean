@@ -87,7 +87,7 @@ theorem encodedSize_ge (n : Nat) (K : Finset (List Terminal))
     3 * 2 ^ n - 1 ≤ encodedSize K := by
   have hle : (witness n).length + 1 ≤ encodedSize K := by
     unfold encodedSize
-    simpa using (Finset.single_le_sum (s := K)
+    exact (Finset.single_le_sum (s := K)
       (f := fun x : List Terminal => x.length + 1)
       (fun _ _ => Nat.zero_le _) hmem)
   have hlen := witness_length_plus_two n
