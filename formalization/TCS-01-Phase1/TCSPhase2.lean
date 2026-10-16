@@ -17,7 +17,7 @@ instance : Monoid Word where
   one := []
   mul := List.append
   one_mul := by intro w; rfl
-  mul_one := by intro w; simp
+  mul_one := by intro w; exact List.append_nil w
   mul_assoc := by intro a b c; exact List.append_assoc a b c
 
 def unaryWord (u : Word) : Word :=
@@ -235,7 +235,7 @@ theorem languageMinus_type_zero (n : Nat) :
     | one =>
         exact False.elim (hne (Set.mem_singleton_iff.mpr
           (unique_type_one n w hw ht)))
-    | zero => exact ht
+    | zero => rfl
   · rintro ⟨hw, ht⟩
     refine ⟨hw, ?_⟩
     intro he
