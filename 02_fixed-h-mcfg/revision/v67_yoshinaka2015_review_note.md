@@ -45,3 +45,21 @@ Under the fixed bounds, operation templates have bounded numbers of variable occ
 Do not claim that Yoshinaka 2015 supplies polynomial *positive data lengths* in the original untyped MCFG size/thickness parameters; its Theorem 1 is a qualitative positive-identification theorem and the finite witness size is expressed through a chosen signature grammar. Do not claim that the 2015 theorem directly handles arbitrarily large finite rule rank with a single fixed signature satisfying Assumption 2.
 
 Reference: https://aclanthology.org/W15-2308/
+
+
+## 2026-10-17: Independent-review corrections applied to this branch
+
+Commit for revised \`main.tex\`: \`98fa5d00e95ac7216b571f5867b748a6164f1ce5\`.
+
+1. **Expanded Yoshinaka (2015) priority statement.** Theorem 1 and Algorithm 1 already provide positive-data TxtEx identification and polynomial-time hypothesis updates on effective bounded-arity signatures. Lemma 3 constructs a finite characteristic set with at most \`|N|+|P|\` words for an associated signature grammar; after fixed-parameter normalization and finite typing, this cardinality is polynomial in the original MCFG description size. The new contribution is **not** the mere existence/cardinality of witnesses.
+2. **Replaced the informal signature translation by a proof keyed to the existing induced-child-context lemma** \`lem:filling-identity\`. Signature context functions are mapped to the positive \`E_d\` interface, but no unneeded identification of the different context encodings is asserted. Their admissibility follows by good-rule nonmerging and nonempty sibling yields.
+3. **Assumptions 1–3 explicit.** Type membership, evaluation, and plugging are effective; rank is bounded; the three candidate sets \`SUB(w)\`, \`CON(w)\`, and \`FUN(w)\` are constructed by bounded numbers of nonempty intervals and cuts. Function candidates include all good templates witnessed inside the positive word.
+4. **Preserved the actual research boundary.** Original-grammar **total positive-data length**, its dependence on rank and thickness, and finite-typing / fan-out separations remain the paper's advertised contributions.
+
+### Open technical and build gates
+
+- Static balanced environments, bibliography keys and targeted labels: checked during the update.
+- Full TeX compile and rendered-PDF inspection: **not yet run** in this workspace.
+- Independent external specialist referee check of the newly expanded proposition: **still recommended**.
+- The existing \`main\` branch has **not** been modified.
+- Group-kernel observer proposition remains deferred (agreed).
