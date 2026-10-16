@@ -12,6 +12,14 @@ open TCSPhase1
 
 abbrev Word := List Terminal
 
+/-- Free-word monoid: multiplication is literal list concatenation. -/
+instance : Monoid Word where
+  one := []
+  mul := List.append
+  one_mul := by intro w; rfl
+  mul_one := by intro w; simp
+  mul_assoc := by intro a b c; exact List.append_assoc a b c
+
 def unaryWord (u : Word) : Word :=
   [Terminal.squareLeft] ++ u ++ [Terminal.squareRight]
 
@@ -112,7 +120,7 @@ theorem noSquare_binary_iff (u v : Word) :
     NoSquareBrackets (binaryWord u v) ↔
       NoSquareBrackets u ∧ NoSquareBrackets v := by
   simp [NoSquareBrackets, binaryWord, List.mem_append,
-    and_assoc, and_left_comm, and_comm]
+    and_assoc, and_left_comm]
 
 theorem witness_noSquare (n : Nat) :
     NoSquareBrackets (witness n) := by
@@ -174,7 +182,7 @@ theorem typeWord_append (u v : Word) :
     typeWord (u ++ v) = typeWord u * typeWord v := by
   induction u with
   | nil => simp [typeWord]
-  | cons a us ih => simp [typeWord, ih, mul_assoc]
+  | cons letter us ih => simp [typeWord, ih, mul_assoc]
 
 /-- The actual free-monoid homomorphism h_U. -/
 def hU : Word →* U1 where
