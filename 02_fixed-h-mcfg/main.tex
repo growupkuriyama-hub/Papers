@@ -69,12 +69,13 @@ monoid.  We study positive-data learning of multiple context-free languages
 under the bias that tuple components may be substituted only when their
 corresponding $h$-values agree.  Starting from Yoshinaka's observed-tuple
 reconstruction, we guard substitution links by componentwise type equality.
-Although this modification is syntactically simple, completeness is not
-automatic: using a yield-typed refinement of a target grammar, we construct
-finite positive witnesses that force exact reconstruction.  An uncapped
-conservative learner therefore identifies every target satisfying the fixed
-fan-out and typing condition in the limit; with a fixed rule-rank cap, updates
-are polynomial in the accumulated sample.
+For bounded rule rank, qualitative identification also follows in principle
+from Yoshinaka's general theorem for substitutable grammar signatures.
+We make this connection precise by finite sort refinement.  Independently,
+a yield-typed refinement of a target grammar provides explicit finite
+witnesses for exact observed-tuple reconstruction.  An uncapped conservative
+learner then identifies the entire fixed-fan-out typed class in the limit;
+with a fixed rule-rank cap, updates are polynomial in the accumulated sample.
 
 The quantitative behavior depends sharply on rule rank.  For arbitrary fixed
 finite typing, rule-rank-one targets admit characteristic data of total length
@@ -109,6 +110,26 @@ MCFGs form a standard mildly context-sensitive formalism and can directly
 represent discontinuous and cross-serial dependencies
 \cite{SekiEtAl1991,Kallmeyer2010}.
 
+\paragraph{The general learning principle and its scope.}
+Yoshinaka's general account of distributional learning establishes
+positive-data identification of substitutable languages over suitable
+grammar signatures~\cite[Theorem~1]{Yoshinaka2015General}.  Its
+MCFG instance bounds both the dimension of tuple objects and the arity
+of grammar operations; these restrictions are essential to the
+computability conditions imposed on the signature
+\cite[Assumptions~1--3 and Example~3]{Yoshinaka2015General}.
+For a fixed finite-monoid typing and fixed fan-out and rule rank, the
+componentwise type values can be represented by finitely many
+additional sorts.  Proposition~\ref{prop:yoshinaka2015-embedding}
+below verifies the resulting bounded-rank inclusion in the
+substitutable-signature setting, taking particular care with nonempty
+tuple components and separators.  Accordingly, bounded-rank
+\emph{qualitative} identifiability is not claimed as a new general
+learning principle.  The theorem does not, by itself, cover a fixed
+fan-out class with no uniform bound on rule rank, nor does it provide
+the characteristic-data bounds in the original grammar parameters
+established here.
+
 This paper fixes, as part of the learnable class, a homomorphism
 $h:\Sigma^*\to M$ into a finite monoid and compares observed tuples only
 when corresponding components have equal $h$-values.  The compositional type
@@ -136,16 +157,17 @@ sample-derived objects, and lets a fixed finite typing guard substitutions.
 \paragraph{Contributions.}
 The paper has four main contributions.
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
-\item \emph{Typed completeness for observed-tuple reconstruction.}
-The guarded reconstruction differs syntactically from Yoshinaka's construction
-only in that substitution links are restricted to tuples of equal
-componentwise type.  The main issue is to prove that finite positive
-completeness survives this restriction.  We refine a target grammar by yield
-type and construct a finite witness set realizing every retained typed
-nonterminal and rule.  This yields exact reconstruction and, via a conservative
-sequential update policy, TxtEx identification without a rule-rank cap.
+\item \emph{Constructive typed completeness beyond bounded rank.}
+The guarded reconstruction differs syntactically from Yoshinaka's
+observed-tuple construction only in its componentwise finite-type test.
+We give an explicit yield-typed simulation and a finite witness set
+realizing each retained typed nonterminal and rule.  The resulting
+exact-reconstruction theorem also supports a conservative TxtEx learner
+without a uniform rule-rank cap, beyond the direct scope of the
+bounded-arity signature instance of Yoshinaka~(2015).
 For every fixed cap $r_{\max}$, updates are polynomial in the accumulated
-positive sample.
+positive sample.  The bounded-rank qualitative conclusion itself is
+acknowledged as an instance of the earlier general learning principle.
 
 \item \emph{A grammar-size polynomial at rule rank one.}
 For arbitrary fixed $h$, rule-rank-one targets have characteristic data of
@@ -175,11 +197,17 @@ this loss need not be repairable by \emph{any} finite typing.
 \end{enumerate}
 
 \paragraph{Relation to prior work and scope.}
-Yoshinaka supplies the semantic baseline, the observed-tuple grammar with
-Type~I--III rules, the conservative update policy, rule-witness completeness,
-and qualitative identification without a fixed rank bound
+Yoshinaka~(2011) supplies the semantic baseline, the observed-tuple grammar
+with Type~I--III rules, the conservative update policy, rule-witness
+completeness, and qualitative identification without a fixed rank bound
 \cite[Sections~4.1--4.3, Corollary~2]{Yoshinaka2011}; the 2009 ALT paper is
 the conference precursor of this later TCS treatment~\cite{Yoshinaka2009}.
+Yoshinaka~(2015) places bounded-arity distributional learning within a
+general substitutable-signature theorem
+\cite[Theorem~1]{Yoshinaka2015General}; the finite-sort embedding
+below makes the corresponding bounded-rank coverage explicit.
+Neither the generic existence theorem nor the original untyped
+observed-tuple construction is claimed here as novel.
 Accordingly, the observed-tuple grammar architecture itself is prior work.
 Proposition~\ref{prop:yoshinaka-type-guard} makes the syntactic relationship
 precise: (Const) and (Comp) correspond to Type~I, (Link) to Type~II with an
@@ -626,6 +654,101 @@ Fix $f\ge1$ and a finite monoid homomorphism $h$.  The class
 $\Cmcf{f}{h}$ consists of all $f$-MCFLs that are
 $(f,h)$-tuple-substitutable.
 \end{definition}
+
+
+\begin{proposition}[Bounded-rank coverage by Yoshinaka's 2015 framework]
+\label{prop:yoshinaka2015-embedding}
+Fix a finite alphabet $\Sigma$, $f,r\ge1$, and a finite monoid
+homomorphism $h:\Sigma^*\to M$.  There is a grammar signature
+$\mathfrak S_{f,r,h}$ satisfying Assumptions~1--3 of
+Yoshinaka~\cite{Yoshinaka2015General} such that every language in
+\[
+  \Cmcf{f}{h}\cap\mathsf{MCFL}(f,r)
+\]
+is a substitutable $\mathfrak S_{f,r,h}$-language.
+Consequently, the qualitative positive-data identifiability of this
+bounded-rank class also follows from
+\cite[Theorem~1]{Yoshinaka2015General}.
+This inclusion concerns the existence of a suitable signature and
+learner; it does not identify that generic learner with our
+explicitly guarded reconstruction operator or imply the
+characteristic-data bounds below.
+\end{proposition}
+
+\begin{proof}
+Write $M^+:=h(\Sigma^+)\subseteq M$.
+Besides a distinguished start sort $O_*=\Sigma^*$, introduce, for
+$1\le d\le f$ and $\boldsymbol\mu\in(M^+)^d$, a tagged sort
+\[
+ T_{d,\boldsymbol\mu}
+ :=\{(w_1,\ldots,w_d)\in(\Sigma^+)^d:
+            h(w_i)=\mu_i\ (1\le i\le d)\}.
+\]
+The tags make distinct sorts disjoint, as permitted by the
+sort-separation construction in
+\cite[Section~4]{Yoshinaka2015General}.
+Include all well-typed, linear, nondeleting, nonpermuting and
+nonmerging tuple templates of child rank at most $r$ and fan-out
+at most $f$ whose output components are nonempty.
+The type of an output component is computed by multiplying in
+$M$ the values of its fixed terminals and child components
+in their displayed order.  Also include unary promotions
+$T_{1,\mu}\to O_*$ and an optional nullary operation producing
+$\eps$ in the start sort; no operation takes an $O_*$-object as
+an input.  All operations are effective and have arity at most
+$\max\{1,r\}$.
+
+For clarity about the ambient signature conditions, the non-start
+sorts require nonempty components, and the nonmerging condition
+ensures that the components of a selected child remain separated by
+nonempty material in every completed sentence context.  Along with
+nonpermuting order, this makes every signature context on
+$T_{d,\boldsymbol\mu}$ an admissible context in $\mathcal E_d$.
+The distinguished start sort admits only its identity context.
+Thus, whenever two objects of a non-start sort have overlapping
+signature distributions in a target $L$, they have equal
+componentwise $h$-values and share a context in $\mathcal E_d$.
+The $(f,h)$-substitutability of $L$ makes their distributions
+equal.  The start sort is automatically substitutable because it
+has only the identity context.
+
+We check the effective assumptions of
+\cite[Section~4]{Yoshinaka2015General}.
+Sort membership, template evaluation, context membership and plugging
+are polynomial-time operations for fixed $f,r,h$.
+Uniform membership for grammars over this signature is polynomial
+for fixed fan-out and rule rank, by the standard bounded-parameter
+MCFG parsing theorem (cf.\ \cite[Proposition~4]{Yoshinaka2011}).
+Every substructure or context arising in a complete derivation of
+a word of length $n$ has a realization by nonempty, ordered,
+nonoverlapping intervals of that word, with internal gaps.
+Their possible tuples and context fillings are enumerable in
+$n^{O(f)}$ time.  Every operation used in such a derivation has
+at most $r$ children of fan-out at most $f$; its terminal
+constants and child occurrences are recoverable from finitely
+many cut positions in the same sentence, and a polynomial-size
+superset of all such operations is enumerable in
+$n^{O(fr)}$ time.  Filtering the candidates by the fixed
+sort and good-template restrictions gives the required
+polynomially computable supersets of the substructures,
+contexts, and operations arising from $n$.  This establishes
+Assumptions~1--3.
+
+Finally choose a rank-$\le r$ presentation of
+$L\in\Cmcf{f}{h}\cap\mathsf{MCFL}(f,r)$.
+Proposition~\ref{prop:good-normalization} gives a good
+presentation of $L\setminus\{\eps\}$ without increasing
+fan-out or rank.  Refine each nonterminal by its componentwise
+$h$-value, discard unproductive typed copies, and replace its
+rules by the corresponding typed template operations.
+Promotions from typed fan-out-one copies produce the start
+language; the direct nullary start operation adds $\eps$ if
+necessary.  The resulting finite $\mathfrak S_{f,r,h}$-grammar
+generates exactly $L$.  The preceding context argument proves
+its language substitutable in the sense of Yoshinaka~(2015).
+Applying that paper's Theorem~1 finishes the proof.
+\end{proof}
+
 
 A target $L\in\Cmcf{f}{h}$ is called \emph{boundary-typed} when $h$ is a
 boundary typing.
@@ -3247,6 +3370,14 @@ R.~Yoshinaka.
 multidimensional substitutability from positive data.
 \newblock {\em Theoretical Computer Science}, 412(19):1821--1831, 2011.
 \newblock doi:10.1016/j.tcs.2010.12.058.
+
+\bibitem{Yoshinaka2015General}
+R.~Yoshinaka.
+\newblock General perspective on distributionally learnable classes.
+\newblock In \emph{Proceedings of the 14th Meeting on the Mathematics
+of Language (MoL 2015)}, pp.~87--98.
+Association for Computational Linguistics, 2015.
+\newblock doi:10.3115/v1/W15-2308.
 
 \bibitem{Yoshinaka2010}
 R.~Yoshinaka.
