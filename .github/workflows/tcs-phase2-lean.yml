@@ -1,0 +1,50 @@
+name: TCS Phase 2 Lean formal verification
+
+on:
+  push:
+    branches:
+      - formalization/tcs-phase2-bracketed-grammar-20261016
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase2-lean.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Mathlib
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+      - name: Build Phase 1 and Phase 2, audit axioms and syntax
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          lake env lean TCSPhase1.lean 2>&1 | tee phase1-axioms.log
+          lake env lean TCSPhase2.lean 2>&1 | tee phase2-axioms.log
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase1.lean TCSPhase2.lean; then
+            echo 'FORBIDDEN PROOF TOKEN'
+            exit 1
+          fi
+          if grep -E 'sorryAx' phase1-axioms.log phase2-axioms.log; then
+            echo 'SORRY AXIOM DETECTED'
+            exit 1
+          fi
+          echo 'Both phases compiled; no forbidden proof terms or sorryAx'
