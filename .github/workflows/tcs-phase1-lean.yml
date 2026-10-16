@@ -1,0 +1,38 @@
+name: TCS Phase 1 Lean formal verification
+
+on:
+  push:
+    branches:
+      - formalization/tcs-phase1-set-driven-20261016
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase1-lean.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formalization/TCS-01-Phase1
+          use-mathlib-cache: true
+          test: false
+      - name: Explicit compilation, axiom audit, and forbidden-proof scan
+        working-directory: formalization/TCS-01-Phase1
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          lake env lean TCSPhase1.lean 2>&1 | tee lean-axioms.log
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase1.lean; then
+            echo 'FORBIDDEN TOKEN DETECTED'
+            exit 1
+          fi
+          echo 'No sorry/admit/axiom/opaque tokens in formalization'
