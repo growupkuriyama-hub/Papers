@@ -1,6 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\newcommand{\NT}[1]{\llbracket #1\rrbracket}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 \usepackage[switch]{lineno}
@@ -648,11 +650,11 @@ restriction to $\mathrm{CFL}$.
 For a finite sample $K\subseteq\Sigma^*$, let
 \[
  \widehat V(K):=
- \{[x]:x\in\Sigma^+,\ \exists u,v\in\Sigma^*\text{ with }uxv\in K\}.
+ \{\NT{x}:x\in\Sigma^+,\ \exists u,v\in\Sigma^*\text{ with }uxv\in K\}.
 \]
 Thus there is one hypothesis nonterminal for each distinct nonempty factor
-observed in the sample; the brackets are part of the nonterminal name and do
-not denote a quotient class.  For observed nonempty factors $x,y$, write
+observed in the sample; the double brackets are part of the nonterminal name and do
+not denote a quotient class or literal terminal symbols.  For observed nonempty factors $x,y$, write
 \[
  x\approx_{K,h}y
  \quad\Longleftrightarrow\quad
@@ -664,10 +666,10 @@ $\widehat V(K)\cup\{\widehat S\}$, start symbol $\widehat S$, and the following
 $\widehat V(K)$:
 \[
 \begin{array}{rll}
-\textup{(B)}&[xy]\to[x][y],&x,y\in\Sigma^+,\\[1mm]
-\textup{(U)}&[x]\to[y],&x\approx_{K,h}y,\\[1mm]
-\textup{(L)}&[a]\to a,&a\in\Sigma,\\[1mm]
-\textup{(S)}&\widehat S\to[w],&w\in K\cap\Sigma^+.
+\textup{(B)}&\NT{xy}\to\NT{x}\NT{y},&x,y\in\Sigma^+,\\[1mm]
+\textup{(U)}&\NT{x}\to\NT{y},&x\approx_{K,h}y,\\[1mm]
+\textup{(L)}&\NT{a}\to a,&a\in\Sigma,\\[1mm]
+\textup{(S)}&\widehat S\to\NT{w},&w\in K\cap\Sigma^+.
 \end{array}
 \]
 If $\lambda\in K$, Rule~\textup{(S)} also contains
@@ -691,7 +693,7 @@ prefix--suffix test is replaced by equality of $h$-types.
 For every finite sample $K$, $K\subseteq L(\mathsf{Rec}_h(K))$.
 \end{lemma}
 \begin{proof}
-If $w=a_1\cdots a_m\in K\cap\Sigma^+$, Rule~\textup{(S)} enters $[w]$.
+If $w=a_1\cdots a_m\in K\cap\Sigma^+$, Rule~\textup{(S)} enters $\NT{w}$.
 Repeated use of Rule~\textup{(B)} along any binary factorization of $w$
 reaches the one-letter factors, all of which are observed because they occur
 inside the same sample word.  Rule~\textup{(L)} then emits
@@ -704,9 +706,9 @@ $L(\mathsf{Rec}_h(K))\subseteq L$.
 \end{theorem}
 
 \begin{proof}
-Induct on the height of a derivation tree rooted at $[x]$ to prove
+Induct on the height of a derivation tree rooted at $\NT{x}$ to prove
 \begin{equation}\label{eq:soundness-invariant}
- [x]\Rightarrow_{\mathsf{Rec}_h(K)}^*w
+ \NT{x}\Rightarrow_{\mathsf{Rec}_h(K)}^*w
  \quad\Longrightarrow\quad
  x\equiv_L w\ \text{ and }\ h(w)=h(x).
 \end{equation}
@@ -715,20 +717,20 @@ so the fragments compared by Rule~\textup{(U)} satisfy the nonempty
 requirement of Definition~\ref{def:hsubst}.  Moreover,
 Rules~\textup{(B)}--\textup{(L)} cannot derive $\lambda$ from a
 factor nonterminal.  Rule~\textup{(L)} is immediate.  For Rule~\textup{(U)}, suppose
-$[x]\to[y]$.  By definition there is a sample context $(u,v)$ with
+$\NT{x}\to\NT{y}$.  By definition there is a sample context $(u,v)$ with
 $uxv,uyv\in K\subseteq L$ and $h(x)=h(y)$.  Fixed-$h$ substitutability gives
 $x\equiv_L y$; the induction hypothesis gives $y\equiv_L w$ and
 $h(w)=h(y)$, proving~\eqref{eq:soundness-invariant}.
 
 For Rule~\textup{(B)}, write the derived word as $w_1w_2$ from
-$[xy]\to[x][y]$.  The induction hypotheses give
+$\NT{xy}\to\NT{x}\NT{y}$.  The induction hypotheses give
 $x\equiv_L w_1$, $y\equiv_L w_2$,
 $h(w_1)=h(x)$, and $h(w_2)=h(y)$.
 Because $\equiv_L$ is a monoid congruence,
 $xy\equiv_L w_1w_2$, and the homomorphism law gives
 $h(w_1w_2)=h(xy)$.
 
-Finally, if a start rule $\widehat S\to[x]$ is used, then $x\in K\subseteq L$,
+Finally, if a start rule $\widehat S\to\NT{x}$ is used, then $x\in K\subseteq L$,
 so $(\lambda,\lambda)\in\D_L(x)$.  The invariant gives
 $\D_L(w)=\D_L(x)$ and hence $w\in L$.  The direct $\lambda$ rule is present
 only when $\lambda\in K\subseteq L$.
@@ -738,7 +740,7 @@ only when $\lambda\in K\subseteq L$.
 
 Recomputing $\mathsf{Rec}_h$ after every datum need not stabilize
 syntactically: for $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$, longer examples
-introduce new factor nonterminals such as $[a^ncb^n]$.
+introduce new factor nonterminals such as $\NT{a^ncb^n}$.
 We therefore use the conservative wrapper of Clark--Eyraud's
 Substitution Graph Learner (SGL, Algorithm~2) and Yoshinaka's
 $(k,\ell)$-Substitutable Grammar Learner ($(k,\ell)$-SGL, Algorithm~1)~\cite{clark-eyraud2007,yoshinaka2008};
@@ -760,8 +762,8 @@ may depend on the presentation order; only eventual syntactic stabilization
 to a grammar for the target is claimed (Corollary~\ref{cor:ilt}).
 This order dependence is genuine: for any infinite target and a
 convergent text $\mathcal T$, choose $w\in L$ longer than all examples at
-the last rebuild.  The limiting grammar for $\mathcal T$ omits $[w]$,
-but prepending $w$ to $\mathcal T$ puts $[w]$ in every rebuilt grammar,
+the last rebuild.  The limiting grammar for $\mathcal T$ omits $\NT{w}$,
+but prepending $w$ to $\mathcal T$ puts $\NT{w}$ in every rebuilt grammar,
 so the two limiting grammars differ.
 See also Clark~\cite[Section~4, Example~1]{clark2013}
 for this phenomenon with $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$.
@@ -806,8 +808,8 @@ A_{\mu\nu}\to B_\mu C_\nu & (A\to BC\in P,\ \mu,\nu\in M).
 \]
 The reduced part of this grammar is denoted
 $\widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S)$ and called
-the \emph{typed refinement}.  By construction, every symbol of
-$\widetilde G$ is therefore reachable and productive.
+the \emph{typed refinement}.  Since $\widetilde G$ is obtained by trimming the yield-typed grammar,
+every remaining symbol is reachable and productive.
 
 Fix an order on $\Sigma$ and use the induced \emph{shortlex} order:
 shorter strings come first, with lexicographic order breaking equal-length
@@ -899,7 +901,7 @@ $\WitnessSet(\widetilde G)\subseteq K$, then $L\subseteq L(\mathsf{Rec}_h(K))$.
 Neither substitutability nor $K\subseteq L$ is needed for
 this combinatorial completeness statement.
 \begin{proof}
-For each non-start $X$ write $\widehat X:=[\omega(X)]$.
+For each non-start $X$ write $\widehat X:=\NT{\omega(X)}$.
 The corresponding word in the first family of~\eqref{eq:W} ensures that
 $\widehat X$ exists.  We prove by induction on a typed derivation
 $X\Rightarrow^*w$ that
@@ -909,7 +911,7 @@ If the first rule is $X\to a$, the first and second witness families contain
 $u_X\omega(X)v_X$ and $u_Xav_X$, respectively.  Hence
 $\omega(X)\approx_{K,h}a$ because
 $h(\omega(X))=h(a)$ by Proposition~\ref{prop:typed-core}.  Rule~\textup{(U)}
-moves $\widehat X$ to $[a]$ when necessary, and Rule~\textup{(L)} yields $a$.
+moves $\widehat X$ to $\NT{a}$ when necessary, and Rule~\textup{(L)} yields $a$.
 
 Suppose the first rule is $X=A_{\mu\nu}\to B_\mu C_\nu$; put
 $Y:=B_\mu$ and $Z:=C_\nu$.  The first and third witness families contain
@@ -917,9 +919,9 @@ $u_X\omega(X)v_X$ and
 $u_X\omega(Y)\omega(Z)v_X$.  Since
 $h(\omega(X))=\mu\nu=h(\omega(Y))h(\omega(Z)) =h(\omega(Y)\omega(Z))$,
 Rule~\textup{(U)} moves $\widehat X$ to
-$[\omega(Y)\omega(Z)]$ when necessary.  The third witness also makes
+$\NT{\omega(Y)\omega(Z)}$ when necessary.  The third witness also makes
 $\omega(Y)\omega(Z)$ an observed factor, so Rule~\textup{(B)} gives
-$[\omega(Y)\omega(Z)]\to[\omega(Y)][\omega(Z)]$.
+$\NT{\omega(Y)\omega(Z)}\to\NT{\omega(Y)}\NT{\omega(Z)}$.
 The induction hypotheses finish the two subderivations.
 
 Finally, every nonempty $w\in L$ has a lifted start derivation
@@ -998,7 +1000,7 @@ obtained by choosing an observed factor occurrence and a split point.
 For Rule~\textup{(U)}, for each $(u,x,v)\in\mathcal O_K$
 and each $w\in K$, check whether there is a nonempty word $y$
 with $w=uyv$. Such a $y$, if it exists, is unique;
-if $h(x)=h(y)$, emit the rule $[x]\to[y]$.
+if $h(x)=h(y)$, emit the rule $\NT{x}\to\NT{y}$.
 This enumerates all Rule~\textup{(U)} candidates, at most
 $|\mathcal O_K||K|=O(n_K^3)$ of them.
 
@@ -1104,26 +1106,26 @@ cannot in general be replaced by ordinary thickness, even for the
 reconstruction operator itself under a single fixed typing.
 
 \paragraph{A bracketed doubling family.}
-Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\langle,\rangle,\mathtt{[},\mathtt{]}\}$ and
+Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\triangleleft,\triangleright,\mathtt{[},\mathtt{]}\}$ and
 recall the two-element monoid $U_1=\{1,\zeta\}$ with zero $\zeta$.
-Here $\langle$ and $\rangle$ are literal terminal symbols marking binary-node
+Here $\triangleleft$ and $\triangleright$ are literal terminal symbols marking binary-node
 boundaries, not parentheses used to group expressions.
 Define $h_{\mathrm U}:\Gamma_{\mathrm{br}}^*\to U_1$ by mapping
-$\mathtt a,\langle,\rangle$ to $1$ and
+$\mathtt a,\triangleleft,\triangleright$ to $1$ and
 $\mathtt{[},\mathtt{]}$ to $\zeta$, and let $h_0$ be the trivial typing.
 Thus $h_{\mathrm U}(x)=1$ exactly when $x$ has no square bracket, and
 $h_{\mathrm U}(\Gamma_{\mathrm{br}}^+)=U_1$.
 For $n\ge1$, define the reduced CFG $G_n$ by
 \[
  S_0\to E_n,\qquad E_0\to\mathtt a,\qquad
- E_i\to\langle{}E_{i-1}E_{i-1}\rangle
+ E_i\to\triangleleft{}E_{i-1}E_{i-1}\triangleright
        \mid\mathtt{[}E_{i-1}\mathtt{]}
  \quad(1\le i\le n),
 \]
 and put $L_n=L(G_n)$. Then $|G_n|=O(n)$ and
 $\tau_{G_n}=2n+1$.
 Write $w^*_0=\mathtt a$ and
-$w^*_i=\langle{}w^*_{i-1}w^*_{i-1}\rangle$.
+$w^*_i=\triangleleft{}w^*_{i-1}w^*_{i-1}\triangleright$.
 The only word of $L_n$ without square brackets is $w^*_n$, of length
 $|w^*_n|=3\cdot2^n-2$: without unary square-bracket nodes the
 derivation is the unique complete binary tree of height $n$.
@@ -1169,13 +1171,23 @@ An explicit sample is obtained by setting $u_0=\mathtt a$,
 $u_i=\mathtt{[}u_{i-1}\mathtt{]}$, and
 \[
 \mathcal K_n=\{u_n\}\cup
-\{\mathtt{[}^{n-i}\langle u_{i-1}u_{i-1}\rangle
+\{\mathtt{[}^{n-i}\triangleleft u_{i-1}u_{i-1}\triangleright
 \mathtt{]}^{n-i}:1\le i\le n\}.
 \]
 For each $i$, the two sample words provide a common context for
-$u_i$ and $\langle u_{i-1}u_{i-1}\rangle$; Rules~\textup{(U)} and
-\textup{(B)} thus recover both $E_i$ alternatives.
-By soundness, $\mathcal K_n$ is characteristic, with
+$u_i$ and $\triangleleft u_{i-1}u_{i-1}\triangleright$;
+Rules~\textup{(U)} and \textup{(B)} therefore recover both
+$E_i$ alternatives, so
+$L_n\subseteq L(\mathsf{Rec}_{h_0}(\mathcal K_n))$.
+If $\mathcal K_n\subseteq K\subseteq L_n$, then every observed factor
+and every common-context witness for $\mathcal K_n$ remains available
+in $K$. Hence every production of $\mathsf{Rec}_{h_0}(\mathcal K_n)$
+also belongs to $\mathsf{Rec}_{h_0}(K)$.
+By monotonicity and soundness (Theorem~\ref{thm:soundness}),
+\[
+L_n\subseteq L(\mathsf{Rec}_{h_0}(K))\subseteq L_n.
+\]
+Thus $\mathcal K_n$ is characteristic, with
 $|\mathcal K_n|=n+1$ and $\|\mathcal K_n\|=3n^2+4n+2$.
 
 For (iii)--(iv), put
@@ -1206,8 +1218,8 @@ would have to generate both languages, a contradiction.
 
 For $n\ge2$, $L_n^-\notin\Ccf{h_0}$:
 $u_{n-1}$ and $w_{n-1}^*$ share the context
-$(\langle,u_{n-1}\rangle)$ in $L_n^-$, but only the former
-admits $(\langle w_{n-1}^*,\rangle)$.
+$(\triangleleft,u_{n-1}\triangleright)$ in $L_n^-$, but only the former
+admits $(\triangleleft w_{n-1}^*,\triangleright)$.
 Thus (iv) does not conflict with the $h_0$ upper bound in (ii).
 \end{proof}
 
@@ -1260,10 +1272,12 @@ and characteristic-set bounds~\cite[Lemmas~2 and~7]{yoshinaka2008}.
 Here we instead bound the shortest yields of the typed refinement used by
 $\mathsf{Rec}_h$.  One argument covers both fixed windows and
 typings that additionally track finite-group values.
-The corresponding batch bounds are in the polynomial-time-and-thick-data
-(IPTtD) sense of~\cite{yoshinaka2008} and
-\cite[Definition~2.12]{eyraud-heinz-yoshinaka2016};
-we claim no improvement in Yoshinaka's polynomial degree.
+The corresponding batch bounds satisfy the set-based
+polynomial-time-and-thick-data (IPTtD) criterion of~\cite{yoshinaka2008}
+and \cite[Definition~2.12]{eyraud-heinz-yoshinaka2016}.
+They do not assert the stronger incremental stabilization requirement
+of \cite[Definition~2.5]{eyraud-heinz-yoshinaka2016}.
+We claim no improvement in Yoshinaka's polynomial degree.
 For general fixed $h$, ordinary thickness need not give a polynomial
 characteristic-data bound for $\mathsf{Rec}_h$
 (Proposition~\ref{prop:typed-thickness-gap}).
@@ -2185,7 +2199,7 @@ time.
 
 Set $L_0=\{\mathtt a\}$. The languages $L_n=L(G_n)$ from
 Proposition~\ref{prop:typed-thickness-gap} satisfy
-$L_n=\mathtt{[}L_{n-1}\mathtt{]}\cup\langle{}L_{n-1}L_{n-1}\rangle$
+$L_n=\mathtt{[}L_{n-1}\mathtt{]}\cup\triangleleft{}L_{n-1}L_{n-1}\triangleright$
 for $n\ge1$, and $L_{G_n}(E_i)=L_i$ for $0\le i\le n$.
 Induction on $i$ shows that every word of $L_i$ starts with exactly
 $i$ opening brackets followed by $\mathtt a$.
@@ -2194,16 +2208,16 @@ top-down parser.
 
 \paragraph{Parser and stack properties.}
 Fix $n\ge1$. A stack is a word over $E_0,\ldots,E_n$ and the closing
-terminals $\mathtt{]}$ and $\rangle$, with its top on the left.
+terminals $\mathtt{]}$ and $\triangleright$, with its top on the left.
 The empty stack is $\lambda$. For an arbitrary stack $\psi$ and
 $1\le i\le n$, all transitions are
 \[
 \begin{aligned}
 E_0\psi&\xrightarrow{\mathtt a}\psi,&
 E_i\psi&\xrightarrow{\mathtt{[}}E_{i-1}\mathtt{]}\psi,&
-E_i\psi&\xrightarrow{\langle}E_{i-1}E_{i-1}\rangle \psi,\\
+E_i\psi&\xrightarrow{\triangleleft}E_{i-1}E_{i-1}\triangleright \psi,\\
 \mathtt{]}\psi&\xrightarrow{\mathtt{]}}\psi,&
-\rangle \psi&\xrightarrow{\rangle}\psi.
+\triangleright \psi&\xrightarrow{\triangleright}\psi.
 \end{aligned}
 \]
 Write $\sigma\xrightarrow{w}\theta$ for the run reading $w$ from $\sigma$ to $\theta$.
@@ -2227,7 +2241,7 @@ followed by $\vartheta\xrightarrow{w_2}\theta$, where $w=w_1w_2$;
 otherwise it ends at $\upsilon'\vartheta$ with $\upsilon'\ne\lambda$.
 The visit to $\vartheta$ can occur at most once by strict weight decrease.
 Second, since only the top symbol is rewritten, a nonempty stack
-whose last symbol is $\mathtt{]}$ (respectively $\rangle$) retains
+whose last symbol is $\mathtt{]}$ (respectively $\triangleright$) retains
 that last symbol until the entire stack is popped.
 
 \begin{lemma}\label{lem:app-recognition}
@@ -2247,15 +2261,15 @@ Conversely, any such run from $E_i$ lifts to one from $E_i\psi$.
 We prove $E_i\xrightarrow{w}\lambda$ iff $w\in L_i$ by induction
 on $i$. For $i=0$, the only possible run is the single
 $\mathtt a$-transition. For $i\ge1$, a run must start with
-$\mathtt{[}$ or $\langle$. In the unary case the stack becomes
+$\mathtt{[}$ or $\triangleleft$. In the unary case the stack becomes
 $E_{i-1}\mathtt{]}$. The suffix property forces the child
 $E_{i-1}$ to be completely processed before the final
 $\mathtt{]}$ is popped. Hence $w=\mathtt{[}z\mathtt{]}$
 with $E_{i-1}\xrightarrow{z}\lambda$, equivalently
 $z\in L_{i-1}$ by induction. In the binary case the stack becomes
-$E_{i-1}E_{i-1}\rangle$. Applying the same suffix property
+$E_{i-1}E_{i-1}\triangleright$. Applying the same suffix property
 successively to its first and second $E_{i-1}$ forces
-$w=\langle z_1z_2\rangle$ with $z_1,z_2\in L_{i-1}$.
+$w=\triangleleft z_1z_2\triangleright$ with $z_1,z_2\in L_{i-1}$.
 Both decompositions conversely give accepting runs, proving
 the equivalence.
 
@@ -2288,17 +2302,17 @@ $\psi\xrightarrow{x'}\theta$ and $\psi\xrightarrow{y'}\theta$.
 \end{lemma}
 \begin{proof}
 Only $E_i\psi$ admits two initial moves, reading $\mathtt{[}$
-and $\langle$. Say these occur for $x$ and $y$, leaving
-$E_{i-1}\mathtt{]}\psi$ and $E_{i-1}E_{i-1}\rangle \psi$.
+and $\triangleleft$. Say these occur for $x$ and $y$, leaving
+$E_{i-1}\mathtt{]}\psi$ and $E_{i-1}E_{i-1}\triangleright \psi$.
 Until the first visit to $\psi$, the suffix property and the
 last-marker property force the respective stacks to have the
-forms $A\mathtt{]}\psi$ and $B\rangle \psi$. Each then has weight
+forms $A\mathtt{]}\psi$ and $B\triangleright \psi$. Each then has weight
 strictly greater than that of $\psi$. At the first visit to $\psi$
 the weight equals that of $\psi$, and after any further move it
 is smaller. Thus, if both runs end at the same $\theta$, either
 both visit $\psi$ or neither does. In the latter case
-$A\mathtt{]}\psi=B\rangle \psi$ at $\theta$; right cancellation
-would give $A\mathtt{]}=B\rangle$, impossible because
+$A\mathtt{]}\psi=B\triangleright \psi$ at $\theta$; right cancellation
+would give $A\mathtt{]}=B\triangleright$, impossible because
 the last markers differ. Both runs therefore visit $\psi$.
 Their prefixes up to these visits are in $L_i$ by
 Lemma~\ref{lem:app-recognition}, and their remaining
