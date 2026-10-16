@@ -80,7 +80,7 @@ theorem witness_length (n : Nat) :
 
 /-- Encoded size from main.tex line 293: sum (word length + 1). -/
 def encodedSize {β : Type*} (K : Finset (List β)) : Nat :=
-  ∑ x ∈ K, x.length + 1
+  K.sum (fun x => x.length + 1)
 
 theorem encodedSize_ge (n : Nat) (K : Finset (List Terminal))
     (hmem : witness n ∈ K) :
