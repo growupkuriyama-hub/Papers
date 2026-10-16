@@ -16,15 +16,22 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
     steps:
       - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@v1
-        with:
-          lake-package-directory: formalization/TCS-01-Phase1
-          use-mathlib-cache: true
-          test: false
-      - name: Explicit compilation, axiom audit, and forbidden-proof scan
-        working-directory: formalization/TCS-01-Phase1
+      - name: Install pinned Lean toolchain with elan
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve pinned Mathlib and obtain precompiled cache
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+      - name: Build, compile, print axioms, scan prohibited proof tokens
         run: |
           set -euo pipefail
           lean --version
@@ -35,4 +42,4 @@ jobs:
             echo 'FORBIDDEN TOKEN DETECTED'
             exit 1
           fi
-          echo 'No sorry/admit/axiom/opaque tokens in formalization'
+          echo 'No forbidden proof tokens found'
