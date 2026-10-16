@@ -47,7 +47,7 @@ theorem distinguishing_word
     hT.2 K Finset.subset_union_right hKminus
   have hEq : L = L \ {w} := hOpL.symm.trans hOpMinus
   rw [hEq] at hw
-  exact (Set.mem_diff.mp hw).2 (by simp)
+  simp at hw
 
 /-- Five literal terminal symbols in the bracketed family. -/
 inductive Terminal where
@@ -87,7 +87,9 @@ theorem encodedSize_ge (n : Nat) (K : Finset (List Terminal))
     3 * 2 ^ n - 1 ≤ encodedSize K := by
   have hle : (witness n).length + 1 ≤ encodedSize K := by
     unfold encodedSize
-    exact Finset.single_le_sum (fun _ _ => Nat.zero_le _) hmem
+    simpa using (Finset.single_le_sum (s := K)
+      (f := fun x : List Terminal => x.length + 1)
+      (fun _ _ => Nat.zero_le _) hmem)
   have hlen := witness_length_plus_two n
   omega
 
@@ -123,7 +125,7 @@ theorem soundness_excludes
     exact ⟨hK hx, by simpa using hxne⟩
   intro hwRec
   have hwminus := hSound K hKminus hwRec
-  exact (Set.mem_diff.mp hwminus).2 (by simp)
+  simp at hwminus
 
 #print axioms TCSPhase1.distinguishing_word
 #print axioms TCSPhase1.witness_length_plus_two
