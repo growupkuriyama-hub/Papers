@@ -38,3 +38,6 @@ lean_lib TCSPhase3RecognitionConverse where
 
 @[default_target]
 lean_lib TCSPhase3Marker where
+
+@[default_target]
+lean_lib TCSPhase3RecognitionFull where
