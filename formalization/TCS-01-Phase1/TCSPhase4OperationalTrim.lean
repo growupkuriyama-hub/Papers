@@ -5,7 +5,7 @@ open TCSPhase1 TCSPhase2
 
 /-- Independent operational trimming reachability after productive-rule
 filtering: starts must yield, and one may traverse a binary rule only if
-both child typed symbols admit completed terminal derivations. This is a
+both child typed symbols have completed terminal derivations. This is a
 least inductively generated relation, separate from successful-tree
 occurrence used to define RetainedTypedSymbol. -/
 inductive OperationalReachable {NT : Type} [Fintype NT]
