@@ -865,217 +865,298 @@ $\Cmcf{f}{h}$ に属する．
 \section{正例データからの厳密な再構成}
 \label{sec:learner}
 
-We define the finite-sample reconstruction operator, prove soundness, and then
-prove completeness using a normalized target grammar refined by yield type.
-The target grammar is used only to select a finite characteristic sample.
-Since every observed tuple component is nonempty, the rank of an enumerated
-composition witness is bounded by the length of the sample word containing it.
+有限標本からの再構成作用素を定義し，健全性を示し，
+続いて生成語型により精密化した良形の標的文法を使って完全性を証明する．
+標的文法を使うのは，有限な特徴標本を選ぶためだけである．
+観測タプルのすべての成分は非空なので，
+列挙される合成証拠のランクは，
+その証拠を含む標本語の長さで抑えられる．
 
-\subsection{Set-Driven Reconstruction and Sample-Bounded Rank}
+\subsection{集合駆動型再構成と標本サイズによるランク上界}
 
+定義~\ref{def:tuple-occurrence} に従い，
+標本 $K$ に現れるアリティが高々 $f$ の
+すべてのタプル出現を列挙する．
+再構成では，観測された各タプル値
+$\tuple x\in(\Sigma^+)^d$ に対して
+非終端記号 $[\tuple x]$ を一つ設け，
+さらに新たな開始記号 $\widehat S$ を導入する．
+どの出現が標的の非終端記号や規則に対応するかは与えられず，
+許容されるすべての区間分割を列挙する．
 
-Following Definition~\ref{def:tuple-occurrence}, enumerate all tuple occurrences
-of arity at most $f$ in the sample $K$.  The reconstruction uses one nonterminal
-$[\tuple x]$ for every observed tuple value $\tuple x\in(\Sigma^+)^d$, together
-with a fresh start symbol $\widehat S$.  It is not told which occurrences
-correspond to target nonterminals or rules; all admissible segmentations are
-enumerated.
-
-\begin{definition}[Composition witness]
+\begin{definition}[合成証拠]
 \label{def:composition-witness}
-Let $r\ge1$.  A \emph{composition witness of rank $r$} in $K$ consists of an
-observed parent occurrence $(E_{\mathrm{par}},\tuple z)$ of arity $e\le f$ together with a
-segmentation of the parent components into terminal gaps and nonempty labelled
-intervals.  The labels are variables $\xi_j^{\kappa}$ with
-$1\le j\le r$ and $1\le\kappa\le d_j\le f$; every variable occurs exactly once,
-and for each fixed $j$ the variables
-$\xi_j^1,\ldots,\xi_j^{d_j}$ occur in this order when the parent components are
-scanned from left to right.  No output component may contain adjacent variables
-$\xi_j^{\kappa}\xi_j^{\kappa+1}$ of the same child.  The labelled intervals
-induce child tuples $\tuple u_j=(u_{j,1},\ldots,u_{j,d_j})$ and determine a
-unique linear template $\rho$ satisfying
+$r\ge1$ とする．
+$K$ における\emph{ランク $r$ の合成証拠}は，
+アリティ $e\le f$ の親タプル出現
+$(E_{\mathrm{par}},\tuple z)$ と，
+親の各成分を終端記号からなる隙間と
+非空の標識付き区間に分割する情報からなる．
+標識は $1\le j\le r$，
+$1\le\kappa\le d_j\le f$ の
+変数 $\xi_j^\kappa$ であり，
+各変数はちょうど一度現れる．
+固定した $j$ について，
+親の成分を左から右に走査すると
+$\xi_j^1,\ldots,\xi_j^{d_j}$ がこの順序で現れる．
+いかなる親の出力成分にも，
+同じ子の隣接変数
+$\xi_j^\kappa\xi_j^{\kappa+1}$
+がそのまま隣接して現れてはならない．
+標識付き区間は子タプル
+$\tuple u_j=(u_{j,1},\ldots,u_{j,d_j})$
+を定め，
 \[
-  \tuple z=\rho(\tuple u_1,\ldots,\tuple u_r).
+  \tuple z=\rho(\tuple u_1,\ldots,\tuple u_r)
 \]
+を満たす一意の線形テンプレート $\rho$ を決める．
 \end{definition}
 
-\begin{lemma}[Materialization of child tuples]
+\begin{lemma}[子タプルの観測出現]
 \label{lem:composition-witness-materialization}
-Every child tuple induced by a composition witness is itself an observed tuple
-occurrence, and the induced template $\rho$ is good.
+合成証拠によって誘導される各子タプルも観測タプル出現であり，
+誘導されたテンプレート $\rho$ は良形である．
 \end{lemma}
 
 \begin{proof}
-Because the parent is an observed tuple occurrence, the components of each
-$\tuple u_j$ occur in their original left-to-right order in the same sample
-word.  If two consecutive components of the same child lie in one parent
-component, the definition of a composition witness excludes their direct
-adjacency.  They are therefore separated either by nonempty terminal material
-or by one or more nonempty labelled intervals belonging to other children.
-If they lie in different parent components, they are separated by the
-nonempty internal material of the parent sentence context.  Hence the
-components of each $\tuple u_j$ satisfy the separation condition for an
-observed tuple occurrence.
+親が観測タプル出現なので，
+各 $\tuple u_j$ の成分も，
+同じ標本語中で元の左から右の順序に現れる．
+同じ子の連続する二成分が一つの親成分内にあれば，
+合成証拠の定義はその直接隣接を禁止する．
+よって，非空の終端部分か，
+他の子に属する一つ以上の非空な標識区間によって分離される．
+異なる親成分にあれば，
+親の文文脈における非空の内部区切り語によって分離される．
+したがって各子タプルの成分は，
+観測タプル出現の分離条件を満たす．
 
-Every variable occurs exactly once, the components of each child occur in
-order, and adjacent consecutive components of one child are excluded.
-Therefore $\rho$ is linear, nondeleting, nonpermuting, and nonmerging.
-Finally every parent component is nonempty, so every output component of
-$\rho$ is nonempty.  Thus $\rho$ is good.
+各変数はちょうど一度現れ，
+同じ子の成分は順序を保ち，
+連続成分の直接隣接も禁止される．
+よって $\rho$ は線形，非消去，非置換，非融合である．
+また各親成分は非空なので，
+$\rho$ のすべての出力成分も非空である．
+したがって $\rho$ は良形である．
 \end{proof}
 
-\begin{lemma}[Enumeration and sample-bounded rank]
+\begin{lemma}[列挙可能性と標本によるランク上界]
 \label{lem:general-witness-enumeration}
-Fix $f$ and a finite sample $K$, and put $n_K:=\max\{1,\|K\|_+\}$.  If a
-rank-$r$ composition witness has parent tuple $\tuple z$ occurring in a sample
-word $w$, then
+$f$ と有限標本 $K$ を固定し，
+$n_K:=\max\{1,\|K\|_+\}$ とおく．
+ランク $r$ の合成証拠の親タプル
+$\tuple z$ が標本語 $w$ に出現するなら，
 \[
-  r\le\|\tuple z\|_1\le |w|\le\|K\|_+.
+  r\le\|\tuple z\|_1\le |w|\le\|K\|_+
 \]
-All composition witnesses are effectively enumerable.  Under a rule-rank cap
-$r_{\max}$, those of rank at most $r_{\max}$ are enumerable in
-$n_K^{O(f r_{\max})}$ time and space.
+が成り立つ．
+すべての合成証拠は実効的に列挙可能である．
+ランク上界 $r_{\max}$ を設けると，
+ランクが高々 $r_{\max}$ の合成証拠は，
+時間・空間ともに
+$n_K^{O(f r_{\max})}$ で列挙できる．
 \end{lemma}
 
 \begin{proof}
-Every child tuple has at least one nonempty component.  Linearity and
-nondeletion make the child components contribute disjointly to the parent, so
-$\|\tuple z\|_1\ge\sum_j\|\tuple u_j\|_1\ge r$; the remaining inequalities
-follow because the parent components are disjoint intervals of $w$.
+各子タプルには少なくとも一つの非空成分がある．
+線形性と非消去性により子成分は親に重複せずに寄与するので，
+$\|\tuple z\|_1\ge\sum_j\|\tuple u_j\|_1\ge r$ である．
+残りの不等式は，
+親タプルの各成分が語 $w$ の互いに交わらない区間であることから従う．
 
-An arity-$d$ tuple occurrence is determined by $2d$ cuts.  For a fixed rank
-$r$, a candidate segmentation has at most $fr$ labelled child intervals, whose endpoints are chosen among the $|w|+1\le n_K+1$ cut positions of
-the parent sample word.  For $r\le r_{\max}$, assignments to parent components and
-terminal gaps contribute only a factor depending on $f$ and $r_{\max}$, and
-the nonpermuting and nonmerging conditions are directly checkable.  Summing
-over $r\le r_{\max}$ gives the stated bound.  Without a cap, the displayed
-rank inequality restricts the effective enumeration to
-$1\le r\le\|K\|_+$.
+アリティ $d$ のタプル出現は $2d$ 個の切断位置で決まる．
+ランク $r$ を固定すると，
+区間分割の候補には高々 $fr$ 個の
+子の標識付き区間があり，
+その端点は親の標本語の高々 $|w|+1\le n_K+1$ 個の
+切断位置から選ぶ．
+$r\le r_{\max}$ の場合，
+親成分への割当てと終端の隙間に関する選択は
+$f,r_{\max}$ のみに依存する因子を増やすにすぎない．
+非置換・非融合条件は直接検査できる．
+$r\le r_{\max}$ を足し合わせると主張した上界を得る．
+ランク上界を設けない場合も，
+先のランク不等式から列挙範囲は
+$1\le r\le\|K\|_+$ に制限できる．
 \end{proof}
 
-\begin{definition}[Capped and uncapped reconstruction operators]
+\begin{definition}[ランク上界付き・上界なし再構成作用素]
 \label{def:reconstruction}
-Fix $f$ and $h$.  For $r_{\max}\ge1$, let
-$\mathcal B_{f,h}^{\le r_{\max}}(K)$ be the grammar
-$\widehat G_{\le r_{\max}}(K)$ with a fresh start symbol $\widehat S$, one nonterminal $[\tuple x]$ for each nonempty tuple value $\tuple x$ observed in $K$,
-and the following rules:
+$f,h$ を固定する．
+$r_{\max}\ge1$ について，
+$\mathcal B_{f,h}^{\le r_{\max}}(K)$ を
+次の文法 $\widehat G_{\le r_{\max}}(K)$ とする．
+非終端記号は新しい開始記号 $\widehat S$ と，
+$K$ に現れた各非空タプル値 $\tuple x$ に対する
+$[\tuple x]$ であり，規則は次のとおりである．
 \begin{enumerate}[leftmargin=*]
-\item[\textnormal{(Start)}] for every $w\in K\cap\Sigma^+$,
-      $\widehat S\to[(w)]$, and if $\eps\in K$, also
-      $\widehat S\to\eps$;
-\item[\textnormal{(Const)}] for every observed tuple, the constant rule
-      $[\tuple u]\to\tuple u$;
-\item[\textnormal{(Comp)}] for every composition witness of rank
-      $1\le r\le r_{\max}$ with parent tuple $\tuple z$, template $\rho$,
-      and induced child tuples $\tuple u_1,\ldots,\tuple u_r$, the rule
-      \[
-        [\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r]);
-      \]
-\item[\textnormal{(Link)}] for observed nonempty tuples
-      $\tuple x,\tuple y$ of the same arity $d$, the identity-template rule
-      $[\tuple x]\to[\tuple y]$ whenever
-      $h^{(d)}(\tuple x)=h^{(d)}(\tuple y)$ and some $E\in\mathcal E_d$
-      satisfies $E[\tuple x],E[\tuple y]\in K$.
+\item[\textnormal{(Start)}]
+各 $w\in K\cap\Sigma^+$ に対して
+$\widehat S\to[(w)]$ を加え，
+$\eps\in K$ なら $\widehat S\to\eps$ も加える．
+\item[\textnormal{(Const)}]
+観測された各タプルについて定数規則
+$[\tuple u]\to\tuple u$ を加える．
+\item[\textnormal{(Comp)}]
+親タプル $\tuple z$，
+テンプレート $\rho$，
+子タプル $\tuple u_1,\ldots,\tuple u_r$ をもつ
+ランク $1\le r\le r_{\max}$ の各合成証拠に対して
+\[
+ [\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r])
+\]
+を加える．
+\item[\textnormal{(Link)}]
+アリティ $d$ が同じ観測済み非空タプル
+$\tuple x,\tuple y$ に対し，
+$h^{(d)}(\tuple x)=h^{(d)}(\tuple y)$ かつ
+ある $E\in\mathcal E_d$ が
+$E[\tuple x],E[\tuple y]\in K$ を満たすとき，
+恒等テンプレート規則
+$[\tuple x]\to[\tuple y]$ を加える．
 \end{enumerate}
-If $K\ne\emptyset$, define
-$\mathcal B_{f,h}(K):=\widehat G(K):=
-\widehat G_{\le\|K\|_+}(K)$; for $K=\emptyset$, let
-$\mathcal B_{f,h}(\emptyset)$ be the grammar with no productive start rule.
-Fixed encoding orders make both reconstruction operators deterministic and
-set-driven.
+$K\ne\emptyset$ なら
+\[
+ \mathcal B_{f,h}(K):=\widehat G(K):=
+ \widehat G_{\le\|K\|_+}(K)
+\]
+と定義し，
+$K=\emptyset$ なら
+$\mathcal B_{f,h}(\emptyset)$ を
+生産的な開始規則をもたない文法とする．
+符号化順序を固定すれば，両作用素は決定的かつ集合駆動型となる．
 \end{definition}
 
-\paragraph{Exact relation to Yoshinaka's finite-sample grammar.}
-The finite typing modifies Yoshinaka's constructor only at substitution links.
-\begin{proposition}[Typed guard on Yoshinaka's reconstruction]
+\paragraph{Yoshinaka の有限標本文法との厳密な関係．}
+有限型付けによる変更点は，
+Yoshinaka の文法構成における代入リンクだけである．
+
+\begin{proposition}[Yoshinaka の再構成における型の制約]
 \label{prop:yoshinaka-type-guard}
-Fix a finite positive sample $K$, fan-out bound $f$, and rank cap
-$r_{\max}\ge1$.  Under the trivial typing,
-$\mathcal B_{f,h_{\mathrm{triv}}}^{\le r_{\max}}(K)$ agrees, up to notation,
-with Yoshinaka's hypothesis grammar $G(K)$ for $\mathcal A(f,r_{\max})$
-\cite[Section~4.1]{Yoshinaka2011}, except that the present construction handles
-$\eps\in K$ by a separate direct start rule.  For an arbitrary finite typing
-$h$, $\mathcal B_{f,h}^{\le r_{\max}}(K)$ is obtained from that grammar by
-deleting exactly those Type~II substitution rules whose source and target
-tuples have different componentwise $h$-types.  The same statement holds for
-the uncapped reconstruction and Yoshinaka's $\mathcal A(f,*)$.
+有限正例標本 $K$，ファンアウト上界 $f$，
+ランク上界 $r_{\max}\ge1$ を固定する．
+自明型付けの下で
+$\mathcal B_{f,h_{\mathrm{triv}}}^{\le r_{\max}}(K)$
+は，$\eps\in K$ の場合を開始記号からの直接規則で
+別扱いする点を除いて，
+Yoshinaka の $\mathcal A(f,r_{\max})$ における
+仮説文法 $G(K)$ と記法の違いを除き一致する
+~\cite[Section~4.1]{Yoshinaka2011}．
+任意の有限型付け $h$ に対し，
+$\mathcal B_{f,h}^{\le r_{\max}}(K)$ は
+この文法から，出発タプルと到着タプルの
+成分ごとの $h$-型が異なる
+Type~II の代入規則だけを削除したものである．
+ランク上界なしの再構成と
+Yoshinaka の $\mathcal A(f,*)$ についても同様である．
 \end{proposition}
 
 \begin{proof}
-The observed tuple values are the same nonterminal indices in both
-constructions.  Rule~(Start) is Yoshinaka's Type~III rule, and Rule~(Link) is
-Type~II with the additional componentwise type test.
+観測タプル値は両構成で同じ非終端記号の添字になる．
+Rule~(Start) は Yoshinaka の Type~III に対応し，
+Rule~(Link) は成分別の型検査を追加した Type~II に対応する．
 
-It remains to compare Type~I with Rules~(Const) and~(Comp).  A rank-zero
-Type~I rule is exactly Rule~(Const).  For positive rank, suppose Yoshinaka has
+残る Type~I と Rules~(Const), (Comp) を比較する．
+ランク0の Type~I はそのまま Rule~(Const) である．
+正のランクについて，Yoshinaka の文法に
 \[
- [\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r])
- \qquad\text{with}\qquad
- \tuple z=\rho(\tuple u_1,\ldots,\tuple u_r),
+ [\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r]),
+ \qquad
+ \tuple z=\rho(\tuple u_1,\ldots,\tuple u_r)
 \]
-where all displayed tuple values are observed and $\rho$ is good.  Choose an
-observed occurrence of $\tuple z$ in a sample word.  The displayed equality
-locates every component of every $\tuple u_j$ as a labelled interval inside
-that occurrence.  Linearity and nondeletion use each interval once,
-nonpermutation puts the components of each child in order, and nonmerging
-prevents direct adjacency of consecutive components of one child.  Hence these
-intervals form a composition witness, so Rule~(Comp) contains the same rule.
-Conversely every composition witness is a good algebraic decomposition among
-observed tuple values and therefore is a Type~I rule.  This also matches
-Yoshinaka's counting proof, where each Type~I rule is enumerated as a
-factorization of a single sample word
-\cite[Lemma~6]{Yoshinaka2011}.
+という規則があるとする．
+ここで表示したすべてのタプル値は観測され，
+$\rho$ は良形である．
+標本語の中から $\tuple z$ の観測出現を一つ選ぶ．
+上の等式によって，各子 $\tuple u_j$ のすべての成分は，
+この出現の内部にある標識付き区間として位置づけられる．
+線形性・非消去性は各区間を一度だけ使用することを意味し，
+非置換性は同じ子の成分順序を保ち，
+非融合性は同じ子の連続成分の直接隣接を禁止する．
+したがって，これらの区間は合成証拠を構成し，
+Rule~(Comp) に同じ規則が含まれる．
+逆に各合成証拠は，
+観測タプル値の間の良形な代数的分解であり，
+Type~I の規則となる．
+これは Type~I 規則を一つの標本語の分解として
+列挙する Yoshinaka の計数証明とも一致する
+~\cite[Lemma~6]{Yoshinaka2011}．
 
-Thus trivial typing gives the same Type~I--III rule set, apart from the direct
-$\eps$ start convention.  For general $h$, Rules~(Start), (Const), and (Comp)
-are unchanged, and only Type~II/Rule~(Link) is filtered by componentwise type.
-Finally, in the uncapped construction every composition witness has rank at
-most the length of the sample word containing it, so allowing the cap
-$\|K\|_+$ introduces no Type~I rule beyond the sample-length cap used in
-Yoshinaka's $\mathcal A(f,*)$.
+よって自明型付けでは，
+空語の直接開始規則という規約を除いて，
+Type~I--III の規則集合が一致する．
+一般の $h$ では Rules~(Start), (Const), (Comp) は不変であり，
+Type~II/Rule~(Link) だけを成分別の型で制限する．
+最後に，ランク上界なしの構成で列挙される各合成証拠のランクは，
+それを含む標本語の長さ以下である．
+したがって $\|K\|_+$ をランク上界としても，
+Yoshinaka の $\mathcal A(f,*)$ の標本長上界よりも
+新たな Type~I 規則は現れない．
 \end{proof}
 
-\begin{example}[Why the equal-type premise matters]
+\begin{example}[同じ型であるという前提の役割]
 \label{ex:type-guard-purpose}
-Let $L=\{\mathtt a^n\mathtt b^n\mathtt c^n:n\ge1\}$ and
-$K=\{\mathtt{abc},\mathtt{aabbcc}\}\subseteq L$.  The observed factors
-$(\mathtt b)$ and $(\mathtt{abbc})$ share the sample context
-$\mathtt a\blank_1\mathtt c$.  With trivial typing, Rule~(Link) therefore
-connects their hypothesis nonterminals.  The composition witness
-$[\mathtt{aabbcc}]\to\mathtt{aa}[\mathtt b]\mathtt{bcc}$ can then use that
-link to derive $\mathtt{aaabbcbcc}\notin L$.  Under $h_\Sigma^{1,1}$ the
-link is blocked because $h_\Sigma^{1,1}(\mathtt b)=\mathtt b$ while
-$h_\Sigma^{1,1}(\mathtt{abbc})=\langle\mathtt a,\mathtt c\rangle$.
-This illustrates the local role of the equal-type premise.
+$L=\{\mathtt a^n\mathtt b^n\mathtt c^n:n\ge1\}$，
+$K=\{\mathtt{abc},\mathtt{aabbcc}\}\subseteq L$ とする．
+観測された因子 $(\mathtt b)$ と
+$(\mathtt{abbc})$ は標本文脈
+$\mathtt a\blank_1\mathtt c$ を共有する．
+したがって自明型付けでは，
+Rule~(Link) が対応する非終端記号を結び付ける．
+合成証拠
+\[
+ [\mathtt{aabbcc}]
+ \to\mathtt{aa}[\mathtt b]\mathtt{bcc}
+\]
+は，このリンクを使って
+$\mathtt{aaabbcbcc}\notin L$ を導出できる．
+しかし $h_\Sigma^{1,1}$ の下では，
+\[
+ h_\Sigma^{1,1}(\mathtt b)=\mathtt b,
+ \qquad
+ h_\Sigma^{1,1}(\mathtt{abbc})
+ =\langle\mathtt a,\mathtt c\rangle
+\]
+なので，このリンクは許されない．
+この例は，同じ型という前提の局所的な役割を示す．
 \end{example}
 
-The reconstruction is sample-consistent:
+再構成は標本整合的である：
 \[
  K\subseteq L\bigl(\mathcal B_{f,h}^{\le r_{\max}}(K)\bigr),
  \qquad
  K\subseteq L\bigl(\mathcal B_{f,h}(K)\bigr).
 \]
-Indeed, each nonempty $w\in K$ has the direct derivation
-$\widehat S\to[(w)]\to(w)$ by Rules~(Start)--(Const), while
-$\eps\in K$ gives the direct start rule $\widehat S\to\eps$.
+実際，各非空 $w\in K$ には
+Rules~(Start)--(Const) による
+$\widehat S\to[(w)]\to(w)$ という直接導出がある．
+また $\eps\in K$ なら，
+開始規則 $\widehat S\to\eps$ がある．
 
-These $\mathcal B$ operators are set-driven constructors, not sequential TxtEx
-learners: recomputation on growing samples need not stabilize syntactically
-(e.g. for successively longer $\mathtt a^n\mathtt c\mathtt b^n$).  The conservative learner below
-rebuilds only when a new positive datum is rejected.
+これらの $\mathcal B$ 作用素は集合駆動型の文法構成であり，
+逐次 TxtEx 学習器ではない．
+標本が増大するたびに再計算した結果が
+構文的に安定する必要はない．
+例えば $\mathtt a^n\mathtt c\mathtt b^n$
+を順次長くして観測する場合がそうである．
+後述の保守的学習器は，新しい正例を
+現在の仮説が拒否したときに限って再構成する．
 
-Both reconstruction operators produce finite standard MCFGs of fan-out at
-most $f$ and are effectively constructible from $K,f,h$.  There are only
-finitely many observed nonempty tuple occurrences.  Rule~(Link) is obtained by
-grouping occurrences by concrete context and componentwise type, while
-Lemma~\ref{lem:general-witness-enumeration} enumerates Rule~(Comp).  By
-Lemma~\ref{lem:general-witness-enumeration}, every rule of $\mathcal B_{f,h}(K)$
-has rank at most $\|K\|_+$ when $K\ne\emptyset$.
+両作用素は，ファンアウトが高々 $f$ の有限標準 MCFG を生成し，
+$K,f,h$ から実効的に構成できる．
+非空タプルの観測出現は有限個しかない．
+Rule~(Link) は具体的な文脈と成分別の型によって出現を分類して得られ，
+Rule~(Comp) は補題~\ref{lem:general-witness-enumeration}
+によって列挙される．
+同補題から，$K\ne\emptyset$ なら
+$\mathcal B_{f,h}(K)$ のすべての規則のランクは
+$\|K\|_+$ 以下である．
 
-The concrete separation examples in Section~\ref{sec:comparison} also serve as
-small instances of the tuple-nonterminal and composition mechanisms used here.
+第~\ref{sec:comparison}節の分離例は，
+ここで用いたタプル非終端記号と合成の仕組みの
+小さな実例にもなっている．
 
-\subsection{Soundness}
+\subsection{健全性}
 \label{sec:soundness}
 
 \begin{lemma}[Induced child context]
