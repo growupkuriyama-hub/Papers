@@ -1,0 +1,47 @@
+name: TCS Phase 6 Typed Witness Bounds Lean Verification
+on:
+  push:
+    branches: [formalization/tcs-phase6-typed-witness-bounds-20261017]
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase6-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve mathlib
+        run: |
+          lake update
+          lake exe cache get
+      - name: Build and audit Lean
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          for f in TCSPhase*.lean; do
+            echo "Checking $f"
+            lake env lean "$f" 2>&1 | tee "$f.log"
+          done
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
+            echo "Forbidden proof token detected"
+            exit 1
+          fi
+          if grep -E 'sorryAx' TCSPhase*.lean.log; then
+            echo "sorryAx detected"
+            exit 1
+          fi
+          echo "All Phase 1-6 modules compiled, axioms audited"
