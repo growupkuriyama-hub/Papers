@@ -45,12 +45,7 @@ theorem derivesFrom_nonempty {NT : Type} [Fintype NT] [DecidableEq NT]
   | terminal hr => simp
   | binary hr hl hr ihl ihr =>
       intro he
-      have hn := congrArg List.length he
-      simp only [List.length_append, List.length_nil] at hn
-      have hlen : (List.nil : Word).length = 0 := rfl
-      have : _ := ihl
-      have hzero : _ := he
-      simp_all [List.append_eq_nil_iff]
+      exact ihl ((List.append_eq_nil_iff.mp he).1)
 
 /-- Any nonempty start derivation must begin with a start-unit production. -/
 theorem nonempty_start_has_root {NT : Type} [Fintype NT] [DecidableEq NT]
