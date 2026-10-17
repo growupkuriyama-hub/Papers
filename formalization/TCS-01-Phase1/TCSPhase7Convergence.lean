@@ -25,6 +25,7 @@ theorem characteristic_stage :
 /-- A first post-characteristic rebuild uses the full observed sample and
 therefore reconstructs the target language exactly. -/
 theorem rebuild_after_characteristic
+    (hSub : TypedSubstitutable h (GrammarLanguage G))
     {n₀ n : Nat} (hle : n₀ ≤ n+1)
     (hW : PositiveWitnesses G h ⊆ observed T.data n₀)
     (hRebuild : RebuildAt h T.data n) :
@@ -64,6 +65,7 @@ theorem stable_after_exact
 /-- Once characteristic observations exist, two distinct subsequent
 rebuild events are impossible. This counts events, not only changed CFGs. -/
 theorem at_most_one_rebuild_after_characteristic
+    (hSub : TypedSubstitutable h (GrammarLanguage G))
     {n₀ : Nat} (hW : PositiveWitnesses G h ⊆ observed T.data n₀) :
     ∀ n m : Nat, n₀ ≤ n+1 → n < m →
       RebuildAt h T.data n → ¬ RebuildAt h T.data m := by
@@ -79,6 +81,7 @@ theorem at_most_one_rebuild_after_characteristic
 /-- The same post-characteristic at-most-one statement for actual changes
 of finite grammar snapshots (which need not coincide with rebuild events). -/
 theorem at_most_one_change_after_characteristic
+    (hSub : TypedSubstitutable h (GrammarLanguage G))
     {n₀ : Nat} (hW : PositiveWitnesses G h ⊆ observed T.data n₀) :
     ∀ n m : Nat, n₀ ≤ n+1 → n < m →
       learner h T.data (n+1) ≠ learner h T.data n →
@@ -116,7 +119,8 @@ theorem stable_if_no_rebuild (n₀ : Nat)
 
 /-- Without a later rebuild the fixed hypothesis is correct because the text
 covers the entire target, not simply because its syntax is constant. -/
-theorem exact_if_no_rebuild (n₀ : Nat)
+theorem exact_if_no_rebuild
+    (hSub : TypedSubstitutable h (GrammarLanguage G)) (n₀ : Nat)
     (hNo : ∀ n, n₀ ≤ n → ¬ RebuildAt h T.data n) :
     hypothesisLanguage h (learner h T.data n₀) = GrammarLanguage G := by
   apply Set.Subset.antisymm
@@ -129,12 +133,13 @@ theorem exact_if_no_rebuild (n₀ : Nat)
     have hwn : w ∈ observed T.data n :=
       (observed_mono T.data (Nat.le_max_right n₀ (i+1))) hwi
     have hCons := learner_sample_consistency h T.data n hwn
-    rw [stable_if_no_rebuild h T n₀ hNo n (Nat.le_max_left n₀ (i+1))] at hCons
+    rw [stable_if_no_rebuild G h T n₀ hNo n (Nat.le_max_left n₀ (i+1))] at hCons
     exact hCons
 
 /-- Gold identification with equality of finite-grammar snapshots, not merely
 an equality of abstract languages. -/
-theorem gold_identification :
+theorem gold_identification
+    (hSub : TypedSubstitutable h (GrammarLanguage G)) :
     ∃ N : Nat,
       (∀ n : Nat, N ≤ n → learner h T.data n = learner h T.data N) ∧
       hypothesisLanguage h (learner h T.data N) = GrammarLanguage G := by
@@ -147,7 +152,7 @@ theorem gold_identification :
   · have hNo : ∀ n, n₀ ≤ n → ¬ RebuildAt h T.data n := by
       intro n hn hr
       exact hSome ⟨n, hn, hr⟩
-    exact ⟨n₀, stable_if_no_rebuild h T n₀ hNo,
+    exact ⟨n₀, stable_if_no_rebuild G h T n₀ hNo,
       exact_if_no_rebuild G h T hSub n₀ hNo⟩
 
 #print axioms TCSPhase7.characteristic_stage
