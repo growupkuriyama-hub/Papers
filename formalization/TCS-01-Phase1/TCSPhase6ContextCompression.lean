@@ -50,28 +50,28 @@ theorem context_predecessor
         have hzero := chosenContext_start_empty hs hd
         simp [contextCost, hzero] at hpositive
     | @left P Q R α β a b wQ wR hparent rule hQ hR =>
-        have hp : RetainedTypedSymbol G h P (α * β) :=
-          ⟨a,b,hparent⟩
+        have hp : RetainedTypedSymbol G h P (ξ * β) :=
+          ⟨u,b,hparent⟩
         obtain ⟨hq, hretR⟩ :=
           retained_binary_children hp rule hQ hR
-        have hminP := chosenContext_is_shortest G h P (α*β) hp a b hparent
+        have hminP := chosenContext_is_shortest G h P (ξ*β) hp u b hparent
         have hposR : 0 < wR.length := by
           have hne := typed_nonempty hR
           cases wR with
           | nil => exact False.elim (hne rfl)
           | cons t ts => simp
         have hcanon := chosenContext_spec hp
-        have hcandidate : TypedContext G h Q α
-            (chosenContext G h P (α*β)).1
-            (chosenYield G h R β ++ (chosenContext G h P (α*β)).2) :=
+        have hcandidate : TypedContext G h X ξ
+            (chosenContext G h P (ξ*β)).1
+            (chosenYield G h R β ++ (chosenContext G h P (ξ*β)).2) :=
           TypedContext.left hcanon rule
             (chosenYield_spec hq) (chosenYield_spec hretR)
-        have hminQ := chosenContext_is_shortest G h Q α hq
-          (chosenContext G h P (α*β)).1
-          (chosenYield G h R β ++ (chosenContext G h P (α*β)).2)
+        have hminQ := chosenContext_is_shortest G h X ξ hq
+          (chosenContext G h P (ξ*β)).1
+          (chosenYield G h R β ++ (chosenContext G h P (ξ*β)).2)
           hcandidate
         have hlenR := chosenYield_length_le_typedThickness G h R β hretR
-        refine ⟨P,α*β,hp,?_,?_⟩
+        refine ⟨P,ξ*β,hp,?_,?_⟩
         · unfold contextCost
           rw [he]
           simp only [List.length_append]
@@ -81,27 +81,27 @@ theorem context_predecessor
           simp only [List.length_append]
           omega
     | @right P Q R α β a b wQ wR hparent rule hQ hR =>
-        have hp : RetainedTypedSymbol G h P (α * β) :=
-          ⟨a,b,hparent⟩
+        have hp : RetainedTypedSymbol G h P (α * ξ) :=
+          ⟨a,v,hparent⟩
         obtain ⟨hretQ, hrR⟩ :=
           retained_binary_children hp rule hQ hR
-        have hminP := chosenContext_is_shortest G h P (α*β) hp a b hparent
+        have hminP := chosenContext_is_shortest G h P (α*ξ) hp a v hparent
         have hposQ : 0 < wQ.length := by
           have hne := typed_nonempty hQ
           cases wQ with
           | nil => exact False.elim (hne rfl)
           | cons t ts => simp
         have hcanon := chosenContext_spec hp
-        have hcandidate : TypedContext G h R β
-            ((chosenContext G h P (α*β)).1 ++ chosenYield G h Q α)
-            (chosenContext G h P (α*β)).2 :=
+        have hcandidate : TypedContext G h X ξ
+            ((chosenContext G h P (α*ξ)).1 ++ chosenYield G h Q α)
+            (chosenContext G h P (α*ξ)).2 :=
           TypedContext.right hcanon rule
             (chosenYield_spec hretQ) (chosenYield_spec hrR)
-        have hminR := chosenContext_is_shortest G h R β hrR
-          ((chosenContext G h P (α*β)).1 ++ chosenYield G h Q α)
-          (chosenContext G h P (α*β)).2 hcandidate
+        have hminR := chosenContext_is_shortest G h X ξ hrR
+          ((chosenContext G h P (α*ξ)).1 ++ chosenYield G h Q α)
+          (chosenContext G h P (α*ξ)).2 hcandidate
         have hlenQ := chosenYield_length_le_typedThickness G h Q α hretQ
-        refine ⟨P,α*β,hp,?_,?_⟩
+        refine ⟨P,α*ξ,hp,?_,?_⟩
         · unfold contextCost
           rw [he]
           simp only [List.length_append]
