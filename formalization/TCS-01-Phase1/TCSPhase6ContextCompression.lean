@@ -34,68 +34,87 @@ theorem context_predecessor
       contextCost G h A μ ≤
         contextCost G h B ν + typedThickness G h := by
   classical
-  have hc := chosenContext_spec hr
-  cases hc with
-  | root hs hd =>
-      have he := chosenContext_start_empty hs hd
-      simp [contextCost, he] at hpos
-  | @left P Q R α β u v wQ wR hparent rule hQ hR =>
-      have hp : RetainedTypedSymbol G h P (α * β) :=
-        ⟨u,v,hparent⟩
-      obtain ⟨hq, hretR⟩ :=
-        retained_binary_children hp rule hQ hR
-      have hminP := chosenContext_is_shortest G h P (α*β) hp u v hparent
-      have hposR : 0 < wR.length := by
-        have hne := typed_nonempty hR
-        cases wR with
-        | nil => exact False.elim (hne rfl)
-        | cons a as => simp
-      have hcanon := chosenContext_spec hp
-      have hcandidate : TypedContext G h Q α
+  -- Generalizing all four indices avoids dependent elimination on projections
+  -- of the fixed selected context.
+  have aux : ∀ {X : NT} {ξ : M} {u v : List Alphabet},
+      TypedContext G h X ξ u v →
+      chosenContext G h X ξ = (u,v) →
+      0 < contextCost G h X ξ →
+      ∃ (B : NT) (ν : M), RetainedTypedSymbol G h B ν ∧
+        contextCost G h B ν < contextCost G h X ξ ∧
+        contextCost G h X ξ ≤
+          contextCost G h B ν + typedThickness G h := by
+    intro X ξ u v hc he hpositive
+    cases hc with
+    | root hs hd =>
+        have hzero := chosenContext_start_empty hs hd
+        simp [contextCost, hzero] at hpositive
+    | @left P Q R α β a b wQ wR hparent rule hQ hR =>
+        have hp : RetainedTypedSymbol G h P (α * β) :=
+          ⟨a,b,hparent⟩
+        obtain ⟨hq, hretR⟩ :=
+          retained_binary_children hp rule hQ hR
+        have hminP := chosenContext_is_shortest G h P (α*β) hp a b hparent
+        have hposR : 0 < wR.length := by
+          have hne := typed_nonempty hR
+          cases wR with
+          | nil => exact False.elim (hne rfl)
+          | cons t ts => simp
+        have hcanon := chosenContext_spec hp
+        have hcandidate : TypedContext G h Q α
+            (chosenContext G h P (α*β)).1
+            (chosenYield G h R β ++ (chosenContext G h P (α*β)).2) :=
+          TypedContext.left hcanon rule
+            (chosenYield_spec hq) (chosenYield_spec hretR)
+        have hminQ := chosenContext_is_shortest G h Q α hq
           (chosenContext G h P (α*β)).1
-          (chosenYield G h R β ++ (chosenContext G h P (α*β)).2) :=
-        TypedContext.left hcanon rule
-          (chosenYield_spec hq) (chosenYield_spec hretR)
-      have hminQ := chosenContext_is_shortest G h Q α hq
-        (chosenContext G h P (α*β)).1
-        (chosenYield G h R β ++ (chosenContext G h P (α*β)).2)
-        hcandidate
-      have hlenR := chosenYield_length_le_typedThickness G h R β hretR
-      refine ⟨P,α*β,hp,?_,?_⟩
-      · dsimp [contextCost]
-        simp only [List.length_append]
-        omega
-      · dsimp [contextCost] at *
-        simp only [List.length_append] at *
-        omega
-  | @right P Q R α β u v wQ wR hparent rule hQ hR =>
-      have hp : RetainedTypedSymbol G h P (α * β) :=
-        ⟨u,v,hparent⟩
-      obtain ⟨hretQ, hrR⟩ :=
-        retained_binary_children hp rule hQ hR
-      have hminP := chosenContext_is_shortest G h P (α*β) hp u v hparent
-      have hposQ : 0 < wQ.length := by
-        have hne := typed_nonempty hQ
-        cases wQ with
-        | nil => exact False.elim (hne rfl)
-        | cons a as => simp
-      have hcanon := chosenContext_spec hp
-      have hcandidate : TypedContext G h R β
+          (chosenYield G h R β ++ (chosenContext G h P (α*β)).2)
+          hcandidate
+        have hlenR := chosenYield_length_le_typedThickness G h R β hretR
+        refine ⟨P,α*β,hp,?_,?_⟩
+        · unfold contextCost
+          rw [he]
+          simp only [List.length_append]
+          omega
+        · unfold contextCost
+          rw [he]
+          simp only [List.length_append]
+          omega
+    | @right P Q R α β a b wQ wR hparent rule hQ hR =>
+        have hp : RetainedTypedSymbol G h P (α * β) :=
+          ⟨a,b,hparent⟩
+        obtain ⟨hretQ, hrR⟩ :=
+          retained_binary_children hp rule hQ hR
+        have hminP := chosenContext_is_shortest G h P (α*β) hp a b hparent
+        have hposQ : 0 < wQ.length := by
+          have hne := typed_nonempty hQ
+          cases wQ with
+          | nil => exact False.elim (hne rfl)
+          | cons t ts => simp
+        have hcanon := chosenContext_spec hp
+        have hcandidate : TypedContext G h R β
+            ((chosenContext G h P (α*β)).1 ++ chosenYield G h Q α)
+            (chosenContext G h P (α*β)).2 :=
+          TypedContext.right hcanon rule
+            (chosenYield_spec hretQ) (chosenYield_spec hrR)
+        have hminR := chosenContext_is_shortest G h R β hrR
           ((chosenContext G h P (α*β)).1 ++ chosenYield G h Q α)
-          (chosenContext G h P (α*β)).2 :=
-        TypedContext.right hcanon rule
-          (chosenYield_spec hretQ) (chosenYield_spec hrR)
-      have hminR := chosenContext_is_shortest G h R β hrR
-        ((chosenContext G h P (α*β)).1 ++ chosenYield G h Q α)
-        (chosenContext G h P (α*β)).2 hcandidate
-      have hlenQ := chosenYield_length_le_typedThickness G h Q α hretQ
-      refine ⟨P,α*β,hp,?_,?_⟩
-      · dsimp [contextCost]
-        simp only [List.length_append]
-        omega
-      · dsimp [contextCost] at *
-        simp only [List.length_append] at *
-        omega
+          (chosenContext G h P (α*β)).2 hcandidate
+        have hlenQ := chosenYield_length_le_typedThickness G h Q α hretQ
+        refine ⟨P,α*β,hp,?_,?_⟩
+        · unfold contextCost
+          rw [he]
+          simp only [List.length_append]
+          omega
+        · unfold contextCost
+          rw [he]
+          simp only [List.length_append]
+          omega
+  have heq : chosenContext G h A μ =
+      ((chosenContext G h A μ).1,(chosenContext G h A μ).2) := by
+    cases chosenContext G h A μ
+    rfl
+  exact aux (chosenContext_spec hr) heq hpos
 
 /-- Strictly smaller context cost implies strictly smaller finite rank
 among *actually retained* typed symbols. -/
