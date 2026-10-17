@@ -32,3 +32,6 @@ lean_lib TCSPhase3Main where
 
 @[default_target]
 lean_lib TCSPhase3Suffix where
+
+@[default_target]
+lean_lib TCSPhase3RecognitionConverse where
