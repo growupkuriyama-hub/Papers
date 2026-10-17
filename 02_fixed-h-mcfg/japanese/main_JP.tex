@@ -230,151 +230,181 @@ Yoshinaka~\cite[Theorem~1]{Yoshinaka2008} によって得られている．
 \section{準備}
 \label{sec:prelim}
 
-Throughout, $\Sigma$ denotes a finite terminal alphabet, $\eps$ denotes the
-empty word, $\Sigma^*$ is the set of all finite words over $\Sigma$, and
-$\Sigma^+:=\Sigma^*\setminus\{\eps\}$.
+以下，$\Sigma$ は有限の終端アルファベット，
+$\eps$ は空語，$\Sigma^*$ は $\Sigma$ 上の有限語全体，
+$\Sigma^+:=\Sigma^*\setminus\{\eps\}$ とする．
 
-\subsection{Positive-Data Learning}
+\subsection{正例データからの学習}
 
-We use Gold's explanatory learning model and restate the needed conventions
-so that the MCFG development is self-contained.
+Gold の説明的学習モデルを採用し，MCFG に関する議論を自己完結にするため，
+必要な規約を再掲する．
 
-\begin{definition}[Text and TxtEx identification]
-We use Gold's explanatory identification criterion~\cite{Gold1967}.  To handle the empty language, fix a pause symbol
-\(\pausesym\notin\Sigma\); thus
-\(\pausesym,\pausesym,\ldots\) is a text for the empty language.
-A \emph{text} for \(L\subseteq\Sigma^*\) is an infinite sequence over
-\(L\cup\{\pausesym\}\) in which every element of \(L\) appears at least once.
-Pause symbols may occur arbitrarily, and \(\pausesym\) is not an end-of-text marker.
+\begin{definition}[テキストと TxtEx 同定]
+Gold の説明的同定の基準を用いる~\cite{Gold1967}．
+空言語を扱うため，
+$\pausesym\notin\Sigma$ なる停止記号を固定する．
+したがって $\pausesym,\pausesym,\ldots$ は空言語のテキストである．
+$L\subseteq\Sigma^*$ の\emph{テキスト}とは，
+$L\cup\{\pausesym\}$ 上の無限列で，
+$L$ のすべての要素が少なくとも一度出現するものをいう．
+停止記号はいかなる位置にも出現してよく，
+$\pausesym$ はテキストの終了を示す記号ではない．
 
-The \emph{content} of a finite prefix is the finite set
-\(K\subseteq L\) of positive examples from \(\Sigma^*\) that occur in that
-prefix.  Thus neither the positions nor the number of pause symbols, nor repeated
-occurrences of the same positive example, affect the content.
-A learner is a computable function mapping each finite prefix to a hypothesis
-grammar.
+有限接頭部分の\emph{内容}とは，そこに出現した
+$\Sigma^*$ 上の正例からなる有限集合 $K\subseteq L$ である．
+したがって，停止記号の出現位置や個数，
+同じ正例の繰返し回数は内容に影響しない．
+学習器は各有限接頭部分から仮説文法への計算可能関数である．
 
-A learner \emph{TxtEx-identifies} \(L\) from positive data if, for every text
-for \(L\), there are \(n_0\) and a single hypothesis grammar \(H\) such that
-all stages from \(n_0\) onward output exactly \(H\), with \(L(H)=L\).  It
-TxtEx-identifies a class when it does so for every language in the class.  A
-sequential learner is \emph{conservative} if it keeps its current hypothesis
-whenever the newly observed positive datum is already in that hypothesis
-language, changing it only when the datum is not generated.
+学習器が $L$ を正例データから\emph{TxtEx 同定}するとは，
+$L$ の任意のテキストに対して，ある段階 $n_0$ と
+一つの仮説文法 $H$ が存在し，
+$n_0$ 以後のすべての段階で出力が文字どおり $H$ に等しく，
+かつ $L(H)=L$ となることをいう．
+クラスのすべての言語をこの意味で同定するとき，
+そのクラスを TxtEx 同定するという．
+逐次学習器が\emph{保守的}であるとは，
+新しく観測された正例が現在の仮説言語に既に含まれているなら
+仮説を維持し，生成されていないときに限って仮説を変更することをいう．
 \end{definition}
 
-For later use, fix a distinguished hypothesis code $H_0$ with
-$L(H_0)=\emptyset$.
+以下，$L(H_0)=\emptyset$ を満たす
+特別な仮説コード $H_0$ を固定する．
 
-\begin{definition}[Set-driven reconstruction operator and characteristic sample]
+\begin{definition}[集合駆動型再構成作用素と特徴標本]
 \label{def:characteristic-sample}
-A \emph{set-driven reconstruction operator} \(\mathcal B\) maps each finite
-positive sample \(K\) to a grammar \(\mathcal B(K)\), depending only on the
-set \(K\), not on presentation order or multiplicity.  It is
-\emph{sample-consistent} if \(K\subseteq L(\mathcal B(K))\) for every
-finite \(K\).
+\emph{集合駆動型再構成作用素} $\mathcal B$ は，
+各有限正例標本 $K$ を文法 $\mathcal B(K)$ に写し，
+標本の提示順序や重複度ではなく，集合 $K$ だけに依存する．
+すべての有限 $K$ に対して
+$K\subseteq L(\mathcal B(K))$ が成り立つとき，
+$\mathcal B$ は\emph{標本整合的}であるという．
 
-Following the characteristic-set viewpoint of de~la~Higuera
-\cite{deLaHiguera1997}, for a target language \(L\), a finite set
-\(K^\star\subseteq L\) is a \emph{characteristic sample for \(\mathcal B\)}
-if, for every finite set
-\(K\), \(K^\star\subseteq K\subseteq L\) implies
-\(L(\mathcal B(K))=L\).  The case \(K^\star=\emptyset\) is allowed.  We
-use \emph{characteristic data} as a neutral shorthand for the positive content
-of such a sample; whenever a polynomial bound is claimed, we state explicitly
-whether it concerns cardinality or total positive length.
+de~la~Higuera~\cite{deLaHiguera1997} の
+特徴集合の見方に従い，
+標的言語 $L$ の有限集合 $K^\star\subseteq L$ が
+$\mathcal B$ の\emph{特徴標本}であるとは，
+任意の有限集合 $K$ に対し
+$K^\star\subseteq K\subseteq L$ ならば
+$L(\mathcal B(K))=L$ が成立することをいう．
+$K^\star=\emptyset$ の場合も許す．
+\emph{特徴データ}とは，このような標本の正例内容の略称として用いる．
+多項式上界を主張する際には，
+集合の要素数を抑えるのか，正例の総文字数を抑えるのかを明記する．
 
-This finite-sample notion is distinct from TxtEx learning: \(\mathcal B(K)\)
-need not stabilize syntactically as the accumulated sample grows.  The
-sequential learner will be introduced separately after exact reconstruction is
-proved.
+この有限標本の概念は TxtEx 学習と異なる．
+蓄積標本が増加するとき，
+$\mathcal B(K)$ が構文的に安定する必要はない．
+逐次学習器は，厳密な再構成を証明した後で別途定義する．
 \end{definition}
 
-\begin{definition}[Positive sample size]
-For finite \(K\subseteq\Sigma^*\), define
-\(\|K\|_+:=\sum_{w\in K}(|w|+1)\).
-For a tuple \(\tuple u=(u_1,\ldots,u_d)\), write
-\(\|\tuple u\|_1:=\sum_{i=1}^d |u_i|\)
-for its total component length.
-\end{definition}
-
-
-\subsection{Finite-Monoid Typing}
-
-\begin{definition}[Finite typing representation]
-\label{def-monoid-morphism}
-A finite-monoid homomorphism \(h\colon\Sigma^*\to M\) is represented by the
-multiplication table of \(M\) together with the letter images \(h(a)\),
-\(a\in\Sigma\).  Hence \(h(w)\) is computable by a left-to-right product in
-linear time in \(|w|\).  For a tuple \(\tuple w=(w_1,\ldots,w_d)\), write
-\(h^{(d)}(\tuple w):=(h(w_1),\ldots,h(w_d))\in M^d\).
-\end{definition}
-
-\begin{definition}[Refinement of finite typings]
-\label{def:h-refinement}
-Let \(h\colon\Sigma^*\to M\) and \(h'\colon\Sigma^*\to M'\) be finite
-homomorphisms.  We say that \(h'\) \emph{refines} \(h\), and write
-\(h\preceq h'\), when
+\begin{definition}[正例標本のサイズ]
+有限集合 $K\subseteq\Sigma^*$ に対し，
 \[
-  \ker h'\subseteq\ker h.
+ \|K\|_+:=\sum_{w\in K}(|w|+1)
 \]
-Equivalently, the value of \(h\) factors through the image of \(h'\): there is
-a unique monoid homomorphism
-\(\upsilon\colon\operatorname{im}h'\to\operatorname{im}h\) satisfying
-\(h=\upsilon\circ h'\), after restricting the codomains to their images.
+と定義する．
+タプル $\tuple u=(u_1,\ldots,u_d)$ の成分総長を
+\[
+ \|\tuple u\|_1:=\sum_{i=1}^d |u_i|
+\]
+と書く．
 \end{definition}
 
-For two typings $h$ and $g$, their product typing $(h,g)$ refines both and
-satisfies $\ker(h,g)=\ker h\cap\ker g$.
+\subsection{有限モノイド型付け}
 
-Finite-monoid homomorphisms serve here as finite-state typings.  Let
-$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ be the trivial typing.  A DFA
-transition morphism for a regular superset of the target is another example
-\cite{Pin1986}; only the induced finite summary is used, not a membership
-oracle.  We call $h^{(d)}(\tuple w)$ the \emph{yield type}.  The
-prefix--suffix morphism below supplies the boundary typing used later.
+\begin{definition}[有限型付けの表示]
+\label{def-monoid-morphism}
+有限モノイド準同型 $h:\Sigma^*\to M$ は，
+$M$ の乗法表と各文字の像 $h(a)$（$a\in\Sigma$）によって表示する．
+したがって $h(w)$ は左から右へ積を取ることで，
+$|w|$ に線形な時間で計算できる．
+タプル $\tuple w=(w_1,\ldots,w_d)$ に対して
+\[
+ h^{(d)}(\tuple w):=(h(w_1),\ldots,h(w_d))\in M^d
+\]
+と書く．
+\end{definition}
 
-\begin{definition}[Prefix--suffix typing]
+\begin{definition}[有限型付けの精密化]
+\label{def:h-refinement}
+$h:\Sigma^*\to M$ と $h':\Sigma^*\to M'$ を
+有限モノイド準同型とする．
+\[
+  \ker h'\subseteq\ker h
+\]
+が成り立つとき，$h'$ は $h$ を\emph{精密化する}といい，
+$h\preceq h'$ と書く．
+同値な条件として，値域をそれぞれの像に制限すると，
+一意なモノイド準同型
+$\upsilon:\operatorname{im}h'\to\operatorname{im}h$
+が存在して，
+$h=\upsilon\circ h'$ となる．
+\end{definition}
+
+二つの型付け $h,g$ の積型付け $(h,g)$ は両方を精密化し，
+$\ker(h,g)=\ker h\cap\ker g$ を満たす．
+
+ここでは有限モノイド準同型を有限状態型付けとして用いる．
+$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ を自明型付けとする．
+標的を含む正則言語の DFA の遷移準同型も例である
+~\cite{Pin1986}．
+利用するのは準同型による有限な要約だけであり，
+所属質問へのアクセスではない．
+$h^{(d)}(\tuple w)$ を\emph{生成語型}と呼ぶ．
+以下に定義する接頭辞--接尾辞準同型は，
+後で使う境界型付けを与える．
+
+\begin{definition}[接頭辞--接尾辞型付け]
 \label{def:prefix-suffix-typing}
-For $k,\ell\ge0$, put $m_0:=\max\{1,k+\ell\}$.  For a word $w$, let
-$\operatorname{pref}_k(w)$ and $\operatorname{suf}_\ell(w)$ denote its prefix
-and suffix of the indicated lengths whenever $|w|\ge m_0$, with the length-zero
-windows equal to $\eps$.  Define
+$k,\ell\ge0$ に対し $m_0:=\max\{1,k+\ell\}$ とおく．
+$|w|\ge m_0$ の語 $w$ について，
+$\operatorname{pref}_k(w)$ と $\operatorname{suf}_\ell(w)$ は，
+それぞれ指定した長さの接頭辞と接尾辞であり，
+窓の長さが0なら $\eps$ とする．
 \[
  h_\Sigma^{k,\ell}(w)=
  \begin{cases}
    w, & |w|<m_0,\\
    \langle\operatorname{pref}_k(w),\operatorname{suf}_\ell(w)\rangle,
-      & |w|\ge m_0,
+      & |w|\ge m_0
  \end{cases}
 \]
-using disjoint tags for the short-word and prefix--suffix elements.  Put
-$M_{k,\ell}:=h_\Sigma^{k,\ell}(\Sigma^*)$.  For short words $x,y$ and long
-elements $\langle u,v\rangle$, define
+と定義し，短い語と接頭辞--接尾辞の対は
+相異なるタグで区別する．
+$M_{k,\ell}:=h_\Sigma^{k,\ell}(\Sigma^*)$ とおく．
+短い語 $x,y$ と長い要素 $\langle u,v\rangle$ の積を
 \[
 \begin{aligned}
  x\cdot y&:=h_\Sigma^{k,\ell}(xy), &
  x\cdot\langle u,v\rangle&:=\langle\operatorname{pref}_k(xu),v\rangle,\\
  \langle u,v\rangle\cdot y&:=\langle u,\operatorname{suf}_\ell(vy)\rangle, &
- \langle u,v\rangle\cdot\langle u',v'\rangle&:=\langle u,v'\rangle.
+ \langle u,v\rangle\cdot\langle u',v'\rangle&:=\langle u,v'\rangle
 \end{aligned}
 \]
+によって定める．
 \end{definition}
 
-With this multiplication,
-$h_\Sigma^{k,\ell}(xy)=h_\Sigma^{k,\ell}(x)\cdot h_\Sigma^{k,\ell}(y)$.
-Since $h_\Sigma^{k,\ell}$ is surjective, associativity is inherited from
-concatenation and $h_\Sigma^{k,\ell}(\eps)$ is the identity.  Thus
-$h_\Sigma^{k,\ell}:\Sigma^*\to M_{k,\ell}$ is a finite-monoid homomorphism.
+この積により
+$h_\Sigma^{k,\ell}(xy)
+=h_\Sigma^{k,\ell}(x)\cdot h_\Sigma^{k,\ell}(y)$
+が成り立つ．
+$h_\Sigma^{k,\ell}$ は全射なので，
+積の結合性は連接から従い，
+$h_\Sigma^{k,\ell}(\eps)$ は単位元である．
+よって
+$h_\Sigma^{k,\ell}:\Sigma^*\to M_{k,\ell}$
+は有限モノイド準同型である．
 
-A finite typing $h$ is called \emph{$(k,\ell)$-boundary-determined} when
-$h\preceq h_\Sigma^{k,\ell}$.  Equivalently, equality of prefix--suffix types implies equality of $h$-types;
-a factor map exists on the image of the prefix--suffix typing.
+有限型付け $h$ が
+\emph{$(k,\ell)$-境界決定的}であるとは，
+$h\preceq h_\Sigma^{k,\ell}$ が成り立つことをいう．
+同値な条件として，
+接頭辞--接尾辞型が等しければ $h$-型も等しく，
+接頭辞--接尾辞型付けの像上に因子写像が存在する．
+以下ではこれを単に\emph{境界型付け}とも呼ぶ．
 
-For brevity, we call such an $h$ a \emph{boundary typing}.
-
-
-\subsection{Multiple Context-Free Grammars}
+\subsection{多重文脈自由文法}
 
 We use the standard tuple-generating definition of multiple context-free
 grammars \cite{SekiEtAl1991}; see also \cite{Kallmeyer2010} for a general
