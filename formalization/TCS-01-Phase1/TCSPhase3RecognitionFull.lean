@@ -19,7 +19,7 @@ theorem initial_nt_of_opening_prefix {bound : Nat} {i : Nat}
       cases h with
       | next hs hr =>
           cases hs with
-          | atom tail => exact ⟨tail, rfl⟩
+          | atom tail => exact ⟨_, rfl⟩
   | @ceil k u hp ih =>
       cases h with
       | next hs hr =>
