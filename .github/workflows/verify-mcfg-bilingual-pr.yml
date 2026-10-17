@@ -1,0 +1,57 @@
+name: Verify MCFG #2 bilingual manuscript on PR
+
+on:
+  pull_request:
+    paths:
+      - "02_fixed-h-mcfg/main.tex"
+      - "02_fixed-h-mcfg/appendix_window_abelian.tex"
+      - "02_fixed-h-mcfg/appendix_window_group.tex"
+      - "02_fixed-h-mcfg/japanese/main_JP.tex"
+      - "02_fixed-h-mcfg/japanese/appendix_window_abelian_JP.tex"
+      - "02_fixed-h-mcfg/japanese/appendix_window_group_JP.tex"
+      - ".github/workflows/verify-mcfg-bilingual-pr.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manuscript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compile English MCFG manuscript
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: 02_fixed-h-mcfg
+          texlive_version: 2026
+      - name: Compile Japanese MCFG manuscript
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02_fixed-h-mcfg/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+      - name: Check PDF artifacts and unresolved LaTeX references
+        shell: bash
+        run: |
+          set -euo pipefail
+          for root in 02_fixed-h-mcfg/main 02_fixed-h-mcfg/japanese/main_JP; do
+            test -s "$root.pdf"
+            test "$(head -c 4 "$root.pdf")" = "%PDF"
+            if grep -Eiq "There were undefined references|There were undefined citations|Reference .* undefined|Citation .* undefined|Label .* multiply defined" "$root.log"; then
+              echo "Unresolved reference, citation, or duplicate label in $root"
+              grep -Ei "There were undefined references|There were undefined citations|Reference .* undefined|Citation .* undefined|Label .* multiply defined" "$root.log"
+              exit 1
+            fi
+          done
+      - name: Upload PDFs for human visual inspection
+        uses: actions/upload-artifact@v7
+        with:
+          name: 02-mcfg-v75-review-pdfs
+          path: |
+            02_fixed-h-mcfg/main.pdf
+            02_fixed-h-mcfg/japanese/main_JP.pdf
+          retention-days: 30
+          if-no-files-found: error
