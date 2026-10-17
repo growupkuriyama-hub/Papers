@@ -140,7 +140,8 @@ theorem chosenContext_start_empty {G : SSBNFGrammar Alphabet NT}
   have hp : shortestContextOfRet hr = ([],[]) := by
     cases hp : shortestContextOfRet hr with
     | mk u v =>
-        simp only at hlen
+        have hsum : u.length + v.length = 0 := by
+          simpa [hp] using hlen
         have hu : u = [] := List.length_eq_zero_iff.mp (by omega)
         have hv : v = [] := List.length_eq_zero_iff.mp (by omega)
         subst u
