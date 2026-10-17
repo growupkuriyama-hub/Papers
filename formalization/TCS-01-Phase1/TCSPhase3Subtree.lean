@@ -3,7 +3,7 @@ import TCSPhase3RecognitionFull
 /-!
 Appendix C complete-subtree exchange (optional Phase 3B milestone).
 Uses the *fully proved* parser/CFG recognition equivalence and its
-arbitrary-start-stack assertion. No CE axiom is assumed.
+arbitrary-start-stack assertion. Clark--Eyraud substitutability is not taken as a premise.
 -/
 
 namespace TCSPhase3
