@@ -137,3 +137,12 @@ lean_lib TCSPhase5BFiniteTyped where
 
 @[default_target]
 lean_lib TCSPhase5BWitnesses where
+
+@[default_target]
+lean_lib TCSPhase5BRuleSimulation where
+
+@[default_target]
+lean_lib TCSPhase5BCompleteness where
+
+@[default_target]
+lean_lib TCSPhase5BCharacteristic where
