@@ -69,6 +69,7 @@ theorem witness_word_length_le_of_context_bound
         have hupper := arithmetic_length_bound n τ 1 (hn A μ hr) (by omega)
         have hcx := hbase A μ hr
         have hyl := hy A μ hr
+        change _ ≤ (n+1)*τ
         simp only [wrapYield, List.length_append]
         omega
       · obtain ⟨p,hp,rfl⟩ := Finset.mem_image.mp hl
@@ -76,6 +77,7 @@ theorem witness_word_length_le_of_context_bound
         obtain ⟨_,_,hr⟩ := (finite_terminal_iff G h A μ a).mp hp
         have hupper := arithmetic_length_bound n τ 1 (hn A μ hr) (by omega)
         have hcx := hbase A μ hr
+        change _ ≤ (n+1)*τ
         simp only [wrapYield, List.length_append, List.length_cons, List.length_nil]
         omega
     · obtain ⟨p,hp,rfl⟩ := Finset.mem_image.mp hb
@@ -86,6 +88,7 @@ theorem witness_word_length_le_of_context_bound
       have hcx := hbase A μ hrA
       have hyl := hy B ν hrB
       have hyr := hy C ρ hrC
+      change _ ≤ (n+1)*τ
       simp only [wrapYield, List.length_append]
       omega
   · unfold WitnessEmpty at he
