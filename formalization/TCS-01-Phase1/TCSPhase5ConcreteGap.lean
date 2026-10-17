@@ -13,19 +13,19 @@ theorem languageMinus_generic_typed (n : Nat) :
 
 /-- Soundness of the genuine newly formalized Rec_h_U, not Phase 1's
 abstract operator. -/
-theorem rec_languageMinus_sound (n : Nat) (K : Finset Word)
-    (hK : (↑K : Set Word) ⊆ LanguageMinus n) :
+theorem rec_languageMinus_sound (n : Nat) (K : Finset TCSPhase2.Word)
+    (hK : (↑K : Set TCSPhase2.Word) ⊆ LanguageMinus n) :
     RecLanguage hU K ⊆ LanguageMinus n :=
   rec_soundness hU K (LanguageMinus n) hK
     (languageMinus_generic_typed n)
 
 /-- Proposition 6.3(iii): the exponential witness cannot appear in the
 actual reconstruction unless it was included in the positive sample. -/
-theorem rec_witness_exclusion (n : Nat) (K : Finset Word)
-    (hK : (↑K : Set Word) ⊆ Language n)
+theorem rec_witness_exclusion (n : Nat) (K : Finset TCSPhase2.Word)
+    (hK : (↑K : Set TCSPhase2.Word) ⊆ Language n)
     (hnot : witness n ∉ K) :
     witness n ∉ RecLanguage hU K := by
-  have hKminus : (↑K : Set Word) ⊆ LanguageMinus n := by
+  have hKminus : (↑K : Set TCSPhase2.Word) ⊆ LanguageMinus n := by
     intro x hx
     refine ⟨hK hx, ?_⟩
     intro he
