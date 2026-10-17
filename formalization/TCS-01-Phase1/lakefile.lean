@@ -35,3 +35,6 @@ lean_lib TCSPhase3Suffix where
 
 @[default_target]
 lean_lib TCSPhase3RecognitionConverse where
+
+@[default_target]
+lean_lib TCSPhase3Marker where
