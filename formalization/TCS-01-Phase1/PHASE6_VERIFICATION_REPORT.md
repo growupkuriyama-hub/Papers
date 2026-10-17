@@ -1,49 +1,61 @@
-# Phase 6 — Verification report (active, commit-matched audit)
+# Phase 6 — Final proof and CI verification report
 
-**Review state:** IN PROGRESS. No unconditional Phase 6 result should be described as kernel-verified before the *final HEAD's* dedicated CI succeeds. This report records the exact checks and will be updated with their definitive results.
+**Mathematical proof status: VERIFIED** on commit `bda98879d4090c070608d478d94d5afcb6d53d6c`, [successful CI 39077209572](https://github.com/growupkuriyama-hub/Papers/actions/runs/39077209572), job **117526739086**. The subsequent report-only HEAD is independently CI-checked before Phase 7 branches from it. This document deliberately records the stable proof-code commit, rather than a self-referential documentation commit hash.
 
-## Inputs and immutable baseline
+## Source identification and inheritance
+- TCS manuscript: `01_fixed-h-cfg/main.tex`, Git blob `6bef291fc39cef7c4bcb42bdb9ee055cc9608966`, `PAPER.yaml` **internal v227** (checked on main, 2026-10-18 JST).
+- Theorem labels: `lem:typed-thickness-bound` and `cor:typed-thickness-data`.
+- Original preserved Phase 5B base: `417529d221c7ff73e0622373479e88d68ea00335`.
+- Working branch: `formalization/tcs-phase6-typed-witness-bounds-20261017`.
+- Initial failed run: [39047451947](https://github.com/growupkuriyama-hub/Papers/actions/runs/39047451947), job 117438952113. It compiled all mathematics but failed because a comment contained a banned command token.
+- One-line comment-only repair commit: `bda98879d4090c070608d478d94d5afcb6d53d6c`, replacing the detected comment without changing the checker.
+- Successful proof-code CI: [39077209572](https://github.com/growupkuriyama-hub/Papers/actions/runs/39077209572), job `117526739086`. The docs-only closing commit must also pass its workflow.
+- Lean 4.24.0, Mathlib v4.24.0; `lake build` **7448 jobs**, nine new modules directly checked, 49 prior modules directly checked.
 
-- TCS original paper: `01_fixed-h-cfg/main.tex`, current `PAPER.yaml` internal **v227**; original proof labels `lem:typed-thickness-bound` and `cor:typed-thickness-data`. Read `main.tex` lines 1039–1110; original blob `6bef291fc39cef7c4bcb42bdb9ee055cc9608966`.
-- Source base commit `417529d221c7ff73e0622373479e88d68ea00335` (Phase 5B verified proof tree plus handoff).
-- Baseline regression [39038218785](https://github.com/growupkuriyama-hub/Papers/actions/runs/39038218785): SUCCESS, job `117412239721`, Lean 4.24.0, Mathlib v4.24.0.
-- Branch: `formalization/tcs-phase6-typed-witness-bounds-20261017`; current/final HEAD **to be filled after CI**.
-- No inherited theorem statement changed, and **no** paper, `PAPER.yaml`, translation, reviewer response, PDF, arXiv, or Editorial Manager action was requested or undertaken.
+## Kernel-verified numerical results
+Let `Nt = (finiteTypedRefinement G h).symbols.card`, `tau = typedThickness G h`,
+`N = Fintype.card NT`, `m = Fintype.card M`, `T = G.terminalRules.card`, `B = G.binaryRules.card`.
 
-## Intended exact Lean theorem statements
-
-New `TCSPhase6.typedThickness G h` is the supremum of the finite set of actual chosen retained typed-yield lengths together with `1`.
-
-- `one_le_typedThickness`: `1 ≤ typedThickness G h`.
-- `chosenYield_length_le_typedThickness`: retained `(A,μ)` implies `(chosenYield G h A μ).length ≤ typedThickness G h`.
-- `chosenContext_is_shortest`: all actual `TypedContext G h A μ u v` have total length at least the chosen context.
-- `context_compression_bound`: `ContextCompressionBound G h`, with `chosenContext` length at most `((finiteTypedRefinement G h).symbols.card - 1) * typedThickness G h` for each retained symbol.
-- `typed_symbols_card_le`: typed retained symbol count at most `Fintype.card NT * Fintype.card M`.
-- `typed_terminal_card_le`: actual refined terminal-rule count at most `G.terminalRules.card`.
-- `typed_binary_card_le`: actual refined binary-rule count at most `G.binaryRules.card * Fintype.card M ^ 2`.
-- `positive_witnesses_card_le`: bound by `N*m + |Pter| + |Pbin|*m^2 + 1`, using images and subadditive unions, not disjointness.
-- `canonical_witness_length_bound`: every element of the **unchanged** `PositiveWitnesses G h` has length at most `(Nt+1)*tau`.
-- `canonical_witness_encoded_size_bound`: for actual `encodedSize W := ∑ w ∈ W, w.length+1`,
-```text
-encodedSize (PositiveWitnesses G h)
- ≤ (Fintype.card NT * Fintype.card M
-     + G.terminalRules.card + G.binaryRules.card * Fintype.card M ^ 2 + 1)
-   * ((Fintype.card NT * Fintype.card M + 1) * typedThickness G h + 1)
+1. `TCSPhase6.one_le_typedThickness`: `1 ≤ typedThickness G h`. The thickness is the **Finset supremum** of lengths of the actual `chosenYield` over retained symbols, union `{1}`.
+2. `TCSPhase6.chosenYield_length_le_typedThickness`: each retained typed symbol's chosen terminal yield has length at most `tau`.
+3. `TCSPhase6.context_compression_bound G h : ContextCompressionBound G h`, and `TCSPhase6.canonical_context_length_bound`: for retained `(A,μ)`,
+   `(chosenContext G h A μ).1.length + (chosenContext G h A μ).2.length ≤ (Nt - 1) * tau`.
+   The proof uses productive `TypedContext` predecessors, a strict rank counting retained symbols with smaller minimum context cost, well-founded descent, and one canonical sibling yield of length at most `tau` per step. The finite rank is bounded by `Nt-1`; no path-diameter bound is postulated.
+4. `TCSPhase6.canonical_witness_length_bound`: every `w ∈ PositiveWitnesses G h` has `w.length ≤ (Nt+1)*tau`. Proof analyzes all four original witness families, without changing their definitions.
+5. `TCSPhase6.typed_symbols_card_le`: `Nt ≤ N*m`.
+6. `TCSPhase6.typed_terminal_card_le`: `(finiteTypedRefinement G h).terminalRules.card ≤ T`.
+7. `TCSPhase6.typed_binary_card_le`: `(finiteTypedRefinement G h).binaryRules.card ≤ B*m^2`.
+8. `TCSPhase6.positive_witnesses_card_le`: `(PositiveWitnesses G h).card ≤ N*m + T + B*m^2 + 1`. Images and unions are bounded without requiring witness families to be disjoint.
+9. `TCSPhase6.canonical_witness_encoded_size_bound`:
+```lean
+encodedSize (PositiveWitnesses G h) ≤
+  (Fintype.card NT * Fintype.card M +
+    G.terminalRules.card +
+    G.binaryRules.card * Fintype.card M ^ 2 + 1) *
+  ((Fintype.card NT * Fintype.card M + 1) *
+    typedThickness G h + 1)
 ```
-- `polynomial_characteristic_data`: existential witness `W = PositiveWitnesses G h` with existing `TCSPhase1.Characteristic (RecLanguage h) (GrammarLanguage G) W` and the above size inequality, assuming only the same fixed-`h` substitutability premise as Phase 5B.
-- Boundary cases: type-cardinality zero, language empty and epsilon-only, and Nat truncated subtraction are handled by proving cardinal positivity **only when a retained symbol exists**. In the epsilon-only case the singleton empty-witness family remains of size at most 1.
+where `encodedSize W = ∑ w ∈ W, w.length + 1` and duplicate words count only once.
+10. `TCSPhase6.polynomial_characteristic_data`: under
+`hSub : TypedSubstitutable h (GrammarLanguage G)`,
+```lean
+∃ W : Finset (List Alphabet),
+  W = PositiveWitnesses G h ∧
+  TCSPhase1.Characteristic (RecLanguage h) (GrammarLanguage G) W ∧
+  encodedSize W ≤
+    (Fintype.card NT * Fintype.card M +
+      G.terminalRules.card +
+      G.binaryRules.card * Fintype.card M ^ 2 + 1) *
+    ((Fintype.card NT * Fintype.card M + 1) *
+      typedThickness G h + 1)
+```
+This composes the actual finite `PositiveWitnesses` with the Phase 5B `canonical_witnesses_characteristic` and Phase 5A `RecLanguage`, not a surrogate learner.
 
-## Verification status / CI evidence
+## Audit
+`#print axioms` for `context_compression_bound`, `canonical_witness_length_bound`, `canonical_witness_encoded_size_bound`, and `polynomial_characteristic_data` in the successful job reported **[propext, Classical.choice, Quot.sound]** only. No `sorryAx`, custom unproven mathematical `axiom`, `sorry`, `admit`, or shortcut `opaque` survived. The source scan and end-of-job audit returned success.
 
-**Status is preliminary until final SHA is audited.** Early partial CI `39044122784` was **SUCCESS** for the thickness-only source (`8ac1857187ff81e2835af8198bf9cdae09cc3fc1`). Additional interim runs detected *actual* compiler errors in successor modules; these failed runs do **not** establish verification. Some independent subtheorems of the typed-rule cardinality proof printed only `propext`, `Classical.choice`, and `Quot.sound` in interim build logs; final verdict must come from the final full CI.
+The retained-cardinality-zero and epsilon-only cases are treated by the existing source proof with truncated Nat subtraction guarded by positive retained cardinality. The source construction chooses representatives of **minimum length** but does not formalize the manuscript's **shortlex tie-breaking**; therefore we establish the stated bounds and positive characteristic-data existence for the constructed `PositiveWitnesses`, not equality with the paper's literal shortlex-canonical sample.
 
-Outstanding CI URL / job ID / final SHA: **PENDING**.
-Outstanding mathematical/Lean issue: the productive context predecessor inductive case split and integration of the context-count and witness-length inequalities. No mathematical counterexample has been verified. Conditional lemmas `witness_word_length_le_of_context_bound`, `encoded_size_le_of_context_bound`, and `quantitative_characteristic_sample_of_context_bound` **do not** by themselves discharge `ContextCompressionBound`. The separate `context_compression_bound` must kernel-compile for the unconditional target.
+Compared with `417529d...`, the recorded change list consists solely of `.github/workflows/tcs-phase6-lean.yml`, the nine `TCSPhase6*.lean` modules, and the two Phase 6 reports. The protected `01_fixed-h-cfg/main.tex`, `PAPER.yaml`, Japanese manuscript, reviewer response, submitted PDF, and inherited Phase 1–5B theorem files remain unmodified. No merge to `main`, arXiv upload, or Editorial Manager action was made.
 
-## Audit and acceptance controls
-
-The direct compilation and entire inherited 49-module regression, plus `lake build`, are required. `#print axioms` must show only the normal Lean kernel axioms where applicable; source check must reject `sorry`, `admit`, `axiom`, `opaque`, and output logs must reject `sorryAx`. **A failed compilation generates temporary `sorryAx`-reported declarations; none can count as successful evidence.**
-
-Compare final new branch against immutable baseline with `compare_commits` and verify the diff is *restricted* to new Phase 6 Lean source files, the two Phase 6 reports, and `.github/workflows/tcs-phase6-lean.yml`. Keep `main` untouched. Report shortlex tie-breaking as separately unverified even if the numerical bound is completely proved.
-
-**Provisional grade: E (final CI not yet complete).** Update to A only when *all* explicit bounds, characteristic result and the final HEAD's CI are successful; otherwise distinguish B, C, D or E honestly.
+**Scientific verdict: A — the explicitly formalized Phase 6 numeric bound and quantitative characteristic-data theorem were kernel-checked.** This is not a claim of verification of the entire TCS paper, shortlex literal canonicality, algorithmic time complexity, or general CFG normalization.

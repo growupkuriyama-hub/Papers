@@ -40,7 +40,13 @@ Empty and epsilon-only grammars require no retained-node assumption. For a *reta
 
 Phase 5B choices are minimum **length**, and remain not necessarily the literal manuscript's shortlex tie-breaking among equal-length candidates. Phase 6 proves bounds for the **same already-existing** `PositiveWitnesses G h`, not for a redefined set.
 
-Rather than assume a graph-diameter estimate, context compression uses a strict descent in the minimum terminal-context cost to a productive parent in a genuine binary production. The finite rank is the number of retained typed symbols with strictly shorter chosen contexts. Each descent lowers this rank, and adds at most one canonical sibling yield of length `tau`. Thus the bound is a direct consequence of finiteness, *once the formal Lean proof compiles*.
+Rather than assume a graph-diameter estimate, context compression uses a strict descent in the minimum terminal-context cost to a productive parent in a genuine binary production. The finite rank is the number of retained typed symbols with strictly shorter chosen contexts. Each descent lowers this rank, and adds at most one canonical sibling yield of length `tau`. Thus the bound is a direct consequence of finiteness, *the actual compiled Lean proof discharges the bound*.
+
+## Final proof-code verification
+
+**VERIFIED:** The source-code HEAD `bda98879d4090c070608d478d94d5afcb6d53d6c` passed [GitHub Actions run 39077209572](https://github.com/growupkuriyama-hub/Papers/actions/runs/39077209572), job `117526739086`, on 2026-10-18 JST. `lake build` completed (7448 jobs), each of the nine Phase 6 files was compiled directly in dependency order, and all 49 inherited modules compiled directly. The final job logged `All Phase 1-6 modules compiled, axioms audited`. The four unconditional top-level theorems all report only `propext`, `Classical.choice`, `Quot.sound`; the forbidden proof-token and `sorryAx` scans passed.
+
+The one-line documentation comment fix is commit `bda98879d4090c070608d478d94d5afcb6d53d6c` (parent: `8235662e8790edc5ed874fe1ea46d19a809d5df6`). The mathematical code was not modified by that fix. See `PHASE6_VERIFICATION_REPORT.md` for exact statements and protected-file audit. Subsequent changes limited to documentation require their own final-HEAD CI success before freezing Phase 6.
 
 ## CI contract
 
