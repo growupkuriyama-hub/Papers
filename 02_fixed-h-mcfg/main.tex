@@ -31,9 +31,6 @@
 
 \newcommand{\Wit}{\mathsf{W}}
 \newcommand{\Cmcf}[2]{\mathcal{C}^{\mathrm{mcf}}_{#1,#2}}
-\newcommand{\Cboundedtyping}[2]{\mathcal{C}^{\mathrm{mcf},\le #2}_{#1}}
-\newcommand{\Calltyping}[1]{\mathcal{C}^{\mathrm{mcf},\mathrm{fin}}_{#1}}
-\newcommand{\Ffrag}[2]{\mathcal{F}_{#1,#2}}
 \newcommand{\D}{\mathcal{D}}
 \newcommand{\out}{\mathrm{out}}
 \newcommand{\tuple}[1]{\vec{#1}}
@@ -69,8 +66,9 @@ monoid. We study positive-data learning of multiple context-free languages
 when tuples may be interchanged only if corresponding components have
 equal $h$-values. At bounded rule rank this class is an instance of
 Yoshinaka's general substitutable-signature framework; we verify the
-relationship for the guarded observed-tuple construction, including
-its uncapped extension.
+relationship for the guarded observed-tuple construction,
+and relate its uncapped extension to Yoshinaka's
+uncapped learner.
 
 Our principal quantitative question is the \emph{total length} of
 characteristic positive data, measured in the size and rule thickness
@@ -139,6 +137,10 @@ when corresponding components have equal $h$-values.  The compositional type
 guard is fixed before the positive text is seen, separating the choice of a
 finite bias from learning under that bias~\cite{CosteTyping2004}.
 Prefix--suffix and DFA transition morphisms provide two useful families.
+A fixed prefix--suffix window is a uniform, independently chosen finite
+parameter of the target class, not a parameter tuned to each sample;
+the principal total-length bound applies to every target in that fixed
+window-typed class at the given fan-out and rule rank.
 Fan-out is part of the same bias because it determines which tuple arities are
 tested for substitution.  Thus a fixed typing supplies finite-state information
 while the MCFG carries the unbounded dependency.
@@ -910,9 +912,7 @@ $[\mathtt{aabbcc}]\to\mathtt{aa}[\mathtt b]\mathtt{bcc}$ can then use that
 link to derive $\mathtt{aaabbcbcc}\notin L$.  Under $h_\Sigma^{1,1}$ the
 link is blocked because $h_\Sigma^{1,1}(\mathtt b)=\mathtt b$ while
 $h_\Sigma^{1,1}(\mathtt{abbc})=\langle\mathtt a,\mathtt c\rangle$.
-This illustrates the local role of the equal-type premise; the strictness theorem in
-Section~\ref{sec:comparison} later uses the same boundary mechanism at every
-fan-out level.
+This illustrates the local role of the equal-type premise.
 \end{example}
 
 The reconstruction is sample-consistent:
@@ -1764,10 +1764,12 @@ Write $n_{\mathrm{typ}}\le|V||M|^f$ for its
 number of non-start typed nonterminals and
 $b_G\le\max\{1,\|G\|\}$ for the largest explicit
 terminal count of a rule, taking $b_G\ge1$.
-A shortest typed terminal derivation from any
-nonterminal is a unary chain with no repeated
-typed nonterminal: splicing in the later suffix
-would otherwise shorten the chain. Therefore
+Choose a typed terminal unary derivation that
+minimizes first total yield length and then the
+number of rules. No typed nonterminal can repeat:
+splicing in the later suffix would not increase
+yield length and would strictly shorten the
+chain. Therefore
 $\|\omega(X)\|_1\le n_{\mathrm{typ}}b_G$.
 Lemma~\ref{lem:reusable-context-bound} bounds
 each witness word by $(2n_{\mathrm{typ}}+1)b_G$,
@@ -1795,8 +1797,11 @@ grammar $A_0\to\mathtt c$,
 $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
 generates the singleton $\{\mathtt c^{2^n}\}$,
 which is $(f,h)$-tuple-substitutable for
-every fixed $f,h$. Every characteristic
-sample for this target contains a word
+every fixed $f,h$: over a one-letter alphabet,
+sharing a sentence context forces equal total
+component lengths, so every context accepts
+both tuples or neither. Every characteristic
+sample for this singleton target contains a word
 of length at least $2^n$.
 
 \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
@@ -1989,6 +1994,10 @@ Theorem~\ref{thm:intrinsic-ranktwo-witness} below shows that this higher-rank
 regime is needed at the language level: it gives a non-context-free
 $(1,1)$-typed target of minimum fan-out two and minimum rule rank two even
 when competing presentations may use arbitrary finite fan-out.
+Of the examples below, $L_{\mathrm{intr}}$ falls under the window theorem,
+whereas the rank-one languages $L_{\mathrm{cd}}$ and $L_\star$ fall under
+Theorem~\ref{thm:rankone-polydata}; thus each separation is compatible with
+a quantitative learning bound.
 
 \section{Comparison with Multidimensional Substitutability}
 \label{sec:comparison}
@@ -2733,10 +2742,13 @@ commercial, or not-for-profit sectors.
 No data were used for the research described in this article.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
-During the preparation of this manuscript, the author used ChatGPT and Claude
-to assist with language editing, consistency checks, and critical review of the
-draft.  The author reviewed and edited all resulting material and takes full
-responsibility for the content of the article.
+The author used ChatGPT (OpenAI) and Claude (Anthropic) during the research
+and manuscript-preparation process, including exploratory mathematical
+argument development, proof drafting and criticism, literature and
+consistency checks, and editing of text and LaTeX source.
+AI-generated suggestions and reviews are not treated as independent
+mathematical verification. The author takes responsibility for the
+mathematical claims, citations, and final content of this article.
 
 \appendix
 \section{Details of the Good Normalization}
@@ -2892,10 +2904,17 @@ good MCFG templates of child rank at most $r$
 (including rank zero); promotions
 $T_{1,\mu}\to O_*$; and a nullary $\eps$
 constant of sort $O_*$. No function takes an
-$O_*$ input. These are finite sort refinements
-of the bounded-MCFG and prefix--suffix
-signatures in
-\cite[Examples~3--4 and Section~8]{Yoshinaka2015General}.
+$O_*$ input. After forgetting the type tags, this is a
+finite sort refinement, in the sense of
+\cite[Section~8]{Yoshinaka2015General}, of
+the signature of good $\lambda$-free MCFG
+operations on nonempty tuples. That
+untyped signature is a nonempty-component
+variant of \cite[Example~3]{Yoshinaka2015General},
+rather than literally the signature of that
+example; at fan-out one the prefix--suffix
+case corresponds to
+\cite[Example~4]{Yoshinaka2015General}.
 Write $\mathcal S_O,\mathcal C_O$ for the
 substructures and contexts realizable in
 some grammar over this signature.
@@ -2982,6 +3001,9 @@ Lemma~\ref{lem:signature-contexts} identifies
 the four-instance signature implication
 with Definition~\ref{def:tuple-substitutable}
 for each arity and componentwise type.
+The trimmed presentation has no useless
+nonterminals or functions, as required in
+\cite[Section~6]{Yoshinaka2015General}.
 This proves the equality.
 
 For the effective assumptions, sort/context
@@ -3027,9 +3049,11 @@ Identify their non-start symbols indexed
 by the same observed tuples and typed sorts.
 A $\mathrm{SUBST}_{\mathrm P}$ rule
 with parent $s_0$ and template value
-$z=\rho(s_1,\ldots,s_t)$ is witnessed
-by a common signature context for
-$s_0,z$. By Lemma~\ref{lem:signature-contexts}
+$z=\rho(s_1,\ldots,s_t)$ requires a
+common $c\in\mathrm{CON}_O(K)$ such that
+$c\odot s_0,c\odot z\in K$,
+in the notation of
+\cite{Yoshinaka2015General}. By Lemma~\ref{lem:signature-contexts}
 this is an admissible sentence context.
 The guarded Rule~(Link) sends $[s_0]$
 to $[z]$, followed by Rule~(Comp), or
@@ -3061,9 +3085,12 @@ languages are empty.
 
 \paragraph{Characteristic witness correspondence.}
 Yoshinaka's proof uses the context-indexed
-$\mathrm{SUBST}_{\mathrm D}$, while its
+$\mathrm{SUBST}_{\mathrm D}$, whereas its
 Section~7 discusses $\mathrm{SUBST}_{\mathrm P}$
+under the stated additional assumption
 \cite{Yoshinaka2015General}.
+The sample-level equality here is established
+directly by Lemma~\ref{lem:substp}.
 Choosing its non-start witnesses as
 $c_X=\chi(X)$ and $s_X=\omega(X)$
 gives precisely $\Wit(\widetilde G_0)$
@@ -3208,6 +3235,7 @@ M.~Kanazawa and R.~Yoshinaka.
 \newblock Extending distributional learning from positive data and membership queries.
 \newblock In {\em Proceedings of the 16th International Conference on Grammatical Inference},
 Proceedings of Machine Learning Research 217, pp.~8--22, 2023.
+
 \bibitem{Gallot2021}
 P.~D.~Gallot.
 \newblock \emph{Safety of transformations of data trees: Tree transducer
