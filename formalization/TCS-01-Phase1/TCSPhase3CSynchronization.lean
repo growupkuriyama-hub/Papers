@@ -55,7 +55,7 @@ theorem oriented_branch_synchronization (bound i : Nat)
     ∃ w w' xr yr : Word,
       Terminal.squareLeft :: x = w ++ xr ∧
       Terminal.left :: y = w' ++ yr ∧
-      w ∈ Language (i + 1) ∧ w' ∈ Language (i + 1) ∧
+      w ∈ TCSPhase2.Language (i + 1) ∧ w' ∈ TCSPhase2.Language (i + 1) ∧
       Run bound ψ xr θ ∧ Run bound ψ yr θ := by
   obtain ⟨u, v, xr, yr, hxsplit, hysplit, hrunx, hruny, hrestx, hresty⟩ :=
     opposite_branches_both_visit hx hy
@@ -64,10 +64,10 @@ theorem oriented_branch_synchronization (bound i : Nat)
   have hruny' :
       Run bound (Frame.nt i :: Frame.nt i :: Frame.floorClose :: ψ) v ψ := by
     simpa using run_suffix hruny ψ
-  have hxl : (Terminal.squareLeft :: u) ∈ Language (i + 1) :=
+  have hxl : (Terminal.squareLeft :: u) ∈ TCSPhase2.Language (i + 1) :=
     recognition_converse bound (i + 1) ψ _ hi
       (Run.next (Step.unary i hi ψ) hrunx')
-  have hyl : (Terminal.left :: v) ∈ Language (i + 1) :=
+  have hyl : (Terminal.left :: v) ∈ TCSPhase2.Language (i + 1) :=
     recognition_converse bound (i + 1) ψ _ hi
       (Run.next (Step.binary i hi ψ) hruny')
   refine ⟨Terminal.squareLeft :: u, Terminal.left :: v, xr, yr,
@@ -83,7 +83,7 @@ theorem branch_synchronization {bound : Nat} {σ θ : Stack}
     ∃ (i : Nat) (ψ : Stack) (w w' xr yr : Word),
       1 ≤ i ∧ i ≤ bound ∧ σ = Frame.nt i :: ψ ∧
       c :: x = w ++ xr ∧ d :: y = w' ++ yr ∧
-      w ∈ Language i ∧ w' ∈ Language i ∧
+      w ∈ TCSPhase2.Language i ∧ w' ∈ TCSPhase2.Language i ∧
       Run bound ψ xr θ ∧ Run bound ψ yr θ := by
   cases hx with
   | next hs hxr =>
