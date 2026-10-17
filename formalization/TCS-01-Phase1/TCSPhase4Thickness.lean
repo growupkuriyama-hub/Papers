@@ -63,6 +63,27 @@ theorem shortestTypedLength_le {NT : Type} [Fintype NT]
   rw [dif_pos hex]
   exact Nat.find_min' hex ⟨w, h, rfl⟩
 
+
+/-- Any yield chosen by a length-first order (including shortlex)
+has exactly the same length as shortestTypedLength. Conversely this
+number is attained and is the least possible length. -/
+theorem shortest_length_characterization {NT : Type} [Fintype NT]
+    [DecidableEq NT] {G : SSBNFGrammar NT} {A : NT} {μ : U1}
+    {w : Word} (hret : RetainedTypedSymbol G A μ)
+    (hw : TrimmedTypedDerives G A μ w) :
+    shortestTypedLength G A μ = w.length ↔
+      ∀ v : Word, TrimmedTypedDerives G A μ v →
+        w.length ≤ v.length := by
+  constructor
+  · intro hm v hv
+    rw [← hm]
+    exact shortestTypedLength_le hv
+  · intro hmin
+    obtain ⟨v, hv, hlen⟩ := shortestTypedLength_spec hret
+    have hle := shortestTypedLength_le hw
+    have hle' := hmin v hv
+    omega
+
 /-- Precise typed thickness: max(1, shortest terminal-yield lengths over
 the finite set of retained non-start typed symbols). -/
 noncomputable def typedThickness {NT : Type} [Fintype NT]
@@ -88,5 +109,6 @@ theorem shortest_le_typedThickness {NT : Type} [Fintype NT]
 #print axioms TCSPhase4.mem_retainedTypedPairs
 #print axioms TCSPhase4.shortestTypedLength_spec
 #print axioms TCSPhase4.shortestTypedLength_le
+#print axioms TCSPhase4.shortest_length_characterization
 #print axioms TCSPhase4.shortest_le_typedThickness
 end TCSPhase4
