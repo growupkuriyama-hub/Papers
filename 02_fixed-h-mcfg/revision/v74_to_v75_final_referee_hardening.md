@@ -37,11 +37,18 @@ Sources: `main.tex`, `appendix_window_group.tex`, Japanese counterparts. Existin
 - [x] English and Japanese TeX source corrections committed on feature branch.
 - [x] GitHub companion citation pinned to a concrete, public manuscript.
 - [x] Primary-source Gallot and related-work bibliography review.
-- [ ] Verify PR English pdfLaTeX and Japanese LuaLaTeX build logs and references.
-- [ ] Verify English/Japanese theorem-label sets and final TeX sources.
-- [ ] Visually inspect both final PDFs; automated compilation alone is not visual certification.
+- [x] PR #40 English pdfLaTeX and Japanese LuaLaTeX builds passed; the dedicated reference/citation/duplicate-label checks passed.
+- [x] English/Japanese theorem-label sets (83 each) and their order, bibliography keys and source SHA-256 values independently matched.
+- [ ] Full-page *visual* inspection of both final PDFs remains a human review gate; automated compilation and published PDF availability alone do not establish it.
 - [ ] Author review of editorial/AI-use wording and I&C submission metadata.
 - [ ] Add #1 arXiv v5 beside GitHub citation **after actual public release**.
 - [ ] Disclose companion TCS manuscript overlap in I&C cover letter.
 
 This version remains a working submission candidate, not a peer-reviewed or proof-assistant-certified mathematical result.
+
+## GitHub release confirmation
+
+- PR [#40](https://github.com/growupkuriyama-hub/Papers/pull/40) merged as `356c178ae2f9b525b79ecd1a50481a0e2a972a8a`.
+- CI `Verify MCFG` run 39055371346, manuscript job 117462146785: successful English and Japanese builds, with successful automated check for unresolved references/citations and duplicate labels.
+- Publisher commit `91194b733bc8509a2883496f3fab89ae4d7f34ce` wrote updated stable-path English and Japanese PDFs to main; their Git blob SHA values differ from the previous v74 releases.
+- Full-page PDF visual inspection is still outstanding; this is not represented as completed.
