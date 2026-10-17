@@ -40,6 +40,7 @@ theorem shortestTypedLength_spec {NT : Type} [Fintype NT]
     (hret : RetainedTypedSymbol G A μ) :
     ∃ w : Word, TrimmedTypedDerives G A μ w ∧
       w.length = shortestTypedLength G A μ := by
+  classical
   obtain ⟨w, hd⟩ := retained_productive hret
   have htrim := trimmed_complete hd hret
   have hex : ∃ k : Nat, ∃ v : Word,
@@ -54,6 +55,7 @@ theorem shortestTypedLength_le {NT : Type} [Fintype NT]
     [DecidableEq NT] {G : SSBNFGrammar NT} {A : NT} {μ : U1}
     {w : Word} (h : TrimmedTypedDerives G A μ w) :
     shortestTypedLength G A μ ≤ w.length := by
+  classical
   have hex : ∃ k : Nat, ∃ v : Word,
       TrimmedTypedDerives G A μ v ∧ v.length = k :=
     ⟨w.length, w, h, rfl⟩
