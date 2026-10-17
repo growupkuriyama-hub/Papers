@@ -26,7 +26,7 @@ set-driven characteristic predicate of Phase 1. -/
 #print axioms TCSPhase5B.rec_characteristic_sample_exists
 #print axioms TCSPhase5.finite_rec_language_iff
 
-/-- Relate Phase 5B completeness directly to the *independent* derivations
+/- Relate Phase 5B completeness directly to the *independent* derivations
 from Phase 5A's real finite B/U/L/S production collections. -/
 namespace TCSPhase5B
 open TCSPhase5
