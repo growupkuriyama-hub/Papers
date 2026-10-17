@@ -119,3 +119,9 @@ lean_lib TCSPhase5ConcreteGap where
 
 @[default_target]
 lean_lib TCSPhase5Main where
+
+@[default_target]
+lean_lib TCSPhase5BGeneralSSBNF where
+
+@[default_target]
+lean_lib TCSPhase5BTypedRefinement where
