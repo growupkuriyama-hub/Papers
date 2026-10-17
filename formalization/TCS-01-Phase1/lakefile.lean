@@ -17,3 +17,9 @@ lean_lib TCSPhase2Bridge where
 
 @[default_target]
 lean_lib TCSPhase3Parser where
+
+@[default_target]
+lean_lib TCSPhase3Recognition where
+
+@[default_target]
+lean_lib TCSPhase3Congruence where
