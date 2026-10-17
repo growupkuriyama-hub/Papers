@@ -37,7 +37,8 @@ theorem rec_factor_soundness_invariant
             distribution_right_congruent L x u y ihl.1
           _ = Distributions L (u ++ v) :=
             distribution_left_congruent L y v u ihr.1
-      · simp only [map_mul, ihl.2, ihr.2]
+      · change h (u * v) = h (x * y)
+        simp only [map_mul, ihl.2, ihr.2]
   | @unary x y w hx hy hxy hder ih =>
       have hxyD : Distributions L x = Distributions L y :=
         hSub x y hx.1 hy.1 hxy.1
