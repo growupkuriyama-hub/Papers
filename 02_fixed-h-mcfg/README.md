@@ -23,24 +23,26 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v72 全文）
+## 日本語査読版（v74 全文）
 
-英語版 v72 の定理・数式・証明・文献に対応する完全な日本語版を
+英語版 v74 の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
-有限アーベル群の独立付録も
+有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
-として全文訳してあり，本文から読み込まれます。
+および [`japanese/appendix_window_group_JP.tex`](japanese/appendix_window_group_JP.tex) として訳してあり，本文から読み込まれます。
 [`japanese/README.md`](japanese/README.md) に英語原稿の固定版，
 対応検査，LuaLaTeX PDF のビルド方法を記録しています。
 提出用の英語版 `main.tex` は変更しません。
 
 ## Current working baseline
 
-- `main.tex` — **v72** I&C final-referee working revision, current source of truth (see `PAPER.yaml`).
+- `main.tex` — **v74** I&C pre-submission revision including arbitrary finite-group shortening, current source of truth (see `PAPER.yaml`).
+- `revision/v73_to_v74_finite_group_shortening.md` — independently audited Ramsey block-order/finite-group extension and verification gates.
+- `appendix_window_group.tex` — arbitrary finite-group short-tuple theorem and window--group polynomial characteristic-data bound (nonabelian groups included).
 - `revision/v71_to_v72_referee_p1p2_and_sharper_bounds.md` — v72 correction log, new untyped canonical-context bound, and outstanding author/publication checks.
 - `revision/v71_retired_results_archive.md` — the removed v70 results and the entire former doubling-family appendix, preserved for reuse in a thesis or separate paper; **not compiled** in v71.
 - `revision/v70_to_v71_selective_results_note.md` — v71 scope decisions, retained results and validation gates.
-- `appendix_window_abelian.tex` — separate window + finite-abelian-group characteristic-data theorem, with proof and explicit nonabelian limitation.
+- `appendix_window_abelian.tex` — retained direct window + finite-abelian-group theorem with the sharper explicit abelian constant. The former limitation is resolved in the subsequent general-group appendix.
 - `revision/v69_to_v70_ic_referee_revision_note.md` — referee-audit revision, mathematical verification, and remaining submission gates.
 - `revision/v68_to_v69_ic_referee_corrections.md` — I&C independent-review corrections: resolves the false fan-out-one open problem using the companion CFG lower bound, strengthens the SUBST_P proof, checks Gallot's exact theorem scope, reorders and focuses the introduction.
 - `revision/v67_to_v68_yoshinaka2015_revision_note.md` — prior Yoshinaka 2015 exact-correspondence revision.
