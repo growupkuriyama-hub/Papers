@@ -1,41 +1,40 @@
-# #2 MCFG v73 — 日本語査読版
+# #2 MCFG v75 — 日本語査読版（英語正本との対照）
 
-英語原稿 **v73** `02_fixed-h-mcfg/main.tex` の全文を，日本語で検討するための対照版です。
-**英語版は正本**であり，日本語版は著者自身の数学的・論理的査読のために作成されています。
-今回の日本語版v73は、v72から**数式表示（displayとinline）だけを整理した組版改訂**です。翻訳・数学的主張・証明・参照先は変更していません。
+対象論文: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing*（I&C 投稿準備中）
+
+英語版 `../main.tex` と付録が**数学的な正本**です。日本語版は独立査読・定理の仮定の確認用であり、英語版と同じ数学的主張・同じ `\\label` の集合を保ちます。
+
+## v75 の更新（2026-10-18）
+
+- 要旨の「同じ多項式次数」を修正し、窓のみ `O(||G||^2 θ̄_G)` と窓＋任意有限群 `O(||G||^3 θ̄_G)` を区別。
+- #1 CFG 関連原稿の指数下界を、公開 GitHub の**特定コミット** `834e99a1f35b4a5fb949acc55a080658388d4480` に固定して引用。arXiv v5 は未公開で、公開後に別途追記する。
+- 任意有限群の付録Dで、block-order の逆方向の場合分け、Ramsey 抽出の最終頂点を明示し、一般群用の独立した短い正準タプル補題 `lem:window-group-short` を追加。
+- 日本語版の `r_max>=1` 仮定漏れ、参照先の「付録 付録 X」重複を修正。
+- 先行研究として Duncan–Elder–Frenkel–Lyu (2026) の MCFL 非所属のための置換補題との目的の違いを追記。
 
 ## ファイル
 
-- `main_JP.tex` — 要旨，序論，準備，再構成，健全性，完全性，Gold同定，計算量，特徴データ長，すべての分離定理，結論，通常の付録，Yoshinaka (2015) に関する付録，文献一覧を含む**全文翻訳**。文献題名・著者名は原文表記のまま保持。
-- `appendix_window_abelian_JP.tex` — 窓と有限アーベル群の積型付けに関する補題・定理・全証明の翻訳。本文 `main_JP.tex` から `\\input` によって組み込む。
+- `main_JP.tex` — 日本語全文（要旨、本文、既存の通常の付録、Yoshinaka 比較、文献）
+- `appendix_window_abelian_JP.tex` — 可換有限群の零和証明
+- `appendix_window_group_JP.tex` — 非可換群を含む任意有限群の Ramsey 型短縮・総長上界の証明
+- `../revision/v74_to_v75_final_referee_hardening.md` — 変更履歴・査読ゲート
 
-## 対応する英語原稿
+## 対応する英語正本
 
-- 原稿: `02_fixed-h-mcfg/main.tex`, version **v73**
-- 固定済み英語版マージコミット: `c9b4644c5d201395777eddc4b634210caca1a1af`
-- 本文 Git blob: `48778ccbed8557a19c6f8d09c469d358987396b1`
-- 群拡張付録 Git blob: `c1bbee4b26cd39dc68f4ae8e72488ec97702f117`
+- `../main.tex`
+- `../appendix_window_abelian.tex`
+- `../appendix_window_group.tex`
 
-## 同一性・注意
-
-数式，主張の条件と量化，証明の順序，すべての `\\label`・`\\ref`・`\\cite`，および文献情報を対応させています。英語版にない定理の追加や，証明の省略は意図していません。翻訳は数学的正しさを保証しません。著者による逐語的な確認で誤訳を見つけたら英語版と照合して修正してください。
-
-翻訳時点の機械的比較では，英語版・日本語版とも定理・補題・命題・定義・証明の個数が一致し，全 `\\label` の**集合と出現順序**も一致しています。
-
-今回の組版改訂では、本文の display 数式 **140 → 48**、付録 **5 → 2**（合計 **145 → 50**）です。全95か所の数式内容は、空白を正規化して照合しています。英語版v73とは言語別の行長や翻訳上の段組に応じて残す式が異なります。
-
-## PDFビルド
-
-GitHub Actions の `Build MCFG Japanese review manuscript` ワークフローで
-LuaLaTeX / TeX Live 2026 の PDF を生成します。成果物名：
-`02-fixed-h-mcfg-japanese-pdf`。
-
-ローカル環境での例：
+## ビルド
 
 ```bash
 cd 02_fixed-h-mcfg/japanese
 latexmk -lualatex -interaction=nonstopmode -halt-on-error main_JP.tex
 ```
 
-英語版の提出用ファイル `../main.tex` と `../appendix_window_abelian.tex`
-は，日本語版の追加によって変更しません。
+両言語をコンパイルする pull request 検証ワークフローは
+`../../.github/workflows/verify-mcfg-bilingual-pr.yml`。
+main への反映後には `publish-mcfg-bilingual-pdf.yml` が英日PDFを
+`../main.pdf` と `main_JP.pdf` に公開します。
+
+機械的な文法検査・ビルド合格は、翻訳の完全一致や数学的正しさの形式的証明を意味しません。
