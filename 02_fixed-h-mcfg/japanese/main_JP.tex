@@ -640,168 +640,229 @@ $O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$ のままである．
 
 \subsection{タプル文脈と代入可能性}
 
-\paragraph{Sentence contexts.}
-A \emph{sentence context of arity $d$} is a word
-$E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d$ in which each named hole occurs
-exactly once, $v_0,v_d\in\Sigma^*$, and every internal separator
-$v_1,\ldots,v_{d-1}$ belongs to $\Sigma^+$.  Let $\mathcal E_d$ be the set
-of such contexts.  This is Yoshinaka's multidimensional-context convention
-\cite[Section~3.1]{Yoshinaka2011}.
-For $\tuple w=(w_1,\ldots,w_d)$, write $E[\tuple w]$ for the result of filling
-$\blank_i$ by $w_i$, and put
-$|E|_{\mathrm{fix}}:=\sum_{i=0}^d|v_i|$.  For brevity, we say that a
-sentence context $E$ \emph{accepts} $\tuple w$ in a language $L$ when
-$E[\tuple w]\in L$.
-
-\begin{definition}[Tuple occurrence in a sample word]
-\label{def:tuple-occurrence}
-Let $K\subseteq\Sigma^*$ and $w=a_1\cdots a_n\in K$.  Number the cut
-positions of $w$ as
-$\cutpos{0}a_1\cutpos{1}\cdots a_n\cutpos{n}$.
-For $0\le i<i'\le n$, write
-$w[i:i']:=a_{i+1}\cdots a_{i'}$.
-
-An \emph{arity-$d$ tuple occurrence} in $w$ is a sequence of nonempty,
-left-to-right intervals
+\paragraph{文をつくる文脈．}
+\emph{アリティ $d$ の文文脈}とは，
 \[
-  0\le i_1<i_1'<i_2<i_2'<\cdots<i_d<i_d'\le n.
+ E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d
 \]
-It determines the tuple
-$\tuple x=(w[i_1:i_1'],\ldots,w[i_d:i_d'])\in(\Sigma^+)^d$ and the
-context $E\in\mathcal E_d$ obtained by replacing those intervals by
-$\blank_1,\ldots,\blank_d$.  We identify the occurrence with $(E,\tuple x)$.
-For example, the two intervals spelling $\mathtt a$ and $\mathtt c$ in $\mathtt{abc}$ give the tuple
-$(\mathtt a,\mathtt c)$ and the context $\blank_1\mathtt b\blank_2$.
+という形の語で，各番号付き穴がちょうど一度ずつ出現し，
+$v_0,v_d\in\Sigma^*$ かつ
+内部の区切り語 $v_1,\ldots,v_{d-1}$ は
+すべて $\Sigma^+$ に属するものをいう．
+こうした文脈の集合を $\mathcal E_d$ と書く．
+これは Yoshinaka の多次元文脈の規約である
+~\cite[Section~3.1]{Yoshinaka2011}．
+タプル $\tuple w=(w_1,\ldots,w_d)$ に対し，
+$E[\tuple w]$ は各 $\blank_i$ を $w_i$ で埋めて得られる語とし，
+\[
+ |E|_{\mathrm{fix}}:=\sum_{i=0}^d|v_i|
+\]
+とおく．
+$E[\tuple w]\in L$ であるとき，
+文脈 $E$ は言語 $L$ において
+$\tuple w$ を\emph{受理する}という．
+
+\begin{definition}[標本語におけるタプルの出現]
+\label{def:tuple-occurrence}
+$K\subseteq\Sigma^*$，$w=a_1\cdots a_n\in K$ とする．
+語 $w$ の切断位置に
+$\cutpos{0}a_1\cutpos{1}\cdots a_n\cutpos{n}$
+と番号を付ける．
+$0\le i<i'\le n$ に対して
+$w[i:i']:=a_{i+1}\cdots a_{i'}$ と書く．
+
+語 $w$ における\emph{アリティ $d$ のタプル出現}とは，
+左から右に並ぶ非空区間の列
+\[
+ 0\le i_1<i_1'<i_2<i_2'<\cdots<i_d<i_d'\le n
+\]
+である．
+これによりタプル
+$\tuple x=(w[i_1:i_1'],\ldots,w[i_d:i_d'])\in(\Sigma^+)^d$
+と，各区間を $\blank_1,\ldots,\blank_d$ に置き換えた文脈
+$E\in\mathcal E_d$ が決まる．
+出現を $(E,\tuple x)$ と同一視する．
+例えば $\mathtt{abc}$ の中の
+$\mathtt a$ と $\mathtt c$ を選べば，
+タプル $(\mathtt a,\mathtt c)$ と
+文脈 $\blank_1\mathtt b\blank_2$ が得られる．
 \end{definition}
 
-For $L\subseteq\Sigma^*$ and $\tuple x\in(\Sigma^*)^d$, define its
-\emph{$d$-tuple distribution}
+$L\subseteq\Sigma^*$，
+$\tuple x\in(\Sigma^*)^d$ に対して，
+\emph{$d$-タプル分布}を
 \[
-  \D_L^{(d)}(\tuple x):=\{E\in\mathcal E_d:E[\tuple x]\in L\}.
+ \D_L^{(d)}(\tuple x):=
+ \{E\in\mathcal E_d:E[\tuple x]\in L\}
 \]
-When $d$ is clear, the superscript is omitted.
+と定義する．アリティが明白なら上付きの $(d)$ を省略する．
 
-\begin{definition}[$(f,h)$-tuple substitutability]
+\begin{definition}[$(f,h)$-タプル代入可能性]
 \label{def:tuple-substitutable}
-Let $f\ge1$ and let $h:\Sigma^*\to M$ be a finite monoid
-homomorphism.  A language $L\subseteq\Sigma^*$ is
-\emph{$(f,h)$-tuple-substitutable} if, for every $1\le d\le f$ and all
-$\tuple x,\tuple y\in(\Sigma^+)^d$,
+$f\ge1$ と有限モノイド準同型
+$h:\Sigma^*\to M$ を固定する．
+言語 $L\subseteq\Sigma^*$ が
+\emph{$(f,h)$-タプル代入可能}であるとは，
+任意の $1\le d\le f$ と
+$\tuple x,\tuple y\in(\Sigma^+)^d$ に対し，
 \[
  h^{(d)}(\tuple x)=h^{(d)}(\tuple y),\qquad
  \D_L^{(d)}(\tuple x)\cap\D_L^{(d)}(\tuple y)\ne\emptyset
 \]
-imply $\D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y)$.
-Thus empty strings are not compared as tuple components; when $\eps$ belongs
-to the target, it is handled separately at the start symbol.  This is Yoshinaka's nonempty-component convention for multidimensional
-substitutability~\cite[Section~3.1 and footnote~3]{Yoshinaka2011}; see also
-Clark~\cite{Clark2013} for the CFG case.  The restriction is
-substantive already at fan-out one: if $\eps$ itself were allowed among the
-compared fragments, the ordinarily substitutable language $\mathtt a^+$ would fail
-the condition because $\mathtt a$ and $\eps$ share a context but do not have the same
-distribution.
+ならば
+$\D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y)$
+が成り立つことをいう．
+したがって，タプルの成分として空語は比較しない．
+標的に $\eps$ が属するときは，開始記号で別途扱う．
+これは多次元代入可能性に関する Yoshinaka の
+非空成分の規約である
+~\cite[Section~3.1 and footnote~3]{Yoshinaka2011}．
+CFG の場合は Clark~\cite{Clark2013} も参照されたい．
+この制約はファンアウト1ですでに重要である．
+空語を比較対象に許せば，
+通常の意味では代入可能な $\mathtt a^+$ でさえ，
+$\mathtt a$ と $\eps$ が文脈を共有する一方で分布が異なるため，
+条件を満たさなくなる．
 \end{definition}
 
-At fan-out one, every sentence context has the form
-$u\blank_1v$, so $\D_L^{(1)}(x)$ is canonically the ordinary two-sided
-distribution $\D_L(x)=\{(u,v):uxv\in L\}$.  Hence Definition~\ref{def:tuple-substitutable}
-specializes, without any external convention, to the ordinary two-sided
-fixed-$h$ substitutability condition on nonempty factors.
-
-\paragraph{Typing--distribution equivalence.}
-For $\tuple x,\tuple y\in(\Sigma^+)^d$, write
-$\tuple x\equiv_{L,h}^d\tuple y$ if and only if
+ファンアウト1では文文脈がすべて
+$u\blank_1v$ という形なので，
+$\D_L^{(1)}(x)$ は通常の両側分布
 \[
+ \D_L(x)=\{(u,v):uxv\in L\}
+\]
+と自然に同一視できる．
+よって定義~\ref{def:tuple-substitutable} は，
+外部の規約を仮定することなく，
+非空因子に対する通常の固定 $h$ の
+両側代入可能性条件に特殊化する．
+
+\paragraph{型付けと分布による同値関係．}
+$\tuple x,\tuple y\in(\Sigma^+)^d$ に対し，
+\[
+ \tuple x\equiv_{L,h}^d\tuple y
+ \iff
  h^{(d)}(\tuple x)=h^{(d)}(\tuple y)
- \qquad\text{and}\qquad
- \D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y).
+ \ \text{かつ}\
+ \D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y)
 \]
-For fixed $L,h,d$ this is an equivalence relation; the superscript is omitted
-when the arity is clear.
+と書く．
+$L,h,d$ を固定すると，これは同値関係である．
+アリティが明らかな場合は上付き $d$ を省略する．
 
-\begin{definition}[The target class]
+\begin{definition}[標的言語クラス]
 \label{def:class-cmcf}
-Fix $f\ge1$ and a finite monoid homomorphism $h$.  The class
-$\Cmcf{f}{h}$ consists of all $f$-MCFLs that are
-$(f,h)$-tuple-substitutable.
+$f\ge1$ と有限モノイド準同型 $h$ を固定する．
+$\Cmcf{f}{h}$ は，
+$(f,h)$-タプル代入可能な $f$-MCFL 全体のクラスである．
 \end{definition}
 
+$L\in\Cmcf{f}{h}$ において，
+$h$ が境界型付けであるとき，
+$L$ を\emph{境界型付き}と呼ぶ．
 
-A target $L\in\Cmcf{f}{h}$ is called \emph{boundary-typed} when $h$ is a
-boundary typing.
+$h\preceq h'$ ならば
+$\Cmcf{f}{h}\subseteq\Cmcf{f}{h'}$ である．
+より細かい $h'$-型が等しければ
+より粗い $h$-型も等しいため，
+$h$ の下で使える代入の結論を適用できるからである．
+ファンアウト1では，先述の両側固定 $h$ 条件の
+文脈自由部分に一致する．
 
-If $h\preceq h'$, then
-$\Cmcf{f}{h}\subseteq\Cmcf{f}{h'}$: equality of the finer $h'$-types implies
-equality of the coarser $h$-types, so the substitution conclusion available
-under $h$ applies.  At fan-out one this is the context-free part of the
-two-sided fixed-$h$ condition just described.
-
-For every $f\ge1$,
+任意の $f\ge1$ について
 \[
-  \Cmcf{f+1}{h}\cap f\text{-}\mathrm{MCFL}
-  \subseteq \Cmcf{f}{h},
+ \Cmcf{f+1}{h}\cap f\text{-}\mathrm{MCFL}
+ \subseteq\Cmcf{f}{h}
 \]
-because the fan-out-$f$ condition tests only the arities
-$1,\ldots,f$.  The possible loss of substitutability when the tested arity is
-increased is already present for trivial typing: Yoshinaka notes that
-$\mathsf{SL}(p,r)$ and $\mathsf{SL}(p+1,r)$ are generally incomparable and
-gives
-$L_{\mathrm{reverse}}=\{w\#w^R\}$ as a one-dimensional substitutable language
-that is not two-dimensional substitutable
-\cite[Section~4.1 and Example~5]{Yoshinaka2011}.  What finite
-typing adds here is the stronger phenomenon of
-Proposition~\ref{prop:strong-fanout-separation}: a target can be learnable at
-fan-out one under a finite typing yet fail the fan-out-two condition for
-\emph{every} finite typing.  Thus $f$ is part of the learning bias, not merely
-an upper bound on representational power.  No monotonicity of the learned
-classes in $f$ is claimed.
+が成り立つ．
+ファンアウト $f$ の条件で調べるのは
+アリティ $1,\ldots,f$ だけだからである．
+検査するアリティを増やすと代入可能性が失われる現象は，
+自明型付けでも既に現れる．
+Yoshinaka は $\mathsf{SL}(p,r)$ と
+$\mathsf{SL}(p+1,r)$ が一般に比較不能であることを指摘し，
+1次元では代入可能だが2次元では代入可能でない言語
+$L_{\mathrm{reverse}}=\{w\#w^R\}$
+を与えている
+~\cite[Section~4.1 and Example~5]{Yoshinaka2011}．
+本稿の有限型付けが追加するのは，
+命題~\ref{prop:strong-fanout-separation} のより強い現象である．
+すなわち，ある有限型付けの下ではファンアウト1で学習可能な標的が，
+\emph{いかなる}有限型付けでも
+ファンアウト2の条件を満たさないことがある．
+したがって $f$ は表現能力の上界というだけでなく，
+学習バイアスの一部である．
+学習対象クラスの $f$ に関する単調性は主張しない．
 
-For every $\mathsf{Acc}\subseteq M$, the language
-$h^{-1}(\mathsf{Acc})$ belongs to $\Cmcf{f}{h}$.  Indeed, it is regular, and equal componentwise $h$-types give the
-same total $h$-value in every sentence context, hence equal tuple
-distributions.
+任意の $\mathsf{Acc}\subseteq M$ について，
+$h^{-1}(\mathsf{Acc})\in\Cmcf{f}{h}$ である．
+実際，この言語は正則であり，
+対応する成分の $h$-型が等しければ，
+任意の文文脈に入れたときの全体の $h$-値も等しい．
+したがってタプル分布が等しくなる．
 
-\begin{proposition}[Intersection and abelian filtering]
+\begin{proposition}[交差とアーベル群フィルタ]
 \label{prop:abelian-coset-filter}
-Fix $f$ and $h$.
+$f$ と $h$ を固定する．
 \begin{enumerate}[label=(\roman*),leftmargin=*]
-\item If $L_1$ and $L_2$ are $(f,h)$-tuple-substitutable, then
-$L_1\cap L_2$ is $(f,h)$-tuple-substitutable.
-\item Let $L$ be $(f,h)$-tuple-substitutable, let $\mathbb A$ be an abelian
-group, let $\varphi:\Sigma^*\to\mathbb A$ be a monoid homomorphism, let
-$\mathcal H\le\mathbb A$, and let $\gamma\in\mathbb A$.  Then
-$L\cap\varphi^{-1}(\gamma+\mathcal H)$ is $(f,h)$-tuple-substitutable.
+\item $L_1,L_2$ がともに $(f,h)$-タプル代入可能なら，
+$L_1\cap L_2$ も $(f,h)$-タプル代入可能である．
+\item $L$ が $(f,h)$-タプル代入可能とする．
+$\mathbb A$ をアーベル群，
+$\varphi:\Sigma^*\to\mathbb A$ をモノイド準同型，
+$\mathcal H\le\mathbb A$，
+$\gamma\in\mathbb A$ とすると，
+$L\cap\varphi^{-1}(\gamma+\mathcal H)$
+は $(f,h)$-タプル代入可能である．
 \end{enumerate}
-Whenever the resulting intersection is an $f$-MCFL, it therefore belongs to
-$\Cmcf{f}{h}$.
+得られた交差言語が $f$-MCFL なら，
+$\Cmcf{f}{h}$ に属する．
 \end{proposition}
 
 \begin{proof}
-For (i), equal-type tuples $\tuple x,\tuple y$ with some context $E$ satisfying
-$E[\tuple x],E[\tuple y]\in L_1\cap L_2$ have equal tuple distributions in each $L_i$, hence in their intersection.
-For (ii), first observe that $\varphi^{-1}(\gamma+\mathcal H)$ is
-$(f,h_{\mathrm{triv}})$-tuple-substitutable.  Indeed, if a common context
-accepts tuples $\tuple x,\tuple y$, then
-$\sum_i(\varphi(y_i)-\varphi(x_i))\in\mathcal H$.  By commutativity, for every other sentence
-context $E'$ the difference
-$\varphi(E'[\tuple y])-\varphi(E'[\tuple x])$ is the same element of
-$\mathcal H$, so coset membership is preserved in both directions.  Trivial
-typing is coarser than $h$, hence the same coset language is
-$(f,h)$-tuple-substitutable.  Apply (i).
+(i) について，
+同じ型の $\tuple x,\tuple y$ が
+$E[\tuple x],E[\tuple y]\in L_1\cap L_2$
+を満たす共通文脈 $E$ をもつなら，
+各 $L_i$ で両者のタプル分布は等しく，
+その交差でも等しい．
+
+(ii) については，まず
+$\varphi^{-1}(\gamma+\mathcal H)$ が
+$(f,h_{\mathrm{triv}})$-タプル代入可能であることを示す．
+共通文脈が $\tuple x,\tuple y$ を受理するなら，
+\[
+ \sum_i(\varphi(y_i)-\varphi(x_i))\in\mathcal H
+\]
+である．
+可換性により，任意の別の文文脈 $E'$ に対して，
+差
+$\varphi(E'[\tuple y])-\varphi(E'[\tuple x])$
+は同じ $\mathcal H$ の元となる．
+したがって剰余類への所属は両方向で保存される．
+自明型付けは $h$ より粗いので，
+この剰余類言語は $(f,h)$-タプル代入可能でもある．
+(i) を適用すればよい．
 \end{proof}
 
-As an immediate consequence, for any $\mathsf{Acc}\subseteq M$, abelian group
-$\mathbb A$, homomorphism $\varphi:\Sigma^*\to\mathbb A$, subgroup
-$\mathcal H\le\mathbb A$, and $\gamma\in\mathbb A$, every $f$-MCFL of the
-form
+直ちに次が従う．
+$\mathsf{Acc}\subseteq M$，
+アーベル群 $\mathbb A$，
+準同型 $\varphi:\Sigma^*\to\mathbb A$，
+部分群 $\mathcal H\le\mathbb A$，
+$\gamma\in\mathbb A$ に対し，
 \[
- h^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathcal H)
+ h^{-1}(\mathsf{Acc})
+ \cap\varphi^{-1}(\gamma+\mathcal H)
 \]
-belongs to $\Cmcf{f}{h}$.  Thus one typing can support a family of targets
-while the abelian constraint varies; these factorizations are not supplied to
-the learner.
+という形の任意の $f$-MCFL は
+$\Cmcf{f}{h}$ に属する．
+したがって，一つの型付けの下で
+アーベル群の制約を変化させれば，
+標的言語族を得られる．
+これらの因子化は学習器には与えない．
 
-\section{Exact Reconstruction from Positive Data}
+\section{正例データからの厳密な再構成}
 \label{sec:learner}
 
 We define the finite-sample reconstruction operator, prove soundness, and then
