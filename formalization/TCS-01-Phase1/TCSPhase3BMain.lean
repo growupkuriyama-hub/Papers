@@ -4,7 +4,7 @@ import TCSPhase3Marker
 /-!
 Phase 3B certified appendix fragment. All selected statements below are
 unconditional Lean theorems, with their normal explicit input hypotheses.
-No axioms, placeholders, or opaque theorem surrogates are added.
+This file only imports and audits completed proofs from other modules.
 -/
 
 #print axioms TCSPhase3.step_prefix_decompose
