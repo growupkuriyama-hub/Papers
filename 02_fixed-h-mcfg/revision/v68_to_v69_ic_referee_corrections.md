@@ -3,7 +3,7 @@
 Date: 2026-10-17 (JST)
 Branch: `revision/02-v69-ic-referee-corrections`
 Source of truth: `02_fixed-h-mcfg/main.tex`
-Status: **review candidate, pending complete GitHub Actions PDF build and merge.**
+Status: **v69 revision candidate; current CI and merge state are tracked by [PR #31](https://github.com/growupkuriyama-hub/Papers/pull/31).**
 
 ## Source and audit basis
 
@@ -31,11 +31,12 @@ Status: **review candidate, pending complete GitHub Actions PDF build and merge.
 
 - [x] Distinct labels and resolved `\\ref` and `\\cite` in source (static scans during edits).
 - [x] Standard theorem/proof/list environment counts balanced during edits.
-- [ ] CI pdflatex full build, page count and visual inspection.
+- [x] CI pdfLaTeX full build for first v69 source: run 39015572350, 42 pages, successful; final bibliography link display shortened afterward, so check PR #31 for the latest source build.
+- [ ] Full manual rendered-PDF inspection (not asserted from CI alone).
 - [ ] Independent mathematical referee review of the inserted lemma/lower-bound proof (source-priority checked but not externally refereed).
 - [ ] Full 30–35 page structural compression while preserving detailed proofs.
 - [ ] Review whether current journal guidelines require a generative-AI usage declaration, and obtain author confirmation of its exact wording before adding any declaration on the author's behalf.
 - [ ] Elsevier-specific submission template and journal formatting check.
 - [ ] Optional window–finite-abelian-group extension, but **only after independent proof verification**.
 
-No changes to #1 or other paper projects. No I&C portal submission and no arXiv upload.
+No changes to #1 or other paper projects. No I&C portal submission and no arXiv upload. Main-branch merge state is the live state of PR #31, not a claim made by this static note.
