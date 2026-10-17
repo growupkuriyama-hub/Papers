@@ -1,0 +1,308 @@
+% v74 candidate: quantitative finite-group extension (all finite groups).
+% This is a separately auditable strengthening of the preceding abelian appendix.
+\section{Windows combined with arbitrary finite groups}
+\label{app:window-group}
+
+Here we remove commutativity from the finite-group hypothesis in
+Appendix~\ref{app:window-abelian}.  The learning operator and the
+window-only bound are unchanged.  All groups in this appendix are
+fixed and finite.  The constants below are deliberately very large:
+the result concerns polynomial dependence on the \emph{original}
+grammar size and rule thickness, not a practical uniform bound in
+the order of the group.
+
+\begin{lemma}[A homogeneous block-order lemma]
+\label{lem:group-block-order}
+Fix positive integers $e,n$ with $n\ge3$.  For each
+$t\in[e]$ and $i\in[n]$, let $(t,i)$ be a distinct point
+on a line, with a total left-to-right order.  Suppose that
+(i) the order of $(t,i)$ and $(u,i)$ is independent of $i$;
+and (ii) for each ordered pair $(t,u)$, including $t=u$,
+the order of $(t,i)$ and $(u,j)$ for $i<j$ is independent
+of the choice of $i<j$.
+Then the types at the points have a partition into classes,
+each occupying a consecutive region of the line.  Every
+class has one direction (increasing or decreasing in $i$);
+inside its region the points occur in $n$ successive
+\emph{chunks}, one per rank in that direction.  Each
+chunk consists of exactly one point of each type in the
+class (in a fixed within-chunk order).
+\end{lemma}
+\begin{proof}
+By (ii) with $t=u$, each type's points are monotone.
+Consider distinct types $t,u$.  Write
+$X$ for $(t,i)<(u,j)$ when $i<j$, and $Y$ for
+$(u,i)<(t,j)$ when $i<j$; both are uniform by (ii).
+If both types increase, $X\wedge Y$ puts all points
+of rank $i$ before all points of rank $j>i$.
+The cases $X\wedge\neg Y$ and
+$\neg X\wedge Y$ put all $t$-points before all
+$u$-points, or conversely.  The remaining case
+$\neg X\wedge\neg Y$ would give
+$(t,1)<(t,2)<(u,1)<(u,2)<(t,1)$,
+a contradiction.  If their directions are opposite,
+$X\wedge Y$ and $\neg X\wedge\neg Y$
+yield a cycle using indices $1,2,3$.
+In the other two cases one type is entirely to
+the left of the other: off-diagonal comparisons
+follow from (ii), and comparisons at equal indices
+follow from (i) and monotonicity.  Reverse indices
+to cover the two-decreasing case.  Thus any two
+types are either \emph{separated}, or have the
+same direction and are \emph{interleaved by rank}.
+
+Interleaving is transitive.  Indeed, if $t$ interleaves
+with $u$ and $u$ with $v$, all three have the same
+direction.  Reverse indices to assume increasing.
+If $t$ and $v$ were separated with $t$ to the left,
+we would have
+$(v,1)<(u,2)<(t,3)<(v,1)$;
+the other separation order gives the analogous
+cycle.  Hence interleaving, with equality, partitions
+the types into classes.  A type outside a class is
+separated from each type inside it, and must lie
+on the same side of all its types: otherwise two
+interleaved types would themselves be separated.
+The class regions are therefore consecutive.  The
+rank comparisons give successive chunks.  Finally
+the within-chunk order is independent of rank by (i).
+\end{proof}
+
+\begin{lemma}[Simultaneous finite-group interval shortening]
+\label{lem:group-interval}
+Let $A$ be any finite group.  Suppose $n$ indices each
+contribute at most $f$ disjoint blocks to at most $f$
+ordered output components, and each block has a prescribed
+replacement block.  A selected index replaces \emph{all}
+its blocks simultaneously.  The other material is fixed.
+If the individual block destinations and within-index orders
+are constant across the indices, and all cross-index block
+order comparisons are constant for $i<j$, then
+$n\ge\max\{3,|A|^f\}$ implies that a nonempty consecutive
+interval of indices can be replaced without changing
+any output component's value in $A$.
+\end{lemma}
+\begin{proof}
+Apply Lemma~\ref{lem:group-block-order} separately to
+the block types going to each output component.  Across
+all output components there are $q\le f$ consecutive
+class regions.  Consider such a region $K$, and enumerate
+its chunks $1,\ldots,n$ from left to right.  Include all
+unchanged material between the blocks in the region.
+Let $P_p$ be the original group value of its prefix
+ending after chunk $p$, and $Q_p$ the value of the
+same prefix when chunks $1,\ldots,p$ have been
+replaced; set $P_0=Q_0=1_A$.  Write
+$\kappa^K_p=P_pQ_p^{-1}$.
+
+Replacing just chunks $p+1,\ldots,p'$ gives the
+following \emph{ordered} value for the entire region:
+\[
+ P_p\,Q_p^{-1}Q_{p'}\,P_{p'}^{-1}P_n .
+\]
+Indeed, $Q_p^{-1}Q_{p'}$ is exactly the replacement
+value of the segment between the two prefix boundaries,
+and $P_{p'}^{-1}P_n$ is its unchanged suffix.
+Consequently, the region retains its original value
+$P_n$ whenever $\kappa^K_p=\kappa^K_{p'}$.
+This computation uses inverses, but never commutes
+factors.
+
+If class $K$ increases with the original index order,
+its chunks for indices $(a,b]$ occupy $(a,b]$.
+If it decreases, they occupy $(n-b,n-a]$.
+For $j=0,\ldots,n$ define a state in $A^q$ by taking
+$\kappa^K_j$ from each increasing class and
+$\kappa^K_{n-j}$ from each decreasing class.
+There are $n+1>|A|^q$ such states, so two,
+at indices $a<b$, coincide.  Replacing precisely
+indices $a+1,\ldots,b$ then preserves each
+class region's value.  The rest of every output
+component is unchanged, so all output group values
+are preserved.
+\end{proof}
+
+\begin{lemma}[Uniform shortening of heavy antichains]
+\label{lem:group-heavy-antichain}
+Set
+\[
+ N_{A,f}=\max\{3,|A|^f\},\quad
+ c_f=2^{f^2},\quad U_f=f^{f+1}f!,\quad
+ M_{A,f}=U_f\,c_f^{\,c_f(N_{A,f}-1)+1}.
+\]
+Let $G$ be reduced and good, and let $g:\Sigma^*\to A$
+be any homomorphism into a finite group.  In a terminal
+derivation minimizing first total yield length and then
+node count subject to its prescribed componentwise
+$g$-value, every antichain of subtrees of total yield
+length $>\bar\theta_G$ has fewer than $M_{A,f}$ nodes.
+\end{lemma}
+\begin{proof}
+Every child component passes through the linear,
+nondeleting templates to exactly one contiguous block
+in a root component.  Blocks of incomparable subtrees
+are disjoint.  Fix for each node of a heavy antichain
+a replacement derivation of the \emph{same untyped}
+nonterminal whose yield has length at most
+$\bar\theta_G$; such a derivation exists by
+Lemma~\ref{lem:thickness-local-bounds}(ii).
+Its group values may differ from the original values.
+
+An antichain node has at most $f$ blocks.  Its
+\emph{unary pattern} records the number of blocks,
+their root-component destinations, and their order
+within any shared root component.  There are at
+most $U_f$ such patterns.  First retain a set of
+nodes having one common unary pattern.  For indices
+$i<j$, color $\{i,j\}$ by all comparisons between
+block types $(t,i)$ and $(u,j)$ situated in the
+same root component, including $t=u$.  There are
+at most $c_f$ colors.  The elementary multicolor
+Ramsey bound
+\[
+ R_{c_f}(N)\le c_f^{\,c_f(N-1)+1}
+\]
+suffices: greedily select $c_f(N-1)+1$ successive
+vertices, at each step retaining a largest
+monochromatic set of later neighbors, and then
+choose $N$ vertices whose selected outgoing color
+is the same.  Each step preserves at least
+$1/c_f$ of the available vertices (with integer
+rounding).  Thus an antichain of at least
+$M_{A,f}$ nodes contains $N=N_{A,f}$ indices
+with constant unary pattern and constant
+cross-index comparison color.
+
+Within each root component their blocks meet
+the hypotheses of
+Lemma~\ref{lem:group-block-order}.
+Lemma~\ref{lem:group-interval} therefore supplies
+a nonempty interval of these selected indices
+whose simultaneous replacement preserves the
+\emph{whole root group vector}.  Every replaced
+subtree was heavy but is replaced by one of length
+at most $\bar\theta_G$, so the resulting valid
+derivation has strictly smaller root yield length.
+This contradicts its choice.
+\end{proof}
+
+\begin{theorem}[Short tuples with prescribed arbitrary finite-group values]
+\label{thm:group-typed-shortest}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG
+of fan-out at most $f$ and maximum rule rank
+$r_{\max}\ge1$.  Let $g:\Sigma^*\to A$ be a
+homomorphism into \emph{any} finite group $A$.
+For every $B\in V$ and every realizable
+$\mathbf s\in A^{\fan(B)}$ there is
+$\tuple u\in L_B(G)$ with
+$g^{(\fan(B))}(\tuple u)=\mathbf s$ and
+\[
+ \|\tuple u\|_1\le
+ \beta_g^{\mathrm{grp}}:=
+ (r_{\max}+1)\bar\theta_G
+ \max\{1,(M_{A,f}-1)|V||A|^f\}.
+\]
+In particular $\beta_g^{\mathrm{grp}}
+=O_{A,f,r_{\max}}(\|G\|\bar\theta_G)$.
+\end{theorem}
+\begin{proof}
+Choose a terminal derivation from $B$ having the
+prescribed root vector, lexicographically minimizing
+(total length, node count).  Label each node by
+its nonterminal and componentwise group value.
+An ancestor and a proper descendant cannot have
+the same label: replacing the ancestor by the
+descendant would preserve every ancestral group
+vector (by the ordered evaluation of rule templates),
+would not increase total length (by nondeletion),
+and would decrease node count.  Hence each
+root-to-leaf path has at most
+$n_g=|V||A|^f$ nodes.
+
+Call a node heavy when its subtree's total yield
+length exceeds $\bar\theta_G$.  Heavy nodes are
+ancestor-closed.  By
+Lemma~\ref{lem:group-heavy-antichain},
+their leaves number at most $M_{A,f}-1$;
+all heavy nodes lie on paths to those leaves,
+so their number is at most
+$(M_{A,f}-1)n_g$.
+If the root is light, its yield already has
+length at most $\bar\theta_G$.
+Otherwise, each heavy rule contributes at most
+$\bar\theta_G$ explicit terminal symbols, and
+each of its at most $r_{\max}$ light child
+subtrees contributes at most $\bar\theta_G$.
+Counting the heavy nodes and their maximal light
+children gives the displayed upper bound.
+\end{proof}
+
+\begin{theorem}[Polynomial characteristic data for window--finite-group typing]
+\label{thm:window-group-polydata}
+Fix $f,r_{\max},k,\ell,\Sigma$, any finite group
+$A$, a homomorphism $g:\Sigma^*\to A$, and a
+fixed finite typing $h$ satisfying
+$h\preceq(h_\Sigma^{k,\ell},g)$.
+For every reduced good fan-out-$\le f$,
+rank-$\le r_{\max}$ grammar $G$ of a target in
+$\Cmcf{f}{h}$, the capped reconstruction operator
+$\mathcal B^{\le r_{\max}}_{f,h}$ has a characteristic
+sample such that
+\[
+ |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ \|\Wit(\widetilde G_0)\|_+
+ =O_{f,r_{\max},k,\ell,h,g,\Sigma}
+   (\|G\|^3\bar\theta_G).
+\]
+\end{theorem}
+\begin{proof}
+The proof of
+Lemma~\ref{lem:window-abelian-short} uses
+commutativity only through its input bound
+Lemma~\ref{lem:group-typed-shortest}; its
+skeleton replacement itself preserves the
+group value of \emph{each omitted child component}
+individually.  Replace that input by
+Theorem~\ref{thm:group-typed-shortest}.
+Specifically, retain the paths to the at most
+$f(k+\ell+1)$ protected root terminal positions;
+the skeleton has at most
+$f(k+\ell+1)n_{\mathrm{typ}}$ nodes.
+Each omitted child is replaced by a tuple of
+the same underlying nonterminal with the same
+componentwise $g$-vector and length at most
+$\beta_g^{\mathrm{grp}}$.  Every replacement
+component remains nonempty, so the marked
+prefix--suffix positions remain unchanged and
+the original long root components stay long.
+Ordered evaluation of the unchanged child group
+vectors preserves the root group vector
+\emph{without commutativity}.  Thus the root
+$h$-type is preserved and the new derivation
+lifts to the trimmed full refinement.
+The canonical tuples consequently have length
+at most
+\[
+ f(k+\ell+1)n_{\mathrm{typ}}
+ (\bar\theta_G+r_{\max}\beta_g^{\mathrm{grp}})
+ =O(\|G\|^2\bar\theta_G),
+\]
+since $n_{\mathrm{typ}}\le|V||M|^f=O(\|G\|)$.
+Lemma~\ref{lem:untyped-contexts} now bounds
+each characteristic word by
+$2\bar\theta_G+r_{\max}b_{\mathrm{can}}
+=O(\|G\|^2\bar\theta_G)$, while
+Proposition~\ref{prop:witness-cardinality}
+bounds the number of words by $O(\|G\|)$.
+The optional empty-word witness adds only a
+constant to the encoded total.
+\end{proof}
+
+\begin{remark}
+This strengthening does not assert an original-thickness
+polynomial for arbitrary finite \emph{monoid} typings.
+The explicit constant $M_{A,f}$ is a coarse
+Ramsey bound.  The abelian argument of
+Appendix~\ref{app:window-abelian} gives a substantially
+smaller constant when $A$ is commutative.
+\end{remark}
