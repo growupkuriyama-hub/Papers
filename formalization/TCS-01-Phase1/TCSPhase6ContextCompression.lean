@@ -71,6 +71,9 @@ theorem context_predecessor
           (chosenYield G h R β ++ (chosenContext G h P (ξ*β)).2)
           hcandidate
         have hlenR := chosenYield_length_le_typedThickness G h R β hretR
+        have hshort := hminQ
+        rw [he] at hshort
+        simp only [List.length_append] at hshort
         refine ⟨P,ξ*β,hp,?_,?_⟩
         · unfold contextCost
           rw [he]
@@ -101,6 +104,9 @@ theorem context_predecessor
           ((chosenContext G h P (α*ξ)).1 ++ chosenYield G h Q α)
           (chosenContext G h P (α*ξ)).2 hcandidate
         have hlenQ := chosenYield_length_le_typedThickness G h Q α hretQ
+        have hshort := hminR
+        rw [he] at hshort
+        simp only [List.length_append] at hshort
         refine ⟨P,α*ξ,hp,?_,?_⟩
         · unfold contextCost
           rw [he]
