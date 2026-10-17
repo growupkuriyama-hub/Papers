@@ -1,4 +1,5 @@
 import TCSPhase5BCharacteristic
+import TCSPhase5BFiniteDerivation
 import TCSPhase5FiniteDerivation
 
 /-! Kernel dependency audit: generic typed grammar, productive typed nodes,
@@ -24,3 +25,29 @@ set-driven characteristic predicate of Phase 1. -/
 #print axioms TCSPhase5B.canonical_witnesses_characteristic
 #print axioms TCSPhase5B.rec_characteristic_sample_exists
 #print axioms TCSPhase5.finite_rec_language_iff
+
+/-- Relate Phase 5B completeness directly to the *independent* derivations
+from Phase 5A's real finite B/U/L/S production collections. -/
+namespace TCSPhase5B
+open TCSPhase5
+variable {Alphabet NT M : Type*}
+variable [Fintype Alphabet] [DecidableEq Alphabet]
+variable [Fintype NT] [DecidableEq NT]
+variable [Monoid M] [Fintype M] [DecidableEq M]
+
+theorem finite_rec_complete_from_positive_witnesses
+    (G : SSBNFGrammar Alphabet NT) (h : List Alphabet →* M)
+    (K : Finset (List Alphabet))
+    (hW : PositiveWitnesses G h ⊆ K) :
+    GrammarLanguage G ⊆ {w | FiniteRecStartDerives h K w} := by
+  intro w hw
+  exact (finite_rec_language_iff h K w).mpr
+    (rec_complete_from_positive_witnesses G h K hW hw)
+end TCSPhase5B
+
+#print axioms TCSPhase5B.finite_typed_sound
+#print axioms TCSPhase5B.finite_typed_complete
+#print axioms TCSPhase5B.finite_typed_iff
+#print axioms TCSPhase5B.finite_typed_start_iff
+#print axioms TCSPhase5B.finite_typed_grammar_language_eq
+#print axioms TCSPhase5B.finite_rec_complete_from_positive_witnesses
