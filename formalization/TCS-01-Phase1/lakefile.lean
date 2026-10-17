@@ -53,3 +53,6 @@ lean_lib TCSPhase3CAux where
 
 @[default_target]
 lean_lib TCSPhase3CSynchronization where
+
+@[default_target]
+lean_lib TCSPhase3CPathCongruence where
