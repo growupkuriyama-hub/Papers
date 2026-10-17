@@ -1,0 +1,112 @@
+name: Publish MCFG #2 English and Japanese PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "02_fixed-h-mcfg/main.tex"
+      - "02_fixed-h-mcfg/appendix_window_abelian.tex"
+      - "02_fixed-h-mcfg/japanese/main_JP.tex"
+      - "02_fixed-h-mcfg/japanese/appendix_window_abelian_JP.tex"
+      - "02_fixed-h-mcfg/**/*.sty"
+      - "02_fixed-h-mcfg/**/*.cls"
+      - ".github/workflows/publish-mcfg-bilingual-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-mcfg02-bilingual-pdf
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Build and publish current #2 English and Japanese PDFs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source from main
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+
+      - name: Build full English manuscript (including appendix)
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: 02_fixed-h-mcfg
+          texlive_version: 2026
+
+      - name: Build full Japanese manuscript (including appendix)
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02_fixed-h-mcfg/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Validate and publish two fixed-path PDFs to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          english="02_fixed-h-mcfg/main.pdf"
+          japanese="02_fixed-h-mcfg/japanese/main_JP.pdf"
+
+          test -s "$english"
+          test -s "$japanese"
+          test "$(head -c 4 "$english")" = "%PDF"
+          test "$(head -c 4 "$japanese")" = "%PDF"
+
+          # latex-action may produce root-owned files. Copy them out before
+          # updating the checkout so a git reset cannot discard build outputs.
+          sudo chown "$(id -u):$(id -g)" "$english" "$japanese"
+          cp "$english" "$RUNNER_TEMP/mcfg02-english.pdf"
+          cp "$japanese" "$RUNNER_TEMP/mcfg02-japanese.pdf"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Concurrency with unrelated commits is allowed. Never upload
+          # stale PDFs if any TeX or style input changed during compilation.
+          for attempt in 1 2 3 4 5; do
+            git fetch --no-tags origin main
+            if ! git diff --quiet "$GITHUB_SHA" origin/main -- \
+              02_fixed-h-mcfg/main.tex \
+              02_fixed-h-mcfg/appendix_window_abelian.tex \
+              02_fixed-h-mcfg/japanese/main_JP.tex \
+              02_fixed-h-mcfg/japanese/appendix_window_abelian_JP.tex \
+              ':(glob)02_fixed-h-mcfg/**/*.sty' \
+              ':(glob)02_fixed-h-mcfg/**/*.cls'; then
+              echo "::error::MCFG source changed since this build started; will not publish stale PDFs."
+              exit 1
+            fi
+
+            git reset --hard origin/main
+            cp "$RUNNER_TEMP/mcfg02-english.pdf" "$english"
+            cp "$RUNNER_TEMP/mcfg02-japanese.pdf" "$japanese"
+            git add -f "$english" "$japanese"
+
+            if git diff --cached --quiet; then
+              echo "Both stable MCFG PDF paths are already current."
+              exit 0
+            fi
+            git commit -m "Publish latest MCFG #2 English and Japanese PDFs [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Published both fixed PDF URLs on main."
+              exit 0
+            fi
+            echo "Unrelated commit advanced main; retry $attempt/5."
+          done
+          echo "::error::Unable to publish current MCFG PDFs after five attempts."
+          exit 1
+
+      - name: Upload bilingual PDF build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: 02-mcfg-bilingual-latest
+          path: |
+            02_fixed-h-mcfg/main.pdf
+            02_fixed-h-mcfg/japanese/main_JP.pdf
+          retention-days: 30
+          if-no-files-found: error
