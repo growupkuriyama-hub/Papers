@@ -50,13 +50,24 @@ noncomputable def learner (h : List Alphabet →* M)
 theorem learner_zero (h : List Alphabet →* M) (T : Nat → List Alphabet) :
     learner h T 0 = .initial := rfl
 
+/-- The conservative transition has exactly the two advertised cases. -/
 theorem learner_step (h : List Alphabet →* M)
     (T : Nat → List Alphabet) (n : Nat) :
-    learner h T (n+1) =
-      if T n ∈ hypothesisLanguage h (learner h T n) then learner h T n
-      else .reconstructed (observed T (n+1)) := by
+    (T n ∈ hypothesisLanguage h (learner h T n) ∧
+      learner h T (n+1) = learner h T n) ∨
+    (T n ∉ hypothesisLanguage h (learner h T n) ∧
+      learner h T (n+1) = .reconstructed (observed T (n+1))) := by
   classical
-  rfl
+  by_cases hm : T n ∈ hypothesisLanguage h (learner h T n)
+  · refine Or.inl ⟨hm, ?_⟩
+    change (if T n ∈ hypothesisLanguage h (learner h T n) then
+      learner h T n else .reconstructed (observed T (n+1))) = learner h T n
+    simp [hm]
+  · refine Or.inr ⟨hm, ?_⟩
+    change (if T n ∈ hypothesisLanguage h (learner h T n) then
+      learner h T n else .reconstructed (observed T (n+1))) =
+      .reconstructed (observed T (n+1))
+    simp [hm]
 
 /-- A rebuild is an event, not an assumption that the two CFGs are distinct. -/
 def RebuildAt (h : List Alphabet →* M)
@@ -67,15 +78,17 @@ theorem learner_conservative (h : List Alphabet →* M)
     (T : Nat → List Alphabet) (n : Nat)
     (hmem : T n ∈ hypothesisLanguage h (learner h T n)) :
     learner h T (n+1) = learner h T n := by
-  rw [learner_step]
-  exact if_pos hmem
+  rcases learner_step h T n with ⟨_, heq⟩ | ⟨hnot, _⟩
+  · exact heq
+  · exact False.elim (hnot hmem)
 
 theorem learner_rebuild (h : List Alphabet →* M)
     (T : Nat → List Alphabet) (n : Nat)
     (hmiss : RebuildAt h T n) :
     learner h T (n+1) = .reconstructed (observed T (n+1)) := by
-  rw [learner_step]
-  exact if_neg hmiss
+  rcases learner_step h T n with ⟨hmem, _⟩ | ⟨_, heq⟩
+  · exact False.elim (hmiss hmem)
+  · exact heq
 
 /-- A syntactic change can happen only on a missed positive datum. -/
 theorem change_implies_rebuild (h : List Alphabet →* M)
