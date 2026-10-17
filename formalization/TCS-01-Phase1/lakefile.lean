@@ -14,3 +14,6 @@ lean_lib TCSPhase2 where
 
 @[default_target]
 lean_lib TCSPhase2Bridge where
+
+@[default_target]
+lean_lib TCSPhase3Parser where
