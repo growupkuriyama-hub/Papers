@@ -7,8 +7,10 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal v65; this is the current source of truth.
-- `revision/v64_to_v65_revision_note.md` — final pre-submission hardening after independent review: simplifies the Gallot/Bishop citation chain, clarifies rank-one novelty scope, and makes two small proof/metadata points explicit; no mathematical statement changes.
+- `main.tex` — English working manuscript, internal **v69**, current source of truth (see `PAPER.yaml`).
+- `revision/v68_to_v69_ic_referee_corrections.md` — I&C independent-review corrections: resolves the false fan-out-one open problem using the companion CFG lower bound, strengthens the SUBST_P proof, checks Gallot's exact theorem scope, reorders and focuses the introduction.
+- `revision/v67_to_v68_yoshinaka2015_revision_note.md` — prior Yoshinaka 2015 exact-correspondence revision.
+- `revision/v64_to_v65_revision_note.md` — earlier pre-submission hardening after independent review.
 - `revision/v64_to_v65.diff` — sequential unified diffs for the v64 → v65 hardening.
 - `revision/v63_to_v64_revision_note.md` — citation-hardening pass after independent audit: expands the Bishop et al. corroboration chain while retaining Gallot as the direct non-branching MCFG lower-bound source; no mathematical statement changes.
 - `revision/v63_to_v64.diff` — unified manuscript diff for the v63 → v64 citation hardening.
