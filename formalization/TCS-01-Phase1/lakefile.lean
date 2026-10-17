@@ -23,3 +23,6 @@ lean_lib TCSPhase3Recognition where
 
 @[default_target]
 lean_lib TCSPhase3Congruence where
+
+@[default_target]
+lean_lib TCSPhase3Prefix where
