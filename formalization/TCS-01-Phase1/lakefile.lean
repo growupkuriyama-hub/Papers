@@ -131,3 +131,9 @@ lean_lib TCSPhase5BRetained where
 
 @[default_target]
 lean_lib TCSPhase5BChoices where
+
+@[default_target]
+lean_lib TCSPhase5BFiniteTyped where
+
+@[default_target]
+lean_lib TCSPhase5BWitnesses where
