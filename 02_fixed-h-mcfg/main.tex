@@ -1449,104 +1449,73 @@ finite languages and an infinite language, so Gold's obstruction for a class con
 infinite language applies~\cite{Gold1967}.
 \end{proof}
 
-\subsection{Polynomial-Time Hypothesis Construction at Bounded Rule Rank}
+\subsection{Polynomial-Time Updates at Bounded Rule Rank}
 \label{sec:poly-time}
 
-The uncapped reconstruction allows arbitrary finite rule rank and serves the
-qualitative identification result; polynomial update bounds are stated only
-for the capped regime.  When $f$, $r_{\max}$, and $h$ are treated as fixed
-class parameters, the same witness construction is polynomial in the observed
-sample.  This is the standard bounded-dimension/bounded-rank regime used for
-polynomial MCFG learning and recognition; Yoshinaka likewise fixes dimension
-and rule rank in his polynomial learner and invokes the corresponding uniform
-membership bound \cite[Proposition~4 and Section~4.3]{Yoshinaka2011}.
-
-\paragraph{Encoding convention.}
-We use canonical finite encodings for all sample-derived objects.  An occurrence is
-recorded by its sample-word index and cut positions;
-tuple contexts and templates are recorded by arity together with delimited
-terminal factors and ordered hole or variable labels.
+For fixed $f,r_{\max},h$, the construction is polynomial
+in the observed sample, as in Yoshinaka's
+bounded-rank learner~\cite[Proposition~4
+and Section~4.3]{Yoshinaka2011}.
+We encode observed tuples by cut positions and
+sample-word indices, and templates by ordered
+variables and terminal factors.
 
 \begin{theorem}[Polynomial construction under a rule-rank cap]
 \label{thm:poly}
-Fix a fan-out bound \(f\ge1\), a rule-rank cap \(r_{\max}\ge1\), and a
-finite-monoid homomorphism \(h:\Sigma^*\to M\).  From any finite positive
-sample \(K\), the capped reconstruction hypothesis
-\(\widehat G_{\le r_{\max}}(K)\)
-can be constructed, including its complete output encoding, in time
-\((1+\|K\|_+)^{O(f r_{\max})}.\)
-Its fan-out is at most \(f\), and every composition-witness rule has rank at
-most \(r_{\max}\).
+Fix $f,r_{\max}\ge1$ and a finite homomorphism $h$.
+From a finite sample $K$ the complete encoding of
+$\widehat G_{\le r_{\max}}(K)$ is computable in
+time $(1+\|K\|_+)^{O(fr_{\max})}$.
+Its fan-out is at most $f$ and rule rank at
+most $r_{\max}$.
 \end{theorem}
 
-Rule~(Link) is unary and Rule~(Const) has rank zero.  Here $h$ is fixed: hidden constants may depend on its finite
-multiplication table and letter images, while the polynomial degree may depend
-on $f$ and $r_{\max}$.  The complexity statement treats $h$ as a fixed class parameter; a variable
-input encoding of $h$ lies outside its scope.
-
 \begin{proof}
-Put \(n_K:=\max(1,\|K\|_+)\).  Tuple occurrences of arity at most \(f\) are
-enumerable in \(n_K^{O(f)}\) time by the same cut-position count used in
-Lemma~\ref{lem:general-witness-enumeration}.  All observed constant rules are
-read from these tuples.  Since $h$ is represented as in Definition~\ref{def-monoid-morphism}, all substring $h$-values in
-the sample can be precomputed in polynomial time (for example, by extending
-from every cut position), so type evaluation introduces no hidden
-super-polynomial cost.  Rule~(Link) is obtained by grouping
-occurrences by arity and concrete-context encoding and comparing componentwise
-\(h\)-types; even exhaustive pairwise comparison remains within
-\(n_K^{O(f)}\).
-
-By Lemma~\ref{lem:general-witness-enumeration}, all composition
-witnesses of rank at most \(r_{\max}\), together with their canonical template
-encodings, are enumerable in \(n_K^{O(f r_{\max})}\) time and space.  Canonical sorting
-removes duplicate nonterminals and rules within the same bound.  Thus the
-number of output symbols, rules, and their total encoding length are all
-\(n_K^{O(f r_{\max})}\).
+With $n_K=\max\{1,\|K\|_+\}$, cut positions
+enumerate all tuple occurrences in
+$n_K^{O(f)}$ time; fixed-monoid substring
+products give their types. Grouping by
+context and type enumerates Rule~(Link).
+Lemma~\ref{lem:general-witness-enumeration}
+enumerates Rule~(Comp) and its encodings
+in $n_K^{O(fr_{\max})}$ time.
+The remaining rules have rank at most one,
+and deduplication leaves a polynomial-size
+complete grammar encoding.
 \end{proof}
 
 \begin{corollary}[Polynomial-time conservative learning at bounded rank]
 \label{cor:capped-gold-poly}
-Fix $f\ge1$, $r_{\max}\ge1$, and a homomorphism
-$h:\Sigma^*\to M$ into a finite monoid.  There is a conservative learner
-$\mathcal A_{f,h}^{\le r_{\max}}$ that TxtEx-identifies
-\[
-  \Cmcf{f}{h}\cap \mathsf{MCFL}(f,r_{\max})
-\]
-and processes each datum in time polynomial in the accumulated positive-sample
-size, which includes the length of the newly received datum.  Whenever it changes hypothesis, it rebuilds
-$\mathcal B_{f,h}^{\le r_{\max}}(K)$ from the current content $K$.
+For fixed $f,r_{\max},h$, the policy in
+Definition~\ref{def:conservative-learner}
+using $\mathcal B^{\le r_{\max}}_{f,h}$
+TxtEx-identifies
+$\Cmcf{f}{h}\cap\mathsf{MCFL}(f,r_{\max})$
+in time polynomial in the accumulated
+positive-sample size per processed datum.
 \end{corollary}
 
 \begin{proof}
-Use the policy of Definition~\ref{def:conservative-learner}, but replace the
-uncapped reconstruction by $\mathcal B_{f,h}^{\le r_{\max}}$.  For a target in
-$\mathsf{MCFL}(f,r_{\max})$, choose a rank-$\le r_{\max}$ presentation,
-apply the rank-preserving good normalization, and form the characteristic
-sample of Theorem~\ref{thm:exact-reconstruction} from that normalized
-presentation.  Proposition~\ref{prop:completeness} then makes every rebuild
-after this sample exact; soundness and sample consistency are unchanged.
-Hence the stabilization proof of Corollary~\ref{cor:gold-explanatory} applies
-verbatim.
-
-By Theorem~\ref{thm:poly}, a rebuild has polynomial cost for fixed
-$f,r_{\max},h$.  Every current hypothesis has fan-out at most $f$ and rule
-rank at most $r_{\max}$: Rules~(Start)--(Const) have rank zero, Rule~(Comp) is capped,
-and Rule~(Link) is unary.  For fixed fan-out and rule rank, MCFG membership is polynomial jointly in
-the grammar encoding and input length
-\cite[Proposition~4]{Yoshinaka2011}; see also
-\cite{SekiEtAl1991,Kallmeyer2010} for the classical recognition and parsing
-background.  Unary Rule~(Link) cycles cause no
-difficulty: the chart algorithm saturates the finite unary closure over the
-current nonterminal set.  Thus both the membership test that decides whether
-to rebuild and the rebuild itself take polynomial time in the accumulated
-positive-sample size.
+Rank-preserving normalization
+(Proposition~\ref{prop:good-normalization})
+and soundness and completeness
+(Propositions~\ref{prop:reconstruction-soundness}
+and~\ref{prop:completeness}) provide the
+characteristic sample needed in the proof
+of Corollary~\ref{cor:gold-explanatory}.
+Theorem~\ref{thm:poly} bounds rebuilds.
+Uniform MCFG membership for bounded
+fan-out and rank is polynomial jointly
+in the grammar encoding and input length
+\cite[Proposition~4]{Yoshinaka2011};
+the parser saturates finite unary closures.
 \end{proof}
 
-At fan-out one, every context-free language has a rule-rank-two CFG
-presentation after the usual Chomsky-normal-form conversion, with the empty
-word handled separately at the start symbol.  Hence, for every fixed finite
-$h$, the capped learner $\mathcal A_{1,h}^{\le2}$ already covers the whole
-class $\Cmcf{1}{h}$ and has polynomial time per processed datum.  No grammar-size-only characteristic-data bound is implied at rank two.
+At fan-out one every CFG admits a rank-two
+presentation, with $\eps$ handled separately.
+Thus $\mathcal A^{\le2}_{1,h}$ covers
+$\Cmcf{1}{h}$ without implying polynomial
+characteristic-data length at rank two.
 
 \section{Relation to Yoshinaka's General Framework}
 \label{sec:general-framework}
@@ -1778,10 +1747,11 @@ generate the empty language.
 \end{proof}
 
 \paragraph{Relation of characteristic witnesses.}
-Yoshinaka~\cite[Section~7]{Yoshinaka2015General}
-proves the learning theorem via the context-indexed
-$\mathrm{SUBST}_{\mathrm D}$ and also states it for
-$\mathrm{SUBST}_{\mathrm P}$.  The lemma and the
+Yoshinaka proves the learning theorem with the
+context-indexed $\mathrm{SUBST}_{\mathrm D}$
+\cite[Section~6.1]{Yoshinaka2015General}
+and states in Section~7 that Algorithm~1 also
+works with $\mathrm{SUBST}_{\mathrm P}$.  The lemma and the
 direct soundness and completeness results above
 verify the latter construction for the present
 signature.  For a trimmed typed target grammar,
@@ -2986,36 +2956,21 @@ Hence $L_{\mathrm{cd}}$ separates finite typing from every prefix--suffix
 typing and arbitrary regular filtering at fan-out one, while no finite typing
 repairs the language once arity two is tested.
 
-\begin{proposition}[The copy language has no finite typing]
-\label{prop:copy-infinite-typing}
-Let $\Sigma:=\{\mathtt a,\mathtt b\}$ and
-$\mathrm{COPY}:=\{ww:w\in\Sigma^+\}$.  Then
-$\mathrm{COPY}\in2\text{-}\mathrm{MCFL}$, but for every finite monoid
-homomorphism $h:\Sigma^*\to M$ and every $f\ge1$, COPY is not
-$(f,h)$-tuple-substitutable.  In fact the failure already occurs at arity one.
-\end{proposition}
-
-\begin{proof}
-The standard fan-out-two grammar
-\[
-\begin{aligned}
- A&\to(\mathtt a,\mathtt a)\mid(\mathtt b,\mathtt b)
-      \mid(\mathtt a \xi_1^1,\mathtt a \xi_1^2)(A)
-      \mid(\mathtt b \xi_1^1,\mathtt b \xi_1^2)(A),\\
- S&\to(\xi_1^1\xi_1^2)(A)
-\end{aligned}
-\]
-generates COPY, so $\mathrm{COPY}\in2\text{-}\mathrm{MCFL}$.
-
-Fix finite $h:\Sigma^*\to M$ and choose $n$ with $2^n>|M|$ and distinct
-$u,v\in\Sigma^n$ satisfying $h(u)=h(v)$.  Then $x:=uu$ and $y:=vv$ have equal
-$h$-type and are both accepted by the empty context.  The context
-$E:=u\blank_1u$ accepts $x$, since $E[x]=uuuu$.  If it accepted $y$, then
-$uvvu\in\mathrm{COPY}$ would have equal halves, so $uv=vu$; because
-$|u|=|v|$, this forces $u=v$, a contradiction.  Thus arity-one
-substitutability fails for every finite $h$, and hence so does the $(f,h)$
-condition for every $f\ge1$.
-\end{proof}
+\begin{remark}[The copy language]
+\label{rem:copy}
+The standard two-component copying grammar
+makes $\mathrm{COPY}=\{ww:w\in\{\mathtt a,\mathtt b\}^+\}$
+a $2$-MCFL, but for every finite typing $h$,
+already arity-one substitutability fails.
+Choose distinct $u,v\in\{\mathtt a,\mathtt b\}^n$
+with $h(u)=h(v)$ and $|u|=|v|$ by pigeonhole.
+Then $uu,vv$ share the empty context,
+while $u\blank_1u$ accepts $uu$ but not $vv$:
+otherwise $uvvu\in\mathrm{COPY}$ would give
+$uv=vu$ and hence $u=v$.
+Thus $\mathrm{COPY}\notin\Cmcf{f}{h}$
+for any $f\ge1$.
+\end{remark}
 
 \subsection{Strictness and Typings beyond Prefix--Suffix Windows}
 \label{subsec:comparison-separations}
