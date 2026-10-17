@@ -1,0 +1,48 @@
+name: TCS Phase 3C Lean formal verification
+on:
+  push:
+    branches:
+      - formalization/tcs-phase3c-ce-proof-20261017
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase3c-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve Mathlib v4.24.0
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+      - name: Build and audit all theorem files
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          for source in TCSPhase1.lean TCSPhase2.lean TCSPhase2Bridge.lean TCSPhase3Parser.lean TCSPhase3Recognition.lean TCSPhase3Congruence.lean TCSPhase3Prefix.lean TCSPhase3Main.lean TCSPhase3Suffix.lean TCSPhase3RecognitionConverse.lean TCSPhase3Marker.lean TCSPhase3RecognitionFull.lean TCSPhase3Subtree.lean TCSPhase3BMain.lean TCSPhase3CAux.lean; do
+            lake env lean "$source" 2>&1 | tee "$source.log"
+          done
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
+            echo "Forbidden token in source"
+            exit 1
+          fi
+          if grep -E 'sorryAx' TCSPhase*.lean.log; then
+            echo "Incomplete declaration found"
+            exit 1
+          fi
+          echo "All Phase 1–3C Lean declarations verified without holes"
