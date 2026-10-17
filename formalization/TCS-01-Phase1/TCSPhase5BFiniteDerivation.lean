@@ -96,6 +96,18 @@ theorem finite_typed_start_iff (G : SSBNFGrammar Alphabet NT)
           ((finite_start_iff G h _ _).mpr ⟨hs,ret⟩)
           (finite_typed_complete (trimmed_complete ht ret))
 
+/-- The independent grammar built from literal finite typed production
+sets generates exactly the original grammar's terminal language. -/
+theorem finite_typed_grammar_language_eq (G : SSBNFGrammar Alphabet NT)
+    (h : List Alphabet →* M) :
+    {w : List Alphabet | FiniteTypedStart G h w} =
+      GrammarLanguage G := by
+  ext w
+  exact finite_typed_start_iff G h w
+
+#print axioms TCSPhase5B.finite_typed_sound
+#print axioms TCSPhase5B.finite_typed_complete
 #print axioms TCSPhase5B.finite_typed_iff
 #print axioms TCSPhase5B.finite_typed_start_iff
+#print axioms TCSPhase5B.finite_typed_grammar_language_eq
 end TCSPhase5B
