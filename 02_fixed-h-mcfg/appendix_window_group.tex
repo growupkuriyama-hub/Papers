@@ -40,13 +40,17 @@ $\neg X\wedge Y$ put all $t$-points before all
 $u$-points, or conversely.  The remaining case
 $\neg X\wedge\neg Y$ would give
 $(t,1)<(t,2)<(u,1)<(u,2)<(t,1)$,
-a contradiction.  If their directions are opposite,
-$X\wedge Y$ and $\neg X\wedge\neg Y$
-yield a cycle using indices $1,2,3$.
-In the other two cases one type is entirely to
-the left of the other: off-diagonal comparisons
-follow from (ii), and comparisons at equal indices
-follow from (i) and monotonicity.  Reverse indices
+a contradiction.  If $t$ increases and $u$ decreases, $X\wedge Y$
+gives $(t,2)<(u,3)<(u,1)<(t,2)$, while
+$\neg X\wedge\neg Y$ gives
+$(t,3)<(u,2)<(t,1)<(t,3)$.
+For $X\wedge\neg Y$, all off-diagonal comparisons
+put $t$ to the left of $u$; a contrary equal-rank
+comparison would give
+$(t,1)<(u,2)<(u,1)<(t,1)$,
+contrary to (i).  Thus the types are separated.
+The case $\neg X\wedge Y$ is symmetric.
+Reverse indices
 to cover the two-decreasing case.  Thus any two
 types are either \emph{separated}, or have the
 same direction and are \emph{interleaved by rank}.
@@ -57,8 +61,9 @@ direction.  Reverse indices to assume increasing.
 If $t$ and $v$ were separated with $t$ to the left,
 we would have
 $(v,1)<(u,2)<(t,3)<(v,1)$;
-the other separation order gives the analogous
-cycle.  Hence interleaving, with equality, partitions
+if $v$ were to the left of $t$, we would instead
+have $(t,1)<(u,2)<(v,3)<(t,1)$.
+Hence interleaving, with equality, partitions
 the types into classes.  A type outside a class is
 separated from each type inside it, and must lie
 on the same side of all its types: otherwise two
@@ -162,13 +167,18 @@ Ramsey bound
 \[
  R_{c_f}(N)\le c_f^{\,c_f(N-1)+1}
 \]
-suffices: greedily select $c_f(N-1)+1$ successive
-vertices, at each step retaining a largest
-monochromatic set of later neighbors, and then
-choose $N$ vertices whose selected outgoing color
-is the same.  Each step preserves at least
-$1/c_f$ of the available vertices (with integer
-rounding).  Thus an antichain of at least
+suffices.  Put $c=c_f$ and $L=c(N-1)+1$.
+Start with at least $c^L$ vertices.  Select
+$v_1,\ldots,v_L$ successively, retaining after
+$v_j$ a largest monochromatic set of later neighbors.
+If $S_j$ is the retained set, then
+$|S_j|\ge\lceil(|S_{j-1}|-1)/c\rceil
+\ge c^{L-j}$ for $j<L$.
+Among the first $L-1=c(N-1)$ selected vertices,
+at least $N-1$ have the same outgoing color.
+The final vertex $v_L$ lies in every preceding
+retained set and completes an $N$-vertex
+monochromatic clique.  Thus an antichain of at least
 $M_{A,f}$ nodes contains $N=N_{A,f}$ indices
 with constant unary pattern and constant
 cross-index comparison color.
@@ -237,6 +247,63 @@ Counting the heavy nodes and their maximal light
 children gives the displayed upper bound.
 \end{proof}
 
+\begin{lemma}[Short canonical tuples for window--arbitrary-group typing]
+\label{lem:window-group-short}
+Under the hypotheses of Theorem~\ref{thm:group-typed-shortest},
+fix $k,\ell\ge0$ and a finite typing $h$ satisfying
+$h\preceq(h_\Sigma^{k,\ell},g)$.
+Let $\widetilde G_0$ be the trimmed full $h$-refinement
+of $G$, and let $n_{\mathrm{typ}}$ denote its number of
+non-start nonterminals.  Every non-start
+$X$ of $\widetilde G_0$ admits a canonical tuple
+$\omega(X)$ of total length at most
+\[
+ f(k+\ell+1)n_{\mathrm{typ}}
+ \bigl(\bar\theta_G+r_{\max}\beta_g^{\mathrm{grp}}\bigr).
+\]
+\end{lemma}
+\begin{proof}
+Choose a terminal derivation from $X$ minimizing the
+number of nodes.  Along a root-to-leaf path, a repeated
+typed nonterminal could be bypassed, preserving the root
+$h$-type and decreasing the number of nodes; thus
+each path has at most $n_{\mathrm{typ}}$ nodes.
+As in Lemma~\ref{lem:boundary-short-canonical},
+mark the root positions determining the
+$h_\Sigma^{k,\ell}$-value: all positions in a short
+component, the first $k$ and last $\ell$ positions
+in a long component, and one position when
+$k=\ell=0$.  The union of ancestor paths to the
+at most $f(k+\ell+1)$ marks is a skeleton with at most
+$f(k+\ell+1)n_{\mathrm{typ}}$ nodes.
+
+For each child subtree omitted from this skeleton,
+record its underlying nonterminal $B$ and the
+componentwise group vector actually realized.
+Theorem~\ref{thm:group-typed-shortest} supplies
+a replacement derivation from $B$ of length at most
+$\beta_g^{\mathrm{grp}}$ and the \emph{same group
+value in each component}.  Since $G$ is good,
+all replacement components are nonempty.
+No protected position changes, and each root
+component that was long remains long; hence the
+window value is preserved.  The ordered evaluation
+of rule templates preserves every root group value
+because each replaced child component retains its
+group value; no commutativity is used.
+Consequently the product $(h_\Sigma^{k,\ell},g)$
+and the coarser root $h$-type are unchanged.
+The underlying $G$-derivation lifts to the
+trimmed full refinement with root $X$ by
+Proposition~\ref{prop:output-invariants}(ii).
+
+Each skeleton rule contributes at most
+$\bar\theta_G$ explicit terminals and at most
+$r_{\max}$ omitted children, each contributing at most
+$\beta_g^{\mathrm{grp}}$ terminals.  The displayed
+bound follows.
+\end{proof}
+
 \begin{theorem}[Polynomial characteristic data for window--finite-group typing]
 \label{thm:window-group-polydata}
 Fix $f,r_{\max},k,\ell,\Sigma$, any finite group
@@ -256,42 +323,21 @@ sample such that
 \]
 \end{theorem}
 \begin{proof}
-The proof of
-Lemma~\ref{lem:window-abelian-short} uses
-commutativity only through its input bound
-Lemma~\ref{lem:group-typed-shortest}; its
-skeleton replacement itself preserves the
-group value of \emph{each omitted child component}
-individually.  Replace that input by
-Theorem~\ref{thm:group-typed-shortest}.
-Specifically, retain the paths to the at most
-$f(k+\ell+1)$ protected root terminal positions;
-the skeleton has at most
-$f(k+\ell+1)n_{\mathrm{typ}}$ nodes.
-Each omitted child is replaced by a tuple of
-the same underlying nonterminal with the same
-componentwise $g$-vector and length at most
-$\beta_g^{\mathrm{grp}}$.  Every replacement
-component remains nonempty, so the marked
-prefix--suffix positions remain unchanged and
-the original long root components stay long.
-Ordered evaluation of the unchanged child group
-vectors preserves the root group vector
-\emph{without commutativity}.  Thus the root
-$h$-type is preserved and the new derivation
-lifts to the trimmed full refinement.
-The canonical tuples consequently have length
-at most
+By Lemma~\ref{lem:window-group-short},
+canonical tuples in the trimmed refinement have
+length at most
 \[
- f(k+\ell+1)n_{\mathrm{typ}}
+ b_{\mathrm{can}}
+ \le f(k+\ell+1)n_{\mathrm{typ}}
  (\bar\theta_G+r_{\max}\beta_g^{\mathrm{grp}})
  =O(\|G\|^2\bar\theta_G),
 \]
-since $n_{\mathrm{typ}}\le|V||M|^f=O(\|G\|)$.
-Lemma~\ref{lem:untyped-contexts} now bounds
-each characteristic word by
+since $n_{\mathrm{typ}}\le|V||M|^f=O(\|G\|)$
+and the typing and rank bounds are fixed.
+Lemma~\ref{lem:untyped-contexts} bounds each
+characteristic word by
 $2\bar\theta_G+r_{\max}b_{\mathrm{can}}
-=O(\|G\|^2\bar\theta_G)$, while
+=O(\|G\|^2\bar\theta_G)$, and
 Proposition~\ref{prop:witness-cardinality}
 bounds the number of words by $O(\|G\|)$.
 The optional empty-word witness adds only a
