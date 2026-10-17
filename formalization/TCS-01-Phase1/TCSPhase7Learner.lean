@@ -54,7 +54,9 @@ theorem learner_step (h : List Alphabet →* M)
     (T : Nat → List Alphabet) (n : Nat) :
     learner h T (n+1) =
       if T n ∈ hypothesisLanguage h (learner h T n) then learner h T n
-      else .reconstructed (observed T (n+1)) := rfl
+      else .reconstructed (observed T (n+1)) := by
+  classical
+  rfl
 
 /-- A rebuild is an event, not an assumption that the two CFGs are distinct. -/
 def RebuildAt (h : List Alphabet →* M)
