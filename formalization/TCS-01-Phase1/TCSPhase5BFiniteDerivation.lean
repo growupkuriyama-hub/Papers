@@ -24,10 +24,10 @@ inductive FiniteTypedDerives (G : SSBNFGrammar Alphabet NT)
       FiniteTypedDerives G h (A,τ) (u ++ v)
 
 theorem finite_typed_sound {G : SSBNFGrammar Alphabet NT}
-    {h : List Alphabet →* M} {A : NT} {μ : M}
+    {h : List Alphabet →* M} {p : TypedSymbol NT M}
     {w : List Alphabet}
-    (hd : FiniteTypedDerives G h (A,μ) w) :
-    TrimmedTypedDerives G h A μ w := by
+    (hd : FiniteTypedDerives G h p w) :
+    TrimmedTypedDerives G h p.1 p.2 w := by
   induction hd with
   | terminal hr =>
       obtain ⟨orig,ht,ret⟩ := (finite_terminal_iff G h _ _ _).mp hr
