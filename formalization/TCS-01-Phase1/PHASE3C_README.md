@@ -37,6 +37,8 @@ The synchronization lemma is stated for concrete starting words `c :: x`, `d :: 
 
 `ClarkEyraud` is the **existing** Phase 2 definition that quantifies over two **nonempty words** and requires a shared accepting two-sided context, not a newly weakened definition. `LanguageMinus n` is the exact Phase 2 punctured target; `hU` is the existing finite monoid morphism.
 
+**Complete final CI:** [GitHub Actions #39015571444](https://github.com/growupkuriyama-hub/Papers/actions/runs/39015571444) (job `117346885435`), proof commit **`8148fc2abc401e22f7525a70157baf21ab125fcd`**. All **7,388 jobs** passed; 19 Lean source files were directly compiled and audited, with no proof holes or user-defined mathematical postulates. Documentation-only commits follow that validated code SHA.
+
 ## Reproduction
 
 ```bash
