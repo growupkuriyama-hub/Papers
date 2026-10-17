@@ -2,7 +2,7 @@
 
 ## 1. Canonical inputs and untouched baseline
 
-- Manuscript: `01_fixed-h-cfg/main.tex`, main HEAD `b7abdcf95d537a4f7ef364e387ec01ebd87d3e32`, `PAPER.yaml` **v225**, manuscript Git blob `7a3ed5ca1aaaf376a1e5104d12e08f59f424ab0d`.
+- Manuscript: `01_fixed-h-cfg/main.tex`, main HEAD `de32398d2fb9f378e33de9249b58e1a71248294f`, `PAPER.yaml` **v226**, manuscript Git blob `7a3ed5ca1aaaf376a1e5104d12e08f59f424ab0d`.
 - Paper: Takayuki Kuriyama, *Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing*, `TCS-D-26-00494`. LaTeX definitions inspected by labels `prop:typed-core`, `eq:W`, `thm:complete`, `thm:reconstruction-fixed-h`, `lem:sample-consistency`, `thm:soundness`.
 - New branch `formalization/tcs-phase5b-canonical-witnesses-20261017`, based exactly on successful Phase 5A HEAD `013400b7e53f55209c1c7555ecbdd0c5e3c66ada`.
 - Lean **4.24.0**, Mathlib **v4.24.0**, Lake **5.0.0** as inherited from unchanged pinned lakefile requirement.
@@ -132,9 +132,13 @@ The latter is the **actual unchanged Phase 1** set-driven characteristic predica
 
 CI workflow `.github/workflows/tcs-phase5b-lean.yml` pins Lean 4.24.0 and Mathlib v4.24.0, runs `lake build`, compiles every old and new source separately with `lake env lean`, performs `#print axioms`, and scans sources and theorem logs for forbidden proof tokens and `sorryAx`.
 
-**Status at initial report save:** The generic SSBNF, typed lifting, and retained contexts have successful CI evidence in Actions #39030778953. Later choice/witness/completeness modules require additional CI; early failing elaborations are not a mathematical counterexample, and no unverified theorem is to be counted as complete.
+**Final proof-code CI SUCCESS:** [Actions #39035468664](https://github.com/growupkuriyama-hub/Papers/actions/runs/39035468664), job **`117404271879`**, code HEAD **`696d18298a5441d0d421f0cfaac2d806ae4d02dc`**. Lean 4.24.0, Mathlib v4.24.0, `lake build` **7448 jobs**, **49** individual modules (38 inherited + 11 Phase 5B) checked by `lake env lean`, and the strict source-token check + printed dependency `sorryAx` scan all succeeded. The workflow ended with **`Phase 1-5B modules compiled and audited`**. Prior CI failures had two missing constructor indices `μ`/`τ` in `finite_typed_sound` and an audit-file documentation-comment parsing mistake; no target theorem or grammar semantics was weakened. Their fixes are part of the successful code commit.
 
-**Final successful full-HEAD workflow run and job ID:** To be recorded only after a successful run at the exact final branch HEAD; any incomplete CI does not justify verdict A/B.
+**Targeted finite-rule milestone:** [Actions #39035147081](https://github.com/growupkuriyama-hub/Papers/actions/runs/39035147081), job `117403337913`, separately confirmed `finite_typed_sound`, `finite_typed_complete`, `finite_typed_iff`, `finite_typed_start_iff`, `finite_typed_grammar_language_eq` with dependencies **`[propext, Classical.choice, Quot.sound]`** only.
+
+**Integrated printed dependencies:** `typed_lifting`, `retained_productive`, `context_plug`, `trimmed_lifting` use only `[propext, Quot.sound]`. All remaining audited Phase 5B theorems—minimum yield/context selectors, explicit finite rules, positivity, genuine U/B/L simulations, inductive completeness, exact reconstruction, characteristic-sample existence, finite-typed language equality, and `finite_rec_complete_from_positive_witnesses`—use **`[propext, Classical.choice, Quot.sound]`** only. None depends on `sorryAx` or custom mathematical postulates. See the full log of #39035468664 for each of the printed theorem names.
+
+**Paper provenance audit:** The update from v225 to v226 changes reviewer-response and metadata files, **not `01_fixed-h-cfg/main.tex`**, whose Git blob remains `7a3ed5ca1aaaf376a1e5104d12e08f59f424ab0d`. Thus `prop:typed-core`, `eq:W`, `thm:complete`, `thm:reconstruction-fixed-h` are byte-for-byte unchanged. The baseline-to-proof-code Git compare contains **zero** changes to `01_fixed-h-cfg/` or any Phase 1–5A Lean source. Documentation-only commits after the proof-code SHA must be separately CI-checked at the final HEAD.
 
 No local source changes to Phase 1–5A theorem statements or proofs, `01_fixed-h-cfg/main.tex`, `PAPER.yaml`, responses or PDFs are intended.
 
@@ -143,3 +147,46 @@ No local source changes to Phase 1–5A theorem statements or proofs, `01_fixed-
 Even if the full **minimum-choice** positive-witness reconstruction is kernel-verified, this is not yet an exact formalization of the manuscript's **shortlex** canonical tie-breaking. Also out of scope: the polynomial characteristic-data upper bound, Gold learner's conservative convergence, polynomial-time construction of Rec_h, general CFG-to-SSBNF normalization, and all remaining TCS statements.
 
 **Conditional classification:** B if full theorem set and CI succeeds with minimum-choice witnesses but shortlex unresolved; C/D if only lower milestones compile; F if compilation/CI cannot be completed. No stronger classification is asserted ahead of actual workflow completion.
+
+## 8. Exact finite production-set equivalence and proof interfaces
+
+The repaired induction in `TCSPhase5BFiniteDerivation.lean` now explicitly binds implicit production indices:
+
+```lean
+| @terminal A μ a hr => ...
+| @binary A B C τ μ ν u v hr hu hv ihU ihV => ...
+```
+
+These are Lean tactic binders only; no mathematical definitions or theorem statements changed. The following have fully checked proofs:
+
+```lean
+finite_typed_sound :
+  FiniteTypedDerives G h p w →
+    TrimmedTypedDerives G h p.1 p.2 w
+
+finite_typed_complete :
+  TrimmedTypedDerives G h A μ w →
+    FiniteTypedDerives G h (A,μ) w
+
+finite_typed_iff :
+  FiniteTypedDerives G h (A,μ) w ↔
+    TrimmedTypedDerives G h A μ w
+
+finite_typed_start_iff :
+  FiniteTypedStart G h w ↔ StartDerives G w
+
+finite_typed_grammar_language_eq :
+  {w : List Alphabet | FiniteTypedStart G h w} = GrammarLanguage G
+
+finite_rec_complete_from_positive_witnesses :
+  PositiveWitnesses G h ⊆ K →
+    GrammarLanguage G ⊆ {w | TCSPhase5.FiniteRecStartDerives h K w}
+```
+
+The final theorem explicitly invokes Phase 5A's independently kernel-verified `TCSPhase5.finite_rec_language_iff`; it is **not** a replacement of the original `RecLanguage` with an abstract model. The finite-typed refinement has actual finite `symbols`, `startRules`, `terminalRules`, and `binaryRules`.
+
+## 9. Precise final scientific assessment
+
+**B — principal mathematical goal proved, literal shortlex-canonicality not formalized.** The proved theorems concern the minimum-length choice representative `PositiveWitnesses G h`. The original manuscript's `eq:W` also fixes shortlex tie-breaking between equal-length yields and context pairs, and this exact tie-break is not encoded here. The four actual positive witness families, true grammar rules, arbitrary finite target typing and construction of a finite characteristic sample are certified; the literal equality of this `Finset` with the manuscript's shortlex-selected witness `Finset` is not. Neither Gold learning convergence nor polynomial upper bounds nor arbitrary CFG normalization has been established by Phase 5B.
+
+The final GitHub branch HEAD may differ from code HEAD above only in README and verification-report edits. The branch's final HEAD must independently pass the same complete CI; do not infer that from a prior green run.
