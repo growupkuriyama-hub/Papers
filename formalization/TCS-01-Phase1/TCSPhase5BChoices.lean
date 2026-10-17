@@ -82,6 +82,12 @@ noncomputable def shortestContextOfRet {G : SSBNFGrammar Alphabet NT}
   classical
   exact Classical.choose (Nat.find_spec (context_length_exists hr))
 
+noncomputable def shortestContextLength {G : SSBNFGrammar Alphabet NT}
+    {h : List Alphabet →* M} {A : NT} {μ : M}
+    (hr : RetainedTypedSymbol G h A μ) : Nat := by
+  classical
+  exact Nat.find (context_length_exists hr)
+
 theorem shortestContextOfRet_spec {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
     (hr : RetainedTypedSymbol G h A μ) :
@@ -89,8 +95,9 @@ theorem shortestContextOfRet_spec {G : SSBNFGrammar Alphabet NT}
       (shortestContextOfRet hr).2 ∧
     (shortestContextOfRet hr).1.length +
       (shortestContextOfRet hr).2.length =
-      Nat.find (context_length_exists hr) := by
+      shortestContextLength hr := by
   classical
+  change _ ∧ _ = Nat.find (context_length_exists hr)
   exact Classical.choose_spec (Nat.find_spec (context_length_exists hr))
 
 noncomputable def chosenContext (G : SSBNFGrammar Alphabet NT)
@@ -124,8 +131,9 @@ theorem chosenContext_start_empty {G : SSBNFGrammar Alphabet NT}
       TypedContext G h A μ p.1 p.2 ∧
       p.1.length + p.2.length = 0 :=
     ⟨([],[]),TypedContext.root hs hd,rfl⟩
-  have hle : Nat.find (context_length_exists hr) ≤ 0 :=
-    Nat.find_min' (context_length_exists hr) h0
+  have hle : shortestContextLength hr ≤ 0 := by
+    change Nat.find (context_length_exists hr) ≤ 0
+    exact Nat.find_min' (context_length_exists hr) h0
   have hc := (shortestContextOfRet_spec hr).2
   have hlen : (shortestContextOfRet hr).1.length +
       (shortestContextOfRet hr).2.length = 0 := by omega
