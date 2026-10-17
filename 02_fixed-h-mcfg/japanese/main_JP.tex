@@ -3600,131 +3600,189 @@ AI が生成した提案や査読を，
 \section{良形標準化の詳細}
 \label{app:normalization-details}
 
-The following bookkeeping records the fixed-parameter bounds used in
-Proposition~\ref{prop:good-normalization}; semantic correctness of the
-nondeleting and nonmerging conversions is standard
-\cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011}.
+以下では，命題~\ref{prop:good-normalization} で用いた
+固定パラメータに関する上界を記録する．
+非消去化と非融合化の意味論的正しさは標準的な結果である
+~\cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011}．
 
-\paragraph{Nondeleting conversion and component permutations.}
-After trimming, use only the nondeleting step (f3) from
-the proof of Seki et al.'s Lemma~2.2, in Kanazawa's rank-preserving form
-\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}.
-Retained-component subsets give at most $O_f(1)$ decorated copies per
-nonterminal and $O_{f,r_{\max}}(1)$ projected copies per rule; deleting an
-empty child cannot increase rank.  For nonpermutation, decorate a fan-out-$d$
-nonterminal by $\sigma\in\mathfrak S_d$.  The parent permutation determines
-the child permutations, so there are at most $f!$ copies, no child is
-duplicated, and rank is preserved.  Denote the result by $G_{\mathrm{nd}}$.
+\paragraph{非消去化と成分の置換．}
+刈り込みの後，
+Seki らの補題2.2の証明にある非消去化段階 (f3) だけを，
+Kanazawa のランク保存形式で用いる
+~\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}
+\cite[Section~2.1]{Kanazawa2019Ogden}．
+保持する成分の部分集合による装飾は，
+各非終端記号について高々 $O_f(1)$ 個のコピー，
+各規則について高々 $O_{f,r_{\max}}(1)$ 個の
+射影後のコピーを生む．
+空の子を削除してもランクは増えない．
+非置換化については，
+ファンアウト $d$ の非終端記号を
+$\sigma\in\mathfrak S_d$ で装飾する．
+親の置換によって子の置換が決まるため，
+コピー数は高々 $f!$ 倍であり，
+子は重複されずランクも保存される．
+得られた文法を $G_{\mathrm{nd}}$ と書く．
 
-\paragraph{Removing empty tuple components.}
-For a fan-out-$d$ nonterminal $A$, let
+\paragraph{空のタプル成分の除去．}
+ファンアウト $d$ の非終端記号 $A$ について，
 \[
  \mathsf{Pat}(A):=
- \{I\subseteq\{1,\ldots,d\}:\text{$I$ is the nonempty-component pattern of
- some }\tuple w\in L_A(G_{\mathrm{nd}})\}.
+ \{I\subseteq\{1,\ldots,d\}:
+ \text{$I$ はある $\tuple w\in L_A(G_{\mathrm{nd}})$
+ の非空成分パターン}\}
 \]
-Finite saturation computes these sets.  For realizable child patterns, replace
-variables from absent components by $\eps$, delete empty parent components,
-and omit all-empty children.  There are at most $2^f$ patterns per nonterminal
-and $2^{fr_{\max}}$ choices per rule.  Introduce $A^I$ for each nonempty
-pattern $I$.  Retained variables still occur once and in order, so
-nondeletion/nonpermutation, fan-out, and rank are preserved and the result is
-$\lambda$-free.
+とおく．
+これらの集合は有限な飽和計算で求められる．
+実現可能な子のパターンについて，
+存在しない成分から来る変数を $\eps$ で置き換え，
+空の親成分を削除し，
+全成分が空の子を省略する．
+非終端記号ごとのパターンは高々 $2^f$ 個，
+規則ごとの選択は高々 $2^{fr_{\max}}$ 通りである．
+非空パターン $I$ ごとに $A^I$ を導入する．
+保持された変数は依然としてちょうど一度，
+元の順序で現れるため，
+非消去性・非置換性・ファンアウト・規則ランクは保存され，
+出力は $\lambda$-自由となる．
 
-Induction on derivations gives
-$L_{A^I}$ exactly as the projection of source tuples having pattern $I$;
-all-empty omitted children can be restored by terminal derivations realizing their all-empty component pattern.  Since
-the start symbol has fan-out one, $S^{\{1\}}$ generates precisely the nonempty
-part of the original language.  Projection shortens templates, giving
-$O_{f,r_{\max}}(\|G_{\mathrm{nd}}\|)$ size.
+導出に関する帰納法によって，
+$L_{A^I}$ は，
+成分パターン $I$ をもつ元のタプルを
+その成分へ射影した集合と正確に一致する．
+全成分が空であるため省略された子は，
+そのパターンを実現する終端導出によって復元できる．
+開始記号のファンアウトは1なので，
+$S^{\{1\}}$ は元言語の非空部分を正確に生成する．
+射影はテンプレートを短くするため，
+サイズは $O_{f,r_{\max}}(\|G_{\mathrm{nd}}\|)$ である．
 
-\paragraph{Nonmerging.}
-Apply Yoshinaka's nonmerging conversion
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  Each decorated nonterminal denotes exactly the projected tuples associated
-with its retained component pattern, and adjacent-component concatenation
-preserves $\lambda$-freeness, nonpermutation, fan-out, and rule rank.
-For fixed fan-out and rank Yoshinaka's combined good-form conversion has
-$O(\|G\|)$ size~\cite[Section~2.3, after Example~2]{Yoshinaka2011}; trimming
-can only decrease all bounds.  This proves
-Proposition~\ref{prop:good-normalization}.
+\paragraph{非融合化．}
+Yoshinaka の非融合化を適用する
+~\cite[Section~2.3, Lemma~1]{Yoshinaka2011}．
+装飾された各非終端記号は，
+保持する成分パターンに対応する射影タプルを正確に表す．
+隣接成分を連接する変換は，
+$\lambda$-自由性，非置換性，
+ファンアウト，規則ランクを保存する．
+ファンアウトとランクを固定した場合，
+Yoshinaka の良形化全体のサイズは
+$O(\|G\|)$ である
+~\cite[Section~2.3, after Example~2]{Yoshinaka2011}．
+最後の刈り込みはどの上界も増やさない．
+これで命題~\ref{prop:good-normalization} が証明された．
 
-\subsection*{Thickness transfer for $\lambda$-free presentations}
+\subsection*{$\lambda$-自由表示に対する厚みの転移}
 
-\begin{proposition}[Thickness under good-form conversion]
+\begin{proposition}[良形変換の下での厚み]
 \label{prop:structural-good-thickness}
-Fix $f$ and $r_{\max}$.  Let $G_{\mathrm{in}}$ be a reduced $\lambda$-free
-$f$-MCFG of maximum rule rank at most $r_{\max}$, possibly with deleting
-rules, and suppose $L(G_{\mathrm{in}})\cap\Sigma^+\neq\emptyset$.  The good
-normalization of Proposition~\ref{prop:good-normalization} yields an equivalent
-reduced good grammar $G$ with the same fan-out and rule-rank bounds such that
+$f,r_{\max}$ を固定する．
+$G_{\mathrm{in}}$ を，
+削除規則を含んでもよい，
+縮約済み $\lambda$-自由な
+ファンアウト $f$ 以下の MCFG とし，
+最大規則ランクは $r_{\max}$ 以下，
+$L(G_{\mathrm{in}})\cap\Sigma^+\ne\emptyset$
+とする．
+命題~\ref{prop:good-normalization} による
+良形標準化では，
+同じファンアウト・規則ランク上界の
+同値な縮約済み良形文法 $G$ が得られ，
 \[
-  \|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|),\qquad
-  t_G\le t_{G_{\mathrm{in}}},\qquad
-  \theta_G=O_{f,r_{\max}}\!\bigl(
-     \|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}\bigr).
+ \|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|),
+ \qquad
+ t_G\le t_{G_{\mathrm{in}}},
 \]
+\[
+ \theta_G=O_{f,r_{\max}}\!\bigl(
+ \|G_{\mathrm{in}}\|
+ \max\{1,t_{G_{\mathrm{in}}}\}\bigr)
+\]
+が成り立つ．
 \end{proposition}
 
 \begin{proof}
-For $\lambda$-free $G_{\mathrm{in}}$, every derived component is nonempty.
-The nondeleting conversion therefore needs no later empty-pattern split, and
-each retained decoration $A^I$ generates exactly the projection of
-$L_A(G_{\mathrm{in}})$ onto $I$.  Hence its minimum total yield cannot exceed
-that of $A$.  Component permutations preserve total length, and Yoshinaka's
-nonmerging copies are exact adjacent-component images
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}, so
-$t_G\le t_{G_{\mathrm{in}}}$.  All decorations have fixed-parameter
-linear overhead, giving
-$\|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$; then
-Lemma~\ref{lem:thickness-equivalence} yields the displayed bound on
-$\theta_G$.
+$G_{\mathrm{in}}$ が $\lambda$-自由なら，
+生成されるすべての成分は非空である．
+したがって非消去化の後に，
+空パターンに関する追加の分割は不要であり，
+保持された各装飾 $A^I$ は，
+$L_A(G_{\mathrm{in}})$ の $I$ 上への射影を正確に生成する．
+そのため，最短生成タプルの総長は
+元の $A$ のものを超えない．
+成分置換は総長を保ち，
+Yoshinaka の非融合化コピーは
+隣接成分を連接した正確な像を表す
+~\cite[Section~2.3, Lemma~1]{Yoshinaka2011}．
+よって $t_G\le t_{G_{\mathrm{in}}}$ である．
+いずれの装飾も固定パラメータに対する線形の負担しかないため，
+$\|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$ が従う．
+最後に補題~\ref{lem:thickness-equivalence} から
+$\theta_G$ に関する表示した上界を得る．
 \end{proof}
 
-Thus deleting rules do not by themselves obstruct polynomial thickness
-transfer from a reduced $\lambda$-free presentation; genuine empty components
-are the problematic step.
+したがって，削除規則それ自体は，
+縮約済み $\lambda$-自由表示からの
+厚みの多項式転移を妨げない．
+問題となるのは実際に空の成分が存在する場合である．
 
-\begin{proposition}[Empty-component elimination can blow up thickness]
+\begin{proposition}[空成分除去は厚みを指数的に増大させ得る]
 \label{prop:empty-component-blowup}
-For every $n\ge1$ there is a reduced fan-out-two, rule-rank-two MCFG $E_n$ of
-size $O(n)$ with $t_{E_n}\le2$ and $\theta_{E_n}=O(n)$ such that the
-empty-component elimination stage of Proposition~\ref{prop:good-normalization}
-contains a retained nonterminal and a retained rule of thickness at least
-$2^n$.
+任意の $n\ge1$ に対して，
+サイズ $O(n)$，ファンアウト2，規則ランク2の
+縮約済み MCFG $E_n$ で，
+$t_{E_n}\le2$ と
+$\theta_{E_n}=O(n)$ を満たしながら，
+命題~\ref{prop:good-normalization} の
+空成分除去段階で，
+厚みが少なくとも $2^n$ の
+残存非終端記号と残存規則が現れるものが存在する．
 \end{proposition}
 
 \begin{proof}
-Let $E_n$ have fan-out-one $S$, fan-out-two $A_0,\ldots,A_n$, and
+$E_n$ はファンアウト1の開始記号 $S$ と，
+ファンアウト2の
+$A_0,\ldots,A_n$ をもち，
 \[
 \begin{aligned}
  A_0&\to(\mathtt a,\eps),\\
  A_i&\to(\eps,\mathtt c)\mid
       (\xi_1^1\xi_2^1,\xi_1^2\xi_2^2)(A_{i-1},A_{i-1})
       \quad(1\le i\le n),\\
- S&\to(\xi_1^1\mathtt d\,\xi_1^2)(A_n).
+ S&\to(\xi_1^1\mathtt d\,\xi_1^2)(A_n)
 \end{aligned}
 \]
-It is reduced, nondeleting, nonpermuting, and nonmerging.  Short side
-derivations give $t_{E_n}\le2$, and placing any chosen rule on one branch
-of the binary spine while completing siblings minimally gives
-$\theta_{E_n}=O(n)$.
+という規則をもつとする．
+これは縮約済みで，非消去，非置換，非融合である．
+短い側枝への導出から $t_{E_n}\le2$ であり，
+二分木の背骨上の一枝に任意の規則を置き，
+兄弟を最短で完成させると
+$\theta_{E_n}=O(n)$ が従う．
 
-If an $A_i$-tuple has nonempty first component and empty second component, the
-rule $(\eps,\mathtt c)$ cannot occur.  Inductively the shortest such tuple is
-$(\mathtt a^{2^i},\eps)$.  Thus pattern $\{1\}$ for $A_n$ survives
-empty-component elimination, and the projected start rule
+$A_i$ が生成するタプルの第1成分が非空で
+第2成分が空なら，
+規則 $(\eps,\mathtt c)$ は使用できない．
+帰納法により，そのような最短タプルは
+$(\mathtt a^{2^i},\eps)$ である．
+したがって $A_n$ のパターン $\{1\}$ は
+空成分除去後も残存し，
+射影された開始規則
 \[
  S\to\xi_1^1\mathtt d\,(A_n^{\{1\}})
 \]
-can succeed only with a child of length at least $2^n$.  Hence the retained
-nonterminal and rule have thickness at least $2^n$.
+の成功導出には，
+長さが少なくとも $2^n$ の子が必要である．
+よって残存非終端記号と規則の厚みは
+少なくとも $2^n$ となる．
 \end{proof}
 
-This is the same obstruction exhibited by
-Proposition~\ref{prop:typed-thickness-exponential}: finite state refinement can
-force exponentially long shortest witnesses inside one refined state.
+これは命題~\ref{prop:typed-thickness-exponential}
+と同種の障害である．
+有限状態への精密化により，
+一つの精密化状態の内部で必要な最短証拠が
+指数的に長くなり得る．
 
-\section{Relation to Yoshinaka's General Framework}
+\section{Yoshinaka の一般枠組みとの関係}
 \label{sec:general-framework}
 
 The bounded-rank learner is a typed instance of
