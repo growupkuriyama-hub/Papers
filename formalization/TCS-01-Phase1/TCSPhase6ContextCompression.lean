@@ -1,4 +1,5 @@
 import TCSPhase6DependencyPaths
+import TCSPhase6WitnessLengths
 
 /-! Phase 6: cost-descent compression of successful reaching contexts.
 A canonical context of positive length has a productive parent of
