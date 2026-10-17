@@ -77,3 +77,6 @@ lean_lib TCSPhase4Thickness where
 
 @[default_target]
 lean_lib TCSPhase4IntrinsicGap where
+
+@[default_target]
+lean_lib TCSPhase4TrimmingLanguage where
