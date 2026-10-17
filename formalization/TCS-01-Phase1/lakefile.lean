@@ -65,3 +65,6 @@ lean_lib TCSPhase3CMain where
 
 @[default_target]
 lean_lib TCSPhase4SSBNF where
+
+@[default_target]
+lean_lib TCSPhase4TypedLifting where
