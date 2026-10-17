@@ -18,31 +18,36 @@ private theorem length_yield_exists {G : SSBNFGrammar Alphabet NT}
 /-- Least length of a retained symbol's actual typed terminal yields. -/
 noncomputable def shortestYieldLength {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
-    (hr : RetainedTypedSymbol G h A μ) : Nat :=
-  Nat.find (length_yield_exists hr)
+    (hr : RetainedTypedSymbol G h A μ) : Nat := by
+  classical
+  exact Nat.find (length_yield_exists hr)
 
 noncomputable def shortestYieldOfRet {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
-    (hr : RetainedTypedSymbol G h A μ) : List Alphabet :=
-  Classical.choose (Nat.find_spec (length_yield_exists hr))
+    (hr : RetainedTypedSymbol G h A μ) : List Alphabet := by
+  classical
+  exact Classical.choose (Nat.find_spec (length_yield_exists hr))
 
 theorem shortestYieldOfRet_spec {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
     (hr : RetainedTypedSymbol G h A μ) :
     TypedDerives G h A μ (shortestYieldOfRet hr) ∧
       (shortestYieldOfRet hr).length = shortestYieldLength hr := by
+  classical
   exact Classical.choose_spec (Nat.find_spec (length_yield_exists hr))
 
 /-- Selected shortest-length yield at each retained symbol; [] is an
 unobservable fallback outside the retained domain. -/
 noncomputable def chosenYield (G : SSBNFGrammar Alphabet NT)
-    (h : List Alphabet →* M) (A : NT) (μ : M) : List Alphabet :=
-  if hr : RetainedTypedSymbol G h A μ then shortestYieldOfRet hr else []
+    (h : List Alphabet →* M) (A : NT) (μ : M) : List Alphabet := by
+  classical
+  exact if hr : RetainedTypedSymbol G h A μ then shortestYieldOfRet hr else []
 
 theorem chosenYield_spec {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
     (hr : RetainedTypedSymbol G h A μ) :
     TypedDerives G h A μ (chosenYield G h A μ) := by
+  classical
   unfold chosenYield
   simp only [dif_pos hr]
   exact (shortestYieldOfRet_spec hr).1
@@ -73,8 +78,9 @@ tie-breaking among equal-length contexts). -/
 noncomputable def shortestContextOfRet {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
     (hr : RetainedTypedSymbol G h A μ) :
-    List Alphabet × List Alphabet :=
-  Classical.choose (Nat.find_spec (context_length_exists hr))
+    List Alphabet × List Alphabet := by
+  classical
+  exact Classical.choose (Nat.find_spec (context_length_exists hr))
 
 theorem shortestContextOfRet_spec {G : SSBNFGrammar Alphabet NT}
     {h : List Alphabet →* M} {A : NT} {μ : M}
@@ -84,12 +90,14 @@ theorem shortestContextOfRet_spec {G : SSBNFGrammar Alphabet NT}
     (shortestContextOfRet hr).1.length +
       (shortestContextOfRet hr).2.length =
       Nat.find (context_length_exists hr) := by
+  classical
   exact Classical.choose_spec (Nat.find_spec (context_length_exists hr))
 
 noncomputable def chosenContext (G : SSBNFGrammar Alphabet NT)
     (h : List Alphabet →* M) (A : NT) (μ : M) :
-    List Alphabet × List Alphabet :=
-  if hr : RetainedTypedSymbol G h A μ then
+    List Alphabet × List Alphabet := by
+  classical
+  exact if hr : RetainedTypedSymbol G h A μ then
     shortestContextOfRet hr else ([],[])
 
 theorem chosenContext_spec {G : SSBNFGrammar Alphabet NT}
@@ -97,6 +105,7 @@ theorem chosenContext_spec {G : SSBNFGrammar Alphabet NT}
     (hr : RetainedTypedSymbol G h A μ) :
     TypedContext G h A μ (chosenContext G h A μ).1
       (chosenContext G h A μ).2 := by
+  classical
   unfold chosenContext
   simp only [dif_pos hr]
   exact (shortestContextOfRet_spec hr).1
@@ -108,6 +117,7 @@ theorem chosenContext_start_empty {G : SSBNFGrammar Alphabet NT}
     {w : List Alphabet} (hs : A ∈ G.startRules)
     (hd : TypedDerives G h A μ w) :
     chosenContext G h A μ = ([], []) := by
+  classical
   have hr : RetainedTypedSymbol G h A μ :=
     retained_at_start hs hd
   have h0 : ∃ p : List Alphabet × List Alphabet,
@@ -115,7 +125,7 @@ theorem chosenContext_start_empty {G : SSBNFGrammar Alphabet NT}
       p.1.length + p.2.length = 0 :=
     ⟨([],[]),TypedContext.root hs hd,rfl⟩
   have hle : Nat.find (context_length_exists hr) ≤ 0 :=
-    Nat.find_min' (context_length_exists hr) 0 h0
+    Nat.find_min' (context_length_exists hr) h0
   have hc := (shortestContextOfRet_spec hr).2
   have hlen : (shortestContextOfRet hr).1.length +
       (shortestContextOfRet hr).2.length = 0 := by omega
