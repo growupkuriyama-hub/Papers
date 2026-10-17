@@ -5,6 +5,24 @@
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
+## いつでも同じURLで読める最新PDF（英語／日本語）
+
+GitHub の **main ブランチ**上に固定したPDFパスです。論文を改訂してもURLを変更する必要はありません。
+
+- [#2 MCFG 英語版PDF — 最新公開版](https://github.com/growupkuriyama-hub/Papers/blob/main/02_fixed-h-mcfg/main.pdf)
+- [#2 MCFG 日本語版PDF — 最新公開版](https://github.com/growupkuriyama-hub/Papers/blob/main/02_fixed-h-mcfg/japanese/main_JP.pdf)
+- [#1 TCS CFG 英語版Clean PDF — 最新公開版](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf)
+- [#1 TCS CFG 日本語版PDF — 最新公開版](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/japanese/main_JP.pdf)
+
+#2 については
+[Publish MCFG #2 English and Japanese PDFs](../../.github/workflows/publish-mcfg-bilingual-pdf.yml)
+が，英語 \`main.tex\` とその別付録，日本語 \`japanese/main_JP.tex\` とその別付録の
+いずれかが変更されるとPDFの両方をビルドし，成功後に固定パスへコミットします。
+**日本語の翻訳文は英語原稿の変更に自動追従しません。**
+英語本文を修正した場合は，対応する日本語TeXも更新する必要があります。
+このワークフローは，既存の日本語TeXを再コンパイルするものであり，
+改訂箇所を機械翻訳して自動同期するものではありません。
+
 ## 日本語査読版（v72 全文）
 
 英語版 v72 の定理・数式・証明・文献に対応する完全な日本語版を
