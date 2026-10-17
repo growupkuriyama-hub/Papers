@@ -56,3 +56,6 @@ lean_lib TCSPhase3CSynchronization where
 
 @[default_target]
 lean_lib TCSPhase3CPathCongruence where
+
+@[default_target]
+lean_lib TCSPhase3CClarkEyraud where
