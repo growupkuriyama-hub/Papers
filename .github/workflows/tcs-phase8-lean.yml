@@ -1,0 +1,59 @@
+name: TCS Phase 8 Polynomial Reconstruction Lean Verification
+on:
+  push:
+    branches: [formalization/tcs-phase8-rec-poly-build-20261018]
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase8-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve mathlib
+        run: |
+          lake update
+          lake exe cache get
+      - name: Build and direct compile with kernel audit
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          for f in TCSPhase6Thickness.lean TCSPhase6Contexts.lean TCSPhase6DependencyPaths.lean TCSPhase6RuleCounts.lean TCSPhase6WitnessLengths.lean TCSPhase6EncodedSize.lean TCSPhase6CharacteristicData.lean TCSPhase6ContextCompression.lean TCSPhase6Main.lean; do
+            echo "Checking Phase 6 $f"
+            lake env lean -o ".lake/build/lib/lean/${f%.lean}.olean" "$f" 2>&1 | tee "$f.log"
+          done
+          for f in TCSPhase7Texts.lean TCSPhase7Learner.lean TCSPhase7Convergence.lean TCSPhase7Main.lean; do
+            echo "Checking Phase 7 $f"
+            lake env lean -o ".lake/build/lib/lean/${f%.lean}.olean" "$f" 2>&1 | tee "$f.log"
+          done
+          for f in TCSPhase8Occurrences.lean; do
+            echo "Checking Phase 8 $f"
+            lake env lean -o ".lake/build/lib/lean/${f%.lean}.olean" "$f" 2>&1 | tee "$f.log"
+          done
+          for f in TCSPhase[1-5]*.lean; do
+            echo "Checking inherited $f"
+            lake env lean "$f" 2>&1 | tee "$f.log"
+          done
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
+            echo "Forbidden proof token detected"
+            exit 1
+          fi
+          if grep -E 'sorryAx' TCSPhase*.lean.log; then
+            echo "sorryAx detected"
+            exit 1
+          fi
+          echo "All inherited and new Phase 8 modules compiled, axioms audited"
