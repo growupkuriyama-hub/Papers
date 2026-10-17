@@ -28,10 +28,11 @@ theorem mem_retainedTypedPairs {NT : Type} [Fintype NT]
 *after trimming*. Only unreachable/unproductive symbols default to zero;
 these are excluded from the retained-symbol maximum. -/
 noncomputable def shortestTypedLength {NT : Type} [Fintype NT]
-    [DecidableEq NT] (G : SSBNFGrammar NT) (A : NT) (μ : U1) : Nat :=
-  if h : ∃ k : Nat, ∃ w : Word,
+    [DecidableEq NT] (G : SSBNFGrammar NT) (A : NT) (μ : U1) : Nat := by
+  classical
+  exact if h : ∃ k : Nat, ∃ w : Word,
       TrimmedTypedDerives G A μ w ∧ w.length = k
-  then Nat.find h else 0
+    then Nat.find h else 0
 
 /-- A retained symbol has a genuine shortest terminal yield. -/
 theorem shortestTypedLength_spec {NT : Type} [Fintype NT]
