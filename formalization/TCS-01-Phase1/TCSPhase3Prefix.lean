@@ -20,9 +20,9 @@ theorem openingPrefix_append {i : Nat} {w : Word}
   | atom tail =>
       simpa using (OpeningPrefix.atom (tail ++ suffix))
   | ceil h ih =>
-      simpa using (OpeningPrefix.ceil (ih suffix))
+      simpa using (OpeningPrefix.ceil ih)
   | floor h ih =>
-      simpa using (OpeningPrefix.floor (ih suffix))
+      simpa using (OpeningPrefix.floor ih)
 
 theorem derived_opening_prefix {i : Nat} {w : Word}
     (hd : Derives i w) : OpeningPrefix i w := by
@@ -31,7 +31,7 @@ theorem derived_opening_prefix {i : Nat} {w : Word}
   | unary hu ih =>
       simpa [unaryWord] using
         (OpeningPrefix.ceil (openingPrefix_append ih [Terminal.squareRight]))
-  | binary hu hv ihU ihV =>
+  | @binary i u v hu hv ihU ihV =>
       simpa [binaryWord, List.append_assoc] using
         (OpeningPrefix.floor
           (openingPrefix_append ihU (v ++ [Terminal.right])))
