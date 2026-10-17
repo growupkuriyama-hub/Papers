@@ -1,0 +1,48 @@
+name: TCS Phase 3B Lean formal verification
+on:
+  push:
+    branches:
+      - formalization/tcs-phase3b-suffix-recognition-20261017
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase3b-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve Mathlib v4.24.0
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+      - name: Compile all modules and audit axioms
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          for source in TCSPhase1.lean TCSPhase2.lean TCSPhase2Bridge.lean TCSPhase3Parser.lean TCSPhase3Recognition.lean TCSPhase3Congruence.lean TCSPhase3Prefix.lean TCSPhase3Main.lean TCSPhase3Suffix.lean; do
+            lake env lean "$source" 2>&1 | tee "$source.log"
+          done
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
+            echo "Forbidden proof token detected"
+            exit 1
+          fi
+          if grep -E 'sorryAx' TCSPhase*.lean.log; then
+            echo "sorryAx detected"
+            exit 1
+          fi
+          echo "All Phase 1-3B modules compiled without proof holes"
