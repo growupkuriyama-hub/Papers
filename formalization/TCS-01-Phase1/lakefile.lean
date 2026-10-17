@@ -71,3 +71,6 @@ lean_lib TCSPhase4TypedLifting where
 
 @[default_target]
 lean_lib TCSPhase4Trimming where
+
+@[default_target]
+lean_lib TCSPhase4Thickness where
