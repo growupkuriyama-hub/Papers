@@ -1,0 +1,46 @@
+name: TCS Phase 3 Lean verification
+on:
+  push:
+    branches:
+      - formalization/tcs-phase3-appendix-c-20261016
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase3-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve pinned Mathlib
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+      - name: Build Phase 1-3 and audit all proofs
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          for source in TCSPhase1.lean TCSPhase2.lean TCSPhase2Bridge.lean TCSPhase3Parser.lean; do
+            lake env lean "$source" 2>&1 | tee "${source%.lean}.log"
+          done
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
+            echo 'FORBIDDEN PROOF TOKEN'; exit 1
+          fi
+          if grep -E 'sorryAx' TCSPhase*.log; then
+            echo 'SORRY AXIOM DETECTED'; exit 1
+          fi
+          echo 'All modules compiled with no holes'
