@@ -128,3 +128,6 @@ lean_lib TCSPhase5BTypedRefinement where
 
 @[default_target]
 lean_lib TCSPhase5BRetained where
+
+@[default_target]
+lean_lib TCSPhase5BChoices where
