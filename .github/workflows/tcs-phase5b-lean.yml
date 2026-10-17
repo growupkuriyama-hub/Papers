@@ -1,0 +1,46 @@
+name: TCS Phase 5B Canonical Witnesses Lean verification
+on:
+  push:
+    branches: [formalization/tcs-phase5b-canonical-witnesses-20261017]
+    paths:
+      - 'formalization/TCS-01-Phase1/**'
+      - '.github/workflows/tcs-phase5b-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: formalization/TCS-01-Phase1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.24.0
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.24.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve mathlib
+        run: |
+          lake update
+          lake exe cache get
+      - name: Build and audit each Lean module
+        run: |
+          set -euo pipefail
+          lean --version
+          lake --version
+          lake build
+          for m in TCSPhase1 TCSPhase2 TCSPhase2Bridge TCSPhase3Parser TCSPhase3Recognition TCSPhase3Congruence TCSPhase3Prefix TCSPhase3Main TCSPhase3Suffix TCSPhase3RecognitionConverse TCSPhase3Marker TCSPhase3RecognitionFull TCSPhase3Subtree TCSPhase3BMain TCSPhase3CAux TCSPhase3CSynchronization TCSPhase3CPathCongruence TCSPhase3CClarkEyraud TCSPhase3CMain TCSPhase4SSBNF TCSPhase4TypedLifting TCSPhase4Trimming TCSPhase4Thickness TCSPhase4IntrinsicGap TCSPhase4TrimmingLanguage TCSPhase4Main TCSPhase4FiniteRefinement TCSPhase4OperationalTrim TCSPhase5Factors TCSPhase5Derivations TCSPhase5Soundness TCSPhase5Consistency TCSPhase5Monotonicity TCSPhase5FactorsFinite TCSPhase5Grammar TCSPhase5FiniteDerivation TCSPhase5ConcreteGap TCSPhase5Main TCSPhase5BGeneralSSBNF TCSPhase5BTypedRefinement; do
+            lake env lean "$m.lean" 2>&1 | tee "$m.lean.log"
+          done
+          if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
+            echo "Forbidden source proof token"
+            exit 1
+          fi
+          if grep -E 'sorryAx' TCSPhase*.lean.log; then
+            echo "Proof placeholder dependency detected"
+            exit 1
+          fi
+          echo "Phase 1-5B modules compiled and audited"
