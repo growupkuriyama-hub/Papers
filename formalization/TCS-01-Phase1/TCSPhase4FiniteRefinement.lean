@@ -110,8 +110,95 @@ theorem finite_trimmed_sound {NT : Type} [Fintype NT]
       subst μ
       exact TrimmedTypedDerives.binary hr' hret ihB ihC
 
+
+/-- Start-rule filtering has the same exact retained-symbol criterion
+as the terminal and binary rule filters. -/
+theorem finite_trimmed_start_iff {NT : Type} [Fintype NT]
+    [DecidableEq NT] (G : SSBNFGrammar NT) (A : NT) (μ : U1) :
+    (A, μ) ∈ (FiniteTrimmedRefinement G).startRules ↔
+      A ∈ G.startRules ∧ RetainedTypedSymbol G A μ := by
+  classical
+  simp [FiniteTrimmedRefinement]
+
+/-- A typed symbol is productive in the actual finite pruned grammar iff
+it appeared in a successful typed derivation tree from the original start. -/
+theorem finite_trimmed_productive_iff_retained {NT : Type} [Fintype NT]
+    [DecidableEq NT] (G : SSBNFGrammar NT) (A : NT) (μ : U1) :
+    (∃ w : Word, DerivesFrom (FiniteTrimmedRefinement G) (A, μ) w) ↔
+      RetainedTypedSymbol G A μ := by
+  constructor
+  · rintro ⟨w, hd⟩
+    exact trimmed_root_retained (finite_trimmed_sound hd)
+  · intro hret
+    obtain ⟨w, htyped⟩ := retained_productive hret
+    exact ⟨w, finite_trimmed_complete (trimmed_complete htyped hret)⟩
+
+/-- The finite trimmed CFG's actual derivations are exactly original
+untyped derivations of the same type from a successfully retained node. -/
+theorem finite_trimmed_lifting {NT : Type} [Fintype NT]
+    [DecidableEq NT] (G : SSBNFGrammar NT)
+    (A : NT) (μ : U1) (w : Word) :
+    DerivesFrom (FiniteTrimmedRefinement G) (A, μ) w ↔
+      (DerivesFrom G A w ∧ hU w = μ) ∧
+      RetainedTypedSymbol G A μ := by
+  constructor
+  · intro hd
+    have ht := finite_trimmed_sound hd
+    exact ⟨(trimmed_lifting (trimmed_root_retained ht)).mp ht,
+      trimmed_root_retained ht⟩
+  · rintro ⟨hOrig, hret⟩
+    exact finite_trimmed_complete ((trimmed_lifting hret).mpr hOrig)
+
+/-- The finite typed production-set representation really preserves the
+whole original generated language, including the optional empty start. -/
+theorem finite_trimmed_grammar_language_eq {NT : Type} [Fintype NT]
+    [DecidableEq NT] (G : SSBNFGrammar NT) :
+    GrammarLanguage (FiniteTrimmedRefinement G) = GrammarLanguage G := by
+  rw [← trimmed_grammar_language_eq G]
+  ext w
+  constructor
+  · intro hw
+    change StartDerives (FiniteTrimmedRefinement G) w at hw
+    cases hw with
+    | empty he =>
+        exact TrimmedStartDerives.empty
+          (by simpa [FiniteTrimmedRefinement] using he)
+    | root hs hd =>
+        have hs' := (finite_trimmed_start_iff G _ _).mp hs
+        exact TrimmedStartDerives.root hs'.1 (finite_trimmed_sound hd)
+  · intro hw
+    change TrimmedStartDerives G w at hw
+    cases hw with
+    | empty he =>
+        exact StartDerives.empty
+          (by simpa [FiniteTrimmedRefinement] using he)
+    | root hs hd =>
+        have hret := trimmed_root_retained hd
+        exact StartDerives.root
+          ((finite_trimmed_start_iff G _ _).mpr ⟨hs, hret⟩)
+          (finite_trimmed_complete hd)
+
+/-- Minimum lengths of the explicit finite CFG and the semantic
+typed-thickness parameter coincide on every retained node. -/
+theorem finite_trimmed_shortest_length {NT : Type} [Fintype NT]
+    [DecidableEq NT] (G : SSBNFGrammar NT) (A : NT) (μ : U1)
+    (hret : RetainedTypedSymbol G A μ) :
+    ∃ w : Word,
+      DerivesFrom (FiniteTrimmedRefinement G) (A, μ) w ∧
+      w.length = shortestTypedLength G A μ ∧
+      (∀ v : Word,
+        DerivesFrom (FiniteTrimmedRefinement G) (A, μ) v →
+          shortestTypedLength G A μ ≤ v.length) := by
+  obtain ⟨w, hw, hlen⟩ := shortestTypedLength_spec hret
+  exact ⟨w, finite_trimmed_complete hw, hlen,
+    fun v hv => shortestTypedLength_le (finite_trimmed_sound hv)⟩
+
 #print axioms TCSPhase4.finite_trimmed_terminal_iff
 #print axioms TCSPhase4.finite_trimmed_binary_iff
 #print axioms TCSPhase4.finite_trimmed_complete
 #print axioms TCSPhase4.finite_trimmed_sound
+#print axioms TCSPhase4.finite_trimmed_productive_iff_retained
+#print axioms TCSPhase4.finite_trimmed_lifting
+#print axioms TCSPhase4.finite_trimmed_grammar_language_eq
+#print axioms TCSPhase4.finite_trimmed_shortest_length
 end TCSPhase4
