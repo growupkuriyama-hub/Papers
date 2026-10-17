@@ -1,0 +1,44 @@
+name: Build MCFG Japanese review manuscript
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "02_fixed-h-mcfg/japanese/**"
+      - ".github/workflows/build-mcfg-japanese.yml"
+  pull_request:
+    paths:
+      - "02_fixed-h-mcfg/japanese/**"
+      - ".github/workflows/build-mcfg-japanese.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-mcfg-japanese:
+    name: "LuaLaTeX — 02 MCFG Japanese review"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Compile Japanese paper with LuaLaTeX
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02_fixed-h-mcfg/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Upload Japanese PDF
+        uses: actions/upload-artifact@v7
+        with:
+          name: 02-fixed-h-mcfg-japanese-pdf
+          path: |
+            02_fixed-h-mcfg/japanese/main_JP.pdf
+            02_fixed-h-mcfg/japanese/main_JP.tex
+            02_fixed-h-mcfg/japanese/appendix_window_abelian_JP.tex
+          if-no-files-found: error
+          retention-days: 30
