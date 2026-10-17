@@ -41,3 +41,6 @@ lean_lib TCSPhase3Marker where
 
 @[default_target]
 lean_lib TCSPhase3RecognitionFull where
+
+@[default_target]
+lean_lib TCSPhase3Subtree where
