@@ -89,3 +89,6 @@ lean_lib TCSPhase4FiniteRefinement where
 
 @[default_target]
 lean_lib TCSPhase4OperationalTrim where
+
+@[default_target]
+lean_lib TCSPhase5Factors where
