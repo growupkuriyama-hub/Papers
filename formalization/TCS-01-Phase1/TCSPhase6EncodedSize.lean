@@ -44,7 +44,7 @@ theorem encoded_size_le_of_context_bound
     calc
       (∑ w ∈ W, w.length + 1) ≤
           ∑ _w ∈ W, ((n+1)*τ + 1) :=
-        Finset.sum_le_sum hterm
+        by simpa only [] using (Finset.sum_le_sum hterm)
       _ = W.card * ((n+1)*τ + 1) := by simp
   have hfactor : (n+1)*τ+1 ≤ (nMax+1)*τ+1 := by
     have hmul := Nat.mul_le_mul_right τ (Nat.add_le_add_right hn 1)
