@@ -2079,56 +2079,52 @@ Taking the maximum over retained $A_\mu$ proves the lemma.
 \label{app:thick-ssbnf}
 
 \begin{proof}[Proof of Proposition~\ref{prop:thick-ssbnf-normal}]
-Let $G_*=(V,\Sigma,P,S)$ be reduced and generate a nonempty language.  Put
-$n:=|G_*|$ and $\bar\tau:=\tau_{G_*}+1$.  We describe a standard normalization in
-an order that keeps both grammar size and shortest terminal yields polynomial.
+Let $G_*=(V,\Sigma,P,S)$ be reduced with $L(G_*)\ne\emptyset$, and put
+$N:=|G_*|$ and $\bar\tau:=\tau_{G_*}+1$.
+The standard CFG normalization operations are classical
+\cite[Section~3.1]{autebert1997}
+\cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}.
+We specify their order and the shortest-yield estimates required here;
+the latter do not follow merely from existence of a normal form.
 
-First introduce a fresh start symbol $S_0$ with $S_0\to S$ and, if
-$\lambda\in L(G_*)$, retain the possibility $S_0\to\lambda$ at the end.  Isolate every terminal occurring in a right-hand side of length at least two
-by a fresh wrapper $W_a\to a$, and binarize every right-hand side of length
-greater than two.
-Call the resulting grammar $G_{\mathrm{bin}}$.  These operations have total size $O(n)$ up
-to the chosen reasonable encoding.  Every original nonterminal keeps the same
-terminal language.  Every fresh binarization symbol expands a contiguous block
-of some original right-hand side, containing at most $O(n)$ original symbols;
-replacing each productive nonterminal in that block by a shortest terminal
-yield gives
-$\tau_{G_{\mathrm{bin}}}\le c_1 n\bar\tau$
-for a fixed constant $c_1$.
+Introduce a fresh start symbol $S_0\to S$, retaining
+$S_0\to\lambda$ precisely when $\lambda\in L(G_*)$.
+First isolate terminals in longer right-hand sides using
+$W_a\to a$, and then binarize.  The resulting $G_{\mathrm{bin}}$
+has $O(N)$ nonterminals and productions in symbol-count size
+(and polynomial encoded size); original nonterminals retain their
+terminal languages.  Each fresh binarization symbol represents a
+contiguous block of an original right-hand side with $O(N)$ symbols.
+Replacing these symbols by shortest terminal yields, each of length
+at most $\bar\tau$, gives
+$\tau_{G_{\mathrm{bin}}}=O(N\bar\tau)$.
 
-We next bound the shortest \emph{nonempty} yield of a nullable symbol of $G_{\mathrm{bin}}$.
-Suppose $A\Rightarrow_{G_{\mathrm{bin}}}^*w$ for some nonempty terminal word $w$.  Choose one
-terminal leaf in a derivation tree and follow the path from the root to that
-leaf.  If the same nonterminal occurs twice on this path, replace the subtree
-at the upper occurrence by the subtree at the lower occurrence.  Repeating
-this shortcut yields a path with at most $|V_{G_{\mathrm{bin}}}|$ nonterminal occurrences.
-At every binary node on the path, replace the off-path sibling by a shortest
-terminal yield; a nullable sibling may contribute the empty word.  The chosen
-terminal leaf contributes one symbol.  Hence
+For any nonterminal $A$ deriving a nonempty word, mark a terminal
+leaf in a derivation tree and follow its root-to-leaf path.
+Whenever a nonterminal repeats on that path, replace the subtree
+at its higher occurrence by that at its lower occurrence.
+The marked leaf survives, and the resulting path contains at most
+$|V_{G_{\mathrm{bin}}}|$ nonterminal occurrences.
+Replace each off-path sibling by a shortest terminal yield,
+possibly $\lambda$.  This still gives a nonempty word and shows
 \[
- \min\{\,|w|>0:A\Rightarrow_{G_{\mathrm{bin}}}^*w\,\}
- \le 1+|V_{G_{\mathrm{bin}}}|\tau_{G_{\mathrm{bin}}}
- \le c_2 n^2\bar\tau
+\min\{\,|w|>0:A\Rightarrow_{G_{\mathrm{bin}}}^*w\,\}
+\le 1+|V_{G_{\mathrm{bin}}}|\tau_{G_{\mathrm{bin}}}
+=O(N^2\bar\tau).
 \]
-for another fixed constant $c_2$.
 
-Now eliminate all non-start $\lambda$-productions.  Because $G_{\mathrm{bin}}$ is binary, a
-rule $A\to BC$ creates at most the variants $A\to BC$, $A\to B$, and
-$A\to C$ according to which children are nullable; there is therefore no
-exponential nullable-subset expansion.  The usual construction preserves, for
-every nonterminal, its nonempty terminal language, so the preceding bound is
-unchanged.  Next compute unit closure and eliminate non-start unit productions.
-For each source nonterminal and each unit-reachable non-unit production, copy
-that production to the source.  With $O(n)$ nonterminals and $O(n)$
-non-unit productions before this step, this creates at most $O(n^2)$ rules.
-Unit elimination preserves every nonterminal language and therefore does not
-increase the thickness bound.  Finally trim useless symbols.
-
-The resulting grammar is reduced and has separated start form; every non-start
-rule is terminal or binary, and $S_0\to\lambda$ is the only possible
-$\lambda$-rule.  Thus it is in SSBNF.  Its size is polynomial in $n$, and
-its thickness is at most $c_2 n^2(\tau_{G_*}+1)$.  All transformations above are
-computable in polynomial time, proving the proposition.
+Now eliminate non-start $\lambda$-productions.  Because binarization
+has already been performed, each $A\to BC$ yields at most the
+nonempty-right-hand-side variants $A\to BC$, $A\to B$, and $A\to C$;
+there is no exponential nullable-subset expansion.  Unit-closure
+elimination then copies at most $O(N^2)$ non-unit productions, since
+there are $O(N)$ nonterminals and $O(N)$ such productions beforehand.
+Both eliminations preserve the nonempty terminal language of each
+non-start symbol, so the preceding bound survives.  Finally trim
+useless symbols, retaining $\lambda$ only at $S_0$.
+The result is an equivalent reduced SSBNF grammar of polynomial
+encoded size and thickness $O(N^2(\tau_{G_*}+1))$.
+Every step is computable in polynomial time.
 \end{proof}
 
 \section{Proof of the linear-spine SSBNF normalization}
@@ -2514,6 +2510,11 @@ J.-M.~Autebert, J.~Berstel, and L.~Boasson.
 \newblock In G.~Rozenberg and A.~Salomaa (Eds.),
 \emph{Handbook of Formal Languages}, Vol.~1, pp.~111--174,
 Springer, 1997.
+
+\bibitem{hopcroft-motwani-ullman2007}
+J.~E.~Hopcroft, R.~Motwani, and J.~D.~Ullman.
+\newblock \emph{Introduction to Automata Theory, Languages, and Computation}.
+\newblock 3rd ed., Pearson/Addison-Wesley, 2007.
 
 \bibitem{ginsburg-greibach1966}
 S.~Ginsburg and S.~A.~Greibach.
