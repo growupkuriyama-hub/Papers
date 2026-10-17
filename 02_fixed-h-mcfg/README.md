@@ -23,9 +23,9 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v74 全文）
+## 日本語査読版（v75 全文）
 
-英語版 v74 の定理・数式・証明・文献に対応する日本語版を
+英語版 v75 の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
@@ -34,9 +34,12 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 対応検査，LuaLaTeX PDF のビルド方法を記録しています。
 提出用の英語版 `main.tex` は変更しません。
 
+**#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
+
 ## Current working baseline
 
-- `main.tex` — **v74** I&C pre-submission revision including arbitrary finite-group shortening, current source of truth (see `PAPER.yaml`).
+- `main.tex` — **v75** I&C pre-submission revision including arbitrary finite-group shortening, current source of truth (see `PAPER.yaml`).
+- `revision/v74_to_v75_final_referee_hardening.md` — final adversarial-referee corrections, version-locked companion GitHub reference, primary-source citation audit, and bilingual verification status.
 - `revision/v73_to_v74_finite_group_shortening.md` — independently audited Ramsey block-order/finite-group extension and verification gates.
 - `appendix_window_group.tex` — arbitrary finite-group short-tuple theorem and window--group polynomial characteristic-data bound (nonabelian groups included).
 - `revision/v71_to_v72_referee_p1p2_and_sharper_bounds.md` — v72 correction log, new untyped canonical-context bound, and outstanding author/publication checks.
