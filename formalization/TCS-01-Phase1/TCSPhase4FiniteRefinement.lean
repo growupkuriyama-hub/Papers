@@ -4,6 +4,14 @@ import TCSPhase4Thickness
 namespace TCSPhase4
 open TCSPhase1 TCSPhase2
 
+/-- Finite enumeration of the five literal bracketed terminals. -/
+instance : Fintype Terminal where
+  elems := {Terminal.a, Terminal.left, Terminal.right,
+    Terminal.squareLeft, Terminal.squareRight}
+  complete := by
+    intro x
+    cases x <;> simp
+
 /-- An explicit finite presentation of the semantically trimmed typed
 refinement: distinct nonterminals are pairs (A,μ), terminal and binary
 rules are finite filters of actual original rules and type equations,
@@ -87,16 +95,16 @@ theorem finite_trimmed_sound {NT : Type} [Fintype NT]
     (h : DerivesFrom (FiniteTrimmedRefinement G) X w) :
     TrimmedTypedDerives G X.1 X.2 w := by
   induction h with
-  | terminal hr =>
-      obtain ⟨A, μ⟩ := X
+  | @terminal Z c hr =>
+      rcases Z with ⟨A, μ⟩
       obtain ⟨hr', ht, hret⟩ :=
-        (finite_trimmed_terminal_iff G A μ _).mp hr
+        (finite_trimmed_terminal_iff G A μ c).mp hr
       subst μ
       exact TrimmedTypedDerives.terminal hr' hret
-  | binary hr hB hC ihB ihC =>
-      obtain ⟨A, μ⟩ := X
-      obtain ⟨B, ν⟩ := B
-      obtain ⟨C, ρ⟩ := C
+  | @binary Z Y W u v hr hB hC ihB ihC =>
+      rcases Z with ⟨A, μ⟩
+      rcases Y with ⟨B, ν⟩
+      rcases W with ⟨C, ρ⟩
       obtain ⟨hr', ht, hret, _, _⟩ :=
         (finite_trimmed_binary_iff G A B C μ ν ρ).mp hr
       subst μ
