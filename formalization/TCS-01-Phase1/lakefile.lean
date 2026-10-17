@@ -62,3 +62,6 @@ lean_lib TCSPhase3CClarkEyraud where
 
 @[default_target]
 lean_lib TCSPhase3CMain where
+
+@[default_target]
+lean_lib TCSPhase4SSBNF where
