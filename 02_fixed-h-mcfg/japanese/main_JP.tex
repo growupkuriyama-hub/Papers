@@ -1801,83 +1801,89 @@ MCFG の所属問題は決定可能なので
 \subsection{規則ランク有界の場合の多項式時間更新}
 \label{sec:poly-time}
 
-For fixed $f,r_{\max},h$, the construction is polynomial
-in the observed sample, as in Yoshinaka's
-bounded-rank learner~\cite[Proposition~4
-and Section~4.3]{Yoshinaka2011}.
-We encode observed tuples by cut positions and
-sample-word indices, and templates by ordered
-variables and terminal factors.
+$f,r_{\max},h$ を固定すると，
+Yoshinaka のランク有界学習器
+~\cite[Proposition~4 and Section~4.3]{Yoshinaka2011}
+と同様に，本構成は観測標本に関して多項式時間である．
+観測タプルは標本語の番号と切断位置によって，
+テンプレートは順序付き変数と終端因子によって符号化する．
 
-\begin{theorem}[Polynomial construction under a rule-rank cap]
+\begin{theorem}[規則ランク上界の下での多項式時間構成]
 \label{thm:poly}
-Fix $f,r_{\max}\ge1$ and a finite homomorphism $h$.
-From a finite sample $K$ the complete encoding of
-$\widehat G_{\le r_{\max}}(K)$ is computable in
-time $(1+\|K\|_+)^{O(fr_{\max})}$.
-Its fan-out is at most $f$ and rule rank at
-most $r_{\max}$.
+$f,r_{\max}\ge1$ と有限準同型 $h$ を固定する．
+有限標本 $K$ から，
+$\widehat G_{\le r_{\max}}(K)$ の完全な符号化を
+\[
+ (1+\|K\|_+)^{O(fr_{\max})}
+\]
+時間で計算できる．
+この文法のファンアウトは高々 $f$，
+規則ランクは高々 $r_{\max}$ である．
 \end{theorem}
 
 \begin{proof}
-With $n_K=\max\{1,\|K\|_+\}$, cut positions
-enumerate all tuple occurrences in
-$n_K^{O(f)}$ time; fixed-monoid substring
-products give their types. Grouping by
-context and type enumerates Rule~(Link).
-Lemma~\ref{lem:general-witness-enumeration}
-enumerates Rule~(Comp) and its encodings
-in $n_K^{O(fr_{\max})}$ time.
-The remaining rules have rank at most one,
-and deduplication leaves a polynomial-size
-complete grammar encoding.
+$n_K=\max\{1,\|K\|_+\}$ とおく．
+切断位置を用いると，
+すべてのタプル出現を
+$n_K^{O(f)}$ 時間で列挙できる．
+固定有限モノイドで部分語の積を計算すれば型が得られる．
+文脈と型で分類することで Rule~(Link) を列挙できる．
+補題~\ref{lem:general-witness-enumeration} により
+Rule~(Comp) とその符号化を
+$n_K^{O(fr_{\max})}$ 時間で列挙できる．
+残る規則はランクが高々1であり，
+重複を取り除いても完全な文法の符号長は多項式のままである．
 \end{proof}
 
-\begin{corollary}[Polynomial-time conservative learning at bounded rank]
+\begin{corollary}[規則ランク有界の場合の保守的多項式時間学習]
 \label{cor:capped-gold-poly}
-For fixed $f,r_{\max},h$, the policy in
-Definition~\ref{def:conservative-learner}
-using $\mathcal B^{\le r_{\max}}_{f,h}$
-TxtEx-identifies
-$\Cmcf{f}{h}\cap\mathsf{MCFL}(f,r_{\max})$
-in time polynomial in the accumulated
-positive-sample size per processed datum.
+$f,r_{\max},h$ を固定する．
+定義~\ref{def:conservative-learner} の方針で，
+$\mathcal B^{\le r_{\max}}_{f,h}$ を用いる学習器は，
+\[
+ \Cmcf{f}{h}\cap\mathsf{MCFL}(f,r_{\max})
+\]
+を TxtEx 同定する．
+各データ処理に要する時間は，
+その時点までの正例標本の総サイズに関して多項式である．
 \end{corollary}
 
 \begin{proof}
-Rank-preserving normalization
-(Proposition~\ref{prop:good-normalization})
-and soundness and completeness
-(Propositions~\ref{prop:reconstruction-soundness}
-and~\ref{prop:completeness}) provide the
-characteristic sample needed in the proof
-of Corollary~\ref{cor:gold-explanatory}.
-Theorem~\ref{thm:poly} bounds rebuilds.
-Uniform MCFG membership for bounded
-fan-out and rank is polynomial jointly
-in the grammar encoding and input length
-\cite[Proposition~4]{Yoshinaka2011};
-the parser saturates finite unary closures.
+ランクを保存する標準化
+（命題~\ref{prop:good-normalization}），
+健全性と完全性
+（命題~\ref{prop:reconstruction-soundness} と
+命題~\ref{prop:completeness}）から，
+系~\ref{cor:gold-explanatory} の証明に必要な
+特徴標本が得られる．
+定理~\ref{thm:poly} が再構成時間を抑える．
+ファンアウトとランクが有界な MCFG の一様な所属問題は，
+文法符号長と入力語長に関して多項式時間で解ける
+~\cite[Proposition~4]{Yoshinaka2011}．
+構文解析器では有限な単項閉包を飽和させる．
 \end{proof}
 
-At fan-out one every CFG admits a rank-two
-presentation, with $\eps$ handled separately.
-Thus $\mathcal A^{\le2}_{1,h}$ covers
-$\Cmcf{1}{h}$ without implying polynomial
-characteristic-data length at rank two.
+ファンアウト1では，空語を別に扱うことで，
+すべての CFG はランク2の表示をもつ．
+したがって $\mathcal A^{\le2}_{1,h}$ は
+$\Cmcf{1}{h}$ を対象にできる．
+ただし，これはランク2における
+特徴データ長が多項式であることを意味しない．
 
-\paragraph{Relation to Yoshinaka's general framework.}
-At bounded rule rank the present typed class is exactly
-the substitutable class of a finite-sort signature,
-and our reconstruction generates the same language as
-Yoshinaka's substructure-indexed $\mathrm{SUBST}_{\mathrm P}$
-on each sample. These qualitative conclusions are
-instances of the general framework
-\cite{Yoshinaka2015General}; precise statements,
-context-function correspondence, and proofs appear
-in Appendix~\ref{sec:general-framework}.
+\paragraph{Yoshinaka の一般枠組みとの関係．}
+規則ランクが有界なら，
+本稿の型付きクラスは
+有限ソート signature の代入可能な言語クラスと厳密に一致する．
+また再構成作用素は，各標本について
+Yoshinaka の部分構造添字付き
+$\mathrm{SUBST}_{\mathrm P}$ と同じ言語を生成する．
+これらの質的結論は
+一般枠組み~\cite{Yoshinaka2015General}
+の特別な場合である．
+厳密な命題，文脈関数の対応，証明は
+付録~\ref{sec:general-framework} に示す．
 
-\section{Characteristic-Data Bounds}
+\section{特徴データ長の上界}
 \label{sec:char-data}
 
 Under a rule-rank cap, Proposition~\ref{prop:witness-cardinality} already
