@@ -1,0 +1,26 @@
+import TCSPhase5BCharacteristic
+import TCSPhase5FiniteDerivation
+
+/-! Kernel axiom audit: generic typed grammar, productive typed nodes,
+witness set, genuine U/B/L/S simulation, completeness and the
+set-driven characteristic predicate of Phase 1. -/
+#print axioms TCSPhase5B.typed_lifting
+#print axioms TCSPhase5B.retained_productive
+#print axioms TCSPhase5B.context_plug
+#print axioms TCSPhase5B.trimmed_lifting
+#print axioms TCSPhase5B.chosenYield_spec
+#print axioms TCSPhase5B.chosenYield_type
+#print axioms TCSPhase5B.chosenContext_spec
+#print axioms TCSPhase5B.chosenContext_start_empty
+#print axioms TCSPhase5B.finite_terminal_iff
+#print axioms TCSPhase5B.finite_binary_iff
+#print axioms TCSPhase5B.positive_witnesses_subset_language
+#print axioms TCSPhase5B.witness_unary
+#print axioms TCSPhase5B.simulate_terminal
+#print axioms TCSPhase5B.simulate_binary
+#print axioms TCSPhase5B.canonical_symbol_reconstructs
+#print axioms TCSPhase5B.rec_complete_from_positive_witnesses
+#print axioms TCSPhase5B.rec_exact_reconstruction
+#print axioms TCSPhase5B.canonical_witnesses_characteristic
+#print axioms TCSPhase5B.rec_characteristic_sample_exists
+#print axioms TCSPhase5.finite_rec_language_iff
