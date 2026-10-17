@@ -1,7 +1,7 @@
 import TCSPhase5BCharacteristic
 import TCSPhase5FiniteDerivation
 
-/-! Kernel axiom audit: generic typed grammar, productive typed nodes,
+/-! Kernel dependency audit: generic typed grammar, productive typed nodes,
 witness set, genuine U/B/L/S simulation, completeness and the
 set-driven characteristic predicate of Phase 1. -/
 #print axioms TCSPhase5B.typed_lifting
