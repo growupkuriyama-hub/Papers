@@ -124,6 +124,23 @@ Only Lean's permitted, built-in logical principles appear. There are no new math
 
 The initial auxiliary-module attempt had one unnecessary specialized marker helper whose binder could not be inferred; it was removed and replaced by the already-proved general marker theorem. The first branch synchronization attempt had an ambiguity between `_root_.Language` and the actual `TCSPhase2.Language`; qualification fixed that error. These were elaboration failures, not mathematical counterexamples. No failed intermediate run was represented as proof success.
 
+## Final integrated CI — all phases, all 19 source modules
+
+**Full proof success:** [GitHub Actions #39015571444](https://github.com/growupkuriyama-hub/Papers/actions/runs/39015571444); job **`117346885435`**; exact proof-and-workflow commit **`8148fc2abc401e22f7525a70157baf21ab125fcd`**.
+
+```text
+Built TCSPhase3CSynchronization
+Built TCSPhase3CPathCongruence
+Built TCSPhase3CClarkEyraud
+Built TCSPhase3CMain
+Build completed successfully (7388 jobs).
+All Phase 1–3C Lean declarations verified without holes
+```
+
+The successful workflow explicitly executed `lean --version`, `lake --version`, `lake build`, and `lake env lean` independently on all **19** theorem files; its two audits found neither prohibited source declarations nor `sorryAx`. `#print axioms` for the final four requested theorems in the `TCSPhase3CMain.lean` output reports **only** `[propext, Classical.choice, Quot.sound]`.
+
+GitHub commit comparison with the Phase 3B baseline confirms that all previous Lean source blobs remain byte-identical, only five new Lean source modules and two documentation files plus one CI workflow were added, and only `lakefile.lean` was extended. The protected `01_fixed-h-cfg/` source tree has **zero changed files**. The final README/report additions and this record are documentation-only commits after the verified proof code, so the code verified by the successful run is exactly the code on this branch.
+
 ## D. Paper correspondence
 
 | Paper source, Appendix C or Section 6 | Verified Lean theorem |
