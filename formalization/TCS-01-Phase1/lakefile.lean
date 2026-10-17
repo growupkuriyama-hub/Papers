@@ -146,3 +146,9 @@ lean_lib TCSPhase5BCompleteness where
 
 @[default_target]
 lean_lib TCSPhase5BCharacteristic where
+
+@[default_target]
+lean_lib TCSPhase5BFiniteDerivation where
+
+@[default_target]
+lean_lib TCSPhase5BMain where
