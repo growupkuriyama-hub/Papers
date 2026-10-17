@@ -31,9 +31,6 @@
 
 \newcommand{\Wit}{\mathsf{W}}
 \newcommand{\Cmcf}[2]{\mathcal{C}^{\mathrm{mcf}}_{#1,#2}}
-\newcommand{\Cboundedtyping}[2]{\mathcal{C}^{\mathrm{mcf},\le #2}_{#1}}
-\newcommand{\Calltyping}[1]{\mathcal{C}^{\mathrm{mcf},\mathrm{fin}}_{#1}}
-\newcommand{\Ffrag}[2]{\mathcal{F}_{#1,#2}}
 \newcommand{\D}{\mathcal{D}}
 \newcommand{\out}{\mathrm{out}}
 \newcommand{\tuple}[1]{\vec{#1}}
@@ -69,8 +66,9 @@ monoid. We study positive-data learning of multiple context-free languages
 when tuples may be interchanged only if corresponding components have
 equal $h$-values. At bounded rule rank this class is an instance of
 Yoshinaka's general substitutable-signature framework; we verify the
-relationship for the guarded observed-tuple construction, including
-its uncapped extension.
+relationship for the guarded observed-tuple construction,
+and relate its uncapped extension to Yoshinaka's
+uncapped learner.
 
 Our principal quantitative question is the \emph{total length} of
 characteristic positive data, measured in the size and rule thickness
@@ -139,6 +137,10 @@ when corresponding components have equal $h$-values.  The compositional type
 guard is fixed before the positive text is seen, separating the choice of a
 finite bias from learning under that bias~\cite{CosteTyping2004}.
 Prefix--suffix and DFA transition morphisms provide two useful families.
+A fixed prefix--suffix window is a uniform, independently chosen finite
+parameter of the target class, not a parameter tuned to each sample;
+the principal total-length bound applies to every target in that fixed
+window-typed class at the given fan-out and rule rank.
 Fan-out is part of the same bias because it determines which tuple arities are
 tested for substitution.  Thus a fixed typing supplies finite-state information
 while the MCFG carries the unbounded dependency.
@@ -162,13 +164,13 @@ finite characteristic sets.
 \item \emph{A multi-component quantitative upper bound.}
 At every fixed fan-out and rule rank, a typing determined by a
 fixed prefix--suffix window admits characteristic data of total
-length $O(\|G\|^3\max\{1,\theta_G\})$ for a reduced good
+length $O(\|G\|^2\max\{1,\theta_G\})$ for a reduced good
 presentation $G$ (Theorem~\ref{thm:boundary-polydata}).
 Its key ingredient is a short-tuple lemma preserving boundary
 information across all tuple components simultaneously.
 Appendix~\ref{app:window-abelian} extends the result
 to a window combined with a fixed finite abelian group,
-with total length $O(\|G\|^4\bar\theta_G)$
+with total length $O(\|G\|^3\bar\theta_G)$
 (Theorem~\ref{thm:window-abelian-polydata}).
 
 \item \emph{Typing, fan-out and rule-rank separations.}
@@ -233,6 +235,14 @@ CFG paper~\cite{kuriyamaCFG}.
 Sections~\ref{sec:prelim}--\ref{sec:char-data} develop the model,
 reconstruction, convergence, and quantitative bounds; Section~\ref{sec:comparison}
 gives the comparison with Yoshinaka's classes and the separation results.
+
+\paragraph{Proof methodology and AI-assisted research.}
+This is a theoretical study: the claims are justified by the formal
+proofs presented here rather than by computational experiments or
+automated reviews. Generative AI tools were used to explore and
+critique candidate arguments and to assist manuscript revisions;
+such output is not itself mathematical verification.
+The tools and their roles are disclosed at the end of the manuscript.
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -910,9 +920,7 @@ $[\mathtt{aabbcc}]\to\mathtt{aa}[\mathtt b]\mathtt{bcc}$ can then use that
 link to derive $\mathtt{aaabbcbcc}\notin L$.  Under $h_\Sigma^{1,1}$ the
 link is blocked because $h_\Sigma^{1,1}(\mathtt b)=\mathtt b$ while
 $h_\Sigma^{1,1}(\mathtt{abbc})=\langle\mathtt a,\mathtt c\rangle$.
-This illustrates the local role of the equal-type premise; the strictness theorem in
-Section~\ref{sec:comparison} later uses the same boundary mechanism at every
-fan-out level.
+This illustrates the local role of the equal-type premise.
 \end{example}
 
 The reconstruction is sample-consistent:
@@ -1514,10 +1522,10 @@ rule rank one
   & polynomial in $\|G\|$ alone
   & Theorem~\ref{thm:rankone-polydata} \\
 $h\preceq h_\Sigma^{k,\ell}$, bounded rank
-  & polynomial in $\|G\|$ and $\max\{1,\theta_G\}$
+  & $O(\|G\|^2\bar\theta_G)$
   & Theorem~\ref{thm:boundary-polydata} \\
 window plus finite abelian group
-  & $O(\|G\|^4\bar\theta_G)$
+  & $O(\|G\|^3\bar\theta_G)$
   & Theorem~\ref{thm:window-abelian-polydata} \\
 \hline
 \end{tabularx}
@@ -1764,10 +1772,12 @@ Write $n_{\mathrm{typ}}\le|V||M|^f$ for its
 number of non-start typed nonterminals and
 $b_G\le\max\{1,\|G\|\}$ for the largest explicit
 terminal count of a rule, taking $b_G\ge1$.
-A shortest typed terminal derivation from any
-nonterminal is a unary chain with no repeated
-typed nonterminal: splicing in the later suffix
-would otherwise shorten the chain. Therefore
+Choose a typed terminal unary derivation that
+minimizes first total yield length and then the
+number of rules. No typed nonterminal can repeat:
+splicing in the later suffix would not increase
+yield length and would strictly shorten the
+chain. Therefore
 $\|\omega(X)\|_1\le n_{\mathrm{typ}}b_G$.
 Lemma~\ref{lem:reusable-context-bound} bounds
 each witness word by $(2n_{\mathrm{typ}}+1)b_G$,
@@ -1795,8 +1805,11 @@ grammar $A_0\to\mathtt c$,
 $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
 generates the singleton $\{\mathtt c^{2^n}\}$,
 which is $(f,h)$-tuple-substitutable for
-every fixed $f,h$. Every characteristic
-sample for this target contains a word
+every fixed $f,h$: over a one-letter alphabet,
+sharing a sentence context forces equal total
+component lengths, so every context accepts
+both tuples or neither. Every characteristic
+sample for this singleton target contains a word
 of length at least $2^n$.
 
 \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
@@ -1839,6 +1852,78 @@ of the tuple produced at its left-hand side survives exactly once to the final
 sentence.  A minimum-yield successful derivation using the rule therefore bounds both
 its explicit terminal material and the total length of that occurrence's
 left-hand-side tuple.  Maximizing over rules gives (i) and (ii).
+\end{proof}
+
+\begin{lemma}[Untyped rule thickness controls canonical contexts]
+\label{lem:untyped-contexts}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good
+MCFG and $\widetilde G_0$ its trimmed
+yield-type refinement for any fixed finite typing
+$h$. For each $A\in V$ of fan-out $d$ there is
+an admissible sentence context $E_A\in\mathcal E_d$
+such that
+\[
+ |E_A|_{\mathrm{fix}}\le\bar\theta_G,
+ \qquad E_A[\tuple u]\in L(G)
+ \quad\text{for all }\tuple u\in L_A(G),
+\]
+and $E_S=\blank_1$ may be chosen.
+Thus for every non-start typed nonterminal
+$X=A_{\mathbf t}$ the choice
+$\chi(X):=E_A$ meets
+Definition~\ref{def:target-canonical}.
+With canonical tuples satisfying
+$\|\omega(X)\|_1\le b_{\mathrm{can}}$
+and maximum rule rank $r_{\max}$,
+every word in $\Wit(\widetilde G_0)$
+has length at most
+\[
+  2\bar\theta_G+r_{\max}b_{\mathrm{can}}.
+\]
+\end{lemma}
+
+\begin{proof}
+Take $E_S=\blank_1$. For $A\ne S$ choose
+a source rule $R$ with left-hand side $A$.
+Because $G$ is reduced, there is a successful
+sentence derivation using $R$ and having
+length $\theta_G(R)\le\theta_G$.
+Remove the subtree rooted at that occurrence
+of $A$, replacing its $d$ components by
+ordered holes. Lemma~\ref{lem:filling-identity},
+iterated along the path to the root, and
+goodness show that the resulting
+$E_A$ belongs to $\mathcal E_d$.
+Its fixed terminal material is part of the
+selected sentence, hence has length at most
+$\theta_G(R)$. Substituting any tuple from
+$L_A(G)$ gives another successful source
+derivation, so $E_A$ accepts every such tuple.
+
+By Proposition~\ref{prop:output-invariants}(i),
+$L_X\subseteq L_A(G)$; consequently $E_A$
+accepts every tuple of the typed $X$.
+The surrounding source derivation can also
+be lifted to the full typed refinement by
+Proposition~\ref{prop:output-invariants}(ii):
+the type of $X$ determines all ancestral
+types given the fixed sibling derivations,
+and the fresh start symbol admits every
+start type. In particular, $\chi(X)$
+has the required common-context property.
+For a direct start link, $X=S_{\mathbf t}$
+and the chosen context is $\blank_1$.
+
+A witness is $\chi(X)[\omega(X)]$,
+$\chi(X)[\tuple c]$, or
+$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_r))]$.
+Its context contributes at most
+$\bar\theta_G$ terminals; the source rule
+writes at most $\bar\theta_G$ by
+Lemma~\ref{lem:thickness-local-bounds}(i),
+and it has at most $r_{\max}$ child tuples.
+The displayed bound follows, with the
+rank-zero case included.
 \end{proof}
 
 Fix $k,\ell\ge0$ and let
@@ -1910,18 +1995,18 @@ derivation can be inserted into a successful derivation through $X$ and hence
 survives trimming.  Its root tuple may therefore be chosen as $\omega(X)$.
 \end{proof}
 
-Applying Lemma~\ref{lem:reusable-context-bound} with
+Apply Lemma~\ref{lem:untyped-contexts}
+with
 \[
  b_{\mathrm{can}}
- =f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G,
- \qquad
- b_{\mathrm{rule}}=\bar\theta_G,
- \qquad
- r_0=r_{\max},
+ =f(k+\ell+1)n_{\mathrm{typ}}
+       (r_{\max}+1)\bar\theta_G.
 \]
-shows directly that every selected witness word has length
-$O_{f,r_{\max},k,\ell,h,\Sigma}(\|G\|^2\bar\theta_G)$, since
-$n_{\mathrm{typ}}\le |V||M|^f$.
+Every selected witness word then has length at most
+$2\bar\theta_G+r_{\max}b_{\mathrm{can}}
+ =O_{f,r_{\max},k,\ell,h,\Sigma}
+   (\|G\|\bar\theta_G)$, since
+$n_{\mathrm{typ}}\le|V||M|^f$.
 
 \begin{theorem}[Polynomial data for prefix--suffix-determined typings]
 \label{thm:boundary-polydata}
@@ -1936,7 +2021,7 @@ A characteristic sample can be chosen with
  \qquad
  \|\Wit(\widetilde G_0)\|_+
  =O_{f,r_{\max},k,\ell,h,\Sigma}
-   (\|G\|^3\bar\theta_G),
+   (\|G\|^2\bar\theta_G),
 \]
 where $\bar\theta_G=\max\{1,\theta_G\}$.  For a reduced $\lambda$-free input
 presentation $G_{\mathrm{in}}$ (deleting rules allowed), the structural
@@ -1949,10 +2034,10 @@ $\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}$.
 The $h$-refinement has at most $|V||M|^f$ typed nonterminals and
 $|P||M|^{fr_{\max}}$ typed rule instances.
 Lemma~\ref{lem:boundary-short-canonical} applies because preserving the finer
-$h_\Sigma^{k,\ell}$ boundary type preserves the coarser $h$-type.  Together
-with Lemma~\ref{lem:reusable-context-bound}, it bounds every selected witness
-word by
-$O_{f,r_{\max},k,\ell,h,\Sigma}(\|G\|^2\bar\theta_G)$.
+$h_\Sigma^{k,\ell}$ boundary type preserves the coarser $h$-type.  Lemma~\ref{lem:untyped-contexts} now
+bounds every selected witness word by
+$O_{f,r_{\max},k,\ell,h,\Sigma}
+(\|G\|\bar\theta_G)$.
 Proposition~\ref{prop:witness-cardinality} gives
 \[
  |\Wit(\widetilde G_0)|
@@ -1989,6 +2074,10 @@ Theorem~\ref{thm:intrinsic-ranktwo-witness} below shows that this higher-rank
 regime is needed at the language level: it gives a non-context-free
 $(1,1)$-typed target of minimum fan-out two and minimum rule rank two even
 when competing presentations may use arbitrary finite fan-out.
+Of the examples below, $L_{\mathrm{intr}}$ falls under the window theorem,
+whereas the rank-one languages $L_{\mathrm{cd}}$ and $L_\star$ fall under
+Theorem~\ref{thm:rankone-polydata}; thus each separation is compatible with
+a quantitative learning bound.
 
 \section{Comparison with Multidimensional Substitutability}
 \label{sec:comparison}
@@ -2733,10 +2822,13 @@ commercial, or not-for-profit sectors.
 No data were used for the research described in this article.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
-During the preparation of this manuscript, the author used ChatGPT and Claude
-to assist with language editing, consistency checks, and critical review of the
-draft.  The author reviewed and edited all resulting material and takes full
-responsibility for the content of the article.
+The author used ChatGPT (OpenAI) and Claude (Anthropic) during the research
+and manuscript-preparation process, including exploratory mathematical
+argument development, proof drafting and criticism, literature and
+consistency checks, and editing of text and LaTeX source.
+AI-generated suggestions and reviews are not treated as independent
+mathematical verification. The author takes responsibility for the
+mathematical claims, citations, and final content of this article.
 
 \appendix
 \section{Details of the Good Normalization}
@@ -2892,10 +2984,17 @@ good MCFG templates of child rank at most $r$
 (including rank zero); promotions
 $T_{1,\mu}\to O_*$; and a nullary $\eps$
 constant of sort $O_*$. No function takes an
-$O_*$ input. These are finite sort refinements
-of the bounded-MCFG and prefix--suffix
-signatures in
-\cite[Examples~3--4 and Section~8]{Yoshinaka2015General}.
+$O_*$ input. After forgetting the type tags, this is a
+finite sort refinement, in the sense of
+\cite[Section~8]{Yoshinaka2015General}, of
+the signature of good $\lambda$-free MCFG
+operations on nonempty tuples. That
+untyped signature is a nonempty-component
+variant of \cite[Example~3]{Yoshinaka2015General},
+rather than literally the signature of that
+example; at fan-out one the prefix--suffix
+case corresponds to
+\cite[Example~4]{Yoshinaka2015General}.
 Write $\mathcal S_O,\mathcal C_O$ for the
 substructures and contexts realizable in
 some grammar over this signature.
@@ -2982,6 +3081,9 @@ Lemma~\ref{lem:signature-contexts} identifies
 the four-instance signature implication
 with Definition~\ref{def:tuple-substitutable}
 for each arity and componentwise type.
+The trimmed presentation has no useless
+nonterminals or functions, as required in
+\cite[Section~6]{Yoshinaka2015General}.
 This proves the equality.
 
 For the effective assumptions, sort/context
@@ -3027,9 +3129,11 @@ Identify their non-start symbols indexed
 by the same observed tuples and typed sorts.
 A $\mathrm{SUBST}_{\mathrm P}$ rule
 with parent $s_0$ and template value
-$z=\rho(s_1,\ldots,s_t)$ is witnessed
-by a common signature context for
-$s_0,z$. By Lemma~\ref{lem:signature-contexts}
+$z=\rho(s_1,\ldots,s_t)$ requires a
+common $c\in\mathrm{CON}_O(K)$ such that
+$c\odot s_0,c\odot z\in K$,
+in the notation of
+\cite{Yoshinaka2015General}. By Lemma~\ref{lem:signature-contexts}
 this is an admissible sentence context.
 The guarded Rule~(Link) sends $[s_0]$
 to $[z]$, followed by Rule~(Comp), or
@@ -3061,9 +3165,12 @@ languages are empty.
 
 \paragraph{Characteristic witness correspondence.}
 Yoshinaka's proof uses the context-indexed
-$\mathrm{SUBST}_{\mathrm D}$, while its
+$\mathrm{SUBST}_{\mathrm D}$, whereas its
 Section~7 discusses $\mathrm{SUBST}_{\mathrm P}$
+under the stated additional assumption
 \cite{Yoshinaka2015General}.
+The sample-level equality here is established
+directly by Lemma~\ref{lem:substp}.
 Choosing its non-start witnesses as
 $c_X=\chi(X)$ and $s_X=\omega(X)$
 gives precisely $\Wit(\widetilde G_0)$
@@ -3208,6 +3315,7 @@ M.~Kanazawa and R.~Yoshinaka.
 \newblock Extending distributional learning from positive data and membership queries.
 \newblock In {\em Proceedings of the 16th International Conference on Grammatical Inference},
 Proceedings of Machine Learning Research 217, pp.~8--22, 2023.
+
 \bibitem{Gallot2021}
 P.~D.~Gallot.
 \newblock \emph{Safety of transformations of data trees: Tree transducer
