@@ -32,15 +32,15 @@ jobs:
           lean --version
           lake --version
           lake build
-          for f in TCSPhase[1-5]*.lean; do
-            echo "Checking inherited $f"
-            lake env lean "$f" 2>&1 | tee "$f.log"
-          done
           # These are new modules, not part of the inherited Lake target.
           # Compile them in dependency order and write .olean for subsequent imports.
           for f in TCSPhase6Thickness.lean TCSPhase6Contexts.lean TCSPhase6RuleCounts.lean TCSPhase6WitnessLengths.lean TCSPhase6EncodedSize.lean TCSPhase6CharacteristicData.lean; do
             echo "Checking new $f"
             lake env lean -o ".lake/build/lib/lean/${f%.lean}.olean" "$f" 2>&1 | tee "$f.log"
+          done
+          for f in TCSPhase[1-5]*.lean; do
+            echo "Checking inherited $f"
+            lake env lean "$f" 2>&1 | tee "$f.log"
           done
           if grep -nE '(^|[^[:alnum:]_])(sorry|admit|axiom|opaque)([^[:alnum:]_]|$)' TCSPhase*.lean; then
             echo "Forbidden proof token detected"
