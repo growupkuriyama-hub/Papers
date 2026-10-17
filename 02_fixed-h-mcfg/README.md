@@ -7,7 +7,8 @@
 
 ## Current working baseline
 
-- `main.tex` — **v71** reduced I&C working manuscript, current source of truth (see `PAPER.yaml`).
+- `main.tex` — **v72** I&C final-referee working revision, current source of truth (see `PAPER.yaml`).
+- `revision/v71_to_v72_referee_p1p2_and_sharper_bounds.md` — v72 correction log, new untyped canonical-context bound, and outstanding author/publication checks.
 - `revision/v71_retired_results_archive.md` — the removed v70 results and the entire former doubling-family appendix, preserved for reuse in a thesis or separate paper; **not compiled** in v71.
 - `revision/v70_to_v71_selective_results_note.md` — v71 scope decisions, retained results and validation gates.
 - `appendix_window_abelian.tex` — separate window + finite-abelian-group characteristic-data theorem, with proof and explicit nonabelian limitation.
