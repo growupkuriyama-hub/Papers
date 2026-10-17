@@ -125,3 +125,6 @@ lean_lib TCSPhase5BGeneralSSBNF where
 
 @[default_target]
 lean_lib TCSPhase5BTypedRefinement where
+
+@[default_target]
+lean_lib TCSPhase5BRetained where
