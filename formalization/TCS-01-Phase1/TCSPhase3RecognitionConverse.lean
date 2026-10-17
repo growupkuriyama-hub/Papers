@@ -28,7 +28,6 @@ theorem run_ceil_close_exact {bound : Nat} {w : Word}
     (h : Run bound [Frame.ceilClose] w []) :
     w = [Terminal.squareRight] := by
   cases h with
-  | nil _ => contradiction
   | next hs hr =>
       cases hs with
       | ceilPop tail =>
@@ -40,7 +39,6 @@ theorem run_floor_close_exact {bound : Nat} {w : Word}
     (h : Run bound [Frame.floorClose] w []) :
     w = [Terminal.right] := by
   cases h with
-  | nil _ => contradiction
   | next hs hr =>
       cases hs with
       | floorPop tail =>
@@ -58,8 +56,7 @@ theorem run_nt_nil_derives (bound : Nat) :
   | zero =>
       intro w hi hr
       cases hr with
-      | nil _ => contradiction
-      | next hs hrest =>
+          | next hs hrest =>
           cases hs with
           | atom tail =>
               obtain ⟨hword, _⟩ := run_from_nil hrest
@@ -68,33 +65,32 @@ theorem run_nt_nil_derives (bound : Nat) :
   | succ i ih =>
       intro w hi hr
       cases hr with
-      | nil _ => contradiction
-      | next hs hrest =>
+          | next hs hrest =>
           cases hs with
           | unary j hj tail =>
               have ht : Run bound
-                  ([Frame.nt j] ++ [Frame.ceilClose]) _ [] := by
+                  ([Frame.nt i] ++ [Frame.ceilClose]) _ [] := by
                 simpa using hrest
               obtain ⟨u, v, heq, hu, hv⟩ :=
                 split_run_to_nil (by simp) (by simp) ht
               have hv' := run_ceil_close_exact hv
-              have hdu : Derives j u := ih u (by omega) hu
+              have hdu : Derives i u := ih u (by omega) hu
               rw [heq, hv']
               simpa [unaryWord] using (Derives.unary hdu)
           | binary j hj tail =>
               have ht : Run bound
-                  ([Frame.nt j] ++ [Frame.nt j, Frame.floorClose]) _ [] := by
+                  ([Frame.nt i] ++ [Frame.nt i, Frame.floorClose]) _ [] := by
                 simpa using hrest
               obtain ⟨u, rest, heq, hu, hr2⟩ :=
                 split_run_to_nil (by simp) (by simp) ht
               have ht2 : Run bound
-                  ([Frame.nt j] ++ [Frame.floorClose]) rest [] := by
+                  ([Frame.nt i] ++ [Frame.floorClose]) rest [] := by
                 simpa using hr2
               obtain ⟨v, tailw, heq2, hv, hpop⟩ :=
                 split_run_to_nil (by simp) (by simp) ht2
               have hc := run_floor_close_exact hpop
-              have hdu : Derives j u := ih u (by omega) hu
-              have hdv : Derives j v := ih v (by omega) hv
+              have hdu : Derives i u := ih u (by omega) hu
+              have hdv : Derives i v := ih v (by omega) hv
               rw [heq, heq2, hc]
               simpa [binaryWord, List.append_assoc] using
                 (Derives.binary hdu hdv)
