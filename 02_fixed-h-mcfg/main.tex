@@ -125,7 +125,7 @@ prefix--suffix refinements of the CFG signature with a promoted start sort
 finitely partitioning sorts \cite[Section~8]{Yoshinaka2015General}.
 Proposition~\ref{prop:yoshinaka2015-embedding} shows that, for every
 fixed rank bound, our typed class is exactly the class of substitutable
-languages of such a finer MCFG signature.  Remark~\ref{rem:substp} adds
+languages of such a finer MCFG signature.  Lemma~\ref{lem:substp} adds
 that our guarded constructor is language-equivalent there to the
 substructure-indexed constructor $\mathrm{SUBST}_{\mathrm P}$.
 
@@ -223,7 +223,7 @@ its proof of identification
 the corresponding substructure-indexed $\mathrm{SUBST}_{\mathrm P}$
 construction is described in Section~6 and discussed further in
 Section~7.  Proposition~\ref{prop:yoshinaka2015-embedding}
-and Remark~\ref{rem:substp} below identify our bounded-rank
+and Remark~\ref{lem:substp} below identify our bounded-rank
 language class and hypothesis construction within that framework.
 The observed-tuple grammar architecture and the generic
 characteristic-set existence and cardinality argument are
@@ -765,10 +765,13 @@ satisfies Assumptions~1--3 of \cite{Yoshinaka2015General}, and
 \]
 where the left-hand side is the class of substitutable
 $\mathfrak S_{f,r,h}$-languages
-\cite[Definition~1]{Yoshinaka2015General}.  Consequently Algorithm~1 of
-\cite{Yoshinaka2015General}, run with $\mathrm{SUBST}_{\mathrm D}$,
-identifies this class in the limit from positive data
-\cite[Theorem~1 and Lemmas~2--3]{Yoshinaka2015General}.  Its updates take
+\cite[Definition~1]{Yoshinaka2015General}.  Consequently Yoshinaka's identification theorem applies
+\cite[Theorem~1 and Lemmas~2--3]{Yoshinaka2015General}.
+His Algorithm~1 is displayed with $\mathrm{SUBST}_{\mathrm P}$,
+whereas its correctness proof uses the
+context-indexed $\mathrm{SUBST}_{\mathrm D}$; the
+substructure-indexed correspondence for this signature
+is verified in Lemma~\ref{lem:substp}.  Its updates take
 time polynomial in the total size of the data, of degree $O(fr)$ for fixed
 $f,r,h$.  Every target has a characteristic set of at most
 $|N^\sharp|+|P^\sharp|$ words, where $N^\sharp$ and $P^\sharp$ are the
@@ -824,34 +827,94 @@ cardinality.  The polynomial update time is the remark after Lemma~3,
 under Assumptions~1--3.
 \end{proof}
 
-\begin{remark}[The guarded constructor within the general framework]
-\label{rem:substp}
-With $\mathrm{SUB}$, $\mathrm{CON}$ and $\mathrm{FUN}$ chosen as in the
-proof, $\mathcal B^{\le r}_{f,h}(K)$ and Yoshinaka's
-$\mathrm{SUBST}_{\mathrm P}(K)$ over $\mathfrak S_{f,r,h}$ generate the
-same language.  A $\mathrm{SUBST}_{\mathrm P}$ rule
-$[\![s_0]\!]\leftarrow\rho\langle[\![s_1]\!],\ldots,[\![s_n]\!]\rangle$
-is simulated by Rule~(Link) $[s_0]\to[\rho(s_1,\ldots,s_n)]$ followed by
-Rule~(Comp) or Rule~(Const).  Conversely, Rule~(Link) is the
-$\mathrm{SUBST}_{\mathrm P}$ rule for an identity template.
-\cite[Section~7]{Yoshinaka2015General} states without proof that
-Algorithm~1 also works with $\mathrm{SUBST}_{\mathrm P}$;
-Propositions~\ref{prop:reconstruction-soundness}
-and~\ref{prop:completeness} supply such a proof for
-$\mathfrak S_{f,r,h}$.  With consistent canonical choices
-$c_X=\chi(X)$ and $s_X=\omega(X)$ for the non-start
-typed symbols, the non-start members of Yoshinaka's
-$D^*$ coincide with $\Wit(\widetilde G_0)$.
-The promotion and start-symbol witnesses are already
-represented by the selected root words; if the target
-contains $\eps$, the separate nullary start rule adds
-the datum $\eps$.  Thus the two witness families agree
-as \emph{sets of positive words} after these start and
-empty-word conventions are applied.  The total-length
-bounds of Section~\ref{sec:char-data} also bound this
-general characteristic-witness pattern, rather than
-being peculiar to the guarded reconstruction.
-\end{remark}
+\begin{lemma}[Substructure-indexed and guarded reconstruction]
+\label{lem:substp}
+Fix $f,r,h$ as in Proposition~\ref{prop:yoshinaka2015-embedding},
+and choose the $\mathrm{SUB}$, $\mathrm{CON}$ and
+$\mathrm{FUN}$ enumerations from its proof.
+For every finite sample $K\subseteq\Sigma^*$, the guarded
+constructor $\mathcal B^{\le r}_{f,h}(K)$ and
+Yoshinaka's substructure-indexed
+$\mathrm{SUBST}_{\mathrm P}(K)$ over
+$\mathfrak S_{f,r,h}$ generate the same language.
+\end{lemma}
+
+\begin{proof}
+For a non-start sort, identify the substructure-indexed
+symbol $[\![\tuple s]\!]$ with the guarded symbol
+$[\tuple s]$ of the same componentwise type.
+An instance
+\[
+ [\![s_0]\!]\leftarrow
+ \rho\langle[\![s_1]\!],\ldots,[\![s_t]\!]\rangle
+\]
+of $\mathrm{SUBST}_{\mathrm P}(K)$ has a common
+signature context $c$ for $s_0$ and
+$\tuple z:=\rho(s_1,\ldots,s_t)$ such that both
+$c[s_0]$ and $c[\tuple z]$ lie in $K$.
+Lemma~\ref{lem:signature-contexts} makes $c$ an
+admissible sentence context and puts $s_0,\tuple z$
+in the same typed sort.  Hence the guarded Rule~(Link)
+contains $[s_0]\to[\tuple z]$.
+The occurrence of $\tuple z$ inside $c[\tuple z]$
+materializes a composition witness for $\rho$ and
+the $s_j$, by
+Lemma~\ref{lem:composition-witness-materialization}.
+Rule~(Comp), or Rule~(Const) when $t=0$,
+therefore supplies the second step from $[\tuple z]$.
+
+Conversely, each guarded Rule~(Link) is a
+$\mathrm{SUBST}_{\mathrm P}$ instance of the
+well-typed unary identity operation; the witness
+is the common sentence context of its two tuples.
+Rules~(Comp) and~(Const) are instances with
+$s_0=\rho(s_1,\ldots,s_t)$ and the witnessed
+occurrence context of the parent tuple.
+Thus the languages derived from corresponding
+non-start tuple symbols agree by induction on
+their finite derivations.
+
+It remains to compare the start conventions,
+rather than tacitly identifying their syntactic
+nonterminals.  The signature's only start-sort
+context is the identity and no operation takes a
+start-sort input.  Therefore every
+$\mathrm{SUBST}_{\mathrm P}$ initial symbol
+$[\![w]\!]$ for $w\in K$ admits promotions from
+every observed nonempty one-component tuple
+$(w')$ with $w'\in K\cap\Sigma^+$, and it admits
+the direct $\eps$ rule exactly when $\eps\in K$.
+All such initial symbols consequently generate
+the same union
+\[
+ \bigcup_{w'\in K\cap\Sigma^+}L([(w')])
+ \ \cup\ (\{\eps\}\cap K),
+\]
+which is precisely the language of the guarded
+Rule~(Start).  For $K=\emptyset$ both constructions
+generate the empty language.
+\end{proof}
+
+\paragraph{Relation of characteristic witnesses.}
+Yoshinaka~\cite[Section~7]{Yoshinaka2015General}
+proves the learning theorem via the context-indexed
+$\mathrm{SUBST}_{\mathrm D}$ and also states it for
+$\mathrm{SUBST}_{\mathrm P}$.  The lemma and the
+direct soundness and completeness results below
+verify the latter construction for the present
+signature.  For a trimmed typed target grammar,
+choose Yoshinaka's canonical $c_X=\chi(X)$ and
+$s_X=\omega(X)$ for non-start symbols.
+Its non-start witness words then coincide with
+$\Wit(\widetilde G_0)$; promotion witnesses are
+already present among the chosen start words, and
+the direct $\eps$ start rule contributes $\eps$
+exactly when needed.  With these start choices,
+the resulting characteristic sets agree as sets
+of positive words.  This is an identification of
+the witness \emph{pattern}, not a claim that the
+two hypothesis grammars are syntactically equal.
+
 
 A target $L\in\Cmcf{f}{h}$ is called \emph{boundary-typed} when $h$ is a
 boundary typing.
@@ -2738,7 +2801,13 @@ maximum nonterminal arity, Gallot's non-branching MCFL class is
 \]
 Gallot's Theorem~29 identifies this class with the finite-index EDT0L
 languages, and Theorem~31 proves that
-$\mathrm{MIX}_2$ is not finite-index EDT0L.  Equivalently,
+$\mathrm{MIX}_2$ is not finite-index EDT0L.
+Definition~38 explicitly permits a child variable to
+occur at most once, and Theorem~28 confirms that
+non-permuting non-erasing presentations generate
+the same non-branching class; thus the use of
+erasing terminal homomorphisms below stays within
+the formalism of the cited lower bound.  Equivalently,
 $\mathrm{MIX}_2$ is not generated by any non-branching MCFG; Gallot's
 Propositions~5--6 give the underlying bounded-$k$-derivation contradiction
 \cite[Theorem~29, Theorem~31, Propositions~5--6]{Gallot2021}.
