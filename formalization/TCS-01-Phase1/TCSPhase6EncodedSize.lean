@@ -10,7 +10,7 @@ variable [Fintype NT] [DecidableEq NT]
 variable [Monoid M] [Fintype M] [DecidableEq M]
 
 def encodedSize (W : Finset (List Alphabet)) : Nat :=
-  ∑ w ∈ W, w.length + 1
+  W.sum (fun w => w.length + 1)
 
 /-- All quantitative work except the separate context-compression
 proof is discharged here; this theorem is intentionally conditional. -/
@@ -42,9 +42,9 @@ theorem encoded_size_le_of_context_bound
       encodedSize W ≤ W.card * ((n+1)*τ + 1) := by
     unfold encodedSize
     calc
-      (∑ w ∈ W, w.length + 1) ≤
-          ∑ _w ∈ W, ((n+1)*τ + 1) :=
-        by simpa only [] using (Finset.sum_le_sum hterm)
+      W.sum (fun w => w.length + 1) ≤
+          W.sum (fun _w => ((n+1)*τ + 1)) :=
+        Finset.sum_le_sum hterm
       _ = W.card * ((n+1)*τ + 1) := by simp
   have hfactor : (n+1)*τ+1 ≤ (nMax+1)*τ+1 := by
     have hmul := Nat.mul_le_mul_right τ (Nat.add_le_add_right hn 1)
