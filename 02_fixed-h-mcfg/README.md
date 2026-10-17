@@ -7,7 +7,10 @@
 
 ## Current working baseline
 
-- `main.tex` — English working manuscript, internal **v69**, current source of truth (see `PAPER.yaml`).
+- `main.tex` — English working manuscript, internal **v70**, current source of truth (see `PAPER.yaml`).
+- `appendix_bracketed_substitutability.tex` — full in-paper proof of substitutability for the fan-out-one distinguishing-pair family.
+- `appendix_window_abelian.tex` — separate window + finite-abelian-group characteristic-data theorem, with proof and explicit nonabelian limitation.
+- `revision/v69_to_v70_ic_referee_revision_note.md` — referee-audit revision, mathematical verification, and remaining submission gates.
 - `revision/v68_to_v69_ic_referee_corrections.md` — I&C independent-review corrections: resolves the false fan-out-one open problem using the companion CFG lower bound, strengthens the SUBST_P proof, checks Gallot's exact theorem scope, reorders and focuses the introduction.
 - `revision/v67_to_v68_yoshinaka2015_revision_note.md` — prior Yoshinaka 2015 exact-correspondence revision.
 - `revision/v64_to_v65_revision_note.md` — earlier pre-submission hardening after independent review.
