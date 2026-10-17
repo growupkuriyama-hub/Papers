@@ -68,21 +68,19 @@ theorem run_nt_nil_derives (bound : Nat) :
           | next hs hrest =>
           cases hs with
           | unary j hj tail =>
-              have ht : Run bound
-                  ([Frame.nt i] ++ [Frame.ceilClose]) _ [] := by
-                simpa using hrest
               obtain ⟨u, v, heq, hu, hv⟩ :=
-                split_run_to_nil (by simp) (by simp) ht
+                split_run_to_nil
+                  (α := [Frame.nt i]) (ψ := [Frame.ceilClose])
+                  (by simp) (by simp) (by simpa using hrest)
               have hv' := run_ceil_close_exact hv
               have hdu : Derives i u := ih u (by omega) hu
               rw [heq, hv']
               simpa [unaryWord] using (Derives.unary hdu)
           | binary j hj tail =>
-              have ht : Run bound
-                  ([Frame.nt i] ++ [Frame.nt i, Frame.floorClose]) _ [] := by
-                simpa using hrest
               obtain ⟨u, rest, heq, hu, hr2⟩ :=
-                split_run_to_nil (by simp) (by simp) ht
+                split_run_to_nil
+                  (α := [Frame.nt i]) (ψ := [Frame.nt i, Frame.floorClose])
+                  (by simp) (by simp) (by simpa using hrest)
               have ht2 : Run bound
                   ([Frame.nt i] ++ [Frame.floorClose]) rest [] := by
                 simpa using hr2
