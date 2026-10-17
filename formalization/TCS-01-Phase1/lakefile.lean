@@ -104,3 +104,9 @@ lean_lib TCSPhase5Consistency where
 
 @[default_target]
 lean_lib TCSPhase5Monotonicity where
+
+@[default_target]
+lean_lib TCSPhase5FactorsFinite where
+
+@[default_target]
+lean_lib TCSPhase5Grammar where
