@@ -43,13 +43,6 @@ theorem suffix_cancel_right (α β ψ : Stack)
     (h : α ++ ψ = β ++ ψ) : α = β := by
   simpa only [List.append_cancel_right_eq] using h
 
-/-- Active nonvisited runs cannot lose or change their bottom closing marker. -/
-theorem nonvisited_ceil_marker {bound : Nat} {β : Stack}
-    {w : Word} (hβ : β ≠ [])
-    (h : Run bound [Frame.nt 0, Frame.ceilClose] w β) :
-    ∃ γ, β = γ ++ [Frame.ceilClose] := by
-  exact run_preserves_last_marker (Or.inl rfl) (by simpa using h) hβ
-
 /-- A useful reusable suffix-visit decision, including exact weight bounds. -/
 theorem classified_first_visit {bound : Nat} {α ψ θ : Stack}
     {w : Word} (hα : α ≠ [])
@@ -81,7 +74,7 @@ theorem distinct_initial_steps {bound : Nat} {σ σ₁ σ₂ : Stack}
         Frame.nt i :: Frame.nt i :: Frame.floorClose :: ψ ∧
       d = Terminal.squareLeft ∧ σ₂ =
         Frame.nt i :: Frame.ceilClose :: ψ)) := by
-  cases h₁ <;> cases h₂ <;> simp_all <;> aesop
+  cases h₁ <;> cases h₂ <;> simp_all
 
 #print axioms TCSPhase3.frame_weight_pos
 #print axioms TCSPhase3.weight_append
