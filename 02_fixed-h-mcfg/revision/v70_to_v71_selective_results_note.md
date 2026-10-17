@@ -52,6 +52,33 @@ removed from the I&C manuscript.
 - Do not invent new theorems, alter the boundary/group estimates, or
   change the journal AI declaration.
 
+## Secondary compression after the first 40-page trial
+
+The first CI build after removing the optional results compiled to
+**40 pages**, down from v70's 44.
+Rather than remove another central separation theorem, a subsequent
+pass made the following dependency-preserving changes:
+
+- Folded `lem:rankone-short-canonical` into the proof of
+  `thm:rankone-polydata`, retaining the original explicit length bound.
+- Compressed the signature appendix, keeping the exact signature class
+  equality, admissible-context lemma, effective Assumptions 1--3, and
+  language-level `SUBST_P` equivalence with start/epsilon treatment.
+- Archived `cor:no-splitting-thickness`, the standalone semantic
+  specializations proposition and the same-typing filter-fragment
+  proposition; the relevant known relations now appear as concise
+  prose and citations.
+- Eliminated the redundant `\\Ffrag`-based reformulation of
+  arbitrary regular filtering; the actual `L_\\star` separation
+  and its proof are unchanged.
+- Added the retained window-plus-finite-abelian-group extension to
+  the data-complexity comparison table.
+
+The full original wording of the additional secondary results was
+appended to `revision/v71_retired_results_archive.md`.
+Final page count must be read from the last PR #33 CI run after
+all source and metadata updates.
+
 ## Validation / next gates
 
 - [x] Main TeX and included abelian appendix static checks: no duplicate
@@ -60,9 +87,7 @@ removed from the I&C manuscript.
 - [x] Removed result text archived in a separate noncompiled Markdown file.
 - [ ] Full v71 GitHub Actions PDF build, final page count and layout check;
   use [PR #33](https://github.com/growupkuriyama-hub/Papers/pull/33) for run logs.
-- [ ] If too long, consider *individually* compressing the independent
-  Yoshinaka-signature appendix and rank-one exposition, without deleting
-  dependencies or losing novelty attribution.
+- [x] Compressed the independent Yoshinaka-signature appendix and rank-one exposition while retaining main statements, premises, and length estimates.
 - [ ] Independently referee the already-added finite-abelian-group
   theorem; this update does not claim human verification.
 - [ ] Confirm factual AI-use disclosure and I&C journal file/metadata
