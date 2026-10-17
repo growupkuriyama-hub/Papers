@@ -77,4 +77,39 @@ theorem rec_unary_rule_iff (h : Word Alphabet →* M)
 #print axioms TCSPhase5.rec_start_empty_iff
 #print axioms TCSPhase5.rec_unary_rule_iff
 
+
+theorem rec_binary_rule_iff (h : Word Alphabet →* M)
+    (K : Finset (Word Alphabet)) (z x y : Word Alphabet) :
+    (z, x, y) ∈ (makeRecGrammar h K).binaryRules ↔
+      z = x ++ y ∧ ObservedFactor K x ∧
+      ObservedFactor K y ∧ ObservedFactor K z := by
+  classical
+  constructor
+  · intro hr
+    obtain ⟨himage, hz⟩ := (Finset.mem_filter.mp hr)
+    obtain ⟨⟨a,b⟩,hpair, heq⟩ := Finset.mem_image.mp himage
+    have ha := (Finset.mem_product.mp hpair).1
+    have hb := (Finset.mem_product.mp hpair).2
+    have hza : z = a ++ b := congrArg Prod.fst heq.symm
+    have hxa : x = a :=
+      congrArg (fun p : Word Alphabet × Word Alphabet × Word Alphabet => p.2.1) heq.symm
+    have hyb : y = b :=
+      congrArg (fun p : Word Alphabet × Word Alphabet × Word Alphabet => p.2.2) heq.symm
+    subst x
+    subst y
+    subst z
+    exact ⟨rfl, (mem_observedFactors K a).mp ha,
+      (mem_observedFactors K b).mp hb,
+      (mem_observedFactors K (a ++ b)).mp hz⟩
+  · rintro ⟨rfl,hx,hy,hxy⟩
+    apply Finset.mem_filter.mpr
+    constructor
+    · apply Finset.mem_image.mpr
+      exact ⟨(x,y), Finset.mem_product.mpr
+        ⟨(mem_observedFactors K x).mpr hx,
+         (mem_observedFactors K y).mpr hy⟩, rfl⟩
+    · exact (mem_observedFactors K (x ++ y)).mpr hxy
+
+#print axioms TCSPhase5.rec_binary_rule_iff
+
 end TCSPhase5
