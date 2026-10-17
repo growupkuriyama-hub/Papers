@@ -54,12 +54,17 @@ theorem typedDependencyPath_retained
     {A : NT} {μ : M} {p : List (NT × M)}
     (hp : TypedDependencyPath G h (A,μ) p) :
     RetainedTypedSymbol G h A μ := by
-  induction hp with
-  | root hs hd => exact retained_at_start hs hd
-  | left hp rule hB hC ih =>
-      exact (retained_binary_children ih rule hB hC).1
-  | right hp rule hB hC ih =>
-      exact (retained_binary_children ih rule hB hC).2
+  have aux : ∀ {v : NT × M} {q : List (NT × M)},
+      TypedDependencyPath G h v q →
+        RetainedTypedSymbol G h v.1 v.2 := by
+    intro v q path
+    induction path with
+    | root hs hd => exact retained_at_start hs hd
+    | left path rule hB hC ih =>
+        exact (retained_binary_children ih rule hB hC).1
+    | right path rule hB hC ih =>
+        exact (retained_binary_children ih rule hB hC).2
+  exact aux hp
 
 /-- All actually retained symbols admit such a successful walk. -/
 theorem retained_dependency_path
