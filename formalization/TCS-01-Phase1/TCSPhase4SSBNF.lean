@@ -31,7 +31,7 @@ inductive DerivesFrom {NT : Type} [Fintype NT] [DecidableEq NT]
 inductive StartDerives {NT : Type} [Fintype NT] [DecidableEq NT]
     (G : SSBNFGrammar NT) : Word → Prop
   | empty (he : G.startEmpty = true) : StartDerives G []
-  | from {A : NT} {w : Word} (hs : A ∈ G.startRules)
+  | root {A : NT} {w : Word} (hs : A ∈ G.startRules)
       (h : DerivesFrom G A w) : StartDerives G w
 
 def GrammarLanguage {NT : Type} [Fintype NT] [DecidableEq NT]
@@ -55,13 +55,13 @@ theorem nonempty_start_has_root {NT : Type} [Fintype NT] [DecidableEq NT]
   change StartDerives G w at hw
   cases hw with
   | empty he => contradiction
-  | from hs hd => exact ⟨_, hs, hd⟩
+  | root hs hd => exact ⟨_, hs, hd⟩
 
 theorem start_rule_generates {NT : Type} [Fintype NT] [DecidableEq NT]
     {G : SSBNFGrammar NT} {A : NT} {w : Word}
     (hs : A ∈ G.startRules) (hd : DerivesFrom G A w) :
     w ∈ GrammarLanguage G :=
-  StartDerives.from hs hd
+  StartDerives.root hs hd
 
 #print axioms TCSPhase4.nonempty_start_has_root
 #print axioms TCSPhase4.start_rule_generates
