@@ -1769,87 +1769,71 @@ whose tuple substitutability tests more arities.
 \subsection{Rule Rank One: Grammar-Size Polynomial Data}
 \label{subsec:rankone-polydata}
 
-At rule rank one every terminal derivation in the typed refinement is a unary
-chain ending in a rank-zero rule, so its length can grow only by the terminals
-written along that chain.  Fix a finite typing $h:\Sigma^*\to M$ and a
-reduced good grammar $G=(V,\Sigma,P,S,\fan)$ of fan-out at most $f$ and rule
-rank at most one, and let $\widetilde G_0$ be its trimmed full yield-type
-refinement.  Let $n_{\mathrm{typ}}$ be the number of non-start typed
-nonterminals and let $b_G\ge1$ be the maximum number of terminals explicitly
-written by a rule.  Then
-\[
- n_{\mathrm{typ}}\le |V||M|^f,\qquad b_G\le\max\{1,\|G\|\}.
-\]
-
-\begin{lemma}[Short typed canonical tuples at rule rank one]
-\label{lem:rankone-short-canonical}
-For every non-start typed nonterminal $X$ of $\widetilde G_0$, the
-canonical tuple may be chosen so that
-\[
- \|\omega(X)\|_1\le n_{\mathrm{typ}}b_G.
-\]
-\end{lemma}
-
-\begin{proof}
-Choose a shortest terminal unary chain from $X$.  It cannot repeat a typed
-nonterminal, since splicing in the lower suffix would shorten the chain.
-Thus it has at most $n_{\mathrm{typ}}$ rule applications, each adding at most
-$b_G$ terminals because the rules are linear and nondeleting.
-\end{proof}
-
-Lemma~\ref{lem:reusable-context-bound} with
-$b_{\mathrm{can}}=n_{\mathrm{typ}}b_G$, $b_{\mathrm{rule}}=b_G$, and $r_0=1$
-then bounds every selected characteristic word by
-$(2n_{\mathrm{typ}}+1)b_G$.
+Unary derivation chains admit a grammar-size bound
+independent of thickness, even under arbitrary fixed
+componentwise typing.
 
 \begin{theorem}[Rank-one polynomial construction and characteristic data]
 \label{thm:rankone-polydata}
-Fix $f\ge1$, a finite alphabet $\Sigma$, and a finite typing
-$h:\Sigma^*\to M$.  Let $G_{\mathrm{in}}$ be any finite standard fan-out-$\le f$,
-rule-rank-$\le1$ presentation of a target $L\in\Cmcf{f}{h}$.  Then
-$\mathcal B_{f,h}^{\le1}$ is computable in time polynomial in $\|K\|_+$ for a finite positive
-sample $K$ and admits characteristic data of total positive length
-$\operatorname{poly}_{f,h}(\|G_{\mathrm{in}}\|)$.  If $\eps\in L$, the
-characteristic sample additionally contains the single direct-start datum
-$\eps$; its length is zero and hence does not affect this bound.  The capped conservative learner
-$\mathcal A_{f,h}^{\le1}$ TxtEx-identifies
-$\Cmcf{f}{h}\cap\mathsf{MCFL}(f,1)$, with polynomial time per processed datum.
+Fix $f\ge1$, finite $\Sigma$, and a typing
+$h:\Sigma^*\to M$ into a finite monoid.
+For any finite standard fan-out-$\le f$,
+rank-$\le1$ grammar $G_{\mathrm{in}}$
+of $L\in\Cmcf{f}{h}$,
+$\mathcal B_{f,h}^{\le1}$ is polynomial-time in
+$\|K\|_+$ and has a characteristic sample of
+total length $\operatorname{poly}_{f,h}(\|G_{\mathrm{in}}\|)$.
+The direct-start datum $\eps$ is added when
+$\eps\in L$ without affecting this bound.
+The conservative learner
+$\mathcal A_{f,h}^{\le1}$ consequently
+TxtEx-identifies
+$\Cmcf{f}{h}\cap\mathsf{MCFL}(f,1)$
+with polynomial time per datum.
 \end{theorem}
 
 \begin{proof}
-A rank-zero rule has one retained typed instance and a unary rule at most
-$|M|^f$, so the refined rule set has size $O(|P||M|^f)$.  By the preceding
-lemma and Proposition~\ref{prop:witness-cardinality},
+Normalize without increasing rank
+(Proposition~\ref{prop:good-normalization}),
+and trim the typed refinement.
+Write $n_{\mathrm{typ}}\le|V||M|^f$ for its
+number of non-start typed nonterminals and
+$b_G\le\max\{1,\|G\|\}$ for the largest explicit
+terminal count of a rule, taking $b_G\ge1$.
+A shortest typed terminal derivation from any
+nonterminal is a unary chain with no repeated
+typed nonterminal: splicing in the later suffix
+would otherwise shorten the chain. Therefore
+$\|\omega(X)\|_1\le n_{\mathrm{typ}}b_G$.
+Lemma~\ref{lem:reusable-context-bound} bounds
+each witness word by $(2n_{\mathrm{typ}}+1)b_G$,
+while Proposition~\ref{prop:witness-cardinality}
+gives at most $n_{\mathrm{typ}}+|P||M|^f$
+witnesses. Hence
 \[
  \|\Wit(\widetilde G_0)\|_+
- \le (n_{\mathrm{typ}}+|P||M|^f)
-      (1+(2n_{\mathrm{typ}}+1)b_G),
- \qquad n_{\mathrm{typ}}\le |V||M|^f.
+ \le(n_{\mathrm{typ}}+|P||M|^f)
+        \bigl(1+(2n_{\mathrm{typ}}+1)b_G\bigr).
 \]
-This is polynomial for fixed $f,h$.  Proposition~\ref{prop:good-normalization}
-preserves rank one with fixed-parameter linear overhead, while
-Theorem~\ref{thm:poly} and Corollary~\ref{cor:capped-gold-poly} give the stated
-reconstruction and conservative TxtEx bounds.
+The polynomial overhead of normalization and the
+time and convergence bounds follow from
+Theorem~\ref{thm:poly} and
+Corollary~\ref{cor:capped-gold-poly}.
 \end{proof}
 
-Under trivial typing, the same grammar-size scale can also be read from
-Yoshinaka's characteristic-data estimate~\cite[Lemma~7]{Yoshinaka2011}
-together with the unary-chain bound for rank-one presentations.  At fan-out
-one, this specializes to the linear-CFG argument of the companion
-paper~\cite{kuriyamaCFG}.  The point of
-Theorem~\ref{thm:rankone-polydata} is that the grammar-size bound continues to
-hold under arbitrary fixed componentwise finite typing at every fixed fan-out.
-
-Rank two already precludes a grammar-size-only data bound.  The size-$O(n)$
-grammar
-$A_0\to\mathtt c$, $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
-generates the singleton $\{\mathtt c^{2^n}\}$.  Every singleton over a one-letter alphabet is
-$f$D-substitutable for every fixed $f$: if two tuples occur in one common
-sentence context, equality of the resulting unary word forces equality of
-their total component lengths, and hence they have the same distribution in
-the singleton language.  The displayed grammar has fan-out one, so this target
-belongs to $\Cmcf{f}{h}$ for every finite typing $h$ and every $f\ge1$.  Any nonempty characteristic sample therefore has length at least
-$2^n$.  This motivates the thickness parameter used below.
+This extends the rank-one untyped scale
+\cite[Lemma~7]{Yoshinaka2011} and the fan-out-one
+argument of~\cite{kuriyamaCFG} to arbitrary
+fixed finite typing at every fixed fan-out.
+Rank two cannot generally yield a
+grammar-size-only bound: the size-$O(n)$
+grammar $A_0\to\mathtt c$,
+$A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
+generates the singleton $\{\mathtt c^{2^n}\}$,
+which is $(f,h)$-tuple-substitutable for
+every fixed $f,h$. Every characteristic
+sample for this target contains a word
+of length at least $2^n$.
 
 \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
 \label{subsec:boundary-polydata}
