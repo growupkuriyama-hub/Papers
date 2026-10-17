@@ -1,6 +1,6 @@
 # Phase 5B — Finite positive witness reconstruction
 
-**Research paper:** *Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing* (TCS-D-26-00494). Source of truth: `01_fixed-h-cfg/main.tex`, main HEAD `b7abdcf95d537a4f7ef364e387ec01ebd87d3e32`, PAPER.yaml **v225**, manuscript blob `7a3ed5ca1aaaf376a1e5104d12e08f59f424ab0d`, inspected on 2026-10-17.
+**Research paper:** *Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing* (TCS-D-26-00494). Source of truth: `01_fixed-h-cfg/main.tex`, main HEAD `de32398d2fb9f378e33de9249b58e1a71248294f`, PAPER.yaml **v226**, manuscript blob `7a3ed5ca1aaaf376a1e5104d12e08f59f424ab0d`, inspected on 2026-10-17.
 
 **Work branch:** `formalization/tcs-phase5b-canonical-witnesses-20261017` from the immutable, CI-successful Phase 5A HEAD `013400b7e53f55209c1c7555ecbdd0c5e3c66ada`.
 
@@ -28,14 +28,26 @@ The original `prop:typed-core` concerns *all* finite typed monoid morphisms, whe
 
 `TCSPhase5BCharacteristic.lean`: uses the fully verified **original Phase 5A `TCSPhase5.rec_soundness`** to derive `rec_exact_reconstruction` and the *actual Phase 1* `Characteristic` predicate. No extra soundness axiom is introduced.
 
-`TCSPhase5BMain.lean` has direct `#print axioms` for all central theorem names.
+`TCSPhase5BMain.lean` imports `TCSPhase5BFiniteDerivation` and directly audits the main theorems plus `finite_typed_sound`, `finite_typed_complete`, `finite_typed_iff`, `finite_typed_start_iff`, `finite_typed_grammar_language_eq`, and `finite_rec_complete_from_positive_witnesses`. The latter transfers genuine completeness to the **independently defined finite B/U/L/S grammar** using Phase 5A's `finite_rec_language_iff`. All depend exclusively on standard Lean logical axioms.
 
 ## Submission-independent verification
 
-The CI `.github/workflows/tcs-phase5b-lean.yml` installs Lean 4.24.0, resolves Mathlib tag v4.24.0, runs `lake build`, then `lake env lean` for **all 38 inherited sources and all new Phase 5B sources**. It scans source for forbidden proof tokens and checks no `sorryAx` occurs. Its complete results and code-SHA matching are recorded in [PHASE5B_VERIFICATION_REPORT.md](PHASE5B_VERIFICATION_REPORT.md). **Source files are not counted as proven until the actual CI succeeds.**
+The CI `.github/workflows/tcs-phase5b-lean.yml` installs Lean 4.24.0, resolves Mathlib tag v4.24.0, runs `lake build`, then `lake env lean` for **all 38 inherited sources and all new Phase 5B sources**. It scans source for forbidden proof tokens and checks no `sorryAx` occurs. Its complete results and code-SHA matching are recorded in [PHASE5B_VERIFICATION_REPORT.md](PHASE5B_VERIFICATION_REPORT.md). **The entire proof-code tree passed the complete CI:** [Actions #39035468664](https://github.com/growupkuriyama-hub/Papers/actions/runs/39035468664), job `117404271879`, code SHA `696d18298a5441d0d421f0cfaac2d806ae4d02dc`, 7448 Lake jobs, 49 sources (38 inherited, 11 new), all direct Lean checks and forbidden-placeholder tests passed.
 
 No existing Phase 1–5A proofs, the manuscript, PAPER.yaml, reviewer responses, PDFs, main, arXiv, or Editorial Manager have been edited.
 
 ## Not yet covered
 
 Exact shortlex tie-breaking, an executable polynomial learner, Gold identification, arbitrary-CFG-to-SSBNF normalization, polynomial witness-size upper bounds, and full TCS manuscript verification are logically separate from the present witness-existence and completeness claims.
+
+## Confirmed Phase 5B result
+
+The generic positive-witness completeness theorem makes **only** the hypothesis `PositiveWitnesses G h ⊆ K`. It does not assume `K ⊆ GrammarLanguage G` or target substitutability. Combining it with already proved Phase 5A soundness yields exact reconstruction when the sample is positive and the grammar language is typed substitutable. The original Phase 1 set-driven `Characteristic` is then verified for the **explicit finite witness set**.
+
+The independent finite typed refinement theorem additionally establishes
+`FiniteTypedStart G h w ↔ StartDerives G w`, equivalently
+`{w | FiniteTypedStart G h w} = GrammarLanguage G`.
+
+**Verdict B**: These results are kernel-verified with the existing *minimum-length* witness representatives. The manuscript's *shortlex* tie-breaking among equal-length candidates is not yet formalized, so this result does not prove identity with the manuscript's literally fixed canonical witness set. Phase 5B does not include algorithmic runtime, Gold convergence or arbitrary CFG normalization.
+
+**Regression and protected-source audit:** Comparing the Phase 5A base `013400b7e53f55209c1c7555ecbdd0c5e3c66ada` with the Phase 5B branch confirms that no earlier Lean proof file or `01_fixed-h-cfg/` source changed. `main.tex` itself is byte-identical between v225 and v226. No main merge, arXiv update or Editorial Manager action was performed.
