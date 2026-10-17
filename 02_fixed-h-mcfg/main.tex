@@ -164,13 +164,13 @@ finite characteristic sets.
 \item \emph{A multi-component quantitative upper bound.}
 At every fixed fan-out and rule rank, a typing determined by a
 fixed prefix--suffix window admits characteristic data of total
-length $O(\|G\|^3\max\{1,\theta_G\})$ for a reduced good
+length $O(\|G\|^2\max\{1,\theta_G\})$ for a reduced good
 presentation $G$ (Theorem~\ref{thm:boundary-polydata}).
 Its key ingredient is a short-tuple lemma preserving boundary
 information across all tuple components simultaneously.
 Appendix~\ref{app:window-abelian} extends the result
 to a window combined with a fixed finite abelian group,
-with total length $O(\|G\|^4\bar\theta_G)$
+with total length $O(\|G\|^3\bar\theta_G)$
 (Theorem~\ref{thm:window-abelian-polydata}).
 
 \item \emph{Typing, fan-out and rule-rank separations.}
@@ -1514,10 +1514,10 @@ rule rank one
   & polynomial in $\|G\|$ alone
   & Theorem~\ref{thm:rankone-polydata} \\
 $h\preceq h_\Sigma^{k,\ell}$, bounded rank
-  & polynomial in $\|G\|$ and $\max\{1,\theta_G\}$
+  & $O(\|G\|^2\bar\theta_G)$
   & Theorem~\ref{thm:boundary-polydata} \\
 window plus finite abelian group
-  & $O(\|G\|^4\bar\theta_G)$
+  & $O(\|G\|^3\bar\theta_G)$
   & Theorem~\ref{thm:window-abelian-polydata} \\
 \hline
 \end{tabularx}
@@ -1846,8 +1846,80 @@ its explicit terminal material and the total length of that occurrence's
 left-hand-side tuple.  Maximizing over rules gives (i) and (ii).
 \end{proof}
 
+\begin{lemma}[Untyped rule thickness controls canonical contexts]
+\label{lem:untyped-contexts}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good
+MCFG and $\widetilde G_0$ its trimmed
+yield-type refinement for any fixed finite typing
+$h$. For each $A\in V$ of fan-out $d$ there is
+an admissible sentence context $E_A\in\mathcal E_d$
+such that
+\[
+ |E_A|_{\mathrm{fix}}\le\bar\theta_G,
+ \qquad E_A[\tuple u]\in L(G)
+ \quad\text{for all }\tuple u\in L_A(G),
+\]
+and $E_S=\blank_1$ may be chosen.
+Thus for every non-start typed nonterminal
+$X=A_{\mathbf t}$ the choice
+$\chi(X):=E_A$ meets
+Definition~\ref{def:target-canonical}.
+With canonical tuples satisfying
+$\|\omega(X)\|_1\le b_{\mathrm{can}}$
+and maximum rule rank $r_{\max}$,
+every word in $\Wit(\widetilde G_0)$
+has length at most
+\[
+  2\bar\theta_G+r_{\max}b_{\mathrm{can}}.
+\]
+\end{lemma}
+
+\begin{proof}
+Take $E_S=\blank_1$. For $A\ne S$ choose
+a source rule $R$ with left-hand side $A$.
+Because $G$ is reduced, there is a successful
+sentence derivation using $R$ and having
+length $\theta_G(R)\le\theta_G$.
+Remove the subtree rooted at that occurrence
+of $A$, replacing its $d$ components by
+ordered holes. Lemma~\ref{lem:filling-identity},
+iterated along the path to the root, and
+goodness show that the resulting
+$E_A$ belongs to $\mathcal E_d$.
+Its fixed terminal material is part of the
+selected sentence, hence has length at most
+$\theta_G(R)$. Substituting any tuple from
+$L_A(G)$ gives another successful source
+derivation, so $E_A$ accepts every such tuple.
+
+By Proposition~\ref{prop:output-invariants}(i),
+$L_X\subseteq L_A(G)$; consequently $E_A$
+accepts every tuple of the typed $X$.
+The surrounding source derivation can also
+be lifted to the full typed refinement by
+Proposition~\ref{prop:output-invariants}(ii):
+the type of $X$ determines all ancestral
+types given the fixed sibling derivations,
+and the fresh start symbol admits every
+start type. In particular, $\chi(X)$
+has the required common-context property.
+For a direct start link, $X=S_{\mathbf t}$
+and the chosen context is $\blank_1$.
+
+A witness is $\chi(X)[\omega(X)]$,
+$\chi(X)[\tuple c]$, or
+$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_r))]$.
+Its context contributes at most
+$\bar\theta_G$ terminals; the source rule
+writes at most $\bar\theta_G$ by
+Lemma~\ref{lem:thickness-local-bounds}(i),
+and it has at most $r_{\max}$ child tuples.
+The displayed bound follows, with the
+rank-zero case included.
+\end{proof}
+
 Fix $k,\ell\ge0$ and let
-$h:\Sigma^*\to M$ be any finite typing with
+$h:\Sigma^*\to M be any finite typing with
 $h\preceq h_\Sigma^{k,\ell}$.  Thus $h$ factors through the surjective prefix--suffix typing
 $h_\Sigma^{k,\ell}$.  Let $G$ have fan-out at most $f$ and
 rule rank at most a fixed $r_{\max}\ge1$, and let $\widetilde G_0$ be its
@@ -1915,18 +1987,18 @@ derivation can be inserted into a successful derivation through $X$ and hence
 survives trimming.  Its root tuple may therefore be chosen as $\omega(X)$.
 \end{proof}
 
-Applying Lemma~\ref{lem:reusable-context-bound} with
+Apply Lemma~\ref{lem:untyped-contexts}
+with
 \[
  b_{\mathrm{can}}
- =f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G,
- \qquad
- b_{\mathrm{rule}}=\bar\theta_G,
- \qquad
- r_0=r_{\max},
+ =f(k+\ell+1)n_{\mathrm{typ}}
+       (r_{\max}+1)\bar\theta_G.
 \]
-shows directly that every selected witness word has length
-$O_{f,r_{\max},k,\ell,h,\Sigma}(\|G\|^2\bar\theta_G)$, since
-$n_{\mathrm{typ}}\le |V||M|^f$.
+Every selected witness word then has length at most
+$2\bar\theta_G+r_{\max}b_{\mathrm{can}}
+ =O_{f,r_{\max},k,\ell,h,\Sigma}
+   (\|G\|\bar\theta_G)$, since
+$n_{\mathrm{typ}}\le|V||M|^f$.
 
 \begin{theorem}[Polynomial data for prefix--suffix-determined typings]
 \label{thm:boundary-polydata}
@@ -1941,7 +2013,7 @@ A characteristic sample can be chosen with
  \qquad
  \|\Wit(\widetilde G_0)\|_+
  =O_{f,r_{\max},k,\ell,h,\Sigma}
-   (\|G\|^3\bar\theta_G),
+   (\|G\|^2\bar\theta_G),
 \]
 where $\bar\theta_G=\max\{1,\theta_G\}$.  For a reduced $\lambda$-free input
 presentation $G_{\mathrm{in}}$ (deleting rules allowed), the structural
@@ -1954,10 +2026,10 @@ $\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}$.
 The $h$-refinement has at most $|V||M|^f$ typed nonterminals and
 $|P||M|^{fr_{\max}}$ typed rule instances.
 Lemma~\ref{lem:boundary-short-canonical} applies because preserving the finer
-$h_\Sigma^{k,\ell}$ boundary type preserves the coarser $h$-type.  Together
-with Lemma~\ref{lem:reusable-context-bound}, it bounds every selected witness
-word by
-$O_{f,r_{\max},k,\ell,h,\Sigma}(\|G\|^2\bar\theta_G)$.
+$h_\Sigma^{k,\ell}$ boundary type preserves the coarser $h$-type.  Lemma~\ref{lem:untyped-contexts} now
+bounds every selected witness word by
+$O_{f,r_{\max},k,\ell,h,\Sigma}
+(\|G\|\bar\theta_G)$.
 Proposition~\ref{prop:witness-cardinality} gives
 \[
  |\Wit(\widetilde G_0)|
