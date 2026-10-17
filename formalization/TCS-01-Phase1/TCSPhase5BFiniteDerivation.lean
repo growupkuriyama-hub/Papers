@@ -29,11 +29,11 @@ theorem finite_typed_sound {G : SSBNFGrammar Alphabet NT}
     (hd : FiniteTypedDerives G h p w) :
     TrimmedTypedDerives G h p.1 p.2 w := by
   induction hd with
-  | terminal hr =>
+  | @terminal A μ a hr =>
       obtain ⟨orig,ht,ret⟩ := (finite_terminal_iff G h _ _ _).mp hr
       subst μ
       exact TrimmedTypedDerives.terminal orig ret
-  | binary hr hu hv ihU ihV =>
+  | @binary A B C τ μ ν u v hr hu hv ihU ihV =>
       obtain ⟨orig,ht,ret,_,_⟩ :=
         (finite_binary_iff G h _ _ _ _ _ _).mp hr
       subst τ
