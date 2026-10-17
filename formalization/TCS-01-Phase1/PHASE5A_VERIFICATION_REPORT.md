@@ -77,12 +77,14 @@ rec_witness_exclusion (n : Nat) (K : Finset TCSPhase2.Word)
   (hnot : witness n ∉ K) :
   witness n ∉ RecLanguage hU K
 ```
-The **optional milestones must not be reported as verified until the follow-up CI passes**.
+**Milestone H is independently VERIFIED:** [GitHub Actions #39026224393](https://github.com/growupkuriyama-hub/Papers/actions/runs/39026224393), job **`117377624280`**, successful corrected code commit **`72dcba522dc459158012cd82c36c234ad6bd5f05`**. The log contains `Built TCSPhase5ConcreteGap`, `Built TCSPhase5Main`, `Build completed successfully (7426 jobs).`, followed by `Phase 1-5A modules compiled and audited`. Both `rec_languageMinus_sound` and `rec_witness_exclusion` report **`[propext, Classical.choice, Quot.sound]`** only. This does not claim characteristic-sample existence.
 
 ## F. Limits
 
 This phase does not prove canonical-witness completeness, existence of characteristic samples, conservative Gold-learning convergence, incremental learner soundness, or polynomial runtime of the grammar-construction algorithm. The bounded-enumeration proof of finite observed factors is mathematical, not an efficient extraction algorithm.
 
 ## G. Final integrated audit
+
+**Full mathematics and finite-rule correspondence completed at commit `72dcba522dc459158012cd82c36c234ad6bd5f05`**, CI #39026224393. Core soundness/consistency/monotonicity use **`[propext, Quot.sound]`**, while finite rule enumeration and the special U1 bridge also use standard **`Classical.choice`**. All original 28 modules and the 10 new modules directly compile; no `sorryAx` occurs.
 
 The branch workflow is `.github/workflows/tcs-phase5a-lean.yml`. It rebuilds all **28 earlier sources** and all **10 Phase 5A sources**, and directly checks every Lean file; it runs `#print axioms`, a forbidden-source-proof-token scanner and a `sorryAx` detector. Record the final successful branch HEAD, full job ID, build job count and source-diff audit in the final user-facing report once the **entire** workflow passes. No paper, main branch, arXiv or Editorial Manager mutation is permitted.
