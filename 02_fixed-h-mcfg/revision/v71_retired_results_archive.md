@@ -492,3 +492,138 @@ distributional equality.
 \end{proof}
 
 ```
+
+---
+
+# Further v71 editorial consolidation
+
+These are secondary results replaced by short explanatory references in the compiled manuscript. Their original claims are not repudiated.
+
+## A1. Auxiliary no-splitting characteristic-length criterion
+
+```latex
+\begin{corollary}[Auxiliary no-splitting criterion]
+\label{cor:no-splitting-thickness}
+Under the assumptions of Lemma~\ref{lem:typed-thickness-baseline}, suppose in
+addition that for every nonterminal $B$ occurring as a child on the right-hand
+side of a rule there is a tuple
+$\mathbf t_B\in M^{\fan(B)}$ such that
+\[
+  h^{(\fan(B))}(\tuple u)=\mathbf t_B
+  \qquad\text{for every }\tuple u\in L_B(G).
+\]
+Then every source rule of $G$ has exactly one typed instance in
+$\widetilde G_0$ and
+\[
+  \theta_{\widetilde G_0}=\theta_G.
+\]
+Moreover,
+\[
+  |\Wit(\widetilde G_0)|\le |V|+2|P|,
+\]
+and the witness set may be chosen so that
+\[
+  \|\Wit(\widetilde G_0)\|_+
+  \le
+  (|V|+2|P|)
+  \bigl(1+(r_{\max}+2)\max\{1,\theta_G\}\bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+Each productive child has its unique type $\mathbf t_B$; hence every productive
+source rule has one typed instance, whose parent type is forced by
+$\out_\rho$.  Reducedness and unique lifting show that these instances survive
+trimming, and erasing/reinstating type indices gives a yield-length-preserving
+bijection between successful uses of a source rule and its typed instance.
+Thus $\theta_{\widetilde G_0}=\theta_G$ (start links have no larger
+thickness).  There is at most one retained typed copy of each ordinary child
+nonterminal, at most $|P|$ typed copies of the original start symbol, and one
+typed instance per source rule, giving at most $|V|+2|P|$ witnesses.
+Lemma~\ref{lem:typed-thickness-baseline} then gives the stated length bound.
+\end{proof}
+
+The singleton-type hypothesis is effectively checkable: the finite sets
+$h^{(\fan(A))}(L_A(G))$ are obtained by saturation using the template maps
+$\out_\rho$, polynomially for fixed $f,r_{\max},h$.  Outside this regime,
+refined thickness need not be controlled by the source presentation; rank one
+and prefix--suffix-determined typing are the two positive cases below.
+```
+
+## A2. Standalone semantic specializations proposition
+
+```latex
+\begin{proposition}[Semantic specializations of finite typing]
+\label{prop:semantic-specializations}
+The following hold.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item For the one-element typing $h_{\mathrm{triv}}$ defined above and every
+$f\ge1$,
+\[
+  \Cmcf{f}{h_{\mathrm{triv}}}=\YSub{f}\cap f\text{-}\mathrm{MCFL},
+\]
+and for every finite typing $h$,
+\[
+  \YSub{f}\cap f\text{-}\mathrm{MCFL}\subseteq\Cmcf{f}{h}.
+\]
+\item At $f=1$, the prefix--suffix typing recovers Yoshinaka's word-level
+$(k,\ell)$ condition: for every context-free language $L$,
+\[
+  L\text{ is $(k,\ell)$-substitutable}
+  \quad\Longleftrightarrow\quad
+  L\in\Cmcf{1}{h_\Sigma^{k,\ell}}.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For (i), trivial typing makes the type premise vacuous, and the inclusion for
+general $h$ follows from $h_{\mathrm{triv}}\preceq h$.
+
+For (ii), let nonempty $x,y$ have the same $h_\Sigma^{k,\ell}$-type.  If they
+are shorter than $m_0$, then $x=y$; otherwise write
+$x=uy_1v$ and $y=uy_2v$ with the common length-$k$ prefix $u$ and
+length-$\ell$ suffix $v$.  Yoshinaka's $(k,\ell)$ condition then gives
+$\D_L(x)=\D_L(y)$.  Conversely, in the premises of that condition the two
+nonempty compared fragments have the same prefix--suffix type, so
+$(1,h_\Sigma^{k,\ell})$-tuple substitutability transfers acceptance between
+the two outer contexts in both directions.
+\end{proof}
+
+For general $f$, componentwise $h_\Sigma^{k,\ell}$-equality is exactly the
+corresponding componentwise prefix--suffix condition.
+```
+
+## A3. Same-typing filter fragment proposition and definition
+
+```latex
+\paragraph{Same-typing regular-filter fragment.}
+For a fixed finite typing $h:\Sigma^*\to M$, define
+\[
+  \Ffrag{f}{h}
+  :=\bigl\{L_0\cap h^{-1}(\mathsf{Acc}):L_0\in\YSub{f},\ \mathsf{Acc}\subseteq M\bigr\}
+    \cap f\text{-}\mathrm{MCFL}.
+\]
+This is the part of the typed class obtained by taking Yoshinaka's trivial-typing
+baseline and applying only a regular filter recognized by the \emph{same}
+morphism $h$.
+
+\begin{proposition}[Same-typing filtering is sufficient]
+\label{prop:same-typing-filter-fragment}
+For every fixed $f$ and finite typing $h$,
+\[
+  \Ffrag{f}{h}\subseteq\Cmcf{f}{h}.
+\]
+\end{proposition}
+
+\begin{proof}
+For $L=L_0\cap h^{-1}(\mathsf{Acc})$, $f$D-substitutability transfers the
+$L_0$ part between equal-$h$-type tuples, while compositionality of $h$
+preserves the whole-word filter value in every fixed context.  Symmetry gives
+equal tuple distributions.
+\end{proof}
+
+The same-typing qualifier excludes arbitrary
+target-dependent regular filters; these are treated
+in Subsection~\ref{subsec:comparison-separations}.
+```
