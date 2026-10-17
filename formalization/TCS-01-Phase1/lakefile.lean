@@ -80,3 +80,6 @@ lean_lib TCSPhase4IntrinsicGap where
 
 @[default_target]
 lean_lib TCSPhase4TrimmingLanguage where
+
+@[default_target]
+lean_lib TCSPhase4Main where
