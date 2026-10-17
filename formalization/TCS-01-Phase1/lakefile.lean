@@ -83,3 +83,6 @@ lean_lib TCSPhase4TrimmingLanguage where
 
 @[default_target]
 lean_lib TCSPhase4Main where
+
+@[default_target]
+lean_lib TCSPhase4FiniteRefinement where
