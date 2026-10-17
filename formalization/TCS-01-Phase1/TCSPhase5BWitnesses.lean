@@ -133,7 +133,9 @@ theorem positive_witnesses_subset_language (G : SSBNFGrammar Alphabet NT)
           (chosenYield_spec retB) (chosenYield_spec retC))
   · unfold WitnessEmpty at h4
     split at h4
-    · exact StartDerives.empty (by assumption)
+    · have hnil : w = [] := by simpa using h4
+      subst w
+      exact StartDerives.empty (by assumption)
     · simp at h4
 
 #print axioms TCSPhase5B.symbol_witness_mem
