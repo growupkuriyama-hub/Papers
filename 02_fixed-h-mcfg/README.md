@@ -5,6 +5,17 @@
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
+## 日本語査読版（v72 全文）
+
+英語版 v72 の定理・数式・証明・文献に対応する完全な日本語版を
+[`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
+有限アーベル群の独立付録も
+[`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
+として全文訳してあり，本文から読み込まれます。
+[`japanese/README.md`](japanese/README.md) に英語原稿の固定版，
+対応検査，LuaLaTeX PDF のビルド方法を記録しています。
+提出用の英語版 `main.tex` は変更しません。
+
 ## Current working baseline
 
 - `main.tex` — **v72** I&C final-referee working revision, current source of truth (see `PAPER.yaml`).
