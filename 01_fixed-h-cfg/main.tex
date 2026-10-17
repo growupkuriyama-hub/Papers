@@ -36,7 +36,7 @@ Independent Researcher\\
 We study positive-data learning of context-free languages under a fixed
 homomorphism $h:\Sigma^*\to M$ to a finite monoid. For each fixed $h$, a
 polynomial-time set-driven operator reconstructs context-free
-$\sim_h$-substitutable targets from finite positive witnesses, while a
+targets substitutable relative to $h$ from finite positive witnesses, while a
 separate conservative learner identifies all nonempty targets in Gold's sense.
 
 Characteristic-data bounds depend on shortest yields in type-refined
@@ -677,6 +677,11 @@ $\widehat V(K)$:
 If $\lambda\in K$, Rule~\textup{(S)} also contains
 $\widehat S\to\lambda$.
 
+For finite samples $K\subseteq K'$, every nonterminal and production
+of $\mathsf{Rec}_h(K)$ also occurs in $\mathsf{Rec}_h(K')$.
+Consequently,
+$L(\mathsf{Rec}_h(K))\subseteq L(\mathsf{Rec}_h(K'))$.
+
 The construction follows the substring-indexed grammar scheme of
 Yoshinaka~\cite[Section~4, Algorithm~1]{yoshinaka2008}, also recalled
 by Clark~\cite[Section~4, Algorithm~1]{clark2013}.
@@ -1273,9 +1278,10 @@ and characteristic-set bounds~\cite[Lemmas~2 and~7]{yoshinaka2008}.
 Here we instead bound the shortest yields of the typed refinement used by
 $\mathsf{Rec}_h$.  One argument covers both fixed windows and
 typings that additionally track finite-group values.
-The corresponding batch bounds satisfy the set-based
-polynomial-time-and-thick-data (IPTtD) criterion of~\cite{yoshinaka2008}
-and \cite[Definition~2.12]{eyraud-heinz-yoshinaka2016}.
+The corresponding batch bounds establish
+identification in polynomial time and thick data (IPTtD),
+in the set-driven sense of~\cite{yoshinaka2008} and
+\cite[Definition~2.12]{eyraud-heinz-yoshinaka2016}.
 They do not assert the stronger incremental stabilization requirement
 of \cite[Definition~2.5]{eyraud-heinz-yoshinaka2016}.
 We claim no improvement in Yoshinaka's polynomial degree.
@@ -1860,10 +1866,10 @@ For the one-bracket Dyck language
  D_1:=\{w\in\{a,b\}^*: |w'|_a\ge|w'|_b
  \text{ for every prefix }w',\ |w|_a=|w|_b\},
 \]
-a standard deterministic context-free language
-\cite{ginsburg-greibach1966}, our notation denotes the whole Dyck language
-(called $D_1^*$ in the convention of
-Autebert--Berstel--Boasson~\cite{autebert1997}).
+This is a standard deterministic context-free language
+\cite{ginsburg-greibach1966}.
+Here $D_1$ denotes the whole Dyck language, written $D_1^*$
+in the convention of Autebert--Berstel--Boasson~\cite{autebert1997}.
 
 \begin{corollary}\label{cor:dyck-not-rs}
 $D_1\notin\mathsf{RS}(\{a,b\})$.
@@ -2080,7 +2086,7 @@ Taking the maximum over retained $A_\mu$ proves the lemma.
 
 \begin{proof}[Proof of Proposition~\ref{prop:thick-ssbnf-normal}]
 Let $G_*=(V,\Sigma,P,S)$ be reduced with $L(G_*)\ne\emptyset$, and put
-$N:=|G_*|$ and $\bar\tau:=\tau_{G_*}+1$.
+$s_*:=|G_*|$ and $\bar\tau:=\tau_{G_*}+1$.
 The standard CFG normalization operations are classical
 \cite[Section~3.1]{autebert1997}
 \cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}.
@@ -2091,13 +2097,13 @@ Introduce a fresh start symbol $S_0\to S$, retaining
 $S_0\to\lambda$ precisely when $\lambda\in L(G_*)$.
 First isolate terminals in longer right-hand sides using
 $W_a\to a$, and then binarize.  The resulting $G_{\mathrm{bin}}$
-has $O(N)$ nonterminals and productions in symbol-count size
+has $O(s_*)$ nonterminals and productions in symbol-count size
 (and polynomial encoded size); original nonterminals retain their
 terminal languages.  Each fresh binarization symbol represents a
-contiguous block of an original right-hand side with $O(N)$ symbols.
+contiguous block of an original right-hand side with $O(s_*)$ symbols.
 Replacing these symbols by shortest terminal yields, each of length
 at most $\bar\tau$, gives
-$\tau_{G_{\mathrm{bin}}}=O(N\bar\tau)$.
+$\tau_{G_{\mathrm{bin}}}=O(s_*\bar\tau)$.
 
 For any nonterminal $A$ deriving a nonempty word, mark a terminal
 leaf in a derivation tree and follow its root-to-leaf path.
@@ -2110,20 +2116,20 @@ possibly $\lambda$.  This still gives a nonempty word and shows
 \[
 \min\{\,|w|>0:A\Rightarrow_{G_{\mathrm{bin}}}^*w\,\}
 \le 1+|V_{G_{\mathrm{bin}}}|\tau_{G_{\mathrm{bin}}}
-=O(N^2\bar\tau).
+=O(s_*^2\bar\tau).
 \]
 
 Now eliminate non-start $\lambda$-productions.  Because binarization
 has already been performed, each $A\to BC$ yields at most the
 nonempty-right-hand-side variants $A\to BC$, $A\to B$, and $A\to C$;
 there is no exponential nullable-subset expansion.  Unit-closure
-elimination then copies at most $O(N^2)$ non-unit productions, since
-there are $O(N)$ nonterminals and $O(N)$ such productions beforehand.
+elimination then copies at most $O(s_*^2)$ non-unit productions, since
+there are $O(s_*)$ nonterminals and $O(s_*)$ such productions beforehand.
 Both eliminations preserve the nonempty terminal language of each
 non-start symbol, so the preceding bound survives.  Finally trim
 useless symbols, retaining $\lambda$ only at $S_0$.
 The result is an equivalent reduced SSBNF grammar of polynomial
-encoded size and thickness $O(N^2(\tau_{G_*}+1))$.
+encoded size and thickness $O(s_*^2(\tau_{G_*}+1))$.
 Every step is computable in polynomial time.
 \end{proof}
 
