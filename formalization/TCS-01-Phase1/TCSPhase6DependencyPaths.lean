@@ -66,7 +66,7 @@ theorem typedDependencyPath_retained
         exact (retained_binary_children ih rule hB hC).2
   exact aux hp
 
-/-- All actually retained symbols admit such a successful walk. -/
+/-- Every retained symbol has such a successful walk. -/
 theorem retained_dependency_path
     (G : SSBNFGrammar Alphabet NT) (h : List Alphabet →* M)
     (A : NT) (μ : M) (hr : RetainedTypedSymbol G h A μ) :
