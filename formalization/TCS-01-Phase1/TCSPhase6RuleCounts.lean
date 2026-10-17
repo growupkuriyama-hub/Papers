@@ -66,7 +66,7 @@ theorem typed_binary_card_le (G : SSBNFGrammar Alphabet NT)
        simp [source, Finset.card_product, pow_two, mul_assoc]
 
 theorem typed_empty_card_le (G : SSBNFGrammar Alphabet NT) :
-    (WitnessEmpty (M := M) G).card ≤ 1 := by
+    (WitnessEmpty G).card ≤ 1 := by
   unfold WitnessEmpty
   split <;> simp
 
@@ -99,7 +99,7 @@ theorem positive_witnesses_card_le (G : SSBNFGrammar Alphabet NT)
         (WitnessEmpty G).card := by
     unfold PositiveWitnesses
     exact Finset.card_union_le _ _
-  have he := typed_empty_card_le (M := M) G
+  have he := typed_empty_card_le G
   have hn := typed_symbols_card_le G h
   have ht := typed_terminal_card_le G h
   have hb := typed_binary_card_le G h
