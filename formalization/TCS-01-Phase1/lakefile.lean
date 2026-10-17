@@ -92,3 +92,15 @@ lean_lib TCSPhase4OperationalTrim where
 
 @[default_target]
 lean_lib TCSPhase5Factors where
+
+@[default_target]
+lean_lib TCSPhase5Derivations where
+
+@[default_target]
+lean_lib TCSPhase5Soundness where
+
+@[default_target]
+lean_lib TCSPhase5Consistency where
+
+@[default_target]
+lean_lib TCSPhase5Monotonicity where
