@@ -81,12 +81,12 @@ boundary information across several tuple components simultaneously.
 A separate extension also gives a polynomial bound for a fixed
 prefix--suffix window combined with a finite abelian-group typing,
 using a zero-sum shortening argument.
-This restriction matters. Already at fan-out one and rule rank two,
-a fixed two-element semilattice typing forces exponentially long
-characteristic samples despite linear grammar size and rule
-thickness, for any set-driven operator possessing characteristic
-samples throughout the class. At rule rank one, every fixed typing
-admits characteristic data polynomial in grammar size alone.
+At rule rank one, every fixed typing admits characteristic
+data polynomial in grammar size alone.
+For arbitrary finite typings, a universal
+original-thickness polynomial bound is already known
+to fail for CFGs; the window and window--abelian
+conditions circumvent this obstruction.
 We also establish finite-typing, regular-filter and fan-out
 separations, including a boundary-typed non-context-free target of
 minimum fan-out and minimum rule rank two.
@@ -140,11 +140,8 @@ guard is fixed before the positive text is seen, separating the choice of a
 finite bias from learning under that bias~\cite{CosteTyping2004}.
 Prefix--suffix and DFA transition morphisms provide two useful families.
 Fan-out is part of the same bias because it determines which tuple arities are
-tested for substitution.  A fixed bound on the unknown codomain size can be
-absorbed into one product typing, whereas without such a bound the union
-contains all regular languages and is not TxtEx-identifiable.  Thus the typing
-supplies bounded finite-state information while the MCFG carries the
-unbounded dependency.
+tested for substitution.  Thus a fixed typing supplies finite-state information
+while the MCFG carries the unbounded dependency.
 
 Other learning biases make different choices.  Takada uses regular control
 languages over derivations~\cite{Takada1988,Takada1995}, while local
@@ -173,22 +170,6 @@ Appendix~\ref{app:window-abelian} extends the result
 to a window combined with a fixed finite abelian group,
 with total length $O(\|G\|^4\bar\theta_G)$
 (Theorem~\ref{thm:window-abelian-polydata}).
-
-\item \emph{A sharp obstruction for arbitrary finite typing.}
-The linear-size, linear-thickness branching CFG family of the
-companion paper yields, already at fan-out one and rank two, a fixed
-semilattice typing for which any set-driven operator admitting
-characteristic samples for all targets in the class needs an
-exponentially long example
-(Proposition~\ref{prop:fanout-one-lower-bound}).
-This is an established fan-out-one consequence of the companion
-CFG result, not a new MCFG lower-bound construction. By contrast,
-at rule rank one every fixed typing admits a grammar-size
-polynomial for characteristic data
-(Theorem~\ref{thm:rankone-polydata}).
-Separate examples identify exponential costs of full yield-type
-refinement and empty-component elimination without asserting
-operator-independent lower bounds for those constructions.
 
 \item \emph{Typing, fan-out and rule-rank separations.}
 We give languages outside every regular-filter fragment of
@@ -228,12 +209,13 @@ At fan-out one, polynomial characteristic data for fixed
 prefix--suffix typing were obtained by
 Yoshinaka~\cite[Theorem~1]{Yoshinaka2008}.
 The companion CFG manuscript~\cite{kuriyamaCFG}
-develops arbitrary finite typing and the lower-bound
-family used below; Appendix~\ref{app:bracketed-substitutability}
-reproduces its substitutability proof to make the
-present manuscript self-contained.  The MCFG-specific questions are componentwise
-typing of tuples, rule-rank/thickness dependence of characteristic data, and
-interaction with fan-out and regular filtering.  The non-branching lower bound
+develops arbitrary finite typing and proves the
+operator-independent fan-out-one lower bound.
+These are prior results, not standalone new MCFG
+contributions here. The MCFG-specific questions
+are componentwise typing of tuples, characteristic-data
+length at higher rank, and interactions with
+fan-out and regular filtering.  The non-branching lower bound
 used for the intrinsic-rank witness is prior work; the contribution is its
 boundary-typed wrapper, typed membership and Yoshinaka separation, and its
 connection to the quantitative theorem.
@@ -242,9 +224,11 @@ Throughout the polynomial statements, fan-out, rank cap, and finite typing are
 fixed.  Characteristic data for the set-driven reconstruction concern
 language-level exactness; syntactic stabilization is supplied by the
 conservative sequential learner.  The full-refinement and
-empty-component obstructions concern their particular constructions;
-Proposition~\ref{prop:fanout-one-lower-bound} separately gives an
-operator-independent lower bound for other targets at fan-out one.
+empty-component obstructions concern only those
+constructions, not all learners.
+The distinct operator-independent lower bound
+at fan-out one is due to the companion
+CFG paper~\cite{kuriyamaCFG}.
 
 Sections~\ref{sec:prelim}--\ref{sec:char-data} develop the model,
 reconstruction, convergence, and quantitative bounds; Section~\ref{sec:comparison}
@@ -1429,33 +1413,6 @@ change is possible.  The learner is generally presentation-order-sensitive and
 need not be set-driven.
 \end{proof}
 
-\begin{proposition}[Unknown typing with a bounded codomain]
-\label{prop:bounded-unknown-typing}
-Fix $\Sigma$, $f$, and $m_{\max}\ge1$, and let
-$\Cboundedtyping{f}{m_{\max}}$ be the union of $\Cmcf{f}{h}$ over all
-homomorphisms $h:\Sigma^*\to M$ with $|M|\le m_{\max}$.  There is one finite
-homomorphism $U_{\Sigma,m_{\max}}$ such that
-\[
- \Cboundedtyping{f}{m_{\max}}
- \subseteq \Cmcf{f}{U_{\Sigma,m_{\max}}},
-\]
-so the bounded union is TxtEx-identifiable.  In contrast,
-$\Calltyping{f}=\bigcup_h\Cmcf{f}{h}$ is not TxtEx-identifiable from positive
-data.
-\end{proposition}
-
-\begin{proof}
-There are only finitely many monoid structures of size at most $m_{\max}$ and
-letter maps from $\Sigma$ into them.  Take the product of all resulting
-homomorphisms and restrict it to its image.  Every admissible $h$ factors
-through this product, so typing refinement gives the displayed inclusion and
-Corollary~\ref{cor:gold-explanatory} gives TxtEx identification.  The product
-can be extremely large; no polynomial dependence on $m_{\max}$ is claimed.
-Without a codomain bound the union contains every regular language, hence all
-finite languages and an infinite language, so Gold's obstruction for a class containing all finite languages together with an
-infinite language applies~\cite{Gold1967}.
-\end{proof}
-
 \subsection{Polynomial-Time Updates at Bounded Rule Rank}
 \label{sec:poly-time}
 
@@ -1556,15 +1513,12 @@ arbitrary $h$, bounded rank
 rule rank one
   & polynomial in $\|G\|$ alone
   & Theorem~\ref{thm:rankone-polydata} \\
-auxiliary: unique componentwise $h$-type for every rule child
-  & explicit $O((|V|+|P|)(1+r_{\max})\max\{1,\theta_G\})$ scale
-  & Corollary~\ref{cor:no-splitting-thickness} \\
 $h\preceq h_\Sigma^{k,\ell}$, bounded rank
   & polynomial in $\|G\|$ and $\max\{1,\theta_G\}$
   & Theorem~\ref{thm:boundary-polydata} \\
-arbitrary $h$, fan-out one and rank two
-  & no universal polynomial original-thickness bound
-  & Proposition~\ref{prop:fanout-one-lower-bound} \\
+window plus finite abelian group
+  & $O(\|G\|^4\bar\theta_G)$
+  & Theorem~\ref{thm:window-abelian-polydata} \\
 \hline
 \end{tabularx}
 \end{center}
@@ -1574,14 +1528,15 @@ Full yield-type refinement can make its thickness exponentially larger than
 the original presentation parameters
 (Proposition~\ref{prop:typed-thickness-exponential}), so that route alone
 gives no original-thickness bound.  Rank one removes the thickness dependence,
-whereas prefix--suffix-determined typing gives the main higher-rank transfer;
-the unique-child-type row is only an auxiliary no-splitting criterion.
-The final row records the operator-independent
-fan-out-one obstruction inherited from the companion
-CFG result.  It does not contradict the positive
-boundary-typing theorem, because the semilattice
-typing used there is not determined by any fixed
-prefix--suffix window.
+whereas prefix--suffix-determined typing gives the
+main higher-rank transfer. The finite-abelian-group
+extension has its own proof in
+Appendix~\ref{app:window-abelian}.
+The companion CFG result~\cite{kuriyamaCFG}
+separately excludes a universal original-thickness
+polynomial for arbitrary finite typing at fan-out one;
+the semilattice typing of that example is
+not determined by any fixed prefix--suffix window.
 Polynomial update time in the observed sample is independent of these
 data-length refinements
 (Theorem~\ref{thm:poly} and Corollary~\ref{cor:capped-gold-poly}).
@@ -1719,52 +1674,14 @@ $(r_{\max}+2)\bar\theta_{\mathrm{typ}}$.  Therefore
 which is polynomial for fixed $f,r_{\max},h$.
 \end{proof}
 
-\begin{corollary}[Auxiliary no-splitting criterion]
-\label{cor:no-splitting-thickness}
-Under the assumptions of Lemma~\ref{lem:typed-thickness-baseline}, suppose in
-addition that for every nonterminal $B$ occurring as a child on the right-hand
-side of a rule there is a tuple
-$\mathbf t_B\in M^{\fan(B)}$ such that
-\[
-  h^{(\fan(B))}(\tuple u)=\mathbf t_B
-  \qquad\text{for every }\tuple u\in L_B(G).
-\]
-Then every source rule of $G$ has exactly one typed instance in
-$\widetilde G_0$ and
-\[
-  \theta_{\widetilde G_0}=\theta_G.
-\]
-Moreover,
-\[
-  |\Wit(\widetilde G_0)|\le |V|+2|P|,
-\]
-and the witness set may be chosen so that
-\[
-  \|\Wit(\widetilde G_0)\|_+
-  \le
-  (|V|+2|P|)
-  \bigl(1+(r_{\max}+2)\max\{1,\theta_G\}\bigr).
-\]
-\end{corollary}
-
-\begin{proof}
-Each productive child has its unique type $\mathbf t_B$; hence every productive
-source rule has one typed instance, whose parent type is forced by
-$\out_\rho$.  Reducedness and unique lifting show that these instances survive
-trimming, and erasing/reinstating type indices gives a yield-length-preserving
-bijection between successful uses of a source rule and its typed instance.
-Thus $\theta_{\widetilde G_0}=\theta_G$ (start links have no larger
-thickness).  There is at most one retained typed copy of each ordinary child
-nonterminal, at most $|P|$ typed copies of the original start symbol, and one
-typed instance per source rule, giving at most $|V|+2|P|$ witnesses.
-Lemma~\ref{lem:typed-thickness-baseline} then gives the stated length bound.
-\end{proof}
-
-The singleton-type hypothesis is effectively checkable: the finite sets
-$h^{(\fan(A))}(L_A(G))$ are obtained by saturation using the template maps
-$\out_\rho$, polynomially for fixed $f,r_{\max},h$.  Outside this regime,
-refined thickness need not be controlled by the source presentation; rank one
-and prefix--suffix-determined typing are the two positive cases below.
+For trivial typing, no nonterminal is split by
+yield type; consequently the original
+thickness scale is retained. This recovers
+Yoshinaka's untyped characteristic-data
+estimate~\cite[Lemma~7]{Yoshinaka2011}.
+Without this uniqueness, the refinement
+may have much larger thickness, as the next
+proposition demonstrates.
 
 \begin{proposition}[Exponential blow-up of full yield-type refinement]
 \label{prop:typed-thickness-exponential}
@@ -1803,179 +1720,84 @@ $\|G\|\max\{1,\theta_G\}$ for arbitrary fixed typing, already at fan-out one
 and rank two.  This is a limitation of the full-refinement route, not of the
 language $\{\mathtt a,\mathtt c\}^+$ itself.
 
-\begin{proposition}[No original-thickness bound at fan-out one]
-\label{prop:fanout-one-lower-bound}
-There exist a fixed two-element semilattice typing $h_{\mathrm U}$
-and reduced good fan-out-one, rule-rank-two grammars $G_n$
-with $\|G_n\|=O(n)$ and $\theta_{G_n}\le4n$
-whose languages $L_n$ belong to $\Cmcf{1}{h_{\mathrm U}}$,
-with the following property: for every set-driven operator
-$\mathcal O$ having characteristic samples for all targets in
-$\Cmcf{1}{h_{\mathrm U}}\cap\mathsf{MCFL}(1,2)$,
-each characteristic sample for $L_n$ contains a word of
-length $3\cdot2^n-2$. In particular, its total encoded
-positive length is at least $3\cdot2^n-1$.
-This applies to $\mathcal B_{1,h_{\mathrm U}}$ and to
-$\mathcal B^{\le r}_{1,h_{\mathrm U}}$ for fixed $r\ge2$.
-\end{proposition}
-
-\begin{proof}
-Use the bracketed-doubling family of the companion CFG manuscript
-\cite[Proposition~6.3 and Appendix~C]{kuriyamaCFG}.
-Let
-$\Gamma=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$ and
-$U_1=\{1,\zeta\}$ with $\zeta^2=\zeta$.
-Define $h_{\mathrm U}:\Gamma^*\to U_1$ by
-sending $\lceil,\rceil$ to $\zeta$ and the other letters to $1$.
-For $n\ge1$ take
-\[
- \begin{aligned}
- S&\to E_n,& E_0&\to\mathtt a,\\
- E_i&\to\lfloor{}E_{i-1}E_{i-1}\rfloor
-       \mid\lceil{}E_{i-1}\rceil
-       &&(1\le i\le n).
- \end{aligned}
-\]
-This is a reduced good fan-out-one grammar of rank two and
-size $O(n)$. Put $u_j=\lceil^j\mathtt a\rceil^j$.
-Every unary rule occurs in a successful derivation of
-$u_n$, of length $2n+1$; the binary rule at $E_i$ occurs
-in the word
-$\lceil^{n-i}\lfloor{}u_{i-1}u_{i-1}\rfloor\rceil^{n-i}$,
-of length $2n+2i\le4n$. Hence $\theta_{G_n}\le4n$.
-
-By Proposition~\ref{prop:app-bracketed-substitutable},
-$L_n:=L(G_n)$ is Clark--Eyraud substitutable,
-hence is in $\Cmcf{1}{h_{\mathrm U}}$.
-The only word of $L_n$ with $h_{\mathrm U}$-value $1$
-is the completely binary expansion $w_n^\ast$,
-and $|w_n^\ast|=3\cdot2^n-2$.
-Put $L_n^-:=L_n\setminus\{w_n^\ast\}
-=L_n\cap h_{\mathrm U}^{-1}(\{\zeta\})$.
-The regular fiber $h_{\mathrm U}^{-1}(\{\zeta\})$
-is $(1,h_{\mathrm U})$-substitutable; the
-intersection closure in
-Proposition~\ref{prop:abelian-coset-filter}(i)
-therefore gives $L_n^-\in\Cmcf{1}{h_{\mathrm U}}$.
-Moreover $L_n^-$ is finite, so it has a
-rank-at-most-two CFG presentation and lies in
-$\mathsf{MCFL}(1,2)$.
-
-Let $K^\ast$ be a characteristic sample of $L_n$
-for $\mathcal O$ and $K^-$ one of $L_n^-$.
-If $w_n^\ast\notin K^\ast$, then
-\[
- K^\ast\subseteq K^\ast\cup K^-\subseteq
- L_n^-\subsetneq L_n .
-\]
-Since $\mathcal O$ is set-driven, the characteristic
-property applied to the same finite sample
-$K^\ast\cup K^-$ forces its hypothesis language
-to equal both $L_n$ and $L_n^-$, a contradiction.
-Thus $w_n^\ast\in K^\ast$ and
-$\|K^\ast\|_+\ge|w_n^\ast|+1$.
-\end{proof}
-
-For $n\ge2$, $L_n^-$ is not substitutable under trivial
-typing; the semilattice typing is what admits the second
-language of the distinguishing pair. Consequently,
-this lower bound does not contradict Yoshinaka's
-polynomial data bound for untyped
-substitutability~\cite[Lemma~7]{Yoshinaka2011}.
-
-This fan-out-one obstruction is the
-distinguishing-pair result of the companion CFG paper,
-expressed using the current MCFG learning model.
-It is not a claim of a new intrinsic lower bound for
-higher fan-out. Proposition~\ref{prop:typed-thickness-exponential}
-instead concerns the cost of \emph{full refinement}
-for an easy language and must not be confused with
-this operator-independent phenomenon.
+\paragraph{Prior lower bound at fan-out one.}
+The revised companion CFG paper proves an
+operator-independent exponential characteristic-data
+lower bound for fixed two-element semilattice typing,
+already at fan-out one and rule rank two
+\cite{kuriyamaCFG}.
+We do not reproduce this prior CFG result.
+It does not automatically extend to higher fan-out,
+whose tuple substitutability tests more arities.
 
 \subsection{Rule Rank One: Grammar-Size Polynomial Data}
 \label{subsec:rankone-polydata}
 
-At rule rank one every terminal derivation in the typed refinement is a unary
-chain ending in a rank-zero rule, so its length can grow only by the terminals
-written along that chain.  Fix a finite typing $h:\Sigma^*\to M$ and a
-reduced good grammar $G=(V,\Sigma,P,S,\fan)$ of fan-out at most $f$ and rule
-rank at most one, and let $\widetilde G_0$ be its trimmed full yield-type
-refinement.  Let $n_{\mathrm{typ}}$ be the number of non-start typed
-nonterminals and let $b_G\ge1$ be the maximum number of terminals explicitly
-written by a rule.  Then
-\[
- n_{\mathrm{typ}}\le |V||M|^f,\qquad b_G\le\max\{1,\|G\|\}.
-\]
-
-\begin{lemma}[Short typed canonical tuples at rule rank one]
-\label{lem:rankone-short-canonical}
-For every non-start typed nonterminal $X$ of $\widetilde G_0$, the
-canonical tuple may be chosen so that
-\[
- \|\omega(X)\|_1\le n_{\mathrm{typ}}b_G.
-\]
-\end{lemma}
-
-\begin{proof}
-Choose a shortest terminal unary chain from $X$.  It cannot repeat a typed
-nonterminal, since splicing in the lower suffix would shorten the chain.
-Thus it has at most $n_{\mathrm{typ}}$ rule applications, each adding at most
-$b_G$ terminals because the rules are linear and nondeleting.
-\end{proof}
-
-Lemma~\ref{lem:reusable-context-bound} with
-$b_{\mathrm{can}}=n_{\mathrm{typ}}b_G$, $b_{\mathrm{rule}}=b_G$, and $r_0=1$
-then bounds every selected characteristic word by
-$(2n_{\mathrm{typ}}+1)b_G$.
+Unary derivation chains admit a grammar-size bound
+independent of thickness, even under arbitrary fixed
+componentwise typing.
 
 \begin{theorem}[Rank-one polynomial construction and characteristic data]
 \label{thm:rankone-polydata}
-Fix $f\ge1$, a finite alphabet $\Sigma$, and a finite typing
-$h:\Sigma^*\to M$.  Let $G_{\mathrm{in}}$ be any finite standard fan-out-$\le f$,
-rule-rank-$\le1$ presentation of a target $L\in\Cmcf{f}{h}$.  Then
-$\mathcal B_{f,h}^{\le1}$ is computable in time polynomial in $\|K\|_+$ for a finite positive
-sample $K$ and admits characteristic data of total positive length
-$\operatorname{poly}_{f,h}(\|G_{\mathrm{in}}\|)$.  If $\eps\in L$, the
-characteristic sample additionally contains the single direct-start datum
-$\eps$; its length is zero and hence does not affect this bound.  The capped conservative learner
-$\mathcal A_{f,h}^{\le1}$ TxtEx-identifies
-$\Cmcf{f}{h}\cap\mathsf{MCFL}(f,1)$, with polynomial time per processed datum.
+Fix $f\ge1$, finite $\Sigma$, and a typing
+$h:\Sigma^*\to M$ into a finite monoid.
+For any finite standard fan-out-$\le f$,
+rank-$\le1$ grammar $G_{\mathrm{in}}$
+of $L\in\Cmcf{f}{h}$,
+$\mathcal B_{f,h}^{\le1}$ is polynomial-time in
+$\|K\|_+$ and has a characteristic sample of
+total length $\operatorname{poly}_{f,h}(\|G_{\mathrm{in}}\|)$.
+The direct-start datum $\eps$ is added when
+$\eps\in L$ without affecting this bound.
+The conservative learner
+$\mathcal A_{f,h}^{\le1}$ consequently
+TxtEx-identifies
+$\Cmcf{f}{h}\cap\mathsf{MCFL}(f,1)$
+with polynomial time per datum.
 \end{theorem}
 
 \begin{proof}
-A rank-zero rule has one retained typed instance and a unary rule at most
-$|M|^f$, so the refined rule set has size $O(|P||M|^f)$.  By the preceding
-lemma and Proposition~\ref{prop:witness-cardinality},
+Normalize without increasing rank
+(Proposition~\ref{prop:good-normalization}),
+and trim the typed refinement.
+Write $n_{\mathrm{typ}}\le|V||M|^f$ for its
+number of non-start typed nonterminals and
+$b_G\le\max\{1,\|G\|\}$ for the largest explicit
+terminal count of a rule, taking $b_G\ge1$.
+A shortest typed terminal derivation from any
+nonterminal is a unary chain with no repeated
+typed nonterminal: splicing in the later suffix
+would otherwise shorten the chain. Therefore
+$\|\omega(X)\|_1\le n_{\mathrm{typ}}b_G$.
+Lemma~\ref{lem:reusable-context-bound} bounds
+each witness word by $(2n_{\mathrm{typ}}+1)b_G$,
+while Proposition~\ref{prop:witness-cardinality}
+gives at most $n_{\mathrm{typ}}+|P||M|^f$
+witnesses. Hence
 \[
  \|\Wit(\widetilde G_0)\|_+
- \le (n_{\mathrm{typ}}+|P||M|^f)
-      (1+(2n_{\mathrm{typ}}+1)b_G),
- \qquad n_{\mathrm{typ}}\le |V||M|^f.
+ \le(n_{\mathrm{typ}}+|P||M|^f)
+        \bigl(1+(2n_{\mathrm{typ}}+1)b_G\bigr).
 \]
-This is polynomial for fixed $f,h$.  Proposition~\ref{prop:good-normalization}
-preserves rank one with fixed-parameter linear overhead, while
-Theorem~\ref{thm:poly} and Corollary~\ref{cor:capped-gold-poly} give the stated
-reconstruction and conservative TxtEx bounds.
+The polynomial overhead of normalization and the
+time and convergence bounds follow from
+Theorem~\ref{thm:poly} and
+Corollary~\ref{cor:capped-gold-poly}.
 \end{proof}
 
-Under trivial typing, the same grammar-size scale can also be read from
-Yoshinaka's characteristic-data estimate~\cite[Lemma~7]{Yoshinaka2011}
-together with the unary-chain bound for rank-one presentations.  At fan-out
-one, this specializes to the linear-CFG argument of the companion
-paper~\cite{kuriyamaCFG}.  The point of
-Theorem~\ref{thm:rankone-polydata} is that the grammar-size bound continues to
-hold under arbitrary fixed componentwise finite typing at every fixed fan-out.
-
-Rank two already precludes a grammar-size-only data bound.  The size-$O(n)$
-grammar
-$A_0\to\mathtt c$, $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
-generates the singleton $\{\mathtt c^{2^n}\}$.  Every singleton over a one-letter alphabet is
-$f$D-substitutable for every fixed $f$: if two tuples occur in one common
-sentence context, equality of the resulting unary word forces equality of
-their total component lengths, and hence they have the same distribution in
-the singleton language.  The displayed grammar has fan-out one, so this target
-belongs to $\Cmcf{f}{h}$ for every finite typing $h$ and every $f\ge1$.  Any nonempty characteristic sample therefore has length at least
-$2^n$.  This motivates the thickness parameter used below.
+This extends the rank-one untyped scale
+\cite[Lemma~7]{Yoshinaka2011} and the fan-out-one
+argument of~\cite{kuriyamaCFG} to arbitrary
+fixed finite typing at every fixed fan-out.
+Rank two cannot generally yield a
+grammar-size-only bound: the size-$O(n)$
+grammar $A_0\to\mathtt c$,
+$A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
+generates the singleton $\{\mathtt c^{2^n}\}$,
+which is $(f,h)$-tuple-substitutable for
+every fixed $f,h$. Every characteristic
+sample for this target contains a word
+of length at least $2^n$.
 
 \subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
 \label{subsec:boundary-polydata}
@@ -2226,94 +2048,36 @@ $h_\Sigma^{k,\ell}$-values is exactly equality of the boundary information
 used in this condition, including the exact identity of words shorter than
 $m_0=\max\{1,k+\ell\}$.
 
-\begin{proposition}[Semantic specializations of finite typing]
-\label{prop:semantic-specializations}
-The following hold.
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item For the one-element typing $h_{\mathrm{triv}}$ defined above and every
-$f\ge1$,
+\paragraph{Specializations of the semantic condition.}
+The trivial typing removes the componentwise
+type premise, so
 \[
-  \Cmcf{f}{h_{\mathrm{triv}}}=\YSub{f}\cap f\text{-}\mathrm{MCFL},
+ \Cmcf{f}{h_{\mathrm{triv}}}
+ =\YSub{f}\cap f\text{-}\mathrm{MCFL}
+ \subseteq\Cmcf{f}{h}.
 \]
-and for every finite typing $h$,
-\[
-  \YSub{f}\cap f\text{-}\mathrm{MCFL}\subseteq\Cmcf{f}{h}.
-\]
-\item At $f=1$, the prefix--suffix typing recovers Yoshinaka's word-level
-$(k,\ell)$ condition: for every context-free language $L$,
-\[
-  L\text{ is $(k,\ell)$-substitutable}
-  \quad\Longleftrightarrow\quad
-  L\in\Cmcf{1}{h_\Sigma^{k,\ell}}.
-\]
-\end{enumerate}
-\end{proposition}
+At fan-out one,
+$(1,h_\Sigma^{k,\ell})$-substitutability
+is precisely Yoshinaka's word-level
+$(k,\ell)$ condition~\cite{Yoshinaka2008}:
+equal window types mean identical short words
+or common prefixes and suffixes of lengths
+$k$ and $\ell$, respectively.
+The same correspondence applies
+componentwise at larger fan-out.
 
-\begin{proof}
-For (i), trivial typing makes the type premise vacuous, and the inclusion for
-general $h$ follows from $h_{\mathrm{triv}}\preceq h$.
-
-For (ii), let nonempty $x,y$ have the same $h_\Sigma^{k,\ell}$-type.  If they
-are shorter than $m_0$, then $x=y$; otherwise write
-$x=uy_1v$ and $y=uy_2v$ with the common length-$k$ prefix $u$ and
-length-$\ell$ suffix $v$.  Yoshinaka's $(k,\ell)$ condition then gives
-$\D_L(x)=\D_L(y)$.  Conversely, in the premises of that condition the two
-nonempty compared fragments have the same prefix--suffix type, so
-$(1,h_\Sigma^{k,\ell})$-tuple substitutability transfers acceptance between
-the two outer contexts in both directions.
-\end{proof}
-
-For general $f$, componentwise $h_\Sigma^{k,\ell}$-equality is exactly the
-corresponding componentwise prefix--suffix condition.
-
-\paragraph{Compatibility with Yoshinaka's bounded-rank scale.}
-For trivial typing every productive nonterminal has a unique componentwise
-type, so Corollary~\ref{cor:no-splitting-thickness}, rather than the more
-general boundary theorem, gives the sharper comparison.  For a reduced good
-rank-$\le r$ grammar,
-\[
- |\Wit(\widetilde G_0)|\le |V|+2|P|,
- \qquad
- \|\Wit(\widetilde G_0)\|_+
- \le (|V|+2|P|)\bigl(1+(r+2)\max\{1,\theta_G\}\bigr).
-\]
-Yoshinaka's characteristic set satisfies
-$|K_G|\le |P|$ and $\|K_G\|\le |P|\tau_G$
-\cite[Lemma~7]{Yoshinaka2011}, and his Theorem~1 gives polynomial time and
-data for fixed dimension and rank~\cite[Theorem~1]{Yoshinaka2011}.  Thus the
-present trivial-typing specialization recovers the same grammar-size--rule-
-thickness efficiency scale, while the exact constants and witness
-organization differ.
-
-\paragraph{Same-typing regular-filter fragment.}
-For a fixed finite typing $h:\Sigma^*\to M$, define
-\[
-  \Ffrag{f}{h}
-  :=\bigl\{L_0\cap h^{-1}(\mathsf{Acc}):L_0\in\YSub{f},\ \mathsf{Acc}\subseteq M\bigr\}
-    \cap f\text{-}\mathrm{MCFL}.
-\]
-This is the part of the typed class obtained by taking Yoshinaka's trivial-typing
-baseline and applying only a regular filter recognized by the \emph{same}
-morphism $h$.
-
-\begin{proposition}[Same-typing filtering is sufficient]
-\label{prop:same-typing-filter-fragment}
-For every fixed $f$ and finite typing $h$,
-\[
-  \Ffrag{f}{h}\subseteq\Cmcf{f}{h}.
-\]
-\end{proposition}
-
-\begin{proof}
-For $L=L_0\cap h^{-1}(\mathsf{Acc})$, $f$D-substitutability transfers the
-$L_0$ part between equal-$h$-type tuples, while compositionality of $h$
-preserves the whole-word filter value in every fixed context.  Symmetry gives
-equal tuple distributions.
-\end{proof}
-
-The same-typing qualifier excludes arbitrary target-dependent regular filters;
-these are treated after Theorem~\ref{thm:every-fanout-strictness}.
-
+\paragraph{Compatibility with Yoshinaka's efficiency scale.}
+For trivial typing no productive nonterminal
+has more than one yield type. Yoshinaka's
+untyped grammar witnesses already satisfy
+$|K_G|\le|P|$ and
+$\|K_G\|\le|P|\tau_G$
+\cite[Lemma~7]{Yoshinaka2011}, with polynomial
+time and data for fixed dimension and rank
+\cite[Theorem~1]{Yoshinaka2011}.
+Thus the present quantitative claims concern
+new typed, multi-component settings rather
+than re-proving the trivial-typing result.
 
 \subsection{An Intrinsically Rank-Two Boundary-Typed Target}
 \label{subsec:intrinsic-ranktwo}
@@ -2724,94 +2488,8 @@ Hence $L_{\mathrm{cd}}$ separates finite typing from every prefix--suffix
 typing and arbitrary regular filtering at fan-out one, while no finite typing
 repairs the language once arity two is tested.
 
-\begin{remark}[The copy language]
-\label{rem:copy}
-The standard two-component copying grammar
-makes $\mathrm{COPY}=\{ww:w\in\{\mathtt a,\mathtt b\}^+\}$
-a $2$-MCFL, but for every finite typing $h$,
-already arity-one substitutability fails.
-Choose distinct $u,v\in\{\mathtt a,\mathtt b\}^n$
-with $h(u)=h(v)$ and $|u|=|v|$ by pigeonhole.
-Then $uu,vv$ share the empty context,
-while $u\blank_1u$ accepts $uu$ but not $vv$:
-otherwise $uvvu\in\mathrm{COPY}$ would give
-$uv=vu$ and hence $u=v$.
-Thus $\mathrm{COPY}\notin\Cmcf{f}{h}$
-for any $f\ge1$.
-\end{remark}
-
-\subsection{Strictness and Typings beyond Prefix--Suffix Windows}
+\subsection{Local Boundary Control and Arbitrary Regular Filtering}
 \label{subsec:comparison-separations}
-
-The prefix--suffix typings do not exhaust the finite-typing framework.
-Let $\Sigma_Q:=\{\mathtt 0,\mathtt 1,\mathtt\#,\mathtt a,\mathtt b\}$ and
-\[
-  Q:=\{w\mathtt\#\mathtt a^i\mathtt b^j:w\in\{\mathtt 0,\mathtt 1\}^*,\ i,j\ge0,\ \text{$w$ contains $\mathtt{11}$}\}.
-\]
-Fix a complete DFA for $Q$, let $h_Q:\Sigma_Q^*\to M_Q$ be its transition
-morphism, and let $\mathsf{Acc}_Q\subseteq M_Q$ satisfy $Q=h_Q^{-1}(\mathsf{Acc}_Q)$.
-
-\begin{proposition}[A non-boundary typing beyond every prefix--suffix window]
-\label{prop:nonboundary-rankone-separator}
-For every $s\ge1$, let
-\[
- J_s:=\{w\mathtt\#\mathtt a^{sn}\mathtt b^n:
-       w\in\{\mathtt 0,\mathtt 1\}^n,
-       \text{$w$ contains $\mathtt{11}$}\}.
-\]
-Then $J_s$ is a non-context-free fan-out-two rank-one language satisfying
-\[
-  J_s\in\Cmcf{2}{h_Q},
-  \qquad
-  J_s\notin\Cmcf{2}{h_{\Sigma_Q}^{k,\ell}}
-  \quad\text{for every }k,\ell\ge0.
-\]
-\end{proposition}
-
-\begin{proof}
-A fan-out-two rank-one grammar is
-\[
-\begin{aligned}
- A&\to(\mathtt{11},\mathtt a^{2s}\mathtt b^2),\\
- A&\to(\mathtt 0\xi_1^1,\mathtt a^s\xi_1^2\mathtt b)(A)
-   \mid(\mathtt 1\xi_1^1,\mathtt a^s\xi_1^2\mathtt b)(A),\\
- A&\to(\xi_1^1\mathtt 0,\mathtt a^s\xi_1^2\mathtt b)(A)
-   \mid(\xi_1^1\mathtt 1,\mathtt a^s\xi_1^2\mathtt b)(A),\\
- S&\to(\xi_1^1\mathtt\#\xi_1^2)(A).
-\end{aligned}
-\]
-It generates $J_s$.  Intersecting with
-$\mathtt 1^*\mathtt\#\mathtt a^*\mathtt b^*$ gives
-$\{\mathtt 1^n\mathtt\#\mathtt a^{sn}\mathtt b^n:n\ge2\}$, which is
-not context-free: otherwise the indicated block homomorphism, inverse image,
-and regular intersection would yield
-$\{\mathtt x^n\mathtt\#\mathtt y^n\mathtt z^n:n\ge2\}$.
-
-Moreover $J_s=Q\cap\varphi_s^{-1}(0,0)$ for the abelian map
-$\varphi_s(\mathtt 0)=\varphi_s(\mathtt 1)=(-s,-1)$,
-$\varphi_s(\mathtt a)=(1,0)$, $\varphi_s(\mathtt b)=(0,1)$, and
-$\varphi_s(\mathtt\#)=(0,0)$, so
-Proposition~\ref{prop:abelian-coset-filter} gives
-$J_s\in\Cmcf{2}{h_Q}$.
-
-Fix $k,\ell\ge0$, put $n_0:=k+\ell+4$, and take
-$x=\mathtt 0^k\mathtt{0110}\mathtt 0^\ell$ and
-$y=\mathtt 0^k\mathtt{0100}\mathtt 0^\ell$.  With
-\[
- E=\mathtt{11}\blank_1\mathtt\#\mathtt a^{s(n_0+2)}\mathtt b^{n_0+2},
- \qquad F=\blank_1\mathtt\#\mathtt a^{sn_0}\mathtt b^{n_0},
-\]
-the factors $x,y$ have the same $h_{\Sigma_Q}^{k,\ell}$-type and
-$E[x],E[y],F[x]\in J_s$, whereas $F[y]\notin J_s$.  Thus the
-$(2,h_{\Sigma_Q}^{k,\ell})$ condition already fails at arity one.
-\end{proof}
-
-Thus the arbitrary-$h$ rank-one theorem reaches beyond every fixed
-prefix--suffix typing.  Since
-$J_s=\varphi_s^{-1}(0,0)\cap h_Q^{-1}(\mathsf{Acc}_Q)$, this witness concerns
-non-boundary typing, not regular-filter separation.  We next obtain strictness
-at every fan-out with a separator-free witness; Yoshinaka's Example~3 uses
-separator-marked equal-block languages instead~\cite[Example~3]{Yoshinaka2011}.
 
 Following the standard local-testability terminology~\cite{McNaughtonPapert1971}, call
 $L_{\mathrm{sl}}\subseteq\Sigma^*$ \emph{strictly 2-local} if there is a set
@@ -2842,101 +2520,6 @@ encoded by the boundary type; end-marker pairs are unchanged.  Thus
 $E[\tuple y]\in L_{\mathrm{sl}}$, and symmetry finishes the proof.
 \end{proof}
 
-\begin{theorem}[Strictness at every fan-out]
-\label{thm:every-fanout-strictness}
-For $m\ge2$ let
-$\Sigma_m:=\{\mathtt a_1,\ldots,\mathtt a_{2m}\}$ and
-\[
-  H_m:=\{\mathtt a_1^n\mathtt a_2^n\cdots\mathtt a_{2m}^n:n\ge1\}.
-\]
-Then $H_m\in\mathsf{MCFL}(m,1)$ but $H_m$ is not an $(m-1)$-MCFL.  Moreover,
-for every $f\ge m$,
-\[
-  H_m\in\Cmcf{f}{h_{\Sigma_m}^{1,1}}
-  \setminus\bigl(\YSub{f}\cup\Ffrag{f}{h_{\Sigma_m}^{1,1}}\bigr).
-\]
-\end{theorem}
-
-The alphabet $\Sigma_m$ varies with $m$; the hierarchy content of the theorem
-is that the witness has minimum fan-out exactly $m$.  For strictness at any
-single fixed fan-out $f\ge2$, the case $H_2$ already supplies a witness for
-every tested fan-out at least two.
-
-\begin{proof}
-A good rank-one grammar is
-\[
-\begin{aligned}
-  A&\to(\mathtt a_1,\mathtt a_3,\ldots,\mathtt a_{2m-1}),\\
-  A&\to(\mathtt a_1\xi_1^1\mathtt a_2,
-        \mathtt a_3\xi_1^2\mathtt a_4,\ldots,
-        \mathtt a_{2m-1}\xi_1^m\mathtt a_{2m})(A),\\
-  S&\to(\xi_1^1\mathtt a_2\,\xi_1^2\mathtt a_4\cdots
-         \xi_1^m\mathtt a_{2m})(A).
-\end{aligned}
-\]
-It derives from $A$ the tuples
-$(\mathtt a_1^n\mathtt a_2^{n-1},\ldots,
-  \mathtt a_{2m-1}^n\mathtt a_{2m}^{n-1})$ and hence generates $H_m$.
-Seki et al.'s Lemma~3.3, applied with their parameter $m-1$,
-shows that
-$\{\mathtt a_1^n\cdots\mathtt a_{2m-1}^n:n\ge1\}$ is not an
-$(m-1)$-MCFL~\cite[Lemma~3.3, p.~202]{SekiEtAl1991}.  Since MCFLs are closed under homomorphism as a consequence of their
-substitution closure~\cite[Theorem~3.9, p.~203]{SekiEtAl1991}, erasing
-$\mathtt a_{2m}$ proves that $H_m$ is not an $(m-1)$-MCFL.
-
-For membership, put
-$Q_m:=\mathtt a_1^*\cdots\mathtt a_{2m}^*\cap\Sigma_m^+$.
-This language is strictly $2$-local, and
-\[
-  H_m=Q_m\cap\varphi_m^{-1}(0),\qquad
-  \varphi_m(w):=(|w|_{\mathtt a_i}-|w|_{\mathtt a_{i+1}})_{1\le i<2m}.
-\]
-Lemma~\ref{lem:sl2-boundary-control} and
-Proposition~\ref{prop:abelian-coset-filter}(ii) therefore give
-$H_m\in\Cmcf{f}{h_{\Sigma_m}^{1,1}}$ for every $f\ge m$.
-
-It remains to exclude Yoshinaka's substitution implication.  Put
-$d:=\lceil m/2\rceil$.  Since $d\le2m-2d\le2d$, choose
-$\ell_i\in\{1,2\}$ with $\sum_i\ell_i=2m-2d$, and set
-\[
-\begin{aligned}
- q_i&:=2+2(i-1)+\sum_{j<i}\ell_j,&
- x_i&:=\mathtt a_{q_i}\cdots\mathtt a_{q_i+\ell_i-1},\\
- v_0&:=\mathtt a_1,&v_d&:=\mathtt a_{2m},&
- v_i&:=\mathtt a_{q_i+\ell_i}\mathtt a_{q_i+\ell_i+1}\quad(1\le i<d).
-\end{aligned}
-\]
-Then $w_1:=\mathtt a_1\cdots\mathtt a_{2m}=v_0x_1v_1\cdots x_dv_d$.
-With $E:=v_0\blank_1v_1\cdots\blank_dv_d$, we have $E[\tuple x]=w_1$.
-
-In $w_2:=\mathtt a_1^2\cdots\mathtt a_{2m}^2$, place $v_0,v_d$ at the two
-ends and each interior $v_i=\mathtt a_j\mathtt a_{j+1}$ across its block
-boundary.  The intervening nonempty segments form $\tuple y$ with
-$E[\tuple y]=w_2$ and $y_1$ beginning in $\mathtt a_1$.  Place each $x_i$ in
-$w_2$ starting at the last occurrence of its first letter (straddling the
-block boundary when $|x_i|=2$); the remaining material defines
-$F\in\mathcal E_d$ with $F[\tuple x]=w_2$.  Its fixed prefix ends in the first
-$\mathtt a_2$, so $F[\tuple y]$ contains $\mathtt a_2\mathtt a_1$ and is not
-in $H_m$.  Hence
-\[
- E[\tuple x],E[\tuple y],F[\tuple x]\in H_m,\qquad
- F[\tuple y]\notin H_m,
-\]
-with $d\le m\le f$, proving $H_m\notin\YSub{f}$.
-
-The same rectangle excludes $\Ffrag{f}{h_{\Sigma_m}^{1,1}}$: all four complete
-words have the same first and last symbols and length at least two, hence the
-same whole-word boundary type.  The first three would force the fourth into
-both $L_0$ and the same filter, a contradiction.
-\end{proof}
-
-Consequently, for every $m\ge2$, every $f\ge m$, and every $r\ge1$,
-\[
-  \YSL{f}{r}\subsetneq
-  \Cmcf{f}{h_{\Sigma_m}^{1,1}}\cap\mathsf{MCFL}(f,r).
-\]
-The witness $H_m$ has minimum fan-out $m$ and rule rank one.
-
 \paragraph{Arbitrary target-dependent regular filters.}
 For comparison, on a fixed alphabet define
 \[
@@ -2944,22 +2527,24 @@ For comparison, on a fixed alphabet define
  :=\bigl\{L_0\cap R:L_0\in\YSub{f},\ R\text{ regular}\bigr\}
    \cap f\text{-}\mathrm{MCFL}.
 \]
-Because every regular language has a finite transition morphism,
-\[
- \mathcal F_f^{\mathrm{arb}}=\bigcup_h\Ffrag{f}{h}.
-\]
-This union contains all regular languages (take $\Sigma^*\in\YSub{f}$), so as
-one positive-data class it is not TxtEx-identifiable by Gold's obstruction.
+This class contains all regular languages
+(take $\Sigma^*\in\YSub{f}$) and is therefore
+not TxtEx-identifiable as a single
+positive-data class by Gold's obstruction.
+We use it only as an expressiveness baseline,
+not as an additional learnable class.
 
-The witnesses $H_m$ and $L_{\mathrm{intr}}$ lie in this larger fragment:
+The intrinsic-rank-two witness lies in this larger
+fragment:
 \[
- H_m=\varphi_m^{-1}(0)\cap\mathtt a_1^+\cdots\mathtt a_{2m}^+,\qquad
  L_{\mathrm{intr}}=\Phi_{\mathrm{intr}}^{-1}(0)\cap Q_{\mathrm{intr}}.
 \]
-They therefore witness fan-out/rank and same-typing separation, not arbitrary
-regular-filter separation.  Proposition~\ref{prop:strong-fanout-separation}
-gives the latter at fan-out one; the next theorem keeps it inside a finitely
-typed fan-out-two rank-one target.
+It demonstrates intrinsic rank rather than
+separation from arbitrary regular filtering.
+Proposition~\ref{prop:strong-fanout-separation}
+gives that separation at fan-out one;
+the next theorem establishes it for a
+finitely typed non-context-free fan-out-two target.
 
 \begin{theorem}[A fan-out-two typed language beyond arbitrary regular filtering]
 \label{thm:arbitrary-filter-separation}
@@ -3076,13 +2661,10 @@ Thus the single target $L_\star$ rules out representation by a Yoshinaka
 language followed by any finite-state filter, irrespective of how the filter
 typing refines $h_\star$.
 
-The witnesses $H_m$ are rank one and fall under
-Theorem~\ref{thm:rankone-polydata}; by contrast,
-Theorem~\ref{thm:intrinsic-ranktwo-witness} gives a boundary-typed
-non-context-free target whose minimum rule rank remains two across all finite
-fan-outs, placing the higher-rank boundary theorem genuinely beyond the
-rank-one regime.
-
+This rank-one separation complements
+Theorem~\ref{thm:intrinsic-ranktwo-witness},
+which gives a boundary-typed non-context-free
+target of minimum rule rank two across all finite fan-outs.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -3090,11 +2672,11 @@ rank-one regime.
 Finite-monoid typing gives a compositional bias for positive-data MCFG
 learning: every fixed $(f,h)$ admits exact reconstruction and TxtEx
 identification, with polynomial-time updates under a fixed rule-rank cap.
-Fan-out is part of the bias: $L_{\mathrm{cd}}$ shows that increasing tested
-arity can destroy substitutability beyond repair by any finite typing, while
-Theorem~\ref{thm:every-fanout-strictness} gives typed rank-one witnesses of
-minimum fan-out $m$ outside Yoshinaka's class.  The language $L_\star$
-additionally excludes arbitrary target-dependent regular filtering.
+Fan-out is part of the bias: $L_{\mathrm{cd}}$
+shows that increasing tested arity can destroy
+substitutability beyond repair by any finite typing.
+The language $L_\star$ additionally excludes
+arbitrary target-dependent regular filtering.
 
 For characteristic data, arbitrary fixed typing has a grammar-size polynomial
 at rule rank one, while prefix--suffix-determined typing has a
@@ -3114,11 +2696,11 @@ of targets in $\Cmcf{f}{h}$ for which
 $\|G_n\|\max\{1,\theta_{G_n}\}$ grows polynomially
 in $n$ but every characteristic sample for
 $\mathcal B^{\le r}_{f,h}$ has superpolynomial
-total positive length?  The fan-out-one counterexample
-of Proposition~\ref{prop:fanout-one-lower-bound}
-does not by itself answer this higher-arity question:
-membership in $\Cmcf{1}{h}$ need not imply membership
-in $\Cmcf{f}{h}$ for $f\ge2$.
+total positive length?  The fan-out-one counterexample of the companion
+CFG paper~\cite{kuriyamaCFG} does not by itself
+answer this higher-arity question:
+membership in $\Cmcf{1}{h}$ need not imply
+membership in $\Cmcf{f}{h}$ for $f\ge2$.
 \end{openproblem}
 
 
@@ -3287,255 +2869,212 @@ force exponentially long shortest witnesses inside one refined state.
 \section{Relation to Yoshinaka's General Framework}
 \label{sec:general-framework}
 
-The reconstruction of Section~\ref{sec:learner} is an
-explicitly guarded version of the standard
-observed-tuple construction.  The following bounded-rank
-correspondence records precisely which conclusions were already
-covered by Yoshinaka's general signature theory; it is not
-presented as a new qualitative learning principle.
+The bounded-rank learner is a typed instance of
+Yoshinaka's substitutable-signature framework
+\cite{Yoshinaka2015General}. We make the
+correspondence explicit to distinguish prior
+qualitative learning results from the total-length
+bounds of Section~\ref{sec:char-data}.
 
-\paragraph{A signature for the bounded-rank typed class.}
-Fix $\Sigma$, $f,r\ge1$ and $h:\Sigma^*\to M$, and put $M^+:=h(\Sigma^+)$.
-The signature $\mathfrak S_{f,r,h}$ has the start sort $O_*:=\Sigma^*$ and,
-for $1\le d\le f$ and $\boldsymbol\mu\in(M^+)^d$, the non-start sort
+Fix finite $\Sigma$, $f,r\ge1$ and
+$h:\Sigma^*\to M$, and put $M^+:=h(\Sigma^+)$.
+The signature $\mathfrak S_{f,r,h}$ has a
+start sort $O_*=\Sigma^*$ and tagged sorts
 \[
-  T_{d,\boldsymbol\mu}:=\{\tuple w\in(\Sigma^+)^d:
-      h^{(d)}(\tuple w)=\boldsymbol\mu\},
+ T_{d,\boldsymbol\mu}
+ =\{\tuple w\in(\Sigma^+)^d:
+ h^{(d)}(\tuple w)=\boldsymbol\mu\},
+ \qquad
+ 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d.
 \]
-tagged as in \cite[Section~4]{Yoshinaka2015General} so that all sorts are
-pairwise disjoint.  Its function names are
-(i) every good template $\rho$ of fan-out at most $f$ and child rank at
-most $r$, rank zero included, with input sorts
-$T_{d_j,\boldsymbol\mu_j}$ and output sort
-$T_{d_0,\out_\rho(\boldsymbol\mu_1,\ldots,\boldsymbol\mu_n)}$;
-(ii) for each $\mu\in M^+$, the promotion $T_{1,\mu}\to O_*$,
-$(w)\mapsto w$; and (iii) the nullary constant $\eps\in O_*$.
-No function takes an argument of sort $O_*$, exactly as for the signature
-$\Sigma_{k,l}$ of \cite[Example~4]{Yoshinaka2015General}.  Forgetting
-types, $\mathfrak S_{f,r,h}$ is finer, in the sense of
-\cite[Section~8]{Yoshinaka2015General}, than the untyped signature of
-$\lambda$-free good MCFG operations, which is a nonempty-component variant
-of \cite[Example~3]{Yoshinaka2015General}.  Every function is total: good
-templates are nondeleting and $\lambda$-free, so nonempty inputs give
-nonempty outputs, and the output type is $\out_\rho$ of the input types
-(Definition~\ref{def:output-map}).  Write $\mathcal S_O$ and
-$\mathcal C_O$ for Yoshinaka's sets of $O$-substructures and $O$-contexts
-realized by some $\mathfrak S_{f,r,h}$-grammar
-\cite[Section~3]{Yoshinaka2015General}.
+Its function names comprise all well-typed
+good MCFG templates of child rank at most $r$
+(including rank zero); promotions
+$T_{1,\mu}\to O_*$; and a nullary $\eps$
+constant of sort $O_*$. No function takes an
+$O_*$ input. These are finite sort refinements
+of the bounded-MCFG and prefix--suffix
+signatures in
+\cite[Examples~3--4 and Section~8]{Yoshinaka2015General}.
+Write $\mathcal S_O,\mathcal C_O$ for the
+substructures and contexts realizable in
+some grammar over this signature.
 
 \begin{lemma}[Signature contexts are admissible sentence contexts]
 \label{lem:signature-contexts}
-For every non-start sort $T_{d,\boldsymbol\mu}$,
+For every non-start sort,
 \[
-  \mathcal S_{T_{d,\boldsymbol\mu}}=T_{d,\boldsymbol\mu}
-  \qquad\text{and}\qquad
-  \mathcal C_{T_{d,\boldsymbol\mu}}
-   =\{\tuple x\mapsto E[\tuple x]:E\in\mathcal E_d\},
+ \mathcal S_{T_{d,\boldsymbol\mu}}
+ =T_{d,\boldsymbol\mu},
+ \qquad
+ \mathcal C_{T_{d,\boldsymbol\mu}}
+ =\{\tuple x\mapsto E[\tuple x]:E\in\mathcal E_d\}.
 \]
-the second equality being one of sets of functions on
-$T_{d,\boldsymbol\mu}$.  Moreover $\mathcal C_{O_*}=\{\blank_{O_*}\}$.
+The latter equality is between \emph{functions}
+on $T_{d,\boldsymbol\mu}$.
+Also $\mathcal C_{O_*}$ contains only the identity.
 \end{lemma}
 
 \begin{proof}
-Rank-zero templates give $\mathcal S_{T_{d,\boldsymbol\mu}}
-=T_{d,\boldsymbol\mu}$.  Since no function has an argument of sort $O_*$,
-the only $O_*$-context is the identity.
+Every element of a non-start sort is a rank-zero
+good template constant. No operation takes
+$O_*$ as input. For a context of non-start
+sort, induct along the path from its hole
+to the start. Composing a good template with
+an admissible parent context preserves the
+order and single occurrence of the
+distinguished child's variables.
+Consecutive holes in one output component
+are separated by a terminal or a nonempty
+sibling component (nonmerging); holes in
+different output components are separated
+by a nonempty parent-context separator.
+Thus every resulting sentence context
+belongs to $\mathcal E_d$, by repeated
+application of Lemma~\ref{lem:filling-identity}.
 
-For the inclusion $\subseteq$, induct on the depth of the hole in a
-derivation context $\chi$ whose hole has sort $T_{d,\boldsymbol\mu}$.  If
-the hole lies directly below a promotion, then $d=1$ and $\tilde\chi$ is
-the identity on one-component tuples.  Otherwise $\chi$ arises from a
-context $\chi_0$ for a parent sort $T_{e,\boldsymbol\nu}$ through a rule
-with good template $\rho=(\alpha_1,\ldots,\alpha_e)$, the hole at child $j$
-and the other children filled by substructures.  By induction,
-$\tilde\chi_0(\tuple y)=v_0y_1v_1\cdots y_ev_e$ with
-$v_1,\ldots,v_{e-1}\in\Sigma^+$.  Sibling substructures lie in non-start
-sorts, so their components are nonempty.  By nondeletion and
-nonpermutation, $\xi_j^1,\ldots,\xi_j^d$ occur once each and in order.
-If $\xi_j^\kappa$ and $\xi_j^{\kappa+1}$ lie in one $\alpha_i$, nonmerging
-and nonpermutation place a terminal or a variable of another child between
-them, so their separator is nonempty.  If they lie in $\alpha_i$ and
-$\alpha_{i'}$ with $i<i'$, their separator contains $v_i\in\Sigma^+$.
-Hence $\tilde\chi$ is $\tuple x\mapsto E[\tuple x]$ for some
-$E\in\mathcal E_d$; this is Lemma~\ref{lem:filling-identity} iterated
-along the path from the root to the hole.  All three conditions are used:
-dropping nonmerging, nonpermutation or $\lambda$-freeness of siblings
-yields contexts with an empty internal separator or with holes out of
-order.
-
-For $\supseteq$, let $E=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$.
-The unary template $\rho_E:=(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$ is good,
-because every internal $v_i$ is nonempty, and it maps
-$T_{d,\boldsymbol\mu}$ to $T_{1,\mu'}$ with
-$\mu'=h(v_0)\mu_1h(v_1)\cdots\mu_dh(v_d)$.  In the grammar with rules
-$Z\leftarrow\mathrm{prom}\langle Y\rangle$,
-$Y\leftarrow\rho_E\langle X\rangle$ and $X\leftarrow\tuple c$ for some
-$\tuple c\in T_{d,\boldsymbol\mu}$, the $X$-context has yield
-$\tuple x\mapsto E[\tuple x]$.
+Conversely, for any
+$E=v_0\blank_1v_1\cdots\blank_dv_d
+\in\mathcal E_d$, the unary good template
+$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$
+with a rank-zero child and start promotion
+realizes $\tuple x\mapsto E[\tuple x]$.
+Here the internal $v_i$ are nonempty,
+as required by goodness; the output type
+is fixed by $h$.
 \end{proof}
 
 \begin{proposition}[Bounded-rank coverage by Yoshinaka's 2015 framework]
 \label{prop:yoshinaka2015-embedding}
-For fixed $\Sigma$, $f,r\ge1$ and $h$, the signature $\mathfrak S_{f,r,h}$
-satisfies Assumptions~1--3 of \cite{Yoshinaka2015General}, and
+The signature $\mathfrak S_{f,r,h}$ satisfies
+Assumptions~1--3 of
+\cite{Yoshinaka2015General}, and
 \[
-  \mathsf{Subst}(\mathfrak S_{f,r,h})
-  =\Cmcf{f}{h}\cap\mathsf{MCFL}(f,r),
+ \mathsf{Subst}(\mathfrak S_{f,r,h})
+ =\Cmcf{f}{h}\cap\mathsf{MCFL}(f,r).
 \]
-where the left-hand side is the class of substitutable
-$\mathfrak S_{f,r,h}$-languages
-\cite[Definition~1]{Yoshinaka2015General}.  Consequently Yoshinaka's identification theorem applies
-\cite[Theorem~1 and Lemmas~2--3]{Yoshinaka2015General}.
-His Algorithm~1 is displayed with $\mathrm{SUBST}_{\mathrm P}$,
-whereas its correctness proof uses the
-context-indexed $\mathrm{SUBST}_{\mathrm D}$; the
-substructure-indexed correspondence for this signature
-is verified in Lemma~\ref{lem:substp}.  Its updates take
-time polynomial in the total size of the data, of degree $O(fr)$ for fixed
-$f,r,h$.  Every target has a characteristic set of at most
-$|N^\sharp|+|P^\sharp|$ words, where $N^\sharp$ and $P^\sharp$ are the
-nonterminals and rules of the trimmed refinement $\widetilde G_0$ of a good
-rank-$\le r$ presentation, with its promotions and $\eps$.  For fixed
-$f,r,h$ this number is linear in the size of any rank-$\le r$
-presentation, by Proposition~\ref{prop:good-normalization} and
-Proposition~\ref{prop:witness-cardinality}.  None of these statements
-bounds the total length of the characteristic words.
+Consequently Yoshinaka's identification theorem
+applies to the bounded-rank class
+\cite[Theorem~1]{Yoshinaka2015General}:
+for fixed $f,r,h$, updates are polynomial
+in the accumulated sample, and characteristic
+sets have cardinality at most
+$|N^\sharp|+|P^\sharp|$ for a trimmed
+signature presentation
+\cite[Lemma~3]{Yoshinaka2015General}.
+This does not bound the total \emph{length}
+of those samples.
 \end{proposition}
 
 \begin{proof}
-\emph{Equality.}  Every $\mathfrak S_{f,r,h}$-grammar is an $f$-MCFG of
-rule rank at most $r$, since promotions are unary and $r\ge1$.
-Conversely, let $L\in\mathsf{MCFL}(f,r)$.  Proposition~\ref{prop:good-normalization}
-gives a good presentation of $L\setminus\{\eps\}$ of fan-out at most $f$
-and rank at most $r$.  Its trimmed yield-type refinement $\widetilde G_0$,
-with each start link read as a promotion and with the constant $\eps$
-added when $\eps\in L$, is an $\mathfrak S_{f,r,h}$-grammar for $L$
-(Proposition~\ref{prop:output-invariants}).  It has no useless
-nonterminals or functions, as \cite[Section~6]{Yoshinaka2015General}
-requires.  It remains to compare the two substitutability conditions,
-sort by sort.  At $O_*$, Yoshinaka's condition is vacuous because
-$\mathcal C_{O_*}=\{\blank_{O_*}\}$.  At $T_{d,\boldsymbol\mu}$,
-Lemma~\ref{lem:signature-contexts} lets $s_1,s_2$ range over all tuples in
-$(\Sigma^+)^d$ of type $\boldsymbol\mu$ and $c_1,c_2$ over all of
-$\mathcal E_d$.  This is exactly the arity-$d$, type-$\boldsymbol\mu$
-instance of Definition~\ref{def:tuple-substitutable}.
+Every signature grammar is a fan-out-$\le f$,
+rank-$\le r$ MCFG after forgetting tags.
+Conversely, rank-preserving good normalization
+(Proposition~\ref{prop:good-normalization}),
+trimmed yield-type refinement
+(Definition~\ref{def:output-refinement}),
+start promotions and the separate $\eps$
+constant present every language in
+$\mathsf{MCFL}(f,r)$ over this signature.
+At the start sort substitutability is
+vacuous; at all other sorts
+Lemma~\ref{lem:signature-contexts} identifies
+the four-instance signature implication
+with Definition~\ref{def:tuple-substitutable}
+for each arity and componentwise type.
+This proves the equality.
 
-\emph{Assumptions.}  Sort membership, template evaluation and plugging are
-linear-time, and context membership is decided through
-Lemma~\ref{lem:signature-contexts}.  Uniform membership takes
-$O(\|G\|^2|w|^{f(r+1)})$ time \cite[Proposition~4]{Yoshinaka2011}.  This
-gives Assumption~1, and arities are at most $r$ (Assumption~2).  For
-Assumption~3, let $|w|=n$.  By Lemma~\ref{lem:signature-contexts},
-$\mathcal S|_w$ consists of $w$ itself together with the tagged tuples of
-at most $f$ nonempty, left-to-right intervals of $w$ with nonempty gaps.
-Similarly, $\mathcal C|_w$ consists of the identity together with the
-corresponding hole contexts.  A function $\rho$ with
-$c\odot\rho(s_1,\ldots,s_n)=w$ is recovered from the parent occurrence
-determined by $c$ and the child intervals determined by evaluation.  The
-remaining substrings are its terminal constants, and the child intervals
-are tuple occurrences by
-Lemma~\ref{lem:composition-witness-materialization}.  Together with the
-promotion of $(w)$ for $w\ne\eps$ and the constant $\eps$ for $w=\eps$,
-this lists $\mathcal F|_w$.  All three sets are enumerated exactly, in time
-$(n+1)^{2f(r+1)}$ times a constant depending on $f,r,|M|$.
-
-\emph{Learning consequences.}  Theorem~1 follows from Lemmas~2 and~3 of
-\cite{Yoshinaka2015General}, both stated for $\mathrm{SUBST}_{\mathrm D}$.
-Lemma~3 and the remark after it give the characteristic set and its
-cardinality.  The polynomial update time is the remark after Lemma~3,
-under Assumptions~1--3.
+For the effective assumptions, sort/context
+membership and template evaluation are
+polynomial-time by the lemma and finite
+typing; uniform bounded-rank MCFG membership
+is polynomial
+\cite[Proposition~4]{Yoshinaka2011}.
+All operations have arity at most $r$.
+For a sentence of length $n$, enumerate
+the start word, each tagged tuple of up
+to $f$ nonoverlapping nonempty intervals
+with nonempty internal gaps, and the
+associated context functions. For each
+parent tuple occurrence, enumerate the
+rank-$\le r$ good templates determined by
+ordered child-component intervals (at most
+$fr$ such intervals) and the remaining
+terminal material, recording the actual
+\emph{function names}. Add promotions and
+the $\eps$ constant as appropriate.
+By Lemma~\ref{lem:composition-witness-materialization},
+every realizable function instance occurs.
+At most $2f(r+1)$ cut positions are needed,
+so the enumeration is polynomial in $n$
+for fixed $f,r,h$. These are precisely
+Assumptions~1--3; applying Yoshinaka's
+Theorem~1 and Lemma~3 gives the stated
+learning consequences.
 \end{proof}
 
 \begin{lemma}[Substructure-indexed and guarded reconstruction]
 \label{lem:substp}
-Fix $f,r,h$ as in Proposition~\ref{prop:yoshinaka2015-embedding},
-and choose the $\mathrm{SUB}$, $\mathrm{CON}$ and
-$\mathrm{FUN}$ enumerations from its proof.
-For every finite sample $K\subseteq\Sigma^*$, the guarded
-constructor $\mathcal B^{\le r}_{f,h}(K)$ and
-Yoshinaka's substructure-indexed
-$\mathrm{SUBST}_{\mathrm P}(K)$ over
-$\mathfrak S_{f,r,h}$ generate the same language.
+For the preceding signature and enumerations,
+Yoshinaka's $\mathrm{SUBST}_{\mathrm P}(K)$
+and $\mathcal B^{\le r}_{f,h}(K)$ generate
+the same language for every finite
+positive sample $K\subseteq\Sigma^*$.
 \end{lemma}
 
 \begin{proof}
-For a non-start sort, identify the substructure-indexed
-symbol $[\![\tuple s]\!]$ with the guarded symbol
-$[\tuple s]$ of the same componentwise type.
-An instance
-\[
- [\![s_0]\!]\leftarrow
- \rho\langle[\![s_1]\!],\ldots,[\![s_t]\!]\rangle
-\]
-of $\mathrm{SUBST}_{\mathrm P}(K)$ has a common
-signature context $c$ for $s_0$ and
-$\tuple z:=\rho(s_1,\ldots,s_t)$ such that both
-$c[s_0]$ and $c[\tuple z]$ lie in $K$.
-Lemma~\ref{lem:signature-contexts} makes $c$ an
-admissible sentence context and puts $s_0,\tuple z$
-in the same typed sort.  Hence the guarded Rule~(Link)
-contains $[s_0]\to[\tuple z]$.
-The occurrence of $\tuple z$ inside $c[\tuple z]$
-materializes a composition witness for $\rho$ and
-the $s_j$, by
+Identify their non-start symbols indexed
+by the same observed tuples and typed sorts.
+A $\mathrm{SUBST}_{\mathrm P}$ rule
+with parent $s_0$ and template value
+$z=\rho(s_1,\ldots,s_t)$ is witnessed
+by a common signature context for
+$s_0,z$. By Lemma~\ref{lem:signature-contexts}
+this is an admissible sentence context.
+The guarded Rule~(Link) sends $[s_0]$
+to $[z]$, followed by Rule~(Comp), or
+Rule~(Const) for $t=0$, whose witness
+is materialized by
 Lemma~\ref{lem:composition-witness-materialization}.
-Rule~(Comp), or Rule~(Const) when $t=0$,
-therefore supplies the second step from $[\tuple z]$.
+Conversely, every guarded Link is a
+$\mathrm{SUBST}_{\mathrm P}$ instance of
+the unary identity template; every Comp
+and Const is its own witnessed parent
+instance. Induction on derivations
+therefore equates the non-start
+symbol languages.
 
-Conversely, each guarded Rule~(Link) is a
-$\mathrm{SUBST}_{\mathrm P}$ instance of the
-well-typed unary identity operation; the witness
-is the common sentence context of its two tuples.
-Rules~(Comp) and~(Const) are instances with
-$s_0=\rho(s_1,\ldots,s_t)$ and the witnessed
-occurrence context of the parent tuple.
-Thus the languages derived from corresponding
-non-start tuple symbols agree by induction on
-their finite derivations.
-
-It remains to compare the start conventions,
-rather than tacitly identifying their syntactic
-nonterminals.  The signature's only start-sort
-context is the identity and no operation takes a
-start-sort input.  Therefore every
-$\mathrm{SUBST}_{\mathrm P}$ initial symbol
-$[\![w]\!]$ for $w\in K$ admits promotions from
-every observed nonempty one-component tuple
-$(w')$ with $w'\in K\cap\Sigma^+$, and it admits
-the direct $\eps$ rule exactly when $\eps\in K$.
-All such initial symbols consequently generate
-the same union
+At the start sort the only context is
+the identity and no operation accepts
+a start-sort argument. Each observed
+start symbol consequently has the
+same language
 \[
- \bigcup_{w'\in K\cap\Sigma^+}L([(w')])
+ \bigcup_{w\in K\cap\Sigma^+}L([(w)])
  \ \cup\ (\{\eps\}\cap K),
 \]
-which is precisely the language of the guarded
-Rule~(Start).  For $K=\emptyset$ both constructions
-generate the empty language.
+by the promotions and direct $\eps$
+constant. This is precisely guarded
+Rule~(Start); for $K=\emptyset$ both
+languages are empty.
 \end{proof}
 
-\paragraph{Relation of characteristic witnesses.}
-Yoshinaka proves the learning theorem with the
-context-indexed $\mathrm{SUBST}_{\mathrm D}$
-\cite[Section~6.1]{Yoshinaka2015General}
-and states in Section~7 that Algorithm~1 also
-works with $\mathrm{SUBST}_{\mathrm P}$.  The lemma and the
-direct soundness and completeness results above
-verify the latter construction for the present
-signature.  For a trimmed typed target grammar,
-choose Yoshinaka's canonical $c_X=\chi(X)$ and
-$s_X=\omega(X)$ for non-start symbols.
-Its non-start witness words then coincide with
-$\Wit(\widetilde G_0)$; promotion witnesses are
-already present among the chosen start words, and
-the direct $\eps$ start rule contributes $\eps$
-exactly when needed.  With these start choices,
-the resulting characteristic sets agree as sets
-of positive words.  This is an identification of
-the witness \emph{pattern}, not a claim that the
-two hypothesis grammars are syntactically equal.
+\paragraph{Characteristic witness correspondence.}
+Yoshinaka's proof uses the context-indexed
+$\mathrm{SUBST}_{\mathrm D}$, while its
+Section~7 discusses $\mathrm{SUBST}_{\mathrm P}$
+\cite{Yoshinaka2015General}.
+Choosing its non-start witnesses as
+$c_X=\chi(X)$ and $s_X=\omega(X)$
+gives precisely $\Wit(\widetilde G_0)$
+at non-start sorts; promoted start
+witnesses are among these chosen words,
+and $\eps$ contributes its direct
+datum when present. This identifies
+the positive-word witness \emph{pattern}
+with consistent start conventions,
+not the syntactic hypothesis grammars.
 
-\input{appendix_bracketed_substitutability.tex}
 \input{appendix_window_abelian.tex}
 
 \small
