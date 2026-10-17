@@ -50,7 +50,7 @@ theorem run_append {bound : Nat} {s t u : Stack} {x y : Word}
     Run bound s (x ++ y) u := by
   induction hx with
   | nil _ => simpa using hy
-  | next hs hr ih => exact Run.next hs ih
+  | next hs hr ih => exact Run.next hs (ih hy)
 
 theorem run_append_split {bound : Nat} {s t : Stack} (x y : Word)
     (h : Run bound s (x ++ y) t) :
@@ -95,15 +95,15 @@ theorem step_suffix {bound : Nat} {s t : Stack} {c : Terminal}
     (h : Step bound s c t) (suffix : Stack) :
     Step bound (s ++ suffix) c (t ++ suffix) := by
   cases h with
-  | atom tail => simpa using (Step.atom (bound := bound) (tail ++ suffix))
+  | atom tail => simpa using (Step.atom (bound := bound) _)
   | unary i hi tail =>
       simpa using (Step.unary (bound := bound) i hi (tail ++ suffix))
   | binary i hi tail =>
       simpa using (Step.binary (bound := bound) i hi (tail ++ suffix))
   | ceilPop tail =>
-      simpa using (Step.ceilPop (bound := bound) (tail ++ suffix))
+      simpa using (Step.ceilPop (bound := bound) _)
   | floorPop tail =>
-      simpa using (Step.floorPop (bound := bound) (tail ++ suffix))
+      simpa using (Step.floorPop (bound := bound) _)
 
 theorem run_suffix {bound : Nat} {s t : Stack} {w : Word}
     (h : Run bound s w t) (suffix : Stack) :
