@@ -29,3 +29,6 @@ lean_lib TCSPhase3Prefix where
 
 @[default_target]
 lean_lib TCSPhase3Main where
+
+@[default_target]
+lean_lib TCSPhase3Suffix where
