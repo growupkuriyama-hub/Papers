@@ -2130,66 +2130,59 @@ Every step is computable in polynomial time.
 \section{Proof of the linear-spine SSBNF normalization}
 \label{app:linear-normalization}
 
-The construction for Proposition~\ref{prop:linear-normal} combines standard
-start-symbol separation, elimination of useless, nullable, and unit rules,
-and binarization, with the cases written out to preserve the single-spine form
-needed in Section~\ref{sec:linear}.
-
 \begin{proof}[Proof of Proposition~\ref{prop:linear-normal}]
-If $L(G)=\{\lambda\}$, take the reduced grammar with the single rule
-$S_0\to\lambda$; it has no binary productions, so the required condition is
-vacuous.  Hence assume below that $L(G)$ contains a nonempty word.
+Standard CFG preprocessing is classical
+\cite[Section~3.1]{autebert1997}
+\cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}.
+We specify the order and the additional spine-preserving binarization.
+If $L(G)=\{\lambda\}$, the single rule $S_0\to\lambda$ suffices;
+hence suppose that $L(G)$ contains a nonempty word.
 
-Let $S$ be the original start symbol.  Introduce a fresh $S_0$ that never
-occurs on a right-hand side, with $S_0\to S$ and, if $\lambda\in L(G)$,
-$S_0\to\lambda$.  Treat $S$ thereafter as a non-start symbol.  Remove useless
-symbols, eliminate non-start $\lambda$-rules while preserving $\lambda$ only
-at $S_0$, and then eliminate non-start unit rules.  Unit elimination is not
-applied to the start rules, so every start rule surviving final trimming has
-the required form $S_0\to A$ or $S_0\to\lambda$.  This order also removes unit rules created by $\lambda$-elimination.
-Linearity implies that nullable elimination creates at most one additional
-alternative per production and leaves at most one nonterminal on every
-surviving right-hand side.  Unit closure copies at most one non-unit
-production for each source/reachable-production pair, so these preprocessing
-steps remain polynomial.
+Introduce a fresh start symbol $S_0\to S$, with
+$S_0\to\lambda$ also present exactly when $\lambda\in L(G)$.
+Remove useless symbols, eliminate non-start $\lambda$-rules,
+and then eliminate non-start unit rules, leaving the start rules
+untouched.  Each right-hand side of a linear grammar contains at most
+one nonterminal.  Thus nullable elimination introduces at most one
+additional nonempty variant per rule and preserves linearity.
+Unit-closure elimination copies non-unit rules along unit paths;
+both steps preserve polynomial size and leave only
+$S_0\to S$ and possibly $S_0\to\lambda$ as start rules.
 
-Binarize using fresh terminal wrappers $W_a\to a$, without
-introducing unit rules.  For each rule
-$A\to a_1\cdots a_m B b_1\cdots b_n$, unit elimination ensures
-$m+n>0$.  Put $Z_0^{\mathrm R}:=B$ and, for $n>0$, form a right chain
-$Z_j^{\mathrm R}\to Z_{j-1}^{\mathrm R}W_{b_j}\ (1\le j\le n)$.
-All intermediate $Z_j^{\mathrm R}$ are fresh.  If $m=0$ let $Z_n^{\mathrm R}:=A$,
-so the last displayed rule has left side $A$; otherwise $Z_n^{\mathrm R}$
-is fresh for $n>0$, and $Z_0^{\mathrm R}=B$ when $n=0$.
-For $m>0$ put $Z_m^{\mathrm L}:=Z_n^{\mathrm R}$, introduce fresh
-$Z_1^{\mathrm L},\ldots,Z_{m-1}^{\mathrm L}$, and use
+For each remaining rule
+$A\to a_1\cdots a_m B b_1\cdots b_n$ with $m+n>0$,
+use terminal wrappers $W_a\to a$ and form the two chains
 \[
- A\to W_{a_1}Z_1^{\mathrm L},\qquad
- Z_i^{\mathrm L}\to W_{a_{i+1}}Z_{i+1}^{\mathrm L}\quad(1\le i<m).
+\begin{aligned}
+D_0&:=B,&
+D_j&\to D_{j-1}W_{b_j} &&(1\le j\le n),\\
+E_0&:=D_n,&
+E_i&\to W_{a_{m-i+1}}E_{i-1} &&(1\le i\le m).
+\end{aligned}
 \]
-Here $Z_1^{\mathrm L}=Z_n^{\mathrm R}$ when $m=1$.  Each rule is binary
-with precisely one fresh terminal-wrapper child;
-the original symbol $B$ is not a wrapper.
+When $m=0$, omit the $E$-chain and identify $D_n=A$;
+otherwise identify $E_m=A$.  Apart from $D_0=B$,
+$E_0=D_n$, and this last identification, all chain symbols
+are fresh.  Empty chains cover $m=0$ or $n=0$.
+Every resulting binary rule has exactly one wrapper child
+and a distinct continuing non-wrapper child.
 
-For a terminal-only rule $A\to a_1\cdots a_m$, keep $A\to a_1$ when
-$m=1$.  For $m\ge2$, introduce fresh
-$\Theta_2,\ldots,\Theta_m$ and use
+For a terminal-only rule $A\to a_1\cdots a_k$, retain
+$A\to a_1$ if $k=1$.  If $k\ge2$, set $T_1:=A$,
+introduce fresh $T_2,\ldots,T_k$, and use
 \[
- A\to W_{a_1}\Theta_2,\qquad
- \Theta_i\to W_{a_i}\Theta_{i+1}\quad(2\le i\le m-1),\qquad
- \Theta_m\to a_m.
+T_i\to W_{a_i}T_{i+1}\ (1\le i<k),
+\qquad T_k\to a_k.
 \]
-(When $m=2$, the middle family is empty.)  Every new non-start rule is
-therefore either terminal or binary with exactly one wrapper child and one
-other nonterminal child.  By construction, a wrapper $W_a$ occurs only in the
-wrapper-child position of a binary rule and never as its continuing
-nonterminal child; the terminal-only construction ends instead in a fresh non-wrapper
-nonterminal with a terminal rule.  Final trimming preserves this property,
-the separated start form, and reducedness.  The wrapper and chain
-factorizations are linear in the already polynomial total right-hand-side
-length, so the whole construction has polynomial size and runs in polynomial
-time.
-\end{proof}
+Thus wrappers occur only in the wrapper-child position;
+no wrapper is a continuing spine symbol, and the terminal-only
+chain ends with a non-wrapper terminal rule.  The constructions
+preserve the generated language and introduce no unit or
+non-start $\lambda$-rules.  Final trimming gives a reduced SSBNF
+grammar with the required spine property.
+Each chain is linear in the length of the rule it replaces,
+so the total encoded size and running time are polynomial in $|G|$.
+\end{proof>
 
 \section{Substitutability of the bracketed doubling family}
 \label{app:bracketed-substitutability}
