@@ -110,3 +110,12 @@ lean_lib TCSPhase5FactorsFinite where
 
 @[default_target]
 lean_lib TCSPhase5Grammar where
+
+@[default_target]
+lean_lib TCSPhase5FiniteDerivation where
+
+@[default_target]
+lean_lib TCSPhase5ConcreteGap where
+
+@[default_target]
+lean_lib TCSPhase5Main where
