@@ -28,11 +28,11 @@ theorem word_length_le_encodedListSample
   induction sample with
   | nil => simp at hw
   | cons head rest ih =>
+    change w.length ≤ head.length + 1 + encodedListSample rest
     rcases List.mem_cons.mp hw with h | h
     · subst w
-      simp [encodedListSample]
+      omega
     · have ht := ih h
-      simp only [encodedListSample, List.map_cons, List.sum_cons]
       omega
 
 /-- Every actual (occurrence, sample-word) unary candidate is charged
