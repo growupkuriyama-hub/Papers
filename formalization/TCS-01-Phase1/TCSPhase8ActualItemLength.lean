@@ -45,7 +45,7 @@ theorem emitAllRecItems_letterCount_le
   rcases hr with (((((hnt | hb) | hu) | hl) | hs) | heps)
   · obtain ⟨st,hst,heq⟩ := List.mem_map.mp hnt
     rcases st with ⟨u,x,v⟩
-    cases heq
+    subst r
     have hp := (mem_enumerateOccurrencesList_iff sample u x v).mp hst
     have hword :=
       word_length_le_encodedListSample sample (u++x++v) hp.2
@@ -54,7 +54,7 @@ theorem emitAllRecItems_letterCount_le
     omega
   · obtain ⟨p,hp,heq⟩ := List.mem_map.mp hb
     rcases p with ⟨z,x,y⟩
-    cases heq
+    subst r
     have hspec := (efficient_binary_spec sample.toFinset z x y).mp
       ((mem_emitBinaryCandidates_iff sample z x y).mp hp)
     rcases hspec with ⟨hzw,_,_,hz⟩
@@ -66,7 +66,7 @@ theorem emitAllRecItems_letterCount_le
     omega
   · obtain ⟨p,hp,heq⟩ := List.mem_map.mp hu
     rcases p with ⟨x,y⟩
-    cases heq
+    subst r
     have hmem := (mem_emitUnaryCandidates_iff t sample x y).mp hp
     obtain ⟨⟨⟨u,x',v⟩,w⟩, hfilter, heq⟩ := Finset.mem_image.mp hmem
     have hd := Finset.mem_filter.mp hfilter
@@ -89,11 +89,11 @@ theorem emitAllRecItems_letterCount_le
     change x.length + y.length ≤ 2*(encodedListSample sample+1)
     omega
   · obtain ⟨a,_,heq⟩ := List.mem_map.mp hl
-    cases heq
+    subst r
     change 1 ≤ 2*(encodedListSample sample+1)
     omega
   · obtain ⟨w,hw,heq⟩ := List.mem_map.mp hs
-    cases heq
+    subst r
     have hmem : w ∈ sample := (List.mem_filter.mp hw).1
     have hlen := word_length_le_encodedListSample sample w hmem
     change w.length ≤ 2*(encodedListSample sample+1)
