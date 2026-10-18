@@ -55,7 +55,7 @@ theorem mem_emitUnaryCandidates_iff
         middle u v w ≠ [] ∧
           u ++ middle u v w ++ v = w ∧
           codeWord t x' = codeWord t (middle u v w) := by
-      simpa using hfiltered.2
+      exact of_decide_eq_true hfiltered.2
     apply Finset.mem_image.mpr
     refine ⟨((u,x',v),w), ?_, heq⟩
     exact Finset.mem_filter.mpr ⟨hpair, hcondition⟩

@@ -34,12 +34,16 @@ theorem decodeIndicesAux_prefix
     rfl
   | succ k ih =>
     intro count
-    change decodeIndicesAux (count + 1)
-        (List.replicate k true ++ false :: rest) =
+    have hstep :
+        unaryBits (k + 1) ++ rest =
+          true :: (unaryBits k ++ rest) := by
+      simp [unaryBits, List.replicate_succ, List.append_assoc]
+    rw [hstep]
+    change decodeIndicesAux (count + 1) (unaryBits k ++ rest) =
       (decodeIndicesAux 0 rest).map
-        (fun xs => (count + (k+1)) :: xs)
-    simpa [unaryBits, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
-      using (ih (count+1))
+        (fun xs => (count + (k + 1)) :: xs)
+    simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+      using (ih (count + 1))
 
 theorem decodeIndices_encodeIndices (ns : List Nat) :
     decodeIndicesAux 0 (encodeIndices ns) = some ns := by
