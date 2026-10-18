@@ -15,6 +15,11 @@ theorem contains_empty_eq_false (q : List Bool) :
   | cons bit rest ih =>
     cases bit <;> rfl
 
+@[simp]
+theorem contains_blank_false (q : List Bool) :
+    contains q (.node false none none) = false := by
+  simpa [empty] using contains_empty_eq_false q
+
 /-- One concrete insertion adds exactly its argument to the recognized
 language; all previously accepted keys are preserved. -/
 theorem contains_insertCount_iff
@@ -33,11 +38,11 @@ theorem contains_insertCount_iff
       cases trie with
       | node accept left right =>
         cases query with
-        | nil => cases bit <;> rfl
+        | nil => cases bit <;> simp [insertCount, contains]
         | cons qbit qrest =>
           cases bit <;> cases qbit <;>
             cases left <;> cases right <;>
-            simp [insertCount, contains, ih, contains_empty_eq_false]
+            simp [insertCount, contains, ih, contains_blank_false]
 
 /-- The concrete batch insertion preserves the exact input key set,
 allowing duplicates in its input list. -/
