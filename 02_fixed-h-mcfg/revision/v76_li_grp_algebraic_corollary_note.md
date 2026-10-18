@@ -21,6 +21,10 @@ Base: Claude's draft branch \`mcfg2-v76-strengthening-drafts\` at commit
   of targets in the relevant typed-substitutable class.
 - English and Japanese abstract, introduction, conclusion, mathematical
   lemma, corollary and references updated symmetrically.
+- Hardened the concurrent effective-witness draft: use lexicographic
+  (terminal-length, derivation-node-count) weights and outside-path
+  length/edge-count ties so that zero-terminal cycles cannot generate
+  cyclic witness-DAG predecessor pointers.
 
 ## What this does and does not claim
 
