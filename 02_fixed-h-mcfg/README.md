@@ -37,9 +37,36 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v83 I&C Focused Manuscript (review draft)
+
+**Current review branch:** `mcfg-v83-ic-focused-trim`. The official `main` manuscript remains at v81; this draft has not been submitted or merged.
+
+- EN `main.tex` / JP `japanese/main_JP.tex`: targeted trim, retaining the two complementary algebraic polynomial-data results: positive-image local groups (typing-side) and semilattice-indexed abelian cosets (target-side). Exact learning, rank-one, window and arbitrary finite-group bounds, relaxed and computable witness results remain.
+- Entire untrimmed v82 at commit `bcc0caf0eade66f552127171c0de24d2b92950b0` on archive branch `archive/mcfg-v82-pretrim-full-20261018`.
+- **Restorable exact excerpts** for separation and lower-bound results in [`archive/trim-v83/README.md`](archive/trim-v83/README.md), with full EN and JP proof sections.
+- [`revision/v83_ic_focus_trim_manifest.md`](revision/v83_ic_focus_trim_manifest.md) documents editorial scope and mathematical/proof dependencies.
+- Full algebraic appendices remain, including the noncommutative-group lemmas used by the local-group theorem and the original Davenport refinement.
+- Mandatory author journal declarations and `\\appendix` are preserved.
+
+Both PDF builds and proof/source audits must pass before promotion to `main`. The ordinary stable PDF links above still point to v81.
+
+## v82 draft（有限半束ねじれ定理への統合、レビュー中）
+
+このブランチは **v82-draft（未マージ・未投稿）** です。英語・日本語の両TeX原稿を同期し、`main` 上のv81とその固定パスPDFは変更していません。
+
+- 新しい主定理 `thm:mcfg-semilattice-twisted-polydata`: 有限半束で添字付けした共通部分群アーベル剰余類言語に対する一様な多項式特徴データ長上界。
+- 新補題 `lem:mcfg-coset-representative-transfer`: 緩和分布同値証人への整数計画転送を共通化。
+- 新補題 `lem:mcfg-sl-rectangle`、`lem:mcfg-sl-height`、`lem:mcfg-sl-short-value`: 長方形剛性・高さの狭義低下・経路費用の短縮。
+- 既存 `thm:mcfg-abelian-filter-data` は **ラベルを保存し系に変更**。空語を除いたコアを主張し、空語は追加サンプルとして別処理。
+- 一マーカー特殊例 `cor:mcfg-one-marker-split-polydata` を明記。
+- 補助群に一様な存在論的上界であり、任意の補助群表示に対する多項式時間構成は主張しません。
+- ワークフロー `.github/workflows/validate-mcfg-v82.yml` はレビュー用で、日英PDFをビルドして成果物をアップロードするだけです。mainの公開PDFを更新しません。
+
+**投稿前の確認事項：** 日英ビルドの成功、全頁視認、数理の独立監査、原典・先行研究・引用の最終照合、著者承認。現行v81の論文を正式に置換したものではありません。
+
 ## Current working baseline
 
-- `main.tex` — **v81** I&C pre-submission working revision: Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `main.tex` — **v81 on main / v82-draft on this branch** I&C pre-submission working revision: Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
 - `revision/v81_submission_preflight_review.md` — bilingual pre-submission editorial/mathematical source audit, repaired abstract/conclusion, journal disclosure and visual-PDF gates.
 - `revision/v80_mobility_distributional_review.md` — type-deletion lower-bound criterion, two-component mobility, universal finite-typing nonmembership, relaxed distribution classes and abelian-filtered polynomial data; algebraic/effective scope checked.
 - `revision/v79_rule_only_witness_budget.md` — proves redundant nonterminal samples can be dropped when minimizing canonical tuples, improving cardinality and computable encoded budget.

@@ -1,0 +1,690 @@
+% ARCHIVED FROM v82 EXACT SOURCE EXCERPT: 02_fixed-h-mcfg/japanese/main_JP.tex
+% Source reference: archive/mcfg-v82-pretrim-full-20261018 (commit bcc0caf0eade66f552127171c0de24d2b92950b0)
+% Restoration: replace the corresponding trimmed location with this excerpt (without these header lines).
+
+\subsection{内在的に規則ランク2を必要とする境界型付き標的}
+\label{subsec:intrinsic-ranktwo}
+
+次の例は，ランク1と高ランクの定量的場合分けが，
+文法表示の偶然ではなく言語自体に内在することを示す．
+この規則ランクの障害は有限型付けによって作られたものではない．
+以下で用いる文字数平衡の因子は，
+既に Yoshinaka の自明型付けクラスに属する．
+本構成では，その障害を，最小ファンアウト2という性質と，
+自明型付けクラスからの分離と組み合わせ，
+一つの境界型付き標的に実現する．
+
+\[
+ \Sigma_{\mathrm{intr}}
+ :=\{\mathtt a,\mathtt b,\mathtt l,\mathtt r,\mathtt p,\mathtt q,
+       \mathtt c,\mathtt d,\mathtt{\#},\mathtt{\$},
+       \mathtt u,\mathtt v,\mathtt w\}
+\]
+とし，
+\(P_{\mathrm{intr}} :=\{\mathtt{lpc},\mathtt{lpd},\mathtt{lqc}, \mathtt{rpc},\mathtt{rpd}\}\)
+とおく．
+\[
+ \mathrm{MIX}_2^+
+ :=\{x\in\{\mathtt a,\mathtt b\}^+:
+       |x|_{\mathtt a}=|x|_{\mathtt b}\},
+ \qquad
+ T_3^+
+ :=\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}
+\]
+と定め，
+\(L_{\mathrm{intr}} :=P_{\mathrm{intr}}\,\mathtt{\#}\,\mathrm{MIX}_2^+\, \mathtt{\$}\,T_3^+\)
+とする．
+
+証拠言語の役割を明確にするため，
+\[
+ \varphi_{\mathrm{mix}}:
+ \{\mathtt a,\mathtt b\}^*\to\mathbb Z,
+ \qquad
+ \varphi_{\mathrm{mix}}(\mathtt a)=1,\quad
+ \varphi_{\mathrm{mix}}(\mathtt b)=-1
+\]
+とおく．すると
+\(\mathrm{MIX}_2^+ =\{\mathtt a,\mathtt b\}^+ \cap\varphi_{\mathrm{mix}}^{-1}(0)\)
+である．
+$\{\mathtt a,\mathtt b\}^+$ は
+自明に $f$-タプル代入可能なので，
+命題~\ref{prop:abelian-coset-filter}(ii) から
+すべての $f\ge1$ について
+$\mathrm{MIX}_2^+\in\YSub{f}$ が従う．
+後述の $B$ に対するランク2の CFG は，
+この因子が文脈自由であることも示す．
+したがって，ここで用いる内在的ランク2の現象自体は，
+すでに自明型付けの基準クラスに存在する．
+$L_{\mathrm{intr}}$ の役割は，この既知のランク障害を，
+非文脈自由性，最小ファンアウト2，
+および $\YSub{f}$ からの分離と，
+単一の有限型付き標的の中で組み合わせることである．
+
+\begin{theorem}[非文脈自由で内在的ランク2をもつ型付き証拠言語]
+\label{thm:intrinsic-ranktwo-witness}
+言語 $L_{\mathrm{intr}}$ は
+\[
+ L_{\mathrm{intr}}
+ \in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}
+\]
+を満たす．
+さらに，任意の $f\ge2$ について
+\[
+ L_{\mathrm{intr}}
+ \in\Cmcf{f}{h_{\Sigma_{\mathrm{intr}}}^{1,1}}
+ \setminus\YSub{f}
+\]
+となる．
+また，任意の有限 $f'\ge1$ について
+\(L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)\)
+である．
+したがって $L_{\mathrm{intr}}$ の最小ファンアウトは正確に2であり，
+任意の有限ファンアウトの MCFG 表示全体での最小規則ランクも
+正確に2である．
+特に，定理~\ref{thm:boundary-polydata} は，
+どの有限ファンアウトでも
+定理~\ref{thm:rankone-polydata} の対象とならない
+非文脈自由言語に適用できる．
+\end{theorem}
+
+\begin{proof}
+まず最大規則ランク2の，
+縮約済み良形のファンアウト2文法を与える．
+非終端記号 $B$ は，次の規則によって
+非空の文字数平衡言語を生成する．
+\[
+\begin{aligned}
+ B\to{}&
+ \mathtt a B\mathtt b B
+ \mid \mathtt b B\mathtt a B
+ \mid \mathtt a B\mathtt b
+ \mid \mathtt a\mathtt b B
+ \mid \mathtt a\mathtt b\\
+ &{}\mid
+ \mathtt b B\mathtt a
+ \mid \mathtt b\mathtt a B
+ \mid \mathtt b\mathtt a .
+\end{aligned}
+\]
+$|x|_{\mathtt a}-|x|_{\mathtt b}$ が初めて0に戻る位置による
+通常の帰納法から
+$L_B=\mathrm{MIX}_2^+$ が従う．
+
+ファンアウト2の非終端記号 $A$ に
+\(A\to(\mathtt u,\mathtt w) \mid (\mathtt u\xi_1^1\mathtt v,\mathtt w\xi_1^2)(A)\)
+という規則を与える．
+生成するタプルは正確に
+\(\{(\mathtt u^n\mathtt v^{n-1},\mathtt w^n):n\ge1\}\)
+である．
+各 $\alpha\in P_{\mathrm{intr}}$ について，
+開始規則
+\(S\to \alpha\mathtt{\#}\xi_1^1\mathtt{\$} \xi_2^1\mathtt v\xi_2^2(B,A)\)
+を加える．
+得られた文法は正確に $L_{\mathrm{intr}}$ を生成する．
+この文法は縮約済みで，
+$\lambda$-自由，線形，非消去，非置換である．
+またすべての開始規則で，
+$A$ の二つの成分は終端記号 $\mathtt v$ により分離されるため，
+非融合でもある．
+よって最大規則ランク2の良形ファンアウト2文法である．
+
+この言語は文脈自由でない．
+正則言語
+\(R:= \mathtt{lpc\#ab\$}\, \mathtt u^+\mathtt v^+\mathtt w^+\)
+と交差を取ると
+\(L_{\mathrm{intr}}\cap R = \{\mathtt{lpc\#ab\$}\mathtt u^n \mathtt v^n\mathtt w^n:n\ge1\}\)
+となる．
+固定接頭辞を消去し，
+$\mathtt u,\mathtt v,\mathtt w$ を固定する準同型で，
+この言語は
+$\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}$
+に写る．
+後者は文脈自由でない．
+文脈自由言語が正則言語との交差と準同型像で閉じていることから，
+$L_{\mathrm{intr}}$ は文脈自由でない．
+本稿の構文でファンアウト1の MCFG は
+ちょうど文脈自由文法であり，
+上の文法はファンアウト2なので，
+最小ファンアウトは正確に2である．
+
+型付きクラスへの所属については，
+\[
+ Q_{\mathrm{intr}}
+ :=P_{\mathrm{intr}}\,\mathtt{\#}\,
+   \{\mathtt a,\mathtt b\}^+\,
+   \mathtt{\$}\,
+   \mathtt u^+\mathtt v^+\mathtt w^+
+\]
+とおく．
+この言語は厳密2局所（strictly 2-local）である．
+両端の標識も含めた，許容する隣接対の完全な集合の一つは
+\[
+\begin{gathered}
+ \vdash\mathtt l,\ \vdash\mathtt r,\quad
+ \mathtt{lp},\ \mathtt{lq},\ \mathtt{rp},\quad
+ \mathtt{pc},\ \mathtt{pd},\ \mathtt{qc},\\
+ \mathtt{c\#},\ \mathtt{d\#},\quad
+ \mathtt{\#a},\ \mathtt{\#b},\quad
+ \mathtt{aa},\ \mathtt{ab},\ \mathtt{ba},\ \mathtt{bb},\\
+ \mathtt{a\$},\ \mathtt{b\$},\quad
+ \mathtt{\$u},\quad
+ \mathtt{uu},\ \mathtt{uv},\ \mathtt{vv},\ \mathtt{vw},\
+ \mathtt{ww},\quad
+ \mathtt w\dashv
+\end{gathered}
+\]
+である．
+準同型
+\(\Phi_{\mathrm{intr}}: \Sigma_{\mathrm{intr}}^*\to\mathbb Z^3\)
+を
+\[
+\begin{aligned}
+ \Phi_{\mathrm{intr}}(\mathtt a)&=(1,0,0),&
+ \Phi_{\mathrm{intr}}(\mathtt b)&=(-1,0,0),\\
+ \Phi_{\mathrm{intr}}(\mathtt u)&=(0,1,0),&
+ \Phi_{\mathrm{intr}}(\mathtt v)&=(0,-1,1),&
+ \Phi_{\mathrm{intr}}(\mathtt w)&=(0,0,-1)
+\end{aligned}
+\]
+と定め，他のすべての終端記号の像を $(0,0,0)$ とする．
+すると
+\(L_{\mathrm{intr}} =Q_{\mathrm{intr}}\cap \Phi_{\mathrm{intr}}^{-1}(0)\)
+となる．実際，3座標の制約は順に
+\[
+ |x|_{\mathtt a}=|x|_{\mathtt b},\qquad
+ |x|_{\mathtt u}=|x|_{\mathtt v},\qquad
+ |x|_{\mathtt v}=|x|_{\mathtt w}
+\]
+を課す．
+補題~\ref{lem:sl2-boundary-control} と
+命題~\ref{prop:abelian-coset-filter}(ii) から，
+この交差言語は任意の $f\ge1$ について
+$(f,h_{\Sigma_{\mathrm{intr}}}^{1,1})$-タプル代入可能である．
+上のファンアウト2文法と合わせて
+\(L_{\mathrm{intr}} \in\Cmcf{f}{h_{\Sigma_{\mathrm{intr}}}^{1,1}} \qquad(f\ge2)\)
+が得られる．
+
+この言語は，アリティ1においてすでに
+Yoshinaka の自明型付けクラスに属さない．
+\(x:=\mathtt p,\qquad y:=\mathtt q\)
+および一穴文脈
+\(E:=\mathtt l\blank_1\mathtt{c\#ab\$uvw}, \qquad F:=\mathtt r\blank_1\mathtt{d\#ab\$uvw}\)
+を取る．
+すると
+\(E[x],\ E[y],\ F[x]\in L_{\mathrm{intr}}, \qquad F[y]\notin L_{\mathrm{intr}}\)
+である．
+よってアリティ1の代入の含意が破れ，
+任意の $f\ge1$ に対して
+$L_{\mathrm{intr}}\notin\YSub{f}$ となる．
+なお，問題となる一文字因子は境界型付けで区別される：
+\(h_{\Sigma_{\mathrm{intr}}}^{1,1}(\mathtt p) \ne h_{\Sigma_{\mathrm{intr}}}^{1,1}(\mathtt q).\)
+
+残るのは内在的な規則ランクの証明である．
+\(\mathrm{MIX}_2 :=\{x\in\{\mathtt a,\mathtt b\}^*: |x|_{\mathtt a}=|x|_{\mathtt b}\}\)
+とおく．
+Gallot は，正ランクの各規則の子が
+高々一つの非終端記号である MCFG を
+\emph{非分岐（non-branching）}と呼ぶ．
+本稿の言葉では，これは規則ランクが高々1であることに正確に対応し，
+ファンアウトについて全体で固定した上界を要求しない
+~\cite[Definition~38]{Gallot2021}．
+有限文法の非終端記号の最大アリティは必ず有限なので，
+Gallot の非分岐 MCFL クラスは
+\(\bigcup_{f'<\infty}\mathsf{MCFL}(f',1)\)
+である．
+Gallot の Theorem~29 はこのクラスを
+有限指数 EDT0L 言語と同定し，
+Theorem~31 は $\mathrm{MIX}_2$ が
+有限指数 EDT0L でないことを示す．
+Definition~38 は子変数が高々一度現れることを明示的に許し，
+Theorem~28 は非置換・非消去表示が
+同じ非分岐クラスを生成することを確認する．
+したがって後で終端記号を消去する準同型を用いても，
+引用した下界の形式体系の範囲に留まる．
+同値に，$\mathrm{MIX}_2$ は
+いかなる非分岐 MCFG でも生成されない．
+Gallot の Propositions~5--6 は，
+その背後にある $k$-導出の有界性による矛盾を与える
+~\cite[Theorem~29, Theorem~31,
+Propositions~5--6]{Gallot2021}．
+
+Bishop らはその後，密接に対応する R-MCFG 形式体系において，
+同じ障害を査読済み論文として詳細に展開した．
+彼らの Definition~6.1 は非終端記号のアリティ
+（本稿のファンアウト）を \emph{rank} と呼ぶが，
+\emph{non-branching} は引き続き伝播規則の子が一つであることを意味する．
+Lemma~6.8 は標準形を与え，
+Definition~7.1 は同じ平衡言語を同定し，
+Section~7 は障害を証明する．
+これは Theorem~C の，
+さらに強い非 EDT0L の主張に至る
+~\cite[Definition~6.1, Lemma~6.8,
+Definition~7.1, Section~7, Theorem~C]{BishopEtAl2026EDT0L}．
+これは結果を裏づける先行研究であり，
+本稿が直接使う含意はあくまで
+Gallot の Theorems~29 と~31 である．
+
+ここで $\pi$ を
+$\mathtt a,\mathtt b$ を固定し，
+$\Sigma_{\mathrm{intr}}$ の他のすべての終端記号を
+消去する準同型とする．
+すると
+\(\pi(L_{\mathrm{intr}})=\mathrm{MIX}_2^+\)
+となる．
+仮に $L_{\mathrm{intr}}$ に
+ファンアウト $f'$・規則ランク1の表示があれば，
+その規則テンプレートの終端部分へ $\pi$ を適用することで，
+ファンアウトと規則ランクを保存した
+$\mathrm{MIX}_2^+$ の表示を得る．
+消去によって空の終端部分が生じても，
+標準 MCFG 形式では許される．
+さらに新しい開始記号を加え，
+旧開始記号への単項恒等リンクと
+$\eps$ を生成するランク0規則を設ければ，
+ファンアウト $f'$・規則ランク1の
+$\mathrm{MIX}_2$ の表示が得られる．
+これは Gallot の非分岐下界に矛盾する．
+したがって任意の有限 $f'\ge1$ について
+\(L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)\)
+である．
+上のランク2文法と合わせて，
+主張した内在的規則ランクが証明された．
+\end{proof}
+
+この構成は意図的にモジュール化されている．
+$\mathrm{MIX}_2^+$ 因子が規則ランク1への障害を担い，
+$T_3^+$ 因子が文脈自由性を破り，
+最小ファンアウト2を強制する．
+したがって本定理は，
+二つの下界が一つの有限型付き標的で同時に成り立つことを示す．
+両下界は，二つの文法資源の不可分な相互作用ではなく，
+別々の因子に由来する．
+
+非分岐性の下界そのものは先行結果である．
+本稿固有の点は，
+厳密局所的な外側の形式と $(1,1)$-境界型付けによって，
+この標的を型付きクラスに含めながら，
+表示した四例の代入の含意によって
+Yoshinaka の自明型付けクラスから分離することである．
+外側の形式は既知の非分岐障害を保存するので，
+同じ標的はあらゆる有限ファンアウトにわたって
+内在的に規則ランク2を必要とする．
+
+\subsection{自明型付けを超える有限型付け}
+\label{subsec:finite-typing-separations}
+
+第~\ref{sec:prelim}節のフィルタに関する結果は，
+十分条件による有用な構成法を与える．
+しかし有限型付けは，
+自明型付けクラスへ正則フィルタを後から適用するだけではない．
+次の線形言語の例は，より強い分離を与えると同時に，
+ファンアウトの鋭い効果を示す．
+
+$\Sigma_{\mathrm{cd}}
+:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$
+上の言語
+\[
+ L_{\mathrm{cd}}
+ :=\{\mathtt a^n\mathtt c\mathtt b^n:n\ge0\}
+ \cup
+ \{\mathtt a^n\mathtt d\mathtt b^{2n}:n\ge0\}
+\]
+を考える．
+$M_{\mathrm{cd}}
+:=\{1,\eta_{\mathtt c},\eta_{\mathtt d},0\}$
+とし，$1$ は単位元，$0$ は零元で，
+$\{\eta_{\mathtt c},\eta_{\mathtt d},0\}$
+から二つの元を取った積は常に $0$ とする．
+準同型を
+\[
+ h_{\mathrm{cd}}(\mathtt a)
+ =h_{\mathrm{cd}}(\mathtt b)=1,\qquad
+ h_{\mathrm{cd}}(\mathtt c)=\eta_{\mathtt c},
+ \qquad
+ h_{\mathrm{cd}}(\mathtt d)=\eta_{\mathtt d}
+\]
+で定義する．
+
+\begin{proposition}[ファンアウトに敏感な型付き言語]
+\label{prop:strong-fanout-separation}
+言語 $L_{\mathrm{cd}}$ は線形であり，
+\(L_{\mathrm{cd}}\in\Cmcf{1}{h_{\mathrm{cd}}}\)
+を満たす．
+また任意の $k,\ell\ge0$ に対し
+\(L_{\mathrm{cd}} \notin\Cmcf{1}{h_{\Sigma_{\mathrm{cd}}}^{k,\ell}}\)
+である．
+さらに
+$L_{\mathrm{cd}}=L_0\cap L_{\mathrm{reg}}$
+を満たす
+$L_0\in\YSub{1}$ と正則言語 $L_{\mathrm{reg}}$
+は存在しない．
+しかも任意の有限モノイド準同型
+$g:\Sigma_{\mathrm{cd}}^*\to N$ に対して
+\(L_{\mathrm{cd}}\notin\Cmcf{2}{g}\)
+となる．
+\end{proposition}
+
+\begin{proof}
+線形文法
+\[
+ S\to C\mid D,\qquad
+ C\to\mathtt c\mid\mathtt a C\mathtt b,\qquad
+ D\to\mathtt d\mid\mathtt a D\mathtt b\mathtt b
+\]
+が $L_{\mathrm{cd}}$ を生成する．
+
+$(1,h_{\mathrm{cd}})$-代入可能性について，
+同じ型の非空因子 $x,y$ が
+受理文脈を共有するとする．
+型 $1$ の語には中央の記号が含まれないので，
+文脈によって枝と左右の位置が固定され，
+個数制約から $x=y$ となる．
+型 $\eta_{\mathtt c}$ では
+\(x=\mathtt a^{n_1}\mathtt c\mathtt b^{n_2}, \quad y=\mathtt a^{n_1'}\mathtt c\mathtt b^{n_2'}\)
+と書ける．
+共通文脈で受理されることから
+$n_1-n_2=n_1'-n_2'$ が従う．
+これは他のすべての $\mathtt c$-文脈でも不変な量である．
+型 $\eta_{\mathtt d}$ では
+$2n_1-n_2=2n_1'-n_2'$ が不変となる．
+型 $0$ の分布は空である．
+したがって
+$L_{\mathrm{cd}}\in\Cmcf{1}{h_{\mathrm{cd}}}$ である．
+
+$k,\ell$ を固定し，
+$m\ge\max\{1,k+\ell\}$ を選ぶ．
+\(x=\mathtt a^m\mathtt c\mathtt b^m,\qquad y=\mathtt a^m\mathtt d\mathtt b^{2m}\)
+は同じ $h_{\Sigma_{\mathrm{cd}}}^{k,\ell}$-型をもち，
+空文脈を共有する．
+しかし
+$\mathtt a\blank_1\mathtt b$ は
+$x$ を受理する一方，$y$ を拒否する．
+よって，すべての接頭辞--接尾辞型付けは
+ファンアウト1でも失敗する．
+
+$L_{\mathrm{cd}}=L_0\cap L_{\mathrm{reg}}$ で，
+$L_0\in\YSub{1}$，
+$L_{\mathrm{reg}}$ が正則だと仮定する．
+$\mathtt c,\mathtt d\in L_0$ なので，
+代入可能性から
+$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$ が従う．
+さらに
+$\mathtt a\mathtt d\mathtt b^2,
+ \mathtt a\mathtt c\mathtt b\in L_0$
+を使うと
+$\D_{L_0}(\mathtt c\mathtt b)
+=\D_{L_0}(\mathtt c\mathtt b^2)$
+が得られる．
+したがって
+\(\mathtt a^m\mathtt c\mathtt b^{m+t}\in L_0 \qquad(m\ge1,\ t\ge0)\)
+である．
+$L_{\mathrm{reg}}$ の DFA の状態数より $m$ を大きくし，
+受理される標的語の末尾の
+$\mathtt b^m$ ブロックをポンピングすると，
+ある $t>0$ について同じ語が
+$L_{\mathrm{reg}}$ にも入る．
+これは仮定した交差表示に矛盾する．
+
+最後に有限準同型
+$g:\Sigma_{\mathrm{cd}}^*\to N$ に対し，
+$1\le i<j$ を
+\(g(\mathtt a^i)=g(\mathtt a^j),\qquad g(\mathtt b^i)=g(\mathtt b^j)\)
+となるように選ぶ．
+タプル
+$(\mathtt a^i,\mathtt b^i)$ と
+$(\mathtt a^j,\mathtt b^j)$
+は成分別 $g$-型が等しく，
+$\blank_1\mathtt c\blank_2$
+によって両方とも受理される．
+一方，
+$\blank_1\mathtt d\blank_2\mathtt b^i$
+は最初のタプルだけを受理する．
+$i<j$ なら
+$\mathtt a^j\mathtt d\mathtt b^{i+j}
+\notin L_{\mathrm{cd}}$
+だからである．
+よってアリティ2の条件は，
+任意の有限 $g$ に対して破れる．
+\end{proof}
+
+したがって $L_{\mathrm{cd}}$ は，
+ファンアウト1におけるすべての接頭辞--接尾辞型付けと
+任意の正則フィルタによる表現から有限型付けを分離する．
+しかしアリティ2を検査するようにすると，
+どの有限型付けでもこの言語を救えない．
+
+\subsection{局所的な境界制御と任意の正則フィルタ}
+\label{subsec:comparison-separations}
+
+局所検査可能性の標準用語に従う
+~\cite{McNaughtonPapert1971}．
+$L_{\mathrm{sl}}\subseteq\Sigma^*$ が
+\emph{厳密2局所（strictly 2-local）}であるとは，
+ある集合
+$\mathsf{Adj}
+\subseteq(\Sigma\cup\{\vdash,\dashv\})^2$
+が存在して，
+\[
+ w\in L_{\mathrm{sl}}
+ \quad\Longleftrightarrow\quad
+ \text{語 $\vdash w\dashv$ の隣接対がすべて
+       $\mathsf{Adj}$ に属する}
+\]
+となることをいう．
+ここで $\vdash,\dashv\notin\Sigma$ は固定した端点標識である．
+
+\begin{lemma}[厳密2局所条件は境界型付きである]
+\label{lem:sl2-boundary-control}
+$L_{\mathrm{sl}}\subseteq\Sigma^*$ が厳密2局所なら，
+任意の $f\ge1$ について
+\(L_{\mathrm{sl}} \in\Cmcf{f}{h_\Sigma^{1,1}}\)
+が成り立つ．
+\end{lemma}
+
+\begin{proof}
+同じ $h_\Sigma^{1,1}$-型をもつ非空タプル
+$\tuple x,\tuple y$ が，
+受理する文脈 $E_0$ を共有するとする．
+各 $y_i$ の内部の隣接対は
+$E_0[\tuple y]$ に現れるので許容される．
+$E[\tuple x]\in L_{\mathrm{sl}}$ のとき，
+$E[\tuple y]$ の各隣接対は，
+固定終端部分の内部，
+ある $y_i$ の内部，
+または成分の境界を横切る対のいずれかである．
+それらは順に
+$E[\tuple x]$，
+$E_0[\tuple y]$，
+あるいは境界型で符号化された先頭・末尾文字の一致
+によって許容される．
+端点標識を含む対は変化しない．
+したがって $E[\tuple y]\in L_{\mathrm{sl}}$ であり，
+対称性から主張が従う．
+\end{proof}
+
+\paragraph{標的依存の任意の正則フィルタ．}
+比較のため，固定アルファベット上に
+\[
+ \mathcal F_f^{\mathrm{arb}}
+ :=\bigl\{L_0\cap R:
+       L_0\in\YSub{f},\ R\text{ は正則}\bigr\}
+       \cap f\text{-}\mathrm{MCFL}
+\]
+と定義する．
+このクラスはすべての正則言語を含む
+（$\Sigma^*\in\YSub{f}$ とすればよい）．
+よって Gold の障害により，
+単一の正例学習クラスとしては
+TxtEx 同定できない．
+ここでは追加の学習可能クラスとしてではなく，
+表現力を比較するための基準としてだけ用いる．
+
+内在的ランク2の証拠言語はこの大きな断片に属する：
+\(L_{\mathrm{intr}} =\Phi_{\mathrm{intr}}^{-1}(0)\cap Q_{\mathrm{intr}}.\)
+したがって，この言語が示すのは内在的規則ランクであって，
+任意の正則フィルタからの分離ではない．
+命題~\ref{prop:strong-fanout-separation} は
+ファンアウト1でその分離を示した．
+次の定理は，型付き非文脈自由の
+ファンアウト2・ランク1の標的について分離を示す．
+
+\begin{theorem}[任意の正則フィルタを超えるファンアウト2の型付き言語]
+\label{thm:arbitrary-filter-separation}
+$\Sigma_\star:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$ とし，
+\[
+ L_\star
+ :=\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}
+   \cup
+   \{\mathtt a^n\mathtt d^{n+1}\mathtt b^{2n}:n\ge0\}
+\]
+とおく．
+準同型
+$g_\star:\Sigma_\star^*
+\to(\mathcal P(\{\mathtt c,\mathtt d\}),\cup)$ を
+\[
+ g_\star(\mathtt a)=g_\star(\mathtt b)=\varnothing,
+ \qquad
+ g_\star(\mathtt c)=\{\mathtt c\},
+ \qquad
+ g_\star(\mathtt d)=\{\mathtt d\}
+\]
+で定め，
+\(h_\star:=(h_{\Sigma_\star}^{1,1},g_\star)\)
+とおく．
+このとき $L_\star$ は非文脈自由で，
+最小ファンアウトは2，
+ファンアウト2での最小規則ランクは1である．
+さらに任意の $f\ge2$ について
+\(L_\star \in\Cmcf{f}{h_\star} \setminus\mathcal F_f^{\mathrm{arb}}\)
+が成り立つ．
+同値に，
+$L_0\in\YSub{f}$ と正則言語 $R_{\mathrm{reg}}$ により
+$L_\star=L_0\cap R_{\mathrm{reg}}$
+と表すことはできない．
+\end{theorem}
+
+\begin{proof}
+良形でファンアウト2・ランク1の文法を
+\[
+\begin{aligned}
+ A_{\mathtt c}
+   &\to(\mathtt a\mathtt c,\mathtt b)
+     \mid(\mathtt a\xi_1^1\mathtt c,\xi_1^2\mathtt b)(A_{\mathtt c}),\\
+ A_{\mathtt d}
+   &\to(\mathtt a\mathtt d,\mathtt b\mathtt b)
+     \mid(\mathtt a\xi_1^1\mathtt d,\xi_1^2\mathtt b\mathtt b)(A_{\mathtt d}),\\
+ S&\to\mathtt c\mid\mathtt d
+   \mid(\xi_1^1\mathtt c\xi_1^2)(A_{\mathtt c})
+   \mid(\xi_1^1\mathtt d\xi_1^2)(A_{\mathtt d})
+\end{aligned}
+\]
+で与える．
+これは正確に $L_\star$ を生成する．
+正則言語
+$\mathtt a^*\mathtt c^+\mathtt b^*$
+との交差は
+$\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}$
+であり，これは文脈自由でない．
+閉包性を使う短い証明のため，
+新しい記号 $\mathtt\#$ を導入し，
+$\mathtt a,\mathtt b,\mathtt c$ は固定して
+$\mathtt\#$ を $\mathtt c$ に写す準同型を考える．
+この枝の逆像を
+$\mathtt a^*\mathtt c^*\mathtt\#\mathtt b^*$
+と交差すると，
+\(\{\mathtt a^n\mathtt c^n\mathtt\#\mathtt b^n:n\ge0\}\)
+となる．
+$\mathtt\#$ を消去すれば
+$\{\mathtt a^n\mathtt c^n\mathtt b^n:n\ge0\}$
+が文脈自由となってしまい，矛盾する．
+よって最小ファンアウトは2である．
+言語が無限であることと上に示した文法から，
+ファンアウト2における最小規則ランクは1である．
+
+型付き代入可能性を示すため，
+\[
+ Q_\star:=
+   \mathtt a^*\mathtt c^+\mathtt b^*
+   \cup\mathtt a^*\mathtt d^+\mathtt b^*,
+ \qquad
+ \Psi(w):=(|w|_{\mathtt a},|w|_{\mathtt b},
+            |w|_{\mathtt c},|w|_{\mathtt d})
+\]
+とおく．
+厳密2局所言語 $Q_\star$ は
+補題~\ref{lem:sl2-boundary-control} により境界型付きである．
+同じ $h_\star$-型をもつタプル
+$\tuple x,\tuple y$ が
+受理文脈 $E_0$ を共有するとし，
+\(\Delta:=\sum_i\Psi(y_i)-\sum_i\Psi(x_i)\)
+とおく．
+両者の $g_\star$-型が等しいので，
+$E_0[\tuple x]$ と $E_0[\tuple y]$
+は同じ枝に属する．
+したがってある $q\in\mathbb Z$ に対し，
+その枝が $\mathtt c$ なら
+$\Delta=q(1,1,1,0)$，
+$\mathtt d$ なら
+$\Delta=q(1,2,0,1)$ である．
+
+$F[\tuple x]\in L_\star$ とする．
+境界型付けにより
+$F[\tuple y]\in Q_\star$ であり，
+$g_\star$-型の一致から
+二つの充填結果は同じ $F$-枝に属する．
+$E_0$ と $F$ が同じ枝を選ぶなら，
+上の個数差はその枝のアフィンな関係を保存する．
+別の枝を選ぶ場合，
+いずれのタプル成分にも
+$\mathtt c,\mathtt d$ は含まれない．
+そのため $\Delta$ の中央の二座標は0となり，
+$q=0$ が強制される．
+いずれの場合も $F[\tuple y]\in L_\star$ であり，
+対称性から
+$L_\star\in\Cmcf{f}{h_\star}$ が従う．
+
+最後に
+$L_\star=L_0\cap R_{\mathrm{reg}}$，
+$L_0\in\YSub{f}$，
+$R_{\mathrm{reg}}$ は正則，と仮定する．
+$\mathtt c,\mathtt d\in L_0$ なので，
+アリティ1の代入可能性から
+$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$
+となる．
+よって
+$\mathtt a\mathtt d^2\mathtt b^2\in L_0$
+で二つの $\mathtt d$ を順に置き換えると，
+まず
+$\mathtt a\mathtt c\mathtt d\mathtt b^2\in L_0$，
+次に
+$\mathtt a\mathtt c^2\mathtt b^2\in L_0$
+が得られる．
+これと
+$\mathtt a\mathtt c^2\mathtt b\in L_0$
+から
+\(\D_{L_0}(\mathtt c^2\mathtt b) =\D_{L_0}(\mathtt c^2\mathtt b^2)\)
+が従う．
+したがって任意の $m\ge1,t\ge0$ について
+$\mathtt a^m\mathtt c^{m+1}\mathtt b^{m+t}\in L_0$
+となる．
+$m$ を $R_{\mathrm{reg}}$ の DFA の状態数以上にすると，
+受理される標的語の末尾の
+$\mathtt b^m$ ブロックをポンピングでき，
+ある $t>0$ について
+同じ語が $R_{\mathrm{reg}}$ に属する．
+この語は交差には属するが
+$L_\star$ には属さないため，矛盾する．
+\end{proof}
+
+よって単一の標的 $L_\star$ は，
+Yoshinaka の言語にどのような有限状態フィルタを
+後から適用しても表現できないことを示す．
+この結論は，フィルタに用いる型付けが
+$h_\star$ をどれほど細かく精密化しても変わらない．
+
+このランク1の分離は，
+定理~\ref{thm:intrinsic-ranktwo-witness} を補完する．
+後者は，すべての有限ファンアウトにわたり
+最小規則ランク2をもつ
+境界型付き非文脈自由標的を与える．
+
