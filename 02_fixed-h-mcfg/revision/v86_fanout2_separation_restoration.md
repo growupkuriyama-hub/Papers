@@ -20,8 +20,8 @@ Date: 2026-10-19; status: I&C Draft (not merged or submitted).
 ## Validation
 
 - [x] Citation keys, theorem references, duplicate LaTeX labels, and begin/end environments cross-checked in each language and retained appendices before PDF build.
-- [ ] GitHub Actions EN/JP LaTeX build and final citation/ref pass.
-- [ ] Final page count, Overfull hbox, and visual PDF review.
+- [x] GitHub Actions EN/JP LaTeX build, PDF output and final citation/ref pass (runs 39144550652, 39144550669, 39144550674, 39144550680; all successful).
+- [x] EN 40 pages, JP 43 pages; 0 Overfull hboxes and 0 unresolved refs/citations in final logs; relevant theorem/proof pages visually inspected.
 - [ ] Author-side independent verification and journal sign-off.
 
 GitHub: `02_fixed-h-mcfg/main.tex`, `japanese/main_JP.tex`; the full archived original theorem remains untouched.
