@@ -50,3 +50,11 @@ Check the source's nonempty separator convention in the arity-one argument indep
 - Request genuinely independent adversarial proof review of the semilattice (rectangle, height, representatives, integer program) and LG noncommutative transfer steps. This tool/source-level check does not substitute for such review.
 - Compare exactly with TCS #1 v227 and Yoshinaka 2008/2011/2015 prior art. No claim of a novel general positive-data Gold learning principle.
 - Require author approval before main merge, new arXiv update, or Information and Computation submission.
+
+## 4. Bilingual v87 build validation
+
+- GitHub Actions runs 39147069384 (bilingual), 39147069285 (verify), 39147069328 (JP): all succeeded on the same v87 source revision.
+- Output: English 40 pages; Japanese 44 pages. Final LaTeX logs: no overfull hboxes, unresolved references/citations or LaTeX errors.
+- Main LG theorem located at English page 21 and Japanese page 23. Semilattice main theorem at English page 27 and Japanese page 29. Fan-out-two separation at English page 29 and Japanese page 31. Representative pages visually inspected.
+- Source diff check: EN and JP semilattice lemma/main-theorem chains byte-identical to v86; EN and JP local-group-shortest lemma/proof byte-identical to v86. Only the LG theorem *statement* was moved from the LG appendix to the main source, with the existing proof retained in the appendix.
+- This verifies edit and typesetting integrity, not independent mathematical soundness or full-page-by-page copyediting. External independent mathematical audit and author approval remain mandatory.
