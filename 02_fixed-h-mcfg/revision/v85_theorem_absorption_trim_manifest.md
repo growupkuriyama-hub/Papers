@@ -25,7 +25,7 @@ To recover v84 exactly, checkout its fixed commit. To reintroduce only one resul
 
 ## Pending checks
 - [x] EN/JP compiled-source label/static environment audit: zero missing/duplicate labels.
-- [ ] Bilingual CI PDF compile, citations, overfull box check, page counts.
-- [ ] Human PDF whole-page visual inspection.
+- [x] GitHub Actions bilingual compilation passed: runs 39139181052, 39139181189 and 39139181214. EN 38 pages (v84: 43), JP 42 pages (v84: 47); 0 undefined citations/references and 0 overfull hboxes in final logs.
+- [ ] Full human page-by-page visual inspection (representative pages covering abstract, LI corollary, semilattice theorem, group-shortening appendix and LG theorem were visually checked in both languages).
 - [ ] Independent mathematical audit of preserved LG and semilattice proofs.
 - [ ] I&C author signoff.
