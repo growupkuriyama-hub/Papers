@@ -2,7 +2,7 @@
 
 Date: 2026-10-18 (JST)
 Status: **draft on branch `mcfg2-v76-strengthening-drafts`; adoption is the author's decision.** Not submitted.
-Sources: new reference bundle (Geroldinger–Halter-Koch 2006; Gao–Geroldinger survey; Knuth 1977; Nederhof 2003; Simon 1990; Costa 2001).
+Sources: project reference bundle (Geroldinger–Halter-Koch 2006; Gao–Geroldinger survey; Nederhof 2003; Ramalingam–Reps 1996; Simon 1990; Costa 2001). Knuth 1977 itself was not acquired; its grammar-problem algorithm is checked through the cited secondary sources.
 
 No main theorem statement changes. All polynomial exponents ($\|G\|^2\bar\theta_G$, $\|G\|^3\bar\theta_G$) unchanged. Only constants and an effectiveness result are added.
 
