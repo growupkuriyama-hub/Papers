@@ -76,9 +76,10 @@ noncommutative groups. We refine the abelian constants via zero-sum theory
 and extend the cubic bound to typings with positive-image semigroup in
 the pseudovariety $\mathbf{LG}$ of local groups. For rank-one rules,
 every fixed finite typing has a grammar-size polynomial bound.
-A distinct language-based condition gives polynomial data for
-abelian-filtered targets with bounded-rank good presentations, even
-when the control monoid lies outside $\mathbf{LG}$.
+A complementary semilattice-indexed abelian-coset criterion gives
+polynomial characteristic-data length uniformly over auxiliary
+abelian groups, subsuming the abelian-filtered case even when the
+control monoid is outside $\mathbf{LG}$.
 
 We provide a computable rule-only witness budget and a separate
 distributional-representative upper bound. At the pseudovariety level,
@@ -2334,7 +2335,7 @@ size, so the computed sample has a polynomial-size compressed
 description.
 
 
-\subsection{Distributional Representatives and Abelian-Filtered Targets}
+\subsection{Distributional Representatives and Semilattice-Indexed Cosets}
 \label{subsec:short-distributional-representatives}
 
 The computable rule-only budget above uses representatives
@@ -2431,146 +2432,386 @@ distinct, effective construction using grammar-generated
 representatives.
 \end{remark}
 
-\begin{theorem}[Polynomial data for abelian-filtered targets]
-\label{thm:mcfg-abelian-filter-data}
-Fix a finite nonempty alphabet $\Sigma$, a finite
-typing $h:\Sigma^*\to M$, and bounds $f,r\ge1$.
-There are constants $C,e$ depending only on
-$\Sigma,h,f,r$ with the following property.
-Let $\mathbb A$ be any abelian group,
-$\varphi:\Sigma^*\to\mathbb A$ a morphism,
-$\mathcal H\le\mathbb A$, $\gamma\in\mathbb A$,
-and $\mathsf{Acc}\subseteq M$.
-If
+
+\begin{lemma}[Short quotient-value representatives imply short data]
+\label{lem:mcfg-coset-representative-transfer}
+Fix $\Sigma,h,f,r$ as above, with $r\ge1$, and let $G$ be a
+reduced good fan-out-$\le f$, rank-$\le r$ presentation of
+$L=L(G)\subseteq\Sigma^+$ in $\Cmcf{f}{h}$.
+Let $\mathbb A$ be an abelian group, $\varphi:\Sigma^*\to\mathbb A$
+a morphism, $\mathcal H\le\mathbb A$, and $\pi:\mathbb A\to
+\mathbb A/\mathcal H$ the quotient map. Assume:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item If nonempty $w,w'$ have $h(w)=h(w')$ and
+$\pi\varphi(w)=\pi\varphi(w')$, then $w\in L$ iff $w'\in L$.
+\item For every non-start typed symbol $X=A_{\mathbf t}$ of the
+trimmed yield-type refinement, $\pi\varphi(\tuple u)$ is constant
+as $\tuple u$ ranges over $L_X$.
+\item For each untyped nonterminal $A$ and each
+$\alpha\in\pi\varphi(L_A)$, there exists a tuple
+$\omega_A^\alpha\in L_A$ with
+$\pi\varphi(\omega_A^\alpha)=\alpha$ and
+$\|\omega_A^\alpha\|_1\le B$, for some $B\ge1$.
+\end{enumerate}
+Put $m=|\Sigma|$ and $T=(r+1)B+\|G\|$.
+There is a constant $C$ depending only on $\Sigma,h,f,r$ such that
 \[
- L=h^{-1}(\mathsf{Acc})\cap
-   \varphi^{-1}(\gamma+\mathcal H)
+ \kappa_G\le C(T+1)^{3m+1}.
 \]
-has a reduced good fan-out-$\le f$, rank-$\le r$
-MCFG presentation $G$, then
-$L\in\Cmcf{f}{h}$ and admits a characteristic sample
-for $\mathcal B^{\le r}_{f,h}$ with
+Consequently, the capped and uncapped reconstruction operators
+admit a characteristic sample $K^\dagger\subseteq L$ with
 \[
+\begin{split}
+ |K^\dagger|&\le |V||M|^f+|P||M|^{fr},\\
+ \|K^\dagger\|_+
+ &\le (|V||M|^f+|P||M|^{fr})
+ \bigl(1+\theta_G+\|G\|+(r+1)C(T+1)^{3m+1}\bigr).
+\end{split}
+\]
+\end{lemma}
+\begin{proof}
+Let $\psi:\Sigma^*\to\mathbb N^\Sigma$ be the Parikh map,
+$\Psi(\tuple u)=\sum_i\psi(u_i)$, and let
+$\widehat\varphi:\mathbb Z^\Sigma\to\mathbb A$ extend $\varphi$.
+Put $\Lambda=\widehat\varphi^{-1}(\mathcal H)$,
+$\Gamma_T=\{\delta\in\Lambda:\|\delta\|_1\le T\}$, and
+$\Lambda_T=\langle\Gamma_T\rangle$.
+For a rule $R:A\to\rho(B_1,\ldots,B_q)$ and child quotient
+values $\alpha_j$, set
+$\tuple z=\rho(\omega_{B_1}^{\alpha_1},\ldots,
+\omega_{B_q}^{\alpha_q})$ and
+$\alpha=\pi\varphi(\tuple z)$. By nondeletion and commutativity,
+\[
+ \delta_{R,\boldsymbol\alpha}
+ :=\Psi(\omega_A^\alpha)-\Psi(\tuple z)\in\Lambda,\qquad
+ \|\delta_{R,\boldsymbol\alpha}\|_1
+ \le (r+1)B+\|G\|=T.
+\]
+Induction on terminal derivations (including rank-zero rules)
+therefore yields, for every $\tuple u\in L_A$,
+\[
+ \Psi(\tuple u)-\Psi(\omega_A^{\pi\varphi(\tuple u)})
+ \in\Lambda_T.                                           \tag{1}
+\]
+Indeed, at the root the left-hand difference equals the sum of
+the analogous child differences minus
+$\delta_{R,\boldsymbol\alpha}$.
+
+Fix a non-start typed symbol $X=A_{\mathbf t}$ of arity $d\le f$
+and $\tuple u=(u_1,\ldots,u_d)\in L_X$.
+By (ii), its quotient value $\alpha_X$ is independent of the
+chosen $\tuple u$; put $\tuple\omega=\omega_A^{\alpha_X}$.
+For each component type $t_i$, the Parikh image of the fixed
+regular language $h^{-1}(t_i)\cap\Sigma^+$ has a finite
+semilinear representation. Since $\Sigma$ and $h$ are fixed,
+the number and $\ell_1$-norms of its base and period vectors
+are bounded by a constant $C_h$.
+Choose a linear-set cell $c_i+\sum_{p\in P_i}\mathbb Np$
+containing $\psi(u_i)$ and consider the following system in
+nonnegative integers:
+\[
+ \sum_{i=1}^d\sum_{p\in P_i}\nu_{i,p}p
+ -\sum_{\delta\in\Gamma_T}
+     (\mu_\delta^+-\mu_\delta^-)\delta
+ =\Psi(\tuple\omega)-\sum_{i=1}^dc_i.                  \tag{2}
+\]
+By (1), the original tuple witnesses feasibility.
+There are $m$ equations, at most
+$n=fC_h+2(2T+1)^m$ variables, and all coefficients and
+right-hand-side entries have absolute value at most
+$a=T+fC_h$ (increasing $C_h$ if necessary).
+Papadimitriou's small nonnegative integral solution
+bound~\cite{Papadimitriou1981} supplies a solution with
+each variable at most $n(ma)^{2m+1}$.
+For each resulting vector $q_i=c_i+\sum_p\nu_{i,p}p$
+choose a nonempty $v_i\in h^{-1}(t_i)$ having
+$\psi(v_i)=q_i$; the definition of the selected
+linear set guarantees existence.
+The tuple $\tuple v=(v_1,\ldots,v_d)$ satisfies
+\[
+ h^{(d)}(\tuple v)=\mathbf t,\qquad
+ \Psi(\tuple v)-\Psi(\tuple\omega)\in\Lambda_T,\qquad
+ \|\tuple v\|_1=O_{\Sigma,h,f}((T+1)^{3m+1}).
+\]
+Together with (1), this implies
+$\pi\varphi(\tuple v)=\pi\varphi(\tuple u)$.
+For every sentence context $E$, componentwise equality
+of $h$-types gives $h(E[\tuple v])=h(E[\tuple u])$,
+while abelian additivity gives
+$\pi\varphi(E[\tuple v])=\pi\varphi(E[\tuple u])$.
+Both filled words are nonempty, so assumption (i) yields
+$E[\tuple v]\in L$ iff $E[\tuple u]\in L$.
+Thus $\tuple v\equiv_{L,h}\tuple u$, and the bound for
+$\kappa_G$ follows. Apply
+Proposition~\ref{prop:mcfg-relaxed-witnesses} for the sample
+bounds. The argument is existential and does not require a
+computable presentation of the auxiliary group.
+\end{proof}
+
+\paragraph{Semilattice-indexed quotient values.}
+Fix a finite join-semilattice $(Y,\vee,\bot)$ and a monoid
+morphism $\eta:\Sigma^*\to Y$ such that $\eta\preceq h$.
+Write $\eta(\tuple u)=\bigvee_i\eta(u_i)$.
+Let $\gamma:Y\to\mathbb A$ be any map and
+$\mathsf{Acc}\subseteq M$. Consider the nonempty target
+\[
+ L=\{w\in\Sigma^+:h(w)\in\mathsf{Acc},\
+             \varphi(w)\in\gamma(\eta(w))+\mathcal H\}.
+                                                               \tag{3}
+\]
+A common accepting context for two tuples of equal componentwise
+$h$-type forces their total $\varphi$-values to agree modulo
+$\mathcal H$. This persists under every context, since both
+the $h$-type and $\eta$-value of the filled words then agree.
+Thus, whenever it is an $f$-MCFL, the language in (3) lies in
+$\Cmcf{f}{h}$.
+
+Fix a reduced good presentation $G$ of (3).
+For a nonterminal $A$ put $D_A=\eta(L_A)$ and write
+$Q=\mathbb A/\mathcal H$. For a finite semilattice define
+$\operatorname{ht}(y)$ to be the length of a longest strict
+chain from $\bot$ to $y$, and put
+$\nu(A)=\max_{y\in D_A}\operatorname{ht}(y)$.
+A nonterminal is \emph{multivalued} if its realized tuples
+have at least two distinct $\varphi$-values in $Q$.
+
+\begin{lemma}[Semilattice values and rectangle rigidity]
+\label{lem:mcfg-sl-rectangle}
+For every $A$ there is a well-defined map
+$F_A:D_A\to Q$ satisfying
+$F_A(\eta(\tuple u))=\pi\varphi(\tuple u)$ for $\tuple u\in L_A$.
+Moreover, for any rule $R:A\to\rho(B_1,\ldots,B_q)$,
+index $j$, and fixed sibling tuples $\tuple v_i\in L_{B_i}$
+for $i\ne j$, put
+\[
+ W=\eta(\rho)\vee\bigvee_{i\ne j}\eta(\tuple v_i),
+\]
+where $\eta(\rho)$ is the join of the terminal letters written
+in the rule. If $y,y'\in D_{B_j}$ and
+$y\vee W=y'\vee W$, then
+$F_{B_j}(y)=F_{B_j}(y')$.
+\end{lemma}
+\begin{proof}
+Reducedness gives each $A$ a derivational sentence context $E$
+accepting every member of $L_A$. For any such tuple,
+\[
+ \pi\varphi(\tuple u)
+ =\pi\bigl(\gamma(\eta(E)\vee\eta(\tuple u))
+          -\varphi(E)\bigr),
+\]
+so the left-hand side depends only on $\eta(\tuple u)$.
+For the second assertion choose child tuples with semilattice
+values $y,y'$ and apply the same rule with the same sibling
+tuples. The two parent yields have identical $\eta$-values,
+hence identical quotient values by the first assertion.
+Linearity and nondeletion cancel all contributions except
+those of the varied child, proving the claimed equality.
+\end{proof}
+
+\begin{lemma}[Height decrease at multivalued branching]
+\label{lem:mcfg-sl-height}
+For every child occurrence $B_j$ in a rule with parent $A$,
+$\nu(B_j)\le\nu(A)$.
+If a rule has at least two occurrences of multivalued
+children, then each such occurrence satisfies
+$\nu(B_j)<\nu(A)$.
+Every multivalued $A$ has $\nu(A)\ge1$.
+\end{lemma}
+\begin{proof}
+Complete a tuple from $B_j$ realizing a maximum-height
+semilattice value by arbitrary productive sibling yields.
+The parent join is at least the child value, proving the
+nonstrict inequality.
+For strictness choose a multivalued child occurrence $B_j$
+and a value $y_*\in D_{B_j}$ with
+$\operatorname{ht}(y_*)=\nu(B_j)$.
+A different multivalued child occurrence $B_k$ realizes
+two semilattice values $z,z'$ with $F_{B_k}(z)\ne F_{B_k}(z')$.
+They cannot both lie below $y_*$: fixing $B_j$ at $y_*$
+would make $z\vee W=z'\vee W=W$ in the rectangle lemma,
+forcing their $F_{B_k}$-values to agree.
+At least one, say $z$, therefore satisfies $z\nleq y_*$.
+Consequently $y_*<y_*\vee z$, and the parent admits a tuple
+whose semilattice value is at least $y_*\vee z$.
+Thus $\nu(A)>\nu(B_j)$.
+Finally, a multivalued symbol realizes at least two
+different semilattice values; at least one lies above
+$\bot$, giving $\nu(A)\ge1$.
+\end{proof}
+
+\begin{lemma}[Short representatives for each quotient value]
+\label{lem:mcfg-sl-short-value}
+Put $H_Y=\max_{y\in Y}\operatorname{ht}(y)$ and
+$b=\max\{0,H_Y-1\}$. For every nonterminal $A$ and
+$\alpha\in\pi\varphi(L_A)$ there is a generated tuple
+$\omega_A^\alpha\in L_A$ with quotient value $\alpha$ and
+\[
+ \|\omega_A^\alpha\|_1\le
+ B_\sharp:=
+ r^b|Y|\bigl(\|G\|+r|V|t_G\bigr)
+ \le C_{Y,r}\|G\|\max\{1,\theta_G\}.
+\]
+\end{lemma}
+\begin{proof}
+If $A$ is single-valued, take a shortest yield of length at
+most $t_G$. Otherwise choose, among derivations from $A$
+with the required quotient value, one minimizing
+(total yield length, number of derivation nodes)
+lexicographically. Every child subtree must also minimize
+this pair for its own nonterminal and quotient value:
+replacing it otherwise would give a smaller derivation of
+the same parent quotient value. In particular, a
+single-valued child can be replaced by a globally shortest
+yield of length at most $t_G$.
+
+Prune all single-valued child subtrees, charging their
+terminal yields to their parent, and retain the tree of
+multivalued occurrences. Along any root-to-leaf path the
+pair (nonterminal, quotient value) cannot repeat:
+each selected subtree is lexicographically minimal for
+that pair, whereas a strict descendant has strictly fewer
+nodes and no greater yield length (by nondeletion).
+For each nonterminal there are at most $|Y|$ quotient
+values, so every retained path has at most $|V||Y|$ nodes.
+
+Lemma~\ref{lem:mcfg-sl-height} says that $\nu$ does not
+increase down a path, while a node with two or more
+retained children forces a strict decrease on each retained
+edge. All retained nodes have $\nu\ge1$.
+Thus each path has at most $b$ branching nodes, and the
+retained tree has at most $r^b$ leaves (when no
+multivalued symbols exist the claim already follows
+from $t_G$).
+
+Each leaf path contains at most $|V||Y|$ retained nodes,
+each with at most $r$ pruned children of cost $t_G$.
+Hence the total cost of pruned children is at most
+$r^b r|V||Y|t_G$.
+For a retained node $v$ let $a_{R_v}$ be the number of
+explicit terminal symbols written by its rule.
+Each nonterminal $A$ appears at most $|Y|$ times on any
+retained path, whence
+\[
+ \sum_{v\text{ on a path}}a_{R_v}
+ \le |Y|\sum_{A\in V}\max_{R:\,\mathrm{lhs}(R)=A}a_R
+ \le |Y|\|G\|.
+\]
+Summing over at most $r^b$ leaf paths may overcount but
+cannot omit any retained node. Combining the costs yields
+the displayed bound. The last inequality uses
+$t_G\le\theta_G$ and $|V|\le\|G\|$.
+\end{proof}
+
+\begin{theorem}[Polynomial data for semilattice-indexed abelian cosets]
+\label{thm:mcfg-semilattice-twisted-polydata}
+Fix a nonempty finite alphabet $\Sigma$, finite typing
+$h:\Sigma^*\to M$, a finite join-semilattice $Y$, a morphism
+$\eta:\Sigma^*\to Y$ with $\eta\preceq h$, and
+$f,r\ge1$. There exist constants $C,C'$ depending only on
+$\Sigma,h,Y,\eta,f,r$ such that, for every abelian group
+$\mathbb A$, morphism $\varphi:\Sigma^*\to\mathbb A$,
+subgroup $\mathcal H\le\mathbb A$, map $\gamma:Y\to\mathbb A$,
+and $\mathsf{Acc}\subseteq M$, every reduced good
+fan-out-$\le f$, rank-$\le r$ presentation $G$ of
+the nonempty target (3) satisfies
+\[
+ \kappa_G\le C(\|G\|\bar\theta_G)^{3|\Sigma|+1},
+ \qquad
  \|K^\dagger\|_+\le
- C\bigl(\|G\|\max\{1,\theta_G\}\bigr)^e.
+ C'(\|G\|\bar\theta_G)^{3|\Sigma|+2},
+ \quad\bar\theta_G=\max\{1,\theta_G\},
 \]
-The constants do not depend on
-$\mathbb A,\varphi,\mathcal H,\gamma$.
-The empty word, if present, costs at most one more.
+for some characteristic sample $K^\dagger\subseteq L$
+of both $\mathcal B^{\le r}_{f,h}$ and $\mathcal B_{f,h}$,
+with $|K^\dagger|\le |V||M|^f+|P||M|^{fr}$.
 \end{theorem}
 \begin{proof}
-Membership in $\Cmcf{f}{h}$ follows from
-Proposition~\ref{prop:abelian-coset-filter} and
-the assumed MCFG presentation.
+As observed after (3), $L\in\Cmcf{f}{h}$.
+The language is saturated under joint equality of
+$h$-type and $\pi\varphi$-value, because $\eta\preceq h$.
+For a typed symbol $X=A_{\mathbf t}$, all tuples in $L_X$
+have the same total $\eta$-value and hence the same quotient
+value by Lemma~\ref{lem:mcfg-sl-rectangle}.
+Lemma~\ref{lem:mcfg-sl-short-value} supplies
+assumption (iii) of Lemma~\ref{lem:mcfg-coset-representative-transfer}
+with $B=B_\sharp=O_{Y,r}(\|G\|\bar\theta_G)$.
+That lemma gives the claimed estimates.
+\end{proof}
 
-Let $\psi:\Sigma^*\to\mathbb N^\Sigma$ be the
-Parikh map and write
-$\Psi(\tuple u)=\sum_i\psi(u_i)$.
-The morphism $\varphi$ factors through a group
-homomorphism $\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$.
-Put
+\begin{corollary}[Abelian-filtered targets]
+\label{thm:mcfg-abelian-filter-data}
+Fix $\Sigma,h,f,r$ as in the preceding theorem.
+For any abelian group $\mathbb A$, morphism
+$\varphi:\Sigma^*\to\mathbb A$, subgroup
+$\mathcal H\le\mathbb A$, $\gamma\in\mathbb A$, and
+$\mathsf{Acc}\subseteq M$, put
 \[
- \Lambda=\{z\in\mathbb Z^\Sigma:
-                 \overline\varphi(z)\in\mathcal H\}.
+ L^+=h^{-1}(\mathsf{Acc})\cap
+       \varphi^{-1}(\gamma+\mathcal H)\cap\Sigma^+.
 \]
-Fix for each untyped nonterminal $A$ a productive
-tuple $\omega_A$ of length at most the
-untyped nonterminal thickness $t_G\le\theta_G$.
-Since any two $A$-tuples can be inserted into the
-same successful derivational context and their
-resulting words belong to $L$,
+If $L^+$ has a reduced good fan-out-$\le f$,
+rank-$\le r$ presentation $G$, then $L^+\in\Cmcf{f}{h}$
+and both reconstruction operators have a characteristic
+sample $K^\dagger\subseteq L^+$ with
 \[
- \Psi(u)-\Psi(\omega_A)\in\Lambda
- \qquad(u\in L_A(G)).                                      \tag{*}
+ \|K^\dagger\|_+
+ \le C(\|G\|\bar\theta_G)^{3|\Sigma|+2},
 \]
-For each rule $R:A\to\rho(B_1,\ldots,B_q)$,
-let $c_R\in\mathbb N^\Sigma$ count its explicit
-terminal letters and define
-\[
- \delta_R=\Psi(\omega_A)-c_R
-                 -\sum_{j=1}^q\Psi(\omega_{B_j}).
-\]
-By (*) this vector lies in $\Lambda$, and its
-$\ell_1$-norm is bounded by
-$T=(r+1)t_G+\|G\|$.
-Let
-$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$ and
-$\Lambda_T=\langle\Gamma_T\rangle$.
-Induction on a derivation, using
-\[
- \Psi(u)-\Psi(\omega_A)=
-   \sum_j(\Psi(u_j)-\Psi(\omega_{B_j}))-\delta_R,
-\]
-shows that every $u\in L_A(G)$ satisfies
-$\Psi(u)-\Psi(\omega_A)\in\Lambda_T$.
+where $C$ depends only on $\Sigma,h,f,r$, not on the
+auxiliary abelian data. If the full filtered target
+also contains $\eps$, augment its characteristic
+sample by $\eps$ at encoded cost one.
+\end{corollary}
+\begin{proof}
+Take $Y$ to be the one-element semilattice, let
+$\eta$ be constant and $\gamma(\bot)=\gamma$ in
+Theorem~\ref{thm:mcfg-semilattice-twisted-polydata}.
+This specialization is available for \emph{every}
+fixed finite typing $h$. In fact all untyped
+nonterminals are single-valued and one may take
+$B=t_G$ in
+Lemma~\ref{lem:mcfg-coset-representative-transfer}.
+The empty word is treated separately by the existing
+start-symbol convention.
+\end{proof}
 
-Consider now any typed nonterminal
-$X=A_{\mathbf t}$ with $d\le f$, and fix
-$u=(u_1,\ldots,u_d)\in L_X$.
-For each component choose one linear set from
-a fixed semilinear representation of the Parikh
-image of the regular language
-$h^{-1}(t_i)\cap\Sigma^+$ containing $\psi(u_i)$.
-Write that linear set as
-$c_i+\sum_{p\in P_i}\mathbb N p$.
-The number and coefficients of all these
-generators are bounded by constants depending
-only on $\Sigma$ and $h$.
-The nonnegative integer system
+\begin{corollary}[One-marker split abelian targets]
+\label{cor:mcfg-one-marker-split-polydata}
+Fix a nonempty set of marker letters
+$\Sigma_{\mathsf c}\subseteq\Sigma$ and put
+$c(w)=1$ if $w$ contains a marker, $c(w)=0$ otherwise.
+If the finite typing $h$ refines
+$h_{\mathrm U}:w\mapsto c(w)$ into
+$(\{0,1\},\max)$, then the preceding polynomial
+bounds hold for every reduced good bounded-rank
+presentation of
 \[
- \sum_{i=1}^d
-    \left(c_i+\sum_{p\in P_i}\nu_{i,p}p\right)
- -
- \sum_{z\in\Gamma_T}(\mu_z^+-\mu_z^-)z
- =\Psi(\omega_A)
+ L=\{w\in\Sigma^+:
+      \varphi(w)\in\gamma_{c(w)}+\mathcal H\}.
 \]
-is feasible: use the Parikh vectors of the
-original $u_i$ and the preceding
-$\Lambda_T$-membership.
-It has exactly $|\Sigma|$ equations,
-at most $O_{f,h,\Sigma}((T+1)^{|\Sigma|})$
-nonnegative variables, and coefficients
-of absolute value $O_{f,h,\Sigma}(T+1)$.
-Papadimitriou's small nonnegative integral
-solution bound~\cite{Papadimitriou1981} therefore
-gives a solution with every coefficient
-bounded by a fixed polynomial in $T+1$.
-For each resulting Parikh vector select a
-nonempty word $v_i\in h^{-1}(t_i)$ realizing it,
-and let $\tuple v=(v_1,\ldots,v_d)$.
-Then $\|\tuple v\|_1$ is polynomial in $T+1$,
-the componentwise $h$-types agree with $u$,
-and
-$\Psi(\tuple v)-\Psi(u)\in\Lambda_T\subseteq\Lambda$.
-
-Finally, for any sentence context $E$, the total
-$h$-type of $E[\tuple v]$ agrees with that of
-$E[u]$, and
-\[
- \varphi(E[\tuple v])-\varphi(E[u])
- =\overline\varphi(\Psi(\tuple v)-\Psi(u))
- \in\mathcal H.
-\]
-Hence $\tuple v\equiv_{L,h}\tuple u$.
-This constructs a representative of every
-typed distribution class with length polynomial
-in $T+1$.  Applying
-Proposition~\ref{prop:mcfg-relaxed-witnesses}
-and $t_G\le\theta_G$ yields the claimed
-total-length bound, with parameters independent
-of the auxiliary abelian group.
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:mcfg-semilattice-twisted-polydata}
+with $Y=\{0,1\}$, $\eta=h_{\mathrm U}$ and
+$\mathsf{Acc}=M$.
 \end{proof}
 
 \begin{remark}
-Theorem~\ref{thm:mcfg-abelian-filter-data} applies
-even when the positive image of $h$ is
-\emph{outside} $\mathbf{LG}$.
-It is a sufficient condition on the target
-language, rather than on the finite control
-monoid.  It does not claim polynomial-time
-construction for arbitrary, possibly
-ineffectively presented auxiliary abelian groups.
+The semilattice-indexed result is a
+\emph{target-language} criterion: it restricts the
+abelian-coset structure of the language and is uniform
+over its auxiliary abelian data. The local-group
+criterion in Appendix~\ref{app:local-group} instead
+restricts the \emph{fixed typing} and applies to all
+targets in the corresponding typed substitutable class.
+Neither subsumes the other in general.
+The bounds above use relaxed distributional witnesses
+and are existential; the computable rule-only budget of
+Proposition~\ref{prop:computed-witness-budget} is distinct.
+The higher-fan-out superpolynomial characteristic-data
+lower-bound question remains open.
 \end{remark}
+
 
 \section{Comparison with Multidimensional Substitutability}
 \label{sec:comparison}
@@ -3172,10 +3413,12 @@ The corresponding pseudovariety-level obstruction uses
 fan-out-one lower-bound examples; it is not a per-typing
 characterization at arbitrary fan-out.
 
-A complementary language-based result,
-Theorem~\ref{thm:mcfg-abelian-filter-data},
+A complementary target-based theorem,
+Theorem~\ref{thm:mcfg-semilattice-twisted-polydata},
 establishes polynomial characteristic-data length for
-abelian-filtered targets with bounded-rank good presentations,
+semilattice-indexed abelian-coset targets, uniformly over the
+auxiliary abelian-group data. The abelian-filtered case is
+recovered as Corollary~\ref{thm:mcfg-abelian-filter-data},
 including when the finite control is outside $\mathbf{LG}$.
 Proposition~\ref{prop:mcfg-relaxed-witnesses} isolates short
 representatives of target distribution classes as a sufficient
