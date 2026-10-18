@@ -44,3 +44,27 @@ The changes explicitly fix unary `Finset.mem_filter`/product witness nesting, Bo
 
 No Phase 1–7 source, mathematical reconstruction definitions, TCS manuscript, Japanese version, referee response, PDF, or `PAPER.yaml` was edited. No main merge, arXiv, or submission action.
 
+
+
+## 2026-10-18 continuation: instrumented lookup and conditional-insertion cost
+
+**Starting HEAD:** `a541078d8687875c6f3dfc02c499bd9e46539cda`.
+The previously pending documentation checkpoint [Actions 39116091729](https://github.com/growupkuriyama-hub/Papers/actions/runs/39116091729) **completed successfully** for precisely that SHA. Prior verified reconstruction correctness, injective item encoding, uniqueness, and unconditional insertion-visit bounds remain unchanged.
+
+New independent modules, authored without changing existing Phase 1–8 proofs:
+- `TCSPhase8TrieLookupCost.lean`: `BitTrie.containsCount`, `containsCount_correct`, `containsCount_steps_le`; counts actual trie-node visits and stops when a child is absent.
+- `TCSPhase8DedupCount.lean`: `BitTrie.collectUniqueKeysCount`, `collectUniqueKeysCount_correct`, `collectUniqueKeysCount_cost_le_twice`, `dedupTrieKeysCount_correct`, `dedupTrieKeysCount_nodup` and membership preservation. The recursive program performs a counted lookup for each key and a counted insertion only on misses; its counter is accumulated in the same recursion.
+- `TCSPhase8ActualDedupCost.lean`: `dedupActualKeysCount_correct`, `dedupActualKeysCount_decode_correct`, `mem_dedupActualKeysCount_iff`, `dedupActualKeysCount_nodup` and `actual_dedup_lookup_insert_steps_fourth`, charging the *actual* emitted `emitAllRecItems` keys serialized by `encodeRecItem`.
+
+**Mathematical target of the last theorem:**
+```lean
+(dedupActualKeysCount c t sample).2 ≤
+  (36 * tokenBound c + 6) * (encodedListSample sample + 1)^4
+```
+This follows by charging lookup at most `key.length+1` and any performed insertion exactly `key.length+1`, then rewriting the sum of all candidate key lengths using `buildItemTrie_steps` and applying the previously kernel-certified `buildItemTrie_insertion_steps_fourth`. This explicitly distinguishes the all-key insertion *analysis* from the actual on-miss insertion program.
+
+**CI status on writing this section:** new modules are **submitted for direct Lean compilation and kernel audit but not yet certified**. The exact final SHA, successful Run ID and job, and ordinary-logic-only dependency check must be filled in after a completed green run. In the meantime these are implementation/proof attempts, not confirmed Lean theorems. The workflow includes all three files after their dependencies.
+
+**Remaining *whole-program* obligations:** (1) prefix/suffix and nonempty-factor List generation, including `flatMap`/append allocations, (2) substring extraction/character comparisons and typing-cache lookups, (3) finite alphabet/monoid table access assumptions, (4) construction of raw binary/unary/start/lexical/nonterminal candidate Lists, (5) complete `encodeRecItem` execution cost including unary bit allocations, (6) accumulator reversal, (7) `decodeRecItem` / `filterMap`, (8) six-way `projectRecItems` traversals and grammar output. None is included in the trie-node counter. In particular repeated List slicing and naive append or membership passes could violate a quartic bound unless their concrete operation costs are proved. The target `thm:poly-build` O(n^4) total runtime is **not formally verified** by this isolated checkpoint.
+
+**Protected sources:** no changes to mathematical definitions or proofs from Phase 1–7, existing Phase 8 theorems, `main.tex`, main's v227 `PAPER.yaml`, Japanese manuscript, responses, PDFs or publication state. No merge to main.
