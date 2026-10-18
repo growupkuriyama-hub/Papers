@@ -50,8 +50,11 @@ theorem cachedScan_eq_scanl (t : LetterTable Alphabet M)
   induction w generalizing acc with
   | nil => rfl
   | cons a ws ih =>
-    simp only [cachedScan, List.scanl_cons, List.drop_succ_cons]
-    simp [ih]
+    change (acc * t.letter a) ::
+      (cachedScan t (acc * t.letter a) ws).1 =
+      List.scanl (fun m a => m * t.letter a) (acc * t.letter a) ws
+    rw [ih]
+    cases ws <;> rfl
 
 /-- Scan every start position, storing each nonempty interval's type
 by a single multiplication that extends its previous interval. -/
