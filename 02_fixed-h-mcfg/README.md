@@ -37,6 +37,17 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v85 absorbed-theorems I&C review draft
+
+Active branch: `mcfg-v85-ic-theorem-absorption`. Original complete v84 is frozen at commit `ed945ec8792f3840cdb108b09c49780f8fa4d404` on `archive/mcfg-v84-preabsorption-full-20261018`.
+
+- **Typing-side main theorem:** positive-image local groups (LG). The cubic window+arbitrary-finite-group theorem is now explicitly a special case, with separate proof archived.
+- **Sharp subcase retained:** locally trivial positive images (LI) keep the better quadratic estimate.
+- **Target-side main theorem:** finite-semilattice-indexed abelian cosets. Abelian-filter and marker results remain short corollaries.
+- **Proof integrity:** noncommutative interval/order/antichain shortening lemmas stay in the compiled appendix. The abelian zero-sum/Davenport appendix and pseudovariety lower-bound detail are archived, not destroyed.
+- `archive/trim-v85/README.md` explains restoration. `revision/v85_theorem_absorption_trim_manifest.md` records scope and pending checks.
+- Six compiled EN/JP TeX source SHA-256 checksums are maintained in `PAPER.yaml`. No main-branch or arXiv changes.
+
 ## v84 concise exposition and inline math (review draft)
 
 Active working branch: `mcfg-v84-ic-inline-prose-tightening`.
