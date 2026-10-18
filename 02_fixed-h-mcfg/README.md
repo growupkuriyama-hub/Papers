@@ -37,6 +37,14 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v87 TCS-style referee preflight (review draft)
+
+- Active stacked review branch: `mcfg-v87-tcs-style-review-preflight`, based on v86. Both main algebraic theorems now have their formal statements in the **main text**, while the finite-group/local-group proofs remain in the corresponding appendices.
+- Clarified fixed-parameter quantifiers, original thickness vs typed-refinement thickness, sample-length polynomial bounds vs time polynomial in the observed sample, and generated rule-only witnesses vs existential short distributional witnesses.
+- The restored fan-out-two rank-one witness is also outside the LG typing condition via its four-element semilattice quotient.
+- The proof-dependency audit and open external-verification points are documented in [`revision/v87_tcs_referee_math_audit.md`](revision/v87_tcs_referee_math_audit.md).
+- Complete v86 source remains at branch `mcfg-v86-fanout-two-separation-return` / Draft PR #56; main and arXiv remain unchanged. No independent mathematical referee report or submission is implied.
+
 ## v86 restored fan-out-two non-CFL rank-one separation (I&C draft)
 
 Branch `mcfg-v86-fanout-two-separation-return` restores the complete EN/JP proof and strict-2-local supporting lemma for `thm:arbitrary-filter-separation` from `archive/trim-v83`. It exhibits a genuine fan-out-two, rank-one typed non-CFL outside every arbitrary regular filter of Yoshinaka's untyped substitutable class. The larger minimum-rank-two example remains archived. No local-group or semilattice-coset theorem, open lower-bound question, or v85 source was modified. See `revision/v86_fanout2_separation_restoration.md`.
