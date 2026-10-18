@@ -15,10 +15,10 @@ variable [Fintype Alphabet] [DecidableEq Alphabet]
 variable [Monoid M] [DecidableEq M]
 
 def emitUnaryCandidates (t : LetterTable Alphabet M)
-    (K : Finset (List Alphabet)) :
+    (sample : List (List Alphabet)) :
     List (List Alphabet × List Alphabet) :=
-  (enumerateOccurrencesList K).flatMap (fun occ =>
-    (K.toList.filter (fun w =>
+  (enumerateOccurrencesList sample).flatMap (fun occ =>
+    (sample.filter (fun w =>
       let u := occ.1
       let x := occ.2.1
       let v := occ.2.2
@@ -29,10 +29,10 @@ def emitUnaryCandidates (t : LetterTable Alphabet M)
 /-- Equality of *sets* after emitting a possibly duplicate-containing
 ordered list from the concrete pair loops. -/
 theorem mem_emitUnaryCandidates_iff
-    (t : LetterTable Alphabet M) (K : Finset (List Alphabet))
+    (t : LetterTable Alphabet M) (sample : List (List Alphabet))
     (x y : List Alphabet) :
     (x,y) ∈ emitUnaryCandidates t K ↔
-      (x,y) ∈ efficientUnaryRules t K := by
+      (x,y) ∈ efficientUnaryRules t sample.toFinset := by
   constructor
   · intro hm
     obtain ⟨⟨u,x',v⟩, ho, hr⟩ := List.mem_flatMap.mp hm
@@ -42,8 +42,9 @@ theorem mem_emitUnaryCandidates_iff
     refine ⟨((u,x',v),w), ?_, heq⟩
     apply Finset.mem_filter.mpr
     exact ⟨Finset.mem_product.mpr
-      ⟨(mem_enumerateOccurrences_iff K u x' v).mpr
-          ((mem_enumerateOccurrencesList_iff K u x' v).mp ho),
+      ⟨(mem_enumerateOccurrences_iff sample.toFinset u x' v).mpr
+          ⟨((mem_enumerateOccurrencesList_iff sample u x' v).mp ho).1,
+            by simpa using ((mem_enumerateOccurrencesList_iff sample u x' v).mp ho).2⟩),
        by simpa using hfiltered.1⟩,
       hfiltered.2⟩
   · intro hm
@@ -52,20 +53,21 @@ theorem mem_emitUnaryCandidates_iff
     have hp := Finset.mem_product.mp hf.1
     apply List.mem_flatMap.mpr
     refine ⟨(u,x',v), ?_, ?_⟩
-    · exact (mem_enumerateOccurrencesList_iff K u x' v).mpr
-        ((mem_enumerateOccurrences_iff K u x' v).mp hp.1)
+    · exact (mem_enumerateOccurrencesList_iff sample u x' v).mpr
+        ⟨((mem_enumerateOccurrences_iff sample.toFinset u x' v).mp hp.1).1,
+          by simpa using ((mem_enumerateOccurrences_iff sample.toFinset u x' v).mp hp.1).2⟩
     · apply List.mem_map.mpr
       refine ⟨w, ?_, heq⟩
-      exact List.mem_filter.mpr ⟨by simpa using hp.2, hf.2⟩
+      exact List.mem_filter.mpr ⟨by simpa using hp.2, by simpa using hf.2⟩
 
 theorem emitUnaryCandidates_toFinset_eq
-    (t : LetterTable Alphabet M) (K : Finset (List Alphabet)) :
-    (emitUnaryCandidates t K).toFinset = efficientUnaryRules t K := by
+    (t : LetterTable Alphabet M) (sample : List (List Alphabet)) :
+    (emitUnaryCandidates t K).toFinset = efficientUnaryRules t sample.toFinset := by
   classical
   ext p
   rcases p with ⟨x,y⟩
   change (x,y) ∈ (emitUnaryCandidates t K).toFinset ↔
-    (x,y) ∈ efficientUnaryRules t K
+    (x,y) ∈ efficientUnaryRules t sample.toFinset
   rw [List.mem_toFinset, mem_emitUnaryCandidates_iff]
 
 #print axioms TCSPhase8.mem_emitUnaryCandidates_iff
