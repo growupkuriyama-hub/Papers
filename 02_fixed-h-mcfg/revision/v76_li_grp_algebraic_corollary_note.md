@@ -32,7 +32,9 @@ Base: Claude's draft branch \`mcfg2-v76-strengthening-drafts\` at commit
   higher-fan-out lower-bound open problem.
 - Additional bibliographic references: Costa (2002) two papers in the
   research Project Source 07; Pin (1986), and the version-locked companion
-  CFG manuscript. The Costa joins provide algebraic context, not the
+  CFG manuscript. The separate effective-data draft now cites the directly
+  held Nederhof (2003) and Ramalingam--Reps (1996) instead of citing
+  the unavailable Knuth (1977) original as if it had been inspected. The Costa joins provide algebraic context, not the
   MCFG learning theorem itself.
 
 ## Independent review gates
