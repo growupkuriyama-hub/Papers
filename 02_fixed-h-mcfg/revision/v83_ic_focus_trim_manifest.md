@@ -19,4 +19,4 @@ Keep normalization, window-abelian, window-nonabelian-group, and local-group sou
 
 After trims, reinserted original acknowledgments, competing-interest declaration, funding, data-availability and generative-AI disclosure, and the `\appendix` command from the complete source. Source static scan across main and three appendices: undefined labels 0, duplicates 0, for both EN and JP.
 
-Pending: bilingual PDF CI check, PDF visual inspection, independent math/new-novelty audit, author signoff. Never confuse a successful PDF compilation with proof verification.
+Validation complete on EN/JP sources from commit `4946f0909ea98bb8da31e7df2bb329cf4176b8af`: bilingual review CI run `39118817678` SUCCEEDED and generated English 46 pages, Japanese 49 pages (v82: 55 / 60). PDF log checks: 0 overfull boxes, 0 undefined references or citations, 0 LaTeX warnings; sample pages including abstract, new semilattice theorem, journal disclosures, normalization and LG appendix have been visually inspected. Complete page-by-page human visual review, independent math/new-novelty audit, and author signoff remain pending. Never confuse a successful PDF compilation with proof verification.
