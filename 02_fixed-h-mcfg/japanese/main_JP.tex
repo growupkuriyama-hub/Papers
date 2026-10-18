@@ -81,9 +81,11 @@ $O(\|G\|^3\bar\theta_G)$ の上界を得る．
 $\mathbf{LG}$ に属する型付け全体へ拡張する．
 規則ランク1では任意の固定有限型付けについて
 文法サイズのみの多項式上界が成立する．
-別の言語構造上の十分条件として，
-有界ランクの良形文法表示を持つアーベル型フィルタ標的は，
-制御モノイドが $\mathbf{LG}$ の外にあっても多項式データを持つ．
+別の標的言語構造上の条件として，
+有限半束の値に応じて剰余類を切り替えるアーベル標的に対し，
+補助アーベル群に一様な多項式特徴データ長を得る．
+これは従来のアーベル型フィルタを含み，
+制御モノイドが $\mathbf{LG}$ の外にある場合も扱う．
 
 計算可能な規則証拠だけによる予算と，
 分布同値代表元による別の上界も与える．
@@ -2801,7 +2803,7 @@ $\mathsf B_{\mathrm{rule}}(G,h)$ となる．
 計算された標本は多項式サイズの圧縮表現をもつ．
 
 
-\subsection{分布同値代表元とアーベル型フィルタ標的}
+\subsection{分布同値代表元と半束添字付き剰余類標的}
 \label{subsec:short-distributional-representatives}
 
 上で求めた計算可能な規則証拠予算では，
@@ -2902,145 +2904,393 @@ $\kappa_{G_n}=n^{\omega(1)}$ が必要である．
 用いる別の構成である．
 \end{remark}
 
-\begin{theorem}[アーベル型フィルタ標的の多項式データ]
-\label{thm:mcfg-abelian-filter-data}
-空でない有限アルファベット $\Sigma$，
-有限型付け $h:\Sigma^*\to M$，
-上界 $f,r\ge1$ を固定する．
-$\Sigma,h,f,r$ のみに依存する定数 $C,e$ が存在して，
-次が成り立つ．
-$\mathbb A$ を任意のアーベル群，
-$\varphi:\Sigma^*\to\mathbb A$ を準同型，
-$\mathcal H\le\mathbb A$，
-$\gamma\in\mathbb A$，
-$\mathsf{Acc}\subseteq M$ とする．
+
+\begin{lemma}[短い商値代表元から短い特徴データへ]
+\label{lem:mcfg-coset-representative-transfer}
+$\Sigma,h,f,r$ を固定し，$r\ge1$ とする．
+$G$ を $L=L(G)\subseteq\Sigma^+$，
+$L\in\Cmcf{f}{h}$ の縮約済み良形MCFG表示とし，
+ファンアウトは高々$f$，規則ランクは高々$r$とする．
+アーベル群$\mathbb A$，準同型
+$\varphi:\Sigma^*\to\mathbb A$，部分群
+$\mathcal H\le\mathbb A$，商写像
+$\pi:\mathbb A\to\mathbb A/\mathcal H$を固定する．
+次の3条件を仮定する．
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 非空語$w,w'$について$h(w)=h(w')$かつ
+$\pi\varphi(w)=\pi\varphi(w')$なら，
+$w\in L\iff w'\in L$である．
+\item トリム済み生成語型細分の開始記号でない各
+$X=A_{\mathbf t}$に対し，
+$\pi\varphi(\tuple u)$は$\tuple u\in L_X$によらず一定である．
+\item 各型なし非終端記号$A$と実現可能な商値
+$\alpha\in\pi\varphi(L_A)$に対し，
+$\pi\varphi(\omega_A^\alpha)=\alpha$かつ
+$\|\omega_A^\alpha\|_1\le B$を満たす
+$\omega_A^\alpha\in L_A$が存在する．
+ここで$B\ge1$は共通の上界である．
+\end{enumerate}
+$m=|\Sigma|$，$T=(r+1)B+\|G\|$とおく．
+$\Sigma,h,f,r$のみに依存する定数$C$が存在して
 \[
- L=h^{-1}(\mathsf{Acc})\cap
-   \varphi^{-1}(\gamma+\mathcal H)
+ \kappa_G\le C(T+1)^{3m+1}
 \]
-がファンアウト高々 $f$，規則ランク高々 $r$ の
-縮約済み良形MCFG $G$ で表示されるなら，
-$L\in\Cmcf{f}{h}$ であり，
-$\mathcal B^{\le r}_{f,h}$ に対する特徴標本
-$K^\dagger$ が存在して
+となる．さらに，ランク上限付き・上限なしの両再構成器には
+特徴標本$K^\dagger\subseteq L$が存在し，
 \[
- \|K^\dagger\|_+\le
- C\bigl(\|G\|\max\{1,\theta_G\}\bigr)^e
+\begin{split}
+ |K^\dagger|&\le|V||M|^f+|P||M|^{fr},\\
+ \|K^\dagger\|_+
+ &\le(|V||M|^f+|P||M|^{fr})
+ \bigl(1+\theta_G+\|G\|+(r+1)C(T+1)^{3m+1}\bigr)
+\end{split}
 \]
-を満たす．定数は補助群
-$\mathbb A,\varphi,\mathcal H,\gamma$ に依存しない．
-空語が含まれる場合の符号化コストは高々1を加える．
-\end{theorem}
+を満たす．
+\end{lemma}
 \begin{proof}
-$L\in\Cmcf{f}{h}$ は
-命題~\ref{prop:abelian-coset-filter} と
-MCFGによる表示の仮定から従う．
+Parikh写像を$\psi$，タプルの総Parikh像を
+$\Psi(\tuple u)=\sum_i\psi(u_i)$とする．
+$\varphi$を拡張する群準同型
+$\widehat\varphi:\mathbb Z^\Sigma\to\mathbb A$を用い，
+\[
+ \Lambda=\widehat\varphi^{-1}(\mathcal H),\quad
+ \Gamma_T=\{\delta\in\Lambda:\|\delta\|_1\le T\},\quad
+ \Lambda_T=\langle\Gamma_T\rangle
+\]
+とおく．規則$R:A\to\rho(B_1,\ldots,B_q)$で，
+子の商値を$\alpha_j$とし，
+$\tuple z=\rho(\omega_{B_1}^{\alpha_1},\ldots,
+\omega_{B_q}^{\alpha_q})$，
+$\alpha=\pi\varphi(\tuple z)$とする．線形・非削除性と可換性から
+\[
+ \delta_{R,\boldsymbol\alpha}
+ =\Psi(\omega_A^\alpha)-\Psi(\tuple z)\in\Lambda,\quad
+ \|\delta_{R,\boldsymbol\alpha}\|_1\le
+ (r+1)B+\|G\|=T
+\]
+である．規則ランク0の場合も含め導出に関して帰納すれば，
+\[
+ \Psi(\tuple u)-
+ \Psi(\omega_A^{\pi\varphi(\tuple u)})\in\Lambda_T
+ \qquad(\tuple u\in L_A) .                              \tag{1}
+\]
+実際，根における差分は子の差分の和から
+$\delta_{R,\boldsymbol\alpha}$を引いたものである．
 
-$\psi:\Sigma^*\to\mathbb N^\Sigma$ をParikh写像とし，
-$\Psi(\tuple u)=\sum_i\psi(u_i)$ と書く．
-$\varphi$ は群準同型
-$\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$
-を用いて分解できる．
-\[
- \Lambda=\{z\in\mathbb Z^\Sigma:
-                 \overline\varphi(z)\in\mathcal H\}
-\]
-とおく．
-各型なし非終端記号 $A$ について，
-長さが非終端記号厚み
-$t_G\le\theta_G$ 以下の生産的タプル
-$\omega_A$ を一つ固定する．
-任意の二つの $A$ の導出タプルは，
-同一の成功導出的文脈へ代入でき，
-その結果はともに $L$ に属するため
-\[
- \Psi(u)-\Psi(\omega_A)\in\Lambda
- \qquad(u\in L_A(G))                                      \tag{*}
-\]
-となる．
-
-各規則 $R:A\to\rho(B_1,\ldots,B_q)$ で，
-$c_R\in\mathbb N^\Sigma$ を規則中の終端記号の
-出現数ベクトルとし，
-\[
- \delta_R=\Psi(\omega_A)-c_R
-                 -\sum_{j=1}^q\Psi(\omega_{B_j})
-\]
-とおく．(*)より $\delta_R\in\Lambda$ で，
-$\|\delta_R\|_1$ は
-$T=(r+1)t_G+\|G\|$ 以下である．
-$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$，
-$\Lambda_T=\langle\Gamma_T\rangle$ とする．
-\[
- \Psi(u)-\Psi(\omega_A)=
- \sum_j(\Psi(u_j)-\Psi(\omega_{B_j}))-\delta_R
-\]
-を用いる導出上の帰納法により，
-すべての $u\in L_A(G)$ に対して
-$\Psi(u)-\Psi(\omega_A)\in\Lambda_T$ が成立する．
-
-型付き非終端記号 $X=A_{\mathbf t}$ の
-$d\le f$ 成分タプル
-$u=(u_1,\ldots,u_d)\in L_X$ を取る．
-各成分について正規言語
-$h^{-1}(t_i)\cap\Sigma^+$ のParikh像の
-固定した半線形表示から，
-$\psi(u_i)$ を含む線形集合
-$c_i+\sum_{p\in P_i}\mathbb N p$ を選ぶ．
-その生成元の個数と係数は
-$\Sigma,h$ のみに依存する定数で抑えられる．
+型付き記号$X=A_{\mathbf t}$のアリティを$d\le f$とし，
+$\tuple u=(u_1,\ldots,u_d)\in L_X$を取る．
+仮定(ii)により商値$\alpha_X$は一定であり，
+$\tuple\omega=\omega_A^{\alpha_X}$とおける．
+各成分型$t_i$について，正規言語
+$h^{-1}(t_i)\cap\Sigma^+$のParikh像に固定の半線形表示を取る．
+$\Sigma,h$を固定しているため，
+線形集合とその基底・周期ベクトルの個数とノルムは
+定数$C_h$で抑えられる．
+$\psi(u_i)$を含む線形集合
+$c_i+\sum_{p\in P_i}\mathbb Np$をそれぞれ選び，
 次の非負整数連立系を考える：
 \[
- \sum_{i=1}^d
-    \left(c_i+\sum_{p\in P_i}\nu_{i,p}p\right)
- -
- \sum_{z\in\Gamma_T}(\mu_z^+-\mu_z^-)z
- =\Psi(\omega_A).
+ \sum_{i=1}^d\sum_{p\in P_i}\nu_{i,p}p
+ -\sum_{\delta\in\Gamma_T}
+   (\mu_\delta^+-\mu_\delta^-)\delta
+ =\Psi(\tuple\omega)-\sum_{i=1}^dc_i.                 \tag{2}
 \]
-元の $u_i$ のParikhベクトルと
-$\Lambda_T$ に属するという上記の事実から，
-この連立系は可解である．
-方程式数は $|\Sigma|$，
-非負変数の個数は
-$O_{f,h,\Sigma}((T+1)^{|\Sigma|})$ 以下，
-係数の絶対値は
-$O_{f,h,\Sigma}(T+1)$ 以下である．
+(1)により元のタプルから解が得られる．
+方程式数は$m$，変数数は
+$n\le fC_h+2(2T+1)^m$，
+係数・右辺成分の絶対値は
+$a=T+fC_h$以下である（必要なら$C_h$を増やす）．
 Papadimitriouの非負整数小解定理
-~\cite{Papadimitriou1981} より，
-全ての変数が $T+1$ の固定多項式で
-抑えられる解が存在する．
-得られた各Parikhベクトルを実現する
-非空語 $v_i\in h^{-1}(t_i)$ を選び，
-$\tuple v=(v_1,\ldots,v_d)$ とする．
-$\|\tuple v\|_1$ は $T+1$ の多項式で抑えられ，
-成分別型は $u$ と一致し，
-$\Psi(\tuple v)-\Psi(u)\in
-\Lambda_T\subseteq\Lambda$ となる．
-
-任意の文文脈 $E$ に対して
-$E[\tuple v]$ と $E[u]$ の全体の $h$-型は等しく，
+~\cite{Papadimitriou1981}から，各変数が
+$n(ma)^{2m+1}$以下の解が存在する．
+得られた各ベクトル$q_i=c_i+\sum_p\nu_{i,p}p$を
+実現する非空語$v_i\in h^{-1}(t_i)$を選べる．
+タプル$\tuple v=(v_1,\ldots,v_d)$は
 \[
- \varphi(E[\tuple v])-\varphi(E[u])
- =\overline\varphi(\Psi(\tuple v)-\Psi(u))
- \in\mathcal H
+ h^{(d)}(\tuple v)=\mathbf t,\quad
+ \Psi(\tuple v)-\Psi(\tuple\omega)\in\Lambda_T,\quad
+ \|\tuple v\|_1=O_{\Sigma,h,f}((T+1)^{3m+1})
 \]
-が成り立つ．
-したがって $\tuple v\equiv_{L,h}\tuple u$ である．
-各型付き分布同値類に，長さが $T+1$ の多項式で
-抑えられた代表元が存在するので，
-命題~\ref{prop:mcfg-relaxed-witnesses} と
-$t_G\le\theta_G$ から求める総長上界が得られる．
-定数は補助アーベル群に依存しない．
+を満たす．(1)と合わせると，
+$\pi\varphi(\tuple v)=\pi\varphi(\tuple u)$である．
+任意の文文脈$E$に対し成分ごとの型が等しいので
+$h(E[\tuple v])=h(E[\tuple u])$，また可換性により
+$\pi\varphi(E[\tuple v])=\pi\varphi(E[\tuple u])$である．
+充填後の語は双方とも非空なので(i)を適用でき，
+$E[\tuple v]\in L\iff E[\tuple u]\in L$を得る．
+ゆえに$\tuple v\equiv_{L,h}\tuple u$であり，
+$\kappa_G$の上界が従う．標本長は
+命題~\ref{prop:mcfg-relaxed-witnesses}から従う．
+補助群の計算可能な表示は仮定しない存在論的な議論である．
+\end{proof}
+
+\paragraph{有限半束で添字付けされた商値．}
+有限結び半束$(Y,\vee,\bot)$，
+$\eta\preceq h$を満たす準同型
+$\eta:\Sigma^*\to Y$を固定する．
+タプルに対し
+$\eta(\tuple u)=\bigvee_i\eta(u_i)$とする．
+任意の写像$\gamma:Y\to\mathbb A$と
+$\mathsf{Acc}\subseteq M$を取り，
+\[
+ L=\{w\in\Sigma^+:h(w)\in\mathsf{Acc},\
+       \varphi(w)\in\gamma(\eta(w))+\mathcal H\}
+                                                               \tag{3}
+\]
+を考える．
+成分ごとの$h$型が等しい二つのタプルが
+受理文脈を共有すると，それらの$\varphi$値の差は
+$\mathcal H$に属する．
+任意の文脈で充填した語の$h$型と$\eta$値は
+それぞれ一致するため，受理性も一致する．
+したがって，(3)が$f$-MCFLなら
+$L\in\Cmcf{f}{h}$である．
+
+(3)の縮約済み良形表示$G$を固定する．
+$D_A=\eta(L_A)$，$Q=\mathbb A/\mathcal H$とし，
+$\operatorname{ht}(y)$を$\bot$から$y$までの
+最長狭義鎖の長さと定め，
+$\nu(A)=\max_{y\in D_A}\operatorname{ht}(y)$とする．
+$\pi\varphi(L_A)$が二つ以上の値を持つとき
+$A$を\emph{多値}という．
+
+\begin{lemma}[半束値関数と長方形剛性]
+\label{lem:mcfg-sl-rectangle}
+各$A$について，
+\[
+ F_A:D_A\to Q,\qquad
+ F_A(\eta(\tuple u))=\pi\varphi(\tuple u)
+ \quad(\tuple u\in L_A)
+\]
+を満たす写像$F_A$が存在する．
+さらに規則$R:A\to\rho(B_1,\ldots,B_q)$，
+子の位置$j$について，
+それ以外の子のyield$\tuple v_i\in L_{B_i}$を固定し，
+\[
+ W=\eta(\rho)\vee\bigvee_{i\ne j}\eta(\tuple v_i)
+\]
+とおく（$\eta(\rho)$は規則の終端部分の結び）．
+$y,y'\in D_{B_j}$が$y\vee W=y'\vee W$を満たせば
+$F_{B_j}(y)=F_{B_j}(y')$である．
+\end{lemma}
+\begin{proof}
+縮約性により$A$の任意のyieldを受理する
+導出文文脈$E$を固定できる．標的条件から
+\[
+ \pi\varphi(\tuple u)
+ =\pi\bigl(\gamma(\eta(E)\vee\eta(\tuple u))
+                 -\varphi(E)\bigr)
+\]
+であり，右辺は$\eta(\tuple u)$だけによる．
+後半は，半束値$y,y'$を持つ二つの子yieldを
+同じ規則と同じ兄弟yieldへ代入すれば，
+親の半束値が等しくなることを使う．
+親の商値が等しいことから，
+規則の線形・非削除性により固定部分を相殺すると，
+求める子の商値の等式が得られる．
+\end{proof}
+
+\begin{lemma}[多値分岐における高さの狭義低下]
+\label{lem:mcfg-sl-height}
+任意の規則の子出現$B_j$について
+$\nu(B_j)\le\nu(A)$である．
+異なる二つ以上の\emph{子出現}が多値なら，
+その各出現について$\nu(B_j)<\nu(A)$が成立する．
+多値記号$A$は$\nu(A)\ge1$を満たす．
+\end{lemma}
+\begin{proof}
+子$B_j$の最大高さを実現するyieldと
+任意の生産的な兄弟yieldを規則に入れると，
+親の半束値は子の値以上になる．
+したがって高さの非増加が従う．
+
+厳密不等号を示すため，多値の子$B_j$と
+$\operatorname{ht}(y_*)=\nu(B_j)$を満たす
+$y_*\in D_{B_j}$を固定する．
+別の多値の子$B_k$には
+$F_{B_k}(z)\ne F_{B_k}(z')$を満たす
+$z,z'\in D_{B_k}$がある．
+もし両方とも$y_*$以下なら，
+$B_j$を$y_*$に固定した際の長方形剛性から
+$F_{B_k}(z)=F_{B_k}(z')$となり矛盾する．
+よって例えば$z\nleq y_*$であり，
+$y_*<y_*\vee z$となる．この組合せを
+規則に入れると親の半束値は$y_*\vee z$以上なので
+$\nu(A)>\nu(B_j)$を得る．
+多値記号では異なる半束値が少なくとも二つ実現し，
+その一方は$\bot$より上にあるから$\nu(A)\ge1$である．
+\end{proof}
+
+\begin{lemma}[各商値の短い生成代表元]
+\label{lem:mcfg-sl-short-value}
+$H_Y=\max_{y\in Y}\operatorname{ht}(y)$，
+$b=\max\{0,H_Y-1\}$とおく．
+各非終端記号$A$と実現商値
+$\alpha\in\pi\varphi(L_A)$について
+$\pi\varphi(\omega_A^\alpha)=\alpha$かつ
+\[
+ \|\omega_A^\alpha\|_1\le
+ B_\sharp:=r^b|Y|
+          \bigl(\|G\|+r|V|t_G\bigr)
+ \le C_{Y,r}\|G\|\max\{1,\theta_G\}
+\]
+を満たす生成タプル$\omega_A^\alpha\in L_A$がある．
+\end{lemma}
+\begin{proof}
+$A$が一値なら長さ$t_G$以下の最短yieldを選ぶ．
+多値の場合，指定商値を実現する導出のうち，
+（総終端語長，導出ノード数）の辞書式順序で
+最小のものを選ぶ．
+各子部分導出も自身の非終端記号と商値に関して
+同じ順序で最小である．そうでなければ
+同じ商値の子へ置換して親をより小さくできる．
+一値の子はその記号の最短yield（長さ$t_G$以下）に
+取り替えられる．
+
+一値の子部分木を刈り込み，
+それらのコストだけを親へ課金して，
+多値出現だけからなる有限木を得る．
+根から葉への各経路で
+（非終端記号，商値）の組は繰り返されない．
+真の子孫導出は非削除性により長さが親以下で，
+ノード数は真に少なく，同じ組の辞書式最小性に反するからである．
+各記号の商値は高々$|Y|$種類なので，
+経路長は高々$|V||Y|$である．
+
+補題~\ref{lem:mcfg-sl-height}から
+$\nu$は下向きに非増加で，
+2つ以上の多値の子を持つ節点では
+各子へ向かって真に減少する．
+多値節点の$\nu$は少なくとも1なので，
+経路上の分岐節点は高々$b$個である．
+子の数は$r$以下ゆえ葉は高々$r^b$枚となる．
+一つの経路上で刈り込んだ子への支払いは
+$r|V||Y|t_G$以下であり，全経路で
+$r^b r|V||Y|t_G$以下である．
+一方，規則$R$が書く終端文字数を$a_R$とすれば，
+経路上の各非終端記号は高々$|Y|$回しか現れないので
+\[
+ \sum_{v\text{（経路上）}}a_{R_v}
+ \le |Y|\sum_{A\in V}
+       \max_{R:\,\mathrm{lhs}(R)=A}a_R
+ \le |Y|\|G\|.
+\]
+高々$r^b$本の葉経路全体で足すことにより，
+同じ節点を重複して数えることはあっても
+終端記号の寄与を取りこぼさない．
+二つのコストを合わせて$B_\sharp$が従う．
+最後の不等式は$t_G\le\theta_G$，
+$|V|\le\|G\|$による．
+\end{proof}
+
+\begin{theorem}[半束添字付きアーベル剰余類標的の多項式データ]
+\label{thm:mcfg-semilattice-twisted-polydata}
+空でない有限アルファベット$\Sigma$，
+有限型付け$h:\Sigma^*\to M$，
+有限結び半束$Y$，
+$\eta\preceq h$を満たす準同型
+$\eta:\Sigma^*\to Y$，
+$f,r\ge1$を固定する．
+$\Sigma,h,Y,\eta,f,r$のみに依存する定数$C,C'$が存在し，
+任意のアーベル群$\mathbb A$，準同型$\varphi$，
+部分群$\mathcal H$，写像$\gamma:Y\to\mathbb A$，
+受理型集合$\mathsf{Acc}\subseteq M$について，
+(3)で定める標的$L$の任意の縮約済み良形
+ファンアウト高々$f$・ランク高々$r$の表示$G$に対し，
+\[
+ \kappa_G\le C(\|G\|\bar\theta_G)^{3|\Sigma|+1},
+ \qquad
+ \|K^\dagger\|_+
+ \le C'(\|G\|\bar\theta_G)^{3|\Sigma|+2},
+ \quad\bar\theta_G=\max\{1,\theta_G\}
+\]
+を満たす両再構成器の特徴標本$K^\dagger\subseteq L$が
+存在する．さらに
+$|K^\dagger|\le|V||M|^f+|P||M|^{fr}$である．
+\end{theorem}
+\begin{proof}
+(3)の後に確認したように$L\in\Cmcf{f}{h}$．
+標的の定義と$\eta\preceq h$から，
+$h$型と$\pi\varphi$値の組による受理飽和性が成り立つ．
+型付き記号$X=A_{\mathbf t}$の全yieldは
+同じ総$\eta$値をもち，
+補題~\ref{lem:mcfg-sl-rectangle}により
+同じ商値をもつ．
+補題~\ref{lem:mcfg-sl-short-value}は
+$B=B_\sharp=O_{Y,r}(\|G\|\bar\theta_G)$で
+補題~\ref{lem:mcfg-coset-representative-transfer}の
+条件(iii)を与える．
+この転送補題から主張が従う．
+\end{proof}
+
+\begin{corollary}[アーベル型フィルタ標的]
+\label{thm:mcfg-abelian-filter-data}
+上の定理と同じ$\Sigma,h,f,r$を固定する．
+任意のアーベル群$\mathbb A$，
+準同型$\varphi:\Sigma^*\to\mathbb A$，
+$\mathcal H\le\mathbb A$，
+$\gamma\in\mathbb A$，
+$\mathsf{Acc}\subseteq M$について
+\[
+ L^+=h^{-1}(\mathsf{Acc})\cap
+      \varphi^{-1}(\gamma+\mathcal H)\cap\Sigma^+
+\]
+とする．$L^+$が縮約済み良形ファンアウト高々$f$・
+ランク高々$r$の表示$G$を持つなら
+$L^+\in\Cmcf{f}{h}$であり，両再構成器には
+特徴標本$K^\dagger\subseteq L^+$が存在して
+\[
+ \|K^\dagger\|_+
+ \le C(\|G\|\bar\theta_G)^{3|\Sigma|+2}
+\]
+を満たす．定数$C$は$\Sigma,h,f,r$のみに依存する．
+元の完全な標的に$\eps$が含まれるときは，
+既存の空語規約に従い符号化コスト1で追加する．
+\end{corollary}
+\begin{proof}
+一元半束$Y=\{\bot\}$と定数写像$\eta$，
+$\gamma(\bot)=\gamma$で
+定理~\ref{thm:mcfg-semilattice-twisted-polydata}を
+特殊化する．これは\emph{任意の}固定有限型付け$h$に
+適用できる．実際にはすべての型なし非終端記号が一値で，
+補題~\ref{lem:mcfg-coset-representative-transfer}の
+$B=t_G$を選べる．空語は既存の開始記号規約で別に処理する．
+\end{proof}
+
+\begin{corollary}[1マーカーの半束分割アーベル標的]
+\label{cor:mcfg-one-marker-split-polydata}
+空でないマーカー文字集合
+$\Sigma_{\mathsf c}\subseteq\Sigma$を固定し，
+$c(w)$を$w$がマーカーを含むとき1，含まないとき0とする．
+有限型付け$h$が2元半束への準同型
+$h_{\mathrm U}:w\mapsto c(w)$を細分するなら，
+\[
+ L=\{w\in\Sigma^+:
+     \varphi(w)\in\gamma_{c(w)}+\mathcal H\}
+\]
+の任意の縮約済み良形・固定ファンアウト・
+固定ランク表示に対し，前定理の多項式上界が成立する．
+\end{corollary}
+\begin{proof}
+$Y=\{0,1\}$，$\eta=h_{\mathrm U}$，
+$\mathsf{Acc}=M$とし，
+定理~\ref{thm:mcfg-semilattice-twisted-polydata}を適用する．
 \end{proof}
 
 \begin{remark}
-定理~\ref{thm:mcfg-abelian-filter-data} は
-$h$ の正語像が $\mathbf{LG}$ の\emph{外}にある
-場合にも成立する．これは有限制御モノイドではなく，
-標的言語の構造に関する十分条件である．
-補助アーベル群の表示が計算可能とは限らない場合に，
-証拠の多項式時間\emph{構成}まで主張しない．
+本節の半束添字付き結果は\emph{標的言語の構造}に関する
+十分条件であり，補助アーベル群のデータについて一様である．
+一方，付録~\ref{app:local-group}の局所群定理は，
+\emph{固定型付け}の代数的構造を制約し，
+対応する代入可能な全標的に適用する．
+一般にはどちらも他方を含まない．
+本節の上界は存在的な緩和分布証拠による．
+命題~\ref{prop:computed-witness-budget}の計算可能な
+規則単位の証拠予算とは異なる．
+高ファンアウトでの超多項式特徴データ下界問題は
+なお未解決である．
 \end{remark}
+
 
 \section{多次元代入可能性との比較}
 \label{sec:comparison}
@@ -3852,11 +4102,13 @@ $(f,h)$-タプル代入可能なMCFGクラスは
 下界例に基づき，任意のファンアウトにおける
 個別型付けの完全な特徴づけではない．
 
-別の言語構造に関する結果として，
-定理~\ref{thm:mcfg-abelian-filter-data} は，
-有界ランクの良形文法表示を持つアーベル型フィルタ標的に対し，
-制御モノイドが $\mathbf{LG}$ の外にある場合も
-特徴データ長の多項式上界を示す．
+標的言語の構造に関する補完的な主定理
+~\ref{thm:mcfg-semilattice-twisted-polydata} は，
+有限半束の値で添字付けされたアーベル剰余類標的について，
+補助アーベル群のデータに一様な多項式特徴データ長を示す．
+従来のアーベル型フィルタ標的は，
+系~\ref{thm:mcfg-abelian-filter-data} として回収され，
+制御モノイドが $\mathbf{LG}$ の外にある場合も扱う．
 命題~\ref{prop:mcfg-relaxed-witnesses} は
 標的の分布同値類に短い代表元があることを十分条件とする．
 一方，命題~\ref{prop:computed-witness-budget} は
