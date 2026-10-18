@@ -33,11 +33,11 @@ theorem contains_insertCount_iff
       cases trie with
       | node accept left right =>
         cases query with
-        | nil => simp [insertCount, contains]
+        | nil => cases bit <;> rfl
         | cons qbit qrest =>
           cases bit <;> cases qbit <;>
             cases left <;> cases right <;>
-            simp [insertCount, contains, ih, empty]
+            simp [insertCount, contains, ih, contains_empty_eq_false]
 
 /-- The concrete batch insertion preserves the exact input key set,
 allowing duplicates in its input list. -/
