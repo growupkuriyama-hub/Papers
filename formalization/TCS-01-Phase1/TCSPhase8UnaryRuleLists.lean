@@ -31,7 +31,7 @@ ordered list from the concrete pair loops. -/
 theorem mem_emitUnaryCandidates_iff
     (t : LetterTable Alphabet M) (sample : List (List Alphabet))
     (x y : List Alphabet) :
-    (x,y) ∈ emitUnaryCandidates t K ↔
+    (x,y) ∈ emitUnaryCandidates t sample ↔
       (x,y) ∈ efficientUnaryRules t sample.toFinset := by
   constructor
   · intro hm
@@ -46,7 +46,7 @@ theorem mem_emitUnaryCandidates_iff
           ⟨((mem_enumerateOccurrencesList_iff sample u x' v).mp ho).1,
             by simpa using ((mem_enumerateOccurrencesList_iff sample u x' v).mp ho).2⟩),
        by simpa using hfiltered.1⟩,
-      hfiltered.2⟩
+      by simpa using hfiltered.2⟩
   · intro hm
     obtain ⟨⟨⟨u,x',v⟩,w⟩, hpair, heq⟩ := Finset.mem_image.mp hm
     have hf := Finset.mem_filter.mp hpair
@@ -62,11 +62,11 @@ theorem mem_emitUnaryCandidates_iff
 
 theorem emitUnaryCandidates_toFinset_eq
     (t : LetterTable Alphabet M) (sample : List (List Alphabet)) :
-    (emitUnaryCandidates t K).toFinset = efficientUnaryRules t sample.toFinset := by
+    (emitUnaryCandidates t sample).toFinset = efficientUnaryRules t sample.toFinset := by
   classical
   ext p
   rcases p with ⟨x,y⟩
-  change (x,y) ∈ (emitUnaryCandidates t K).toFinset ↔
+  change (x,y) ∈ (emitUnaryCandidates t sample).toFinset ↔
     (x,y) ∈ efficientUnaryRules t sample.toFinset
   rw [List.mem_toFinset, mem_emitUnaryCandidates_iff]
 
