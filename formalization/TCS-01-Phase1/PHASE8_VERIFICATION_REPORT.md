@@ -130,3 +130,47 @@ This follows by charging lookup at most `key.length+1` and any performed inserti
 **Remaining *whole-program* obligations:** (1) prefix/suffix and nonempty-factor List generation, including `flatMap`/append allocations, (2) substring extraction/character comparisons and typing-cache lookups, (3) finite alphabet/monoid table access assumptions, (4) construction of raw binary/unary/start/lexical/nonterminal candidate Lists, (5) complete `encodeRecItem` execution cost including unary bit allocations, (6) accumulator reversal, (7) `decodeRecItem` / `filterMap`, (8) six-way `projectRecItems` traversals and grammar output. None is included in the trie-node counter. In particular repeated List slicing and naive append or membership passes could violate a quartic bound unless their concrete operation costs are proved. The target `thm:poly-build` O(n^4) total runtime is **not formally verified** by this isolated checkpoint.
 
 **Protected sources:** no changes to mathematical definitions or proofs from Phase 1–7, existing Phase 8 theorems, `main.tex`, main's v227 `PAPER.yaml`, Japanese manuscript, responses, PDFs or publication state. No merge to main.
+
+
+## Certified checkpoint — complete trie lookup/insertion counting (2026-10-18)
+
+This checkpoint **supersedes the pending-CI qualification in the preceding section**. It does **not** certify the entire reconstruction runtime.
+
+**Successful kernel/Actions audit:** [run 39117542047](https://github.com/growupkuriyama-hub/Papers/actions/runs/39117542047), job **117646284586**, exact source SHA **`57dd8bc94d102139b8d37cb12225dac922deb75f`**. The log reports `Build completed successfully (7448 jobs)`, all Phase 8 modules directly compiled (including the three added files), inherited Phase 1–7 regressions, standard-logic dependency checks, no `sorryAx`, and the forbidden-token check passed. This success follows earlier failed intermediate commits; those are not recorded as certified.
+
+**Precise verified statements** (Lean definitions and universe/typeclass parameters are preserved in the corresponding sources):
+
+```lean
+BitTrie.containsCount_correct (key : List Bool) (trie : BitTrie) :
+  (containsCount key trie).1 = contains key trie
+
+BitTrie.containsCount_steps_le (key : List Bool) (trie : BitTrie) :
+  (containsCount key trie).2 ≤ key.length + 1
+
+BitTrie.collectUniqueKeysCount_correct (keys : List (List Bool)) :
+  ∀ trie acc,
+    (collectUniqueKeysCount keys trie acc).1 =
+      collectUniqueKeys keys trie acc
+
+BitTrie.collectUniqueKeysCount_cost_le_twice (keys : List (List Bool)) :
+  ∀ trie acc,
+    (collectUniqueKeysCount keys trie acc).2 ≤
+      2 * (keys.map (fun k => k.length + 1)).sum
+
+BitTrie.dedupTrieKeysCount_correct (keys : List (List Bool)) :
+  (dedupTrieKeysCount keys).1 = dedupTrieKeys keys
+
+actual_dedup_lookup_insert_steps_fourth c t sample :
+  (dedupActualKeysCount c t sample).2 ≤
+    (36 * tokenBound c + 6) * (encodedListSample sample + 1)^4
+```
+
+In addition, `dedupTrieKeysCount_nodup`, `mem_dedupTrieKeysCount_iff`, `dedupActualKeysCount_correct`, `dedupActualKeysCount_decode_correct`, `dedupActualKeysCount_nodup`, and `mem_dedupActualKeysCount_iff` establish preserved key/output Lists, duplicate-freedom, inclusion and non-manufacture of keys, and equality of the decoded grammar-item List with the pre-existing `dedupRecItems`. Existing operational grammar correctness and uniqueness were reused, not re-established using new definitions.
+
+**Actual cost semantics:** each visited search trie node increments `containsCount` by one; every attempted input key invokes this search; only a missing key invokes the unchanged `insertCount` and adds its actual visit counter. Recursive total cost is accumulated in `collectUniqueKeysCount`. The inequality uses at most `2∑ (|key|+1)` for the *actual duplicate-tolerant encoded candidates*. The equality `buildItemTrie_steps` expresses that sum via the earlier all-key insertion analysis; `buildItemTrie_insertion_steps_fourth` bounds it by `(18b+3)(n_K+1)^4`. Thus the actual collector's **lookup plus conditional insertion** node visits are bounded by `(36b+6)(n_K+1)^4`, where `b=tokenBound c` and `n_K=encodedListSample sample`.
+
+**Kernel dependencies as printed:** `containsCount_correct`, `collectUniqueKeysCount_correct`, and `dedupTrieKeysCount_correct`: `[propext]`. `containsCount_steps_le`, `collectUniqueKeysCount_cost_le_twice`, `dedupTrieKeysCount_cost_le_twice`, and `actual_dedup_lookup_insert_steps_fourth`: `[propext, Classical.choice, Quot.sound]`. Uniqueness and decoded-output bridges use only subsets of these standard logical axioms. No custom mathematical axiom or `sorryAx`.
+
+**Scope and remaining time-analysis duties:** Node-visit counts are not a total RAM/runtime semantics. Not yet costed end-to-end: factor enumeration and List allocations (`take`, `drop`, `flatMap`), string comparison, cached type lookup and fixed-table access, B/U/L/S candidate construction, `encodeRecItem` bit construction/copying, `reverse`, `decodeRecItem` and `filterMap`, `projectRecItems` field scans and final grammar allocation. Each still needs an explicit bound tied to its concrete algorithm; repeated List traversals or concatenations may otherwise exceed a quartic total. The paper's **whole** `thm:poly-build` claim `T_Rec_h(K)=O(n_K^4)` is **not yet kernel-verified**.
+
+**Source boundary:** only the three new Lean modules, the Phase 8 workflow, and these two audit files changed from start SHA `a541078d8687875c6f3dfc02c499bd9e46539cda`. No earlier formal proofs, `main.tex`, English/Japanese submitted documents, main's v227 `PAPER.yaml`, review responses or generated PDFs changed; no merge or publication action. A separate successful run on the final *documentation* SHA is required before calling that final SHA CI-certified.
