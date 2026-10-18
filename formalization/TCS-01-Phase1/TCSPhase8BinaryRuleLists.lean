@@ -24,7 +24,7 @@ def emitBinaryCandidates (sample : List (List Alphabet)) :
 theorem mem_emitBinaryCandidates_iff
     (sample : List (List Alphabet))
     (z x y : List Alphabet) :
-    (z,x,y) ∈ emitBinaryCandidates K ↔
+    (z,x,y) ∈ emitBinaryCandidates sample ↔
       (z,x,y) ∈ efficientBinaryRules sample.toFinset := by
   constructor
   · intro hm
@@ -39,14 +39,14 @@ theorem mem_emitBinaryCandidates_iff
       have hs := (mem_splitsList_iff z' x' y').mp hp.1
       simpa [hzz,hxx,hyy] using hs
     have ho := (mem_enumerateOccurrencesList_iff sample u z' v).mp hocc
-    have hz : ObservedFactor K z := by
+    have hz : ObservedFactor sample.toFinset z := by
       rw [← hzz]
       exact ⟨ho.1,u,v,by simpa using ho.2⟩
     have hxne : x ≠ [] := by simpa [hxx] using hp.2.1
     have hyne : y ≠ [] := by simpa [hyy] using hp.2.2
-    have hx : ObservedFactor K x :=
+    have hx : ObservedFactor sample.toFinset x :=
       observed_of_infix hz hxne ⟨[],y,by simpa using hzw⟩
-    have hy : ObservedFactor K y :=
+    have hy : ObservedFactor sample.toFinset y :=
       observed_of_infix hz hyne ⟨x,[],by simpa using hzw⟩
     exact (efficient_binary_spec sample.toFinset z x y).mpr ⟨hzw,hx,hy,hz⟩
   · intro hm
@@ -59,17 +59,18 @@ theorem mem_emitBinaryCandidates_iff
     · apply List.mem_map.mpr
       refine ⟨(x,y), ?_, rfl⟩
       exact List.mem_filter.mpr
-        ⟨(mem_splitsList_iff z x y).mpr hzw, by simpa using hx.1, hy.1⟩
+        ⟨(mem_splitsList_iff z x y).mpr hzw,
+          by simpa using (show x ≠ [] ∧ y ≠ [] from ⟨hx.1, hy.1⟩)⟩
 
 /-- The duplicate-tolerant List emitter yields exactly the (B) rules
 of the mathematical reconstruction grammar, as a set. -/
 theorem emitBinaryCandidates_toFinset_eq
     (sample : List (List Alphabet)) :
-    (emitBinaryCandidates K).toFinset = efficientBinaryRules sample.toFinset := by
+    (emitBinaryCandidates sample).toFinset = efficientBinaryRules sample.toFinset := by
   classical
   ext p
   rcases p with ⟨z,x,y⟩
-  change (z,x,y) ∈ (emitBinaryCandidates K).toFinset ↔
+  change (z,x,y) ∈ (emitBinaryCandidates sample).toFinset ↔
     (z,x,y) ∈ efficientBinaryRules sample.toFinset
   rw [List.mem_toFinset, mem_emitBinaryCandidates_iff]
 
