@@ -1,0 +1,476 @@
+% v79 research draft (NOT part of main.tex).  Standalone; compile with
+%   pdflatex v79_fanout2_results.tex
+% Status: proofs written for independent audit; nothing here has been
+% adopted into the canonical manuscript.
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,enumitem}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Cmcf}[2]{\mathcal{C}^{\mathrm{mcf}}_{#1,#2}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\tuple}[1]{\vec{#1}}
+\newcommand{\blank}{\square}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\B}{\mathcal B}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\fl}{\lfloor}
+\newcommand{\fr}{\rfloor}
+\newcommand{\cl}{\lceil}
+\newcommand{\cri}{\rceil}
+
+\title{Fan-out two and exponential characteristic data:\\
+reductions, mobility lemmas, a universal obstruction for the doubling
+family, and polynomial data for abelian-filtered targets\\[4pt]
+\large v79 research draft for \#2 (fixed-$h$ MCFG), Open Problem
+\texttt{op:fanout-two}}
+\author{Research memo (internal)}
+\date{2026-10-18}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We record five results related to Open Problem~\texttt{op:fanout-two}
+of the v78 manuscript.  (A) For every fan-out $f$, deleting one
+$h$-type from a target of $\Cmcf{f}{h}$ stays inside $\Cmcf{f}{h}$; hence
+any target with a \emph{rare type} (all of whose words are long) forces
+long characteristic data for the capped and uncapped reconstruction
+operators and for every set-driven operator learning both targets.
+(B) At fan-out two, a single long power $u^{K}$ in one word of a target
+forces the target to be closed under transferring $u$-quanta between
+arbitrary $u$-blocks; more generally every sufficiently long word
+contains a constant-size interchangeable shift pair.  (C) Consequently,
+the bracketed doubling family of the companion CFG paper is outside
+$\Cmcf{2}{h}$ for \emph{every} finite typing $h$ once
+$n\ge 2|M|+3$, strengthening the fixed-window obstruction of v78.
+(D) For every finite typing $h$---including typings outside
+$\mathbf{LG}$---and every fixed fan-out and rank, targets of the form
+$h^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathcal H)$ with
+$\varphi$ into an arbitrary abelian group admit characteristic samples of
+total length polynomial in grammar size and ordinary thickness.  Thus the
+abelian-filter mechanism that produces most known members of
+$\Cmcf{f}{h}$ cannot yield a positive answer to \texttt{op:fanout-two}.
+The open problem itself remains open.
+\end{abstract}
+
+\section{Setting}
+We use the definitions of the v78 manuscript verbatim: sentence contexts
+of arity $d$ have nonempty internal separators; tuples have nonempty
+components; $\D_L^{(d)}(\tuple x)$ is the set of arity-$d$ sentence
+contexts accepting $\tuple x$; $L$ is $(f,h)$-tuple-substitutable when,
+for $d\le f$, equal componentwise $h$-types together with one shared
+accepting context imply equal distributions; $\Cmcf{f}{h}$ is the class of
+$(f,h)$-tuple-substitutable $f$-MCFLs; $\B^{\le r}_{f,h}$ and $\B_{f,h}$
+are the capped and uncapped reconstruction operators;
+$\|K\|_+=\sum_{w\in K}(|w|+1)$; $\theta_G$ is rule thickness and $t_G$
+nonterminal thickness, with $t_G\le\theta_G$ for reduced good $G$.
+For $L\subseteq\Sigma^*$ and $m\in M$ put
+\[
+ \mu_m(L):=\min\{|w|:w\in L,\ h(w)=m\}\qquad(\min\emptyset=\infty).
+\]
+
+\section{(A) Type deletion and the distinguishing pair}
+
+\begin{lemma}[Type deletion]\label{lem:type-deletion}
+Let $f\ge1$, $L\in\Cmcf{f}{h}$ and $m\in M$.  Then
+$L^{\setminus m}:=L\setminus h^{-1}(m)\in\Cmcf{f}{h}$.
+\end{lemma}
+\begin{proof}
+$h^{-1}(M\setminus\{m\})$ is regular, so $L^{\setminus m}$ is an $f$-MCFL
+(closure of $f$-MCFLs under intersection with regular languages,
+Seki et al.\ 1991).  The language $h^{-1}(M\setminus\{m\})$ is
+$(f,h)$-tuple-substitutable (equal component types give the same total type
+in every context), and intersections of $(f,h)$-tuple-substitutable
+languages are $(f,h)$-tuple-substitutable (v78, Proposition
+\emph{Intersection and abelian filtering}(i)).
+\end{proof}
+
+\begin{proposition}[Rare types force long characteristic data]
+\label{prop:rare-type}
+Let $L\in\Cmcf{f}{h}$ and $m\in h(L)$.
+\begin{enumerate}[label=(\roman*)]
+\item If $K\subseteq L$ is finite and contains no word of type $m$, then
+$L(\B^{\le r}_{f,h}(K))\subseteq L^{\setminus m}\subsetneq L$ for every
+$r\ge1$, and likewise for $\B_{f,h}$.  Hence every characteristic sample
+$\mathcal F$ of $L$ for either operator contains a word of type $m$ and
+$\|\mathcal F\|_+\ge\mu_m(L)+1$.
+\item Let $\mathsf{Op}$ be any set-driven operator that has a characteristic
+sample for $L^{\setminus m}$.  Then every characteristic sample of $L$ for
+$\mathsf{Op}$ contains a word of type $m$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(i) $K\subseteq L^{\setminus m}\in\Cmcf{f}{h}$, so soundness of every
+capped hypothesis (v78, Proposition \emph{Soundness}) applied to the target
+$L^{\setminus m}$ gives the inclusion; $L\cap h^{-1}(m)\neq\emptyset$ gives
+strictness.  (ii) If $\mathcal F$ is characteristic for $L$ and avoids type
+$m$, and $\mathcal F'$ is characteristic for $L^{\setminus m}$, then
+$\mathcal F\cup\mathcal F'\subseteq L^{\setminus m}\subseteq L$ forces
+$\mathsf{Op}(\mathcal F\cup\mathcal F')$ to generate both $L$ and
+$L^{\setminus m}$.
+\end{proof}
+
+\begin{corollary}[Sufficient condition for \texttt{op:fanout-two}]
+Suppose a fixed $h$ and reduced good fan-out-$\le f$, rank-$\le r$ grammars
+$G_n$ satisfy $L(G_n)\in\Cmcf{f}{h}$,
+$\|G_n\|\max\{1,\theta_{G_n}\}=n^{O(1)}$, and
+$\mu_{m_n}(L(G_n))=n^{\omega(1)}$ for some types $m_n$.  Then
+\texttt{op:fanout-two} has a positive answer, already against every
+set-driven operator with characteristic samples for the targets
+$L(G_n)$ and $L(G_n)^{\setminus m_n}$.
+\end{corollary}
+
+This is exactly the mechanism of the companion CFG paper at fan-out one.
+Proposition~\ref{prop:rare-type} is not claimed to be necessary for a
+lower bound: a characteristic sample might be forced to be long by a
+sub-target $L'\subsetneq L$ in $\Cmcf{f}{h}$ that is not a type deletion.
+
+\section{(B) Mobility at fan-out two}
+
+\begin{lemma}[Power transfer]\label{lem:power-transfer}
+Let $L\in\Cmcf{f}{h}$ with $f\ge2$, let $u\in\Sigma^+$ and $g:=h(u)$.
+Let $i_0\ge1$ and $\pi\ge1$ satisfy $g^{i}=g^{i+\pi}$ for all $i\ge i_0$.
+Let $s,r\ge i_0$ and $d\in\pi\Z_{>0}$.  If some word of $L$ contains the
+factor $u^{s+d+r+2}$, then for all $X,Z\in\Sigma^*$ and $Y\in\Sigma^+$,
+\[
+ X\,u^{s}\,Y\,u^{d+r}\,Z\in L
+ \iff
+ X\,u^{s+d}\,Y\,u^{r}\,Z\in L .
+\]
+\end{lemma}
+\begin{proof}
+Write the given word as $P u^{s+d+r+2}Q$.  Put
+$\tuple x=(u^s,u^{d+r})$, $\tuple y=(u^{s+d},u^r)$ and
+$E=(Pu)\,\blank_1\,u\,\blank_2\,Q$.  All components are nonempty because
+$s,r\ge1$, and $E$ has the nonempty separator $u$.  Then
+$E[\tuple x]=E[\tuple y]=Pu^{s+d+r+2}Q\in L$.  Since $s,r\ge i_0$ and
+$\pi\mid d$, $h(u^s)=h(u^{s+d})$ and $h(u^{d+r})=h(u^r)$.  Arity-two
+substitutability gives $\D_L(\tuple x)=\D_L(\tuple y)$; the displayed
+equivalence is membership of the context $X\blank_1Y\blank_2Z$.
+\end{proof}
+
+\begin{remark}
+If $g$ is the identity (e.g.\ $u$ is a letter with trivial type), then
+$i_0=\pi=1$ and Lemma~\ref{lem:power-transfer} applies as soon as some
+word contains $u^5$: one copy of $u$ may then be moved between any two
+$u$-blocks of the indicated sizes, across arbitrary nonempty material.
+For a finite monoid, $i_0+\pi\le|M|+1$, so $u^{2|M|+3}$ always suffices.
+\end{remark}
+
+\begin{lemma}[Local shift pairs]\label{lem:local-shift}
+Fix $\Sigma$ and $h:\Sigma^*\to M$, let $c:=|M|^2|\Sigma|$, and let
+$R:=R_c(5)$ be the $c$-colour Ramsey number for monochromatic $K_5$.
+Every $w\in\Sigma^*$ with $|w|\ge R$ has a factorisation
+\[
+ w=P\,x_1\,p\,q\,p\,y_2\,Q,\qquad x_1,p,y_2\in\Sigma^+,\ q\in\Sigma^*,
+\]
+with $h(x_1)=h(x_1pq)$, $h(qpy_2)=h(y_2)$ and $|p|=1$.  Consequently,
+whenever $L\in\Cmcf{2}{h}$ contains $w$, the tuples
+$\tuple x=(x_1,qpy_2)$ and $\tuple y=(x_1pq,y_2)$ satisfy
+$\D_L(\tuple x)=\D_L(\tuple y)$, i.e.\ for all $X,Z$ and $Y\ne\eps$:
+$X x_1 Y qpy_2 Z\in L\iff X x_1pq\, Y y_2 Z\in L$.
+\end{lemma}
+\begin{proof}
+Colour each pair $i<j$ of positions in $\{0,\ldots,|w|-1\}$ by
+$\bigl(h(w[i{:}j]),\,h(w[i{+}1{:}j]),\,w[i]\bigr)$, where
+$w[i{:}j]=w_{i+1}\cdots w_j$ in the cut-position numbering of v78 and
+$w[i]$ is the letter after cut $i$.  By Ramsey's theorem there are
+$i_1<\dots<i_5$ with all ten pairs of one colour.  Put
+$x_1=w[i_1{:}i_2]$, $p=w[i_2]=w[i_3]$ (third coordinates of
+$(i_2,i_5)$ and $(i_3,i_5)$), $q=w[i_2{+}1{:}i_3]$ and
+$y_2=w[i_3{+}1{:}i_5]$, which is nonempty since $i_5\ge i_3+2$.  The first
+coordinates of $(i_1,i_2),(i_1,i_3)$ give $h(x_1)=h(x_1pq)$, and the second
+coordinates of $(i_2,i_5),(i_3,i_5)$ give $h(qpy_2)=h(y_2)$.  The context
+$E=P\blank_1 p\blank_2 Q$ with $P=w[0{:}i_1]$, $Q=w[i_5{:}|w|]$ has the
+nonempty separator $p$ and $E[\tuple x]=E[\tuple y]=w$.
+\end{proof}
+
+Lemma~\ref{lem:local-shift} says that at fan-out two every long word of a
+target carries an interchangeable pair of bounded size whose components
+may then be transported to \emph{any} other occurrence in the language.
+This local mobility has no fan-out-one analogue: an arity-one context
+$P\blank Q$ determines its filling.
+
+\section{(C) No finite typing rescues the doubling family}
+
+Let $\Gamma=\{\mathtt a,\fl,\fr,\cl,\cri\}$, $W_0=\mathtt a$,
+$W_i=\fl W_{i-1}W_{i-1}\fr$, and let $L_n$ be generated from $E_n$ by
+$E_0\to\mathtt a$, $E_i\to\fl E_{i-1}E_{i-1}\fr\mid\cl E_{i-1}\cri$.  The
+unique word of $L_n$ without ceiling brackets is $W_n=\fl^n\mathtt a\cdots$.
+
+\begin{theorem}\label{thm:all-typings}
+Let $h:\Gamma^*\to M$ be any finite-monoid homomorphism, and let
+$i_0\ge1,\pi\ge1$ be the index and period of $g=h(\fl)$ on positive
+powers.  For every $n\ge 2i_0+\pi+2$, in particular for every
+$n\ge 2|M|+3$, $L_n\notin\Cmcf{2}{h}$ (hence $L_n\notin\Cmcf{f}{h}$ for all
+$f\ge2$).
+\end{theorem}
+\begin{proof}
+Suppose $L_n\in\Cmcf{2}{h}$.  Put $s=i_0$, $d=\pi$, $r=n-s-d-2\ge i_0$.
+The word $W_n$ begins with $\fl^n$, so Lemma~\ref{lem:power-transfer}
+applies with $u=\fl$.  Write $W_n=\fl\,W_{n-1}W_{n-1}\fr$; the second copy
+of $W_{n-1}$ begins with $\fl^{n-1}\mathtt a$ and $d+r=n-s-2\le n-1$.
+Choose the factorisation $W_n=X\fl^sY\fl^{d+r}Z$ with $X=\fl$ (so that
+$\fl^s$ occupies positions $1..s$ of the leading run) and with
+$\fl^{d+r}$ the last $d+r$ floors of the leading run of the second copy of
+$W_{n-1}$; $Y$ is nonempty because it contains the first $\mathtt a$.  The
+lemma gives $W':=X\fl^{s+d}Y\fl^{r}Z\in L_n$.  But $W'$ has no ceiling
+bracket and its first $\mathtt a$ is preceded by $n+d\neq n$ floors, so
+$W'\neq W_n$, a contradiction.  Finally $i_0+\pi\le|M|+1$ and $i_0\le|M|$
+give $2i_0+\pi+2\le2|M|+3$.
+\end{proof}
+
+\begin{remark}
+v78 proved the special cases $h=h^{k,\ell}_\Gamma$ and
+$h=(h^{k,\ell}_\Gamma,h_{\mathrm U})$ with the sharper threshold
+$n\ge\max\{3,k+\ell+1\}$.  Theorem~\ref{thm:all-typings} has a cruder
+threshold but quantifies over \emph{all} finite typings, so no typing at
+all---windows, groups, semilattices, or any product---repairs this family
+at fan-out two.  The obstruction is the long run $\fl^n$, not the choice of
+$h$.
+\end{remark}
+
+\section{(R) Relaxed witnesses: what the data length really measures}
+
+For a reduced good presentation $G$ of $L\in\Cmcf{f}{h}$ let
+$\widetilde G_0$ be its trimmed yield-type refinement (v78).  For a
+non-start typed nonterminal $X=A_{\mathbf t}$ write $[X]$ for the common
+$\equiv_{L,h}$-class of the tuples in $L_X$ (it is one class: equal type
+$\mathbf t$ and a shared canonical context, v78), and put
+\[
+ \kappa_G(X):=\min\{\|\tuple v\|_1:\tuple v\in[X]\},
+ \qquad
+ \kappa_G:=\max_X\kappa_G(X).
+\]
+
+\begin{lemma}[Relaxed witnesses]\label{lem:relaxed}
+Let $L\in\Cmcf{f}{h}$ and let $G$ be a reduced good presentation of
+fan-out $\le f$ and rank $\le r$.  For every non-start typed nonterminal
+$X=A_{\mathbf t}$ choose any $\omega'(X)\in[X]$, and let $\chi'(X)$ be
+$\blank_1$ if $\widetilde S\to X$ is a rule of $\widetilde G_0$, and
+otherwise any derivational sentence context of the untyped nonterminal $A$
+in $G$.  Let $K^\star$ consist of the words
+$\chi'(X)[\omega'(X)]$, $\chi'(X)[\rho(\omega'(Y_1),\ldots,\omega'(Y_q))]$
+for non-start typed rules $X\to\rho(Y_1,\ldots,Y_q)$, and
+$\chi'(X)[\tuple c]$ for non-start rank-zero typed rules $X\to\tuple c$.
+Then $K^\star\subseteq L$ and $K^\star$ is a characteristic sample of $L$
+for $\B^{\le r}_{f,h}$ and for $\B_{f,h}$.
+\end{lemma}
+\begin{proof}
+A derivational context of $A$ accepts every tuple of $L_A(G)\supseteq L_X$,
+hence every tuple of $[X]$; it lies in $\mathcal E_{\mathrm{fan}(A)}$ by
+goodness (v78, Lemma \emph{Canonical contexts}).  If $\widetilde S\to X$ is
+present, every tuple of $L_X$ is a one-component word of $L$, so
+$\blank_1\in\D_L(\omega'(X))$.  Thus $\chi'(X)[\omega'(X)]\in L$.  For a
+typed rule, $\omega'(Y_j)\equiv_{L,h}\tuple u_j$ for $\tuple u_j\in L_{Y_j}$,
+so v78, Lemma \emph{Composition preserves equivalence}, gives
+$\rho(\omega'(Y_1),\ldots)\equiv_{L,h}\rho(\tuple u_1,\ldots)\in L_X$;
+rank-zero rules produce members of $L_X$.  Hence all words of $K^\star$
+lie in $L$, and $\omega'(X)$ has the same type as every rule tuple of $X$
+and shares the context $\chi'(X)$ with it.  These are the only properties
+used by the completeness proof of v78 (Proposition \emph{Completeness from a
+target presentation} and Lemma \emph{Target rule words occur in the
+enumeration}): tuple components are nonempty, templates are good and
+$\chi'(X)\in\mathcal E_d$, so the child tuples are observed occurrences.
+Completeness and soundness give the claim.
+\end{proof}
+
+\begin{corollary}[Upper bound by class representatives]
+\label{cor:relaxed-bound}
+In the situation of Lemma~\ref{lem:relaxed} one may take
+\[
+ |K^\star|\le|V||M|^f+|P||M|^{fr},\qquad
+ \|K^\star\|_+\le\bigl(|V||M|^f+|P||M|^{fr}\bigr)
+ \bigl(1+\theta_G+\|G\|+(r+1)\kappa_G\bigr).
+\]
+Consequently, for a fixed typing and fixed $f,r$, a positive answer to
+\texttt{op:fanout-two} for a family $G_n$ \emph{requires}
+$\kappa_{G_n}=n^{\omega(1)}$: some typed distribution class of $G_n$ has
+only superpolynomially long members.
+\end{corollary}
+\begin{proof}
+A minimal successful derivation using a rule with left-hand side $A$ gives
+a derivational context of fixed length at most $\theta_G$.  Each selected
+word consists of such a context, at most $\|G\|$ explicit terminals, and at
+most $r$ tuples of total length at most $\kappa_G$ (choosing $\omega'(X)$
+of minimum length).
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:rare-type} is the special case of a long class at
+a start-linked typed nonterminal $S_{(m)}$: its class consists of words of
+$L$ of type $m$, so $\kappa_G(S_{(m)})\ge\mu_m(L)$.  The exponential
+\emph{full-refinement} thickness of v78 (Proposition \emph{Exponential
+blow-up of full yield-type refinement}) does not by itself produce long
+data: there $[X]$ contains short tuples although $L_X$ does not.
+\end{remark}
+
+\section{(D) Abelian-filtered targets have polynomial data}
+
+\begin{theorem}\label{thm:abelian-poly}
+Fix finite $\Sigma$, a finite typing $h:\Sigma^*\to M$, $f\ge1$ and
+$r\ge1$.  There are constants $C,e$ depending only on $\Sigma,h,f,r$ such
+that the following holds.  Let $\mathbb A$ be an abelian group,
+$\varphi:\Sigma^*\to\mathbb A$ a homomorphism, $\mathcal H\le\mathbb A$,
+$\gamma\in\mathbb A$, $\mathsf{Acc}\subseteq M$, and suppose
+\[
+ L:=h^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathcal H)
+\]
+has a reduced good presentation $G=(V,\Sigma,P,S)$ of fan-out $\le f$ and
+rule rank $\le r$.  Then $L\in\Cmcf{f}{h}$, and $\B^{\le r}_{f,h}$ has a
+characteristic sample $K^\star\subseteq L$ with
+\[
+ |K^\star|\le|V||M|^f+|P||M|^{fr},
+ \qquad
+ \|K^\star\|_+\le C\,\bigl(\|G\|\max\{1,\theta_G\}\bigr)^{e}.
+\]
+In particular $\mu_m(L)\le C(\|G\|\max\{1,\theta_G\})^e$ for every
+$m\in h(L)$.
+\end{theorem}
+
+The proof uses two external facts.  \emph{Parikh's theorem}: for each
+$m\in M$ the Parikh images of $h^{-1}(m)$ and of $h^{-1}(m)\cap\Sigma^+$
+are semilinear; we fix such representations once and for all, so their
+number of linear sets, their constants and their periods are bounded by a
+constant $C_h$ depending only on $h$.  \emph{Small solutions of integer
+programs} (Papadimitriou, J.~ACM 28 (1981) 765--768): if $Az=b$, $z\ge0$
+has an integer solution, where $A$ has $m$ rows, $n$ columns and all
+entries of $A,b$ lie in $[-a,a]$, then it has one with all entries at most
+$n(ma)^{2m+1}$.
+
+\begin{proof}
+\emph{Membership.}  $L$ is an $f$-MCFL by hypothesis.  The language
+$h^{-1}(\mathsf{Acc})$ is $(f,h)$-tuple-substitutable,
+$\varphi^{-1}(\gamma+\mathcal H)$ is $(f,h_{\mathrm{triv}})$-tuple-substitutable
+for an arbitrary abelian group $\mathbb A$, and intersections preserve
+substitutability (v78, Proposition \emph{Intersection and abelian
+filtering}); hence $L\in\Cmcf{f}{h}$.
+
+\emph{Notation.}  Let $\psi:\Sigma^*\to\N^\Sigma$ be the Parikh map and,
+for a tuple, $\Psi(\tuple u)=\sum_i\psi(u_i)$.  Since $\mathbb A$ is
+abelian, $\varphi=\bar\varphi\circ\psi$ for a group homomorphism
+$\bar\varphi:\Z^\Sigma\to\mathbb A$.  Let
+$\Lambda:=\{v\in\Z^\Sigma:\bar\varphi(v)\in\mathcal H\}$.  For a word or
+tuple $\tuple u$ and a sentence context $E$, $\psi(E[\tuple u])=\psi(E)+
+\Psi(\tuple u)$, where $\psi(E)$ counts the fixed material.
+
+\emph{Step 1 (value invariance).}  For $A\in V$ and
+$\tuple u,\tuple u'\in L_A(G)$, $\Psi(\tuple u)-\Psi(\tuple u')\in\Lambda$.
+Indeed $A$ occurs in a successful derivation; removing the subtree gives a
+derivational context $E$ with $E[\tuple u],E[\tuple u']\in L$
+(nondeleting linear templates), and both values lie in $\gamma+\mathcal H$.
+
+\emph{Step 2 (small generators).}  For $A\in V$ fix
+$\omega_A\in L_A(G)$ with $\|\omega_A\|_1\le t_G$.  For a rule
+$R:A\to\rho(B_1,\ldots,B_q)$ let $c_R\in\N^\Sigma$ count its terminals and
+put $\delta_R:=\Psi(\omega_A)-c_R-\sum_j\Psi(\omega_{B_j})$.  Since
+$\rho(\omega_{B_1},\ldots,\omega_{B_q})\in L_A(G)$, Step 1 gives
+$\delta_R\in\Lambda$, and $\|\delta_R\|_1\le T:=(r+1)t_G+\|G\|$.  Let
+$\Gamma_T:=\{\lambda\in\Lambda:\|\lambda\|_1\le T\}$ and let
+$\Lambda_T$ be the subgroup it generates; $|\Gamma_T|\le(2T+1)^{|\Sigma|}$.
+
+\emph{Step 3.}  For every $\tuple u\in L_A(G)$,
+$\Psi(\tuple u)-\Psi(\omega_A)\in\Lambda_T$, by induction on a derivation:
+if the root rule is $R$ with child yields $\tuple u_j$, then
+$\Psi(\tuple u)-\Psi(\omega_A)=\sum_j(\Psi(\tuple u_j)-\Psi(\omega_{B_j}))
+-\delta_R$.
+
+\emph{Step 4 (short typed tuples).}  Let $X=A_{\mathbf t}$ be a non-start
+typed nonterminal of the trimmed refinement $\widetilde G_0$,
+$d=\mathrm{fan}(A)$, and fix $\tuple u\in L_X$.  For each $i\le d$ choose a
+linear set $\{c_i+\sum_{p\in P_i}\nu_pp\}$ of the fixed representation of
+$\psi(h^{-1}(t_i)\cap\Sigma^+)$ containing $\psi(u_i)$.  The system
+\[
+ \sum_{i}\Bigl(c_i+\sum_{p\in P_i}\nu_{i,p}\,p\Bigr)
+ -\sum_{\lambda\in\Gamma_T}(\mu^+_\lambda-\mu^-_\lambda)\lambda
+ =\Psi(\omega_A),
+ \qquad \nu,\mu^\pm\ge0\text{ integers},
+\]
+has $|\Sigma|$ equations and is solvable by Step 3 applied to $\tuple u$.
+Its entries are bounded by $a:=T+fC_h$, and it has at most
+$fC_h+2(2T+1)^{|\Sigma|}$ unknowns.  By Papadimitriou's bound it has a
+solution with all entries $\le\mathrm{poly}(T)$, the degree depending only
+on $|\Sigma|$.  Each vector $c_i+\sum\nu_{i,p}p$ is the Parikh vector of
+some $\omega'_i\in h^{-1}(t_i)\cap\Sigma^+$.  Put
+$\omega'(X):=(\omega'_1,\ldots,\omega'_d)$; then
+$h^{(d)}(\omega'(X))=\mathbf t$, $\Psi(\omega'(X))-\Psi(\omega_A)\in
+\Lambda_T$, and $\|\omega'(X)\|_1\le\mathrm{poly}(T)$.
+
+\emph{Step 5 (equivalence).}  If two tuples $\tuple v,\tuple v'$ have the
+same componentwise type and $\Psi(\tuple v)-\Psi(\tuple v')\in\Lambda$,
+then $E[\tuple v]\in L\iff E[\tuple v']\in L$ for every context $E$: the
+total types coincide and
+$\varphi(E[\tuple v])-\varphi(E[\tuple v'])=
+\bar\varphi(\Psi(\tuple v)-\Psi(\tuple v'))\in\mathcal H$.
+
+\emph{Step 6 (conclusion via relaxed witnesses).}  By Step 5 and
+Step 4, $\omega'(X)\equiv_{L,h}\tuple u$ for every $\tuple u\in L_X$,
+because $\Psi(\omega'(X))-\Psi(\tuple u)=(\Psi(\omega'(X))-\Psi(\omega_A))-
+(\Psi(\tuple u)-\Psi(\omega_A))\in\Lambda_T\subseteq\Lambda$.  Apply
+Lemma~\ref{lem:relaxed} with these $\omega'(X)$.  By
+Corollary~\ref{cor:relaxed-bound},
+\[
+ \|K^\star\|_+\le
+ \bigl(|V||M|^f+|P||M|^{fr}\bigr)
+ \bigl(1+\theta_G+\|G\|+(r+1)\max_X\|\omega'(X)\|_1\bigr),
+\]
+and $\max_X\|\omega'(X)\|_1\le\mathrm{poly}(T)$ with
+$T\le(r+1)\theta_G+\|G\|$ because $t_G\le\theta_G$.  Finally, by
+Proposition~\ref{prop:rare-type}(i) the characteristic sample $K^\star$
+contains a word of every type $m\in h(L)$, whence
+$\mu_m(L)\le\|K^\star\|_+$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:abelian-poly} holds for typings outside $\mathbf{LG}$,
+including $h_{\mathrm U}$, and at every fan-out, including fan-out one.
+The bracketed CFG family of the companion paper is not abelian-filtered.
+Since the abelian-filter construction is the mechanism behind the members
+of $\Cmcf{f}{h}$ exhibited in v78 (e.g.\ $\mathrm{MIX}_2^+$ and
+$L_{\mathrm{intr}}$), any positive answer to \texttt{op:fanout-two} must use
+targets whose tuple distributions are not determined by type and an
+abelian invariant.  A finite union of abelian filters on type-disjoint
+branches (such as $L_\star$) is expected to admit the same argument branch
+by branch; this is stated as a conjecture in the memo, not proved here.
+\end{remark}
+
+\section{Conjectures}
+\begin{conjecture}[Short class representatives at fan-out two]
+\label{conj:kappa}
+For every finite $\Sigma$, finite typing $h$ and $r\ge1$ there is a
+polynomial $p$ such that every reduced good presentation $G$ of fan-out
+$\le2$ and rank $\le r$ with $L(G)\in\Cmcf{2}{h}$ satisfies
+$\kappa_G\le p(\|G\|\max\{1,\theta_G\})$.
+\end{conjecture}
+By Corollary~\ref{cor:relaxed-bound}, Conjecture~\ref{conj:kappa}
+\emph{implies} a negative answer to \texttt{op:fanout-two} at $f=2$ for the
+operators $\B^{\le r}_{2,h}$, for every fixed $h$ (the converse is not
+claimed).  It is false at fan-out one (companion CFG paper), true
+for $h(\Sigma^+)\in\mathbf{LG}$ (v78) and for abelian-filtered targets
+(Theorem~\ref{thm:abelian-poly}).
+
+\begin{conjecture}[Rare types are polynomially short at fan-out two]
+For every finite $\Sigma$, finite typing $h$ and $r\ge1$ there is a
+polynomial $p$ such that, for every reduced good presentation $G$ of
+fan-out $\le2$ and rank $\le r$ with $L(G)\in\Cmcf{2}{h}$ and every
+$m\in h(L(G))$, $\mu_m(L(G))\le p(\|G\|\max\{1,\theta_G\})$.
+\end{conjecture}
+The conjecture holds for $h$ with $h(\Sigma^+)\in\mathbf{LG}$ (v78) and for
+abelian-filtered targets (Theorem~\ref{thm:abelian-poly}); it fails at
+fan-out one (companion CFG paper).  If it holds, the type-deletion method
+of Proposition~\ref{prop:rare-type} cannot settle \texttt{op:fanout-two}.
+
+\end{document}
