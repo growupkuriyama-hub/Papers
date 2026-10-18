@@ -1,0 +1,61 @@
+name: Validate MCFG v82 bilingual manuscript
+
+on:
+  pull_request:
+    paths:
+      - "02_fixed-h-mcfg/**"
+      - ".github/workflows/validate-mcfg-v82.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compile and validate English/Japanese sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile complete English source
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: 02_fixed-h-mcfg
+          texlive_version: 2026
+
+      - name: Compile complete Japanese source
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02_fixed-h-mcfg/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Validate PDF outputs and LaTeX references
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s 02_fixed-h-mcfg/main.pdf
+          test -s 02_fixed-h-mcfg/japanese/main_JP.pdf
+          test "$(head -c 4 02_fixed-h-mcfg/main.pdf)" = "%PDF"
+          test "$(head -c 4 02_fixed-h-mcfg/japanese/main_JP.pdf)" = "%PDF"
+          for log in 02_fixed-h-mcfg/main.log 02_fixed-h-mcfg/japanese/main_JP.log; do
+            if grep -Eq 'There were undefined references|Citation .* undefined|Reference .* undefined|LaTeX Error:|Emergency stop' "$log"; then
+              echo "::error::Invalid LaTeX references or build failure in $log"
+              exit 1
+            fi
+            echo "$log: final pass has no undefined references."
+          done
+
+      - name: Upload bilingual review PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcfg-v82-bilingual-review-pdfs
+          path: |
+            02_fixed-h-mcfg/main.pdf
+            02_fixed-h-mcfg/japanese/main_JP.pdf
+            02_fixed-h-mcfg/main.log
+            02_fixed-h-mcfg/japanese/main_JP.log
+          retention-days: 30
+          if-no-files-found: error

@@ -75,23 +75,21 @@ $\|G\|$ と元の規則厚み $\theta_G$ に対する特徴正例データの総
 境界窓型付けでは $O(\|G\|^2\bar\theta_G)$，
 窓と任意の固定有限群を組み合わせた型付けでは
 $O(\|G\|^3\bar\theta_G)$ の上界を得る．
-後者には非可換群も含まれ，
-可換群では零和理論により定数を改善する．
+後者には非可換群も含まれる．
 さらに三次上界を，正語像半群が局所群の擬多様体
 $\mathbf{LG}$ に属する型付け全体へ拡張する．
 規則ランク1では任意の固定有限型付けについて
 文法サイズのみの多項式上界が成立する．
-別の言語構造上の十分条件として，
-有界ランクの良形文法表示を持つアーベル型フィルタ標的は，
-制御モノイドが $\mathbf{LG}$ の外にあっても多項式データを持つ．
+別の標的言語構造上の条件として，
+有限半束の値に応じて剰余類を切り替えるアーベル標的に対し，
+補助アーベル群に一様な多項式特徴データ長を得る．
+これは従来のアーベル型フィルタを含み，
+制御モノイドが $\mathbf{LG}$ の外にある場合も扱う．
 
 計算可能な規則証拠だけによる予算と，
 分布同値代表元による別の上界も与える．
-擬多様体の水準では，局所群側の上界に対して
-ファンアウト1で下界の障害が存在する．
-また，規則ランク2を本質的に要する非文脈自由言語の分離を与え，
-関連CFG論文の倍化族は任意の有限型付けの下で
-ファンアウト2代入可能性を満たさないことを証明する．
+擬多様体の水準での局所群上界は，
+関連CFG論文のファンアウト1の下界と対照をなす．
 高ファンアウトにおける超多項式の特徴データ下界は未解決である．
 \end{abstract}
 
@@ -104,160 +102,74 @@ $\mathbf{LG}$ に属する型付け全体へ拡張する．
 \section{序論}
 \label{sec:introduction}
 
-正例からの文法推論は，言語の正例だけを列挙するデータから，
-いつその言語を復元できるかを問う~\cite{Gold1967,Angluin1980}．
-分布的手法は，部分文字列やタプルについて観測された交換可能性を
-文法の非終端記号へと変換することで，制限された文法クラスの学習を可能にする．
-文脈自由文法（CFG）の場合，これには代入可能言語~\cite{ClarkEyraud2007} と
-Yoshinaka の $(k,\ell)$ 階層~\cite{Yoshinaka2008} が含まれる．
-Yoshinaka は同じ着想を多重文脈自由文法（MCFG）へ拡張した．
-この場合，非終端記号はタプルを生成し，代入は複数の穴をもつ
-文脈によって検査される~\cite{Yoshinaka2009,Yoshinaka2011}．
-MCFG は代表的な弱文脈依存形式体系であり，
-不連続依存や交差直列依存を直接表現できる
-~\cite{SekiEtAl1991,Kallmeyer2010}．
+正例からの文法推論は，正例だけから標的言語を回復できる条件を問う
+~\cite{Gold1967,Angluin1980}．
+分布的学習では交換可能な因子やタプルを利用する．
+MCFGについてはYoshinakaの観測タプル学習器と
+一般signature枠組みがあり
+~\cite{Yoshinaka2009,Yoshinaka2011,Yoshinaka2015General}，
+後者は有限ソートの精密化，質的同定，
+多項式時間更新，特徴集合の個数上界を既に扱う．
+本稿の主題はそれらの再証明ではなく，
+\emph{元の文法表示に相対的な特徴正例の総文字数}である．
 
-\paragraph{一般学習原理とその適用範囲．}
-Yoshinaka の2011年の観測タプルに基づく学習器が，
-型付けを導入しない MCFG 学習の基準となる~\cite{Yoshinaka2011}．
-その後の signature に関する一般理論は，
-アリティの制限された MCFG，ソートの有限精密化，接頭辞--接尾辞型付けを含み，
-すでに正例からの同定，多項式時間更新，および個数が有界な特徴集合の存在を与える
-~\cite[Theorem~1, Lemma~3 and Examples~3--4]{Yoshinaka2015General}．
-規則ランクが有界な場合，本稿の\ref{sec:general-framework} は，
-型付き言語クラスと signature の間の厳密な特徴づけと，
-再構成作用素同士の対応を証明する．
-したがって，\emph{質的な}学習原理そのものは先行研究である．
-本稿の問題は，元の MCFG 表示に相対的な正例特徴データの
-\emph{総文字数}，および有限型付け・ファンアウト・規則ランクに関する分離である．
-
-本稿では学習対象クラスの一部として，有限モノイドへの準同型
-$h:\Sigma^*\to M$ を固定する．観測されたタプルは，
-対応する成分の $h$-値が等しい場合に限って比較する．
-合成可能な型による制約は正例テキストが与えられる前から固定されており，
-有限なバイアスの選択と，そのバイアスの下での学習を分離する
-~\cite{CosteTyping2004}．
-重要な二つの例は接頭辞--接尾辞準同型と DFA の遷移準同型である．
-固定接頭辞--接尾辞窓は，個々の標本に応じて調整するパラメータではなく，
-標的クラスに対して独立かつ一様に選んだ有限パラメータである．
-本稿の総文字数に関する主上界は，ファンアウトと規則ランクを指定すれば，
-その窓型付けクラスのすべての標的に適用される．
-ファンアウトもバイアスの一部である．これは代入可能性を検査する
-タプルのアリティを決定するからである．
-したがって，固定型付けは有限状態の情報を供給し，
-非有界な依存関係は MCFG が担う．
-
-他の学習バイアスは異なる選択を行う．
-Takada は導出に対する正則制御言語を用いる
-~\cite{Takada1988,Takada1995}．
-一方，局所的代入可能性は因子を比較するための証拠を制限する
-~\cite{CosteGaretNicolas2012,CosteNicolas2019}．
-正例からの学習は他の弱文脈依存形式体系についても研究されている
-~\cite{OatesEtAl2006}．
-より豊富な情報を利用する MCFG 学習には，
-所属質問や双対文脈集合を用いる手法がある
-~\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}．
-本稿はこれらと異なり正例データのみに限定し，
-観測タプルの値を標本由来の基本対象とし，
-固定有限型付けにより代入を制限する．
+有限モノイド準同型$h:\Sigma^*\to M$をデータ観測前に固定し，
+タプルの対応成分の$h$型が一致するときだけ代入を許す．
+境界窓やDFAの遷移はその例であり~\cite{CosteTyping2004}，
+無限の依存関係はMCFGが扱う~\cite{SekiEtAl1991,Kallmeyer2010}．
+ファンアウトは検査するタプルのアリティを規定する．
+導出制御や所属質問を用いる方式と異なり
+~\cite{Takada1988,Takada1995,Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}，
+ここでは正例テキストだけを用いる．
 
 \paragraph{本稿の貢献．}
-本稿が扱うのは，有限特徴集合の存在やその個数だけではなく，
-正例特徴データの\emph{総文字数}である．
-\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
-\item \emph{複数成分に関する定量的上界．}
-固定したファンアウトと規則ランクの下で，
-固定接頭辞--接尾辞窓により型が決定されるとき，
-縮約済み良形表示 $G$ に対し，特徴データの総文字数は
-$O(\|G\|^2\max\{1,\theta_G\})$ 以下となる
-（定理~\ref{thm:boundary-polydata}）．
-鍵となるのは，タプルの全成分にわたる境界情報を同時に保存する
-短いタプルの補題である．
-\ref{app:window-abelian} と
-\ref{app:window-group} は，任意の固定有限群の値を
-窓と組み合わせた場合へ結果を拡張し，
-総文字数 $O(\|G\|^3\bar\theta_G)$ を与える
-（定理~\ref{thm:window-group-polydata}）．
-可換群の場合は定理~\ref{thm:window-abelian-polydata} が
-より小さい明示定数を与える．
-代数的条件による系~\ref{cor:mcfg-li-group-polydata} は，
-これらの保証を正語像半群の $\mathbf{LI}$ および
-$\mathbf{LI}\vee\mathbf{Grp}$ への所属として表す．
-さらに定理~\ref{thm:local-group-polydata} は，
-$\mathbf{LI}\vee\mathbf{Grp}$ の外も含む
-$\mathbf{LG}$ の全体へ三次上界を拡張する．
-既知の代数的特徴づけ
-~\cite[Proposition~2.3]{AlmeidaEtAl2009} を用いた
-系~\ref{cor:pseudovariety-dichotomy} は，
-擬多様体水準の上界・下界の境界を与えるが，
-下界側はファンアウト1でのみ証明されている．
-命題~\ref{prop:computed-witness-budget} は，
-特徴データの符号長について文法表示ごとに
-計算できる上界も与える．
+ファンアウトと規則ランクを固定した縮約済み良形文法について，
+接頭辞--接尾辞窓型付けでは$O(\|G\|^2\bar\theta_G)$
+（定理~\ref{thm:boundary-polydata}），
+正語像が局所群の擬多様体$\mathbf{LG}$に属する
+固定型付けでは$O(\|G\|^3\bar\theta_G)$を得る
+（定理~\ref{thm:local-group-polydata}）．
+窓と非可換群を含む任意の有限群の組合せもその特殊例である．
+規則ランク1では任意の固定型付けに対する多項式上界が成立する
+（定理~\ref{thm:rankone-polydata}）．
+規則証拠による計算可能な予算
+（命題~\ref{prop:computed-witness-budget}）と，
+短い分布同値代表元に基づく存在的上界
+（命題~\ref{prop:mcfg-relaxed-witnesses}）は区別する．
 
-\item \emph{型付け・ファンアウト・規則ランクに関する分離．}
-Yoshinaka の型なしクラスに対する任意の正則フィルタ断片の外にある言語
-（定理~\ref{thm:arbitrary-filter-separation}），
-ファンアウト1では型付き代入可能だが，
-ファンアウト2では\emph{いかなる}有限型付けでも代入可能でない標的
-（命題~\ref{prop:strong-fanout-separation}），
-および最小ファンアウト・最小規則ランクがともに2である
-境界型付け非文脈自由言語
-（定理~\ref{thm:intrinsic-ranktwo-witness}）を与える．
-\end{enumerate}
-学習作用素そのものは，Yoshinaka の観測タプル構成を
-成分ごとに型付けしたものであり，
-規則ランク有界の場合に一般 signature 枠組みに含まれることは
-命題~\ref{prop:yoshinaka2015-embedding} で示す．
+別の十分条件は\emph{標的言語の構造}に課す．
+半束添字付きアーベル剰余類標的では補助アーベル群に一様な
+多項式特徴データ長が成立する
+（定理~\ref{thm:mcfg-semilattice-twisted-polydata}）．
+これはアーベル型フィルタと1マーカー切替を含む
+（系~\ref{thm:mcfg-abelian-filter-data}，
+\ref{cor:mcfg-one-marker-split-polydata}）．
+局所群定理は固定\emph{型付け}を，
+半束定理は\emph{標的言語}を制約する．
 
-\paragraph{先行研究との関係と本稿の範囲．}
-観測タプル文法，保守的な更新方針およびランク上界を設けない質的同定は
-Yoshinaka~\cite{Yoshinaka2009,Yoshinaka2011} による．
-一般的な有限ソートの枠組みと特徴集合の個数に関する上界は
-Yoshinaka~\cite{Yoshinaka2015General} の成果である．
-なお，Duncan らの MCFG に関する substitution lemma
-~\cite{DuncanEtAl2026Substitution} は，
-MCFL に属するための必要条件を用いた非所属証明に関するものであり，
-本稿の分布的正例学習の置換可能性とは異なる問題を扱う．
-本稿の直接的な健全性・完全性の証明は，
-成分ごとに型付けした特定の文法構成を検証するものであって，
-新しい一般的学習機構を主張するものではない．
-規則ランク1における特徴データ長の結果は基本的な精密化の帰結である．
-より本質的な高ランクの成果は，複数のタプル成分について
-境界を同時に保存することで得られる上界
-（定理~\ref{thm:boundary-polydata}）である．
-
-ファンアウト1の固定接頭辞--接尾辞型付けに関する多項式特徴データは，
-Yoshinaka~\cite[Theorem~1]{Yoshinaka2008} によって得られている．
-関連する CFG 論文~\cite{kuriyamaCFG} は任意の有限型付けを扱い，
-ファンアウト1で作用素に依存しない下界を証明する．
-これらは先行結果であり，本稿独自の MCFG 定理としては掲げない．
-本稿固有の問題は，タプルの成分ごとの型付け，
-高ランクでの特徴データ長，およびファンアウト・正則フィルタとの相互作用である．
-内在的ランクを示す言語の証明で利用する非分岐性の下界も先行研究に基づく．
-本稿の寄与は，その境界型付けによる構成，
-型付きクラスへの所属と Yoshinaka のクラスからの分離，
-ならびに定量的定理との結び付きである．
-
-多項式上界の各主張では，ファンアウト・規則ランク上界・有限型付けを固定する．
-集合駆動型再構成の特徴データは\emph{言語レベル}の厳密性を保証し，
-構文レベルの安定化は保守的な逐次学習器が担う．
-型付き完全精密化と空成分除去に関する障害は，
-それら特定の構成の障害であって，すべての学習器に対する下界ではない．
-ファンアウト1における独立した作用素非依存の下界は，
-関連 CFG 論文~\cite{kuriyamaCFG} の成果である．
-
-第~\ref{sec:prelim}節から第~\ref{sec:char-data}節で，
-モデル，再構成，収束および定量的上界を扱う．
-第~\ref{sec:comparison}節では Yoshinaka の言語クラスとの比較と
-分離結果を与える．
+\paragraph{先行研究との関係と適用範囲．}
+質的再構成の一般原理は
+Yoshinaka~\cite{Yoshinaka2011,Yoshinaka2015General}に由来する．
+本稿は成分別型付けを備えた構成を直接検証するが，
+新しい一般学習機構の創始は主張しない．
+ファンアウト1における窓型付けの上界は
+Yoshinaka~\cite{Yoshinaka2008}による．
+関連CFG論文は作用素に依存しない下界を与える
+~\cite{kuriyamaCFG}．
+本稿は，精密化で増大し得る厚みではなく
+\emph{元の規則厚み}を用いて，
+複数成分の特徴データを抑える．
+上界におけるアルファベット，ファンアウト，
+規則ランク，型付けの固定条件を明示する．
+高ファンアウトの一般下界問題は未解決である．
 
 \paragraph{証明の方法とAI支援研究．}
-本稿は理論研究であり，主張の根拠はここに提示する数学的証明であって，
-計算機実験や自動化された査読ではない．
-生成AIは候補となる論証の探索・批判的検討や原稿改訂の補助に利用したが，
-その出力自体を数学的検証とみなすことはしない．
-使用したツールとその役割は論文末尾で開示する．
+一般定理の根拠は本稿の数学的証明であり，
+計算機実験ではない．
+ChatGPTとClaudeは論証の探索，批判的検討，
+原稿編集を支援したが，その出力は独立した数学的検証ではない．
+論文の内容については著者が責任を負う．
+
 
 \section{準備}
 \label{sec:prelim}
@@ -786,14 +698,9 @@ $\mathsf{SL}(p+1,r)$ が一般に比較不能であることを指摘し，
 $L_{\mathrm{reverse}}=\{w\#w^R\}$
 を与えている
 ~\cite[Section~4.1 and Example~5]{Yoshinaka2011}．
-本稿の有限型付けが追加するのは，
-命題~\ref{prop:strong-fanout-separation} のより強い現象である．
-すなわち，ある有限型付けの下ではファンアウト1で学習可能な標的が，
-\emph{いかなる}有限型付けでも
-ファンアウト2の条件を満たさないことがある．
-したがって $f$ は表現能力の上界というだけでなく，
-学習バイアスの一部である．
-学習対象クラスの $f$ に関する単調性は主張しない．
+この例はファンアウトが文法の表現能力だけでなく，
+タプル文脈に対する代入可能性の条件も変えることを示す．
+学習対象クラスの$f$に関する単調性は主張しない．
 
 任意の $\mathsf{Acc}\subseteq M$ について，
 $h^{-1}(\mathsf{Acc})\in\Cmcf{f}{h}$ である．
@@ -1811,11 +1718,10 @@ $\Cmcf{1}{h}$ を対象にできる．
 また再構成作用素は，各標本について
 Yoshinaka の部分構造添字付き
 $\mathrm{SUBST}_{\mathrm P}$ と同じ言語を生成する．
-これらの質的結論は
-一般枠組み~\cite{Yoshinaka2015General}
-の特別な場合である．
-厳密な命題，文脈関数の対応，証明は
-\ref{sec:general-framework} に示す．
+これらの質的結論は，
+Yoshinakaの一般signature枠組み
+~\cite{Yoshinaka2015General}の特別な場合である．
+その詳細な対応証明は本稿で繰り返さない．
 
 \section{特徴データ長の上界}
 \label{sec:char-data}
@@ -1842,9 +1748,9 @@ $\mathrm{SUBST}_{\mathrm P}$ と同じ言語を生成する．
 $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
   & $O(\|G\|^2\bar\theta_G)$
   & 定理~\ref{thm:boundary-polydata} \\
-固定窓と任意の有限群
+正語像が局所群$\mathbf{LG}$
   & $O(\|G\|^3\bar\theta_G)$
-  & 定理~\ref{thm:window-group-polydata} \\
+  & 定理~\ref{thm:local-group-polydata} \\
 \hline
 \end{tabularx}
 \end{center}
@@ -1857,10 +1763,8 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 規則ランク1では厚みへの依存がなくなる．
 一方，接頭辞--接尾辞窓で決定される型付けでは，
 高ランクの場合も厚みの上界を転移できる．
-アーベル群の零和による直接証明は
-\ref{app:window-abelian} に置き，
-非可換群を含む一般の有限群への拡張は
-\ref{app:window-group} で独立に証明する．
+局所群の証明には，
+付録~\ref{app:window-group}の有限群の順序均質化補題を用いる．
 関連 CFG 論文~\cite{kuriyamaCFG} は，
 任意の有限型付けについて
 元文法の厚みだけでは一様な多項式上界を得られないことを，
@@ -2496,15 +2400,9 @@ Yoshinaka の $(k,\ell)$-代入可能な CFG の学習器は，
 \emph{複数の}タプル成分の境界情報を同時に保存し，
 任意の固定ファンアウト $f\ge2$ でも同種の上界を実現する点にある．
 
-上界は縮約済み良形の規則ランク有界な文法表示に相対的なものである．
-後述の定理~\ref{thm:intrinsic-ranktwo-witness} は，
-この高ランクの場合が言語レベルで必要であることを示す．
-すなわち，競合する文法が任意の有限ファンアウトを使ってよい場合でも，
-最小ファンアウトと最小規則ランクがともに2である，
-$(1,1)$-境界型付けされた非文脈自由標的を与える．
-後の例では，$L_{\mathrm{intr}}$ が窓型付けの定理の対象となり，
-ランク1の言語 $L_{\mathrm{cd}}$ と $L_\star$ は
-定理~\ref{thm:rankone-polydata} の対象となる．
+上界は縮約済み良形の規則ランク有界な文法表示に
+相対的なものであり，規則ランク無制限の場合の
+元の厚みへの同じ上界を主張するものではない．
 したがって，いずれの分離結果も
 対応する定量的学習上界と両立している．
 
@@ -2523,106 +2421,51 @@ $S\in\mathbf{LI}$ と有限群 $A$ の直積 $S\times A$ の
 用いる有限半群に関する事実は関連する
 CFG 論文~\cite{kuriyamaCFG} にも現れる．
 
-\begin{lemma}[局所自明・群型付けの窓・群精密化]
+\begin{lemma}[局所自明な正語像から固定窓への帰着]
 \label{lem:mcfg-li-group-window}
-$\Sigma$ を空でない有限アルファベット，
-$h:\Sigma^*\to M$ を有限モノイド準同型とする．
-もし $h(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$ ならば，
-ある $k,\ell\ge0$，有限群 $A$，および
-準同型 $g:\Sigma^*\to A$ が存在して
-\[
- h\preceq(h_\Sigma^{k,\ell},g)
- \quad(\Sigma^*\text{ 全体上})
-\]
-が成り立つ．
-さらに $h(\Sigma^+)\in\mathbf{LI}$ ならば，
-群因子を自明群としてよく，
-$h\preceq h_\Sigma^{k,\ell}$ となる．
+空でない有限アルファベット$\Sigma$上の有限型付け
+$h:\Sigma^*\to M$について，
+$h(\Sigma^+)\in\mathbf{LI}$ならば，
+ある固定$q$により$h\preceq h_\Sigma^{q,q}$が成り立つ．
 \end{lemma}
 \begin{proof}
-有限局所自明半群 $S$，有限群 $A$，
-部分半群 $T\subseteq S\times A$，
-全射半群準同型 $\pi:T\to h(\Sigma^+)$ を取る．
-各 $a\in\Sigma$ について $h(a)$ の逆像
-$(s_a,g_a)\in T$ を一つ選ぶ．
-これらの積により $\rho:\Sigma^+\to T$ を定めると，
-$\pi\rho=h|_{\Sigma^+}$ である．
-二つの座標準同型を
-$s:\Sigma^+\to S$，$g:\Sigma^*\to A$
-と書き，$g(\eps)=1_A$ とする．
-
-正語像 $S_0=s(\Sigma^+)$ は局所自明である．
-$q=|S_0|+1$ とおく．
-有限局所自明半群に対する標準的な恒等式
-$S_0^q=S_0E(S_0)S_0$ および
-冪等元 $e,f$ と任意の $u\in S_0$ に対する
-$euf=ef$~\cite{Pin1986,kuriyamaCFG} より，
-長さ $2q$ 以上の語の $s$-値は
-長さ $q$ の接頭辞・接尾辞で決まる．
-実際，$w=pxz$，$|p|=|z|=q$ と書き，
-$s(p)=aeb$，$s(z)=cfd$ とすれば，
-$x$ が空でないとき
-\[
- s(pxz)=ae\,(b\,s(x)\,c)\,fd
-       =aefd=s(pz)
-\]
-となる．$x=\eps$ の場合も中央の積を
-$bc\in S_0$ と解釈すれば同じ恒等式が使える．
-長さが $2q$ 未満の語は
-$h_\Sigma^{q,q}$ が個別に区別する．
-したがって非空語について窓型が一致すれば
-$s$-値が一致し，さらに $g$-値も一致すれば
-$\rho$-値，よって $h$-値も一致する．
-
-窓型は空語 $\eps$ と非空語を区別するので，
-核の包含は $\Sigma^*$ 全体に拡張される．
-$k=\ell=q$ とすれば第一の主張が従う．
-$h(\Sigma^+)$ 自体が局所自明ならば，
-$S=h(\Sigma^+)$ とし，群因子を自明群に取ればよい．
+$S=h(\Sigma^+)$，$q=|S|+1$とする．
+有限局所自明半群では，
+$S^q=SE(S)S$，および冪等元$e,f$と
+任意の$u\in S$について$euf=ef$が成立する
+~\cite{Pin1986,kuriyamaCFG}．
+$w=pxz$，$|p|=|z|=q$，$h(p)=aeb$，
+$h(z)=cfd$と書くと，
+$h(pxz)=ae(bh(x)c)fd=aefd=h(pz)$である．
+$x=\eps$のときも中央の因子は$S$に属する．
+窓型付けは短い語を個別に区別し，
+空語と非空語も区別するので，
+$\Sigma^*$全体で型の精密化が従う．
 \end{proof}
 
-\begin{corollary}[多項式特徴データの代数的十分条件]
+\begin{corollary}[局所自明型付けの二次特徴データ上界]
 \label{cor:mcfg-li-group-polydata}
-空でない有限 $\Sigma$，ファンアウト上界 $f\ge1$，
-規則ランク上界 $r_{\max}\ge1$，有限型付け
-$h:\Sigma^*\to M$ を固定する．
-$\Cmcf{f}{h}$ の標的を生成する縮約済み良形の
-ファンアウト高々 $f$・ランク高々 $r_{\max}$ の
-文法 $G$ に対し，
-$\bar\theta_G=\max\{1,\theta_G\}$ とする．
-ランク制限付き再構成作用素は
-個数 $O_{f,r_{\max},h}(\|G\|)$ の特徴標本を持ち，
-その総長は
-\[
-\begin{array}{ll}
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},h,\Sigma}(\|G\|^2\bar\theta_G),
- & h(\Sigma^+)\in\mathbf{LI}\text{ の場合},\\[2pt]
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},h,\Sigma}(\|G\|^3\bar\theta_G),
- & h(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}\text{ の場合}.
-\end{array}
-\]
+$f,r_{\max},\Sigma,h$を固定し，
+$h(\Sigma^+)\in\mathbf{LI}$とする．
+$\Cmcf{f}{h}$の標的の任意の縮約済み良形・
+ファンアウト高々$f$・規則ランク高々$r_{\max}$の表示$G$について，
+ランク制限付き再構成器は個数$O(\|G\|)$，
+総文字数$O_{f,r_{\max},h,\Sigma}
+(\|G\|^2\bar\theta_G)$の特徴標本をもつ．
 \end{corollary}
 \begin{proof}
-$\mathbf{LI}$ の場合，
-補題~\ref{lem:mcfg-li-group-window} により
-群因子を自明群として窓型付けに帰着し，
-定理~\ref{thm:boundary-polydata} を適用する．
-$\mathbf{LI}\vee\mathbf{Grp}$ の場合，
-同補題による窓・有限群への精密化と
-定理~\ref{thm:window-group-polydata} を適用する．
-精密化の諸パラメータは固定した型付けと
-アルファベットだけに依存し，$G$ には依存しない．
-特徴標本の個数についての上界も両方で成立する．
+補題~\ref{lem:mcfg-li-group-window}と
+定理~\ref{thm:boundary-polydata}を適用する．
+窓は固定型付けのみに依存する．
 \end{proof}
 
 \begin{remark}
-上の条件は\emph{十分条件}であり，
-元の文法の厚みに関する多項式上界が成り立つ型付けの
-完全な特徴づけではない．
-問題~\ref{op:fanout-two} の高ファンアウト下界は未解決である．
-空アルファベットでは語は $\eps$ のみであり自明である．
+$\mathbf{LI}\vee\mathbf{Grp}$の三次上界は，
+$\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$
+（命題~\ref{prop:li-g-strict}）により，
+より強い局所群定理~\ref{thm:local-group-polydata}から従う．
+ただし局所自明な場合の二次上界は，
+一般の三次上界より鋭いので残す．
 \end{remark}
 
 \subsection{短い特徴データの計算}
@@ -2650,7 +2493,7 @@ $f,r_{\max}$ と有限型付け $h:\Sigma^*\to M$ を固定する．
 \item これらのタプルと文脈を表す，$\|G\|$ について多項式サイズの導出 DAG．
 したがって，それらから構成される定義~\ref{def:witness-set} の証拠集合 $\Wit(\widetilde G_0)$ の各語の DAG．
 \end{enumerate}
-本節および付録~\ref{app:window-abelian}，\ref{app:window-group} で示した
+本節および付録~\ref{app:window-group} で示した
 語長と総長の上界は，すべてこの計算された証拠集合について成り立つ．
 その語は $\|G\|+\|\Wit(\widetilde G_0)\|_+$ の多項式時間で明示的に書き出せる．
 \end{proposition}
@@ -2699,9 +2542,7 @@ DAG の展開は，表す語の長さについて線形時間である．
 その最小導出の根の規則を
 $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
 （$q=0$ の場合も含む）．このとき
-\[
- \omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))
-\]
+\(\omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))\)
 が成立する．したがって定義~\ref{def:witness-set} の
 特徴証拠集合は，規則証拠だけからなる次の集合に等しい：
 \[
@@ -2714,10 +2555,8 @@ $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
 \]
 ここで $\mathcal R$ は開始記号以外の型付き規則の集合で，
 ランク0の規則も含む．特に
-\[
- |\Wit(\widetilde G_0)|\le|\mathcal R|
- \le |P||M|^{fr_{\max}}
-\]
+\(|\Wit(\widetilde G_0)|\le|\mathcal R|
+ \le |P||M|^{fr_{\max}}\)
 である．標的が $\Cmcf{f}{h}$ に属するとき，
 この集合は $\mathcal B^{\le r_{\max}}_{f,h}$
 に対する特徴標本として引き続き機能する．
@@ -2759,9 +2598,7 @@ $\mu(X)$ は $X$ の導出的文文脈の最小固定長とする
 \]
 と定義する．このとき計算可能な証拠集合
 $\Wit(\widetilde G_0)$ を
-\[
- \|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h)
-\]
+\(\|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h)\)
 となるように選べる．$f,r_{\max},h$ を固定すれば，
 $\mathsf B_{\mathrm{rule}}(G,h)$ は二進表記で $\|G\|$ の多項式時間で
 計算できる．標的が空語を含み，非空部分を別に扱う場合は，
@@ -2801,7 +2638,7 @@ $\mathsf B_{\mathrm{rule}}(G,h)$ となる．
 計算された標本は多項式サイズの圧縮表現をもつ．
 
 
-\subsection{分布同値代表元とアーベル型フィルタ標的}
+\subsection{分布同値代表元と半束添字付き剰余類標的}
 \label{subsec:short-distributional-representatives}
 
 上で求めた計算可能な規則証拠予算では，
@@ -2820,10 +2657,8 @@ $r$ とし，$\widetilde G_0$ を刈り込み済みの
 非開始型付き非終端記号 $X$ に対し，
 $L_X$ を含む $\equiv_{L,h}$-同値類を
 $[X]$ とおき，
-\[
- \kappa_G(X)=\min_{\tuple v\in[X]}\|\tuple v\|_1,
- \qquad \kappa_G=\max_X\kappa_G(X)
-\]
+\(\kappa_G(X)=\min_{\tuple v\in[X]}\|\tuple v\|_1,
+ \qquad \kappa_G=\max_X\kappa_G(X)\)
 と定義する．このとき，
 規則ランク上限が $G$ のランク以上である
 $\mathcal B^{\le r}_{f,h}$ および
@@ -2857,9 +2692,7 @@ $\omega^\dagger(X)\equiv_{L,h}u$ なので
 $\omega^\dagger(X)$ も受理する．
 
 $K^\dagger$ を，非終端記号の証拠語
-\[
- \chi^\dagger(X)[\omega^\dagger(X)]
-\]
+\(\chi^\dagger(X)[\omega^\dagger(X)]\)
 と，各型付き規則
 $X\to\rho(Y_1,\ldots,Y_q)$ の証拠語
 \[
@@ -2902,979 +2735,433 @@ $\kappa_{G_n}=n^{\omega(1)}$ が必要である．
 用いる別の構成である．
 \end{remark}
 
-\begin{theorem}[アーベル型フィルタ標的の多項式データ]
-\label{thm:mcfg-abelian-filter-data}
-空でない有限アルファベット $\Sigma$，
-有限型付け $h:\Sigma^*\to M$，
-上界 $f,r\ge1$ を固定する．
-$\Sigma,h,f,r$ のみに依存する定数 $C,e$ が存在して，
-次が成り立つ．
-$\mathbb A$ を任意のアーベル群，
-$\varphi:\Sigma^*\to\mathbb A$ を準同型，
-$\mathcal H\le\mathbb A$，
-$\gamma\in\mathbb A$，
-$\mathsf{Acc}\subseteq M$ とする．
+
+\begin{lemma}[短い商値代表元から短い特徴データへ]
+\label{lem:mcfg-coset-representative-transfer}
+$\Sigma,h,f,r$ を固定し，$r\ge1$ とする．
+$G$ を $L=L(G)\subseteq\Sigma^+$，
+$L\in\Cmcf{f}{h}$ の縮約済み良形MCFG表示とし，
+ファンアウトは高々$f$，規則ランクは高々$r$とする．
+アーベル群$\mathbb A$，準同型
+$\varphi:\Sigma^*\to\mathbb A$，部分群
+$\mathcal H\le\mathbb A$，商写像
+$\pi:\mathbb A\to\mathbb A/\mathcal H$を固定する．
+次の3条件を仮定する．
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 非空語$w,w'$について$h(w)=h(w')$かつ
+$\pi\varphi(w)=\pi\varphi(w')$なら，
+$w\in L\iff w'\in L$である．
+\item トリム済み生成語型細分の開始記号でない各
+$X=A_{\mathbf t}$に対し，
+$\pi\varphi(\tuple u)$は$\tuple u\in L_X$によらず一定である．
+\item 各型なし非終端記号$A$と実現可能な商値
+$\alpha\in\pi\varphi(L_A)$に対し，
+$\pi\varphi(\omega_A^\alpha)=\alpha$かつ
+$\|\omega_A^\alpha\|_1\le B$を満たす
+$\omega_A^\alpha\in L_A$が存在する．
+ここで$B\ge1$は共通の上界である．
+\end{enumerate}
+$m=|\Sigma|$，$T=(r+1)B+\|G\|$とおく．
+$\Sigma,h,f,r$のみに依存する定数$C$が存在して
+\(\kappa_G\le C(T+1)^{3m+1}\)
+となる．さらに，ランク上限付き・上限なしの両再構成器には
+特徴標本$K^\dagger\subseteq L$が存在し，
 \[
- L=h^{-1}(\mathsf{Acc})\cap
-   \varphi^{-1}(\gamma+\mathcal H)
+\begin{split}
+ |K^\dagger|&\le|V||M|^f+|P||M|^{fr},\\
+ \|K^\dagger\|_+
+ &\le(|V||M|^f+|P||M|^{fr})
+ \bigl(1+\theta_G+\|G\|+(r+1)C(T+1)^{3m+1}\bigr)
+\end{split}
 \]
-がファンアウト高々 $f$，規則ランク高々 $r$ の
-縮約済み良形MCFG $G$ で表示されるなら，
-$L\in\Cmcf{f}{h}$ であり，
-$\mathcal B^{\le r}_{f,h}$ に対する特徴標本
-$K^\dagger$ が存在して
-\[
- \|K^\dagger\|_+\le
- C\bigl(\|G\|\max\{1,\theta_G\}\bigr)^e
-\]
-を満たす．定数は補助群
-$\mathbb A,\varphi,\mathcal H,\gamma$ に依存しない．
-空語が含まれる場合の符号化コストは高々1を加える．
-\end{theorem}
+を満たす．
+\end{lemma}
 \begin{proof}
-$L\in\Cmcf{f}{h}$ は
-命題~\ref{prop:abelian-coset-filter} と
-MCFGによる表示の仮定から従う．
+Parikh写像を$\psi$，タプルの総Parikh像を
+$\Psi(\tuple u)=\sum_i\psi(u_i)$とする．
+$\varphi$を拡張する群準同型
+$\widehat\varphi:\mathbb Z^\Sigma\to\mathbb A$を用い，
+\[
+ \Lambda=\widehat\varphi^{-1}(\mathcal H),\quad
+ \Gamma_T=\{\delta\in\Lambda:\|\delta\|_1\le T\},\quad
+ \Lambda_T=\langle\Gamma_T\rangle
+\]
+とおく．規則$R:A\to\rho(B_1,\ldots,B_q)$で，
+子の商値を$\alpha_j$とし，
+$\tuple z=\rho(\omega_{B_1}^{\alpha_1},\ldots,
+\omega_{B_q}^{\alpha_q})$，
+$\alpha=\pi\varphi(\tuple z)$とする．線形・非削除性と可換性から
+\[
+ \delta_{R,\boldsymbol\alpha}
+ =\Psi(\omega_A^\alpha)-\Psi(\tuple z)\in\Lambda,\quad
+ \|\delta_{R,\boldsymbol\alpha}\|_1\le
+ (r+1)B+\|G\|=T
+\]
+である．規則ランク0の場合も含め導出に関して帰納すれば，
+\[
+ \Psi(\tuple u)-
+ \Psi(\omega_A^{\pi\varphi(\tuple u)})\in\Lambda_T
+ \qquad(\tuple u\in L_A) .                              \tag{1}
+\]
+実際，根における差分は子の差分の和から
+$\delta_{R,\boldsymbol\alpha}$を引いたものである．
 
-$\psi:\Sigma^*\to\mathbb N^\Sigma$ をParikh写像とし，
-$\Psi(\tuple u)=\sum_i\psi(u_i)$ と書く．
-$\varphi$ は群準同型
-$\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$
-を用いて分解できる．
-\[
- \Lambda=\{z\in\mathbb Z^\Sigma:
-                 \overline\varphi(z)\in\mathcal H\}
-\]
-とおく．
-各型なし非終端記号 $A$ について，
-長さが非終端記号厚み
-$t_G\le\theta_G$ 以下の生産的タプル
-$\omega_A$ を一つ固定する．
-任意の二つの $A$ の導出タプルは，
-同一の成功導出的文脈へ代入でき，
-その結果はともに $L$ に属するため
-\[
- \Psi(u)-\Psi(\omega_A)\in\Lambda
- \qquad(u\in L_A(G))                                      \tag{*}
-\]
-となる．
-
-各規則 $R:A\to\rho(B_1,\ldots,B_q)$ で，
-$c_R\in\mathbb N^\Sigma$ を規則中の終端記号の
-出現数ベクトルとし，
-\[
- \delta_R=\Psi(\omega_A)-c_R
-                 -\sum_{j=1}^q\Psi(\omega_{B_j})
-\]
-とおく．(*)より $\delta_R\in\Lambda$ で，
-$\|\delta_R\|_1$ は
-$T=(r+1)t_G+\|G\|$ 以下である．
-$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$，
-$\Lambda_T=\langle\Gamma_T\rangle$ とする．
-\[
- \Psi(u)-\Psi(\omega_A)=
- \sum_j(\Psi(u_j)-\Psi(\omega_{B_j}))-\delta_R
-\]
-を用いる導出上の帰納法により，
-すべての $u\in L_A(G)$ に対して
-$\Psi(u)-\Psi(\omega_A)\in\Lambda_T$ が成立する．
-
-型付き非終端記号 $X=A_{\mathbf t}$ の
-$d\le f$ 成分タプル
-$u=(u_1,\ldots,u_d)\in L_X$ を取る．
-各成分について正規言語
-$h^{-1}(t_i)\cap\Sigma^+$ のParikh像の
-固定した半線形表示から，
-$\psi(u_i)$ を含む線形集合
-$c_i+\sum_{p\in P_i}\mathbb N p$ を選ぶ．
-その生成元の個数と係数は
-$\Sigma,h$ のみに依存する定数で抑えられる．
+型付き記号$X=A_{\mathbf t}$のアリティを$d\le f$とし，
+$\tuple u=(u_1,\ldots,u_d)\in L_X$を取る．
+仮定(ii)により商値$\alpha_X$は一定であり，
+$\tuple\omega=\omega_A^{\alpha_X}$とおける．
+各成分型$t_i$について，正規言語
+$h^{-1}(t_i)\cap\Sigma^+$のParikh像に固定の半線形表示を取る．
+$\Sigma,h$を固定しているため，
+線形集合とその基底・周期ベクトルの個数とノルムは
+定数$C_h$で抑えられる．
+$\psi(u_i)$を含む線形集合
+$c_i+\sum_{p\in P_i}\mathbb Np$をそれぞれ選び，
 次の非負整数連立系を考える：
 \[
- \sum_{i=1}^d
-    \left(c_i+\sum_{p\in P_i}\nu_{i,p}p\right)
- -
- \sum_{z\in\Gamma_T}(\mu_z^+-\mu_z^-)z
- =\Psi(\omega_A).
+ \sum_{i=1}^d\sum_{p\in P_i}\nu_{i,p}p
+ -\sum_{\delta\in\Gamma_T}
+   (\mu_\delta^+-\mu_\delta^-)\delta
+ =\Psi(\tuple\omega)-\sum_{i=1}^dc_i.                 \tag{2}
 \]
-元の $u_i$ のParikhベクトルと
-$\Lambda_T$ に属するという上記の事実から，
-この連立系は可解である．
-方程式数は $|\Sigma|$，
-非負変数の個数は
-$O_{f,h,\Sigma}((T+1)^{|\Sigma|})$ 以下，
-係数の絶対値は
-$O_{f,h,\Sigma}(T+1)$ 以下である．
+(1)により元のタプルから解が得られる．
+方程式数は$m$，変数数は
+$n\le fC_h+2(2T+1)^m$，
+係数・右辺成分の絶対値は
+$a=T+fC_h$以下である（必要なら$C_h$を増やす）．
 Papadimitriouの非負整数小解定理
-~\cite{Papadimitriou1981} より，
-全ての変数が $T+1$ の固定多項式で
-抑えられる解が存在する．
-得られた各Parikhベクトルを実現する
-非空語 $v_i\in h^{-1}(t_i)$ を選び，
-$\tuple v=(v_1,\ldots,v_d)$ とする．
-$\|\tuple v\|_1$ は $T+1$ の多項式で抑えられ，
-成分別型は $u$ と一致し，
-$\Psi(\tuple v)-\Psi(u)\in
-\Lambda_T\subseteq\Lambda$ となる．
-
-任意の文文脈 $E$ に対して
-$E[\tuple v]$ と $E[u]$ の全体の $h$-型は等しく，
+~\cite{Papadimitriou1981}から，各変数が
+$n(ma)^{2m+1}$以下の解が存在する．
+得られた各ベクトル$q_i=c_i+\sum_p\nu_{i,p}p$を
+実現する非空語$v_i\in h^{-1}(t_i)$を選べる．
+タプル$\tuple v=(v_1,\ldots,v_d)$は
 \[
- \varphi(E[\tuple v])-\varphi(E[u])
- =\overline\varphi(\Psi(\tuple v)-\Psi(u))
- \in\mathcal H
+ h^{(d)}(\tuple v)=\mathbf t,\quad
+ \Psi(\tuple v)-\Psi(\tuple\omega)\in\Lambda_T,\quad
+ \|\tuple v\|_1=O_{\Sigma,h,f}((T+1)^{3m+1})
 \]
-が成り立つ．
-したがって $\tuple v\equiv_{L,h}\tuple u$ である．
-各型付き分布同値類に，長さが $T+1$ の多項式で
-抑えられた代表元が存在するので，
-命題~\ref{prop:mcfg-relaxed-witnesses} と
-$t_G\le\theta_G$ から求める総長上界が得られる．
-定数は補助アーベル群に依存しない．
+を満たす．(1)と合わせると，
+$\pi\varphi(\tuple v)=\pi\varphi(\tuple u)$である．
+任意の文文脈$E$に対し成分ごとの型が等しいので
+$h(E[\tuple v])=h(E[\tuple u])$，また可換性により
+$\pi\varphi(E[\tuple v])=\pi\varphi(E[\tuple u])$である．
+充填後の語は双方とも非空なので(i)を適用でき，
+$E[\tuple v]\in L\iff E[\tuple u]\in L$を得る．
+ゆえに$\tuple v\equiv_{L,h}\tuple u$であり，
+$\kappa_G$の上界が従う．標本長は
+命題~\ref{prop:mcfg-relaxed-witnesses}から従う．
+補助群の計算可能な表示は仮定しない存在論的な議論である．
+\end{proof}
+
+\paragraph{有限半束で添字付けされた商値．}
+有限結び半束$(Y,\vee,\bot)$，
+$\eta\preceq h$を満たす準同型
+$\eta:\Sigma^*\to Y$を固定する．
+タプルに対し
+$\eta(\tuple u)=\bigvee_i\eta(u_i)$とする．
+任意の写像$\gamma:Y\to\mathbb A$と
+$\mathsf{Acc}\subseteq M$を取り，
+\[
+ L=\{w\in\Sigma^+:h(w)\in\mathsf{Acc},\
+       \varphi(w)\in\gamma(\eta(w))+\mathcal H\}
+                                                               \tag{3}
+\]
+を考える．
+成分ごとの$h$型が等しい二つのタプルが
+受理文脈を共有すると，それらの$\varphi$値の差は
+$\mathcal H$に属する．
+任意の文脈で充填した語の$h$型と$\eta$値は
+それぞれ一致するため，受理性も一致する．
+したがって，(3)が$f$-MCFLなら
+$L\in\Cmcf{f}{h}$である．
+
+(3)の縮約済み良形表示$G$を固定する．
+$D_A=\eta(L_A)$，$Q=\mathbb A/\mathcal H$とし，
+$\operatorname{ht}(y)$を$\bot$から$y$までの
+最長狭義鎖の長さと定め，
+$\nu(A)=\max_{y\in D_A}\operatorname{ht}(y)$とする．
+$\pi\varphi(L_A)$が二つ以上の値を持つとき
+$A$を\emph{多値}という．
+
+\begin{lemma}[半束値関数と長方形剛性]
+\label{lem:mcfg-sl-rectangle}
+各$A$について，
+\(F_A:D_A\to Q,\qquad
+ F_A(\eta(\tuple u))=\pi\varphi(\tuple u)
+ \quad(\tuple u\in L_A)\)
+を満たす写像$F_A$が存在する．
+さらに規則$R:A\to\rho(B_1,\ldots,B_q)$，
+子の位置$j$について，
+それ以外の子のyield$\tuple v_i\in L_{B_i}$を固定し，
+\(W=\eta(\rho)\vee\bigvee_{i\ne j}\eta(\tuple v_i)\)
+とおく（$\eta(\rho)$は規則の終端部分の結び）．
+$y,y'\in D_{B_j}$が$y\vee W=y'\vee W$を満たせば
+$F_{B_j}(y)=F_{B_j}(y')$である．
+\end{lemma}
+\begin{proof}
+縮約性により$A$の任意のyieldを受理する
+導出文文脈$E$を固定できる．標的条件から
+\[
+ \pi\varphi(\tuple u)
+ =\pi\bigl(\gamma(\eta(E)\vee\eta(\tuple u))
+                 -\varphi(E)\bigr)
+\]
+であり，右辺は$\eta(\tuple u)$だけによる．
+後半は，半束値$y,y'$を持つ二つの子yieldを
+同じ規則と同じ兄弟yieldへ代入すれば，
+親の半束値が等しくなることを使う．
+親の商値が等しいことから，
+規則の線形・非削除性により固定部分を相殺すると，
+求める子の商値の等式が得られる．
+\end{proof}
+
+\begin{lemma}[多値分岐における高さの狭義低下]
+\label{lem:mcfg-sl-height}
+任意の規則の子出現$B_j$について
+$\nu(B_j)\le\nu(A)$である．
+異なる二つ以上の\emph{子出現}が多値なら，
+その各出現について$\nu(B_j)<\nu(A)$が成立する．
+多値記号$A$は$\nu(A)\ge1$を満たす．
+\end{lemma}
+\begin{proof}
+子$B_j$の最大高さを実現するyieldと
+任意の生産的な兄弟yieldを規則に入れると，
+親の半束値は子の値以上になる．
+したがって高さの非増加が従う．
+
+厳密不等号を示すため，多値の子$B_j$と
+$\operatorname{ht}(y_*)=\nu(B_j)$を満たす
+$y_*\in D_{B_j}$を固定する．
+別の多値の子$B_k$には
+$F_{B_k}(z)\ne F_{B_k}(z')$を満たす
+$z,z'\in D_{B_k}$がある．
+もし両方とも$y_*$以下なら，
+$B_j$を$y_*$に固定した際の長方形剛性から
+$F_{B_k}(z)=F_{B_k}(z')$となり矛盾する．
+よって例えば$z\nleq y_*$であり，
+$y_*<y_*\vee z$となる．この組合せを
+規則に入れると親の半束値は$y_*\vee z$以上なので
+$\nu(A)>\nu(B_j)$を得る．
+多値記号では異なる半束値が少なくとも二つ実現し，
+その一方は$\bot$より上にあるから$\nu(A)\ge1$である．
+\end{proof}
+
+\begin{lemma}[各商値の短い生成代表元]
+\label{lem:mcfg-sl-short-value}
+$H_Y=\max_{y\in Y}\operatorname{ht}(y)$，
+$b=\max\{0,H_Y-1\}$とおく．
+各非終端記号$A$と実現商値
+$\alpha\in\pi\varphi(L_A)$について
+$\pi\varphi(\omega_A^\alpha)=\alpha$かつ
+\[
+ \|\omega_A^\alpha\|_1\le
+ B_\sharp:=r^b|Y|
+          \bigl(\|G\|+r|V|t_G\bigr)
+ \le C_{Y,r}\|G\|\max\{1,\theta_G\}
+\]
+を満たす生成タプル$\omega_A^\alpha\in L_A$がある．
+\end{lemma}
+\begin{proof}
+$A$が一値なら長さ$t_G$以下の最短yieldを選ぶ．
+多値の場合，指定商値を実現する導出のうち，
+（総終端語長，導出ノード数）の辞書式順序で
+最小のものを選ぶ．
+各子部分導出も自身の非終端記号と商値に関して
+同じ順序で最小である．そうでなければ
+同じ商値の子へ置換して親をより小さくできる．
+一値の子はその記号の最短yield（長さ$t_G$以下）に
+取り替えられる．
+
+一値の子部分木を刈り込み，
+それらのコストだけを親へ課金して，
+多値出現だけからなる有限木を得る．
+根から葉への各経路で
+（非終端記号，商値）の組は繰り返されない．
+真の子孫導出は非削除性により長さが親以下で，
+ノード数は真に少なく，同じ組の辞書式最小性に反するからである．
+各記号の商値は高々$|Y|$種類なので，
+経路長は高々$|V||Y|$である．
+
+補題~\ref{lem:mcfg-sl-height}から
+$\nu$は下向きに非増加で，
+2つ以上の多値の子を持つ節点では
+各子へ向かって真に減少する．
+多値節点の$\nu$は少なくとも1なので，
+経路上の分岐節点は高々$b$個である．
+子の数は$r$以下ゆえ葉は高々$r^b$枚となる．
+一つの経路上で刈り込んだ子への支払いは
+$r|V||Y|t_G$以下であり，全経路で
+$r^b r|V||Y|t_G$以下である．
+一方，規則$R$が書く終端文字数を$a_R$とすれば，
+経路上の各非終端記号は高々$|Y|$回しか現れないので
+\[
+ \sum_{v\text{（経路上）}}a_{R_v}
+ \le |Y|\sum_{A\in V}
+       \max_{R:\,\mathrm{lhs}(R)=A}a_R
+ \le |Y|\|G\|.
+\]
+高々$r^b$本の葉経路全体で足すことにより，
+同じ節点を重複して数えることはあっても
+終端記号の寄与を取りこぼさない．
+二つのコストを合わせて$B_\sharp$が従う．
+最後の不等式は$t_G\le\theta_G$，
+$|V|\le\|G\|$による．
+\end{proof}
+
+\begin{theorem}[半束添字付きアーベル剰余類標的の多項式データ]
+\label{thm:mcfg-semilattice-twisted-polydata}
+空でない有限アルファベット$\Sigma$，
+有限型付け$h:\Sigma^*\to M$，
+有限結び半束$Y$，
+$\eta\preceq h$を満たす準同型
+$\eta:\Sigma^*\to Y$，
+$f,r\ge1$を固定する．
+$\Sigma,h,Y,\eta,f,r$のみに依存する定数$C,C'$が存在し，
+任意のアーベル群$\mathbb A$，準同型$\varphi$，
+部分群$\mathcal H$，写像$\gamma:Y\to\mathbb A$，
+受理型集合$\mathsf{Acc}\subseteq M$について，
+(3)で定める標的$L$の任意の縮約済み良形
+ファンアウト高々$f$・ランク高々$r$の表示$G$に対し，
+\[
+ \kappa_G\le C(\|G\|\bar\theta_G)^{3|\Sigma|+1},
+ \qquad
+ \|K^\dagger\|_+
+ \le C'(\|G\|\bar\theta_G)^{3|\Sigma|+2},
+ \quad\bar\theta_G=\max\{1,\theta_G\}
+\]
+を満たす両再構成器の特徴標本$K^\dagger\subseteq L$が
+存在する．さらに
+$|K^\dagger|\le|V||M|^f+|P||M|^{fr}$である．
+\end{theorem}
+\begin{proof}
+(3)の後に確認したように$L\in\Cmcf{f}{h}$．
+標的の定義と$\eta\preceq h$から，
+$h$型と$\pi\varphi$値の組による受理飽和性が成り立つ．
+型付き記号$X=A_{\mathbf t}$の全yieldは
+同じ総$\eta$値をもち，
+補題~\ref{lem:mcfg-sl-rectangle}により
+同じ商値をもつ．
+補題~\ref{lem:mcfg-sl-short-value}は
+$B=B_\sharp=O_{Y,r}(\|G\|\bar\theta_G)$で
+補題~\ref{lem:mcfg-coset-representative-transfer}の
+条件(iii)を与える．
+この転送補題から主張が従う．
+\end{proof}
+
+\begin{corollary}[アーベル型フィルタ標的]
+\label{thm:mcfg-abelian-filter-data}
+上の定理と同じ$\Sigma,h,f,r$を固定する．
+任意のアーベル群$\mathbb A$，
+準同型$\varphi:\Sigma^*\to\mathbb A$，
+$\mathcal H\le\mathbb A$，
+$\gamma\in\mathbb A$，
+$\mathsf{Acc}\subseteq M$について
+\(L^+=h^{-1}(\mathsf{Acc})\cap
+      \varphi^{-1}(\gamma+\mathcal H)\cap\Sigma^+\)
+とする．$L^+$が縮約済み良形ファンアウト高々$f$・
+ランク高々$r$の表示$G$を持つなら
+$L^+\in\Cmcf{f}{h}$であり，両再構成器には
+特徴標本$K^\dagger\subseteq L^+$が存在して
+\(\|K^\dagger\|_+
+ \le C(\|G\|\bar\theta_G)^{3|\Sigma|+2}\)
+を満たす．定数$C$は$\Sigma,h,f,r$のみに依存する．
+元の完全な標的に$\eps$が含まれるときは，
+既存の空語規約に従い符号化コスト1で追加する．
+\end{corollary}
+\begin{proof}
+一元半束$Y=\{\bot\}$と定数写像$\eta$，
+$\gamma(\bot)=\gamma$で
+定理~\ref{thm:mcfg-semilattice-twisted-polydata}を
+特殊化する．これは\emph{任意の}固定有限型付け$h$に
+適用できる．実際にはすべての型なし非終端記号が一値で，
+補題~\ref{lem:mcfg-coset-representative-transfer}の
+$B=t_G$を選べる．空語は既存の開始記号規約で別に処理する．
+\end{proof}
+
+\begin{corollary}[1マーカーの半束分割アーベル標的]
+\label{cor:mcfg-one-marker-split-polydata}
+空でないマーカー文字集合
+$\Sigma_{\mathsf c}\subseteq\Sigma$を固定し，
+$c(w)$を$w$がマーカーを含むとき1，含まないとき0とする．
+有限型付け$h$が2元半束への準同型
+$h_{\mathrm U}:w\mapsto c(w)$を細分するなら，
+\(L=\{w\in\Sigma^+:
+     \varphi(w)\in\gamma_{c(w)}+\mathcal H\}\)
+の任意の縮約済み良形・固定ファンアウト・
+固定ランク表示に対し，前定理の多項式上界が成立する．
+\end{corollary}
+\begin{proof}
+$Y=\{0,1\}$，$\eta=h_{\mathrm U}$，
+$\mathsf{Acc}=M$とし，
+定理~\ref{thm:mcfg-semilattice-twisted-polydata}を適用する．
 \end{proof}
 
 \begin{remark}
-定理~\ref{thm:mcfg-abelian-filter-data} は
-$h$ の正語像が $\mathbf{LG}$ の\emph{外}にある
-場合にも成立する．これは有限制御モノイドではなく，
-標的言語の構造に関する十分条件である．
-補助アーベル群の表示が計算可能とは限らない場合に，
-証拠の多項式時間\emph{構成}まで主張しない．
+本節の半束添字付き結果は\emph{標的言語の構造}に関する
+十分条件であり，補助アーベル群のデータについて一様である．
+一方，付録~\ref{app:local-group}の局所群定理は，
+\emph{固定型付け}の代数的構造を制約し，
+対応する代入可能な全標的に適用する．
+一般にはどちらも他方を含まない．
+本節の上界は存在的な緩和分布証拠による．
+命題~\ref{prop:computed-witness-budget}の計算可能な
+規則単位の証拠予算とは異なる．
+高ファンアウトでの超多項式特徴データ下界問題は
+なお未解決である．
 \end{remark}
+
 
 \section{多次元代入可能性との比較}
 \label{sec:comparison}
 
-Yoshinaka の多次元代入可能性は，
-正例学習について直接比較すべき基準である
+Yoshinakaの多次元代入可能性は型付けのない基準である
 ~\cite{Yoshinaka2009,Yoshinaka2011}．
-自明型付けの下で，本稿の枠組みは
-その意味論的言語クラスを再現する．
-有限型付けは，合成に関する規則証拠を保持したまま，
-どの観測タプルを同一視してよいかをさらに制限する．
-MCFG の証明には，成分別の型の伝播が必要であり，
-定量的な境界型付け定理では，
-複数のタプル成分を同時に制御しなければならない．
-Yoshinaka の $(k,\ell)$ 階層は
-別の CFG の成果である~\cite{Yoshinaka2008}．
-$h_\Sigma^{k,\ell}$ は同じ境界情報を成分ごとに持ち上げる．
-すべての $(f,h)$ 条件はアリティ1を含むため，
-\(\Cmcf{f}{h}\cap\mathrm{CFL} \subseteq\Cmcf{1}{h}\)
-が成り立つ．
-以下の例では，有限型付けによるクラスを
-自明型付けの場合，接頭辞--接尾辞型付け，
-正則フィルタによる説明からそれぞれ分離する．
-
-\subsection{Yoshinaka の基準クラスと接頭辞--接尾辞型付けへの特殊化}
-
-\begin{definition}[Yoshinaka の多次元代入可能性]
+自明型付けではそのクラスを再現し，
+有限型付けは同一視可能なタプルを制限する．
+\begin{definition}[Yoshinakaの多次元代入可能性]
 \label{def:yoshinaka-pd-substitutability}
-第~\ref{sec:prelim}節で定義した文文脈集合
-$\mathcal E_d$ を用いる．
-言語 $L$ が\emph{$f$D-代入可能}であるとは，
-任意の $1\le d\le f$，
-$E,F\in\mathcal E_d$ と
-$\tuple x,\tuple y\in(\Sigma^+)^d$ に対し
-\[
- E[\tuple x],\quad
- E[\tuple y],\quad F[\tuple x]\in L
- \Longrightarrow F[\tuple y]\in L
-\]
-が成り立つことをいう．
-この意味論的クラスを $\YSub{f}$ とし，
-$r$ を規則ランク上界として
-$\YSL{f}{r}:=\YSub{f}\cap\mathsf{MCFL}(f,r)$
-と書く．
-表示した四例の含意を\emph{代入の含意}と呼ぶ．
-Yoshinaka の元の定義はすべての
-アリティ $d\le f$ を量化し，
-非空のタプル成分を用い，
-$d$-文脈の内部区切り語を非空と要求する．
-脚注3では，空成分と空の区切り語を許す，
-より強い代替条件を別に論じている
+アリティ$d\le f$について，
+文文脈$E,F\in\mathcal E_d$と
+非空成分タプル$\tuple x,\tuple y$に対して
+\(E[\tuple x],E[\tuple y],F[\tuple x]\in L
+\Rightarrow F[\tuple y]\in L\)が成立するとき，
+$L$は\emph{$f$D-代入可能}である．
+そのクラスを$\YSub{f}$と書く．
+元の定義は非空の内部区切り語を要求し，
+空成分・空区切り語を許す別の強い条件とは区別する
 ~\cite[Section~3.1 and footnote~3]{Yoshinaka2011}．
 \end{definition}
 
-定義~\ref{def:prefix-suffix-typing} の
-有限モノイド準同型 $h_\Sigma^{k,\ell}$ を思い出そう．
-Yoshinaka の語レベルの定義では，
-$w_1,y_1,w_1',w_2,y_2,w_2'\in\Sigma^*$，
-$u\in\Sigma^k$，
-$v\in\Sigma^\ell$，
-$uy_1v,uy_2v\ne\eps$ としたうえで，
-\[
- w_1uy_1vw_1',\ w_1uy_2vw_1'\in L
- \quad\Longrightarrow\quad
- \bigl(w_2uy_1vw_2'\in L\iff w_2uy_2vw_2'\in L\bigr)
-\]
-を要求する~\cite{Yoshinaka2008}．
-比較される因子 $uy_iv$ は非空であるが，
-中央の語 $y_i$ 自体は空でもよい．
-これらの因子の $h_\Sigma^{k,\ell}$-値が等しいことは，
-この条件で使われる境界情報が等しいことと正確に一致する．
-特に $m_0=\max\{1,k+\ell\}$ より短い語については，
-語そのものが一致することを含む．
+自明型付けでは
+\(\Cmcf{f}{h_{\mathrm{triv}}}
+=\YSub{f}\cap f\text{-}\mathrm{MCFL}
+\subseteq\Cmcf{f}{h}\)．
+$f=1$では窓型付け$h_\Sigma^{k,\ell}$による条件は
+Yoshinakaの$(k,\ell)$条件に一致し
+~\cite{Yoshinaka2008}，
+高ファンアウトでは同じ制約を成分ごとに課す．
+型付けのない場合の多項式時間および
+特徴語長の上界は既知である
+~\cite[Theorem~1 and Lemma~7]{Yoshinaka2011}．
+本稿の拡張は有限型付けを備えた多成分の
+元文法厚みに関する定量的保証である．
 
-\paragraph{意味論的条件の特殊化．}
-自明型付けでは成分別の型の前提が消えるため，
-\(\Cmcf{f}{h_{\mathrm{triv}}} =\YSub{f}\cap f\text{-}\mathrm{MCFL} \subseteq\Cmcf{f}{h}\)
-が成り立つ．
-ファンアウト1では，
-$(1,h_\Sigma^{k,\ell})$-代入可能性は
-Yoshinaka の語レベルの $(k,\ell)$ 条件
-~\cite{Yoshinaka2008}
-に正確に一致する．
-すなわち同じ窓型とは，
-短い語では語そのものが等しいこと，
-長い語では長さ $k$ の接頭辞と
-長さ $\ell$ の接尾辞が共通であることを意味する．
-ファンアウトが高い場合も，
-同じ対応が成分ごとに成り立つ．
-
-\paragraph{Yoshinaka の効率性尺度との整合．}
-自明型付けでは，
-生産的な非終端記号の生成語型は一種類しかない．
-Yoshinaka の型なし文法に対する証拠はすでに
-\(|K_G|\le|P|,\qquad \|K_G\|\le|P|\tau_G\)
-を満たす~\cite[Lemma~7]{Yoshinaka2011}．
-次元と規則ランクを固定したときの
-多項式時間・多項式データも既知である
-~\cite[Theorem~1]{Yoshinaka2011}．
-したがって，本稿の定量的な主張は
-自明型付けの結果を再証明することではなく，
-新しい型付き・多成分の場合を扱うものである．
-
-\subsection{内在的に規則ランク2を必要とする境界型付き標的}
-\label{subsec:intrinsic-ranktwo}
-
-次の例は，ランク1と高ランクの定量的場合分けが，
-文法表示の偶然ではなく言語自体に内在することを示す．
-この規則ランクの障害は有限型付けによって作られたものではない．
-以下で用いる文字数平衡の因子は，
-既に Yoshinaka の自明型付けクラスに属する．
-本構成では，その障害を，最小ファンアウト2という性質と，
-自明型付けクラスからの分離と組み合わせ，
-一つの境界型付き標的に実現する．
-
-\[
- \Sigma_{\mathrm{intr}}
- :=\{\mathtt a,\mathtt b,\mathtt l,\mathtt r,\mathtt p,\mathtt q,
-       \mathtt c,\mathtt d,\mathtt{\#},\mathtt{\$},
-       \mathtt u,\mathtt v,\mathtt w\}
-\]
-とし，
-\(P_{\mathrm{intr}} :=\{\mathtt{lpc},\mathtt{lpd},\mathtt{lqc}, \mathtt{rpc},\mathtt{rpd}\}\)
-とおく．
-\[
- \mathrm{MIX}_2^+
- :=\{x\in\{\mathtt a,\mathtt b\}^+:
-       |x|_{\mathtt a}=|x|_{\mathtt b}\},
- \qquad
- T_3^+
- :=\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}
-\]
-と定め，
-\(L_{\mathrm{intr}} :=P_{\mathrm{intr}}\,\mathtt{\#}\,\mathrm{MIX}_2^+\, \mathtt{\$}\,T_3^+\)
-とする．
-
-証拠言語の役割を明確にするため，
-\[
- \varphi_{\mathrm{mix}}:
- \{\mathtt a,\mathtt b\}^*\to\mathbb Z,
- \qquad
- \varphi_{\mathrm{mix}}(\mathtt a)=1,\quad
- \varphi_{\mathrm{mix}}(\mathtt b)=-1
-\]
-とおく．すると
-\(\mathrm{MIX}_2^+ =\{\mathtt a,\mathtt b\}^+ \cap\varphi_{\mathrm{mix}}^{-1}(0)\)
-である．
-$\{\mathtt a,\mathtt b\}^+$ は
-自明に $f$-タプル代入可能なので，
-命題~\ref{prop:abelian-coset-filter}(ii) から
-すべての $f\ge1$ について
-$\mathrm{MIX}_2^+\in\YSub{f}$ が従う．
-後述の $B$ に対するランク2の CFG は，
-この因子が文脈自由であることも示す．
-したがって，ここで用いる内在的ランク2の現象自体は，
-すでに自明型付けの基準クラスに存在する．
-$L_{\mathrm{intr}}$ の役割は，この既知のランク障害を，
-非文脈自由性，最小ファンアウト2，
-および $\YSub{f}$ からの分離と，
-単一の有限型付き標的の中で組み合わせることである．
-
-\begin{theorem}[非文脈自由で内在的ランク2をもつ型付き証拠言語]
-\label{thm:intrinsic-ranktwo-witness}
-言語 $L_{\mathrm{intr}}$ は
-\[
- L_{\mathrm{intr}}
- \in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}
-\]
-を満たす．
-さらに，任意の $f\ge2$ について
-\[
- L_{\mathrm{intr}}
- \in\Cmcf{f}{h_{\Sigma_{\mathrm{intr}}}^{1,1}}
- \setminus\YSub{f}
-\]
-となる．
-また，任意の有限 $f'\ge1$ について
-\(L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)\)
-である．
-したがって $L_{\mathrm{intr}}$ の最小ファンアウトは正確に2であり，
-任意の有限ファンアウトの MCFG 表示全体での最小規則ランクも
-正確に2である．
-特に，定理~\ref{thm:boundary-polydata} は，
-どの有限ファンアウトでも
-定理~\ref{thm:rankone-polydata} の対象とならない
-非文脈自由言語に適用できる．
-\end{theorem}
-
-\begin{proof}
-まず最大規則ランク2の，
-縮約済み良形のファンアウト2文法を与える．
-非終端記号 $B$ は，次の規則によって
-非空の文字数平衡言語を生成する．
-\[
-\begin{aligned}
- B\to{}&
- \mathtt a B\mathtt b B
- \mid \mathtt b B\mathtt a B
- \mid \mathtt a B\mathtt b
- \mid \mathtt a\mathtt b B
- \mid \mathtt a\mathtt b\\
- &{}\mid
- \mathtt b B\mathtt a
- \mid \mathtt b\mathtt a B
- \mid \mathtt b\mathtt a .
-\end{aligned}
-\]
-$|x|_{\mathtt a}-|x|_{\mathtt b}$ が初めて0に戻る位置による
-通常の帰納法から
-$L_B=\mathrm{MIX}_2^+$ が従う．
-
-ファンアウト2の非終端記号 $A$ に
-\(A\to(\mathtt u,\mathtt w) \mid (\mathtt u\xi_1^1\mathtt v,\mathtt w\xi_1^2)(A)\)
-という規則を与える．
-生成するタプルは正確に
-\(\{(\mathtt u^n\mathtt v^{n-1},\mathtt w^n):n\ge1\}\)
-である．
-各 $\alpha\in P_{\mathrm{intr}}$ について，
-開始規則
-\(S\to \alpha\mathtt{\#}\xi_1^1\mathtt{\$} \xi_2^1\mathtt v\xi_2^2(B,A)\)
-を加える．
-得られた文法は正確に $L_{\mathrm{intr}}$ を生成する．
-この文法は縮約済みで，
-$\lambda$-自由，線形，非消去，非置換である．
-またすべての開始規則で，
-$A$ の二つの成分は終端記号 $\mathtt v$ により分離されるため，
-非融合でもある．
-よって最大規則ランク2の良形ファンアウト2文法である．
-
-この言語は文脈自由でない．
-正則言語
-\(R:= \mathtt{lpc\#ab\$}\, \mathtt u^+\mathtt v^+\mathtt w^+\)
-と交差を取ると
-\(L_{\mathrm{intr}}\cap R = \{\mathtt{lpc\#ab\$}\mathtt u^n \mathtt v^n\mathtt w^n:n\ge1\}\)
-となる．
-固定接頭辞を消去し，
-$\mathtt u,\mathtt v,\mathtt w$ を固定する準同型で，
-この言語は
-$\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}$
-に写る．
-後者は文脈自由でない．
-文脈自由言語が正則言語との交差と準同型像で閉じていることから，
-$L_{\mathrm{intr}}$ は文脈自由でない．
-本稿の構文でファンアウト1の MCFG は
-ちょうど文脈自由文法であり，
-上の文法はファンアウト2なので，
-最小ファンアウトは正確に2である．
-
-型付きクラスへの所属については，
-\[
- Q_{\mathrm{intr}}
- :=P_{\mathrm{intr}}\,\mathtt{\#}\,
-   \{\mathtt a,\mathtt b\}^+\,
-   \mathtt{\$}\,
-   \mathtt u^+\mathtt v^+\mathtt w^+
-\]
-とおく．
-この言語は厳密2局所（strictly 2-local）である．
-両端の標識も含めた，許容する隣接対の完全な集合の一つは
-\[
-\begin{gathered}
- \vdash\mathtt l,\ \vdash\mathtt r,\quad
- \mathtt{lp},\ \mathtt{lq},\ \mathtt{rp},\quad
- \mathtt{pc},\ \mathtt{pd},\ \mathtt{qc},\\
- \mathtt{c\#},\ \mathtt{d\#},\quad
- \mathtt{\#a},\ \mathtt{\#b},\quad
- \mathtt{aa},\ \mathtt{ab},\ \mathtt{ba},\ \mathtt{bb},\\
- \mathtt{a\$},\ \mathtt{b\$},\quad
- \mathtt{\$u},\quad
- \mathtt{uu},\ \mathtt{uv},\ \mathtt{vv},\ \mathtt{vw},\
- \mathtt{ww},\quad
- \mathtt w\dashv
-\end{gathered}
-\]
-である．
-準同型
-\(\Phi_{\mathrm{intr}}: \Sigma_{\mathrm{intr}}^*\to\mathbb Z^3\)
-を
-\[
-\begin{aligned}
- \Phi_{\mathrm{intr}}(\mathtt a)&=(1,0,0),&
- \Phi_{\mathrm{intr}}(\mathtt b)&=(-1,0,0),\\
- \Phi_{\mathrm{intr}}(\mathtt u)&=(0,1,0),&
- \Phi_{\mathrm{intr}}(\mathtt v)&=(0,-1,1),&
- \Phi_{\mathrm{intr}}(\mathtt w)&=(0,0,-1)
-\end{aligned}
-\]
-と定め，他のすべての終端記号の像を $(0,0,0)$ とする．
-すると
-\(L_{\mathrm{intr}} =Q_{\mathrm{intr}}\cap \Phi_{\mathrm{intr}}^{-1}(0)\)
-となる．実際，3座標の制約は順に
-\[
- |x|_{\mathtt a}=|x|_{\mathtt b},\qquad
- |x|_{\mathtt u}=|x|_{\mathtt v},\qquad
- |x|_{\mathtt v}=|x|_{\mathtt w}
-\]
-を課す．
-補題~\ref{lem:sl2-boundary-control} と
-命題~\ref{prop:abelian-coset-filter}(ii) から，
-この交差言語は任意の $f\ge1$ について
-$(f,h_{\Sigma_{\mathrm{intr}}}^{1,1})$-タプル代入可能である．
-上のファンアウト2文法と合わせて
-\(L_{\mathrm{intr}} \in\Cmcf{f}{h_{\Sigma_{\mathrm{intr}}}^{1,1}} \qquad(f\ge2)\)
-が得られる．
-
-この言語は，アリティ1においてすでに
-Yoshinaka の自明型付けクラスに属さない．
-\(x:=\mathtt p,\qquad y:=\mathtt q\)
-および一穴文脈
-\(E:=\mathtt l\blank_1\mathtt{c\#ab\$uvw}, \qquad F:=\mathtt r\blank_1\mathtt{d\#ab\$uvw}\)
-を取る．
-すると
-\(E[x],\ E[y],\ F[x]\in L_{\mathrm{intr}}, \qquad F[y]\notin L_{\mathrm{intr}}\)
-である．
-よってアリティ1の代入の含意が破れ，
-任意の $f\ge1$ に対して
-$L_{\mathrm{intr}}\notin\YSub{f}$ となる．
-なお，問題となる一文字因子は境界型付けで区別される：
-\(h_{\Sigma_{\mathrm{intr}}}^{1,1}(\mathtt p) \ne h_{\Sigma_{\mathrm{intr}}}^{1,1}(\mathtt q).\)
-
-残るのは内在的な規則ランクの証明である．
-\(\mathrm{MIX}_2 :=\{x\in\{\mathtt a,\mathtt b\}^*: |x|_{\mathtt a}=|x|_{\mathtt b}\}\)
-とおく．
-Gallot は，正ランクの各規則の子が
-高々一つの非終端記号である MCFG を
-\emph{非分岐（non-branching）}と呼ぶ．
-本稿の言葉では，これは規則ランクが高々1であることに正確に対応し，
-ファンアウトについて全体で固定した上界を要求しない
-~\cite[Definition~38]{Gallot2021}．
-有限文法の非終端記号の最大アリティは必ず有限なので，
-Gallot の非分岐 MCFL クラスは
-\(\bigcup_{f'<\infty}\mathsf{MCFL}(f',1)\)
-である．
-Gallot の Theorem~29 はこのクラスを
-有限指数 EDT0L 言語と同定し，
-Theorem~31 は $\mathrm{MIX}_2$ が
-有限指数 EDT0L でないことを示す．
-Definition~38 は子変数が高々一度現れることを明示的に許し，
-Theorem~28 は非置換・非消去表示が
-同じ非分岐クラスを生成することを確認する．
-したがって後で終端記号を消去する準同型を用いても，
-引用した下界の形式体系の範囲に留まる．
-同値に，$\mathrm{MIX}_2$ は
-いかなる非分岐 MCFG でも生成されない．
-Gallot の Propositions~5--6 は，
-その背後にある $k$-導出の有界性による矛盾を与える
-~\cite[Theorem~29, Theorem~31,
-Propositions~5--6]{Gallot2021}．
-
-Bishop らはその後，密接に対応する R-MCFG 形式体系において，
-同じ障害を査読済み論文として詳細に展開した．
-彼らの Definition~6.1 は非終端記号のアリティ
-（本稿のファンアウト）を \emph{rank} と呼ぶが，
-\emph{non-branching} は引き続き伝播規則の子が一つであることを意味する．
-Lemma~6.8 は標準形を与え，
-Definition~7.1 は同じ平衡言語を同定し，
-Section~7 は障害を証明する．
-これは Theorem~C の，
-さらに強い非 EDT0L の主張に至る
-~\cite[Definition~6.1, Lemma~6.8,
-Definition~7.1, Section~7, Theorem~C]{BishopEtAl2026EDT0L}．
-これは結果を裏づける先行研究であり，
-本稿が直接使う含意はあくまで
-Gallot の Theorems~29 と~31 である．
-
-ここで $\pi$ を
-$\mathtt a,\mathtt b$ を固定し，
-$\Sigma_{\mathrm{intr}}$ の他のすべての終端記号を
-消去する準同型とする．
-すると
-\(\pi(L_{\mathrm{intr}})=\mathrm{MIX}_2^+\)
-となる．
-仮に $L_{\mathrm{intr}}$ に
-ファンアウト $f'$・規則ランク1の表示があれば，
-その規則テンプレートの終端部分へ $\pi$ を適用することで，
-ファンアウトと規則ランクを保存した
-$\mathrm{MIX}_2^+$ の表示を得る．
-消去によって空の終端部分が生じても，
-標準 MCFG 形式では許される．
-さらに新しい開始記号を加え，
-旧開始記号への単項恒等リンクと
-$\eps$ を生成するランク0規則を設ければ，
-ファンアウト $f'$・規則ランク1の
-$\mathrm{MIX}_2$ の表示が得られる．
-これは Gallot の非分岐下界に矛盾する．
-したがって任意の有限 $f'\ge1$ について
-\(L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)\)
-である．
-上のランク2文法と合わせて，
-主張した内在的規則ランクが証明された．
-\end{proof}
-
-この構成は意図的にモジュール化されている．
-$\mathrm{MIX}_2^+$ 因子が規則ランク1への障害を担い，
-$T_3^+$ 因子が文脈自由性を破り，
-最小ファンアウト2を強制する．
-したがって本定理は，
-二つの下界が一つの有限型付き標的で同時に成り立つことを示す．
-両下界は，二つの文法資源の不可分な相互作用ではなく，
-別々の因子に由来する．
-
-非分岐性の下界そのものは先行結果である．
-本稿固有の点は，
-厳密局所的な外側の形式と $(1,1)$-境界型付けによって，
-この標的を型付きクラスに含めながら，
-表示した四例の代入の含意によって
-Yoshinaka の自明型付けクラスから分離することである．
-外側の形式は既知の非分岐障害を保存するので，
-同じ標的はあらゆる有限ファンアウトにわたって
-内在的に規則ランク2を必要とする．
-
-\subsection{自明型付けを超える有限型付け}
-\label{subsec:finite-typing-separations}
-
-第~\ref{sec:prelim}節のフィルタに関する結果は，
-十分条件による有用な構成法を与える．
-しかし有限型付けは，
-自明型付けクラスへ正則フィルタを後から適用するだけではない．
-次の線形言語の例は，より強い分離を与えると同時に，
-ファンアウトの鋭い効果を示す．
-
-$\Sigma_{\mathrm{cd}}
-:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$
-上の言語
-\[
- L_{\mathrm{cd}}
- :=\{\mathtt a^n\mathtt c\mathtt b^n:n\ge0\}
- \cup
- \{\mathtt a^n\mathtt d\mathtt b^{2n}:n\ge0\}
-\]
-を考える．
-$M_{\mathrm{cd}}
-:=\{1,\eta_{\mathtt c},\eta_{\mathtt d},0\}$
-とし，$1$ は単位元，$0$ は零元で，
-$\{\eta_{\mathtt c},\eta_{\mathtt d},0\}$
-から二つの元を取った積は常に $0$ とする．
-準同型を
-\[
- h_{\mathrm{cd}}(\mathtt a)
- =h_{\mathrm{cd}}(\mathtt b)=1,\qquad
- h_{\mathrm{cd}}(\mathtt c)=\eta_{\mathtt c},
- \qquad
- h_{\mathrm{cd}}(\mathtt d)=\eta_{\mathtt d}
-\]
-で定義する．
-
-\begin{proposition}[ファンアウトに敏感な型付き言語]
-\label{prop:strong-fanout-separation}
-言語 $L_{\mathrm{cd}}$ は線形であり，
-\(L_{\mathrm{cd}}\in\Cmcf{1}{h_{\mathrm{cd}}}\)
-を満たす．
-また任意の $k,\ell\ge0$ に対し
-\(L_{\mathrm{cd}} \notin\Cmcf{1}{h_{\Sigma_{\mathrm{cd}}}^{k,\ell}}\)
-である．
-さらに
-$L_{\mathrm{cd}}=L_0\cap L_{\mathrm{reg}}$
-を満たす
-$L_0\in\YSub{1}$ と正則言語 $L_{\mathrm{reg}}$
-は存在しない．
-しかも任意の有限モノイド準同型
-$g:\Sigma_{\mathrm{cd}}^*\to N$ に対して
-\(L_{\mathrm{cd}}\notin\Cmcf{2}{g}\)
-となる．
-\end{proposition}
-
-\begin{proof}
-線形文法
-\[
- S\to C\mid D,\qquad
- C\to\mathtt c\mid\mathtt a C\mathtt b,\qquad
- D\to\mathtt d\mid\mathtt a D\mathtt b\mathtt b
-\]
-が $L_{\mathrm{cd}}$ を生成する．
-
-$(1,h_{\mathrm{cd}})$-代入可能性について，
-同じ型の非空因子 $x,y$ が
-受理文脈を共有するとする．
-型 $1$ の語には中央の記号が含まれないので，
-文脈によって枝と左右の位置が固定され，
-個数制約から $x=y$ となる．
-型 $\eta_{\mathtt c}$ では
-\(x=\mathtt a^{n_1}\mathtt c\mathtt b^{n_2}, \quad y=\mathtt a^{n_1'}\mathtt c\mathtt b^{n_2'}\)
-と書ける．
-共通文脈で受理されることから
-$n_1-n_2=n_1'-n_2'$ が従う．
-これは他のすべての $\mathtt c$-文脈でも不変な量である．
-型 $\eta_{\mathtt d}$ では
-$2n_1-n_2=2n_1'-n_2'$ が不変となる．
-型 $0$ の分布は空である．
-したがって
-$L_{\mathrm{cd}}\in\Cmcf{1}{h_{\mathrm{cd}}}$ である．
-
-$k,\ell$ を固定し，
-$m\ge\max\{1,k+\ell\}$ を選ぶ．
-\(x=\mathtt a^m\mathtt c\mathtt b^m,\qquad y=\mathtt a^m\mathtt d\mathtt b^{2m}\)
-は同じ $h_{\Sigma_{\mathrm{cd}}}^{k,\ell}$-型をもち，
-空文脈を共有する．
-しかし
-$\mathtt a\blank_1\mathtt b$ は
-$x$ を受理する一方，$y$ を拒否する．
-よって，すべての接頭辞--接尾辞型付けは
-ファンアウト1でも失敗する．
-
-$L_{\mathrm{cd}}=L_0\cap L_{\mathrm{reg}}$ で，
-$L_0\in\YSub{1}$，
-$L_{\mathrm{reg}}$ が正則だと仮定する．
-$\mathtt c,\mathtt d\in L_0$ なので，
-代入可能性から
-$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$ が従う．
-さらに
-$\mathtt a\mathtt d\mathtt b^2,
- \mathtt a\mathtt c\mathtt b\in L_0$
-を使うと
-$\D_{L_0}(\mathtt c\mathtt b)
-=\D_{L_0}(\mathtt c\mathtt b^2)$
-が得られる．
-したがって
-\(\mathtt a^m\mathtt c\mathtt b^{m+t}\in L_0 \qquad(m\ge1,\ t\ge0)\)
-である．
-$L_{\mathrm{reg}}$ の DFA の状態数より $m$ を大きくし，
-受理される標的語の末尾の
-$\mathtt b^m$ ブロックをポンピングすると，
-ある $t>0$ について同じ語が
-$L_{\mathrm{reg}}$ にも入る．
-これは仮定した交差表示に矛盾する．
-
-最後に有限準同型
-$g:\Sigma_{\mathrm{cd}}^*\to N$ に対し，
-$1\le i<j$ を
-\(g(\mathtt a^i)=g(\mathtt a^j),\qquad g(\mathtt b^i)=g(\mathtt b^j)\)
-となるように選ぶ．
-タプル
-$(\mathtt a^i,\mathtt b^i)$ と
-$(\mathtt a^j,\mathtt b^j)$
-は成分別 $g$-型が等しく，
-$\blank_1\mathtt c\blank_2$
-によって両方とも受理される．
-一方，
-$\blank_1\mathtt d\blank_2\mathtt b^i$
-は最初のタプルだけを受理する．
-$i<j$ なら
-$\mathtt a^j\mathtt d\mathtt b^{i+j}
-\notin L_{\mathrm{cd}}$
-だからである．
-よってアリティ2の条件は，
-任意の有限 $g$ に対して破れる．
-\end{proof}
-
-したがって $L_{\mathrm{cd}}$ は，
-ファンアウト1におけるすべての接頭辞--接尾辞型付けと
-任意の正則フィルタによる表現から有限型付けを分離する．
-しかしアリティ2を検査するようにすると，
-どの有限型付けでもこの言語を救えない．
-
-\subsection{局所的な境界制御と任意の正則フィルタ}
-\label{subsec:comparison-separations}
-
-局所検査可能性の標準用語に従う
-~\cite{McNaughtonPapert1971}．
-$L_{\mathrm{sl}}\subseteq\Sigma^*$ が
-\emph{厳密2局所（strictly 2-local）}であるとは，
-ある集合
-$\mathsf{Adj}
-\subseteq(\Sigma\cup\{\vdash,\dashv\})^2$
-が存在して，
-\[
- w\in L_{\mathrm{sl}}
- \quad\Longleftrightarrow\quad
- \text{語 $\vdash w\dashv$ の隣接対がすべて
-       $\mathsf{Adj}$ に属する}
-\]
-となることをいう．
-ここで $\vdash,\dashv\notin\Sigma$ は固定した端点標識である．
-
-\begin{lemma}[厳密2局所条件は境界型付きである]
-\label{lem:sl2-boundary-control}
-$L_{\mathrm{sl}}\subseteq\Sigma^*$ が厳密2局所なら，
-任意の $f\ge1$ について
-\(L_{\mathrm{sl}} \in\Cmcf{f}{h_\Sigma^{1,1}}\)
-が成り立つ．
-\end{lemma}
-
-\begin{proof}
-同じ $h_\Sigma^{1,1}$-型をもつ非空タプル
-$\tuple x,\tuple y$ が，
-受理する文脈 $E_0$ を共有するとする．
-各 $y_i$ の内部の隣接対は
-$E_0[\tuple y]$ に現れるので許容される．
-$E[\tuple x]\in L_{\mathrm{sl}}$ のとき，
-$E[\tuple y]$ の各隣接対は，
-固定終端部分の内部，
-ある $y_i$ の内部，
-または成分の境界を横切る対のいずれかである．
-それらは順に
-$E[\tuple x]$，
-$E_0[\tuple y]$，
-あるいは境界型で符号化された先頭・末尾文字の一致
-によって許容される．
-端点標識を含む対は変化しない．
-したがって $E[\tuple y]\in L_{\mathrm{sl}}$ であり，
-対称性から主張が従う．
-\end{proof}
-
-\paragraph{標的依存の任意の正則フィルタ．}
-比較のため，固定アルファベット上に
-\[
- \mathcal F_f^{\mathrm{arb}}
- :=\bigl\{L_0\cap R:
-       L_0\in\YSub{f},\ R\text{ は正則}\bigr\}
-       \cap f\text{-}\mathrm{MCFL}
-\]
-と定義する．
-このクラスはすべての正則言語を含む
-（$\Sigma^*\in\YSub{f}$ とすればよい）．
-よって Gold の障害により，
-単一の正例学習クラスとしては
-TxtEx 同定できない．
-ここでは追加の学習可能クラスとしてではなく，
-表現力を比較するための基準としてだけ用いる．
-
-内在的ランク2の証拠言語はこの大きな断片に属する：
-\(L_{\mathrm{intr}} =\Phi_{\mathrm{intr}}^{-1}(0)\cap Q_{\mathrm{intr}}.\)
-したがって，この言語が示すのは内在的規則ランクであって，
-任意の正則フィルタからの分離ではない．
-命題~\ref{prop:strong-fanout-separation} は
-ファンアウト1でその分離を示した．
-次の定理は，型付き非文脈自由の
-ファンアウト2・ランク1の標的について分離を示す．
-
-\begin{theorem}[任意の正則フィルタを超えるファンアウト2の型付き言語]
-\label{thm:arbitrary-filter-separation}
-$\Sigma_\star:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$ とし，
-\[
- L_\star
- :=\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}
-   \cup
-   \{\mathtt a^n\mathtt d^{n+1}\mathtt b^{2n}:n\ge0\}
-\]
-とおく．
-準同型
-$g_\star:\Sigma_\star^*
-\to(\mathcal P(\{\mathtt c,\mathtt d\}),\cup)$ を
-\[
- g_\star(\mathtt a)=g_\star(\mathtt b)=\varnothing,
- \qquad
- g_\star(\mathtt c)=\{\mathtt c\},
- \qquad
- g_\star(\mathtt d)=\{\mathtt d\}
-\]
-で定め，
-\(h_\star:=(h_{\Sigma_\star}^{1,1},g_\star)\)
-とおく．
-このとき $L_\star$ は非文脈自由で，
-最小ファンアウトは2，
-ファンアウト2での最小規則ランクは1である．
-さらに任意の $f\ge2$ について
-\(L_\star \in\Cmcf{f}{h_\star} \setminus\mathcal F_f^{\mathrm{arb}}\)
-が成り立つ．
-同値に，
-$L_0\in\YSub{f}$ と正則言語 $R_{\mathrm{reg}}$ により
-$L_\star=L_0\cap R_{\mathrm{reg}}$
-と表すことはできない．
-\end{theorem}
-
-\begin{proof}
-良形でファンアウト2・ランク1の文法を
-\[
-\begin{aligned}
- A_{\mathtt c}
-   &\to(\mathtt a\mathtt c,\mathtt b)
-     \mid(\mathtt a\xi_1^1\mathtt c,\xi_1^2\mathtt b)(A_{\mathtt c}),\\
- A_{\mathtt d}
-   &\to(\mathtt a\mathtt d,\mathtt b\mathtt b)
-     \mid(\mathtt a\xi_1^1\mathtt d,\xi_1^2\mathtt b\mathtt b)(A_{\mathtt d}),\\
- S&\to\mathtt c\mid\mathtt d
-   \mid(\xi_1^1\mathtt c\xi_1^2)(A_{\mathtt c})
-   \mid(\xi_1^1\mathtt d\xi_1^2)(A_{\mathtt d})
-\end{aligned}
-\]
-で与える．
-これは正確に $L_\star$ を生成する．
-正則言語
-$\mathtt a^*\mathtt c^+\mathtt b^*$
-との交差は
-$\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}$
-であり，これは文脈自由でない．
-閉包性を使う短い証明のため，
-新しい記号 $\mathtt\#$ を導入し，
-$\mathtt a,\mathtt b,\mathtt c$ は固定して
-$\mathtt\#$ を $\mathtt c$ に写す準同型を考える．
-この枝の逆像を
-$\mathtt a^*\mathtt c^*\mathtt\#\mathtt b^*$
-と交差すると，
-\(\{\mathtt a^n\mathtt c^n\mathtt\#\mathtt b^n:n\ge0\}\)
-となる．
-$\mathtt\#$ を消去すれば
-$\{\mathtt a^n\mathtt c^n\mathtt b^n:n\ge0\}$
-が文脈自由となってしまい，矛盾する．
-よって最小ファンアウトは2である．
-言語が無限であることと上に示した文法から，
-ファンアウト2における最小規則ランクは1である．
-
-型付き代入可能性を示すため，
-\[
- Q_\star:=
-   \mathtt a^*\mathtt c^+\mathtt b^*
-   \cup\mathtt a^*\mathtt d^+\mathtt b^*,
- \qquad
- \Psi(w):=(|w|_{\mathtt a},|w|_{\mathtt b},
-            |w|_{\mathtt c},|w|_{\mathtt d})
-\]
-とおく．
-厳密2局所言語 $Q_\star$ は
-補題~\ref{lem:sl2-boundary-control} により境界型付きである．
-同じ $h_\star$-型をもつタプル
-$\tuple x,\tuple y$ が
-受理文脈 $E_0$ を共有するとし，
-\(\Delta:=\sum_i\Psi(y_i)-\sum_i\Psi(x_i)\)
-とおく．
-両者の $g_\star$-型が等しいので，
-$E_0[\tuple x]$ と $E_0[\tuple y]$
-は同じ枝に属する．
-したがってある $q\in\mathbb Z$ に対し，
-その枝が $\mathtt c$ なら
-$\Delta=q(1,1,1,0)$，
-$\mathtt d$ なら
-$\Delta=q(1,2,0,1)$ である．
-
-$F[\tuple x]\in L_\star$ とする．
-境界型付けにより
-$F[\tuple y]\in Q_\star$ であり，
-$g_\star$-型の一致から
-二つの充填結果は同じ $F$-枝に属する．
-$E_0$ と $F$ が同じ枝を選ぶなら，
-上の個数差はその枝のアフィンな関係を保存する．
-別の枝を選ぶ場合，
-いずれのタプル成分にも
-$\mathtt c,\mathtt d$ は含まれない．
-そのため $\Delta$ の中央の二座標は0となり，
-$q=0$ が強制される．
-いずれの場合も $F[\tuple y]\in L_\star$ であり，
-対称性から
-$L_\star\in\Cmcf{f}{h_\star}$ が従う．
-
-最後に
-$L_\star=L_0\cap R_{\mathrm{reg}}$，
-$L_0\in\YSub{f}$，
-$R_{\mathrm{reg}}$ は正則，と仮定する．
-$\mathtt c,\mathtt d\in L_0$ なので，
-アリティ1の代入可能性から
-$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$
-となる．
-よって
-$\mathtt a\mathtt d^2\mathtt b^2\in L_0$
-で二つの $\mathtt d$ を順に置き換えると，
-まず
-$\mathtt a\mathtt c\mathtt d\mathtt b^2\in L_0$，
-次に
-$\mathtt a\mathtt c^2\mathtt b^2\in L_0$
-が得られる．
-これと
-$\mathtt a\mathtt c^2\mathtt b\in L_0$
-から
-\(\D_{L_0}(\mathtt c^2\mathtt b) =\D_{L_0}(\mathtt c^2\mathtt b^2)\)
-が従う．
-したがって任意の $m\ge1,t\ge0$ について
-$\mathtt a^m\mathtt c^{m+1}\mathtt b^{m+t}\in L_0$
-となる．
-$m$ を $R_{\mathrm{reg}}$ の DFA の状態数以上にすると，
-受理される標的語の末尾の
-$\mathtt b^m$ ブロックをポンピングでき，
-ある $t>0$ について
-同じ語が $R_{\mathrm{reg}}$ に属する．
-この語は交差には属するが
-$L_\star$ には属さないため，矛盾する．
-\end{proof}
-
-よって単一の標的 $L_\star$ は，
-Yoshinaka の言語にどのような有限状態フィルタを
-後から適用しても表現できないことを示す．
-この結論は，フィルタに用いる型付けが
-$h_\star$ をどれほど細かく精密化しても変わらない．
-
-このランク1の分離は，
-定理~\ref{thm:intrinsic-ranktwo-witness} を補完する．
-後者は，すべての有限ファンアウトにわたり
-最小規則ランク2をもつ
-境界型付き非文脈自由標的を与える．
 
 \section{結論}
 \label{sec:conclusion}
 
-固定有限モノイド型付けの下で，
-$(f,h)$-タプル代入可能なMCFGクラスは
-正例から厳密に再構成でき，TxtEx 同定も可能である．
-規則ランクを固定すれば観測標本サイズに関して
-多項式時間で仮説を更新できるが，
-この計算量と特徴標本の取得コストは区別する必要がある．
-
-正例データ総長について，
-規則ランク1なら任意の固定型付けで
-文法サイズのみの多項式上界が成立する．
-高い規則ランクでは，境界窓型付けで
-文法サイズと元の厚みについて二次上界が得られ，
-窓と任意有限群の組合せで三次上界が得られる．
-局所群定理（付録~\ref{app:local-group}）は
-後者を正語像半群が $\mathbf{LG}$ に属する型付け全体へ拡張する．
-擬多様体水準の対応する障害はファンアウト1の
-下界例に基づき，任意のファンアウトにおける
-個別型付けの完全な特徴づけではない．
-
-別の言語構造に関する結果として，
-定理~\ref{thm:mcfg-abelian-filter-data} は，
-有界ランクの良形文法表示を持つアーベル型フィルタ標的に対し，
-制御モノイドが $\mathbf{LG}$ の外にある場合も
-特徴データ長の多項式上界を示す．
-命題~\ref{prop:mcfg-relaxed-witnesses} は
-標的の分布同値類に短い代表元があることを十分条件とする．
-一方，命題~\ref{prop:computed-witness-budget} は
-文法で導出される代表元を用いて，
-規則証拠だけから計算可能な文法表示依存の予算を与える．
-二つの構成は仮定が異なるため混同してはならない．
-
-ファンアウトは代入可能性のバイアスを左右する．
-定理~\ref{thm:intrinsic-ranktwo-witness} は，
-規則ランク2を本質的に必要とする
-境界型付き非文脈自由標的を与える．
-定理~\ref{thm:mcfg-all-typing-doubling-obstruction} は，
-関連CFG論文の倍化族が任意の固定有限型付けの下で
-ファンアウト2代入可能性を満たさないことを示す．
-これはCFG下界の単純な移植を排除するが，
-高ファンアウト下界問題そのものを解決しない．
-また，生成語型の完全精密化や空成分除去は
-厚みを指数的に増やし得る
+固定有限モノイド型付けの下で，正例による
+厳密再構成と保守的なTxtEx同定が可能となり，
+有界規則ランクでは仮説更新が多項式時間となる．
+特徴データ総長については，固定型付けの局所群構造
+（定理~\ref{thm:local-group-polydata}）と，
+標的の半束添字付きアーベル剰余類構造
+（定理~\ref{thm:mcfg-semilattice-twisted-polydata}）
+という二つの十分条件を得た．
+窓型付けと規則ランク1は関連する基本結果である．
+計算可能な規則証拠と存在的な分布同値証拠は区別する．
+生成語型の完全精密化や空成分除去では
+厚みが指数的に増大し得る
 （付録~\ref{app:normalization-details}）．
 
 \begin{openproblem}[ファンアウト1を超える場合の元文法厚みの上界]
@@ -3895,273 +3182,6 @@ $\mathcal B^{\le r}_{f,h}$ に対する任意の特徴標本の
 $\Cmcf{1}{h}$ への所属から
 $f\ge2$ における $\Cmcf{f}{h}$ への所属は従わない．
 \end{openproblem}
-
-
-\begin{proposition}[固定窓では括弧付きCFG族のファンアウト2代入可能性を回復できない]
-\label{prop:fixed-window-doubling-fanout-two}
-$\Gamma_{\mathrm{br}}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$ とし，
-関連CFG原稿~\cite{kuriyamaCFG} の言語族 $L_n$ を
-\[
- E_0\to\mathtt a,\qquad
- E_i\to\lfloor E_{i-1}E_{i-1}\rfloor
-       \mid\lceil E_{i-1}\rceil\quad(1\le i\le n)
-\]
-の開始非終端記号 $E_n$ から生成する．
-$h_{\mathrm U}$ は $\lceil,\rceil$ を2元半束の吸収元に，
-それ以外の文字を単位元に写す準同型とする．
-任意の $k,\ell\ge0$ および
-$n\ge\max\{3,k+\ell+1\}$ について
-\[
- L_n\notin\Cmcf{2}{h_{\Gamma_{\mathrm{br}}}^{k,\ell}},
- \qquad
- L_n\notin\Cmcf{2}{(h_{\Gamma_{\mathrm{br}}}^{k,\ell},h_{\mathrm U})}.
-\]
-したがって，$h_{\mathrm U}$ と組み合わせても，
-\emph{固定}接頭辞--接尾辞窓を加えるだけでは
-この族のファンアウト2での代入可能性は回復しない．
-\end{proposition}
-\begin{proof}
-$W_0=\mathtt a$，
-$W_i=\lfloor W_{i-1}W_{i-1}\rfloor$ とおく．
-$L_n$ のうち天井括弧を含まない唯一の語は $W_n$ である．
-完全二分木の語 $W_{n-1}$ を
-$W_{n-1}=B\mathtt a R$，
-$B=\lfloor^{n-1}$ と書けば
-\[
- W_n=\lfloor B\mathtt a R\,B\mathtt a R\rfloor
-\]
-となる．$B,R$ はいずれも非空で，
-$|B|=n-1\ge k+\ell$，
-$|R|=3\cdot2^{n-1}-n-2\ge n-1\ge k+\ell$ である．
-
-次の2タプルと2つの文文脈を考える：
-\[
- \begin{aligned}
- \tuple x&=(B,\ R B\mathtt a R),&
- \tuple y&=(B\mathtt a R B,\ R),\\
- E&=\lfloor\blank_1\mathtt a\blank_2\rfloor,&
- F&=\blank_1\lfloor\mathtt a\blank_2\rfloor.
- \end{aligned}
-\]
-どちらの文脈でも2つの穴の間の文字列は非空であり，
-定義~\ref{def:tuple-substitutable} に適合する．
-第1成分の $B$ と $B\mathtt a R B$ は，
-長さ $k$ の接頭辞と長さ $\ell$ の接尾辞が一致する．
-第2成分の $R B\mathtt a R$ と $R$ も同様である．
-各成分は $k+\ell$ 以上の長さを持ち，
-天井括弧を含まない．
-よって $\tuple x,\tuple y$ の成分別の型は，
-主張にある両方の型付けで一致する．
-しかし
-\[
- E[\tuple x]=E[\tuple y]=F[\tuple x]=W_n,
- \qquad
- F[\tuple y]=B\mathtt a R B\lfloor\mathtt a R\rfloor
- \ne W_n.
-\]
-$F[\tuple y]$ の最初の $\mathtt a$ の前には
-$\lfloor$ が $n-1$ 個しかないのに対し，
-$W_n$ では $n$ 個あるためである．
-$F[\tuple y]$ にも天井括弧は含まれないため，
-$F[\tuple y]\notin L_n$ である．
-従って両方の型付けについて
-$(2,h)$-タプル代入可能性が破れる．
-\end{proof}
-
-\begin{remark}
-本命題は元のCFG族が高ファンアウトの標的クラスに
-\emph{属さない}ことを示すのであって，
-ファンアウト2における特徴データ長の超多項式下界ではない．
-特に問題~\ref{op:fanout-two} は未解決であり，
-その解決には $\Cmcf{2}{h}$ に実際に属する
-\emph{別の}言語族の構成が必要である．
-\end{remark}
-
-
-
-\subsection{希少な型と2成分の局所的可動性}
-\label{subsec:rare-type-mobility}
-
-\begin{lemma}[$h$ の型全体の削除]
-\label{lem:mcfg-delete-type}
-$f\ge1$、$L\in\Cmcf{f}{h}$、$m\in M$ に対し，
-$L^{\setminus m}:=L\setminus h^{-1}(m)$ も
-$\Cmcf{f}{h}$ に属する．
-\end{lemma}
-\begin{proof}
-$h^{-1}(M\setminus\{m\})$ は正規言語であり，
-$(f,h)$-タプル代入可能でもある．実際，成分別の型が
-一致すれば，どの文文脈でも全体の型が一致する．
-共通部分は代入可能性を保存し
-（命題~\ref{prop:abelian-coset-filter}），
-$f$-MCFL は正規言語との共通部分で閉じる
-~\cite{SekiEtAl1991}．
-\end{proof}
-
-\begin{proposition}[希少な型は長い正例を強制する]
-\label{prop:mcfg-rare-type-sample}
-$L\in\Cmcf{f}{h}$、$m\in h(L)$ とし，
-$\mu_m(L)=\min\{|w|:w\in L,\ h(w)=m\}$ とおく．
-$\mathcal B^{\le r}_{f,h}$（$r\ge1$）または
-$\mathcal B_{f,h}$ の任意の特徴標本には
-型 $m$ の語が含まれ，従って符号化総長は
-$\mu_m(L)+1$ 以上である．
-より一般に，$L$ と $L^{\setminus m}$ の両方に
-特徴標本を持つ任意の集合駆動型再構成器についても
-同じ必要性が成立する．
-\end{proposition}
-\begin{proof}
-型 $m$ を避ける標本 $K\subseteq L$ は
-$K\subseteq L^{\setminus m}$ を満たす．
-補題~\ref{lem:mcfg-delete-type} と
-命題~\ref{prop:reconstruction-soundness} を
-標的 $L^{\setminus m}$ に適用すると，
-$K$ からの再構成言語は真部分言語
-$L^{\setminus m}$ に含まれる．
-一般の集合駆動型再構成器については，
-$L$ の特徴標本 $\mathcal F$ が型 $m$ を避けると仮定し，
-$L^{\setminus m}$ の特徴標本を $\mathcal F'$ とする．
-有限集合 $\mathcal F\cup\mathcal F'$ は両標的に含まれ，
-双方の特徴標本を含むので，同じ再構成結果が
-異なる二言語に等しくなり矛盾する．
-\end{proof}
-
-\begin{lemma}[ファンアウト2の冪移送]
-\label{lem:mcfg-power-transfer}
-$f\ge2$、$L\in\Cmcf{f}{h}$、$u\in\Sigma^+$ とする．
-$g=h(u)$ とし，ある $i_0,\pi\ge1$ が
-全ての $i\ge i_0$ について
-$g^{i+\pi}=g^i$ を満たすとする．
-$s,r\ge i_0$、$d\in\pi\mathbb Z_{>0}$ とする．
-$L$ のある語が $u^{s+d+r+2}$ を因子に持つなら，
-任意の $X,Z\in\Sigma^*$、$Y\in\Sigma^+$ に対し
-\[
- Xu^sYu^{d+r}Z\in L
- \quad\Longleftrightarrow\quad
- Xu^{s+d}Yu^rZ\in L
-\]
-が成り立つ．
-\end{lemma}
-\begin{proof}
-受理語を $Pu^{s+d+r+2}Q$ と書く．
-$\tuple x=(u^s,u^{d+r})$、
-$\tuple y=(u^{s+d},u^r)$ とすると，
-両者の成分別 $h$-型は一致する．
-文脈 $E=Pu\blank_1u\blank_2Q$ は内部区切りが非空で，
-$E[\tuple x]=E[\tuple y]=Pu^{s+d+r+2}Q\in L$ である．
-よって2成分代入可能性から
-両タプルの分布は一致する．
-任意の適切な文脈 $X\blank_1Y\blank_2Z$
-に適用すれば主張が従う．
-\end{proof}
-
-\begin{lemma}[有界な局所シフト対]
-\label{lem:mcfg-local-shift}
-$\Sigma$ は空でないとする．
-$c=|M|^2|\Sigma|$ とし，$R_c(5)$ を
-5頂点完全グラフに対する $c$ 色Ramsey数とする．
-$|w|\ge R_c(5)$ を満たす任意の語は
-$w=P\,x\,p\,q\,p\,y\,Q$ と分解でき，
-$x,y\in\Sigma^+$、$p\in\Sigma$、
-$q\in\Sigma^*$ および
-\[
- h(x)=h(xpq),\qquad h(qpy)=h(y)
-\]
-を満たす．従って $w\in L\in\Cmcf{2}{h}$ ならば
-$(x,qpy)$ と $(xpq,y)$ の分布は一致する．
-\end{lemma}
-\begin{proof}
-最初の $R_c(5)$ 個のカット位置から $i<j$ を選び，
-$(h(w[i:j]),h(w[i+1:j]),w[i])$ で辺を彩色する．
-単色5点集合 $i_1<\cdots<i_5$ を取り，
-$x=w[i_1:i_2]$、
-$p=w[i_2]=w[i_3]$、
-$q=w[i_2+1:i_3]$、
-$y=w[i_3+1:i_5]$ とする．
-$P,Q$ は残りの接頭辞・接尾辞とする．
-辺 $(i_1,i_2),(i_1,i_3)$ の第一座標が
-$h(x)=h(xpq)$ を与え，
-$(i_2,i_5),(i_3,i_5)$ の第二座標が
-$h(qpy)=h(y)$ を与える．
-内部区切り $p$ が非空である文脈
-$P\blank_1p\blank_2Q$ は両タプルを受理するため，
-2成分代入可能性によって分布が一致する．
-\end{proof}
-
-\begin{theorem}[任意の固定有限型付けは括弧付き倍化族を救済できない]
-\label{thm:mcfg-all-typing-doubling-obstruction}
-任意の有限モノイド準同型
-$h:\Gamma_{\mathrm{br}}^*\to M$ について，
-命題~\ref{prop:fixed-window-doubling-fanout-two} の $L_n$ は
-\[
- n\ge2|M|+3\quad\Longrightarrow\quad
- L_n\notin\Cmcf{2}{h}
-\]
-を満たす．$f\ge2$ に対しても
-$L_n\notin\Cmcf{f}{h}$ となる．
-\end{theorem}
-\begin{proof}
-$g=h(\lfloor)$ の冪の指数を $i_0\ge1$、
-周期を $\pi\ge1$ とし，
-$i_0+\pi\le|M|+1$、$i_0\le|M|$ とする．
-$n\ge2i_0+\pi+2$ の場合を考え，
-$s=i_0$、$d=\pi$、
-$r=n-s-d-2\ge i_0$ とおく．
-$W_n=\lfloor W_{n-1}W_{n-1}\rfloor$ は
-$L_n$ に属する唯一の天井括弧なしの語で，
-$\lfloor^n$ から始まる．
-ゆえに $u=\lfloor$ として
-補題~\ref{lem:mcfg-power-transfer} の前提が成立する．
-
-同じ $W_n$ の先頭ランから，
-最初の $\lfloor$ を除いた位置に
-第一ブロック $\lfloor^s$ を取る．
-第二ブロック $\lfloor^{d+r}$ は
-二番目の $W_{n-1}$ の先頭ラン内に取る．
-両者の間の文字列 $Y$ は最初の $\mathtt a$ を
-含むため非空である．従って適切な $X,Z$ により
-$W_n=X\lfloor^sY\lfloor^{d+r}Z$ と書ける．
-冪移送から
-$X\lfloor^{s+d}Y\lfloor^rZ\in L_n$
-が従うはずだが，これは天井括弧を含まず，
-最初の $\mathtt a$ の前の $\lfloor$ が
-$n+d$ 個ある．一方，唯一の天井括弧なしの語
-$W_n$ では $n$ 個であり，矛盾する．
-$2i_0+\pi+2\le2|M|+3$ より一様な閾値が得られる．
-\end{proof}
-
-\begin{remark}
-定理~\ref{thm:mcfg-all-typing-doubling-obstruction} は，
-命題~\ref{prop:fixed-window-doubling-fanout-two} の
-窓型付けに限った障害を任意の有限型付けへ強化する．
-窓型付け固有の鋭い閾値は旧命題に残す．
-これは言語の\emph{クラス非所属}の定理であり，
-問題~\ref{op:fanout-two} が問う特徴データの
-高ファンアウト下界ではない．
-\end{remark}
-
-窓型付けと任意の有限群を組み合わせた場合の拡張は，
-\ref{app:window-group} で証明した．
-可換群の場合のより小さい定数は
-\ref{app:window-abelian} に残す．
-固定窓のみの場合の二次上界と窓・有限群型付けの場合の
-三次上界について，文法サイズの指数が最適かどうかは未解決である．
-非可換群の定数 $M_{A,f}$ の $f$ への二重指数的依存を下げられるかも今後の課題である．
-付録~\ref{app:local-group} は，正像が局所群となるすべての型付け，
-すなわち2元半束を含まない最大のクラスに，この元文法厚みによる制御を拡張する．
-対応する下界はファンアウト1でのみ知られている（系~\ref{cor:pseudovariety-dichotomy}）．
-系~\ref{cor:mcfg-li-group-polydata} は，
-$\mathbf{LI}\vee\mathbf{Grp}$ による見通しのよい十分条件を与える．
-より広い局所群型付けと擬多様体レベルの二分法は
-付録~\ref{app:local-group} で別に扱う．
-高ファンアウトの下界問題は引き続き未解決である．
-
-今後の方向性としては，
-複数のファンアウトバイアスにまたがる適応的学習，
-値域サイズの事前上界なしでの有用な型付けの学習，
-型付きクラス内部の規則ランク1部分クラスの特徴づけ，
-全多重文脈に基づく合同的 MCFG との関係の解明，
-および PMCFG 型のコピーを許す再構成への拡張がある．
 
 \section*{謝辞}
 著者は有益な議論と励ましに対し，
@@ -4377,238 +3397,6 @@ $(\mathtt a^{2^i},\eps)$ である．
 一つの精密化状態の内部で必要な最短証拠が
 指数的に長くなり得る．
 
-\section{Yoshinaka の一般枠組みとの関係}
-\label{sec:general-framework}
-
-規則ランク有界の学習器は，Yoshinaka の代入可能な
-signature に関する枠組み~\cite{Yoshinaka2015General} の
-型付きの特別な場合である．
-この対応を明示するのは，先行研究の質的な学習結果と，
-第~\ref{sec:char-data}節の総文字数上界とを区別するためである．
-
-有限アルファベット $\Sigma$，$f,r\ge1$ および
-$h:\Sigma^*\to M$ を固定し，
-$M^+:=h(\Sigma^+)$ とおく．
-signature $\mathfrak S_{f,r,h}$ は，
-開始ソート $O_*=\Sigma^*$ と，
-タグ付きソート
-\[
- T_{d,\boldsymbol\mu}
- =\{\tuple w\in(\Sigma^+)^d:
- h^{(d)}(\tuple w)=\boldsymbol\mu\},
- \qquad
- 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d
-\]
-をもつ．
-その関数記号は，子の規則ランクが高々 $r$ である
-型の整合したすべての良形 MCFG テンプレート
-（ランク0を含む），
-昇格演算 $T_{1,\mu}\to O_*$，
-および $O_*$ に属する零項の $\eps$ 定数からなる．
-$O_*$ を入力として受け取る関数はない．
-型のタグを忘れると，これは
-~\cite[Section~8]{Yoshinaka2015General}
-の意味で，非空タプル上の良形
-$\lambda$-自由 MCFG 演算の signature を
-有限ソート精密化したものである．
-この型なし signature は
-~\cite[Example~3]{Yoshinaka2015General}
-の例と文字どおり同一ではなく，
-\emph{非空成分に制限した変種}である．
-ファンアウト1における接頭辞--接尾辞型付けの場合は，
-~\cite[Example~4]{Yoshinaka2015General}
-に対応する．
-この signature 上のある文法で実現可能な
-部分構造と文脈を，それぞれ
-$\mathcal S_O,\mathcal C_O$ と書く．
-
-\begin{lemma}[Signature の文脈は許容文文脈である]
-\label{lem:signature-contexts}
-開始ソート以外の各ソートについて
-\[
- \mathcal S_{T_{d,\boldsymbol\mu}}
- =T_{d,\boldsymbol\mu},
- \qquad
- \mathcal C_{T_{d,\boldsymbol\mu}}
- =\{\tuple x\mapsto E[\tuple x]:E\in\mathcal E_d\}
-\]
-が成り立つ．
-後者の等式は $T_{d,\boldsymbol\mu}$ 上の
-\emph{関数}の集合の等式である．
-また $\mathcal C_{O_*}$ に含まれるのは
-恒等関数だけである．
-\end{lemma}
-
-\begin{proof}
-開始ソート以外の各ソートの要素は，
-ランク0の良形テンプレート定数として表現できる．
-$O_*$ を入力に取る演算は存在しない．
-開始ソート以外のソートに対する文脈について，
-穴から開始記号へ至る経路に沿って帰納法を行う．
-良形テンプレートと許容される親文脈を合成しても，
-区別した子の変数の出現順序と
-各変数の一回限りの出現は保存される．
-同じ出力成分内の連続する穴は，
-終端記号または非空の兄弟成分で分離される
-（非融合性）．
-別々の出力成分にある穴は，
-非空の親文脈の区切り語によって分離される．
-したがって補題~\ref{lem:filling-identity} を
-繰り返し適用すれば，
-得られるすべての文文脈は $\mathcal E_d$ に属する．
-
-逆に，任意の
-$E=v_0\blank_1v_1\cdots\blank_dv_d
-\in\mathcal E_d$ に対し，
-単項の良形テンプレート
-$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$ を，
-ランク0の子と開始ソートへの昇格演算とともに用いれば，
-関数 $\tuple x\mapsto E[\tuple x]$ が実現する．
-内部区切り語 $v_i$ は良形性により非空であり，
-出力の型は $h$ によって決まる．
-\end{proof}
-
-\begin{proposition}[Yoshinaka の2015年の枠組みによる規則ランク有界クラスの包含]
-\label{prop:yoshinaka2015-embedding}
-signature $\mathfrak S_{f,r,h}$ は
-~\cite{Yoshinaka2015General} の
-Assumptions~1--3 を満たし，
-\(\mathsf{Subst}(\mathfrak S_{f,r,h}) =\Cmcf{f}{h}\cap\mathsf{MCFL}(f,r)\)
-となる．
-したがって，規則ランク有界のクラスには
-Yoshinaka の同定定理
-~\cite[Theorem~1]{Yoshinaka2015General}
-を適用できる．
-$f,r,h$ を固定すれば，
-蓄積標本に関する更新時間は多項式であり，
-刈り込まれた signature 文法表示について，
-特徴集合の要素数は
-$|N^\sharp|+|P^\sharp|$ 以下である
-~\cite[Lemma~3]{Yoshinaka2015General}．
-ただし，これは特徴語の\emph{総文字数}を
-抑えるものではない．
-\end{proposition}
-
-\begin{proof}
-signature 文法の型タグを忘れれば，
-ファンアウトが高々 $f$，
-規則ランクが高々 $r$ の MCFG になる．
-逆に，ランク保存の良形標準化
-（命題~\ref{prop:good-normalization}），
-刈り込んだ生成語型精密化
-（定義~\ref{def:output-refinement}），
-開始ソートへの昇格演算と独立の $\eps$ 定数によって，
-$\mathsf{MCFL}(f,r)$ のすべての言語を
-この signature 上で表現できる．
-開始ソートでは代入可能性の条件は自明である．
-それ以外のソートでは，
-補題~\ref{lem:signature-contexts} により，
-signature における四例の含意は，
-各アリティと成分別型について
-定義~\ref{def:tuple-substitutable} と一致する．
-刈り込んだ表示には不要な非終端記号や
-関数が含まれないので，
-~\cite[Section~6]{Yoshinaka2015General}
-の要求も満たす．
-これで表示した言語クラスの等式が従う．
-
-実効性に関する仮定については，
-ソートや文脈への所属判定と
-テンプレートの評価が，
-上の補題と有限型付けによって多項式時間で行える．
-規則ランク有界の MCFG の一様な所属判定も
-多項式時間である
-~\cite[Proposition~4]{Yoshinaka2011}．
-すべての演算のアリティは高々 $r$ である．
-長さ $n$ の文について，
-開始語，非空の内部区切り語をはさみ
-互いに重ならない高々 $f$ 個の非空区間による
-タグ付きタプル，および対応する文脈関数を列挙する．
-各親タプル出現について，
-子の成分に対応する順序付き区間
-（高々 $fr$ 個）と残りの終端部分で決まる
-ランク高々 $r$ の良形テンプレートを列挙する．
-ここでは実際の\emph{関数記号}を記録する．
-必要に応じて昇格演算と $\eps$ 定数も加える．
-補題~\ref{lem:composition-witness-materialization} により，
-実現可能な関数のインスタンスはすべて列挙に現れる．
-必要な切断位置は高々 $2f(r+1)$ 個なので，
-$f,r,h$ を固定すれば列挙は $n$ の多項式時間である．
-これらはまさに Assumptions~1--3 に対応する．
-したがって Yoshinaka の Theorem~1 と Lemma~3 を適用すると，
-主張した学習に関する帰結が得られる．
-\end{proof}
-
-\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
-\label{lem:substp}
-上の signature と列挙を用いると，
-任意の有限正例標本 $K\subseteq\Sigma^*$ について，
-Yoshinaka の $\mathrm{SUBST}_{\mathrm P}(K)$ と
-$\mathcal B^{\le r}_{f,h}(K)$ は
-同じ言語を生成する．
-\end{lemma}
-
-\begin{proof}
-まず同じ観測タプルと型付きソートで添字づけられた
-開始記号以外の非終端記号を対応させる．
-親 $s_0$ とテンプレート値
-$z=\rho(s_1,\ldots,s_t)$ をもつ
-$\mathrm{SUBST}_{\mathrm P}$ の規則には，
-~\cite{Yoshinaka2015General} の記法で
-\(c\in\mathrm{CON}_O(K),\qquad c\odot s_0,\ c\odot z\in K\)
-を満たす共通文脈 $c$ が必要である．
-補題~\ref{lem:signature-contexts} により，
-これは許容される文文脈である．
-型制約付き Rule~(Link) は
-$[s_0]$ から $[z]$ へ遷移する．
-さらに Rule~(Comp)，または $t=0$ なら
-Rule~(Const) が続く．
-その証拠の存在は
-補題~\ref{lem:composition-witness-materialization}
-で保証される．
-逆に，型制約付きの各 Link は，
-単項恒等テンプレートに対する
-$\mathrm{SUBST}_{\mathrm P}$ のインスタンスであり，
-各 Comp と Const は
-それ自体が親の出現によって裏づけられたインスタンスである．
-したがって導出に関する帰納法により，
-開始記号以外の対応する非終端記号が
-生成する言語は一致する．
-
-開始ソートにおける文脈は恒等関数だけであり，
-開始ソートを引数に取る演算は存在しない．
-したがって観測された各開始記号は，
-昇格演算と直接の $\eps$ 定数によって，
-同じ言語
-\(\bigcup_{w\in K\cap\Sigma^+}L([(w)]) \ \cup\ (\{\eps\}\cap K)\)
-を生成する．
-これは型制約付きの Rule~(Start) と正確に一致する．
-$K=\emptyset$ の場合は両構成とも空言語を生成する．
-\end{proof}
-
-\paragraph{特徴証拠の対応．}
-Yoshinaka の証明では文脈添字付きの
-$\mathrm{SUBST}_{\mathrm D}$ を使用するが，
-同論文の第7節では追加の仮定の下で
-$\mathrm{SUBST}_{\mathrm P}$ についても論じている
-~\cite{Yoshinaka2015General}．
-本稿の標本ごとの言語の一致は，
-補題~\ref{lem:substp} によって直接証明した．
-開始ソート以外の証拠を
-$c_X=\chi(X)$ と $s_X=\omega(X)$
-として選ぶと，
-$\Wit(\widetilde G_0)$ と正確に対応する．
-開始ソートへの昇格に関する証拠は
-選ばれた語の中に既に含まれ，
-$\eps$ が必要な場合には
-その直接の証拠を加える．
-ここで同一視しているのは，
-開始ソートの規約をそろえたときの
-正例語からなる証拠の\emph{構成パターン}であり，
-仮説文法の構文的な同一性を主張するものではない．
-
-
-\input{appendix_window_abelian_JP.tex}
 \input{appendix_window_group_JP.tex}
 \input{appendix_local_group_JP.tex}
 
