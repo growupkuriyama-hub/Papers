@@ -997,31 +997,24 @@ For fixed $h$, $\mathsf{Rec}_h(K)$ is constructible in time polynomial in
 $\|K\|$.
 \end{theorem}
 \begin{proof}
-Put $n_K:=\|K\|$ and let
-$\mathcal O_K:=
-\{(u,x,v)\in\Sigma^*\times\Sigma^+\times\Sigma^*
-:uxv\in K\}$
-be the set of observed nonempty factor occurrences.
-Since $|\mathcal O_K|=O(n_K^2)$, there are at most
-$O(n_K^2)$ factor nonterminals.
-Extending factors one symbol at a time from each starting
-position of each sample word computes and caches all their
-$h$-values using $O(n_K^2)$ multiplications in the fixed monoid.
+Put $n_K:=\|K\|$ and
+$\mathcal O_K:=\{(u,x,v)\in(\Sigma^*)^3:uxv\in K\}$.
+There are $O(n_K^2)$ observed factor occurrences and hence
+$O(n_K^2)$ factor nonterminals, including $\NT{\lambda}$
+when $K\ne\emptyset$.  All $h^\sharp$-values can be cached
+in $O(n_K^2)$ multiplications in the fixed monoid.
 
 Rule~\textup{(B)} has at most $O(n_K^3)$ candidates,
-obtained by choosing an observed factor occurrence and a split point.
-For Rule~\textup{(U)}, for each $(u,x,v)\in\mathcal O_K$
-and each $w\in K$, check whether there is a nonempty word $y$
-with $w=uyv$. Such a $y$, if it exists, is unique;
-if $h(x)=h(y)$, emit the rule $\NT{x}\to\NT{y}$.
-This enumerates all Rule~\textup{(U)} candidates, at most
-$|\mathcal O_K||K|=O(n_K^3)$ of them.
-
-Lexical and start rules are lower-order.  Checking, encoding and
-inserting a candidate take $O(n_K)$ time, and a trie of the explicit rule
-encodings removes duplicates, so the output is a rule set independent of
-the enumeration order.  Thus $\mathsf{Rec}_h(K)$ is constructible in
-$O(n_K^4)$ time.
+one per observed factor occurrence and split point.
+For Rule~\textup{(U)}, each $(u,x,v)\in\mathcal O_K$
+and $w\in K$ determines at most one $y\in\Sigma^*$
+with $w=uyv$; emit $\NT{x}\to\NT{y}$ precisely when
+$h^\sharp(x)=h^\sharp(y)$.
+This tests at most $O(n_K^3)$ candidates.
+Lexical, empty, and start rules are lower-order.
+Testing and encoding candidates in $O(n_K)$ time
+and deduplicating by explicit rule encodings gives
+an $O(n_K^4)$ construction.
 \end{proof}
 
 Each update of $\mathsf{Learn}_h$ is also polynomial in the data seen so far,
@@ -1260,7 +1253,7 @@ production is $S_0\to A$ for a non-start symbol $A$. The typed
 refinement retains $A_1$, because $A\Rightarrow_G^*w_n^*$ and
 $h_{\mathrm U}(w_n^*)=1$. By Proposition~\ref{prop:typed-core},
 \[
- L_{\widetilde G}(A_1)=L_G(A)\cap h_{\mathrm U}^{-1}(\{1\})
+ L_{\widetilde G}(A_1)=L_G(A)\cap (h_{\mathrm U}^\sharp)^{-1}(\{1\})
  =\{w_n^*\},
 \]
 since every yield of a start child belongs to $L_n$ and
@@ -1471,7 +1464,7 @@ one other nonterminal child.
 
 The construction is given in Appendix~\ref{app:linear-normalization}.  Let
 $\widetilde G_0$ be its typed refinement and
-$N_t:=|\widetilde V_0\setminus\{\widetilde S\}|\le|V_0\setminus\{S_0\}|\,|M|$.
+$N_t:=|\widetilde V_0\setminus\{\widetilde S\}|\le|V_0|\,|M^\sharp|$.
 
 \begin{lemma}[short canonical yields]\label{lem:linear-short}
 Every typed non-start symbol $X$ of $\widetilde G_0$ satisfies
@@ -1480,16 +1473,16 @@ Hence $\tau_h^{\mathrm{typ}}(G_0)\le N_t$.
 \end{lemma}
 
 \begin{proof}
-By Proposition~\ref{prop:linear-normal}, each binary spine step
-$A\to W_aB$ or $A\to BW_a$ emits exactly one terminal outside the
-continuing nonterminal.  If $X$ is a terminal-wrapper symbol then $|\omega(X)|=1$.  Otherwise choose
-a shortest terminal derivation from the typed spine symbol $X$ and write its
-spine as $X=X_0,X_1,\ldots,X_t$, where $X_t$ uses a terminal rule.  Its
-yield has length $t+1$.  No typed spine symbol can repeat: if
-$X_i=X_j$ with $i<j$, deleting the segment between the two occurrences gives
-a valid derivation with fewer spine steps and hence a shorter yield.  Thus the
-$t+1$ typed spine symbols are distinct non-start symbols, so
-$t+1\le N_t$.  Hence $|\omega(X)|\le N_t$ in all cases.
+For an SSBNF source grammar, typed unit rules occur only
+at the original start symbol and emit no terminals.
+Every binary spine step emits one terminal-wrapper child.
+Follow a shortest derivation from $X$ to a lexical
+or empty rule.  No typed spine symbol repeats:
+a repeated segment containing a binary step could be
+removed to shorten the yield, while a unit cycle can
+also be removed.  Thus at most $N_t$ spine symbols
+occur, and at most $N_t$ terminals are emitted.
+Terminal wrappers satisfy the same bound.
 \end{proof}
 
 \begin{theorem}[polynomial characteristic data for linear targets]
@@ -1504,11 +1497,11 @@ For $L=\emptyset$ and $L=\{\lambda\}$ use the samples from
 Section~\ref{sec:typing}.  Otherwise take $G_0$ from
 Proposition~\ref{prop:linear-normal}.  Lemma~\ref{lem:linear-short} gives
 $\tau_h^{\mathrm{typ}}(G_0)\le N_t\le
-|V_0\setminus\{S_0\}|\,|M|$, and
+|V_0|\,|M^\sharp|$, and
 Corollary~\ref{cor:typed-thickness-data} yields a characteristic sample
 polynomial in $|G_0|\le q_{\mathrm{lin}}(|G|)$. More explicitly, the bound in
 Lemma~\ref{lem:typed-thickness-bound} gives
-$\|\WitnessSet(\widetilde G_0)\|=O(|G_0|^3|M|^4)$;
+$\|\WitnessSet(\widetilde G_0)\|=O(|G_0|^3|M^\sharp|^4)$;
 the polynomial dependence on the original $|G|$ also uses
 the normalization bound $q_{\mathrm{lin}}$.
 \end{proof}
@@ -1929,20 +1922,18 @@ inclusion is proper.
 \end{proposition}
 
 \begin{proof}
-Let nonempty $L\in\Ccf{h}$ and take its reduced SSBNF grammar and typed
-refinement $\widetilde G$.  Every non-start typed symbol $X=A_\mu$ has a
-terminal reaching context $(u,v)$, and every
-$w\in L_{\widetilde G}(X)$ is nonempty with $h(w)=\mu$ by
-Proposition~\ref{prop:typed-core}.  Hence any
-$x,y\in L_{\widetilde G}(X)$ have the same type and the common context
-$(u,v)$; fixed-$h$ substitutability gives $x\equiv_L y$.  Thus each typed
-nonterminal generates strings from one syntactic-congruence class.
+Let nonempty $L\in\Ccf{h}$, and take a reduced BUNF grammar
+and its $h^\sharp$-typed refinement $\widetilde G$.
+For a retained typed symbol $A_\mu$, all yields have the
+same $h^\sharp$-type and share a terminal reaching context.
+Lemma~\ref{lem:fresh-identity} implies syntactic congruence
+of all these yields.  Hence each typed symbol generates
+words from one syntactic-congruence class.
 
-Delete the separated start symbol and use its typed successors as the finite
-initial set; if $\lambda\in L$, add one fresh initial symbol generating only
-$\lambda$.  Proposition~\ref{prop:typed-core} then gives a congruential
-grammar for $L$.  The empty language is handled by an initial symbol with no
-productions.  This proves the inclusion after taking the union over $h$.
+Delete the auxiliary $\widetilde S$ and take its
+typed successors $(S_0)_\mu$ as the finite initial set.
+This includes the empty yield through type $\mathbf1$.
+An initial symbol without productions handles the empty language.
 
 For properness over $\{a,b\}$, use the Dyck example also discussed by
 Clark~\cite{clark2010congruential}.  Every $x\in D_1$ satisfies
