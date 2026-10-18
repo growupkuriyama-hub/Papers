@@ -43,20 +43,19 @@ theorem emitAllRecItems_letterCount_le
     cases h : emitStartEmpty sample <;> simp [h]
   simp only [List.mem_append, heps_iff] at hr
   rcases hr with (((((hnt | hb) | hu) | hl) | hs) | heps)
-  · obtain ⟨st,hst,heq⟩ := List.mem_map.mp hnt
-    rcases st with ⟨u,x,v⟩
-    have hp := (mem_enumerateOccurrencesList_iff sample u x v).mp hst
-    have hword :=
-      word_length_le_encodedListSample sample (u++x++v) hp.2
-    simp only [List.length_append] at hword
-    have hxbound :
-        x.length ≤ 2*(encodedListSample sample+1) := by
-      omega
+  · obtain ⟨x,hx,heq⟩ := List.mem_map.mp hnt
+    have hfactor : x ∈ efficientObservedFactors sample.toFinset := by
+      rw [← listedNonterminals_eq sample]
+      exact List.mem_toFinset.mpr hx
+    obtain ⟨hne,u,v,hK⟩ :=
+      (efficient_observed_factors_iff sample.toFinset x).mp hfactor
+    have hlen := observed_factor_length_le_encodedListSample sample x
+      ⟨hne,u,v,hK⟩
     calc
       r.letterCount = x.length := by
         rw [← heq]
         rfl
-      _ ≤ 2*(encodedListSample sample+1) := hxbound
+      _ ≤ 2*(encodedListSample sample+1) := by omega
   · obtain ⟨p,hp,heq⟩ := List.mem_map.mp hb
     rcases p with ⟨z,x,y⟩
     subst r
