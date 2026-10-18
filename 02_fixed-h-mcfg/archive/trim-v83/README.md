@@ -16,4 +16,6 @@ The *original complete* `main.tex` and `japanese/main_JP.tex` remain retrievable
 
 **Kept for dependency safety:** the three original algebraic appendices including the Davenport refinement. Further shortening of these appendices requires an independent dependency audit.
 
+**Restoration caveat:** `fanout_doubling_and_mobility.tex` is an exact cut from v82 and therefore also contains the original Acknowledgments, competing-interest, funding, data and generative-AI declarations plus the `\\appendix` command. These are ALREADY RETAINED in the focused v83 manuscript. To restore the mathematical results, insert only the portion before the first `\\section*{Acknowledgments}` (EN) / `\\section*{謝辞}` (JP), and do not duplicate the declarations or appendix heading.
+
 The archived files are not input into the compiled paper and are not individual standalone TeX manuscripts. The archived results are not retracted. Restore a single result by reinserting it at its corresponding subsection, restoring intro/conclusion references, checking uniqueness of labels, recompiling both manuscripts, and updating `PAPER.yaml`.
