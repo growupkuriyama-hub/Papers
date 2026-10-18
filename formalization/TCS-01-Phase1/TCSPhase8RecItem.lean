@@ -47,7 +47,7 @@ theorem items_length {Alphabet : Type*}
       g.unaryRules.length + g.lexicalRules.length +
       g.startRules.length + (if g.startEmpty then 1 else 0) := by
   cases h : g.startEmpty <;>
-    simp [ListedRecGrammar.items, h]
+    simp [ListedRecGrammar.items, h] <;> omega
 
 #print axioms TCSPhase8.items_startEmpty_iff
 #print axioms TCSPhase8.items_length
