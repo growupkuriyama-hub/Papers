@@ -1,0 +1,90 @@
+name: Temporary MCFG v88 fixed-PDF publisher (self-removing)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/_temporary_publish_mcfg_v88_fixed_pdfs.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: one-time-mcfg-v88-fixed-pdf-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout stable main targets
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Checkout the exact, reviewed MCFG v88 source commit
+        uses: actions/checkout@v6
+        with:
+          ref: 16ab225662d3d540b592647e16ae37c20f7aa4c9
+          path: _mcfg_v88_source
+          persist-credentials: false
+
+      - name: Confirm pinned source
+        shell: bash
+        run: |
+          test "$(git -C _mcfg_v88_source rev-parse HEAD)" = "16ab225662d3d540b592647e16ae37c20f7aa4c9"
+          echo "MCFG v88 pinned source verified."
+
+      - name: Build v88 English PDF
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: _mcfg_v88_source/02_fixed-h-mcfg
+          root_file: main.tex
+          texlive_version: 2026
+
+      - name: Build v88 Japanese PDF
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: _mcfg_v88_source/02_fixed-h-mcfg/japanese
+          root_file: main_JP.tex
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Publish only two MCFG PDFs and remove this temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          en_source="_mcfg_v88_source/02_fixed-h-mcfg/main.pdf"
+          jp_source="_mcfg_v88_source/02_fixed-h-mcfg/japanese/main_JP.pdf"
+          en_target="02_fixed-h-mcfg/main.pdf"
+          jp_target="02_fixed-h-mcfg/japanese/main_JP.pdf"
+          for pdf in "$en_source" "$jp_source"; do
+            test -s "$pdf"
+            test "$(head -c 4 "$pdf")" = "%PDF"
+            echo "Checked: $pdf ($(wc -c < "$pdf") bytes)"
+          done
+          cp "$en_source" "$RUNNER_TEMP/v88-main-en.pdf"
+          cp "$jp_source" "$RUNNER_TEMP/v88-main-jp.pdf"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch --no-tags origin main
+            git reset --hard origin/main
+            cp "$RUNNER_TEMP/v88-main-en.pdf" "$en_target"
+            cp "$RUNNER_TEMP/v88-main-jp.pdf" "$jp_target"
+            git add -f -- "$en_target" "$jp_target"
+            git rm -f -- ".github/workflows/_temporary_publish_mcfg_v88_fixed_pdfs.yml"
+            actual="$(git diff --cached --name-only | sort)"
+            expected="$(printf '%s\n' '.github/workflows/_temporary_publish_mcfg_v88_fixed_pdfs.yml' '$en_target' '$jp_target' | sort)"
+            test "$actual" = "$expected" || { echo "::error::Unexpected staged changes"; git diff --cached --name-only; exit 1; }
+            git commit -m "Publish MCFG v88 bilingual PDFs to fixed URLs (TeX and CFG unchanged) [skip ci]"
+            if git push origin HEAD:main; then
+              echo "SUCCESS: Only the two MCFG PDFs remain changed; temporary publisher deleted."
+              exit 0
+            fi
+            echo "Concurrent commit; retry $attempt/5."
+          done
+          echo "::error::Could not publish to main after 5 attempts"
+          exit 1
