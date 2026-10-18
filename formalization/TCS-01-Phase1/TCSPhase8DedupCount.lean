@@ -1,5 +1,5 @@
 import TCSPhase8TrieLookupCost
-import TCSPhase8TrieUnique
+import TCSPhase8TrieUniqueness
 
 /-!
 Count both actual searches and conditional insertions while preserving
@@ -74,7 +74,8 @@ theorem collectUniqueKeysCount_cost_le_twice
                 2 * (rest.map (fun k => k.length + 1)).sum := by omega
             _ ≤ 2 * ((key :: rest).map
                 (fun k => k.length + 1)).sum := by
-                  simp [List.map_cons, List.sum_cons] <;> omega
+                  simp only [List.map_cons, List.sum_cons]
+                  omega
       | false =>
           have ht := ih (insertCount key trie).1 (key :: acc)
           have hi := insertCount_steps key trie
@@ -89,7 +90,8 @@ theorem collectUniqueKeysCount_cost_le_twice
                 2 * (rest.map (fun k => k.length + 1)).sum := by omega
             _ = 2 * ((key :: rest).map
                 (fun k => k.length + 1)).sum := by
-                  simp [List.map_cons, List.sum_cons] <;> omega
+                  simp only [List.map_cons, List.sum_cons]
+                  omega
 
 /-- Reverse the accumulator once, exactly as in the original deduplicator. -/
 def dedupTrieKeysCount (keys : List (List Bool)) :
