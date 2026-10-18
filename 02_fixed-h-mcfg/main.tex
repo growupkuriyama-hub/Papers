@@ -79,8 +79,8 @@ boundary information across several tuple components simultaneously.
 For a fixed prefix--suffix window, the characteristic-data total
 length is $O(\|G\|^2\bar\theta_G)$.  Combining such a window with
 an arbitrary fixed finite-group typing gives the separate bound
-$O(\|G\|^3\bar\theta_G)$; a Ramsey-type block-order shortening
-argument removes commutativity.
+$O(\|G\|^3\bar\theta_G)$; an Erd\H{o}s--Szekeres-type block-order
+shortening argument removes commutativity.
 For abelian groups a sharper explicit constant follows from zero sums.
 At rule rank one, every fixed typing admits characteristic
 data polynomial in grammar size alone.
@@ -1506,7 +1506,7 @@ whereas prefix--suffix-determined typing gives the
 main higher-rank transfer. The finite-abelian-group refinement has its direct
 zero-sum proof in Appendix~\ref{app:window-abelian};
 the nonabelian extension is established by a separate
-Ramsey-type proof in Appendix~\ref{app:window-group}.
+order-homogenization proof in Appendix~\ref{app:window-group}.
 The companion CFG result~\cite{kuriyamaCFG}
 separately excludes a universal original-thickness
 polynomial for arbitrary finite typing at fan-out one;
@@ -2019,6 +2019,86 @@ Of the examples below, $L_{\mathrm{intr}}$ falls under the window theorem,
 whereas the rank-one languages $L_{\mathrm{cd}}$ and $L_\star$ fall under
 Theorem~\ref{thm:rankone-polydata}; thus each separation is compatible with
 a quantitative learning bound.
+
+\subsection{Computing Short Characteristic Data}
+\label{subsec:effective-char-data}
+
+The bounds above are existential: each proof exhibits a short
+tuple or context.  The shortest ones can be computed directly.
+Call a sentence context of a typed nonterminal $X$
+\emph{derivational} if it arises, as in the proof of
+Lemma~\ref{lem:identity-canonical-contexts}, from a successful
+typed derivation by deleting one occurrence of the subtree
+rooted at $X$.  Every such context is admissible for $X$.
+The contexts $E_A$ of Lemma~\ref{lem:untyped-contexts}, lifted
+to $X=A_{\mathbf t}$, and those of
+Lemma~\ref{lem:reusable-context-bound} are derivational.
+
+\begin{proposition}[Effective short characteristic data]
+\label{prop:effective-char-data}
+Fix $f,r_{\max}$ and a finite typing $h:\Sigma^*\to M$.  Given a
+reduced good MCFG $G$ of fan-out at most $f$ and rule rank at most
+$r_{\max}$, the following can be computed in time polynomial in
+$\|G\|$, with lengths written in binary:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item $\theta_G(R)$ for every rule $R$, and hence $\theta_G$ and $t_G$;
+\item the trimmed refinement $\widetilde G_0$ and, for each non-start
+typed nonterminal $X$, a canonical tuple $\omega(X)\in L_X$ of
+minimum total length and a derivational context $\chi(X)$ of
+minimum fixed length, with $\chi(X)=\blank_1$ whenever
+$\widetilde S\to X$ belongs to $\widetilde G_0$;
+\item derivation DAGs of size polynomial in $\|G\|$ representing
+these tuples and contexts, and hence every word of the
+witness set $\Wit(\widetilde G_0)$ of
+Definition~\ref{def:witness-set} built from them.
+\end{enumerate}
+Every word-length and total-length bound proved in this section
+and in Appendices~\ref{app:window-abelian}
+and~\ref{app:window-group} holds for this computed witness set.
+Its words can be written out explicitly in time polynomial in
+$\|G\|+\|\Wit(\widetilde G_0)\|_+$.
+\end{proposition}
+
+\begin{proof}
+For fixed $f,r_{\max},h$ the full refinement $G^h$ has at most
+$|V||M|^f$ typed nonterminals and $|P||M|^{fr_{\max}}$ typed rules,
+and trimming is a linear-time productivity and reachability
+computation.  View the typed rules as weighted deduction steps.
+A rule $X\to\rho(Y_1,\ldots,Y_r)$ maps child lengths $x_j$ to
+$c_\rho+\sum_jx_j$, where $c_\rho$ is the number of terminals
+written by $\rho$; this function is superior.  Knuth's
+generalization of Dijkstra's algorithm~\cite{Knuth1977}, in the
+deductive form of~\cite{Nederhof2003}, therefore computes the
+minimum length $\lambda(X)=\min\{\|\tuple u\|_1:\tuple u\in L_X\}$
+of every typed nonterminal together with a minimizing rule.  The
+minimizing rules form a derivation DAG for $\omega(X)$.  A
+second, ordinary Dijkstra pass computes outside lengths.  It
+starts with $\mu(X)=0$ when $\widetilde S\to X$ is present.  For
+every typed rule $X\to\rho(Y_1,\ldots,Y_r)$ and every $j$ it adds
+an edge from $X$ to $Y_j$ of weight
+$c_\rho+\sum_{i\ne j}\lambda(Y_i)$.  The value $\mu(X)$ is the
+minimum fixed length of a derivational context of $X$, and the
+shortest-path tree supplies its DAG.  The same two passes on $G$
+itself give $t_G=\max_A\lambda(A)$ and
+$\theta_G(R)=\mu(A)+c_\rho+\sum_j\lambda(B_j)$ for
+$R:A\to\rho(B_1,\ldots,B_r)$.
+
+Each proof in this section and in the cited appendices bounds a
+witness word by bounding the length of its context, its rule
+template, and its canonical child tuples separately.  It does so
+by exhibiting some tuple in $L_X$ and some derivational context
+of length within the stated bound.  The computed minima are no
+longer, so every stated bound persists.  Expanding a DAG takes
+time linear in the length of the word it represents.
+\end{proof}
+
+The singleton $\{\mathtt c^{2^n}\}$ after
+Theorem~\ref{thm:rankone-polydata} shows that explicit
+characteristic words can be exponentially longer than $\|G\|$.
+In that case the derivation DAGs of
+Proposition~\ref{prop:effective-char-data} remain of polynomial
+size, so the computed sample has a polynomial-size compressed
+description.
 
 \section{Comparison with Multidimensional Substitutability}
 \label{sec:comparison}
@@ -2645,10 +2725,13 @@ finite groups, with the sharper abelian constant retained
 in Appendix~\ref{app:window-abelian}.
 Whether the exponents two and three in the respective
 window-only and window--finite-group characteristic-data bounds
-are optimal is open, as is the improvement of the coarse
-nonabelian Ramsey constant $M_{A,f}$.
-Extending this original-thickness control beyond window--group
-typings also remains open.
+are optimal is open, as is whether the doubly exponential
+dependence on $f$ of the nonabelian constant $M_{A,f}$ can be reduced.
+Appendix~\ref{app:local-group} extends this original-thickness
+control to all typings whose positive image is a local group, the
+largest class excluding the two-element semilattice.  The matching
+lower bound is known only at fan-out one
+(Corollary~\ref{cor:pseudovariety-dichotomy}).
 
 Other directions include adaptive learning over several fan-out biases,
 learning useful typings without an a priori codomain bound, characterizing the
@@ -3027,6 +3110,7 @@ not the syntactic hypothesis grammars.
 
 \input{appendix_window_abelian.tex}
 \input{appendix_window_group.tex}
+\input{appendix_local_group.tex}
 
 \small
 \begin{thebibliography}{99}
@@ -3234,6 +3318,37 @@ C.~G\'omez-Rodr\'iguez, M.~Kuhlmann, G.~Satta, and D.~Weir.
 Conference of the North American Chapter of the Association for Computational
 Linguistics}, pp.~539--547. Association for Computational Linguistics, 2009.
 
+\bibitem{GeroldingerHalterKoch2006}
+A.~Geroldinger and F.~Halter-Koch.
+\newblock {\em Non-Unique Factorizations: Algebraic, Combinatorial and
+Analytic Theory}, volume 278 of {\em Pure and Applied Mathematics}.
+\newblock Chapman \& Hall/CRC, Boca Raton, 2006.
+
+\bibitem{Knuth1977}
+D.~E.~Knuth.
+\newblock A generalization of {D}ijkstra's algorithm.
+\newblock {\em Information Processing Letters}, 6(1):1--5, 1977.
+
+\bibitem{Nederhof2003}
+M.-J.~Nederhof.
+\newblock Weighted deductive parsing and {K}nuth's algorithm.
+\newblock {\em Computational Linguistics}, 29(1):135--143, 2003.
+
+\bibitem{Straubing1985}
+H.~Straubing.
+\newblock Finite semigroup varieties of the form $\mathbf V*\mathbf D$.
+\newblock {\em Journal of Pure and Applied Algebra}, 36:53--94, 1985.
+
+\bibitem{Tilson1987}
+B.~Tilson.
+\newblock Categories as algebra: an essential ingredient in the theory of monoids.
+\newblock {\em Journal of Pure and Applied Algebra}, 48:83--198, 1987.
+
+\bibitem{Howie1995}
+J.~M.~Howie.
+\newblock {\em Fundamentals of Semigroup Theory}, volume~12 of {\em London
+Mathematical Society Monographs, New Series}.
+\newblock Clarendon Press, Oxford, 1995.
 
 \end{thebibliography}
 \normalsize

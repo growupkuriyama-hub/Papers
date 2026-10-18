@@ -79,7 +79,7 @@ $O(\|G\|^2\bar\theta_G)$ である．
 さらに，固定窓と任意の固定有限群（非可換群を含む）の
 準同型値を組み合わせた型付けには，
 $O(\|G\|^3\bar\theta_G)$ の上界を与える．
-一般群ではRamsey型のブロック配置短縮を用い，
+一般群では Erd\H{o}s--Szekeres 型のブロック配置短縮を用い，
 アーベル群では零和を用いたより小さな明示定数が得られる．
 規則ランクが1なら，任意の固定有限型付けについて，
 文法サイズのみの多項式で特徴データを抑えられる．
@@ -2491,6 +2491,70 @@ $(1,1)$-境界型付けされた非文脈自由標的を与える．
 したがって，いずれの分離結果も
 対応する定量的学習上界と両立している．
 
+\subsection{短い特徴データの計算}
+\label{subsec:effective-char-data}
+
+ここまでの上界は存在型である．各証明は短いタプルや文脈を一つ示すだけである．
+しかし最短のものは直接計算できる．
+型付き非終端記号 $X$ の文文脈が\emph{導出的}であるとは，
+補題~\ref{lem:identity-canonical-contexts} の証明のように，
+成功する型付き導出から $X$ を根とする部分木の一つの出現を削除して得られることをいう．
+導出的文脈はすべて $X$ に対して許容的である．
+補題~\ref{lem:untyped-contexts} の文脈 $E_A$ を $X=A_{\mathbf t}$ に持ち上げたもの，
+および補題~\ref{lem:reusable-context-bound} の文脈は導出的である．
+
+\begin{proposition}[短い特徴データの実効的計算]
+\label{prop:effective-char-data}
+$f,r_{\max}$ と有限型付け $h:\Sigma^*\to M$ を固定する．
+ファンアウト高々 $f$，規則ランク高々 $r_{\max}$ の縮約済み良形 MCFG $G$ が与えられたとき，
+長さを二進表記して，次のものを $\|G\|$ の多項式時間で計算できる．
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 各規則 $R$ の $\theta_G(R)$，したがって $\theta_G$ と $t_G$．
+\item 縮約された精密化 $\widetilde G_0$．さらに，開始記号以外の各型付き非終端記号 $X$ について，
+総長最小の正準タプル $\omega(X)\in L_X$ と，固定長最小の導出的文脈 $\chi(X)$．
+ただし $\widetilde S\to X$ が $\widetilde G_0$ に属するときは $\chi(X)=\blank_1$ とする．
+\item これらのタプルと文脈を表す，$\|G\|$ について多項式サイズの導出 DAG．
+したがって，それらから構成される定義~\ref{def:witness-set} の証拠集合 $\Wit(\widetilde G_0)$ の各語の DAG．
+\end{enumerate}
+本節および付録~\ref{app:window-abelian}，\ref{app:window-group} で示した
+語長と総長の上界は，すべてこの計算された証拠集合について成り立つ．
+その語は $\|G\|+\|\Wit(\widetilde G_0)\|_+$ の多項式時間で明示的に書き出せる．
+\end{proposition}
+
+\begin{proof}
+$f,r_{\max},h$ が固定されているので，完全精密化 $G^h$ の型付き非終端記号は高々 $|V||M|^f$ 個，
+型付き規則は高々 $|P||M|^{fr_{\max}}$ 個である．
+縮約は生成性と到達性の線形時間計算である．
+型付き規則を重み付き演繹の推論規則とみなす．
+規則 $X\to\rho(Y_1,\ldots,Y_r)$ は子の長さ $x_j$ を $c_\rho+\sum_jx_j$ に写す．
+ここで $c_\rho$ は $\rho$ が書く終端記号の数であり，この関数は superior である．
+したがって Dijkstra のアルゴリズムの Knuth による一般化~\cite{Knuth1977} を，
+\cite{Nederhof2003} の演繹形で用いれば，
+各型付き非終端記号の最小長 $\lambda(X)=\min\{\|\tuple u\|_1:\tuple u\in L_X\}$ と
+それを達成する規則が計算できる．
+最小化規則は $\omega(X)$ の導出 DAG をなす．
+二回目の通常の Dijkstra 計算で外側長を求める．
+$\widetilde S\to X$ があれば $\mu(X)=0$ から始める．
+各型付き規則 $X\to\rho(Y_1,\ldots,Y_r)$ と各 $j$ について，
+$X$ から $Y_j$ への重み $c_\rho+\sum_{i\ne j}\lambda(Y_i)$ の辺を加える．
+値 $\mu(X)$ は $X$ の導出的文脈の最小固定長であり，最短路木がその DAG を与える．
+同じ二回の計算を $G$ 自身に行えば，
+$t_G=\max_A\lambda(A)$ と，
+$R:A\to\rho(B_1,\ldots,B_r)$ に対する
+$\theta_G(R)=\mu(A)+c_\rho+\sum_j\lambda(B_j)$ が得られる．
+
+本節と上記付録の各証明は，証拠語の長さを，文脈，規則テンプレート，
+子の正準タプルの長さに分けてそれぞれ上から評価している．
+その際，$L_X$ のあるタプルと，上界内の長さをもつある導出的文脈を示している．
+計算された最小値はそれより長くないので，述べた上界はすべて保たれる．
+DAG の展開は，表す語の長さについて線形時間である．
+\end{proof}
+
+定理~\ref{thm:rankone-polydata} の後の単元集合 $\{\mathtt c^{2^n}\}$ が示すように，
+明示的な特徴語は $\|G\|$ より指数的に長くなりうる．
+その場合でも命題~\ref{prop:effective-char-data} の導出 DAG は多項式サイズのままであり，
+計算された標本は多項式サイズの圧縮表現をもつ．
+
 \section{多次元代入可能性との比較}
 \label{sec:comparison}
 
@@ -3333,8 +3397,10 @@ $f\ge2$ における $\Cmcf{f}{h}$ への所属は従わない．
 \ref{app:window-abelian} に残す．
 固定窓のみの場合の二次上界と窓・有限群型付けの場合の
 三次上界について，文法サイズの指数が最適かどうかは未解決である．
-非可換群のRamsey定数 $M_{A,f}$ の改善や，窓・群型付けを越える
-元文法厚みによる制御も今後の課題である．
+非可換群の定数 $M_{A,f}$ の $f$ への二重指数的依存を下げられるかも今後の課題である．
+付録~\ref{app:local-group} は，正像が局所群となるすべての型付け，
+すなわち2元半束を含まない最大のクラスに，この元文法厚みによる制御を拡張する．
+対応する下界はファンアウト1でのみ知られている（系~\ref{cor:pseudovariety-dichotomy}）．
 
 今後の方向性としては，
 複数のファンアウトバイアスにまたがる適応的学習，
@@ -3785,6 +3851,7 @@ $\eps$ が必要な場合には
 
 \input{appendix_window_abelian_JP.tex}
 \input{appendix_window_group_JP.tex}
+\input{appendix_local_group_JP.tex}
 
 \small
 \begin{thebibliography}{99}
@@ -3991,6 +4058,38 @@ C.~G\'omez-Rodr\'iguez, M.~Kuhlmann, G.~Satta, and D.~Weir.
 \newblock In {\em Proceedings of Human Language Technologies: The 2009 Annual
 Conference of the North American Chapter of the Association for Computational
 Linguistics}, pp.~539--547. Association for Computational Linguistics, 2009.
+
+\bibitem{GeroldingerHalterKoch2006}
+A.~Geroldinger and F.~Halter-Koch.
+\newblock {\em Non-Unique Factorizations: Algebraic, Combinatorial and
+Analytic Theory}, volume 278 of {\em Pure and Applied Mathematics}.
+\newblock Chapman \& Hall/CRC, Boca Raton, 2006.
+
+\bibitem{Knuth1977}
+D.~E.~Knuth.
+\newblock A generalization of {D}ijkstra's algorithm.
+\newblock {\em Information Processing Letters}, 6(1):1--5, 1977.
+
+\bibitem{Nederhof2003}
+M.-J.~Nederhof.
+\newblock Weighted deductive parsing and {K}nuth's algorithm.
+\newblock {\em Computational Linguistics}, 29(1):135--143, 2003.
+
+\bibitem{Straubing1985}
+H.~Straubing.
+\newblock Finite semigroup varieties of the form $\mathbf V*\mathbf D$.
+\newblock {\em Journal of Pure and Applied Algebra}, 36:53--94, 1985.
+
+\bibitem{Tilson1987}
+B.~Tilson.
+\newblock Categories as algebra: an essential ingredient in the theory of monoids.
+\newblock {\em Journal of Pure and Applied Algebra}, 48:83--198, 1987.
+
+\bibitem{Howie1995}
+J.~M.~Howie.
+\newblock {\em Fundamentals of Semigroup Theory}, volume~12 of {\em London
+Mathematical Society Monographs, New Series}.
+\newblock Clarendon Press, Oxford, 1995.
 
 
 \end{thebibliography}

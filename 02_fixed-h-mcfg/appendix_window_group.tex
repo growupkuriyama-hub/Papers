@@ -127,13 +127,75 @@ component is unchanged, so all output group values
 are preserved.
 \end{proof}
 
+\begin{lemma}[Polynomial order homogenization]
+\label{lem:order-homogenize}
+Let $N\ge3$, and define $m_0=N$ and
+$m_{s+1}=(m_s-1)^2+1$, so that $m_k\le N^{2^k}$.
+Let $T$ be a finite set of point types, each assigned to
+one of several lines.  For every index $i\in[n]$ and
+$t\in T$ let $p_t(i)$ be a point on the line of $t$, the
+points on each line being distinct.  Let $\Pi$ be the set
+of ordered pairs $(t,u)$, including $t=u$, of types on a
+common line, and put $k=|\Pi|$.  If $n\ge m_k$, there is a
+set $I\subseteq[n]$ of $N$ indices such that, for every
+$(t,u)\in\Pi$, the truth value of $p_t(i)<p_u(j)$ is the
+same for all $i<j$ in $I$.
+\end{lemma}
+\begin{proof}
+Treat the pairs one at a time, the pairs $(t,t)$ first.
+Each step passes from a current index set of size at least
+$(m-1)^2+1$ to a subset of size at least $m$.  Homogeneity
+already obtained, and monotonicity of each type, persist
+in subsets.
+
+For $(t,t)$, homogeneity means that $p_t$ is monotone on
+the subset.  The Erd\H{o}s--Szekeres theorem gives a
+monotone subsequence of length $m$.
+
+For $t\ne u$, both $p_t$ and $p_u$ are already monotone.
+Relabel the current indices $1,\ldots,m'$ in order, with
+$m'\ge(m-1)^2+1$.  For $i<j$ put
+$X(i,j)=[p_t(i)<p_u(j)]$.  Each row $X(i,\cdot)$ is
+monotone in $j$, and each column $X(\cdot,j)$ is monotone
+in $i$.  Replacing $X$ by $1-X$ if necessary, we may
+assume that the rows go from $0$ to $1$.  This does not
+change which sets are homogeneous.
+
+If the columns go from $1$ to $0$, put
+$J(i)=\min\{j>i:X(i,j)=1\}$, or $J(i)=\infty$ if there is
+no such $j$.  Then $J$ is nondecreasing.  Set $i_1=1$ and
+$i_{s+1}=J(i_s)$ while this is at most $m'$.  For $a<b$
+we have $i_b\ge J(i_a)$, so $X(i_a,i_b)=1$.  If the chain
+has at least $m$ terms, its first $m$ terms suffice.
+If it has fewer than $m$ terms, its at most $m-1$ terms cut
+$[m']$ into at most $m-1$ intervals
+$[i_s,i_{s+1})$ and $[i_L,m']$, and one interval has at
+least $m'/(m-1)>m-1$ indices.  Inside $[i_s,i_{s+1})$,
+every $i<j$ satisfies $j<i_{s+1}=J(i_s)\le J(i)$, so
+$X(i,j)=0$.  The same holds in the last interval,
+where $J\equiv\infty$.
+
+If the columns go from $0$ to $1$, the set of pairs with
+$X=1$ is closed upward in both coordinates.  Let $\kappa$
+be the least index with $X(\kappa,\kappa+1)=1$, or
+$\kappa=m'$ if there is none.  For $\kappa\le i<j$ we have
+$X(i,j)\ge X(\kappa,\kappa+1)=1$.  For $i<j\le\kappa$ we
+have $X(i,j)\le X(j-1,j)=0$.  One of $[1,\kappa]$ and
+$[\kappa,m']$ has at least $(m'+1)/2\ge m$ indices,
+because $(m-1)^2+1\ge2m-1$ for $m\ge3$.
+
+After all $k$ pairs the remaining set has at least
+$m_0=N$ indices.  Finally,
+$m_{s+1}\le m_s^2$ gives $m_k\le N^{2^k}$.
+\end{proof}
+
 \begin{lemma}[Uniform shortening of heavy antichains]
 \label{lem:group-heavy-antichain}
 Set
 \[
  N_{A,f}=\max\{3,|A|^f\},\quad
- c_f=2^{f^2},\quad U_f=f^{f+1}f!,\quad
- M_{A,f}=U_f\,c_f^{\,c_f(N_{A,f}-1)+1}.
+ U_f=f^{f+1}f!,\quad
+ M_{A,f}=U_f\,N_{A,f}^{\,2^{f^2}}.
 \]
 Let $G$ be reduced and good, and let $g:\Sigma^*\to A$
 be any homomorphism into a finite group.  In a terminal
@@ -157,31 +219,19 @@ An antichain node has at most $f$ blocks.  Its
 \emph{unary pattern} records the number of blocks,
 their root-component destinations, and their order
 within any shared root component.  There are at
-most $U_f$ such patterns.  First retain a set of
-nodes having one common unary pattern.  For indices
-$i<j$, color $\{i,j\}$ by all comparisons between
-block types $(t,i)$ and $(u,j)$ situated in the
-same root component, including $t=u$.  There are
-at most $c_f$ colors.  The elementary multicolor
-Ramsey bound
-\[
- R_{c_f}(N)\le c_f^{\,c_f(N-1)+1}
-\]
-suffices.  Put $c=c_f$ and $L=c(N-1)+1$.
-Start with at least $c^L$ vertices.  Select
-$v_1,\ldots,v_L$ successively, retaining after
-$v_j$ a largest monochromatic set of later neighbors.
-If $S_j$ is the retained set, then
-$|S_j|\ge\lceil(|S_{j-1}|-1)/c\rceil
-\ge c^{L-j}$ for $j<L$.
-Among the first $L-1=c(N-1)$ selected vertices,
-at least $N-1$ have the same outgoing color.
-The final vertex $v_L$ lies in every preceding
-retained set and completes an $N$-vertex
-monochromatic clique.  Thus an antichain of at least
-$M_{A,f}$ nodes contains $N=N_{A,f}$ indices
-with constant unary pattern and constant
-cross-index comparison color.
+most $U_f$ such patterns.  An antichain of at least
+$M_{A,f}$ nodes therefore contains at least
+$N_{A,f}^{\,2^{f^2}}$ nodes with one common unary
+pattern.  Enumerate them in any fixed order.  The block
+types of the common pattern are points of at most $f$
+types, placed on the root components as lines.  There
+are at most $f^2$ ordered pairs of types sharing a root
+component, including $t=u$.  Since
+$m_k\le N^{2^k}\le N^{2^{f^2}}$ for $k\le f^2$,
+Lemma~\ref{lem:order-homogenize} yields $N=N_{A,f}$
+indices with constant unary pattern and constant
+cross-index comparisons between $(t,i)$ and $(u,j)$
+for all $i<j$.
 
 Within each root component their blocks meet
 the hypotheses of
@@ -347,8 +397,13 @@ constant to the encoded total.
 \begin{remark}
 This strengthening does not assert an original-thickness
 polynomial for arbitrary finite \emph{monoid} typings.
-The explicit constant $M_{A,f}$ is a coarse
-Ramsey bound.  The abelian argument of
-Appendix~\ref{app:window-abelian} gives a substantially
-smaller constant when $A$ is commutative.
+For fixed $f$ the constant
+$M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$ is polynomial in
+$|A|$.  It replaces the multicolor Ramsey bound
+$U_f\,c_f^{\,c_f(N_{A,f}-1)+1}$ with $c_f=2^{f^2}$ used in
+earlier versions, which is exponential in $|A|^f$.  The
+dependence on $f$ remains doubly exponential.  The abelian
+argument of Appendix~\ref{app:window-abelian} gives a much
+smaller constant, linear in $f$, when $A$ is commutative
+(Remark~\ref{rem:davenport-size}).
 \end{remark}
