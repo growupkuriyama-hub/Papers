@@ -57,10 +57,13 @@ theorem projectRecItems_startEmpty_iff {Alphabet : Type*}
     (xs : List (RecItem Alphabet)) :
     (projectRecItems xs).startEmpty = true ↔
       RecItem.startEmpty ∈ xs := by
-  induction xs with
-  | nil => simp [projectRecItems]
-  | cons r rs ih =>
-      cases r <;> simp [projectRecItems, ih]
+  simp only [projectRecItems, List.any_eq_true]
+  constructor
+  · rintro ⟨r, hr, hp⟩
+    cases r <;> simp at hp
+    exact hr
+  · intro hr
+    exact ⟨RecItem.startEmpty, hr, rfl⟩
 
 /-- All six mathematical output fields depend only on input membership. -/
 theorem projectRecItems_spec_of_mem {Alphabet : Type*}
@@ -83,9 +86,19 @@ theorem projectRecItems_spec_of_mem {Alphabet : Type*}
         (projectRecItems_startEmpty_iff xs).trans
           ((h RecItem.startEmpty).trans
             (projectRecItems_startEmpty_iff ys).symm)
+    change (projectRecItems xs).startEmpty =
+      (projectRecItems ys).startEmpty
     cases hx : (projectRecItems xs).startEmpty <;>
       cases hy : (projectRecItems ys).startEmpty <;>
       simp_all
+
+/-- Eliminating an always-failing partial projection really returns
+an empty list, independently of the element type. -/
+theorem filterMap_none_elements {α β : Type*} (xs : List α) :
+    xs.filterMap (fun _ => (none : Option β)) = [] := by
+  induction xs with
+  | nil => rfl
+  | cons x tail ih => simp [ih]
 
 /-- Splitting a grammar's own tagged item stream reconstructs all six
 original fields (as sets), including the empty-start Boolean. -/
@@ -98,7 +111,8 @@ theorem projectRecItems_items_spec {Alphabet : Type*}
       cases eps <;>
         simp [projectRecItems, ListedRecGrammar.asRecGrammar,
           ListedRecGrammar.items, List.filterMap_append,
-          List.filterMap_map, List.map_map, Function.comp_def]
+          List.filterMap_map, List.map_map, Function.comp_def,
+          filterMap_none_elements]
 
 /-- This is the executable path: no mathematical grammar specification
 is used in any intermediate operation. -/
