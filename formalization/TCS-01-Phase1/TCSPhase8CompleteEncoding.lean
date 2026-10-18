@@ -45,6 +45,12 @@ theorem readWordTokens_encode_append {Alphabet : Type*}
   | cons a rest ih =>
       simp [encodeWordTokens, readWordTokens, c.decode_number, ih]
 
+@[simp]
+theorem readWordTokens_encode {Alphabet : Type*}
+    (c : LetterNumbering Alphabet) (w : List Alphabet) :
+    readWordTokens c (encodeWordTokens c w) = some (w, []) := by
+  simpa using (readWordTokens_encode_append c w [])
+
 /-- Numeric frame: fixed sort tag followed by delimited word arguments. -/
 def recItemTokens {Alphabet : Type*}
     (c : LetterNumbering Alphabet) : RecItem Alphabet → List Nat
@@ -91,7 +97,7 @@ theorem decodeRecItemTokens_roundtrip {Alphabet : Type*}
     decodeRecItemTokens c (recItemTokens c r) = some r := by
   cases r <;>
     simp [recItemTokens, decodeRecItemTokens,
-      readWordTokens_encode_append, List.append_assoc]
+      readWordTokens_encode_append, readWordTokens_encode, List.append_assoc]
 
 /-- Complete bit encoding, not merely an encoding of numeric indices. -/
 def encodeRecItem {Alphabet : Type*}

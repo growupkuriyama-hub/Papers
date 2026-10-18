@@ -45,7 +45,9 @@ theorem emitAllRecItems_length_le
         (emitLexicalCandidates sample).length +
         (emitStartCandidates sample).length +
         (if emitStartEmpty sample then 1 else 0) := by
-    simp [emitAllRecItems, ListedRecGrammar.items, buildListedRecGrammar]
+    cases h : emitStartEmpty sample <;>
+      simp [emitAllRecItems, ListedRecGrammar.items, buildListedRecGrammar, h] <;>
+      omega
   rw [heq]
   have hflag : (if emitStartEmpty sample then 1 else 0) ≤ 1 := by
     split <;> omega
