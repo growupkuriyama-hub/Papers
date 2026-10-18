@@ -732,148 +732,142 @@ $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$ について同様の例を与える．
 
 \subsection{標的の精密化と有限証拠}
 
-再構成作用素と逐次学習器はすでに定義済みである．ここでは完全性の証明のためだけに標的側の精密化を導入する．目標は，対応する正例証拠が出現した後に，仮説文法が有限個の型付き標的導出を模倣できることを示すことである．次の標準形は証明上の道具としてのみ用いる．
+完全性の証明には，\emph{二分・単位・空語標準形}（BUNF）を用いる．
+すべての生成規則が $A\to BC$，$A\to B$，$A\to a$，
+$A\to\lambda$ のいずれかである形式をいう．
+終端記号の分離と二分化により任意の CFG を多項式時間で
+同値な BUNF に変換でき，空語規則や単位規則を除去する必要はない．
+以下，非空言語の標的文法は縮約済みとする．
 
+後続の定量的評価には，より制約の強い標準形も用いる．
 \begin{definition}[開始記号分離二分標準形]
-CFG $G=(V,\Sigma,P,S_0)$ が \emph{開始記号分離二分標準形}（SSBNF）にあるとは，
-$S_0$ がいかなる右辺にも現れず，すべての開始規則が
-$S_0\to A$ または $S_0\to\lambda$ の形であり，
-すべての非開始規則が $A\to a$ または $A\to BC$ の形であることをいう．
+CFG $G=(V,\Sigma,P,S_0)$ が \emph{開始記号分離二分標準形}
+（SSBNF）にあるとは，$S_0$ がどの右辺にも現れず，
+開始規則が $S_0\to A$ または $S_0\to\lambda$，
+非開始規則が $A\to a$ または $A\to BC$ の形であることをいう．
 \end{definition}
-開始記号分離により $\lambda$ の導出は開始記号に限られ，
-証拠集合の構成に用いる非開始記号の生成語は非空となる．
+任意の非空 CFL は同値な縮約済み SSBNF 文法をもつ．
+空標的は $H_0$ と $\mathsf{Rec}_h(\emptyset)$ で表す．
 
-任意の非空文脈自由言語は，標準的な開始記号分離，無用記号除去，開始記号以外での $\lambda$/単位規則除去，および二分化の手続きにより，同値な縮約済み SSBNF 文法をもつ．従って以下の精密化は非空文脈自由言語について定義する．空標的は $H_0$ と $\mathsf{Rec}_h(\emptyset)$ により別途表す．
-
-非空言語 $L$ に対する縮約済み SSBNF 文法を $G=(V,\Sigma,P,S_0)$ とする．
-開始記号 $\widetilde S$ と，$A\in V\setminus\{S_0\}$, $\mu\in M$ に対する非開始記号 $A_\mu$ をもつ次の生成語型付き文法を作る．以下，型添字の併置は $M$ における積を表す．すなわち $\mu\nu=\mu\cdot\nu$ とする．規則は次である．
+非空言語 $L$ に対する任意の縮約済み BUNF 文法
+$G=(V,\Sigma,P,S_0)$ から，$M^\sharp$ 上の
+\emph{型付き精緻化}を作る．新しい開始記号 $\widetilde S$，
+および $A\in V$，$\mu\in M^\sharp$ に対する
+非開始記号 $A_\mu$ を導入し，次の規則を置く：
 \[
 \begin{array}{ll}
-\widetilde S\to A_\mu & (S_0\to A\in P,\ \mu\in M),\\
-\widetilde S\to\lambda & (S_0\to\lambda\in P),\\
-A_{h(a)}\to a & (A\to a\in P),\\
-A_{\mu\nu}\to B_\mu C_\nu & (A\to BC\in P,\ \mu,\nu\in M).
+\widetilde S\to(S_0)_\mu &(\mu\in M^\sharp),\\
+A_{\mu\nu}\to B_\mu C_\nu &(A\to BC\in P,\ \mu,\nu\in M^\sharp),\\
+A_\mu\to B_\mu &(A\to B\in P,\ \mu\in M^\sharp),\\
+A_{h^\sharp(a)}\to a &(A\to a\in P),\\
+A_{\mathbf1}\to\lambda &(A\to\lambda\in P).
 \end{array}
 \]
-この文法の縮約部分を
-$\widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S)$ と書き，\emph{型付き精密化}と呼ぶ．したがって，規約として $\widetilde G$ のすべての記号は
-到達可能かつ生産的である．
+この文法を縮約したものを $\widetilde G$ と書く．
+残ったすべての非開始記号は生産的かつ到達可能であり，
+型 $\mathbf1$ の記号は $\lambda$ だけを生成する．
 
-$\Sigma$ 上に順序を一つ固定し，それが誘導する \emph{shortlex} 順序を用いる．
-すなわち短い語を先に置き，同じ長さなら辞書式順序で比較する．
-$\widetilde G$ の各非開始記号 $X$ に対し，$\omega(X)$ をその shortlex 最小終端生成語
-とし，これを $X$ の\emph{標準生成語}と呼ぶ．$\widetilde G$ は縮約済みなので
-$\omega(X)$ は常に定義される．
-
-完全性のためには生成語型による分割が必要である．
-親の型付き非終端記号の標準生成語と，その子の標準生成語を
-連接した語とが同じ $h$-型をもつことによって，
-単位規則~\textup{(U)} が適用できる
-（定理~\ref{thm:complete}）．
-
-この分割が現在の完全性証明で果たす役割は，型付け前の文法ですでに見える．
-$h(w)=|w|\bmod 2$ とし，開始記号を $S_0$ とする SSBNF 文法 $G$ の規則を
-$S_0\to A$, $A\to a\mid BC$, $B\to a$, $C\to a$ とする．
-$A$ の最短生成語は $a$ であり型は奇数である一方，$B,C$ の最短生成語の連接 $aa$ は偶数型である．
-したがって，$A$ を生成語型で分割しなければ，対応する単位規則の段階は許可されない．
-生成語型で分割することで必要な等式が不変量となる．一方で周囲の左文脈または右文脈
-には型を付けない．再構成作用素がそのような型を一度も検査しないからである．
+$\Sigma^*$ に shortlex 順序を固定し，残った非開始記号 $X$
+の最小終端生成語を $\omega(X)$ と書いて
+\emph{標準生成語}と呼ぶ．$\omega(X)=\lambda$ も許される．
+型付きの親と生成規則の子の標準生成語の型が一致することは，
+後述する単位規則の適用に必要である．例えば
+$h(w)=|w|\bmod2$ のとき，
+$A\to a\mid BC$，$B\to a$，$C\to a$ ならば，
+$A$ の最短生成語は奇数型 $a$ だが，
+$BC$ の最短生成語は偶数型 $aa$ である．
+生成語による型分割がこの不一致を解消する．
+外側文脈には型を付けない．
 
 \begin{proposition}[型付き持ち上げと生成語不変量]\label{prop:typed-core}
-型付き精密化は $L(\widetilde G)=L(G)$ を満たす．
-さらに，$\widetilde G$ に残る任意の非開始記号 $A_\mu$ について，
+型付き精緻化は $L(\widetilde G)=L(G)$ を満たし，
+残ったすべての $A_\mu$（元の開始記号 $S_0$ の型付きコピーを含む）
+に対して，
 \[
-L_{\widetilde G}(A_\mu)=L_G(A)\cap h^{-1}(\{\mu\})
+L_{\widetilde G}(A_\mu)
+=L_G(A)\cap(h^\sharp)^{-1}(\{\mu\})
 \]
-が成り立つ．特に $A_\mu\Rightarrow_{\widetilde G}^*w$ ならば
-$h(w)=\mu$ である．
+が成り立つ．従って $A_\mu\Rightarrow_{\widetilde G}^*w$
+ならば $h^\sharp(w)=\mu$ である．
 \end{proposition}
 \begin{proof}
-型注釈を消去すれば任意の型付き導出は $G$ の導出となる．
-逆に $G$ の成功導出木の各非開始節点に，その部分木の終端生成語の
-$h$-型を注釈する．終端規則と二項規則は型のボトムアップ伝播則そのもの
-なので，注釈付き木はトリム前の型付き文法での導出となる．
-成功木上の記号はすべてトリム後も残る．
-
-残った非開始記号 $A_\mu$ について，型注釈の消去から
-$L_{\widetilde G}(A_\mu)\subseteq L_G(A)\cap h^{-1}(\{\mu\})$
-が従う．逆の包含のため，$w\in L_G(A)$ かつ $h(w)=\mu$ とする．
-$A_\mu$ はトリム後に残っているので，その出現を含む成功した
-型付き導出木が存在する．一方，$A\Rightarrow_G^*w$ という元文法での
-導出木の各部分木の終端生成語を $h$-型でボトムアップに注釈する．
-得られた型付き部分木を，先の成功木の $A_\mu$ の出現箇所に接ぎ木する．
-根の型が $\mu$ なので接ぎ木は正しく，全体として成功した型付き導出木になる．
-したがって接ぎ木した部分木の記号と規則はすべてトリム後にも残り，
-$A_\mu\Rightarrow_{\widetilde G}^*w$ を得る．
-生成語型の不変量も型付き導出に関する帰納法から直接従う．
+各型付き規則について導出木に関する帰納法を行えば，
+根の型添字はその終端生成語の $h^\sharp$-型と一致する．
+型添字を消せば $G$ の導出を得る．逆に，$G$ の成功導出木の
+各節点にその生成語型を付け，新しい開始規則を加えれば，
+縮約前の型付き導出になり，成功木上の規則は縮約後も残る．
+残存する $A_\mu$ と $w\in L_G(A)$，$h^\sharp(w)=\mu$
+については，型注釈付きの $A\Rightarrow_G^*w$ を
+成功した型付き導出木の $A_\mu$ の出現箇所に接ぎ木すれば，
+逆包含が従う．
 \end{proof}
 
-$\widetilde G$ の各非開始記号 $X$ に対し，$X$ の終端到達文脈の中から
-$|u_X|+|v_X|$ を最小化するものとして $\chi(X)=(u_X,v_X)$ を選び，同値な候補が
-ある場合は $u_X$ の shortlex 順序，次に $v_X$ の shortlex 順序で決める．
-$\chi(X)$ を $X$ の\emph{標準文脈}と呼ぶ．$\widetilde G$ は縮約済みなので，
-このような終端到達文脈は存在する．実際，到達可能性により $X$ は到達可能な文形式中に
-現れ，周囲の非終端記号の生産性により，その左側および右側のすべての記号を終端文字列へ
-展開できる．命題~\ref{prop:typed-core} から $h(\omega(A_\mu))=\mu$ である．
+各非開始記号 $X$ の終端到達文脈から，
+$|u_X|+|v_X|$ を最小にする
+$\chi(X)=(u_X,v_X)$ を選び，同点なら shortlex 順序で決める．
+これを\emph{標準文脈}と呼ぶ．縮約済みなので存在し，
+命題~\ref{prop:typed-core} から
+$h^\sharp(\omega(A_\mu))=\mu$ が成り立つ．
 
-有限証拠集合を
+\emph{標準正例証拠集合}を
 \begin{equation}\label{eq:W}
 \begin{split}
 \WitnessSet(\widetilde G):={}&
- \{u_X\omega(X)v_X:X\in\widetilde V\setminus\{\widetilde S\}\}\\
+\{u_X\omega(X)v_X:X\in\widetilde V\setminus\{\widetilde S\}\}\\
 &\cup\{u_Xav_X:X\to a\in\widetilde P\}\\
-&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}\\
-&\cup\bigl(\{\lambda\}\text{ if }\lambda\in L\bigr)
+&\cup\{u_X\omega(Y)v_X:X\to Y\in\widetilde P,\
+ X,Y\ne\widetilde S\}\\
+&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}
 \end{split}
 \end{equation}
-により定める．ここに表示したすべての語は $L$ に属し，集合は有限である．特に，
-二項規則 $X\to YZ$ に対応する証拠語は
-\[
-\widetilde S\Rightarrow^*u_XXv_X\Rightarrow u_XYZv_X
-\Rightarrow^*u_X\omega(Y)\omega(Z)v_X
-\]
-により正当化される．第一族と第二族についても同様である．
-$\WitnessSet(\widetilde G)$ の要素を \emph{標準正例証拠} と呼ぶ．
-第一族は各型付き記号の標準的な一出現を記録し，第二族と第三族はそれぞれ
-終端生成規則と二項生成規則を記録する．
+で定義する．各証拠語は $X$ の成功到達導出を
+対応する規則と標準生成語で展開したものなので $L$ に属する．
+空語導出可能な型付き記号も同じ四種類の証拠で扱える．
+特に $\lambda\in L$ ならば
+$(S_0)_{\mathbf1}$ の標準文脈は $(\lambda,\lambda)$，
+標準生成語は $\lambda$ なので，
+$\lambda\in\WitnessSet(\widetilde G)$ となる．
 
 \subsection{厳密再構成と Gold 収束}
 
 \begin{theorem}[有限証拠からの完全性]\label{thm:complete}
-非空言語 $L$ に対する任意の縮約済み SSBNF 文法を $G$ とし，固定準同型 $h$ に関するその型付き精密化を $\widetilde G$ とする．有限集合 $K$ が $\WitnessSet(\widetilde G)\subseteq K$ を満たすならば，$L\subseteq L(\mathsf{Rec}_h(K))$ である．
+非空言語 $L$ に対する任意の縮約済み BUNF 文法 $G$ と
+その $h^\sharp$-型付き精緻化 $\widetilde G$ を考える．
+$\WitnessSet(\widetilde G)\subseteq K$ ならば，
+$L\subseteq L(\mathsf{Rec}_h(K))$ である．
 \end{theorem}
-
-ここが標的型付けが登場する箇所である．学習器とバッチ作用素は第~\ref{sec:algo}節ですでに定義されており，以下の証明は，それらの仮説非終端記号が生成語型付き標的非終端記号を模倣できることを示す．それ以外では，この主張は純粋に組合せ論的である．型付き文法と包含 $\WitnessSet(\widetilde G)\subseteq K$ だけを用い，代入可能性も追加仮定 $K\subseteq L$ も必要としない．
-
+ここでは代入可能性も $K\subseteq L$ も仮定しない．
 \begin{proof}
-各非開始記号 $X$ に対し，$\widehat X:=\NT{\omega(X)}$ と書く．
-式~\eqref{eq:W} の第一族の対応する語により $\widehat X$ は存在する．
-型付き導出 $X\Rightarrow^*w$ について帰納法を行い，
+各非開始記号 $X$ に対し $\widehat X:=\NT{\omega(X)}$ とおく．
+第一の証拠族により，$\omega(X)=\lambda$ の場合も
+この非終端記号は再構成文法に存在する．
+型付き導出 $X\Rightarrow^*w$ に関する帰納法で，
 $\widehat X\Rightarrow_{\mathsf{Rec}_h(K)}^*w$ を示す．
 
-最初の規則が $X\to a$ の場合，第一族と第二族にはそれぞれ
-$u_X\omega(X)v_X$ と $u_Xav_X$ が含まれる．
-命題~\ref{prop:typed-core} より $h(\omega(X))=h(a)$ なので
-$\omega(X)\approx_{K,h}a$ である．必要なら規則~\textup{(U)} で
-$\widehat X$ から $\NT{a}$ へ移り，規則~\textup{(L)} で $a$ を生成する．
+$X\to\lambda$ ならば $\omega(X)=\lambda$ なので
+規則~\textup{(E)} を使える．$X\to a$ ならば
+第一・語彙証拠族により
+$\omega(X)\approx_{K,h^\sharp}a$ となり，
+規則~\textup{(U)} と~\textup{(L)} を適用できる．
+$X\to Y$ ならば第一・単位証拠族により，
+$\omega(X)\approx_{K,h^\sharp}\omega(Y)$
+となる．規則~\textup{(U)} と帰納法の仮定から従う．
 
-最初の規則が $X=A_{\mu\nu}\to B_\mu C_\nu$ の場合，
-$Y:=B_\mu$, $Z:=C_\nu$ とおく．第一族と第三族には
-$u_X\omega(X)v_X$ と $u_X\omega(Y)\omega(Z)v_X$ が含まれる．さらに
-$h(\omega(X))=\mu\nu=h(\omega(Y))h(\omega(Z)) =h(\omega(Y)\omega(Z))$
-なので，必要なら規則~\textup{(U)} により
-$\widehat X$ から $\NT{\omega(Y)\omega(Z)}$ へ移る．
-第三族の証拠により $\omega(Y)\omega(Z)$ は観測因子でもあるから，
-規則~\textup{(B)} で
-$\NT{\omega(Y)\omega(Z)}\to\NT{\omega(Y)}\NT{\omega(Z)}$
-と分解できる．二つの部分導出は帰納法の仮定で完了する．
+$X\to YZ$ ならば第一・二項証拠族と
+$h^\sharp$ の準同型則により
+$\omega(X)\approx_{K,h^\sharp}\omega(Y)\omega(Z)$
+となる．規則~\textup{(U)} で
+$\NT{\omega(Y)\omega(Z)}$ に移り，
+規則~\textup{(B)} で二分した後，
+二つの帰納法の仮定を適用する．
+子の一方または両方が $\lambda$ を生成する場合も同様である．
 
-最後に，任意の非空 $w\in L$ は
-$\widetilde S\to X\Rightarrow^*w$ という持ち上げられた開始導出をもつ．
-開始規則そのものにより $(\lambda,\lambda)$ は $X$ の終端到達文脈であり，
-全長 $0$ で最小だから $\chi(X)=(\lambda,\lambda)$ である．
-第一族から $\omega(X)\in K$ なので，規則~\textup{(S)} が上の導出を開始する．
-$w=\lambda$ の場合も式~\eqref{eq:W} と規則~\textup{(S)} から直ちに従う．
+任意の $w\in L$ は
+$\widetilde S\to(S_0)_\mu\Rightarrow^*w$
+という型付き開始導出をもつ．
+$(S_0)_\mu$ の標準文脈は $(\lambda,\lambda)$ なので，
+その標準生成語は第一の証拠族として $K$ に属する．
+規則~\textup{(S)} と上の帰納法によって $w$ を生成できる．
 \end{proof}
 
 \begin{theorem}[厳密有限標本再構成]
