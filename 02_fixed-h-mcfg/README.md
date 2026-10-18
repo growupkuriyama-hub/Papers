@@ -37,6 +37,16 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v84 concise exposition and inline math (review draft)
+
+Active working branch: `mcfg-v84-ic-inline-prose-tightening`.
+This is a **reversible presentation-only refinement** of the focused v83 paper.
+- EN/JP introductions, Yoshinaka comparison and conclusions shortened to eliminate repeated scope statements while retaining attribution, key theorems and the open problem.
+- Short standalone display equations moved inline in the main paper and all three original algebraic appendices, with major multi-line proof equations retained as displays.
+- All bilingual TeX sources have matching updated SHA256 metadata. Bilingual PDF CI and visual overfull checks are required.
+- `mcfg-v83-ic-focused-trim` and PR #52 remain untouched as the immediate restoration baseline. Earlier complete v82 and archived theorems also remain available.
+- See `revision/v84_inline_exposition_trim.md` for checks and what is *not* changed.
+
 ## v83 I&C Focused Manuscript (review draft)
 
 **Current review branch:** `mcfg-v83-ic-focused-trim`. The official `main` manuscript remains at v81; this draft has not been submitted or merged.
