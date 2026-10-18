@@ -2228,11 +2228,68 @@ longer, so every stated bound persists.  Expanding a DAG takes
 time linear in the length of the word it represents.
 \end{proof}
 
+\begin{proposition}[Rule-only characteristic witnesses]
+\label{prop:rule-only-witnesses}
+In the setting of Proposition~\ref{prop:effective-char-data},
+choose all canonical tuples by the consistent acyclic
+minimum-weight derivations described there.
+For each non-start typed nonterminal $X$, let
+$R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ be the first rule in
+its chosen minimizing derivation (including $q=0$).
+Then
+\[
+ \omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q)).
+\]
+Consequently the witness set of
+Definition~\ref{def:witness-set} equals the set of
+rule-witness words alone:
+\[
+ \Wit(\widetilde G_0)=
+ \bigl\{
+ \chi(\operatorname{lhs}R)
+ [\rho_R(\omega(Y_1),\ldots,\omega(Y_q))]:
+ R\in\mathcal R
+ \bigr\},
+\]
+where $\mathcal R$ denotes the non-start typed rules
+and rank-zero rules are included.
+In particular,
+\[
+ |\Wit(\widetilde G_0)|\le|\mathcal R|
+ \le |P||M|^{fr_{\max}},
+\]
+for a fixed typing and rule-rank cap.
+The set remains characteristic for
+$\mathcal B^{\le r_{\max}}_{f,h}$ whenever the
+target is in $\Cmcf{f}{h}$.
+\end{proposition}
+\begin{proof}
+For each typed nonterminal $X$, an optimal derivation
+starts with a rule $R_X$. Every child derivation must
+have minimum weight: replacing a nonoptimal child by
+the chosen minimum would decrease the lexicographic
+weight of the whole derivation. The additional
+derivation-node tie-breaker makes the simultaneous
+choice of minimizing rules acyclic. Hence the displayed
+identity for $\omega(X)$ holds, also for rank zero.
+
+It follows that $\chi(X)[\omega(X)]$ is
+\emph{identical} to the witness word of $R_X$.
+Every other term in Definition~\ref{def:witness-set}
+is already a rule witness. Thus the two sets coincide
+as sets of terminal words; in particular, the
+completeness and characteristic-sample arguments using
+$\Wit(\widetilde G_0)$ are unchanged.
+There is at most one selected word per rule instance.
+The refinement bound on the number of typed rules
+gives the displayed cardinality estimate.
+\end{proof}
+
 \begin{proposition}[A computable presentation-sensitive data budget]
 \label{prop:computed-witness-budget}
 Under the hypotheses of Proposition~\ref{prop:effective-char-data},
-let $\mathcal N$ be the non-start typed nonterminals and
-$\mathcal R$ the non-start typed rules of $\widetilde G_0$.
+let $\mathcal R$ be the non-start typed rules
+of $\widetilde G_0$.
 Let $\lambda(X)$ be the minimum total yield length from $X$,
 and let $\mu(X)$ be the minimum fixed length of a derivational
 sentence context of $X$ (with $\mu(X)=0$ for a direct start link).
@@ -2240,15 +2297,15 @@ For $R:X\to\rho(Y_1,\ldots,Y_q)$, put
 \[
  b(R):=c_\rho+\sum_{j=1}^q\lambda(Y_j),
  \qquad
- \mathsf B(G,h):=
- \sum_{X\in\mathcal N}\bigl(1+\mu(X)+\lambda(X)\bigr)
- +\sum_{R\in\mathcal R}\bigl(1+\mu(\operatorname{lhs}R)+b(R)\bigr).
+ \mathsf B_{\mathrm{rule}}(G,h):=
+ \sum_{R\in\mathcal R}
+ \bigl(1+\mu(\operatorname{lhs}R)+b(R)\bigr).
 \]
 There is a computable witness set $\Wit(\widetilde G_0)$ with
 \[
- \|\Wit(\widetilde G_0)\|_+\le\mathsf B(G,h).
+ \|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h).
 \]
-The integer $\mathsf B(G,h)$ is computable in polynomial time in
+The integer $\mathsf B_{\mathrm{rule}}(G,h)$ is computable in polynomial time in
 $\|G\|$ when $f,r_{\max},h$ are fixed, with its value represented in
 binary.  If $L(G)$ also contains the empty word and its nonempty
 core is treated separately, the optional $\eps$ datum adds at most one
@@ -2257,24 +2314,24 @@ to the encoded budget.
 \begin{proof}
 Use the minimizing canonical tuples and derivational contexts
 constructed in Proposition~\ref{prop:effective-char-data}.
-For each $X\in\mathcal N$ the selected word
-$\chi(X)[\omega(X)]$ has length exactly
-$\mu(X)+\lambda(X)$.
-For each positive-rank or rank-zero rule
-$R:X\to\rho(Y_1,\ldots,Y_q)$ the selected word
+By Proposition~\ref{prop:rule-only-witnesses},
+every canonical-nonterminal witness is already one of
+the rule witnesses. For each positive-rank or rank-zero
+typed rule $R:X\to\rho(Y_1,\ldots,Y_q)$, its witness word
 $\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$
 has length exactly $\mu(X)+b(R)$.
-Summing the corresponding encoded lengths $|w|+1$ over
-this indexed multiset gives $\mathsf B(G,h)$.
-The witness set removes repetitions, so its total encoded length
-cannot be larger.  The computations of $\lambda,\mu$,
+Summing the encoded lengths $|w|+1$ over this indexed
+multiset of rule witnesses gives
+$\mathsf B_{\mathrm{rule}}(G,h)$.
+Passing to the set of distinct words can only lower
+the total length.  The computations of $\lambda,\mu$,
 the number of typed symbols and rules, and the binary lengths of
 these quantities are polynomially bounded as in
 Proposition~\ref{prop:effective-char-data}.
 \end{proof}
 
 \begin{remark}
-This budget is \emph{presentation-sensitive} and can be much smaller
+This \emph{rule-only} budget is presentation-sensitive and can be much smaller
 than substituting worst-case maxima into the polynomial bounds.
 It is an efficiently computable \emph{upper certificate}, not a
 claim of a minimum-size characteristic sample or an improved
