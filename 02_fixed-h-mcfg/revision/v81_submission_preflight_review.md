@@ -62,8 +62,11 @@ not a statement that the paper has been independently peer-reviewed.
   reported one `Overfull \\hbox` of 37.2546 pt near the long relaxed-witness
   formula (JP source lines 2859--2875), despite zero unresolved citations
   in the final compilation pass. Reformatted that formula as displayed
-  mathematics without changing its value. The final subsequent build
-  must be checked to verify the box warning has disappeared.
+  mathematics without changing its value. The subsequent Japanese
+  LuaLaTeX review run succeeded with **zero overfull and zero underfull
+  boxes**. The combined MCFG workflow generated an English 52-page PDF
+  and a Japanese 57-page PDF. The English log retained only two minor
+  underfull warnings; no final-pass undefined-reference error remained.
 
 ## Remaining gates before pressing Submit
 
