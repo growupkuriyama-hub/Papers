@@ -1,7 +1,7 @@
 # MCFG #2 v76 Stage 1: local-group (LG) upper bound and the semilattice boundary
 
 Date: 2026-10-18 (JST)
-Status: **draft on branch `mcfg2-v76-strengthening-drafts`; adoption is the author's decision.** Not submitted.
+Status: **merged into the v76 pre-submission working manuscript through PR #41; not independently human-refereed or journal-submitted.** New local-group results remain mathematical-review priorities.
 New file: `appendix_local_group.tex` (EN) / `japanese/appendix_local_group_JP.tex` (JP), compiled as the last appendix.
 
 ## Result in one line
