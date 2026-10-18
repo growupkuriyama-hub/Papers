@@ -37,6 +37,10 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v86 restored fan-out-two non-CFL rank-one separation (I&C draft)
+
+Branch `mcfg-v86-fanout-two-separation-return` restores the complete EN/JP proof and strict-2-local supporting lemma for `thm:arbitrary-filter-separation` from `archive/trim-v83`. It exhibits a genuine fan-out-two, rank-one typed non-CFL outside every arbitrary regular filter of Yoshinaka's untyped substitutable class. The larger minimum-rank-two example remains archived. No local-group or semilattice-coset theorem, open lower-bound question, or v85 source was modified. See `revision/v86_fanout2_separation_restoration.md`.
+
 ## v85 absorbed-theorems I&C review draft
 
 Active branch: `mcfg-v85-ic-theorem-absorption`. Original complete v84 is frozen at commit `ed945ec8792f3840cdb108b09c49780f8fa4d404` on `archive/mcfg-v84-preabsorption-full-20261018`.

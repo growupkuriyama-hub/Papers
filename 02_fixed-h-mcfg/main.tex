@@ -75,6 +75,8 @@ window with any fixed finite group yields $O(\|G\|^3\bar\theta_G)$, including
 noncommutative groups. We extend the cubic bound to typings with positive-image semigroup in
 the pseudovariety $\mathbf{LG}$ of local groups. For rank-one rules,
 every fixed finite typing has a grammar-size polynomial bound.
+An explicit non-context-free fan-out-two rank-one target separates
+fixed typed substitutability from arbitrary regular filtering.
 A complementary semilattice-indexed abelian-coset criterion gives
 polynomial characteristic-data length uniformly over auxiliary
 abelian groups, subsuming the abelian-filtered case even when the
@@ -125,6 +127,9 @@ including windows combined with arbitrary finite groups
 (Theorem~\ref{thm:local-group-polydata}).
 Every fixed typing also admits polynomial characteristic data
 at rule rank one (Theorem~\ref{thm:rankone-polydata}).
+A fan-out-two non-context-free rank-one target lies outside
+all untyped substitutable classes followed by arbitrary regular
+filters (Theorem~\ref{thm:arbitrary-filter-separation}).
 We distinguish the effective rule-only witness budget
 (Proposition~\ref{prop:computed-witness-budget})
 from existential bounds using short distributional representatives
@@ -2633,7 +2638,9 @@ lower-bound question remains open.
 Yoshinaka's multidimensional substitutability provides the
 untyped baseline~\cite{Yoshinaka2009,Yoshinaka2011}.
 The trivial typing recovers it, whereas finite typing restricts
-which tuples may be identified. \begin{definition}[Yoshinaka multidimensional substitutability]
+which tuples may be identified.
+
+\begin{definition}[Yoshinaka multidimensional substitutability]
 \label{def:yoshinaka-pd-substitutability}
 At arity $d\le f$, a language is
 \emph{$f$D-substitutable} when, for sentence contexts
@@ -2661,6 +2668,166 @@ Our quantitative extension concerns the original thickness
 under finite typed multi-component control.
 
 
+\subsection{A genuine fan-out-two separation}
+\label{subsec:comparison-separations}
+
+The rank-one bound of Theorem~\ref{thm:rankone-polydata}
+covers genuinely non-context-free targets. The following
+example also separates fixed typed substitutability from an
+untyped multidimensionally substitutable language followed
+by an arbitrary regular filter.
+
+Following the standard local-testability terminology~\cite{McNaughtonPapert1971}, call
+$L_{\mathrm{sl}}\subseteq\Sigma^*$ \emph{strictly 2-local} if there is a set
+$\mathsf{Adj}\subseteq(\Sigma\cup\{\vdash,\dashv\})^2$ such that
+\[
+ w\in L_{\mathrm{sl}}
+ \quad\Longleftrightarrow\quad
+ \text{every adjacent pair in $\vdash w\dashv$ belongs to $\mathsf{Adj}$},
+\]
+where $\vdash,\dashv\notin\Sigma$ are fixed boundary markers.
+
+\begin{lemma}[Strictly 2-local constraints are boundary typed]
+\label{lem:sl2-boundary-control}
+If $L_{\mathrm{sl}}\subseteq\Sigma^*$ is strictly 2-local, then for every $f\ge1$,
+\(L_{\mathrm{sl}}\in\Cmcf{f}{h_\Sigma^{1,1}}.\)
+\end{lemma}
+
+\begin{proof}
+Let equal-$h_\Sigma^{1,1}$-type nonempty tuples $\tuple x,\tuple y$ share an
+accepting context $E_0$.  Internal adjacent pairs of each $y_i$ are permitted
+because they occur in $E_0[\tuple y]$.  If $E[\tuple x]\in L_{\mathrm{sl}}$,
+every adjacent pair of $E[\tuple y]$ is either in fixed material, internal to
+a $y_i$, or crosses a component boundary.  These are permitted respectively
+by $E[\tuple x]$, by $E_0[\tuple y]$, or by equality of the first/last letters
+encoded by the boundary type; end-marker pairs are unchanged.  Thus
+$E[\tuple y]\in L_{\mathrm{sl}}$, and symmetry finishes the proof.
+\end{proof}
+
+\paragraph{Arbitrary target-dependent regular filters.}
+For comparison, on a fixed alphabet define
+\[
+ \mathcal F_f^{\mathrm{arb}}
+ :=\bigl\{L_0\cap R:L_0\in\YSub{f},\ R\text{ regular}\bigr\}
+   \cap f\text{-}\mathrm{MCFL}.
+\]
+This class contains all regular languages
+(take $\Sigma^*\in\YSub{f}$) and is therefore
+not TxtEx-identifiable as a single
+positive-data class by Gold's obstruction.
+We use it only as an expressiveness baseline,
+not as an additional learnable class.
+
+The next theorem shows that finite componentwise typing can
+express a non-context-free fan-out-two rank-one target outside
+this entire filtering baseline.
+
+\begin{theorem}[A fan-out-two typed language beyond arbitrary regular filtering]
+\label{thm:arbitrary-filter-separation}
+Let $\Sigma_\star:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$ and
+\[
+ L_\star
+ :=\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}
+   \cup
+   \{\mathtt a^n\mathtt d^{n+1}\mathtt b^{2n}:n\ge0\}.
+\]
+Let
+$g_\star:\Sigma_\star^*\to(\mathcal P(\{\mathtt c,\mathtt d\}),\cup)$
+be the homomorphism defined by
+\[
+ g_\star(\mathtt a)=g_\star(\mathtt b)=\varnothing,
+ \qquad
+ g_\star(\mathtt c)=\{\mathtt c\},
+ \qquad
+ g_\star(\mathtt d)=\{\mathtt d\},
+\]
+and put
+\(h_\star:=(h_{\Sigma_\star}^{1,1},g_\star).\)
+Then $L_\star$ is non-context-free, has minimum fan-out two and minimum
+fan-out-two rule rank one, and for every $f\ge2$,
+\(L_\star\in\Cmcf{f}{h_\star} \setminus\mathcal F_f^{\mathrm{arb}}.\)
+Equivalently, there are no $L_0\in\YSub{f}$ and regular $R_{\mathrm{reg}}$ such that
+$L_\star=L_0\cap R_{\mathrm{reg}}$.
+\end{theorem}
+
+\begin{proof}
+A good fan-out-two rank-one grammar is
+\[
+\begin{aligned}
+ A_{\mathtt c}
+   &\to(\mathtt a\mathtt c,\mathtt b)
+     \mid(\mathtt a\xi_1^1\mathtt c,\xi_1^2\mathtt b)(A_{\mathtt c}),\\
+ A_{\mathtt d}
+   &\to(\mathtt a\mathtt d,\mathtt b\mathtt b)
+     \mid(\mathtt a\xi_1^1\mathtt d,\xi_1^2\mathtt b\mathtt b)(A_{\mathtt d}),\\
+ S&\to\mathtt c\mid\mathtt d
+   \mid(\xi_1^1\mathtt c\xi_1^2)(A_{\mathtt c})
+   \mid(\xi_1^1\mathtt d\xi_1^2)(A_{\mathtt d}).
+\end{aligned}
+\]
+It generates exactly $L_\star$.  The intersection with the regular language
+$\mathtt a^*\mathtt c^+\mathtt b^*$ is
+$\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}$, which is not
+context-free.  For a short closure proof, introduce a fresh symbol
+$\mathtt\#$ and the homomorphism fixing $\mathtt a,\mathtt b,\mathtt c$ and
+sending $\mathtt\#$ to $\mathtt c$.  The inverse image of this branch,
+intersected with
+$\mathtt a^*\mathtt c^*\mathtt\#\mathtt b^*$, is
+$\{\mathtt a^n\mathtt c^n\mathtt\#\mathtt b^n:n\ge0\}$; erasing
+$\mathtt\#$ would make $\{\mathtt a^n\mathtt c^n\mathtt b^n:n\ge0\}$
+context-free, a contradiction.  Thus the minimum fan-out is two, and
+infinitude together with the displayed grammar gives minimum fan-out-two rule
+rank one.
+
+For typed substitutability put
+\[
+ Q_\star:=\mathtt a^*\mathtt c^+\mathtt b^*
+          \cup\mathtt a^*\mathtt d^+\mathtt b^*,
+ \qquad
+ \Psi(w):=(|w|_{\mathtt a},|w|_{\mathtt b},
+            |w|_{\mathtt c},|w|_{\mathtt d}).
+\]
+The strictly $2$-local language $Q_\star$ is boundary typed by
+Lemma~\ref{lem:sl2-boundary-control}.  Let equal-$h_\star$-type tuples
+$\tuple x,\tuple y$ share an accepting context $E_0$, and set
+\(\Delta:=\sum_i\Psi(y_i)-\sum_i\Psi(x_i).\)
+Their equal $g_\star$-types put $E_0[\tuple x],E_0[\tuple y]$ on the same
+branch, so for some $q\in\mathbb Z$,
+\(\Delta=q(1,1,1,0)\quad\text{or}\quad\Delta=q(1,2,0,1)\)
+according as that branch is $\mathtt c$ or $\mathtt d$.
+
+If $F[\tuple x]\in L_\star$, boundary typing gives
+$F[\tuple y]\in Q_\star$, and equal $g_\star$-types put the two fillings on
+the same $F$-branch.  When $E_0$ and $F$ choose the same branch, the displayed
+count difference preserves its affine relation.  If they choose different
+branches, no tuple component can contain $\mathtt c$ or $\mathtt d$; hence the
+two center coordinates of $\Delta$ vanish, forcing $q=0$.  In either case
+$F[\tuple y]\in L_\star$, and symmetry proves
+$L_\star\in\Cmcf{f}{h_\star}$.
+
+Finally assume $L_\star=L_0\cap R_{\mathrm{reg}}$ with
+$L_0\in\YSub{f}$ and $R_{\mathrm{reg}}$ regular.  Since
+$\mathtt c,\mathtt d\in L_0$, arity-one substitutability gives
+$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$.  Hence, replacing the two occurrences of $\mathtt d$ successively,
+$\mathtt a\mathtt d^2\mathtt b^2\in L_0$ yields first
+$\mathtt a\mathtt c\mathtt d\mathtt b^2\in L_0$ and then
+$\mathtt a\mathtt c^2\mathtt b^2\in L_0$; together with
+$\mathtt a\mathtt c^2\mathtt b\in L_0$ gives
+\(\D_{L_0}(\mathtt c^2\mathtt b) =\D_{L_0}(\mathtt c^2\mathtt b^2).\)
+Thus $\mathtt a^m\mathtt c^{m+1}\mathtt b^{m+t}\in L_0$ for all
+$m\ge1,t\ge0$.  For $m$ at least the state number of a DFA for
+$R_{\mathrm{reg}}$, pumping the final $\mathtt b^m$ block of the accepted
+target word gives some $t>0$ with the same word in $R_{\mathrm{reg}}$, hence
+in the intersection but not in $L_\star$, a contradiction.
+\end{proof}
+
+
+This witness has minimum fan-out two and rank one. Thus the
+grammar-size polynomial characteristic-data result of
+Theorem~\ref{thm:rankone-polydata} is not merely a restatement
+of a context-free or linear-CFG special case.
+
+
 \section{Conclusion}
 \label{sec:conclusion}
 
@@ -2672,7 +2839,9 @@ from either local-group structure of the fixed typing
 (Theorem~\ref{thm:local-group-polydata})
 or semilattice-indexed abelian-coset structure of the target
 (Theorem~\ref{thm:mcfg-semilattice-twisted-polydata}).
-Window and rank-one bounds are useful special cases.
+Window and rank-one bounds are useful special cases;
+Theorem~\ref{thm:arbitrary-filter-separation} supplies a
+non-context-free fan-out-two rank-one separation beyond regular filtering.
 The computable rule-only and existential distributional-witness
 bounds remain distinct. Full yield-type refinement and
 empty-component elimination may increase thickness exponentially
