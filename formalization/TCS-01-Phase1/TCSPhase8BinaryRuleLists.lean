@@ -42,8 +42,9 @@ theorem mem_emitBinaryCandidates_iff
     have hz : ObservedFactor sample.toFinset z := by
       rw [← hzz]
       exact ⟨ho.1,u,v,by simpa using ho.2⟩
-    have hxne : x ≠ [] := by simpa [hxx] using hp.2.1
-    have hyne : y ≠ [] := by simpa [hyy] using hp.2.2
+    have hnonempty : x' ≠ [] ∧ y' ≠ [] := by simpa using hp.2
+    have hxne : x ≠ [] := by simpa [hxx] using hnonempty.1
+    have hyne : y ≠ [] := by simpa [hyy] using hnonempty.2
     have hx : ObservedFactor sample.toFinset x :=
       observed_of_infix hz hxne ⟨[],y,by simpa using hzw⟩
     have hy : ObservedFactor sample.toFinset y :=
