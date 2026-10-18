@@ -75,13 +75,12 @@ jobs:
             cp "$RUNNER_TEMP/v88-main-en.pdf" "$en_target"
             cp "$RUNNER_TEMP/v88-main-jp.pdf" "$jp_target"
             git add -f -- "$en_target" "$jp_target"
-            git rm -f -- ".github/workflows/_temporary_publish_mcfg_v88_fixed_pdfs.yml"
             actual="$(git diff --cached --name-only | sort)"
-            expected="$(printf '%s\n' '.github/workflows/_temporary_publish_mcfg_v88_fixed_pdfs.yml' '$en_target' '$jp_target' | sort)"
+            expected="$(printf '%s\n' "$en_target" "$jp_target" | sort)"
             test "$actual" = "$expected" || { echo "::error::Unexpected staged changes"; git diff --cached --name-only; exit 1; }
             git commit -m "Publish MCFG v88 bilingual PDFs to fixed URLs (TeX and CFG unchanged) [skip ci]"
             if git push origin HEAD:main; then
-              echo "SUCCESS: Only the two MCFG PDFs remain changed; temporary publisher deleted."
+              echo "SUCCESS: Only the two MCFG PDFs published; temporary publisher will be removed separately."
               exit 0
             fi
             echo "Concurrent commit; retry $attempt/5."
