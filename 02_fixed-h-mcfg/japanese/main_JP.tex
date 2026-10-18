@@ -2696,11 +2696,60 @@ $\theta_G(R)=\mu(A)+c_\rho+\sum_j\lambda(B_j)$ が得られる．
 DAG の展開は，表す語の長さについて線形時間である．
 \end{proof}
 
+\begin{proposition}[規則証拠だけによる特徴標本]
+\label{prop:rule-only-witnesses}
+命題~\ref{prop:effective-char-data} の設定で，
+全ての正準タプルを同命題の非循環な最小重み導出から
+整合的に選ぶ．開始記号以外の型付き非終端記号 $X$ に対し，
+その最小導出の根の規則を
+$R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
+（$q=0$ の場合も含む）．このとき
+\[
+ \omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))
+\]
+が成立する．したがって定義~\ref{def:witness-set} の
+特徴証拠集合は，規則証拠だけからなる次の集合に等しい：
+\[
+ \Wit(\widetilde G_0)=
+ \bigl\{
+ \chi(\operatorname{lhs}R)
+ [\rho_R(\omega(Y_1),\ldots,\omega(Y_q))]:
+ R\in\mathcal R
+ \bigr\}.
+\]
+ここで $\mathcal R$ は開始記号以外の型付き規則の集合で，
+ランク0の規則も含む．特に
+\[
+ |\Wit(\widetilde G_0)|\le|\mathcal R|
+ \le |P||M|^{fr_{\max}}
+\]
+である．標的が $\Cmcf{f}{h}$ に属するとき，
+この集合は $\mathcal B^{\le r_{\max}}_{f,h}$
+に対する特徴標本として引き続き機能する．
+\end{proposition}
+\begin{proof}
+各 $X$ の最適導出は，ある規則 $R_X$ から始まる．
+その子の導出が最適でなければ，最短の子導出に
+置換することで全体の辞書式重みを小さくでき，
+矛盾する．導出節点数による副次的な最小化によって，
+この根規則の選択を同時に非循環にできる．
+したがってランク0も含めて，表示した
+$\omega(X)$ の恒等式が成立する．
+
+ゆえに $\chi(X)[\omega(X)]$ は
+選択規則 $R_X$ の証拠語と\emph{同一}である．
+定義~\ref{def:witness-set} の他の語は，
+初めから規則証拠として収録されている．
+従って二つの集合は終端語の集合として等しく，
+証拠集合に基づく完全性や特徴標本の証明は変わらない．
+各型付き規則に高々1語が対応し，
+型付き規則数の評価から個数上界が得られる．
+\end{proof}
+
 \begin{proposition}[文法表示ごとに計算可能な特徴データ長予算]
 \label{prop:computed-witness-budget}
 命題~\ref{prop:effective-char-data} の仮定の下で，
-$\widetilde G_0$ の開始記号以外の型付き非終端記号集合を
-$\mathcal N$，開始記号以外の型付き規則集合を
+$\widetilde G_0$ の開始記号以外の型付き規則集合を
 $\mathcal R$ とする．
 $\lambda(X)$ は $X$ から導出できるタプルの最小総長，
 $\mu(X)$ は $X$ の導出的文文脈の最小固定長とする
@@ -2709,42 +2758,41 @@ $\mu(X)$ は $X$ の導出的文文脈の最小固定長とする
 \[
  b(R):=c_\rho+\sum_{j=1}^q\lambda(Y_j),
  \qquad
- \mathsf B(G,h):=
- \sum_{X\in\mathcal N}\bigl(1+\mu(X)+\lambda(X)\bigr)
- +\sum_{R\in\mathcal R}\bigl(1+\mu(\operatorname{lhs}R)+b(R)\bigr)
+ \mathsf B_{\mathrm{rule}}(G,h):=
+ \sum_{R\in\mathcal R}
+ \bigl(1+\mu(\operatorname{lhs}R)+b(R)\bigr)
 \]
 と定義する．このとき計算可能な証拠集合
 $\Wit(\widetilde G_0)$ を
 \[
- \|\Wit(\widetilde G_0)\|_+\le\mathsf B(G,h)
+ \|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h)
 \]
 となるように選べる．$f,r_{\max},h$ を固定すれば，
-$\mathsf B(G,h)$ は二進表記で $\|G\|$ の多項式時間で
+$\mathsf B_{\mathrm{rule}}(G,h)$ は二進表記で $\|G\|$ の多項式時間で
 計算できる．標的が空語を含み，非空部分を別に扱う場合は，
 追加する $\eps$ の符号化コストは高々1である．
 \end{proposition}
 \begin{proof}
 命題~\ref{prop:effective-char-data} の最短正準タプルと
 最短導出的文脈を用いる．
-各 $X\in\mathcal N$ の証拠
-$\chi(X)[\omega(X)]$ の長さは
-$\mu(X)+\lambda(X)$ に等しい．
+命題~\ref{prop:rule-only-witnesses} により，
+各非終端記号の正準証拠語は既に規則証拠に含まれる．
 正ランクおよびランク0の各規則
-$R:X\to\rho(Y_1,\ldots,Y_q)$ の証拠
+$R:X\to\rho(Y_1,\ldots,Y_q)$ に対して，
+その証拠
 $\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$
 の長さは $\mu(X)+b(R)$ に等しい．
-これらを重複を許して添字付きで数え，
-各証拠の長さに1を足した値を合計すると
-$\mathsf B(G,h)$ となる．
-実際の証拠集合では同一語の重複が取り除かれるため，
-総符号長はこれ以下である．
+これらの規則証拠を重複を許して添字付きで数え，
+各語長に1を加えて合計すると
+$\mathsf B_{\mathrm{rule}}(G,h)$ となる．
+同一語の重複を除けば総符号長は増加しない．
 各 $\lambda,\mu$ の計算可能性，型付き非終端記号と
 規則の個数，値の二進長に関する多項式評価は
 命題~\ref{prop:effective-char-data} に従う．
 \end{proof}
 
 \begin{remark}
-この予算は\emph{文法表示に依存}し，
+この\emph{規則証拠だけ}の予算は文法表示に依存し，
 一律の最悪値を代入する多項式上界より
 大幅に小さくなる場合がある．
 これは効率的に計算できる\emph{上界証明}であって，

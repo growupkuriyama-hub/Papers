@@ -23,9 +23,9 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v78 作業版）
+## 日本語査読版（v79 作業版）
 
-英語版 v78 の定理・数式・証明・文献に対応する日本語版を
+英語版 v79 の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
@@ -39,7 +39,8 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 ## Current working baseline
 
-- `main.tex` — **v78** I&C pre-submission working revision: Davenport constants, order homogenization, effective characteristic data, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `main.tex` — **v79** I&C pre-submission working revision: Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `revision/v79_rule_only_witness_budget.md` — proves redundant nonterminal samples can be dropped when minimizing canonical tuples, improving cardinality and computable encoded budget.
 - `revision/v78_fanout2_window1_negative_finding.md` — uniform fixed-window impossibility result for the bracketed family, plus finite test histories.
 - `revision/check_fixed_window_general_obstruction.py` — executable bounded verification of the new all-window theorem.
 - `revision/v77_computable_witness_budget.md` — presentation-sensitive computable characteristic-data budget; attribution of LG algebraic characterization to Almeida et al. (2009) integrated in bilingual text.
