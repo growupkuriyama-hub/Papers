@@ -64,3 +64,45 @@ The changes explicitly fix unary `Finset.mem_filter`/product witness nesting, Bo
 
 No Phase 1–7 source, mathematical reconstruction definitions, TCS manuscript, Japanese version, referee response, PDF, or `PAPER.yaml` was edited. No main merge, arXiv, or submission action.
 
+
+
+## Verified checkpoint — 2026-10-18, Actions 39112579231
+
+This section **supersedes older 'Not yet proved' / 'Remaining obligations' statements above where they conflict**, without rewriting the historical audit. It records only results independently cross-checked against the successful GitHub Actions job and source code. The full end-to-end time theorem is still unverified.
+
+### Source and CI provenance
+
+- Branch: `formalization/tcs-phase8-rec-poly-build-20261018` (not main); verified source HEAD: `aad9fd6703a15da77d864cbbdfa3361fbcb4643e`.
+- [GitHub Actions run 39112579231](https://github.com/growupkuriyama-hub/Papers/actions/runs/39112579231): **success**, job `117631639058`, on the precise SHA above.
+- Environment: Lean 4.24.0 and Mathlib v4.24.0. Log reports `Build completed successfully (7448 jobs)` and `All inherited and new Phase 8 modules compiled, axioms audited`.
+- Direct compilation includes `TCSPhase8ActualItemLength.lean`, `TCSPhase8TrieUniqueness.lean` and `TCSPhase8TrieExtractionUnique.lean`. The previous failure at SHA `72bd205b99b1a87b9340b7bc1a3be5557a9c5e7f` was repaired; the earlier failure is not the current status.
+- In this success log, `#print axioms` for the principal theorems listed below reports only standard Lean logical axioms (`propext`, `Classical.choice`, `Quot.sound` as applicable), no `sorryAx`. The workflow's forbidden-token and inherited-phase checks passed. Compilation warnings about simplifier arguments remain nonfatal.
+- Canonical paper source is **main** `01_fixed-h-cfg/main.tex`, with `PAPER.yaml` internal **v227** at time of check. The formalization branch has an older manuscript snapshot: do not use it to overwrite main.
+
+### Kernel-verified results now available
+
+1. **Concrete emitted grammar and exact specification:** `TCSPhase8.reconstructOperational_correct` relates the executable trie-deduplicated List output's six-field set projection to `TCSPhase5.makeRecGrammar h sample.toFinset`, assuming agreement between letter table and `h`. The earlier `buildListedRecGrammar_correct` supplies the List-to-mathematical-specification bridge.
+2. **All six tagged item kinds and injective serialization:** `TCSPhase8.decodeRecItem_encodeRecItem`, `TCSPhase8.encodeRecItem_injective`; actual item count `TCSPhase8.emitAllRecItems_length_le` bounds raw candidates by `3 * (encodedListSample sample + 1)^3`.
+3. **Source-derived length bound:** `TCSPhase8.observed_factor_length_le_encodedListSample` and `TCSPhase8.emitAllRecItems_letterCount_le` establish that each *actual emitted item* has at most `2 * (encodedListSample sample + 1)` source letters. This closes the previously conditional item-size premise.
+4. **Unconditional quartic trie insertion-step bound for the actual stream:** `TCSPhase8.buildItemTrie_insertion_steps_fourth` proves
+   
+   `(buildItemTrie c t sample).2 <= (18 * tokenBound c + 3) * (encodedListSample sample + 1)^4`.
+   
+   **Scope:** counted trie **insertion** visits for the emitted keys; it is **not** a bound on the total runtime of `reconstructOperational`.
+5. **No duplicates in actual emitted decoded items:** `TCSPhase8.BitTrie.dedupTrieKeys_nodup`, `TCSPhase8.dedupRecItems_encoded_keys`, and `TCSPhase8.dedupRecItems_nodup`. These prove List-level uniqueness, not just set equality.
+6. Earlier successful phases: characteristic samples/completeness, Gold convergence, grammar reconstruction equality, nonempty factor enumeration, typing cache multiplication-count bounds, and raw candidate bounds are retained. This checkpoint does not claim to formalize every statement in the manuscript.
+
+### Still NOT proved: whole-program O(n^4) reconstruction time
+
+- The proof of `TCSPhase8.buildItemTrie_insertion_steps_fourth` does **not** count the `contains` lookups executed by `BitTrie.collectUniqueKeys`, nor the code construction/encoding/decoding/output stages.
+- Missing end-to-end charges: substring extraction and copying, equality checks, cache build plus lookups, letter-numbering/finite-monoid table access, raw candidate generation, serialization, trie search, reverse/filterMap/decoder and six-field output. The actual List/data-structure representation must be linked to any cost model.
+- An executable instrumented operational builder, a cost-preserving correspondence with `reconstructOperational`, and a proven explicit total-cost bound `C * (n+1)^4` remain outstanding. Avoid confusing the number of candidates, trie insertion visits, and full RAM-machine time.
+- The existing source-level correctness, decoder round-trip, and insertion-step results are genuine kernel-checked milestones; do not discard or re-prove them unnecessarily.
+
+### Resume point and safety boundary
+
+The next isolated task is instrumenting `BitTrie.collectUniqueKeys` for **both lookup and insertion**, proving its result equals `dedupTrieKeys`, and bounding both costs using the verified encoded-key length theorem; after that, account for candidate construction, encoding, decoding, and output. Work only on the Phase 8 branch. **No main merge, manuscript/PAPER.yaml/reviewer-response modification, arXiv update, or submission action.**
+
+### Status classification
+
+**Phase 8: substantial partial success — mathematical output correctness, injective serialization, duplicate-free emitted items, and actual-stream trie insertion visit bound are verified. Entire `thm:poly-build` O(n^4) execution-time theorem: NOT verified.**
