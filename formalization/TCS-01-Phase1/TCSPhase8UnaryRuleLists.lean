@@ -38,15 +38,27 @@ theorem mem_emitUnaryCandidates_iff
     obtain ⟨⟨u,x',v⟩, ho, hr⟩ := List.mem_flatMap.mp hm
     obtain ⟨w, hw, heq⟩ := List.mem_map.mp hr
     have hfiltered := List.mem_filter.mp hw
+    have hoccData :=
+      (mem_enumerateOccurrencesList_iff sample u x' v).mp ho
+    have hoccFin :
+        (u,x',v) ∈ enumerateOccurrences sample.toFinset := by
+      apply (mem_enumerateOccurrences_iff sample.toFinset u x' v).mpr
+      exact ⟨hoccData.1, by simpa using hoccData.2⟩
+    have hwFin : w ∈ sample.toFinset := by
+      simpa using hfiltered.1
+    have hpair :
+        ((u,x',v),w) ∈
+          (enumerateOccurrences sample.toFinset).product
+            sample.toFinset :=
+      Finset.mem_product.mpr ⟨hoccFin,hwFin⟩
+    have hcondition :
+        middle u v w ≠ [] ∧
+          u ++ middle u v w ++ v = w ∧
+          codeWord t x' = codeWord t (middle u v w) := by
+      simpa only [] using hfiltered.2
     apply Finset.mem_image.mpr
     refine ⟨((u,x',v),w), ?_, heq⟩
-    apply Finset.mem_filter.mpr
-    exact ⟨Finset.mem_product.mpr
-      ⟨(mem_enumerateOccurrences_iff sample.toFinset u x' v).mpr
-          ⟨((mem_enumerateOccurrencesList_iff sample u x' v).mp ho).1,
-            by simpa using ((mem_enumerateOccurrencesList_iff sample u x' v).mp ho).2⟩),
-       by simpa using hfiltered.1⟩,
-      by simpa using hfiltered.2⟩
+    exact Finset.mem_filter.mpr ⟨hpair, hcondition⟩
   · intro hm
     obtain ⟨⟨⟨u,x',v⟩,w⟩, hpair, heq⟩ := Finset.mem_image.mp hm
     have hf := Finset.mem_filter.mp hpair

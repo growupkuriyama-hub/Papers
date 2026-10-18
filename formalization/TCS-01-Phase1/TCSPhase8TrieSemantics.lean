@@ -42,7 +42,11 @@ theorem contains_insertCount_iff
         | cons qbit qrest =>
           cases bit <;> cases qbit <;>
             cases left <;> cases right <;>
-            simp [insertCount, contains, ih, contains_blank_false]
+            simp [insertCount, contains, ih]
+          all_goals
+            have hfalse : contains qrest empty = false :=
+              contains_empty_eq_false qrest
+            simp [hfalse]
 
 /-- The concrete batch insertion preserves the exact input key set,
 allowing duplicates in its input list. -/
