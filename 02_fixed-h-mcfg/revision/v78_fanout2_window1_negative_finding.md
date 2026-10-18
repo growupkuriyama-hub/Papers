@@ -1,7 +1,62 @@
-# #2 MCFG v78 research memo: obstruction to a trivial higher-fan-out lift
+# #2 MCFG v78 research memo: uniform fixed-window obstruction
 
-Date: 2026-10-18. Research-note branch \`mcfg2-v78-fanout2-lower-bound-notes\`.
-**Not a theorem of the I&C manuscript. No change to the v77 main TeX.**
+Date: 2026-10-18. Branch: \`mcfg2-v78-fanout2-lower-bound-notes\`.
+**Promoted to the proved Proposition \`prop:fixed-window-doubling-fanout-two\`
+in the English and Japanese v78 candidate manuscripts.**
+This is a negative result about class membership, not a positive lower
+bound for higher-fan-out characteristic-data size.
+
+## Uniform theorem (fully proved in main.tex)
+
+For the original bracketed CFG doubling family of the companion TCS #1
+manuscript, **for every k,l >= 0** and
+\`n >= max(3,k+l+1)\`,
+
+\`\`\`
+L_n NOT IN C_mcf(2,h_{Sigma}^{k,l})
+L_n NOT IN C_mcf(2,(h_{Sigma}^{k,l},h_U)).
+\`\`\`
+
+The proof is constructive. Write
+\`W_0=a, W_i=floor(W_{i-1},W_{i-1})\`, and
+\`W_{n-1} = B a R\` where \`B = floor^(n-1)\`.
+Then \`W_n = floor B a R B a R floorclose\`.
+The 2-tuples and 2-hole contexts are
+
+\`\`\`
+x=(B, R B a R);  y=(B a R B, R)
+E[z]=floor z1 a z2 floorclose
+F[z]=z1 floor a z2 floorclose.
+\`\`\`
+
+Because \`|B|,|R| >= k+l\`, the first components have identical
+prefix-k / suffix-l windows (both start/end with B); the second
+components likewise (both start/end with R). All components are
+ceiling-free, so h_U agrees. Both contexts have nonempty separators.
+
+\`E[x] = E[y] = F[x] = W_n\`, whereas
+\`F[y]=B a R B floor a R floorclose\` has its first a at offset n-1,
+compared with offset n in W_n. \`F[y]\` is also ceiling-free.
+The **only** ceiling-free word in L_n is W_n, hence \`F[y] NOT IN L_n\`.
+
+The general proof is symbolic and depends on no search code.
+The executable \`revision/check_fixed_window_general_obstruction.py\`
+verifies **965** parameter pairs \`(n,k,l)\` with 3<=n<=17,
+0<=k+l<=n-1. This tests formula implementation, not all parameters.
+
+## Scope
+
+- The general statement is stronger than the earlier n=3 width-one
+  and n=4 width-two counterexamples, though its n-threshold is not sharp.
+- This proof rules out the tempting proposal to rescue the *original
+  doubling family* by **any fixed boundary-window refinement**.
+- It does NOT rule out a different family that is actually
+  \`(2,h)\`-tuple-substitutable with exponentially long necessary evidence.
+  Open Problem \`op:fanout-two\` stays open.
+- It does NOT assert a per-typing LG dichotomy or an
+  operator-independent higher-fan-out lower bound.
+
+## Previous finite-search log (retained for reproducibility)
 
 ## Exact problem
 
@@ -58,15 +113,17 @@ checks the witness but **does not constitute a general no-go theorem**.
 
 - Simply replacing \`h_U\` by \`h^{1,1}_Sigma x h_U\` does not make
   the original doubling family (2,h)-substitutable.
-- The example does **not** rule out widths k>=2 or a different family,
-  nor does it establish any lower bound for a higher-fan-out learner.
-- Next, test a bounded width k against successive n, and record the first
-  failing tuple/context with a machine-verifiable trace. A general theorem
-  requires a construction for **fixed k independent of n**.
+- This particular finite example by itself did not settle widths k>=2;
+  the **uniform proposition above now does** rule out every fixed window
+  for the original family, but says nothing about new candidate families.
+- The formerly open fixed-k step is solved by the uniform symbolic
+  witness. Next focus on constructing an intrinsically different
+  `(2,h)`-substitutable family.
 - An alternative is an explicit *new* family of languages whose arbitrary
   2-hole exchanges preserve derivability (not merely unique grammar
   parses), while retaining a rare exponentially long typed word.
 - Keep operator-specific and all-operator lower bounds logically separate,
   as in TCS #1's Proposition 6.3.
 
-No manuscript statement or theorem number is changed by this memo.
+This memo accompanies Proposition `prop:fixed-window-doubling-fanout-two`
+  in the v78 candidate manuscript.
