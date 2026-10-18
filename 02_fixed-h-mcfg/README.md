@@ -37,6 +37,19 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v83 I&C Focused Manuscript (review draft)
+
+**Current review branch:** `mcfg-v83-ic-focused-trim`. The official `main` manuscript remains at v81; this draft has not been submitted or merged.
+
+- EN `main.tex` / JP `japanese/main_JP.tex`: targeted trim, retaining the two complementary algebraic polynomial-data results: positive-image local groups (typing-side) and semilattice-indexed abelian cosets (target-side). Exact learning, rank-one, window and arbitrary finite-group bounds, relaxed and computable witness results remain.
+- Entire untrimmed v82 at commit `bcc0caf0eade66f552127171c0de24d2b92950b0` on archive branch `archive/mcfg-v82-pretrim-full-20261018`.
+- **Restorable exact excerpts** for separation and lower-bound results in [`archive/trim-v83/README.md`](archive/trim-v83/README.md), with full EN and JP proof sections.
+- [`revision/v83_ic_focus_trim_manifest.md`](revision/v83_ic_focus_trim_manifest.md) documents editorial scope and mathematical/proof dependencies.
+- Full algebraic appendices remain, including the noncommutative-group lemmas used by the local-group theorem and the original Davenport refinement.
+- Mandatory author journal declarations and `\\appendix` are preserved.
+
+Both PDF builds and proof/source audits must pass before promotion to `main`. The ordinary stable PDF links above still point to v81.
+
 ## v82 draft（有限半束ねじれ定理への統合、レビュー中）
 
 このブランチは **v82-draft（未マージ・未投稿）** です。英語・日本語の両TeX原稿を同期し、`main` 上のv81とその固定パスPDFは変更していません。
