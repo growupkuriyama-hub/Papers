@@ -77,10 +77,15 @@ theorem projectRecItems_spec_of_mem {Alphabet : Type*}
   · exact filterMap_toFinset_eq_of_mem xs ys _ h
   · exact filterMap_toFinset_eq_of_mem xs ys _ h
   · exact filterMap_toFinset_eq_of_mem xs ys _ h
-  · apply Bool.eq_iff_iff.mpr
-    exact (projectRecItems_startEmpty_iff xs).trans
-      ((h RecItem.startEmpty).trans
-        (projectRecItems_startEmpty_iff ys).symm)
+  · have heq :
+        (projectRecItems xs).startEmpty = true ↔
+          (projectRecItems ys).startEmpty = true :=
+        (projectRecItems_startEmpty_iff xs).trans
+          ((h RecItem.startEmpty).trans
+            (projectRecItems_startEmpty_iff ys).symm)
+    cases hx : (projectRecItems xs).startEmpty <;>
+      cases hy : (projectRecItems ys).startEmpty <;>
+      simp_all
 
 /-- Splitting a grammar's own tagged item stream reconstructs all six
 original fields (as sets), including the empty-start Boolean. -/
