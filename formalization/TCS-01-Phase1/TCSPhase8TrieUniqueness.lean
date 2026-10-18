@@ -55,7 +55,8 @@ theorem dedupTrieKeys_nodup (keys : List (List Bool)) :
     intro q
     simp [contains_empty_eq_false]
   have hn := collectUniqueKeys_nodup keys empty [] hinv (by simp)
-  simpa [dedupTrieKeys] using hn.reverse
+  change (collectUniqueKeys keys empty []).2.reverse.Nodup
+  exact List.nodup_reverse.mpr hn
 
 #print axioms TCSPhase8.BitTrie.collectUniqueKeys_nodup
 #print axioms TCSPhase8.BitTrie.dedupTrieKeys_nodup

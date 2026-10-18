@@ -37,7 +37,11 @@ theorem emitAllRecItems_letterCount_le
   intro r hr
   change r ∈ (buildListedRecGrammar t sample).items at hr
   unfold ListedRecGrammar.items buildListedRecGrammar at hr
-  simp only [List.mem_append] at hr
+  have heps_iff :
+      r ∈ (if emitStartEmpty sample then [RecItem.startEmpty] else []) ↔
+        r = RecItem.startEmpty ∧ emitStartEmpty sample = true := by
+    cases h : emitStartEmpty sample <;> simp [h]
+  simp only [List.mem_append, heps_iff] at hr
   rcases hr with hnt | hb | hu | hl | hs | heps
   · obtain ⟨st,hst,heq⟩ := List.mem_map.mp hnt
     rcases st with ⟨u,x,v⟩
@@ -94,12 +98,9 @@ theorem emitAllRecItems_letterCount_le
     have hlen := word_length_le_encodedListSample sample w hmem
     change w.length ≤ 2*(encodedListSample sample+1)
     omega
-  · cases hh : emitStartEmpty sample with
-    | false => simp [hh] at heps
-    | true =>
-        simp [hh] at heps
-        subst r
-        simp [RecItem.letterCount]
+  · rcases heps with ⟨heq, _⟩
+    subst r
+    simp [RecItem.letterCount]
 
 /-- Unconditional quartic bound on the counted bit-insertion visits of
 the real six-field candidate stream with complete injective encoding.
