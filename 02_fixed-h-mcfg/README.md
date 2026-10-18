@@ -37,6 +37,18 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 **#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
 
+## v88 Claude independent-audit mathematical corrections (I&C draft)
+
+Based on the independent adversarial report of v87 (0 Critical, 0 Major,
+3 Moderate, 7 Minor findings), v88 adds rigorous ordered-product
+and local-group heavy-antichain transfer lemmas in both EN/JP appendices;
+corrects the overly broad computed-witness length claim; removes
+the unproved exact SUBST_P correspondence; and tightens semigroup
+attribution, antichain wording and the conditional CFG lower bound.
+The theorem assumptions and asserted polynomial degrees are unchanged.
+See `revision/v88_claude_audit_repairs.md`. The working branch is
+`mcfg-v88-claude-audit-math-repairs`; v87 remains preserved.
+
 ## v87 TCS-style referee preflight (review draft)
 
 - Active stacked review branch: `mcfg-v87-tcs-style-review-preflight`, based on v86. Both main algebraic theorems now have their formal statements in the **main text**, while the finite-group/local-group proofs remain in the corresponding appendices.
