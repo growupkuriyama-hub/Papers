@@ -25,6 +25,7 @@ theorem unary_candidate_pairs_card_le_cube (K : Finset (List Alphabet)) :
     ((enumerateOccurrences K).product K).card ≤
       (TCSPhase1.encodedSize K)^3 := by
   classical
+  change (enumerateOccurrences K ×ˢ K).card ≤ (TCSPhase1.encodedSize K)^3
   rw [Finset.card_product]
   have hocc := enumerateOccurrences_card_le_square K
   have hk := sample_card_le_encoded_size K
@@ -54,7 +55,7 @@ theorem binary_rules_card_le_cubic (K : Finset (List Alphabet)) :
             (fun p => (z,p.1,p.2))).card := by
       unfold efficientBinaryRules
       exact Finset.card_biUnion_le
-    _ ≤ ∑ _z ∈ efficientObservedFactors K, n+1 := by
+    _ ≤ ∑ _z ∈ efficientObservedFactors K, (n+1) := by
       apply Finset.sum_le_sum
       intro z hz
       have h1 :
