@@ -23,9 +23,16 @@ Baseline preserved on `mcfg-v87-tcs-style-review-preflight`, PR #57. This v88 ch
 
 - [x] EN/JP static compiled-source label audit: 0 unresolved references, 0 duplicate labels.
 - [x] EN/JP begin/end environment counts balanced after inserting new lemmas.
-- [ ] EN/JP GitHub Actions PDF compilation and unresolved-reference check.
-- [ ] PDF page-count and overfull math/line inspection.
+- [x] EN/JP GitHub Actions PDF compilation and unresolved-reference check: successful workflow runs `39156586234` (verify), `39156586208` (bilingual), and `39156586263` (Japanese).
+- [x] EN 42 pages; JP 45 pages. Final TeX logs: 0 overfull hboxes, 0 undefined references/citations, 0 LaTeX errors. Representative theorem and proof pages visually inspected.
 - [ ] Independent adversarial re-audit **of the v88 patch**, especially common block-slot factors in noncommutative group products and the new LG antichain proof.
 - [ ] Citation original-source checks (Papadimitriou, Straubing/Tilson, normalization) and author signoff.
 
 Avoid silently upgrading the review's `VALID WITH REPAIR` status to `VERIFIED` until an independent checker assesses the new proof, including all possible block interleavings.
+
+## Final delivery and scope
+
+- v88 bilingual CI source snapshot: PR #58 head before this review-note-only commit, `fb85a39c14af33818a21750226e9ba8552384d9c`.
+- Both PDFs include the explicit ordered-product interval lemma and the separate LG antichain proof. The revised main proposition now distinguishes computed generated witnesses from existential semilattice-coset witnesses.
+- Formal theorem statements, polynomial degrees and the semilattice / rank-one / fan-out-two-separation proofs are preserved from v87.
+- A successful compilation, no reference defects, and an AI-generated adversarial review **do not certify mathematical correctness**. Independently re-check the v88 F-01 block-slot factorization and its applicability to simultaneous MCFG replacements before submission.
