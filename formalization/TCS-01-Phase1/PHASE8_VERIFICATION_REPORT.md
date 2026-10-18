@@ -1,41 +1,49 @@
-# Phase 8 — Verification status (ongoing; not a claim of completion)
+# Phase 8 verification and audit report
 
-**Status: IN PROGRESS.** A theorem is accepted only after the corresponding commit's dedicated GitHub Actions direct Lean compilation, axiom audit, and final HEAD success. Phase 7 is complete and must remain unchanged.
+Date: 2026-10-18 (JST). Paper: `01_fixed-h-cfg/main.tex`, theorem `thm:poly-build`. Canonical main-branch `PAPER.yaml`: **v227**; Phase 8 branch contains historical v209 snapshot. No manuscript edits. Toolchain: Lean 4.24.0 / Mathlib v4.24.0.
 
-## Scope and provenance
+## GitHub status
 
-- Manuscript: `01_fixed-h-cfg/main.tex`, `thm:poly-build`, `PAPER.yaml` **v227**.
-- Phase 7 immutable baseline SHA: `295d0f7d2142e60c832c6a10cb457eabebcf6d76`.
-- Baseline CI: [39080411807](https://github.com/growupkuriyama-hub/Papers/actions/runs/39080411807), job `117536025642`, success.
-- Phase 8 branch: `formalization/tcs-phase8-rec-poly-build-20261018`.
-- Lean 4.24.0 / Mathlib v4.24.0.
+- Branch: `formalization/tcs-phase8-rec-poly-build-20261018`.
+- Start HEAD for this resumed session: `35ea32406b6bae35f3451a64061d496a5a42ce87`.
+- Candidate repair: `8ff487d07172caee9ce8c28495026c4ce20f51de`. Fixes `Finset.card_product` by explicit `×ˢ` coercion and correctly parentheses the constant term of a Finset sum.
+- Integration: `TCSPhase8Main.lean` and workflow at `ca2dfb80f7f90fcfe3c7167b5f2cd7a4ba8c83d7`.
+- **Success** [run 39083733863](https://github.com/growupkuriyama-hub/Papers/actions/runs/39083733863), job `117545845552`, repair proof.
+- **Success** [run 39083766666](https://github.com/growupkuriyama-hub/Papers/actions/runs/39083766666), job `117545942780`, full Phase 8 integration.
+- Later type-cache/trie implementation and cost lemmas: **verification ongoing**; consult the newest run's SHA, do not transfer success from older HEADs.
 
-## Intended exact statements and implementation audits
+## Kernel-checked theorems at the successful integration SHA
 
-### Occurrences
+- Occurrences: `mem_enumerateOccurrences_iff`, `efficient_observed_factors_eq`.
+- Typing: `codeWord_eq_h`.
+- Rules: `efficient_binary_rules_eq`, `efficient_unary_rules_eq`, `efficient_lexical_rules_eq`, `efficient_start_rules_eq`, `efficient_start_empty_eq`.
+- Six-field object equality: `buildRecGrammar_eq_makeRecGrammar`.
+- Explicit cardinality: `enumerateOccurrences_card_le_square` (`|O_K| ≤ n_K²`), `unary_candidate_pairs_card_le_cube` (`|O_K × K| ≤ n_K³`), `binary_rules_card_le_cubic` (`|P_B(K)| ≤ n_K²(n_K+1)`).
+- Integrated: `reconstruction_correct_and_candidate_bounds`.
+- `#print axioms`: only `propext`, `Classical.choice`, and `Quot.sound`. No `sorryAx` in success job logs. Baseline `lake build` 7448 jobs succeeded; inherited Phase 1–7 regression passed.
 
-`mem_splits_iff`: `(u,v) ∈ splits w ↔ w = u ++ v`.
+## Precise cost status (important)
 
-`mem_occurrencesIn_iff`: `(u,x,v) ∈ occurrencesIn w ↔ x ≠ [] ∧ w = u ++ x ++ v`.
+1. Substring occurrence equality: **proved**, nonempty factor positions only.
+2. Grammar field equality, including direct unary overlap: **proved**.
+3. Occurrences ≤ `n_K²`: **proved**.
+4. Unary candidate pair count ≤ `n_K³`: **proved**.
+5. Binary rule-set cardinality ≤ `n_K²(n_K+1)`: **proved**; an explicitly instrumented *raw* binary iteration counter is still distinct.
+6. Incremental typing cache multiplication count ≤ `n_K²`: code and theorem drafted in newly added modules; check subsequent CI and kernel axioms before upgrading status. Explicit constant-time finite monoid operation/table lookup remains to be connected.
+7. Duplicate elimination: bit-trie insertion has an instrumented node-visit cost and a conditional fourth-power statement in new modules; compilation and the relationship to concrete grammar encodings remain outstanding.
+8. All operations, including substring comparisons, encoding, duplicate removal, rule output: **NOT mechanized end-to-end**.
+9. Manuscript `T_{Rec_h}(K)=O(n_K^4)`: **NOT verified**. Never interpret polynomial Finset cardinality as runtime.
 
-`mem_enumerateOccurrences_iff`: `(u,x,v) ∈ enumerateOccurrences K ↔ x ≠ [] ∧ u ++ x ++ v ∈ K`.
+## Remaining obligations
 
-`efficient_observed_factors_eq`: `efficientObservedFactors K = TCSPhase5.ObservedFactors K`.
+- Obtain green direct compile and axiom audits for each new typing-cache and trie module, plus final SHA.
+- Prove completeness and exact index-to-factor correspondence for the incremental typing cache, not merely that stored values match some prefix.
+- Establish injective rule bit encodings of O(n_K) size for all six fields.
+- Define an explicit List/Array-based emission of all grammar rule candidates; bridge this collection to the already-verified `buildRecGrammar`.
+- Bridge emitted code list to the instrumented bit trie, preserve membership and no extraneous keys, account for output and final decoding.
+- Cost string slicing, equality, typing-table lookup, and all scans; conclude an explicit total-cost Nat inequality, then the desired O(n_K^4).
+- Verify unchanged Phase 1–7, manuscript, and protected files via SHA-based compare audit; avoid main merge.
 
-Here enumeration visits only split boundaries of actual sample words; it never calls `CandidateWords` at runtime. Finset-level deduplication is not yet costed.
+## Judgment
 
-### Remaining obligations
-
-1. Actual number of nonempty substring occurrences = sum over words of `m*(m+1)/2`, and explicit O(n_K^2) inequality.
-2. Per-start incremental type caching with exactly bounded multiplication/update count and agreement with h, rather than computing h for all factors separately.
-3. Binary candidate enumeration, correctness and O(n_K^3) count.
-4. Unary construction from one occurrence `(u,x,v)` and one sample word `w=u++y++v`; extraction of unique `y`, direct-context and monoid-type equality, reverse completeness; O(n_K^3) count.
-5. Lexical/start/epsilon productions and all six fields of literal grammar equality `buildRecGrammar ... = makeRecGrammar ...`.
-6. Executable data structure for duplicate elimination and a linked cost semantics for substring processing, comparison, typing, candidate insertion, output, and an O(n_K^4) operation bound.
-7. Audit of final HEAD, `lake build`, direct new-module and inherited regression compilation, forbidden-token and `sorryAx` scan, `#print axioms` standard logical axioms only.
-
-Even an executable collection equality, if achieved, does not by itself establish the paper's O(n^4) machine-cost claim. Any runtime polynomial statement must account for the concrete data structures.
-
-## Results
-
-CI and kernel status to be filled **only** from final action logs. No new Phase 8 theorem is asserted as successfully verified in this preliminary report. Protected Phase 1–7 sources and manuscript are not edited.
+**B at the stable success SHA `ca2dfb80`**: complete finite-grammar equality and candidate cardinality bounds, but not end-to-end runtime. Latest HEAD retains an independent CI gate; do not assign it the successful baseline result before that run finishes.
