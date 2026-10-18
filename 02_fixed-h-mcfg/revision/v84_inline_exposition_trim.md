@@ -20,9 +20,18 @@ Original pre-edit v83 paper: branch `mcfg-v83-ic-focused-trim`, GitHub Draft PR 
 - [x] Bilingual source edits complete; v83 and v82 remain independently restorable.
 - [x] All eight TeX source SHA-256 records synchronized in PAPER.yaml.
 - [x] Cross-file labels and reference count: no undefined or duplicate labels.
-- [ ] CI compiles both PDFs and checks references/citations.
-- [ ] Scan for overfull math caused by inline conversion; if present, restore selective displays.
-- [ ] Compare major theorem proofs and counts in PDFs with v83 baseline.
+- [x] Both languages compile via three successful CI workflows (runs `39120401690`, `39120401767`, `39120401662`); the final reference/citation check passes.
+- [x] Verified CI logs contain no overfull hboxes; all long structural formulas retained as displays.
+- [x] Source label audit: every theorem/lemma/definition label retained, no duplicates or missing refs. Representative page thumbnails visually checked for main theorem, semilattice lemmas and LG appendix; full human page-by-page mathematical review remains pending.
 - [ ] Human review of final I&C submission and scholarly claims.
 
 Caution: number of display pairs in a TeX source is not necessarily the number of equations; `align` and `cases` can contain multiple equations, while `\\[2pt]` is a linebreak spacing command, not a display delimiter.
+
+## Final v84 results
+
+- EN: 43 pages (v83 46); standalone display expressions 65 -> 48 across main and three algebraic appendices; source lines 4438 -> 4274.
+- JP: 47 pages (v83 49); standalone display expressions 77 -> 54 across main and three appendices; source lines 4900 -> 4716.
+- The original v83 source remains on its own branch; original v82 proofs are archived verbatim.
+- Latex CI: overfull hbox 0, undefined final references/citations 0. An underfull hbox warning in one English paragraph does not indicate overflow.
+- EN and JP PDFs extracted and inspected from GitHub Actions Verify MCFG artifact run `39120401767`, artifact `12134112260`.
+- A JP definition environment initially failed, was corrected, and then passed all CI runs. This correction is included in the SHA256 metadata.
