@@ -22,9 +22,9 @@ All certified theorems in this milestone depend only on ordinary logical axioms 
 
 ## Further work after this stable success
 
-`TCSPhase8TypingCache.lean`, `TCSPhase8TypingCacheCorrectness.lean`, `TCSPhase8SampleTypeCache.lean`, `TCSPhase8Trie.lean`, and `TCSPhase8TrieCost.lean` provide new concrete List-based multiplication counting and bit-trie insertion accounting. **Their success is conditional on a subsequent green CI and must not be inferred from the earlier certified milestone.**
+`TCSPhase8TypingCache.lean`, `TCSPhase8TypingCacheCorrectness.lean`, `TCSPhase8SampleTypeCache.lean`, `TCSPhase8Trie.lean`, and `TCSPhase8TrieCost.lean` provide new concrete List-based multiplication counting and bit-trie insertion accounting. **Kernel verified** at commit `b32a73f46a9979459d72d481df62d61366694ddd`, [Actions 39084750762](https://github.com/growupkuriyama-hub/Papers/actions/runs/39084750762), job `117548864944`: all five modules directly compiled, baseline `lake build` 7448 jobs and all inherited regression checks passed, and `#print axioms` found only standard logical axioms with no `sorryAx`.
 
-The new type cache counts actual monoid-multiplication calls per extension, scans all suffixes, and aims at the finite-sample bound `n_K^2`. The bit trie measures visits per inserted bit-string and offers a conditional `n^4` insertion theorem under cubic candidate count and linear encoded-key lengths.
+The new type cache counts actual monoid-multiplication calls per extension and scans all suffixes. `cacheSampleTypes_finset_count_le_square` **proves** the exact finite-sample bound `n_K^2`; `cachedScan_sound_h` establishes typing soundness against the original homomorphism. The bit trie measures visits per inserted bit-string and offers a conditional `n^4` insertion theorem under cubic candidate count and linear encoded-key lengths.
 
 **Unproved end-to-end O(n_K^4) assertion:** A cost-preserving bridge is still required from the actual (B)(U)(L)(S) rule-list enumerator to an injective bit encoding, the tested trie insertion sequence, the exact duplicate-free `RecGrammar`, and explicit costs for substring slicing, equality, encoding, output, and fixed-monoid table lookup. Neither `Finset` cardinality nor the conditional trie theorem alone establishes runtime. Do not claim the manuscript's full polynomial-time theorem is machine-verified.
 
