@@ -76,11 +76,10 @@ theorem occurrenceLists_count_le_square
 /-- Unlike the earlier Finset bound, this bounds the actual emitted
 List's length, counting repeated triples. -/
 theorem enumerateOccurrencesList_length_le_square
-    (K : Finset (List Alphabet)) :
-    (enumerateOccurrencesList K).length ≤
-      (TCSPhase1.encodedSize K)^2 := by
-  simpa [enumerateOccurrencesList, encodedListSample_toList] using
-    (occurrenceLists_count_le_square K.toList)
+    (sample : List (List Alphabet)) :
+    (enumerateOccurrencesList sample).length ≤
+      (encodedListSample sample)^2 := by
+  exact occurrenceLists_count_le_square sample
 
 #print axioms TCSPhase8.length_flatMap_le_mul
 #print axioms TCSPhase8.occurrencesInList_length_le_square
