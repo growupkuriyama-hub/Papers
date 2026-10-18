@@ -23,13 +23,14 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v75 全文）
+## 日本語査読版（v76 候補）
 
-英語版 v75 の定理・数式・証明・文献に対応する日本語版を
+英語版 v76 候補の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
 および [`japanese/appendix_window_group_JP.tex`](japanese/appendix_window_group_JP.tex) として訳してあり，本文から読み込まれます。
+局所群の付録 `appendix_local_group.tex` と `japanese/appendix_local_group_JP.tex` も読み込まれます。
 [`japanese/README.md`](japanese/README.md) に英語原稿の固定版，
 対応検査，LuaLaTeX PDF のビルド方法を記録しています。
 提出用の英語版 `main.tex` は変更しません。
@@ -38,7 +39,10 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 ## Current working baseline
 
-- `main.tex` — **v75** I&C pre-submission revision including arbitrary finite-group shortening, current source of truth (see `PAPER.yaml`).
+- `main.tex` — **v76** I&C pre-submission working revision: Davenport constants, order homogenization, effective characteristic data, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `revision/v75_to_v76_strengthening_drafts.md` — Davenport/order/algorithm strengthening.
+- `revision/v76_stage1_lg_dichotomy.md` — local-group pseudovariety extension, experimental checks and remaining independent verification.
+- `revision/v76_li_grp_algebraic_corollary_note.md` — intrinsic LI∨Grp sufficient condition and proof-hardening audit.
 - `revision/v74_to_v75_final_referee_hardening.md` — final adversarial-referee corrections, version-locked companion GitHub reference, primary-source citation audit, and bilingual verification status.
 - `revision/v73_to_v74_finite_group_shortening.md` — independently audited Ramsey block-order/finite-group extension and verification gates.
 - `appendix_window_group.tex` — arbitrary finite-group short-tuple theorem and window--group polynomial characteristic-data bound (nonabelian groups included).
