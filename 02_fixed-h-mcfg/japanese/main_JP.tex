@@ -3723,6 +3723,167 @@ $(2,h)$-タプル代入可能性が破れる．
 \end{remark}
 
 
+
+\subsection{希少な型と2成分の局所的可動性}
+\label{subsec:rare-type-mobility}
+
+\begin{lemma}[$h$ の型全体の削除]
+\label{lem:mcfg-delete-type}
+$f\ge1$、$L\in\Cmcf{f}{h}$、$m\in M$ に対し，
+$L^{\setminus m}:=L\setminus h^{-1}(m)$ も
+$\Cmcf{f}{h}$ に属する．
+\end{lemma}
+\begin{proof}
+$h^{-1}(M\setminus\{m\})$ は正規言語であり，
+$(f,h)$-タプル代入可能でもある．実際，成分別の型が
+一致すれば，どの文文脈でも全体の型が一致する．
+共通部分は代入可能性を保存し
+（命題~\ref{prop:abelian-coset-filter}），
+$f$-MCFL は正規言語との共通部分で閉じる
+~\cite{SekiEtAl1991}．
+\end{proof}
+
+\begin{proposition}[希少な型は長い正例を強制する]
+\label{prop:mcfg-rare-type-sample}
+$L\in\Cmcf{f}{h}$、$m\in h(L)$ とし，
+$\mu_m(L)=\min\{|w|:w\in L,\ h(w)=m\}$ とおく．
+$\mathcal B^{\le r}_{f,h}$（$r\ge1$）または
+$\mathcal B_{f,h}$ の任意の特徴標本には
+型 $m$ の語が含まれ，従って符号化総長は
+$\mu_m(L)+1$ 以上である．
+より一般に，$L$ と $L^{\setminus m}$ の両方に
+特徴標本を持つ任意の集合駆動型再構成器についても
+同じ必要性が成立する．
+\end{proposition}
+\begin{proof}
+型 $m$ を避ける標本 $K\subseteq L$ は
+$K\subseteq L^{\setminus m}$ を満たす．
+補題~\ref{lem:mcfg-delete-type} と
+命題~\ref{prop:reconstruction-soundness} を
+標的 $L^{\setminus m}$ に適用すると，
+$K$ からの再構成言語は真部分言語
+$L^{\setminus m}$ に含まれる．
+一般の集合駆動型再構成器については，
+$L$ の特徴標本 $\mathcal F$ が型 $m$ を避けると仮定し，
+$L^{\setminus m}$ の特徴標本を $\mathcal F'$ とする．
+有限集合 $\mathcal F\cup\mathcal F'$ は両標的に含まれ，
+双方の特徴標本を含むので，同じ再構成結果が
+異なる二言語に等しくなり矛盾する．
+\end{proof}
+
+\begin{lemma}[ファンアウト2の冪移送]
+\label{lem:mcfg-power-transfer}
+$f\ge2$、$L\in\Cmcf{f}{h}$、$u\in\Sigma^+$ とする．
+$g=h(u)$ とし，ある $i_0,\pi\ge1$ が
+全ての $i\ge i_0$ について
+$g^{i+\pi}=g^i$ を満たすとする．
+$s,r\ge i_0$、$d\in\pi\mathbb Z_{>0}$ とする．
+$L$ のある語が $u^{s+d+r+2}$ を因子に持つなら，
+任意の $X,Z\in\Sigma^*$、$Y\in\Sigma^+$ に対し
+\[
+ Xu^sYu^{d+r}Z\in L
+ \quad\Longleftrightarrow\quad
+ Xu^{s+d}Yu^rZ\in L
+\]
+が成り立つ．
+\end{lemma}
+\begin{proof}
+受理語を $Pu^{s+d+r+2}Q$ と書く．
+$\tuple x=(u^s,u^{d+r})$、
+$\tuple y=(u^{s+d},u^r)$ とすると，
+両者の成分別 $h$-型は一致する．
+文脈 $E=Pu\blank_1u\blank_2Q$ は内部区切りが非空で，
+$E[\tuple x]=E[\tuple y]=Pu^{s+d+r+2}Q\in L$ である．
+よって2成分代入可能性から
+両タプルの分布は一致する．
+任意の適切な文脈 $X\blank_1Y\blank_2Z$
+に適用すれば主張が従う．
+\end{proof}
+
+\begin{lemma}[有界な局所シフト対]
+\label{lem:mcfg-local-shift}
+$c=|M|^2|\Sigma|$ とし，$R_c(5)$ を
+5頂点完全グラフに対する $c$ 色Ramsey数とする．
+$|w|\ge R_c(5)$ を満たす任意の語は
+$w=P\,x\,p\,q\,p\,y\,Q$ と分解でき，
+$x,y\in\Sigma^+$、$p\in\Sigma$、
+$q\in\Sigma^*$ および
+\[
+ h(x)=h(xpq),\qquad h(qpy)=h(y)
+\]
+を満たす．従って $w\in L\in\Cmcf{2}{h}$ ならば
+$(x,qpy)$ と $(xpq,y)$ の分布は一致する．
+\end{lemma}
+\begin{proof}
+最初の $R_c(5)$ 個のカット位置から $i<j$ を選び，
+$(h(w[i:j]),h(w[i+1:j]),w[i])$ で辺を彩色する．
+単色5点集合 $i_1<\cdots<i_5$ を取り，
+$x=w[i_1:i_2]$、
+$p=w[i_2]=w[i_3]$、
+$q=w[i_2+1:i_3]$、
+$y=w[i_3+1:i_5]$ とする．
+$P,Q$ は残りの接頭辞・接尾辞とする．
+辺 $(i_1,i_2),(i_1,i_3)$ の第一座標が
+$h(x)=h(xpq)$ を与え，
+$(i_2,i_5),(i_3,i_5)$ の第二座標が
+$h(qpy)=h(y)$ を与える．
+内部区切り $p$ が非空である文脈
+$P\blank_1p\blank_2Q$ は両タプルを受理するため，
+2成分代入可能性によって分布が一致する．
+\end{proof}
+
+\begin{theorem}[任意の固定有限型付けは括弧付き倍化族を救済できない]
+\label{thm:mcfg-all-typing-doubling-obstruction}
+任意の有限モノイド準同型
+$h:\Gamma_{\mathrm{br}}^*\to M$ について，
+命題~\ref{prop:fixed-window-doubling-fanout-two} の $L_n$ は
+\[
+ n\ge2|M|+3\quad\Longrightarrow\quad
+ L_n\notin\Cmcf{2}{h}
+\]
+を満たす．$f\ge2$ に対しても
+$L_n\notin\Cmcf{f}{h}$ となる．
+\end{theorem}
+\begin{proof}
+$g=h(\lfloor)$ の冪の指数を $i_0\ge1$、
+周期を $\pi\ge1$ とし，
+$i_0+\pi\le|M|+1$、$i_0\le|M|$ とする．
+$n\ge2i_0+\pi+2$ の場合を考え，
+$s=i_0$、$d=\pi$、
+$r=n-s-d-2\ge i_0$ とおく．
+$W_n=\lfloor W_{n-1}W_{n-1}\rfloor$ は
+$L_n$ に属する唯一の天井括弧なしの語で，
+$\lfloor^n$ から始まる．
+ゆえに $u=\lfloor$ として
+補題~\ref{lem:mcfg-power-transfer} の前提が成立する．
+
+同じ $W_n$ の先頭ランから，
+最初の $\lfloor$ を除いた位置に
+第一ブロック $\lfloor^s$ を取る．
+第二ブロック $\lfloor^{d+r}$ は
+二番目の $W_{n-1}$ の先頭ラン内に取る．
+両者の間の文字列 $Y$ は最初の $\mathtt a$ を
+含むため非空である．従って適切な $X,Z$ により
+$W_n=X\lfloor^sY\lfloor^{d+r}Z$ と書ける．
+冪移送から
+$X\lfloor^{s+d}Y\lfloor^rZ\in L_n$
+が従うはずだが，これは天井括弧を含まず，
+最初の $\mathtt a$ の前の $\lfloor$ が
+$n+d$ 個ある．一方，唯一の天井括弧なしの語
+$W_n$ では $n$ 個であり，矛盾する．
+$2i_0+\pi+2\le2|M|+3$ より一様な閾値が得られる．
+\end{proof}
+
+\begin{remark}
+定理~\ref{thm:mcfg-all-typing-doubling-obstruction} は，
+命題~\ref{prop:fixed-window-doubling-fanout-two} の
+窓型付けに限った障害を任意の有限型付けへ強化する．
+窓型付け固有の鋭い閾値は旧命題に残す．
+これは言語の\emph{クラス非所属}の定理であり，
+問題~\ref{op:fanout-two} が問う特徴データの
+高ファンアウト下界ではない．
+\end{remark}
+
 窓型付けと任意の有限群を組み合わせた場合の拡張は，
 \ref{app:window-group} で証明した．
 可換群の場合のより小さい定数は
