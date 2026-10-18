@@ -45,13 +45,18 @@ theorem emitAllRecItems_letterCount_le
   rcases hr with (((((hnt | hb) | hu) | hl) | hs) | heps)
   · obtain ⟨st,hst,heq⟩ := List.mem_map.mp hnt
     rcases st with ⟨u,x,v⟩
-    subst r
     have hp := (mem_enumerateOccurrencesList_iff sample u x v).mp hst
     have hword :=
       word_length_le_encodedListSample sample (u++x++v) hp.2
     simp only [List.length_append] at hword
-    change x.length ≤ 2*(encodedListSample sample+1)
-    omega
+    have hxbound :
+        x.length ≤ 2*(encodedListSample sample+1) := by
+      omega
+    calc
+      r.letterCount = x.length := by
+        rw [← heq]
+        rfl
+      _ ≤ 2*(encodedListSample sample+1) := hxbound
   · obtain ⟨p,hp,heq⟩ := List.mem_map.mp hb
     rcases p with ⟨z,x,y⟩
     subst r
