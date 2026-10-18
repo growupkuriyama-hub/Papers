@@ -34,6 +34,7 @@ theorem cacheSampleTypes_count_le_square
     change (cacheAllStarts t w).2 + (cacheSampleTypes t rest).2 ≤
       (w.length + 1 + encodedListSample rest)^2
     have hw := cacheAllStarts_count_le_square t w
+    have hcross : 0 ≤ (w.length + 1) * encodedListSample rest := Nat.zero_le _
     nlinarith
 
 /-- The concrete List representation of a Finset has precisely the
