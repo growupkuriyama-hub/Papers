@@ -26,7 +26,7 @@ theorem encoded_list_steps {Rule : Type*}
     (insertManyCount (rules.map encode) empty).2 =
       (rules.map (fun r => (encode r).length + 1)).sum := by
   rw [insertManyCount_steps]
-  simp only [List.map_map]
+  simp only [List.map_map, Function.comp_def]
 
 #print axioms TCSPhase8.BitTrie.contains_encoded_list_iff
 #print axioms TCSPhase8.BitTrie.encoded_list_steps
