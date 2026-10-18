@@ -94,6 +94,11 @@ $\mathbf{LG}$ の代数的特徴づけ自体は既知であり，
 任意の有限型付けについて，元文法の厚みによる一様な
 多項式上界が成立しない例が構成されている．
 本稿の $\mathbf{LG}$ 条件は，この障害を回避するものである．
+ファンアウト2では，関連CFG論文のdoubling familyは
+有限窓に限らず任意の有限型付けについて代入可能性を満たさない．
+他方，アーベル型フィルタからなる標的には，
+$\mathbf{LG}$ の外の有限型付けでも
+特徴データ総長の多項式上界が得られる．
 高ファンアウトでの下界問題は未解決である．
 また，有限型付け，正則フィルタおよびファンアウトに関する分離を示し，
 最小ファンアウトと最小規則ランクがともに2である，
@@ -2805,6 +2810,243 @@ $\mathsf B_{\mathrm{rule}}(G,h)$ となる．
 その場合でも命題~\ref{prop:effective-char-data} の導出 DAG は多項式サイズのままであり，
 計算された標本は多項式サイズの圧縮表現をもつ．
 
+
+\subsection{分布同値代表元とアーベル型フィルタ標的}
+\label{subsec:short-distributional-representatives}
+
+上で求めた計算可能な規則証拠予算では，
+型付き文法自身から\emph{導出できる}代表タプルを使った．
+一方，特徴標本の存在に関する上界では，
+同じ\emph{型付き分布同値類}に属する短いタプルを
+用いてよく，そのタプルが当該非終端記号から
+導出される必要はない．
+
+\begin{proposition}[緩和された分布証拠]
+\label{prop:mcfg-relaxed-witnesses}
+$L=L(G)\in\Cmcf{f}{h}$ の縮約済み良形文法
+$G$ のファンアウトを高々 $f$，規則ランクを高々
+$r$ とし，$\widetilde G_0$ を刈り込み済みの
+生成語型精密化とする．
+非開始型付き非終端記号 $X$ に対し，
+$L_X$ を含む $\equiv_{L,h}$-同値類を
+$[X]$ とおき，
+\[
+ \kappa_G(X)=\min_{\tuple v\in[X]}\|\tuple v\|_1,
+ \qquad \kappa_G=\max_X\kappa_G(X)
+\]
+と定義する．このとき，
+規則ランク上限が $G$ のランク以上である
+$\mathcal B^{\le r}_{f,h}$ および
+$\mathcal B_{f,h}$ の特徴標本 $K^\dagger$ が存在し，
+\[
+ \begin{split}
+ |K^\dagger|&\le |V||M|^f+|P||M|^{fr},\\
+ \|K^\dagger\|_+
+ &\le (|V||M|^f+|P||M|^{fr})
+ \bigl(1+\theta_G+\|G\|+(r+1)\kappa_G\bigr)
+ \end{split}
+\]
+を満たす．この評価は非空語部分に対するものであり，
+$\eps\in L$ なら $\eps$ を符号化コスト1で追加する．
+\end{proposition}
+\begin{proof}
+各 $X=A_{\mathbf t}$ に対し
+$\omega^\dagger(X)\in[X]$ を総長
+$\kappa_G(X)$ となるように取る．
+型なし非終端記号 $A$ を含む最短の成功導出から，
+兄弟部分木の語を固定した導出的な文文脈
+$\chi^\dagger(X)$ を選ぶ．
+$A$ を含む成功導出は $A$ を含む規則の
+厚みの証拠にもなるため，
+この文脈の固定部分の長さは
+$\theta_G$ 以下にできる．
+$\widetilde S\to X$ が存在すれば
+$\blank_1$ を使う．
+この文脈は $u\in L_X$ を受理し，
+$\omega^\dagger(X)\equiv_{L,h}u$ なので
+$\omega^\dagger(X)$ も受理する．
+
+$K^\dagger$ を
+$\chi^\dagger(X)[\omega^\dagger(X)]$ と，
+すべての型付き規則
+$X\to\rho(Y_1,\ldots,Y_q)$ に対する
+$\chi^\dagger(X)[\rho(\omega^\dagger(Y_1),
+\ldots,\omega^\dagger(Y_q))]$，
+およびランク0の規則証拠から作る．
+補題~\ref{lem:witnessed-composition} により，
+規則の右辺のタプルは $L_X$ の元と
+分布同値であり，すべての証拠語は $L$ に属する．
+命題~\ref{prop:completeness} の証明で
+$\iota(X)=[\omega^\dagger(X)]$ を使うと，
+文脈証拠からLinkを，規則証拠から必要な
+composition witnessを得て，同じ導出を模倣できる．
+さらに命題~\ref{prop:reconstruction-soundness}
+から逆向きの包含が成立する．
+
+重複を除く前の語数は非終端記号と規則につき
+それぞれ1語である．非終端記号の証拠長は
+$\theta_G+\kappa_G$ 以下，
+規則証拠長は $\theta_G+\|G\|+r\kappa_G$ 以下である．
+これらの符号化長を合計すれば上界が従う．
+命題~\ref{prop:rule-only-witnesses} と異なり，
+今回の代表元は非終端記号から導出できるとは
+限らないため，非終端記号用の証拠を
+一般には省略できない．
+\end{proof}
+
+\begin{remark}
+$f,r,h$ を固定すると，
+$\|G_n\|\max\{1,\theta_{G_n}\}=n^{O(1)}$
+にもかかわらず任意の特徴標本が超多項式長となる
+文法族が存在するなら，
+$\kappa_{G_n}=n^{\omega(1)}$ が必要である．
+これは必要条件であり，そのような族の存在証明ではない．
+緩和された証拠は存在論的な構成である．
+命題~\ref{prop:computed-witness-budget} の
+計算可能な規則証拠は，文法で導出される代表元を
+用いる別の構成である．
+\end{remark}
+
+\begin{theorem}[アーベル型フィルタ標的の多項式データ]
+\label{thm:mcfg-abelian-filter-data}
+空でない有限アルファベット $\Sigma$，
+有限型付け $h:\Sigma^*\to M$，
+上界 $f,r\ge1$ を固定する．
+$\Sigma,h,f,r$ のみに依存する定数 $C,e$ が存在して，
+次が成り立つ．
+$\mathbb A$ を任意のアーベル群，
+$\varphi:\Sigma^*\to\mathbb A$ を準同型，
+$\mathcal H\le\mathbb A$，
+$\gamma\in\mathbb A$，
+$\mathsf{Acc}\subseteq M$ とする．
+\[
+ L=h^{-1}(\mathsf{Acc})\cap
+   \varphi^{-1}(\gamma+\mathcal H)
+\]
+がファンアウト高々 $f$，規則ランク高々 $r$ の
+縮約済み良形MCFG $G$ で表示されるなら，
+$L\in\Cmcf{f}{h}$ であり，
+$\mathcal B^{\le r}_{f,h}$ に対する特徴標本
+$K^\dagger$ が存在して
+\[
+ \|K^\dagger\|_+\le
+ C\bigl(\|G\|\max\{1,\theta_G\}\bigr)^e
+\]
+を満たす．定数は補助群
+$\mathbb A,\varphi,\mathcal H,\gamma$ に依存しない．
+空語が含まれる場合の符号化コストは高々1を加える．
+\end{theorem}
+\begin{proof}
+$L\in\Cmcf{f}{h}$ は
+命題~\ref{prop:abelian-coset-filter} と
+MCFGによる表示の仮定から従う．
+
+$\psi:\Sigma^*\to\mathbb N^\Sigma$ をParikh写像とし，
+$\Psi(\tuple u)=\sum_i\psi(u_i)$ と書く．
+$\varphi$ は群準同型
+$\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$
+を用いて分解できる．
+\[
+ \Lambda=\{z\in\mathbb Z^\Sigma:
+                 \overline\varphi(z)\in\mathcal H\}
+\]
+とおく．
+各型なし非終端記号 $A$ について，
+長さが非終端記号厚み
+$t_G\le\theta_G$ 以下の生産的タプル
+$\omega_A$ を一つ固定する．
+任意の二つの $A$ の導出タプルは，
+同一の成功導出的文脈へ代入でき，
+その結果はともに $L$ に属するため
+\[
+ \Psi(u)-\Psi(\omega_A)\in\Lambda
+ \qquad(u\in L_A(G))                                      \tag{*}
+\]
+となる．
+
+各規則 $R:A\to\rho(B_1,\ldots,B_q)$ で，
+$c_R\in\mathbb N^\Sigma$ を規則中の終端記号の
+出現数ベクトルとし，
+\[
+ \delta_R=\Psi(\omega_A)-c_R
+                 -\sum_{j=1}^q\Psi(\omega_{B_j})
+\]
+とおく．(*)より $\delta_R\in\Lambda$ で，
+$\|\delta_R\|_1$ は
+$T=(r+1)t_G+\|G\|$ 以下である．
+$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$，
+$\Lambda_T=\langle\Gamma_T\rangle$ とする．
+\[
+ \Psi(u)-\Psi(\omega_A)=
+ \sum_j(\Psi(u_j)-\Psi(\omega_{B_j}))-\delta_R
+\]
+を用いる導出上の帰納法により，
+すべての $u\in L_A(G)$ に対して
+$\Psi(u)-\Psi(\omega_A)\in\Lambda_T$ が成立する．
+
+型付き非終端記号 $X=A_{\mathbf t}$ の
+$d\le f$ 成分タプル
+$u=(u_1,\ldots,u_d)\in L_X$ を取る．
+各成分について正規言語
+$h^{-1}(t_i)\cap\Sigma^+$ のParikh像の
+固定した半線形表示から，
+$\psi(u_i)$ を含む線形集合
+$c_i+\sum_{p\in P_i}\mathbb N p$ を選ぶ．
+その生成元の個数と係数は
+$\Sigma,h$ のみに依存する定数で抑えられる．
+次の非負整数連立系を考える：
+\[
+ \sum_{i=1}^d
+    \left(c_i+\sum_{p\in P_i}\nu_{i,p}p\right)
+ -
+ \sum_{z\in\Gamma_T}(\mu_z^+-\mu_z^-)z
+ =\Psi(\omega_A).
+\]
+元の $u_i$ のParikhベクトルと
+$\Lambda_T$ に属するという上記の事実から，
+この連立系は可解である．
+方程式数は $|\Sigma|$，
+非負変数の個数は
+$O_{f,h,\Sigma}((T+1)^{|\Sigma|})$ 以下，
+係数の絶対値は
+$O_{f,h,\Sigma}(T+1)$ 以下である．
+Papadimitriouの非負整数小解定理
+~\cite{Papadimitriou1981} より，
+全ての変数が $T+1$ の固定多項式で
+抑えられる解が存在する．
+得られた各Parikhベクトルを実現する
+非空語 $v_i\in h^{-1}(t_i)$ を選び，
+$\tuple v=(v_1,\ldots,v_d)$ とする．
+$\|\tuple v\|_1$ は $T+1$ の多項式で抑えられ，
+成分別型は $u$ と一致し，
+$\Psi(\tuple v)-\Psi(u)\in
+\Lambda_T\subseteq\Lambda$ となる．
+
+任意の文文脈 $E$ に対して
+$E[\tuple v]$ と $E[u]$ の全体の $h$-型は等しく，
+\[
+ \varphi(E[\tuple v])-\varphi(E[u])
+ =\overline\varphi(\Psi(\tuple v)-\Psi(u))
+ \in\mathcal H
+\]
+が成り立つ．
+したがって $\tuple v\equiv_{L,h}\tuple u$ である．
+各型付き分布同値類に，長さが $T+1$ の多項式で
+抑えられた代表元が存在するので，
+命題~\ref{prop:mcfg-relaxed-witnesses} と
+$t_G\le\theta_G$ から求める総長上界が得られる．
+定数は補助アーベル群に依存しない．
+\end{proof}
+
+\begin{remark}
+定理~\ref{thm:mcfg-abelian-filter-data} は
+$h$ の正語像が $\mathbf{LG}$ の\emph{外}にある
+場合にも成立する．これは有限制御モノイドではなく，
+標的言語の構造に関する十分条件である．
+補助アーベル群の表示が計算可能とは限らない場合に，
+証拠の多項式時間\emph{構成}まで主張しない．
+\end{remark}
+
 \section{多次元代入可能性との比較}
 \label{sec:comparison}
 
@@ -3723,6 +3965,168 @@ $(2,h)$-タプル代入可能性が破れる．
 \end{remark}
 
 
+
+\subsection{希少な型と2成分の局所的可動性}
+\label{subsec:rare-type-mobility}
+
+\begin{lemma}[$h$ の型全体の削除]
+\label{lem:mcfg-delete-type}
+$f\ge1$、$L\in\Cmcf{f}{h}$、$m\in M$ に対し，
+$L^{\setminus m}:=L\setminus h^{-1}(m)$ も
+$\Cmcf{f}{h}$ に属する．
+\end{lemma}
+\begin{proof}
+$h^{-1}(M\setminus\{m\})$ は正規言語であり，
+$(f,h)$-タプル代入可能でもある．実際，成分別の型が
+一致すれば，どの文文脈でも全体の型が一致する．
+共通部分は代入可能性を保存し
+（命題~\ref{prop:abelian-coset-filter}），
+$f$-MCFL は正規言語との共通部分で閉じる
+~\cite{SekiEtAl1991}．
+\end{proof}
+
+\begin{proposition}[希少な型は長い正例を強制する]
+\label{prop:mcfg-rare-type-sample}
+$L\in\Cmcf{f}{h}$、$m\in h(L)$ とし，
+$\mu_m(L)=\min\{|w|:w\in L,\ h(w)=m\}$ とおく．
+$\mathcal B^{\le r}_{f,h}$（$r\ge1$）または
+$\mathcal B_{f,h}$ の任意の特徴標本には
+型 $m$ の語が含まれ，従って符号化総長は
+$\mu_m(L)+1$ 以上である．
+より一般に，$L$ と $L^{\setminus m}$ の両方に
+特徴標本を持つ任意の集合駆動型再構成器についても
+同じ必要性が成立する．
+\end{proposition}
+\begin{proof}
+型 $m$ を避ける標本 $K\subseteq L$ は
+$K\subseteq L^{\setminus m}$ を満たす．
+補題~\ref{lem:mcfg-delete-type} と
+命題~\ref{prop:reconstruction-soundness} を
+標的 $L^{\setminus m}$ に適用すると，
+$K$ からの再構成言語は真部分言語
+$L^{\setminus m}$ に含まれる．
+一般の集合駆動型再構成器については，
+$L$ の特徴標本 $\mathcal F$ が型 $m$ を避けると仮定し，
+$L^{\setminus m}$ の特徴標本を $\mathcal F'$ とする．
+有限集合 $\mathcal F\cup\mathcal F'$ は両標的に含まれ，
+双方の特徴標本を含むので，同じ再構成結果が
+異なる二言語に等しくなり矛盾する．
+\end{proof}
+
+\begin{lemma}[ファンアウト2の冪移送]
+\label{lem:mcfg-power-transfer}
+$f\ge2$、$L\in\Cmcf{f}{h}$、$u\in\Sigma^+$ とする．
+$g=h(u)$ とし，ある $i_0,\pi\ge1$ が
+全ての $i\ge i_0$ について
+$g^{i+\pi}=g^i$ を満たすとする．
+$s,r\ge i_0$、$d\in\pi\mathbb Z_{>0}$ とする．
+$L$ のある語が $u^{s+d+r+2}$ を因子に持つなら，
+任意の $X,Z\in\Sigma^*$、$Y\in\Sigma^+$ に対し
+\[
+ Xu^sYu^{d+r}Z\in L
+ \quad\Longleftrightarrow\quad
+ Xu^{s+d}Yu^rZ\in L
+\]
+が成り立つ．
+\end{lemma}
+\begin{proof}
+受理語を $Pu^{s+d+r+2}Q$ と書く．
+$\tuple x=(u^s,u^{d+r})$、
+$\tuple y=(u^{s+d},u^r)$ とすると，
+両者の成分別 $h$-型は一致する．
+文脈 $E=Pu\blank_1u\blank_2Q$ は内部区切りが非空で，
+$E[\tuple x]=E[\tuple y]=Pu^{s+d+r+2}Q\in L$ である．
+よって2成分代入可能性から
+両タプルの分布は一致する．
+任意の適切な文脈 $X\blank_1Y\blank_2Z$
+に適用すれば主張が従う．
+\end{proof}
+
+\begin{lemma}[有界な局所シフト対]
+\label{lem:mcfg-local-shift}
+$\Sigma$ は空でないとする．
+$c=|M|^2|\Sigma|$ とし，$R_c(5)$ を
+5頂点完全グラフに対する $c$ 色Ramsey数とする．
+$|w|\ge R_c(5)$ を満たす任意の語は
+$w=P\,x\,p\,q\,p\,y\,Q$ と分解でき，
+$x,y\in\Sigma^+$、$p\in\Sigma$、
+$q\in\Sigma^*$ および
+\[
+ h(x)=h(xpq),\qquad h(qpy)=h(y)
+\]
+を満たす．従って $w\in L\in\Cmcf{2}{h}$ ならば
+$(x,qpy)$ と $(xpq,y)$ の分布は一致する．
+\end{lemma}
+\begin{proof}
+最初の $R_c(5)$ 個のカット位置から $i<j$ を選び，
+$(h(w[i:j]),h(w[i+1:j]),w[i])$ で辺を彩色する．
+単色5点集合 $i_1<\cdots<i_5$ を取り，
+$x=w[i_1:i_2]$、
+$p=w[i_2]=w[i_3]$、
+$q=w[i_2+1:i_3]$、
+$y=w[i_3+1:i_5]$ とする．
+$P,Q$ は残りの接頭辞・接尾辞とする．
+辺 $(i_1,i_2),(i_1,i_3)$ の第一座標が
+$h(x)=h(xpq)$ を与え，
+$(i_2,i_5),(i_3,i_5)$ の第二座標が
+$h(qpy)=h(y)$ を与える．
+内部区切り $p$ が非空である文脈
+$P\blank_1p\blank_2Q$ は両タプルを受理するため，
+2成分代入可能性によって分布が一致する．
+\end{proof}
+
+\begin{theorem}[任意の固定有限型付けは括弧付き倍化族を救済できない]
+\label{thm:mcfg-all-typing-doubling-obstruction}
+任意の有限モノイド準同型
+$h:\Gamma_{\mathrm{br}}^*\to M$ について，
+命題~\ref{prop:fixed-window-doubling-fanout-two} の $L_n$ は
+\[
+ n\ge2|M|+3\quad\Longrightarrow\quad
+ L_n\notin\Cmcf{2}{h}
+\]
+を満たす．$f\ge2$ に対しても
+$L_n\notin\Cmcf{f}{h}$ となる．
+\end{theorem}
+\begin{proof}
+$g=h(\lfloor)$ の冪の指数を $i_0\ge1$、
+周期を $\pi\ge1$ とし，
+$i_0+\pi\le|M|+1$、$i_0\le|M|$ とする．
+$n\ge2i_0+\pi+2$ の場合を考え，
+$s=i_0$、$d=\pi$、
+$r=n-s-d-2\ge i_0$ とおく．
+$W_n=\lfloor W_{n-1}W_{n-1}\rfloor$ は
+$L_n$ に属する唯一の天井括弧なしの語で，
+$\lfloor^n$ から始まる．
+ゆえに $u=\lfloor$ として
+補題~\ref{lem:mcfg-power-transfer} の前提が成立する．
+
+同じ $W_n$ の先頭ランから，
+最初の $\lfloor$ を除いた位置に
+第一ブロック $\lfloor^s$ を取る．
+第二ブロック $\lfloor^{d+r}$ は
+二番目の $W_{n-1}$ の先頭ラン内に取る．
+両者の間の文字列 $Y$ は最初の $\mathtt a$ を
+含むため非空である．従って適切な $X,Z$ により
+$W_n=X\lfloor^sY\lfloor^{d+r}Z$ と書ける．
+冪移送から
+$X\lfloor^{s+d}Y\lfloor^rZ\in L_n$
+が従うはずだが，これは天井括弧を含まず，
+最初の $\mathtt a$ の前の $\lfloor$ が
+$n+d$ 個ある．一方，唯一の天井括弧なしの語
+$W_n$ では $n$ 個であり，矛盾する．
+$2i_0+\pi+2\le2|M|+3$ より一様な閾値が得られる．
+\end{proof}
+
+\begin{remark}
+定理~\ref{thm:mcfg-all-typing-doubling-obstruction} は，
+命題~\ref{prop:fixed-window-doubling-fanout-two} の
+窓型付けに限った障害を任意の有限型付けへ強化する．
+窓型付け固有の鋭い閾値は旧命題に残す．
+これは言語の\emph{クラス非所属}の定理であり，
+問題~\ref{op:fanout-two} が問う特徴データの
+高ファンアウト下界ではない．
+\end{remark}
+
 窓型付けと任意の有限群を組み合わせた場合の拡張は，
 \ref{app:window-group} で証明した．
 可換群の場合のより小さい定数は
@@ -4192,6 +4596,12 @@ $\eps$ が必要な場合には
 
 \small
 \begin{thebibliography}{99}
+
+\bibitem{Papadimitriou1981}
+C.~H.~Papadimitriou.
+\newblock On the complexity of integer programming.
+\newblock {\em Journal of the ACM}, 28(4):765--768, 1981.
+\newblock doi:10.1145/322276.322287.
 
 \bibitem{Gold1967}
 E.~M.~Gold.
