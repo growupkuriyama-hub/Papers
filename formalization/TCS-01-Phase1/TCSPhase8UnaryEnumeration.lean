@@ -74,7 +74,8 @@ theorem efficient_unary_rules_eq
       exact hcode
     refine ⟨hobsx,hobsy,htypes,⟨(u,v),?_,?_⟩⟩
     · change u ++ x ++ v ∈ K
-      exact hobsx.2.choose_spec.choose_spec
+      rw [← hxx]
+      exact hocc.2
     · change u ++ y ++ v ∈ K
       rw [← hyy, hcondition.2.1]
       exact hdata.2
