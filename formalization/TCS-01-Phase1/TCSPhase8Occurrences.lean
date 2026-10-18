@@ -26,7 +26,8 @@ theorem mem_splits_iff (w u v : List Alphabet) :
   · intro heq
     apply Finset.mem_image.mpr
     refine ⟨u.length, ?_, ?_⟩
-    · simp [heq]
+    · simp only [heq, List.length_append, Finset.mem_range]
+      omega
     · simp [heq]
 
 /-- All nonempty factor occurrences of one word, retaining both contexts.
@@ -109,7 +110,7 @@ theorem efficient_observed_factors_iff
 
 /-- Same observed nonempty factors as the original mathematical grammar;
 this statement itself makes no claim about execution time. -/
-theorem efficient_observed_factors_eq
+theorem efficient_observed_factors_eq [Fintype Alphabet]
     (K : Finset (List Alphabet)) :
     efficientObservedFactors K = ObservedFactors K := by
   classical
