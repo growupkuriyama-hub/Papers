@@ -19,7 +19,6 @@ theorem middle_append (u x v : List Alphabet) :
     middle u v (u ++ x ++ v) = x := by
   have hlen : (u ++ x ++ v).length - u.length - v.length = x.length := by
     simp [List.length_append]
-    omega
   simp [middle, hlen]
 
 /-- The only possible candidate for each occurrence and sample-word pair. -/
@@ -95,7 +94,7 @@ theorem efficient_unary_rules_eq
         refine ⟨hy.1,rfl,?_⟩
         rw [codeWord_eq_h h t ht x,codeWord_eq_h h t ht y]
         exact htype
-    · simp [middle_append]
+    · simpa [List.append_assoc] using (middle_append u y v)
 
 #print axioms TCSPhase8.middle_append
 #print axioms TCSPhase8.efficient_unary_rules_eq
