@@ -28,7 +28,9 @@ theorem codeWord_eq_h (h : List Alphabet →* M)
     (ht : ∀ a, t.letter a = h [a]) (w : List Alphabet) :
     codeWord t w = h w := by
   induction w with
-  | nil => simp [codeWord]
+  | nil =>
+    change (1 : M) = h 1
+    exact (map_one h).symm
   | cons a xs ih =>
     calc
       codeWord t (a :: xs) = t.letter a * codeWord t xs := rfl
