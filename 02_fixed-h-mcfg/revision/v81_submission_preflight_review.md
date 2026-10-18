@@ -62,10 +62,12 @@ not a statement that the paper has been independently peer-reviewed.
 - Full-page visual examination of the FINAL compiled PDFs, including
   theorem environments, long displayed equations, and bibliography.
   Build success alone is insufficient for that visual gate.
-- Human proof reading of the local-group Rees-coordinate reduction,
+- Author-led spot-check of the local-group Rees-coordinate reduction,
   arbitrary finite-group order homogenization and nonmerging
-  witness-composition proof. AI scrutiny is not external mathematical
-  verification.
+  witness-composition proof. Full independent expert refereeing is
+  precisely what the I&C submission will seek; it is not presented as
+  a prerequisite to making that submission. AI scrutiny alone is
+  not formal proof certification.
 - Author confirmation of all abstract novelty statements, affiliation,
   AI declaration, submission metadata, and relationship to TCS #1.
 - Confirm I&C's current guide-for-authors details, cover letter and
