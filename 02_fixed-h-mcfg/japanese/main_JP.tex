@@ -103,126 +103,76 @@ $\mathbf{LG}$ に属する型付け全体へ拡張する．
 \section{序論}
 \label{sec:introduction}
 
-正例からの文法推論は，言語の正例だけを列挙するデータから，
-いつその言語を復元できるかを問う~\cite{Gold1967,Angluin1980}．
-分布的手法は，部分文字列やタプルについて観測された交換可能性を
-文法の非終端記号へと変換することで，制限された文法クラスの学習を可能にする．
-文脈自由文法（CFG）の場合，これには代入可能言語~\cite{ClarkEyraud2007} と
-Yoshinaka の $(k,\ell)$ 階層~\cite{Yoshinaka2008} が含まれる．
-Yoshinaka は同じ着想を多重文脈自由文法（MCFG）へ拡張した．
-この場合，非終端記号はタプルを生成し，代入は複数の穴をもつ
-文脈によって検査される~\cite{Yoshinaka2009,Yoshinaka2011}．
-MCFG は代表的な弱文脈依存形式体系であり，
-不連続依存や交差直列依存を直接表現できる
-~\cite{SekiEtAl1991,Kallmeyer2010}．
+正例からの文法推論は，正例だけから標的言語を回復できる条件を問う
+~\cite{Gold1967,Angluin1980}．
+分布的学習では交換可能な因子やタプルを利用する．
+MCFGについてはYoshinakaの観測タプル学習器と
+一般signature枠組みがあり
+~\cite{Yoshinaka2009,Yoshinaka2011,Yoshinaka2015General}，
+後者は有限ソートの精密化，質的同定，
+多項式時間更新，特徴集合の個数上界を既に扱う．
+本稿の主題はそれらの再証明ではなく，
+\emph{元の文法表示に相対的な特徴正例の総文字数}である．
 
-\paragraph{一般学習原理とその適用範囲．}
-Yoshinaka の2011年の観測タプルに基づく学習器が，
-型付けを導入しない MCFG 学習の基準となる~\cite{Yoshinaka2011}．
-その後の signature に関する一般理論は，
-アリティの制限された MCFG，ソートの有限精密化，接頭辞--接尾辞型付けを含み，
-すでに正例からの同定，多項式時間更新，および個数が有界な特徴集合の存在を与える
-~\cite[Theorem~1, Lemma~3 and Examples~3--4]{Yoshinaka2015General}．
-この一般枠組みは質的な学習原理を既に与えており，
-本稿はその創始を主張しない．
-本稿の主な問題は，元の MCFG 表示に相対的な
-正例特徴データの\emph{総文字数}である．
-
-本稿では学習対象クラスの一部として，有限モノイドへの準同型
-$h:\Sigma^*\to M$ を固定する．観測されたタプルは，
-対応する成分の $h$-値が等しい場合に限って比較する．
-合成可能な型による制約は正例テキストが与えられる前から固定されており，
-有限なバイアスの選択と，そのバイアスの下での学習を分離する
-~\cite{CosteTyping2004}．
-重要な二つの例は接頭辞--接尾辞準同型と DFA の遷移準同型である．
-固定接頭辞--接尾辞窓は，個々の標本に応じて調整するパラメータではなく，
-標的クラスに対して独立かつ一様に選んだ有限パラメータである．
-本稿の総文字数に関する主上界は，ファンアウトと規則ランクを指定すれば，
-その窓型付けクラスのすべての標的に適用される．
-ファンアウトもバイアスの一部である．これは代入可能性を検査する
-タプルのアリティを決定するからである．
-したがって，固定型付けは有限状態の情報を供給し，
-非有界な依存関係は MCFG が担う．
-
-他の学習バイアスは異なる選択を行う．
-Takada は導出に対する正則制御言語を用いる
-~\cite{Takada1988,Takada1995}．
-一方，局所的代入可能性は因子を比較するための証拠を制限する
-~\cite{CosteGaretNicolas2012,CosteNicolas2019}．
-正例からの学習は他の弱文脈依存形式体系についても研究されている
-~\cite{OatesEtAl2006}．
-より豊富な情報を利用する MCFG 学習には，
-所属質問や双対文脈集合を用いる手法がある
-~\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}．
-本稿はこれらと異なり正例データのみに限定し，
-観測タプルの値を標本由来の基本対象とし，
-固定有限型付けにより代入を制限する．
+有限モノイド準同型$h:\Sigma^*\to M$をデータ観測前に固定し，
+タプルの対応成分の$h$型が一致するときだけ代入を許す．
+境界窓やDFAの遷移はその例であり~\cite{CosteTyping2004}，
+無限の依存関係はMCFGが扱う~\cite{SekiEtAl1991,Kallmeyer2010}．
+ファンアウトは検査するタプルのアリティを規定する．
+導出制御や所属質問を用いる方式と異なり
+~\cite{Takada1988,Takada1995,Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}，
+ここでは正例テキストだけを用いる．
 
 \paragraph{本稿の貢献．}
-本稿が重点的に調べるのは特徴正例データの\emph{総文字数}である．
-ファンアウトと規則ランクを固定すると，接頭辞--接尾辞型付けでは
-$O(\|G\|^2\bar\theta_G)$（定理~\ref{thm:boundary-polydata}），
-窓と任意の固定有限群（非可換群も含む）の組合せでは
+ファンアウトと規則ランクを固定した縮約済み良形文法について，
+接頭辞--接尾辞窓型付けでは$O(\|G\|^2\bar\theta_G)$
+（定理~\ref{thm:boundary-polydata}），
+非可換群も含む固定有限群を窓に加える場合は
 $O(\|G\|^3\bar\theta_G)$
 （定理~\ref{thm:window-group-polydata}）を得る．
-局所群の定理~\ref{thm:local-group-polydata}は後者の三次上界を
-正語像半群が$\mathbf{LG}$に属する型付け全体へ拡張する．
-規則ランク1なら任意の固定型付けで多項式データ長が成立する
+三次上界は正語像半群が局所群の擬多様体
+$\mathbf{LG}$に属する型付け全体へ拡張される
+（定理~\ref{thm:local-group-polydata}）．
+規則ランク1では任意の固定型付けに対する多項式上界が成立する
 （定理~\ref{thm:rankone-polydata}）．
-計算可能な規則単位の特徴証拠予算も与える
-（命題~\ref{prop:computed-witness-budget}）．
+規則証拠による計算可能な予算
+（命題~\ref{prop:computed-witness-budget}）と，
+短い分布同値代表元に基づく存在的上界
+（命題~\ref{prop:mcfg-relaxed-witnesses}）は区別する．
 
-もう一つの代数的機構は\emph{標的言語の構造}に条件を課す．
-定理~\ref{thm:mcfg-semilattice-twisted-polydata}は，
-半束添字付きアーベル剰余類標的について，
-補助アーベル群に一様な多項式特徴データ長を与える．
-アーベル型フィルタの系~\ref{thm:mcfg-abelian-filter-data}と
-一マーカーの場合の系~\ref{cor:mcfg-one-marker-split-polydata}を含む．
-前者の局所群定理は固定型付けを制約し，
-後者は標的言語を制約するという違いがある．
+別の十分条件は\emph{標的言語の構造}に課す．
+半束添字付きアーベル剰余類標的では補助アーベル群に一様な
+多項式特徴データ長が成立する
+（定理~\ref{thm:mcfg-semilattice-twisted-polydata}）．
+これはアーベル型フィルタと1マーカー切替を含む
+（系~\ref{thm:mcfg-abelian-filter-data}，
+\ref{cor:mcfg-one-marker-split-polydata}）．
+局所群定理は固定\emph{型付け}を，
+半束定理は\emph{標的言語}を制約する．
 
-\paragraph{先行研究との関係と本稿の範囲．}
-観測タプル文法，保守的な更新方針およびランク上界を設けない質的同定は
-Yoshinaka~\cite{Yoshinaka2009,Yoshinaka2011} による．
-一般的な有限ソートの枠組みと特徴集合の個数に関する上界は
-Yoshinaka~\cite{Yoshinaka2015General} の成果である．
-なお，Duncan らの MCFG に関する substitution lemma
-~\cite{DuncanEtAl2026Substitution} は，
-MCFL に属するための必要条件を用いた非所属証明に関するものであり，
-本稿の分布的正例学習の置換可能性とは異なる問題を扱う．
-本稿の直接的な健全性・完全性の証明は，
-成分ごとに型付けした特定の文法構成を検証するものであって，
-新しい一般的学習機構を主張するものではない．
-規則ランク1における特徴データ長の結果は基本的な精密化の帰結である．
-より本質的な高ランクの成果は，複数のタプル成分について
-境界を同時に保存することで得られる上界
-（定理~\ref{thm:boundary-polydata}）である．
-
-ファンアウト1の固定接頭辞--接尾辞型付けに関する多項式特徴データは，
-Yoshinaka~\cite[Theorem~1]{Yoshinaka2008} によって得られている．
-関連する CFG 論文~\cite{kuriyamaCFG} は任意の有限型付けを扱い，
-ファンアウト1で作用素に依存しない下界を証明する．
-これらは先行結果であり，本稿独自の MCFG 定理としては掲げない．
-本稿固有の定量的な問題は，ファンアウト・規則ランク・型付けを
-固定したまま，元の文法厚みに対して特徴データ長を抑えることである．
-
-多項式上界の各主張では，ファンアウト・規則ランク上界・有限型付けを固定する．
-集合駆動型再構成の特徴データは\emph{言語レベル}の厳密性を保証し，
-構文レベルの安定化は保守的な逐次学習器が担う．
-型付き完全精密化と空成分除去に関する障害は，
-それら特定の構成の障害であって，すべての学習器に対する下界ではない．
-ファンアウト1における独立した作用素非依存の下界は，
-関連 CFG 論文~\cite{kuriyamaCFG} の成果である．
-
-第~\ref{sec:prelim}節から第~\ref{sec:char-data}節でモデルと定量的上界を扱い，
-第~\ref{sec:comparison}節ではYoshinakaの基準結果との比較を記す．
+\paragraph{先行研究との関係と適用範囲．}
+質的再構成の一般原理は
+Yoshinaka~\cite{Yoshinaka2011,Yoshinaka2015General}に由来する．
+本稿は成分別型付けを備えた構成を直接検証するが，
+新しい一般学習機構の創始は主張しない．
+ファンアウト1における窓型付けの上界は
+Yoshinaka~\cite{Yoshinaka2008}による．
+関連CFG論文は作用素に依存しない下界を与える
+~\cite{kuriyamaCFG}．
+本稿は，精密化で増大し得る厚みではなく
+\emph{元の規則厚み}を用いて，
+複数成分の特徴データを抑える．
+上界におけるアルファベット，ファンアウト，
+規則ランク，型付けの固定条件を明示する．
+高ファンアウトの一般下界問題は未解決である．
 
 \paragraph{証明の方法とAI支援研究．}
-本稿は理論研究であり，主張の根拠はここに提示する数学的証明であって，
-計算機実験や自動化された査読ではない．
-生成AIは候補となる論証の探索・批判的検討や原稿改訂の補助に利用したが，
-その出力自体を数学的検証とみなすことはしない．
-使用したツールとその役割は論文末尾で開示する．
+一般定理の根拠は本稿の数学的証明であり，
+計算機実験ではない．
+ChatGPTとClaudeは論証の探索，批判的検討，
+原稿編集を支援したが，その出力は独立した数学的検証ではない．
+論文の内容については著者が責任を負う．
+
 
 \section{準備}
 \label{sec:prelim}
@@ -2483,10 +2433,8 @@ $h:\Sigma^*\to M$ を有限モノイド準同型とする．
 もし $h(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$ ならば，
 ある $k,\ell\ge0$，有限群 $A$，および
 準同型 $g:\Sigma^*\to A$ が存在して
-\[
- h\preceq(h_\Sigma^{k,\ell},g)
- \quad(\Sigma^*\text{ 全体上})
-\]
+\(h\preceq(h_\Sigma^{k,\ell},g)
+ \quad(\Sigma^*\text{ 全体上})\)
 が成り立つ．
 さらに $h(\Sigma^+)\in\mathbf{LI}$ ならば，
 群因子を自明群としてよく，
@@ -2515,10 +2463,8 @@ $euf=ef$~\cite{Pin1986,kuriyamaCFG} より，
 実際，$w=pxz$，$|p|=|z|=q$ と書き，
 $s(p)=aeb$，$s(z)=cfd$ とすれば，
 $x$ が空でないとき
-\[
- s(pxz)=ae\,(b\,s(x)\,c)\,fd
-       =aefd=s(pz)
-\]
+\(s(pxz)=ae\,(b\,s(x)\,c)\,fd
+       =aefd=s(pz)\)
 となる．$x=\eps$ の場合も中央の積を
 $bc\in S_0$ と解釈すれば同じ恒等式が使える．
 長さが $2q$ 未満の語は
@@ -2652,9 +2598,7 @@ DAG の展開は，表す語の長さについて線形時間である．
 その最小導出の根の規則を
 $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
 （$q=0$ の場合も含む）．このとき
-\[
- \omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))
-\]
+\(\omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))\)
 が成立する．したがって定義~\ref{def:witness-set} の
 特徴証拠集合は，規則証拠だけからなる次の集合に等しい：
 \[
@@ -2667,10 +2611,8 @@ $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
 \]
 ここで $\mathcal R$ は開始記号以外の型付き規則の集合で，
 ランク0の規則も含む．特に
-\[
- |\Wit(\widetilde G_0)|\le|\mathcal R|
- \le |P||M|^{fr_{\max}}
-\]
+\(|\Wit(\widetilde G_0)|\le|\mathcal R|
+ \le |P||M|^{fr_{\max}}\)
 である．標的が $\Cmcf{f}{h}$ に属するとき，
 この集合は $\mathcal B^{\le r_{\max}}_{f,h}$
 に対する特徴標本として引き続き機能する．
@@ -2712,9 +2654,7 @@ $\mu(X)$ は $X$ の導出的文文脈の最小固定長とする
 \]
 と定義する．このとき計算可能な証拠集合
 $\Wit(\widetilde G_0)$ を
-\[
- \|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h)
-\]
+\(\|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h)\)
 となるように選べる．$f,r_{\max},h$ を固定すれば，
 $\mathsf B_{\mathrm{rule}}(G,h)$ は二進表記で $\|G\|$ の多項式時間で
 計算できる．標的が空語を含み，非空部分を別に扱う場合は，
@@ -2773,10 +2713,8 @@ $r$ とし，$\widetilde G_0$ を刈り込み済みの
 非開始型付き非終端記号 $X$ に対し，
 $L_X$ を含む $\equiv_{L,h}$-同値類を
 $[X]$ とおき，
-\[
- \kappa_G(X)=\min_{\tuple v\in[X]}\|\tuple v\|_1,
- \qquad \kappa_G=\max_X\kappa_G(X)
-\]
+\(\kappa_G(X)=\min_{\tuple v\in[X]}\|\tuple v\|_1,
+ \qquad \kappa_G=\max_X\kappa_G(X)\)
 と定義する．このとき，
 規則ランク上限が $G$ のランク以上である
 $\mathcal B^{\le r}_{f,h}$ および
@@ -2810,9 +2748,7 @@ $\omega^\dagger(X)\equiv_{L,h}u$ なので
 $\omega^\dagger(X)$ も受理する．
 
 $K^\dagger$ を，非終端記号の証拠語
-\[
- \chi^\dagger(X)[\omega^\dagger(X)]
-\]
+\(\chi^\dagger(X)[\omega^\dagger(X)]\)
 と，各型付き規則
 $X\to\rho(Y_1,\ldots,Y_q)$ の証拠語
 \[
@@ -2883,9 +2819,7 @@ $\omega_A^\alpha\in L_A$が存在する．
 \end{enumerate}
 $m=|\Sigma|$，$T=(r+1)B+\|G\|$とおく．
 $\Sigma,h,f,r$のみに依存する定数$C$が存在して
-\[
- \kappa_G\le C(T+1)^{3m+1}
-\]
+\(\kappa_G\le C(T+1)^{3m+1}\)
 となる．さらに，ランク上限付き・上限なしの両再構成器には
 特徴標本$K^\dagger\subseteq L$が存在し，
 \[
@@ -3008,18 +2942,14 @@ $A$を\emph{多値}という．
 \begin{lemma}[半束値関数と長方形剛性]
 \label{lem:mcfg-sl-rectangle}
 各$A$について，
-\[
- F_A:D_A\to Q,\qquad
+\(F_A:D_A\to Q,\qquad
  F_A(\eta(\tuple u))=\pi\varphi(\tuple u)
- \quad(\tuple u\in L_A)
-\]
+ \quad(\tuple u\in L_A)\)
 を満たす写像$F_A$が存在する．
 さらに規則$R:A\to\rho(B_1,\ldots,B_q)$，
 子の位置$j$について，
 それ以外の子のyield$\tuple v_i\in L_{B_i}$を固定し，
-\[
- W=\eta(\rho)\vee\bigvee_{i\ne j}\eta(\tuple v_i)
-\]
+\(W=\eta(\rho)\vee\bigvee_{i\ne j}\eta(\tuple v_i)\)
 とおく（$\eta(\rho)$は規則の終端部分の結び）．
 $y,y'\in D_{B_j}$が$y\vee W=y'\vee W$を満たせば
 $F_{B_j}(y)=F_{B_j}(y')$である．
@@ -3182,18 +3112,14 @@ $B=B_\sharp=O_{Y,r}(\|G\|\bar\theta_G)$で
 $\mathcal H\le\mathbb A$，
 $\gamma\in\mathbb A$，
 $\mathsf{Acc}\subseteq M$について
-\[
- L^+=h^{-1}(\mathsf{Acc})\cap
-      \varphi^{-1}(\gamma+\mathcal H)\cap\Sigma^+
-\]
+\(L^+=h^{-1}(\mathsf{Acc})\cap
+      \varphi^{-1}(\gamma+\mathcal H)\cap\Sigma^+\)
 とする．$L^+$が縮約済み良形ファンアウト高々$f$・
 ランク高々$r$の表示$G$を持つなら
 $L^+\in\Cmcf{f}{h}$であり，両再構成器には
 特徴標本$K^\dagger\subseteq L^+$が存在して
-\[
- \|K^\dagger\|_+
- \le C(\|G\|\bar\theta_G)^{3|\Sigma|+2}
-\]
+\(\|K^\dagger\|_+
+ \le C(\|G\|\bar\theta_G)^{3|\Sigma|+2}\)
 を満たす．定数$C$は$\Sigma,h,f,r$のみに依存する．
 元の完全な標的に$\eps$が含まれるときは，
 既存の空語規約に従い符号化コスト1で追加する．
@@ -3215,10 +3141,8 @@ $\Sigma_{\mathsf c}\subseteq\Sigma$を固定し，
 $c(w)$を$w$がマーカーを含むとき1，含まないとき0とする．
 有限型付け$h$が2元半束への準同型
 $h_{\mathrm U}:w\mapsto c(w)$を細分するなら，
-\[
- L=\{w\in\Sigma^+:
-     \varphi(w)\in\gamma_{c(w)}+\mathcal H\}
-\]
+\(L=\{w\in\Sigma^+:
+     \varphi(w)\in\gamma_{c(w)}+\mathcal H\}\)
 の任意の縮約済み良形・固定ファンアウト・
 固定ランク表示に対し，前定理の多項式上界が成立する．
 \end{corollary}
@@ -3246,145 +3170,51 @@ $\mathsf{Acc}=M$とし，
 \section{多次元代入可能性との比較}
 \label{sec:comparison}
 
-Yoshinaka の多次元代入可能性は，
-正例学習について直接比較すべき基準である
+Yoshinakaの多次元代入可能性は型付けのない基準である
 ~\cite{Yoshinaka2009,Yoshinaka2011}．
-自明型付けの下で，本稿の枠組みは
-その意味論的言語クラスを再現する．
-有限型付けは，合成に関する規則証拠を保持したまま，
-どの観測タプルを同一視してよいかをさらに制限する．
-MCFG の証明には，成分別の型の伝播が必要であり，
-定量的な境界型付け定理では，
-複数のタプル成分を同時に制御しなければならない．
-Yoshinaka の $(k,\ell)$ 階層は
-別の CFG の成果である~\cite{Yoshinaka2008}．
-$h_\Sigma^{k,\ell}$ は同じ境界情報を成分ごとに持ち上げる．
-すべての $(f,h)$ 条件はアリティ1を含むため，
-\(\Cmcf{f}{h}\cap\mathrm{CFL} \subseteq\Cmcf{1}{h}\)
-が成り立つ．
-以下の例では，有限型付けによるクラスを
-自明型付けの場合，接頭辞--接尾辞型付け，
-正則フィルタによる説明からそれぞれ分離する．
-
-\subsection{Yoshinaka の基準クラスと接頭辞--接尾辞型付けへの特殊化}
-
-\begin{definition}[Yoshinaka の多次元代入可能性]
-\label{def:yoshinaka-pd-substitutability}
-第~\ref{sec:prelim}節で定義した文文脈集合
-$\mathcal E_d$ を用いる．
-言語 $L$ が\emph{$f$D-代入可能}であるとは，
-任意の $1\le d\le f$，
-$E,F\in\mathcal E_d$ と
-$\tuple x,\tuple y\in(\Sigma^+)^d$ に対し
-\[
- E[\tuple x],\quad
- E[\tuple y],\quad F[\tuple x]\in L
- \Longrightarrow F[\tuple y]\in L
-\]
-が成り立つことをいう．
-この意味論的クラスを $\YSub{f}$ とし，
-$r$ を規則ランク上界として
-$\YSL{f}{r}:=\YSub{f}\cap\mathsf{MCFL}(f,r)$
-と書く．
-表示した四例の含意を\emph{代入の含意}と呼ぶ．
-Yoshinaka の元の定義はすべての
-アリティ $d\le f$ を量化し，
-非空のタプル成分を用い，
-$d$-文脈の内部区切り語を非空と要求する．
-脚注3では，空成分と空の区切り語を許す，
-より強い代替条件を別に論じている
+自明型付けではそのクラスを再現し，
+有限型付けは同一視可能なタプルを制限する．
+アリティ$d\le f$について，
+文文脈$E,F\in\mathcal E_d$と
+非空成分タプル$\tuple x,\tuple y$に対して
+\(E[\tuple x],E[\tuple y],F[\tuple x]\in L
+\Rightarrow F[\tuple y]\in L\)が成立するとき，
+$L$は\emph{$f$D-代入可能}である．
+そのクラスを$\YSub{f}$と書く．
+元の定義は非空の内部区切り語を要求し，
+空成分・空区切り語を許す別の強い条件とは区別する
 ~\cite[Section~3.1 and footnote~3]{Yoshinaka2011}．
-\end{definition}
 
-定義~\ref{def:prefix-suffix-typing} の
-有限モノイド準同型 $h_\Sigma^{k,\ell}$ を思い出そう．
-Yoshinaka の語レベルの定義では，
-$w_1,y_1,w_1',w_2,y_2,w_2'\in\Sigma^*$，
-$u\in\Sigma^k$，
-$v\in\Sigma^\ell$，
-$uy_1v,uy_2v\ne\eps$ としたうえで，
-\[
- w_1uy_1vw_1',\ w_1uy_2vw_1'\in L
- \quad\Longrightarrow\quad
- \bigl(w_2uy_1vw_2'\in L\iff w_2uy_2vw_2'\in L\bigr)
-\]
-を要求する~\cite{Yoshinaka2008}．
-比較される因子 $uy_iv$ は非空であるが，
-中央の語 $y_i$ 自体は空でもよい．
-これらの因子の $h_\Sigma^{k,\ell}$-値が等しいことは，
-この条件で使われる境界情報が等しいことと正確に一致する．
-特に $m_0=\max\{1,k+\ell\}$ より短い語については，
-語そのものが一致することを含む．
+自明型付けでは
+\(\Cmcf{f}{h_{\mathrm{triv}}}
+=\YSub{f}\cap f\text{-}\mathrm{MCFL}
+\subseteq\Cmcf{f}{h}\)．
+$f=1$では窓型付け$h_\Sigma^{k,\ell}$による条件は
+Yoshinakaの$(k,\ell)$条件に一致し
+~\cite{Yoshinaka2008}，
+高ファンアウトでは同じ制約を成分ごとに課す．
+型付けのない場合の多項式時間および
+特徴語長の上界は既知である
+~\cite[Theorem~1 and Lemma~7]{Yoshinaka2011}．
+本稿の拡張は有限型付けを備えた多成分の
+元文法厚みに関する定量的保証である．
 
-\paragraph{意味論的条件の特殊化．}
-自明型付けでは成分別の型の前提が消えるため，
-\(\Cmcf{f}{h_{\mathrm{triv}}} =\YSub{f}\cap f\text{-}\mathrm{MCFL} \subseteq\Cmcf{f}{h}\)
-が成り立つ．
-ファンアウト1では，
-$(1,h_\Sigma^{k,\ell})$-代入可能性は
-Yoshinaka の語レベルの $(k,\ell)$ 条件
-~\cite{Yoshinaka2008}
-に正確に一致する．
-すなわち同じ窓型とは，
-短い語では語そのものが等しいこと，
-長い語では長さ $k$ の接頭辞と
-長さ $\ell$ の接尾辞が共通であることを意味する．
-ファンアウトが高い場合も，
-同じ対応が成分ごとに成り立つ．
-
-\paragraph{Yoshinaka の効率性尺度との整合．}
-自明型付けでは，
-生産的な非終端記号の生成語型は一種類しかない．
-Yoshinaka の型なし文法に対する証拠はすでに
-\(|K_G|\le|P|,\qquad \|K_G\|\le|P|\tau_G\)
-を満たす~\cite[Lemma~7]{Yoshinaka2011}．
-次元と規則ランクを固定したときの
-多項式時間・多項式データも既知である
-~\cite[Theorem~1]{Yoshinaka2011}．
-したがって，本稿の定量的な主張は
-自明型付けの結果を再証明することではなく，
-新しい型付き・多成分の場合を扱うものである．
 
 \section{結論}
 \label{sec:conclusion}
 
-固定有限モノイド型付けの下で，
-$(f,h)$-タプル代入可能なMCFGクラスは
-正例から厳密に再構成でき，TxtEx 同定も可能である．
-規則ランクを固定すれば観測標本サイズに関して
-多項式時間で仮説を更新できるが，
-この計算量と特徴標本の取得コストは区別する必要がある．
-
-正例データ総長について，
-規則ランク1なら任意の固定型付けで
-文法サイズのみの多項式上界が成立する．
-高い規則ランクでは，境界窓型付けで
-文法サイズと元の厚みについて二次上界が得られ，
-窓と任意有限群の組合せで三次上界が得られる．
-局所群定理（付録~\ref{app:local-group}）は
-後者を正語像半群が $\mathbf{LG}$ に属する型付け全体へ拡張する．
-擬多様体水準の対応する障害はファンアウト1の
-下界例に基づき，任意のファンアウトにおける
-個別型付けの完全な特徴づけではない．
-
-標的言語の構造に関する補完的な主定理
-~\ref{thm:mcfg-semilattice-twisted-polydata} は，
-有限半束の値で添字付けされたアーベル剰余類標的について，
-補助アーベル群のデータに一様な多項式特徴データ長を示す．
-従来のアーベル型フィルタ標的は，
-系~\ref{thm:mcfg-abelian-filter-data} として回収され，
-制御モノイドが $\mathbf{LG}$ の外にある場合も扱う．
-命題~\ref{prop:mcfg-relaxed-witnesses} は
-標的の分布同値類に短い代表元があることを十分条件とする．
-一方，命題~\ref{prop:computed-witness-budget} は
-文法で導出される代表元を用いて，
-規則証拠だけから計算可能な文法表示依存の予算を与える．
-二つの構成は仮定が異なるため混同してはならない．
-
-ファンアウトは代入可能性のバイアスを左右し，
-ファンアウト1の下界は高アリティの条件へ自動的には移らない．
-また生成語型の完全精密化や空成分除去は，
-厚みを指数的に増やし得る
+固定有限モノイド型付けの下で，正例による
+厳密再構成と保守的なTxtEx同定が可能となり，
+有界規則ランクでは仮説更新が多項式時間となる．
+特徴データ総長については，固定型付けの局所群構造
+（定理~\ref{thm:local-group-polydata}）と，
+標的の半束添字付きアーベル剰余類構造
+（定理~\ref{thm:mcfg-semilattice-twisted-polydata}）
+という二つの十分条件を得た．
+窓型付けと規則ランク1は関連する基本結果である．
+計算可能な規則証拠と存在的な分布同値証拠は区別する．
+生成語型の完全精密化や空成分除去では
+厚みが指数的に増大し得る
 （付録~\ref{app:normalization-details}）．
 
 \begin{openproblem}[ファンアウト1を超える場合の元文法厚みの上界]
@@ -3405,7 +3235,6 @@ $\mathcal B^{\le r}_{f,h}$ に対する任意の特徴標本の
 $\Cmcf{1}{h}$ への所属から
 $f\ge2$ における $\Cmcf{f}{h}$ への所属は従わない．
 \end{openproblem}
-
 
 \section*{謝辞}
 著者は有益な議論と励ましに対し，
