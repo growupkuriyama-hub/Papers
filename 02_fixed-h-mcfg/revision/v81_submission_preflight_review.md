@@ -56,6 +56,15 @@ not a statement that the paper has been independently peer-reviewed.
   transformation typings with three offsets each: PASS. This
   is supplementary empirical cross-checking only.
 
+## CI layout correction
+
+- Dedicated v81 EN/JP builds passed. The Japanese LuaLaTeX log initially
+  reported one `Overfull \\hbox` of 37.2546 pt near the long relaxed-witness
+  formula (JP source lines 2859--2875), despite zero unresolved citations
+  in the final compilation pass. Reformatted that formula as displayed
+  mathematics without changing its value. The final subsequent build
+  must be checked to verify the box warning has disappeared.
+
 ## Remaining gates before pressing Submit
 
 - Dedicated EN/JP LaTeX build and reference checks on the final commit.
