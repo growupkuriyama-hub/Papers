@@ -14,18 +14,18 @@ variable {Alphabet M : Type*}
 variable [Fintype Alphabet] [DecidableEq Alphabet] [Monoid M]
 
 /-- For every actual occurrence, scan all proper nonempty splits. -/
-def emitBinaryCandidates (K : Finset (List Alphabet)) :
+def emitBinaryCandidates (sample : List (List Alphabet)) :
     List (List Alphabet × List Alphabet × List Alphabet) :=
-  (enumerateOccurrencesList K).flatMap (fun st =>
+  (enumerateOccurrencesList sample).flatMap (fun st =>
     ((splitsList st.2.1).filter
       (fun p => p.1 ≠ [] ∧ p.2 ≠ [])).map
       (fun p => (st.2.1, p.1, p.2)))
 
 theorem mem_emitBinaryCandidates_iff
-    (K : Finset (List Alphabet))
+    (sample : List (List Alphabet))
     (z x y : List Alphabet) :
     (z,x,y) ∈ emitBinaryCandidates K ↔
-      (z,x,y) ∈ efficientBinaryRules K := by
+      (z,x,y) ∈ efficientBinaryRules sample.toFinset := by
   constructor
   · intro hm
     obtain ⟨⟨u,z',v⟩, hocc, hrule⟩ := List.mem_flatMap.mp hm
@@ -38,39 +38,39 @@ theorem mem_emitBinaryCandidates_iff
     have hzw : z = x ++ y := by
       have hs := (mem_splitsList_iff z' x' y').mp hp.1
       simpa [hzz,hxx,hyy] using hs
-    have ho := (mem_enumerateOccurrencesList_iff K u z' v).mp hocc
+    have ho := (mem_enumerateOccurrencesList_iff sample u z' v).mp hocc
     have hz : ObservedFactor K z := by
       rw [← hzz]
-      exact ⟨ho.1,u,v,ho.2⟩
+      exact ⟨ho.1,u,v,by simpa using ho.2⟩
     have hxne : x ≠ [] := by simpa [hxx] using hp.2.1
     have hyne : y ≠ [] := by simpa [hyy] using hp.2.2
     have hx : ObservedFactor K x :=
       observed_of_infix hz hxne ⟨[],y,by simpa using hzw⟩
     have hy : ObservedFactor K y :=
       observed_of_infix hz hyne ⟨x,[],by simpa using hzw⟩
-    exact (efficient_binary_spec K z x y).mpr ⟨hzw,hx,hy,hz⟩
+    exact (efficient_binary_spec sample.toFinset z x y).mpr ⟨hzw,hx,hy,hz⟩
   · intro hm
-    obtain ⟨hzw,hx,hy,hz⟩ := (efficient_binary_spec K z x y).mp hm
+    obtain ⟨hzw,hx,hy,hz⟩ := (efficient_binary_spec sample.toFinset z x y).mp hm
     obtain ⟨hne,u,v,hK⟩ := hz
     apply List.mem_flatMap.mpr
     refine ⟨(u,z,v), ?_, ?_⟩
-    · exact (mem_enumerateOccurrencesList_iff K u z v).mpr
-        ⟨hne,hK⟩
+    · exact (mem_enumerateOccurrencesList_iff sample u z v).mpr
+        ⟨hne,by simpa using hK⟩
     · apply List.mem_map.mpr
       refine ⟨(x,y), ?_, rfl⟩
       exact List.mem_filter.mpr
-        ⟨(mem_splitsList_iff z x y).mpr hzw, hx.1, hy.1⟩
+        ⟨(mem_splitsList_iff z x y).mpr hzw, by simpa using hx.1, hy.1⟩
 
 /-- The duplicate-tolerant List emitter yields exactly the (B) rules
 of the mathematical reconstruction grammar, as a set. -/
 theorem emitBinaryCandidates_toFinset_eq
-    (K : Finset (List Alphabet)) :
-    (emitBinaryCandidates K).toFinset = efficientBinaryRules K := by
+    (sample : List (List Alphabet)) :
+    (emitBinaryCandidates K).toFinset = efficientBinaryRules sample.toFinset := by
   classical
   ext p
   rcases p with ⟨z,x,y⟩
   change (z,x,y) ∈ (emitBinaryCandidates K).toFinset ↔
-    (z,x,y) ∈ efficientBinaryRules K
+    (z,x,y) ∈ efficientBinaryRules sample.toFinset
   rw [List.mem_toFinset, mem_emitBinaryCandidates_iff]
 
 #print axioms TCSPhase8.mem_emitBinaryCandidates_iff
