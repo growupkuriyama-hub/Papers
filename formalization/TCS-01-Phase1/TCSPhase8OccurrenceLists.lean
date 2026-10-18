@@ -29,7 +29,8 @@ theorem mem_splitsList_iff (w u v : List Alphabet) :
   · intro hw
     apply List.mem_map.mpr
     refine ⟨u.length, ?_, ?_⟩
-    · simp [List.mem_range, hw]
+    · simp only [List.mem_range, hw, List.length_append]
+      omega
     · simp [hw]
 
 /-- Ordered scan of start/end offsets; duplicate triples are allowed. -/
@@ -65,39 +66,41 @@ theorem mem_occurrencesInList_iff
     · apply List.mem_map.mpr
       refine ⟨(x,v), ?_, rfl⟩
       exact List.mem_filter.mpr
-        ⟨(mem_splitsList_iff (x++v) x v).mpr rfl, hne⟩
+        ⟨(mem_splitsList_iff (x++v) x v).mpr rfl, by simpa using hne⟩
 
-/-- Actual sample-list traversal; preserves multiple occurrences. -/
-def enumerateOccurrencesList (K : Finset (List Alphabet)) :
+/-- A concrete ordered List of sample words is the executable input.
+It may contain repeated sample words, which are harmless here. -/
+def enumerateOccurrencesList (sample : List (List Alphabet)) :
     List (List Alphabet × List Alphabet × List Alphabet) :=
-  K.toList.flatMap occurrencesInList
+  sample.flatMap occurrencesInList
 
 theorem mem_enumerateOccurrencesList_iff
-    (K : Finset (List Alphabet)) (u x v : List Alphabet) :
-    (u,x,v) ∈ enumerateOccurrencesList K ↔
-      x ≠ [] ∧ u ++ x ++ v ∈ K := by
+    (sample : List (List Alphabet)) (u x v : List Alphabet) :
+    (u,x,v) ∈ enumerateOccurrencesList sample ↔
+      x ≠ [] ∧ u ++ x ++ v ∈ sample := by
   constructor
   · intro hm
     obtain ⟨w, hw, he⟩ := List.mem_flatMap.mp hm
     have hs := (mem_occurrencesInList_iff w u x v).mp he
-    exact ⟨hs.1, hs.2 ▸ (by simpa using hw)⟩
+    exact ⟨hs.1, hs.2 ▸ hw⟩
   · rintro ⟨hne, hw⟩
     apply List.mem_flatMap.mpr
-    exact ⟨u ++ x ++ v, by simpa using hw,
+    exact ⟨u ++ x ++ v, hw,
       (mem_occurrencesInList_iff (u++x++v) u x v).mpr ⟨hne,rfl⟩⟩
 
-/-- The concrete ordered scan and the existing mathematical occurrence
-Finset have exactly the same members; output-list multiplicity is retained. -/
+/-- Converting only the *result* to a Finset proves equality with
+the existing mathematical specification, without requiring Finset.toList
+as an executable data conversion. -/
 theorem enumerateOccurrencesList_toFinset_eq
-    (K : Finset (List Alphabet)) :
-    (enumerateOccurrencesList K).toFinset = enumerateOccurrences K := by
+    (sample : List (List Alphabet)) :
+    (enumerateOccurrencesList sample).toFinset =
+      enumerateOccurrences sample.toFinset := by
   classical
   ext p
   rcases p with ⟨u,x,v⟩
-  change (u,x,v) ∈ (enumerateOccurrencesList K).toFinset ↔
-    (u,x,v) ∈ enumerateOccurrences K
   rw [List.mem_toFinset, mem_enumerateOccurrencesList_iff,
       mem_enumerateOccurrences_iff]
+  simp
 
 #print axioms TCSPhase8.mem_splitsList_iff
 #print axioms TCSPhase8.mem_occurrencesInList_iff
