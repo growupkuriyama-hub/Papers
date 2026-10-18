@@ -84,7 +84,8 @@ theorem recItemTokens_bounded {Alphabet : Type*}
   rw [recItemTokens_as_flatMap] at hk
   rcases List.mem_cons.mp hk with h | h
   · subst k
-    have ht : r.itemTag ≤ 5 := by cases r <;> decide
+    have ht : r.itemTag ≤ 5 := by
+      cases r <;> simp [RecItem.itemTag]
     have h6 : r.itemTag + 1 ≤ 6 := by omega
     exact le_trans h6 (Nat.le_max_left _ _)
   · obtain ⟨w, _, hw⟩ := List.mem_flatMap.mp h

@@ -64,7 +64,9 @@ theorem collectUniqueKeys_mem
             rcases hm with h | h
             · exact List.mem_cons.mpr (Or.inl h)
             · exact List.mem_cons.mpr (Or.inr ((hinv q).mpr h))
-        simp only [collectUniqueKeys, hkey, ite_false]
+        have hkeyFalse : contains key trie = false := by
+          cases hc : contains key trie <;> simp_all
+        simp only [collectUniqueKeys, hkeyFalse, Bool.false_eq_true, ite_false]
         rw [ih (insertCount key trie).1 (key :: acc) hinv' query]
         simp only [List.mem_cons]
         tauto
