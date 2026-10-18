@@ -49,3 +49,13 @@ Date: 2026-10-18 (JST). Paper: `01_fixed-h-cfg/main.tex`, theorem `thm:poly-buil
 ## Judgment
 
 **B confirmed at `b32a73f46a9979459d72d481df62d61366694ddd`**: grammar equality, candidate bounds, cached type-multiplication bounds, and conditional bit-trie insertion bounds are machine-verified; no end-to-end fourth-degree reconstruction runtime theorem. The post-report final HEAD must also pass its own CI.
+
+## Operational List/trie extension (2026-10-18 continuation)
+
+- Session starting commit: `834f041c85e35395724fc820c0f9a8020b79460e`, [final baseline success run 39085542717](https://github.com/growupkuriyama-hub/Papers/actions/runs/39085542717), job `117551182391`.
+- New work (Phase 8 modules only): `TCSPhase8TrieSemantics.lean`, `TCSPhase8CacheIndexing.lean`, `TCSPhase8OccurrenceLists.lean`, `TCSPhase8OccurrenceListCounts.lean`, `TCSPhase8BinaryRuleLists.lean`, `TCSPhase8UnaryRuleLists.lean`, `TCSPhase8StartLexicalLists.lean`, `TCSPhase8RuleListCounts.lean`, `TCSPhase8RuleEncoding.lean`.
+- Critical architecture correction: `Finset.toList` has no executable implementation in this project. The new operational enumerator therefore takes an explicit `List (List Alphabet)` sample; `List.toFinset` occurs in *specification theorems*, not in the runtime scanner. No noncomputable global CandidateWords scan is introduced.
+- The new theorem statements address exact cache-index lookup, list-versus-Finset candidate equality, duplicate-tolerant *raw* candidate counts, bit-trie set invariants, and injective self-delimiting **numeric token-list** encoding. The generic token encoder is **not yet** an injective encoding of all (B)(U)(L)(S) production objects.
+- **Gate:** new modules were committed as proof work-in-progress; do **not** label them machine-verified until a corresponding final-HEAD success run. Consolidated failure-collecting CI (still fails if any module fails) was pushed at `96d145597db4fb5ecc23bf6f1846708659e88057`, [run 39087920741](https://github.com/growupkuriyama-hub/Papers/actions/runs/39087920741); results require separate confirmation.
+- **Unfinished:** complete rule-tag+word-boundary encoder with linear bit size, trie-to-rule decoding, operational grammar object equality, constant-time finite tables, substring and output charges, and an end-to-end Nat cost bound. `T_{Rec_h}(K)=O(n_K^4)` remains **unverified**.
+- Only new Phase 8 Lean files, its Actions YAML, and these two report files were edited; protected proofs and manuscripts remain untouched.
