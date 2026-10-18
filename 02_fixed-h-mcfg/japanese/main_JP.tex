@@ -2805,6 +2805,230 @@ $\mathsf B_{\mathrm{rule}}(G,h)$ となる．
 その場合でも命題~\ref{prop:effective-char-data} の導出 DAG は多項式サイズのままであり，
 計算された標本は多項式サイズの圧縮表現をもつ．
 
+
+\subsection{分布同値代表元とアーベル型フィルタ標的}
+\label{subsec:short-distributional-representatives}
+
+上で求めた計算可能な規則証拠予算では，
+型付き文法自身から\emph{導出できる}代表タプルを使った．
+一方，特徴標本の存在に関する上界では，
+同じ\emph{型付き分布同値類}に属する短いタプルを
+用いてよく，そのタプルが当該非終端記号から
+導出される必要はない．
+
+\begin{proposition}[緩和された分布証拠]
+\label{prop:mcfg-relaxed-witnesses}
+$L=L(G)\in\Cmcf{f}{h}$ の縮約済み良形文法
+$G$ のファンアウトを高々 $f$，規則ランクを高々
+$r$ とし，$\widetilde G_0$ を刈り込み済みの
+生成語型精密化とする．
+非開始型付き非終端記号 $X$ に対し，
+$L_X$ を含む $\equiv_{L,h}$-同値類を
+$[X]$ とおき，
+\[
+ \kappa_G(X)=\min_{\tuple v\in[X]}\|\tuple v\|_1,
+ \qquad \kappa_G=\max_X\kappa_G(X)
+\]
+と定義する．このとき，
+規則ランク上限が $G$ のランク以上である
+$\mathcal B^{\le r}_{f,h}$ および
+$\mathcal B_{f,h}$ の特徴標本 $K^\dagger$ が存在し，
+\[
+ \begin{split}
+ |K^\dagger|&\le |V||M|^f+|P||M|^{fr},\\
+ \|K^\dagger\|_+
+ &\le (|V||M|^f+|P||M|^{fr})
+ \bigl(1+\theta_G+\|G\|+(r+1)\kappa_G\bigr)
+ \end{split}
+\]
+を満たす．この評価は非空語部分に対するものであり，
+$\eps\in L$ なら $\eps$ を符号化コスト1で追加する．
+\end{proposition}
+\begin{proof}
+各 $X=A_{\mathbf t}$ に対し
+$\omega^\dagger(X)\in[X]$ を総長
+$\kappa_G(X)$ となるように取る．
+型なし非終端記号 $A$ を含む最短の成功導出から，
+兄弟部分木の語を固定した導出的な文文脈
+$\chi^\dagger(X)$ を選ぶ．
+$A$ を含む成功導出は $A$ を含む規則の
+厚みの証拠にもなるため，
+この文脈の固定部分の長さは
+$\theta_G$ 以下にできる．
+$\widetilde S\to X$ が存在すれば
+$\blank_1$ を使う．
+この文脈は $u\in L_X$ を受理し，
+$\omega^\dagger(X)\equiv_{L,h}u$ なので
+$\omega^\dagger(X)$ も受理する．
+
+$K^\dagger$ を
+$\chi^\dagger(X)[\omega^\dagger(X)]$ と，
+すべての型付き規則
+$X\to\rho(Y_1,\ldots,Y_q)$ に対する
+$\chi^\dagger(X)[\rho(\omega^\dagger(Y_1),
+\ldots,\omega^\dagger(Y_q))]$，
+およびランク0の規則証拠から作る．
+補題~\ref{lem:witnessed-composition} により，
+規則の右辺のタプルは $L_X$ の元と
+分布同値であり，すべての証拠語は $L$ に属する．
+命題~\ref{prop:completeness} の証明で
+$\iota(X)=[\omega^\dagger(X)]$ を使うと，
+文脈証拠からLinkを，規則証拠から必要な
+composition witnessを得て，同じ導出を模倣できる．
+さらに命題~\ref{prop:reconstruction-soundness}
+から逆向きの包含が成立する．
+
+重複を除く前の語数は非終端記号と規則につき
+それぞれ1語である．非終端記号の証拠長は
+$\theta_G+\kappa_G$ 以下，
+規則証拠長は $\theta_G+\|G\|+r\kappa_G$ 以下である．
+これらの符号化長を合計すれば上界が従う．
+命題~\ref{prop:rule-only-witnesses} と異なり，
+今回の代表元は非終端記号から導出できるとは
+限らないため，非終端記号用の証拠を
+一般には省略できない．
+\end{proof}
+
+\begin{theorem}[アーベル型フィルタ標的の多項式データ]
+\label{thm:mcfg-abelian-filter-data}
+空でない有限アルファベット $\Sigma$，
+有限型付け $h:\Sigma^*\to M$，
+上界 $f,r\ge1$ を固定する．
+$\Sigma,h,f,r$ のみに依存する定数 $C,e$ が存在して，
+次が成り立つ．
+$\mathbb A$ を任意のアーベル群，
+$\varphi:\Sigma^*\to\mathbb A$ を準同型，
+$\mathcal H\le\mathbb A$，
+$\gamma\in\mathbb A$，
+$\mathsf{Acc}\subseteq M$ とする．
+\[
+ L=h^{-1}(\mathsf{Acc})\cap
+   \varphi^{-1}(\gamma+\mathcal H)
+\]
+がファンアウト高々 $f$，規則ランク高々 $r$ の
+縮約済み良形MCFG $G$ で表示されるなら，
+$L\in\Cmcf{f}{h}$ であり，
+$\mathcal B^{\le r}_{f,h}$ に対する特徴標本
+$K^\dagger$ が存在して
+\[
+ \|K^\dagger\|_+\le
+ C\bigl(\|G\|\max\{1,\theta_G\}\bigr)^e
+\]
+を満たす．定数は補助群
+$\mathbb A,\varphi,\mathcal H,\gamma$ に依存しない．
+空語が含まれる場合の符号化コストは高々1を加える．
+\end{theorem}
+\begin{proof}
+$L\in\Cmcf{f}{h}$ は
+命題~\ref{prop:abelian-coset-filter} と
+MCFGによる表示の仮定から従う．
+
+$\psi:\Sigma^*\to\mathbb N^\Sigma$ をParikh写像とし，
+$\Psi(\tuple u)=\sum_i\psi(u_i)$ と書く．
+$\varphi$ は群準同型
+$\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$
+を用いて分解できる．
+\[
+ \Lambda=\{z\in\mathbb Z^\Sigma:
+                 \overline\varphi(z)\in\mathcal H\}
+\]
+とおく．
+各型なし非終端記号 $A$ について，
+長さが非終端記号厚み
+$t_G\le\theta_G$ 以下の生産的タプル
+$\omega_A$ を一つ固定する．
+任意の二つの $A$ の導出タプルは，
+同一の成功導出的文脈へ代入でき，
+その結果はともに $L$ に属するため
+\[
+ \Psi(u)-\Psi(\omega_A)\in\Lambda
+ \qquad(u\in L_A(G))                                      \tag{*}
+\]
+となる．
+
+各規則 $R:A\to\rho(B_1,\ldots,B_q)$ で，
+$c_R\in\mathbb N^\Sigma$ を規則中の終端記号の
+出現数ベクトルとし，
+\[
+ \delta_R=\Psi(\omega_A)-c_R
+                 -\sum_{j=1}^q\Psi(\omega_{B_j})
+\]
+とおく．(*)より $\delta_R\in\Lambda$ で，
+$\|\delta_R\|_1$ は
+$T=(r+1)t_G+\|G\|$ 以下である．
+$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$，
+$\Lambda_T=\langle\Gamma_T\rangle$ とする．
+\[
+ \Psi(u)-\Psi(\omega_A)=
+ \sum_j(\Psi(u_j)-\Psi(\omega_{B_j}))-\delta_R
+\]
+を用いる導出上の帰納法により，
+すべての $u\in L_A(G)$ に対して
+$\Psi(u)-\Psi(\omega_A)\in\Lambda_T$ が成立する．
+
+型付き非終端記号 $X=A_{\mathbf t}$ の
+$d\le f$ 成分タプル
+$u=(u_1,\ldots,u_d)\in L_X$ を取る．
+各成分について正規言語
+$h^{-1}(t_i)\cap\Sigma^+$ のParikh像の
+固定した半線形表示から，
+$\psi(u_i)$ を含む線形集合
+$c_i+\sum_{p\in P_i}\mathbb N p$ を選ぶ．
+その生成元の個数と係数は
+$\Sigma,h$ のみに依存する定数で抑えられる．
+次の非負整数連立系を考える：
+\[
+ \sum_{i=1}^d
+    \left(c_i+\sum_{p\in P_i}\nu_{i,p}p\right)
+ -
+ \sum_{z\in\Gamma_T}(\mu_z^+-\mu_z^-)z
+ =\Psi(\omega_A).
+\]
+元の $u_i$ のParikhベクトルと
+$\Lambda_T$ に属するという上記の事実から，
+この連立系は可解である．
+方程式数は $|\Sigma|$，
+非負変数の個数は
+$O_{f,h,\Sigma}((T+1)^{|\Sigma|})$ 以下，
+係数の絶対値は
+$O_{f,h,\Sigma}(T+1)$ 以下である．
+Papadimitriouの非負整数小解定理
+~\cite{Papadimitriou1981} より，
+全ての変数が $T+1$ の固定多項式で
+抑えられる解が存在する．
+得られた各Parikhベクトルを実現する
+非空語 $v_i\in h^{-1}(t_i)$ を選び，
+$\tuple v=(v_1,\ldots,v_d)$ とする．
+$\|\tuple v\|_1$ は $T+1$ の多項式で抑えられ，
+成分別型は $u$ と一致し，
+$\Psi(\tuple v)-\Psi(u)\in
+\Lambda_T\subseteq\Lambda$ となる．
+
+任意の文文脈 $E$ に対して
+$E[\tuple v]$ と $E[u]$ の全体の $h$-型は等しく，
+\[
+ \varphi(E[\tuple v])-\varphi(E[u])
+ =\overline\varphi(\Psi(\tuple v)-\Psi(u))
+ \in\mathcal H
+\]
+が成り立つ．
+したがって $\tuple v\equiv_{L,h}\tuple u$ である．
+各型付き分布同値類に，長さが $T+1$ の多項式で
+抑えられた代表元が存在するので，
+命題~\ref{prop:mcfg-relaxed-witnesses} と
+$t_G\le\theta_G$ から求める総長上界が得られる．
+定数は補助アーベル群に依存しない．
+\end{proof}
+
+\begin{remark}
+定理~\ref{thm:mcfg-abelian-filter-data} は
+$h$ の正語像が $\mathbf{LG}$ の\emph{外}にある
+場合にも成立する．これは有限制御モノイドではなく，
+標的言語の構造に関する十分条件である．
+補助アーベル群の表示が計算可能とは限らない場合に，
+証拠の多項式時間\emph{構成}まで主張しない．
+\end{remark}
+
 \section{多次元代入可能性との比較}
 \label{sec:comparison}
 
@@ -4353,6 +4577,12 @@ $\eps$ が必要な場合には
 
 \small
 \begin{thebibliography}{99}
+
+\bibitem{Papadimitriou1981}
+C.~H.~Papadimitriou.
+\newblock On the complexity of integer programming.
+\newblock {\em Journal of the ACM}, 28(4):765--768, 1981.
+\newblock doi:10.1145/322276.322287.
 
 \bibitem{Gold1967}
 E.~M.~Gold.
