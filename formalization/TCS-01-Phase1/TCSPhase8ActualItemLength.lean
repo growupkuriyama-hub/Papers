@@ -42,7 +42,7 @@ theorem emitAllRecItems_letterCount_le
         r = RecItem.startEmpty ∧ emitStartEmpty sample = true := by
     cases h : emitStartEmpty sample <;> simp [h]
   simp only [List.mem_append, heps_iff] at hr
-  rcases hr with hnt | hb | hu | hl | hs | heps
+  rcases hr with (((((hnt | hb) | hu) | hl) | hs) | heps)
   · obtain ⟨st,hst,heq⟩ := List.mem_map.mp hnt
     rcases st with ⟨u,x,v⟩
     cases heq
