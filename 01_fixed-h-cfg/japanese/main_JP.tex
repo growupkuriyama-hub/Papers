@@ -58,39 +58,24 @@ $s:\Sigma^+\to\mathsf S$ で型付けした文脈自由言語について，
 
 \subsection{背景と動機}
 
-Gold~\cite{gold1967} は，すべての有限言語と少なくとも一つの無限言語を含む
-言語クラスは，正例データのみから極限同定できないことを示した．文脈自由言語では，
-比較してよい部分文字列を文脈間で制限する分布学習により正の結果が回復される．
-古典的な例として Clark--Eyraud の代入可能性~\cite{clark-eyraud2007} と
-Yoshinaka の $(k,\ell)$-代入可能性~\cite{yoshinaka2008} がある．一般的背景は
-de~la~Higuera~\cite{higuera2010} を，範疇文法の正例学習可能性に関する結果は
+Gold~\cite{gold1967} は正例だけによる極限同定の限界を示した．
+分布学習は対象クラスを制限することで正の結果を得る．
+代表例は Clark--Eyraud の代入可能性~\cite{clark-eyraud2007} と
+Yoshinaka の $(k,\ell)$-代入可能性~\cite{yoshinaka2008} である．
+一般的な背景は de~la~Higuera~\cite{higuera2010}，
+相補的な範疇文法の正例学習は
 Kanazawa~\cite{kanazawa1996,kanazawa1998} を参照されたい．
-特に Kanazawa の著書は，rigid grammar の特徴標本および
-$k$-valued 範疇文法の文字列言語族についての有限弾力性による議論を扱う
-~\cite[Chapters~5 and~8]{kanazawa1998}．これは相補的な研究系列であり，
-本論文では代わりに終端因子の有限半群型付けを固定して
-分布的代入可能性を要求する．
 
-\paragraph{先行研究との関係と一般signatureによる学習．}
-本稿は，著者の2014年公開プレプリント（arXiv v3）~\cite{kuriyama2014} を
-証明と学習器の面で大幅に修正・拡張したものである．その初期稿にはすでに，
-可認識同値関係に相対化した代入可能性と正例による学習法が提案されていた．
-その公開は Yoshinaka~\cite{yoshinaka2015} の互いに素なソートを用いる
-signature の一般的枠組みの公刊より早い．
-Yoshinaka の枠組みでは，本論文で用いる有限半群準同型
-$s:\Sigma^+\to\mathsf S$ の各ファイバー $s^{-1}(\mu)$ の
-非空な型ごとのコピーを相異なるソートとし，型付き連接と全文字列ソートへの昇格演算を
-備えることで，非空因子について本稿と同じ代入可能性条件が得られる．
-したがって，固定 $s$ に対する正例学習器の\emph{存在}という質的結論は
-Yoshinaka~\cite[Theorem~1]{yoshinaka2015} の一般理論からも導かれる．
-一方，本稿の特定の再構成・保守的逐次学習器はここで直接解析する．
-有限代数的型付けに固有の寄与は，型付け変更に伴う閉包性，
-証人の個数だけでなく\emph{総符号長}を評価する特徴データ境界，
-窓と有限群の積による型付けへの拡張，線形クラスの保証および
-表現力の分離である．局所自明半群の判定条件自体は古典的である．
-分布学習の広い背景は Clark--Yoshinaka~\cite{clark-yoshinaka2016}，
-局所的代入可能性は Coste--Garet--Nicolas~\cite{coste-garet-nicolas2012}
-および Coste--Nicolas~\cite{coste-nicolas2019} を参照されたい．
+\paragraph{先行研究との関係．}
+著者の先行プレプリント~\cite{kuriyama2014} は，
+可認識関係に相対化した代入可能性を提案した．
+Yoshinaka の多ソート signature 理論
+~\cite[Theorem~1]{yoshinaka2015} でも，
+非空語の型ファイバーを別々のソートとすることで
+固定 $s$ の定性的な正例学習可能性が得られる．
+その存在結果を新規性としては主張しない．
+本稿は再構成の具体的解析，定量的・代数的な境界に重点を置く．
+固定窓の局所自明性判定自体は古典的である．
 
 本論文では，この研究計画の可認識合同関係版を考える．
 $s:\Sigma^+\to\mathsf S$ を有限半群への準同型とし，
@@ -132,19 +117,14 @@ $\mathsf{RS}$ 全体の学習可能性は主張しない．
 固定窓を超える表現力を示し，カウンタや Dyck 言語に関する障害は
 その表現力の限界を示す．
 
-$s$ の指定は事前に与えるバイアスの選択であり，オートマトン推論における
-型付けまたは領域バイアス~\cite{coste-typing2004} と関連する．
-ただし本論文では文字の出現とその外側文脈ではなく，
-終端因子全体を型付けする．線形文法の場合，生成語型付けは
-生成規則ラベル列上に正則制御集合も誘導する．これは Takada の
-正則 control-set 法~\cite{takada1988,takada1995} との
-限定的だが具体的な接点である（第~\ref{sec:linear}節）．
-両学習枠組みの同値性は主張しない．
+$s$ は終端因子に対する型付けバイアスであり，
+因子の出現位置の外側文脈は型に含めない
+~\cite{coste-typing2004}．正則制御集合との接点
+~\cite{takada1988,takada1995} は線形文法に限る
+（第~\ref{sec:linear}節）．
 
 \subsection{貢献と主要結果}
-固定型付けに対する定性的な正例学習器の存在は，
-Yoshinaka の一般的な多ソート signature の枠組みからも導かれる．
-本稿では，有限正例証拠からの直接的な再構成作用素
+本稿では，有限正例証拠からの再構成作用素
 $\mathsf{Rec}_s$ と，別の保守的 Gold 学習器
 $\mathsf{Learn}_s$ を与え，再構成と各更新の多項式時間性を示す．
 特徴データの評価は $\mathsf{Rec}_s$ に関するものであり，
@@ -176,12 +156,6 @@ $\Omega(2^n)$ の下界が生じる．
 カウンタ・Dyck 言語による障害を示す．
 線形文法では型付けが正則制御集合も誘導する．
 \end{enumerate}
-\subsection{論文の構成}
-第~\ref{sec:prelim}--\ref{sec:framework}節で枠組みを準備し，
-第~\ref{sec:algo}--\ref{sec:typing}節で学習可能性を証明する．
-第~\ref{sec:typed-thickness}--\ref{sec:linear}節で定量的結果を与え，
-第~\ref{sec:boundaries}節で表現力を比較する．長い正規化証明は付録に置く．
-
 \section{準備}
 \label{sec:prelim}
 
@@ -609,10 +583,7 @@ $etf=ef$（$e,f$ は冪等元，$t\in\mathsf S$）が成り立つ
 \cite[Corollary~II.6.35 and Proposition~XI.4.17]{pin2025}．
 $p,q\in\Sigma^n$ について $s(p)=aeb$, $s(q)=cfd$
 と書く．$r=\lambda$ でも $b\widehat s(r)c\in\mathsf S$ なので，
-\[
-s(prq)=a\,e\,(b\widehat s(r)c)\,f\,d
-=aefd=s(pq)
-\]
+$s(prq)=a\,e\,(b\widehat s(r)c)\,f\,d =aefd=s(pq)$
 が従う．長さ $2n$ 以上では長さ $n$ の窓が型を決定し，
 それより短い語は $s_{n,n}$ が区別する．
 逆に (ii) は $W_{k,\ell}\twoheadrightarrow\mathsf S$
@@ -1163,9 +1134,7 @@ $L(\mathsf{Rec}_{s_0}(K))\subseteq L_n$ が従う．
 $|\mathcal F_n|=n+1$，$\|\mathcal F_n\|=3n^2+4n+2$ である．
 
 (iii)--(iv) について，削除語による標的は
-\[
-L_n^-=L_n\cap\widehat{s}_{\mathrm U}^{-1}(\{\zeta\})
-\]
+$L_n^-=L_n\cap\widehat{s}_{\mathrm U}^{-1}(\{\zeta\})$
 である．同じ $s_{\mathrm U}$-型の非空因子は
 共通外側文脈へ入れても $\widehat{s}_{\mathrm U}$-型が
 一致する．従ってその型ファイバーの和集合との交わりは
@@ -2005,9 +1974,7 @@ $y(z)$，部分木が含む保護位置を
 $\operatorname{Mark}(z)$ とする．祖先から子孫へ進むと
 マーク集合は包含で単調となり，高々 $d+1$ 種類の値を取る．
 三つ組
-\[
- (\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))
-\]
+$(\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))$
 は同じ祖先鎖上で二度現れない．
 ラベルが同じなら下側の導出木を上側へ移植できる．
 $g(y(z))$ の一致と準同型性から全文字列の群値を保存し，
@@ -2037,10 +2004,7 @@ $\tau_G$ 以下の語 $b_i$ を選ぶ（空語でもよい）．
 $x_i=x_j$ ($i<j$) となる二つが存在する．
 順序を保った区間群積を $r_{i:j},t_{i:j}$ と書けば，
 $r_j=r_i r_{i:j}$，$t_j=t_i t_{i:j}$ である．
-\[
- t_i r_i^{-1}
- =t_i t_{i:j}r_{i:j}^{-1}r_i^{-1}
-\]
+$t_i r_i^{-1} =t_i t_{i:j}r_{i:j}^{-1}r_i^{-1}$
 の両側で消去して $t_{i:j}=r_{i:j}$，
 すなわち
 \[
