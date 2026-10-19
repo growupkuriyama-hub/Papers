@@ -1,13 +1,13 @@
-# #1 TCS — 最新改訂稿 / CURRENT REVISION **v231**
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v233**
 
-> **最新版は `main` の internal v231（2026-10-19）。**  
+> **最新版は `main` の internal v233（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **提出用パッケージの生成・検証は完了。Editorial Managerへの再提出は著者の操作が必要です。**
+> **v233の原稿更新を完了。PDF・ZIPは再生成・検証待ちです。旧版パッケージは提出しないでください。Editorial Managerへの再提出は著者の操作が必要です。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（いずれも v231）
+## 提出に使用する3ファイル（いずれも v233）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,16 +23,16 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v231`** と原稿SHA-256を参照
-- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v231英文Abstractのプレーンテキスト
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v233`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v233英文Abstractのプレーンテキスト
 
-### 検証状態（2026-10-19）
+### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- GitHub Actionsの **Clean PDF / Marked PDF / Response PDF / ZIP** 生成に成功。
-- **査読回答49項目・Marked PDFの位置参照77か所**を、生成したMarked PDFのページ・余白行から再検証。
-- 以前のv230、PR #62の実験PDF・旧回答書・旧Abstractは最新版ではありません。
-- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v231の対訳としては使用しないでください（TCS提出ZIPには含みません）。
+- v233の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成と検証待ち。
+- v232では **査読回答49項目・位置参照77か所**を照合済み。v233でも自動再照合する。
+- v233の唯一の本文変更：Appendix A.1の保護位置集合について `d:=|P|` を `d:=|\\mathrm{Prot}|` に訂正（内容・定理番号・量的上界は不変）。
+- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v233の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
 ## どのファイルが正本か
 
@@ -49,9 +49,9 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 - [初回提出版・基準アーカイブ](archive/) — Marked PDF生成に必要な旧稿、修士論文など。**削除しない**。
 - [研究・査読履歴メモ](revision/) / [補足メモ](notes/) — 過去版と実験・監査の記録。提出用の正本ではありません。
-- [v231の変更をmainへマージしたPR #63](https://github.com/growupkuriyama-hub/Papers/pull/63)。
+- 現行版の正本は `main` 一本。過去のPR・実験系統は現行原稿として扱わない。
 - 詳細な旧版変更履歴はGitのcommit履歴と `PAPER.yaml` に保存しています（旧READMEの長大な逐次履歴は掲載しません）。
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v231**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; the reviewer response was synchronized against the newly built Marked PDF (49 responses / 77 verified anchors). The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v233**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; fresh v233 marked-PDF and response-locator verification is pending. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
