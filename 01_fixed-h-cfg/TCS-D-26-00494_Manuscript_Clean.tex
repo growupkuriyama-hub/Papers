@@ -154,10 +154,12 @@ guarantee is asserted for $\mathsf{Learn}_s$.
 The main contributions concern the cost and scope of finite typing:
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
 \item \emph{Characteristic-data bounds and lower bounds.}
-For every fixed $s$ and every target in $\Ccf{s}$ represented
-by a CFG, finite characteristic data exist for $\mathsf{Rec}_s$.
-A polynomial-size BUNF normalization supplies a bound on their
-encoded length in terms of its typed shortest yields
+For every fixed $s$, qualitative reconstruction and finite
+characteristic witnesses work directly for arbitrary CFGs:
+a general right-hand side contributes one canonical rule witness
+(Theorem~\ref{thm:complete}).  For quantitative bounds,
+a polynomial-size BUNF normalization controls the encoded
+witness length through its typed shortest yields
 (Corollary~\ref{cor:typed-thickness-data}).
 For typings whose positive image lies in the locally trivial--group
 join $\mathbf{LI}\vee\mathbf{Grp}$, the size and ordinary thickness
@@ -839,71 +841,80 @@ See also Clark~\cite[Section~4, Example~1]{clark2013}.
 
 \subsection{Target refinement and finite witnesses}
 
-For completeness, we type the \emph{target} grammar over
-$\mathsf S^\sharp$ while leaving the already-defined hypothesis grammar
-$\mathsf{Rec}_s(K)$ unchanged: its factor nonterminals remain
-indexed only by nonempty words, and it retains the direct start
-rule for $\lambda$.  This distinction is crucial to the proof.
+For qualitative completeness we type an \emph{arbitrary CFG}
+on the target side over $\mathsf S^\sharp$.
+The hypothesis grammar $\mathsf{Rec}_s(K)$ is unchanged:
+its nonterminals are indexed only by observed nonempty factors,
+and its start symbol retains the direct $\lambda$ rule.
+No normal-form assumption is made in this section.
 
 \begin{definition}[binary--unit--nullable normal form]
 A CFG is in \emph{binary--unit--nullable normal form} (BUNF)
 if every production is $A\to BC$, $A\to B$,
 $A\to a$, or $A\to\lambda$.
 \end{definition}
-Terminal isolation and binarization turn an arbitrary CFG into
-an equivalent BUNF grammar in polynomial time, without deleting
-nullable or unit rules.  The BUNF condition is imposed only on the auxiliary target
-representation used in the witness construction and its proofs;
-it is not a restriction on $\mathsf{Rec}_s$, $\mathsf{Learn}_s$,
-or the class of CFG targets.  An arbitrary CFG can be normalized
-before applying the BUNF-specific argument.
-
-No start-symbol separation is needed; the quantitative
-normalization is Proposition~\ref{prop:thick-bunf-normal}.
+We record this auxiliary definition for the \emph{quantitative}
+analysis in Sections~\ref{sec:typed-thickness}--\ref{sec:linear}.
+Terminal isolation and binarization yield an equivalent
+BUNF grammar of polynomial size without deleting unit or
+nullable rules; the quantitative normalization is
+Proposition~\ref{prop:thick-bunf-normal}.
+No BUNF assumption is used in the results of this section.
 
 The empty target is represented by $H_0$ and
 $\mathsf{Rec}_s(\emptyset)$.
 
-Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar generating
-a nonempty language $L$.  Its \emph{$\mathsf S^\sharp$-typed refinement}
-has a fresh start symbol $\widetilde S$ and symbols
-$A_\mu$ for every $A\in V$ and $\mu\in \mathsf S^\sharp$, with rules
+Let $G=(V,\Sigma,P,S_0)$ be any reduced CFG generating
+a nonempty language $L$.  Write an arbitrary production as
 \[
-\begin{array}{ll}
-\widetilde S\to (S_0)_\mu
- &( \mu\in \mathsf S^\sharp),\\
-A_{\mu\nu}\to B_\mu C_\nu
- &( A\to BC\in P,\ \mu,\nu\in \mathsf S^\sharp),\\
-A_\mu\to B_\mu
- &( A\to B\in P,\ \mu\in \mathsf S^\sharp),\\
-A_{\widehat s(a)}\to a
- &( A\to a\in P),\\
-A_{\mathbf e}\to\lambda
- &( A\to\lambda\in P).
-\end{array}
+ \rho:\quad A\to u_0B_1u_1\cdots B_ru_r,
+ \qquad u_i\in\Sigma^*,\quad B_i\in V,\quad r\ge0.
 \]
-Trim this grammar to its reduced part $\widetilde G$.
-All retained symbols are reachable and productive.
-For a retained typed symbol $A_\mu$, every terminal yield
-has type $\mu$; in particular $A_{\mathbf e}$ generates
-\emph{only} $\lambda$, while a typed symbol of type
-$\mu\ne\mathbf e$ generates only nonempty words.
+For every choice $(\mu_1,\ldots,\mu_r)\in(\mathsf S^\sharp)^r$,
+put
+\[
+ \mu=\widehat s(u_0)\mu_1\widehat s(u_1)
+       \cdots\mu_r\widehat s(u_r)
+\]
+and include in the $\mathsf S^\sharp$-typed grammar the rule
+\[
+ \rho_{\mu_1,\ldots,\mu_r}:\quad
+ A_\mu\to
+ u_0(B_1)_{\mu_1}u_1\cdots(B_r)_{\mu_r}u_r.
+\]
+The case $r=0$ includes arbitrary terminal-only and
+empty right-hand sides; unit rules also require no exception.
+Add a fresh start symbol $\widetilde S$ with rules
+$\widetilde S\to(S_0)_\mu$ for every
+$\mu\in\mathsf S^\sharp$, and trim the result to
+its reduced part $\widetilde G$.
+For arbitrary CFGs this explicit typed refinement is
+finite but need not be polynomial in size.
+The qualitative result does not require constructing it
+as part of the learning algorithm.
+
+Every retained typed symbol is reachable and productive.
+All terminal yields of $A_\mu$ have type $\mu$.
+In particular, $A_{\mathbf e}$ generates only $\lambda$,
+while $A_\mu$ for $\mu\ne\mathbf e$ generates only
+nonempty words.
 
 Fix a shortlex order on $\Sigma^*$.
-For each retained non-start symbol $X$, let $\omega(X)$
-be its shortlex-minimal terminal yield, possibly $\lambda$.
-Splitting by yield type ensures that the canonical yield
-of a typed parent and the yield specified by any of its
-productions have the same $\widehat s$-type.  The need for a
-yield split is illustrated by $s(w)=|w|\bmod 2$
-and $A\to a\mid BC$, $B\to a$, $C\to a$:
-the shortest yield $a$ of $A$ and the yield $aa$
-of $BC$ have different types.
+For each retained non-start typed symbol $X$, let
+$\omega(X)$ be its shortlex-minimal terminal yield,
+possibly $\lambda$.  The typed split guarantees
+that a parent and the canonical yield of each typed
+right-hand side have the same type.
+Without this split the shortest yield need not have
+the type of an alternative rule: for $s(w)=|w|\bmod2$,
+the grammar $A\to a\mid BC$, $B\to a$, $C\to a$
+has yields $a$ and $aa$ of different types.
 No types are attached to surrounding contexts.
 
 \begin{proposition}[typed lifting and yield invariant]\label{prop:typed-core}
-The typed refinement satisfies $L(\widetilde G)=L(G)$.
-For every retained $A_\mu$, including typed copies of $S_0$,
+The typed refinement of any reduced CFG $G$ satisfies
+$L(\widetilde G)=L(G)$.  For every retained $A_\mu$,
+including typed copies of $S_0$,
 \[
 L_{\widetilde G}(A_\mu)
  =L_G(A)\cap \widehat s^{-1}(\{\mu\}).
@@ -912,40 +923,54 @@ In particular, $A_\mu\Rightarrow_{\widetilde G}^*w$
 entails $\widehat s(w)=\mu$.
 \end{proposition}
 \begin{proof}
-Induct on typed derivations to obtain the yield-type
-invariant and erase indices to obtain a $G$-derivation.
-Conversely, annotate each node in any successful
-$G$-derivation by the $\widehat s$-type of its yield.
-The resulting typed derivation survives trimming.
-For any retained $A_\mu$ and any $w\in L_G(A)$
-of type $\mu$, graft its annotated derivation
-at an occurrence of $A_\mu$ in a successful typed
-derivation.  This proves the reverse inclusion.
+Erasing type indices from a typed derivation gives a
+$G$-derivation.  Conversely, annotate each node of
+a successful $G$-derivation by the
+$\widehat s$-type of its terminal yield.
+Every annotated production occurs in the typed
+grammar, including nullable child occurrences.
+The annotated derivation survives trimming.
+For a retained $A_\mu$ and any $w\in L_G(A)$ of
+type $\mu$, graft its annotated derivation into
+an occurrence of $A_\mu$ in a successful typed
+derivation.  This proves the reverse fiber inclusion
+and the start-language equality.
 \end{proof}
 
 For each retained non-start symbol $X$, choose a
-\emph{canonical context} $\chi(X)=(u_X,v_X)$ among its
-terminal reaching contexts, minimizing $|u_X|+|v_X|$
-and breaking ties by the shortlex order of $u_X$,
-then $v_X$.  It exists by reduction.
+\emph{canonical context} $\chi(X)=(u_X,v_X)$ among
+its terminal reaching contexts, minimizing
+$|u_X|+|v_X|$ and breaking ties by the shortlex
+order of $u_X$, then $v_X$.  It exists by reduction.
 Proposition~\ref{prop:typed-core} yields
 $\widehat s(\omega(A_\mu))=\mu$.
 
+For each retained typed production
+$\rho:X\to u_0Y_1u_1\cdots Y_ru_r$ with
+$X\ne\widetilde S$, define its
+\emph{canonical right-hand-side yield} by
+\[
+ t_\rho:=u_0\omega(Y_1)u_1\cdots\omega(Y_r)u_r.
+\]
+Every $t_\rho$ belongs to $L_{\widetilde G}(X)$
+and has the same $\widehat s$-type as $\omega(X)$.
 Define the finite set of \emph{canonical positive witnesses}
 \begin{equation}\label{eq:W}
 \begin{split}
 \WitnessSet(\widetilde G):={}&
- \{u_X\omega(X)v_X:X\in\widetilde V\setminus\{\widetilde S\}\}\\
-&\cup\{u_Xav_X:X\to a\in\widetilde P\}\\
-&\cup\{u_X\omega(Y)v_X:X\to Y\in\widetilde P,\
-  X,Y\ne\widetilde S\}\\
-&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}.
+ \{u_X\omega(X)v_X:
+     X\in\widetilde V\setminus\{\widetilde S\}\}\\
+ &{}\cup\{u_Xt_\rho v_X:
+     \rho=(X\to\alpha)\in\widetilde P,\
+     X\ne\widetilde S\}.
 \end{split}
 \end{equation}
-Every witness belongs to $L$, as witnessed by a successful
-reaching derivation and the displayed production.
-A distinct empty-word witness family is unnecessary:
-if $\lambda\in L$, the typed start copy
+Every witness belongs to $L$ by its reaching context
+and the indicated typed derivation.
+For an empty-type typed rule, both $\omega(X)$ and
+$t_\rho$ equal $\lambda$, so its rule witness
+duplicates the corresponding canonical-yield witness.
+If $\lambda\in L$, the typed start copy
 $(S_0)_{\mathbf e}$ has canonical context
 $(\lambda,\lambda)$ and canonical yield $\lambda$;
 hence $\lambda\in\WitnessSet(\widetilde G)$.
@@ -953,80 +978,94 @@ hence $\lambda\in\WitnessSet(\widetilde G)$.
 \subsection{Exact reconstruction and Gold convergence}
 
 \begin{theorem}[completeness from the finite witnesses]\label{thm:complete}
-Let $G$ be any reduced BUNF grammar for a nonempty language
-$L$, and $\widetilde G$ its $\mathsf S^\sharp$-typed refinement.
-If $\WitnessSet(\widetilde G)\subseteq K$, then
-$L\subseteq L(\mathsf{Rec}_s(K))$.
+Let $G$ be any reduced CFG generating a nonempty language
+$L$, and $\widetilde G$ its $\mathsf S^\sharp$-typed
+refinement.  If $\WitnessSet(\widetilde G)\subseteq K$,
+then $L\subseteq L(\mathsf{Rec}_s(K))$.
 \end{theorem}
 Neither substitutability nor $K\subseteq L$ is required.
 \begin{proof}
-For each retained $X=A_\mu$ with $\mu\ne\mathbf e$, put
-$\widehat X:=\NT{\omega(X)}$; it exists by the first
-witness family, and $\omega(X)$ is nonempty.
-We show by induction on a typed derivation
-$X\Rightarrow^*w$ that $\widehat X\Rightarrow^*w$
-in the unchanged $\mathsf{Rec}_s(K)$.
+For each retained $X=A_\mu$ with $\mu\ne\mathbf e$,
+put $\widehat X:=\NT{\omega(X)}$.  It exists because
+the canonical-yield witness contains $\omega(X)$
+as a nonempty factor of a word in $K$.
+We prove by induction on the height of a typed
+derivation $X\Rightarrow_{\widetilde G}^*w$ that
+$\widehat X\Rightarrow_{\mathsf{Rec}_s(K)}^*w$.
 
-Let its first rule be $\rho:X\to\alpha$, and let
-$t_\rho$ be the word obtained from $\alpha$ by replacing
-each nonterminal $Y$ with $\omega(Y)$.
-Since $\widehat s(t_\rho)=\widehat s(\omega(X))=\mu\ne\mathbf e$,
-both words are nonempty and have equal $s$-type.
-The first witness family and the witness for $\rho$
-put them in the same sample context; hence Rule~\textup{(U)}
-gives $\widehat X\to\NT{t_\rho}$.
-Here $X\to\lambda$ is impossible.
+Write its root rule as
+$\rho:X\to u_0Y_1u_1\cdots Y_ru_r$, and
+let $t_\rho$ be its canonical right-hand-side yield.
+Both $t_\rho$ and $\omega(X)$ are nonempty
+and have equal $s$-type.
+The canonical-yield and rule witnesses
+lie in the same context $(u_X,v_X)$ in $K$.
+Rule~\textup{(U)} therefore gives
+$\widehat X\to\NT{t_\rho}$.
 
-If $\rho$ is terminal, Rule~\textup{(L)} finishes;
-if unary, its child has positive type and induction
-finishes.  If $\rho:X\to YZ$ and both children have
-positive type, Rule~\textup{(B)} splits $\NT{t_\rho}$
-into $\NT{\omega(Y)}\NT{\omega(Z)}$, and induction
-finishes each child.  Otherwise exactly one child
-has type $\mathbf e$ and yields only $\lambda$.
-Then $t_\rho$ is the other child's nonempty
-canonical yield, so induction applies directly.
-Two empty-type children would make $X$ empty-type.
+List the nonempty components of $t_\rho$ in their
+original order as $z_1,\ldots,z_h$, with $h\ge1$.
+These are the nonempty terminal blocks $u_i$
+and the canonical yields $\omega(Y_i)$ of
+positive-type children.  A child of type
+$\mathbf e$ generates only $\lambda$ and is omitted.
+All nonempty factors of $t_\rho$, including each
+$z_i$ and each nonempty concatenation of consecutive
+components, occur in the rule witness
+$u_Xt_\rho v_X\in K$.
+Repeated Rule~\textup{(B)} applications can thus
+decompose $\NT{t_\rho}$ into
+$\NT{z_1},\ldots,\NT{z_h}$, with no split if $h=1$.
+A terminal block is reproduced by repeated
+Rules~\textup{(B)} and~\textup{(L)}.
+For a positive-type child $Y_i$, its actual
+derived yield follows from
+$\NT{\omega(Y_i)}$ by the induction hypothesis.
+Concatenating these derivations in order produces $w$.
+The argument covers arbitrary-length right-hand sides,
+unit and terminal-only rules, and any number of
+nullable children.
 
-Finally a positive target word is derived from a
-typed start copy $(S_0)_\mu$ of positive type.
-Its canonical context is $(\lambda,\lambda)$;
-the first witness puts its nonempty $\omega$ in $K$,
-so the original start Rule~\textup{(S)} enters
-the simulation.  If $\lambda\in L$, the first
-witness for $(S_0)_{\mathbf e}$ puts $\lambda\in K$,
-and the original Rule~\textup{(S)} emits $\lambda$.
+Any positive target word comes from a typed
+start copy $(S_0)_\mu$ of positive type.
+Its canonical context is $(\lambda,\lambda)$,
+so the first witness puts $\omega((S_0)_\mu)\in K$.
+The original start Rule~\textup{(S)} enters the
+simulation.  If $\lambda\in L$, the witness for
+$(S_0)_{\mathbf e}$ puts $\lambda\in K$ and
+the direct start Rule~\textup{(S)} emits it.
 \end{proof}
 
 \begin{theorem}[exact finite-sample reconstruction]
 \label{thm:reconstruction-fixed-s}
-Let $L\in\Ccf{s}$ be nonempty and let $G_*$ be any
-reduced CFG for $L$.  Choose an equivalent reduced BUNF
-normalization $G$ of $G_*$, and let $\widetilde G$ be its
-$\mathsf S^\sharp$-typed refinement.
-If $\WitnessSet(\widetilde G)\subseteq K\subseteq L$, then
-$L(\mathsf{Rec}_s(K))=L$.
+Let $L\in\Ccf{s}$ be nonempty and let $G$ be
+any reduced CFG for $L$, with
+$\mathsf S^\sharp$-typed refinement $\widetilde G$.
+If $\WitnessSet(\widetilde G)\subseteq K\subseteq L$,
+then $L(\mathsf{Rec}_s(K))=L$.
 \end{theorem}
 \begin{proof}
-Terminal isolation and binarization give
-$L(G)=L(G_*)=L$.  Apply Theorem~\ref{thm:complete}
-to the BUNF grammar $G$, and Theorem~\ref{thm:soundness}
-to $K\subseteq L$.
+Apply Theorem~\ref{thm:complete} to $G$
+and Theorem~\ref{thm:soundness} to $K\subseteq L$.
 \end{proof}
 
-Thus $\WitnessSet(\widetilde G)$ is characteristic for every
-nonempty target, including $\{\lambda\}$.  For $L=\emptyset$,
-the empty sample gives $L(\mathsf{Rec}_s(\emptyset))=\emptyset$.
+Thus $\WitnessSet(\widetilde G)$ is characteristic
+for every nonempty target, including $\{\lambda\}$.
+For $L=\emptyset$, the empty sample gives
+$L(\mathsf{Rec}_s(\emptyset))=\emptyset$.
 This proves Theorem~\ref{thm:main}(ii).
 
 \begin{corollary}[Gold identification]\label{cor:ilt}
-For a fixed surjective semigroup homomorphism $s:\Sigma^+\to\mathsf S$ to a finite semigroup, the learner
-$\mathsf{Learn}_s$ identifies every nonempty language in $\Ccf{s}$ from positive data.  More precisely, for any reduced CFG $G_*$ representing
-the target, choose an equivalent reduced BUNF grammar $G$
-and its $\mathsf S^\sharp$-typed refinement $\widetilde G$.
-Once $\WitnessSet(\widetilde G)\subseteq K_{n_0}$,
-among stages $n\ge n_0$ at most one hypothesis change
-can occur.
+For a fixed surjective semigroup homomorphism
+$s:\Sigma^+\to\mathsf S$ to a finite semigroup,
+the learner $\mathsf{Learn}_s$ identifies every
+nonempty language in $\Ccf{s}$ from positive data.
+More precisely, for any reduced CFG $G$ representing
+the target and its general typed refinement
+$\widetilde G$, once
+$\WitnessSet(\widetilde G)\subseteq K_{n_0}$,
+among stages $n\ge n_0$ at most one hypothesis
+change can occur.
 \end{corollary}
 
 \begin{proof}
@@ -1096,7 +1135,11 @@ $\{a^{2^n}\}$, substitutable for every $s$
 \section{Typed Thickness for General Fixed Typings}
 \label{sec:typed-thickness}
 
-For any fixed $s$, the witness bound depends on shortest
+The qualitative witness construction of Section~\ref{sec:typing}
+used arbitrary CFG productions.  We now impose BUNF only to
+control the number of typed rules and the branching of derivation
+trees in the quantitative estimates.
+For fixed $s$, the witness bound depends on shortest
 terminal yields of the $\mathsf S^\sharp$-typed refinement.
 Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar,
 $\widetilde G$ its refinement, and put
@@ -1150,8 +1193,12 @@ siblings of binary rules by canonical yields,
 each of length at most $\tau$.  Unit steps contribute
 no sibling.  Hence the canonical reaching context has
 length at most $(N_t-1)\tau$.
-The four witness families add at most two canonical
-yields or one terminal, giving the length bound.
+For a BUNF rule, its canonical right-hand-side yield
+contains at most two child yields or one terminal;
+this gives the length bound for the rule witnesses.
+A typed rule with empty yield has $t_\rho=\omega(X)=\lambda$,
+so its rule witness duplicates the canonical-yield witness
+and does not require a separate term in the count.
 There are at most $N|\mathsf S^\sharp|$ typed symbols,
 $|P_{\mathrm{ter}}|$ terminal typed rules,
 $|P_{\mathrm{unit}}||\mathsf S^\sharp|$ unit typed rules, and
