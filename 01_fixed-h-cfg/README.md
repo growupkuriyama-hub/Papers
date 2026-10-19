@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v237（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v237：Section 5の一般CFG証明を簡潔化し、不要なdisplay数式3本をインライン化。重複説明を削減し、定理・証明の論理は維持。査読回答のPDF位置照合プログラムを修正し、PDF・ZIPを再生成中（投稿は未実施）。**
+> **v237：一般CFG証明を簡潔化してdisplay数式を3本削減。Clean PDFは26→25ページ。Marked・査読回答・ZIPは再生成・検証済み。Editorial Manager未提出。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v237の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち。v236 Clean PDFは26ページ。
-- v236では位置照合コードに旧命題番号が残りMarked/回答生成ジョブが失敗。v237でコードを訂正し、49項目・77か所の再照合を実施する。
+- v237の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 25ページ／Marked 26ページ／査読回答14ページ。
+- v236の位置照合コードに残っていた旧命題番号を修正し、v237では査読回答49項目／位置参照77か所の再照合を完了。ZIP整合性検査成功。
 - v237の変更：一般CFG右辺・型積・canonical rule yieldをインライン化し、Section 5の説明・完全性証明とSection 6冒頭を整理。BUNFはSection 6以降の定量的な仮定のみ。
 - **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v237の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v237**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v237 marked-PDF and synchronized response locators must be reverified before author resubmission. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v237**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v237 marked-PDF and response anchors verified (49 items / 77 references); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
