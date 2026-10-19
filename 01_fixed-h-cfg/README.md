@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v235（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v235ではSection 5の型付き精密化・完全性を一般CFGの任意右辺に直接拡張。BUNFは定量パートだけの仮定です。PDF・ZIPの再生成と査読回答の再照合完了まで提出しないでください。Editorial Managerへの再提出は著者の操作が必要です。**
+> **v235：Section 5の型付き精密化・完全性を一般CFGの任意右辺に直接拡張。BUNFは定量パートだけの仮定です。英文PDF・査読回答・3ファイルZIPを再生成・検証済み。Editorial Managerへの再提出は著者の操作が必要です（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v235の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち。v234以前のPDF・ZIPをv235提出物として扱わない。
-- 査読回答49項目の位置参照はv235で再生成・再照合する。
+- v235の **Clean PDF / Marked PDF / Response PDF / ZIP** は生成・再検証成功。Marked PDFは27ページ、査読回答PDFは14ページ。
+- 査読回答 **49項目・Marked PDF位置参照77か所**を生成した27ページのMarked PDFと照合済み。3ファイルZIPの整合性検査も成功。
 - v235の変更：一般CFG規則 `A → u0 B1 u1 … Br ur` を直接型付けし、canonical rule yield `t_ρ` と規則witnessを定義。Section 5の定性的完全性・Gold収束にはBUNF不要。Section 6以降の標本長・規則数・window-groupの上界ではBUNFを維持。
 - **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v235の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v235**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; fresh v235 marked-PDF and response-locator verification is pending. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v235**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v235 marked-PDF and synchronized response-locator verification succeeded (49 items / 77 locators); the author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.

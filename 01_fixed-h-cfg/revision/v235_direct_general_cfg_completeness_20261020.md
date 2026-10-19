@@ -24,3 +24,11 @@ BUNF definition is recorded in Section 5 as a signpost for the later technical b
 
 ## Review caveat
 The new direct general-CFG argument has undergone internal symbolic verification of all terminal/mixed/nullable cases; it is an author-approved revision but is not certified by formal proof software. Independent adversarial review remains useful, particularly for sample-factor splitting and proof-local indexing.
+
+## v235 verified English release (2026-10-20)
+- GitHub Actions 39287286844 (Clean PDF): SUCCESS; 39287286892 (Marked PDF, synchronized reviewer response and bundle): SUCCESS.
+- Marked PDF: 27 A4 pages; response PDF: 14 A4 pages; both text PDFs, no blank pages, no preflight problems detected. All pages rendered for independent PDF inspection; the revised Section 5 page was checked visually.
+- Reviewer response: 49 items with page/line locator validation against actual 27-page marked PDF; 77 explicit marked-PDF page locator references in response source.
+- Exact three-file ZIP artifact ID 12202604953, tested with unzip -t; entries exactly Clean TeX (112324 bytes), Marked PDF (620352 bytes), Response PDF (323662 bytes). Clean TeX SHA-256 364a4ec03f178dbefcac0fd420b037ff88a398f894741966edb0b33c00dbf08d equals canonical v235 English source hash.
+- Separate Japanese reviewer-response translation CI failed and is NOT a TCS English submission gate; not synchronized.
+- No Editorial Manager submission performed.
