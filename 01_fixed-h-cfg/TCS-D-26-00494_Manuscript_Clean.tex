@@ -330,9 +330,11 @@ $\D_L(x)\cap\D_L(y)\ne\varnothing$ implies $\D_L(x)=\D_L(y)$.
 \end{definition}
 \begin{lemma}[canonical fresh-identity completion]\label{lem:fresh-identity}
 Let $S_h:=h(\Sigma^+)\subseteq M$ be the positive image
-semigroup, and let $Q_h:=S_h\sqcup\{\mathbf e\}$ be obtained by
+semigroup when $\Sigma\ne\emptyset$, and let
+$Q_h:=S_h\sqcup\{\mathbf e\}$ be obtained by
 adjoining a \emph{fresh} identity $\mathbf e$ to $S_h$, even if
-$S_h$ already has an identity.  Define
+$S_h$ already has an identity.  When $\Sigma=\emptyset$,
+this simply means $Q_h=\{\mathbf e\}$. Define
 \[
 q_h(w):=
 \begin{cases}
@@ -341,7 +343,8 @@ h(w),&w\in\Sigma^+.
 \end{cases}
 \]
 Then $q_h:\Sigma^*\twoheadrightarrow Q_h$ is a surjective
-finite-monoid homomorphism, with
+finite-monoid homomorphism, so
+$Q_h\cong\Sigma^*/\ker q_h$, with
 \[
 q_h(x)=q_h(y)\quad\Longleftrightarrow\quad
 (x=y=\lambda)\ \text{or}\
@@ -416,17 +419,24 @@ positive data on nonempty alphabets.  Yoshinaka
 \cite[Section~4]{yoshinaka2008} notes the analogous issue for
 the union of fixed-window classes.  We learn only fixed-$h$ slices.
 
-Typing refinement is monotone on the nonempty factors that enter
-Definition~\ref{def:hsubst}.  If
-$\ker h'|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$, then
-$\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$, since $h'$ requires fewer
-factor comparisons.  Refinement may nevertheless enlarge the typed grammar
-used in the quantitative analysis.  For two finite typings $h,g$,
-$\ker(h\times g)|_{\Sigma^+}
- =\ker h|_{\Sigma^+}\cap\ker g|_{\Sigma^+}$, hence
-$\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$;
-in particular, window information and another finite feature can be combined
-without making the typing target-specific.
+The completion $q_h$ makes refinement and products
+ordinary kernel operations:
+\[
+\ker q_{h'}\subseteq\ker q_h
+\ \Longleftrightarrow\
+\ker h'|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+},
+\qquad
+\ker q_{h\times g}=\ker q_h\cap\ker q_g.
+\]
+In fact $Q_{h\times g}\cong\operatorname{im}(q_h\times q_g)$,
+a submonoid (not necessarily all) of $Q_h\times Q_g$.
+Consequently $\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$
+under the first inclusion, and
+$\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$.
+Thus two finite features, such as a window and a group
+type, can be combined without changing the typing per
+target.  A refinement may nevertheless enlarge the typed
+grammar used in the quantitative analysis.
 
 Yoshinaka~\cite[Proposition~1]{yoshinaka2008} showed that
 fixed-window substitutable languages are not closed under intersection
@@ -449,20 +459,19 @@ homomorphisms.
 $L\cap J\in\mathsf{RS}_{h\times g}$.
 \item If $R_{\mathrm{reg}}=g^{-1}(\mathsf{Acc}_{g})$ is regular and $L\in\Ccf{h}$, then
 $L\cap R_{\mathrm{reg}}\in\Ccf{h\times g}$.
-\item Let $\varphi:\Gamma^*\to\Sigma^*$ be any homomorphism, possibly
-erasing.  Let $U_1=\{1,\zeta\}$ be the two-element monoid with zero
-$\zeta$, define $e_\varphi(w)=1$ iff $\varphi(w)=\lambda$ and
-$e_\varphi(w)=\zeta$ otherwise, and put
-$\widehat h=(h\circ\varphi)\times e_\varphi$.\footnote{%
-The flag $e_\varphi$ cannot in general be omitted.  For $L=a^+$ and
-trivial $h$, let $\varphi(a)=a$ and $\varphi(b)=\lambda$.
-In $\varphi^{-1}(L)$, the factors $a,b$ have equal
-$(h\circ\varphi)$-types and share the context $(a,\lambda)$,
-but $a$ belongs to the inverse image whereas $b$ does not.}
+\item Let $\varphi:\Gamma^*\to\Sigma^*$ be any
+homomorphism, possibly erasing, and put
+$t:=q_h\circ\varphi:\Gamma^*\to Q_h$.
 If $L\in\mathsf{RS}_h$, then
-$\varphi^{-1}(L)\in\mathsf{RS}_{\widehat h}$; if moreover
+$\varphi^{-1}(L)\in\mathsf{RS}_t$; if moreover
 $L\in\Ccf{h}$, then
-$\varphi^{-1}(L)\in\Ccf{\widehat h}$.
+$\varphi^{-1}(L)\in\Ccf{t}$.\footnote{%
+The fresh identity of $Q_h$ replaces the separate
+erasure flag otherwise required for $h\circ\varphi$:
+for trivial $h$, $L=a^+$,
+$\varphi(a)=a$ and $\varphi(b)=\lambda$,
+the factors $a,b$ share a context in the inverse image,
+but have different distributions.}
 \end{enumerate}
 \end{proposition}
 
@@ -475,27 +484,29 @@ $\D_{L\cap J}(x)=\D_{L\cap J}(y)$.  Item~(ii) follows from (i),
 Proposition~\ref{prop:regular-auto}, and closure of CFLs under intersection
 with regular languages.
 
-For (iii), $e_\varphi$ is a homomorphism because
-$\varphi(uv)=\lambda$ iff both $\varphi(u)$ and $\varphi(v)$ are empty.
-Let equal-$\widehat h$-type nonempty $x,y$ share a context in
-$\varphi^{-1}(L)$.  If $e_\varphi(x)=e_\varphi(y)=1$, then
-$\varphi(x)=\varphi(y)=\lambda$, so the two factors have identical
-distributions in the inverse image.  Otherwise both images are nonempty,
-have equal $h$-type, and the shared inverse-image context maps to a common
-context of $\varphi(x),\varphi(y)$ in $L$.  Fixed-$h$ substitutability in
-$L$ gives equal distributions there, and pulling contexts back through
-$\varphi$ gives
-$\D_{\varphi^{-1}(L)}(x)=\D_{\varphi^{-1}(L)}(y)$.
-The context-free statement uses closure of CFLs under inverse homomorphism.
+For (iii), $t=q_h\circ\varphi$ is a finite-monoid
+homomorphism.  Suppose nonempty factors $x,y$ of
+equal $t$-type share a context in $\varphi^{-1}(L)$.
+By Lemma~\ref{lem:fresh-identity}, either both
+$\varphi(x),\varphi(y)$ are empty, in which case the
+inverse-image distributions agree, or they are
+nonempty and have equal $h$-type.  In the latter
+case their common inverse-image context maps to a
+common context in $L$; substitutability in $L$
+and pulling back contexts give the claimed equality
+of distributions.  The context-free assertion
+uses closure of CFLs under inverse homomorphism.
 \end{proof}
 
 \paragraph{Typing adequacy.}
-By Definition~\ref{def:hsubst}, $L\in\mathsf{RS}_h$ exactly when $\ker h$
-identifies no two nonempty factors having a common context but different
-distributions; typing adequacy is thus a finite-index monoid-congruence
-separation condition, preserved by refinement and product typing at a
-possible quantitative cost (Proposition~\ref{prop:typed-thickness-gap}).
-The stronger requirement $\ker h|_{\Sigma^+}\subseteq\equiv_L$
+By Lemma~\ref{lem:fresh-identity},
+$L\in\mathsf{RS}_h$ exactly when $\ker q_h$
+distinguishes every pair of factors with intersecting but
+unequal distributions.  Thus typing adequacy is a
+finite-index congruence separation condition, preserved
+under refinement and products at a possible quantitative
+cost (Proposition~\ref{prop:typed-thickness-gap}).
+The stronger condition $\ker q_h\subseteq\equiv_L$
 is sufficient but forces $L$ to be regular.
 
 \subsection{Classical special cases}
@@ -506,7 +517,8 @@ in excluding $\lambda$.  This distinction matters even for $L=a^+$:
 $(a,\lambda)$ belongs to both $\D_L(\lambda)$ and $\D_L(a)$,
 whereas $(\lambda,\lambda)$ belongs to $\D_L(a)$ but not to
 $\D_L(\lambda)$.  Thus comparing $\lambda$ with nonempty factors
-would exclude $a^+$.
+\emph{without type separation} would exclude $a^+$;
+$q_h$ makes those factors incomparable in type.
 Call $L$
 \emph{Clark--Eyraud substitutable} when
 $\D_L(x)\cap\D_L(y)\ne\emptyset$ implies
@@ -632,6 +644,12 @@ The following positive-image/kernel criterion is classical
 the generalized definite language characterization is likewise known
 \cite[Proposition~5.18]{pin1997}.
 Its learning-specific application is Corollary~\ref{cor:li-thickness}.
+These algebraic conditions must be tested on
+$S_h=h(\Sigma^+)$, \emph{not} on $Q_h$.
+Indeed, for nonempty $S_h$, the new identity
+$\mathbf e$ and any $t\in S_h$ satisfy
+$\mathbf e t\mathbf e=t\ne\mathbf e$;
+thus $Q_h$ itself is not locally trivial.
 
 \begin{proposition}[locally trivial typings and fixed windows]
 \label{prop:li-window}
@@ -941,73 +959,48 @@ hence $\lambda\in\WitnessSet(\widetilde G)$.
 
 \begin{theorem}[completeness from the finite witnesses]\label{thm:complete}
 Let $G$ be any reduced BUNF grammar for a nonempty language
-$L$, and let $\widetilde G$ be its $Q_h$-typed refinement.
+$L$, and $\widetilde G$ its $Q_h$-typed refinement.
 If $\WitnessSet(\widetilde G)\subseteq K$, then
 $L\subseteq L(\mathsf{Rec}_h(K))$.
 \end{theorem}
-Neither substitutability nor $K\subseteq L$ is needed.
+Neither substitutability nor $K\subseteq L$ is required.
 \begin{proof}
-We simulate only \emph{positive-yield} typed symbols:
-for every retained $X=A_\mu$ with $\mu\ne\mathbf e$
-and every $X\Rightarrow_{\widetilde G}^*w$, we prove
-\[
-\NT{\omega(X)}\Rightarrow_{\mathsf{Rec}_h(K)}^*w.
-\]
-Both $\omega(X)$ and $w$ are nonempty.  The first
-witness family ensures that $\NT{\omega(X)}$ exists.
+For each retained $X=A_\mu$ with $\mu\ne\mathbf e$, put
+$\widehat X:=\NT{\omega(X)}$; it exists by the first
+witness family, and $\omega(X)$ is nonempty.
+We show by induction on a typed derivation
+$X\Rightarrow^*w$ that $\widehat X\Rightarrow^*w$
+in the unchanged $\mathsf{Rec}_h(K)$.
 
-Induct on the size of the typed derivation tree.
-For $X\to a$, the first and terminal witnesses put
-$\omega(X)$ and $a$ in the same sample context.
-Their equal $q_h$-types imply equal $h$-types
-because both words are nonempty.
-Rule~\textup{(U)} reaches $\NT a$, and
-Rule~\textup{(L)} emits $a$.
-For $X\to Y$, its type is not $\mathbf e$, so $Y$
-also has positive type.  The unary witness and
-the first witness for $X$ license
-$\NT{\omega(X)}\to\NT{\omega(Y)}$ under Rule~\textup{(U)};
-apply induction to $Y$.
+Let its first rule be $\rho:X\to\alpha$, and let
+$t_\rho$ be the word obtained from $\alpha$ by replacing
+each nonterminal $Y$ with $\omega(Y)$.
+Since $q_h(t_\rho)=q_h(\omega(X))=\mu\ne\mathbf e$,
+both words are nonempty and have equal $h$-type.
+The first witness family and the witness for $\rho$
+put them in the same sample context; hence Rule~\textup{(U)}
+gives $\widehat X\to\NT{t_\rho}$.
+Here $X\to\lambda$ is impossible.
 
-For $X\to YZ$, the product of the child types is
-not $\mathbf e$.  Since $Q_h=S_h\sqcup\{\mathbf e\}$
-with $S_h$ closed under multiplication, at least one
-child has positive type.  There are two cases.
+If $\rho$ is terminal, Rule~\textup{(L)} finishes;
+if unary, its child has positive type and induction
+finishes.  If $\rho:X\to YZ$ and both children have
+positive type, Rule~\textup{(B)} splits $\NT{t_\rho}$
+into $\NT{\omega(Y)}\NT{\omega(Z)}$, and induction
+finishes each child.  Otherwise exactly one child
+has type $\mathbf e$ and yields only $\lambda$.
+Then $t_\rho$ is the other child's nonempty
+canonical yield, so induction applies directly.
+Two empty-type children would make $X$ empty-type.
 
-If both child types are positive, the binary witness
-and the first witness for $X$ license Rule~\textup{(U)}
-from $\NT{\omega(X)}$ to
-$\NT{\omega(Y)\omega(Z)}$, since these nonempty
-factors have equal $h$-type.  Rule~\textup{(B)}
-splits the latter into $\NT{\omega(Y)}\NT{\omega(Z)}$,
-and the two induction hypotheses finish.
-
-If exactly one child, say $Y$, has type $\mathbf e$,
-then Proposition~\ref{prop:typed-core} says its
-only possible terminal yield is $\lambda$, so
-$\omega(Y)=\lambda$.  The binary witness is now
-$u_X\omega(Z)v_X$; paired with the first witness
-for $X$, it licenses the \emph{direct} unary rule
-$\NT{\omega(X)}\to\NT{\omega(Z)}$.
-Apply induction to $Z$.  The symmetric case
-$Z$ of type $\mathbf e$ is identical.
-Crucially, no rule containing $\NT{\lambda}$ is
-needed in the hypothesis.  If both children have
-type $\mathbf e$, then $X$ also has that type,
-so this case is outside the positive-yield induction.
-
-For $w\in L\cap\Sigma^+$, a typed derivation starts
-$\widetilde S\to(S_0)_\mu\Rightarrow^*w$
-with $\mu\ne\mathbf e$.  Its typed start copy
-has canonical context $(\lambda,\lambda)$,
-so the first witness family includes
-$\omega((S_0)_\mu)\in K\cap\Sigma^+$.
-The \emph{original}, unchanged Rule~\textup{(S)}
-enters $\NT{\omega((S_0)_\mu)}$; simulation gives $w$.
-If $\lambda\in L$, the first witness for
-$(S_0)_{\mathbf e}$ ensures $\lambda\in K$,
-and the original direct start rule
-$\widehat S\to\lambda$ gives the remaining yield.
+Finally a positive target word is derived from a
+typed start copy $(S_0)_\mu$ of positive type.
+Its canonical context is $(\lambda,\lambda)$;
+the first witness puts its nonempty $\omega$ in $K$,
+so the original start Rule~\textup{(S)} enters
+the simulation.  If $\lambda\in L$, the first
+witness for $(S_0)_{\mathbf e}$ puts $\lambda\in K$,
+and the original Rule~\textup{(S)} emits $\lambda$.
 \end{proof}
 
 \begin{theorem}[exact finite-sample reconstruction]
@@ -1027,8 +1020,8 @@ This proves Theorem~\ref{thm:main}(ii).
 
 \begin{corollary}[Gold identification]\label{cor:ilt}
 For a fixed homomorphism $h:\Sigma^*\to M$ into a finite monoid $M$, the learner
-$\mathsf{Learn}_h$ identifies every nonempty language in $\Ccf{h}$ from positive data.  More precisely, for any reduced SSBNF target
-grammar $G$ and its typed refinement $\widetilde G$, once
+$\mathsf{Learn}_h$ identifies every nonempty language in $\Ccf{h}$ from positive data.  More precisely, for any reduced BUNF target
+grammar $G$ and its $Q_h$-typed refinement $\widetilde G$, once
 $\WitnessSet(\widetilde G)\subseteq K_{n_0}$, among stages $n\ge n_0$ at most one hypothesis change
 can occur.
 \end{corollary}
@@ -1700,36 +1693,44 @@ outside $\mathsf{KL}$. The displayed grammar is even-linear, so no
 separation from Takada's control-set framework is claimed.
 
 \paragraph{Finite-state control induced by yield typing.}
-The following straightforward product construction gives a limited
-connection with Takada's control-set viewpoint. Give each production of a linear grammar $G=(V,\Sigma,P,S)$ a distinct label
-from $\mathsf{ProdLab}$, and write $A\Rightarrow_G^\alpha w$ when
-$\alpha\in\mathsf{ProdLab}^*$ is the production-label word of a derivation.  For
-$\mathsf{Acc}_{\mathrm{ctrl}}\subseteq M$, let
+A single finite-state construction covers both the
+original typing $h$ and its completion $q_h$.
+Let $t:\Sigma^*\to T$ be any finite-monoid
+morphism, and label each production of a linear
+grammar $G=(V,\Sigma,P,S)$ distinctly over
+$\mathsf{ProdLab}$.  Write $A\Rightarrow_G^\alpha w$
+for a derivation with production-label word $\alpha$.
+For $\mathsf{Acc}_{\mathrm{ctrl}}\subseteq T$, put
 \[
- \mathsf{Ctrl}_{h,\mathsf{Acc}_{\mathrm{ctrl}}}(G):=
- \{\alpha\in\mathsf{ProdLab}^*:S\Rightarrow_G^\alpha w
-   \text{ for some }w\in\Sigma^*,\ h(w)\in \mathsf{Acc}_{\mathrm{ctrl}}\}.
+\mathsf{Ctrl}_{t,\mathsf{Acc}_{\mathrm{ctrl}}}(G):=
+\{\alpha\in\mathsf{ProdLab}^*:S\Rightarrow_G^\alpha w
+\text{ for some }w\in\Sigma^*,\
+t(w)\in\mathsf{Acc}_{\mathrm{ctrl}}\}.
 \]
-This is a regular control set.  A finite automaton uses states
-$V\times M\times M$ (and one accepting state), starts in $(S,1,1)$, and for
-a labeled rule $A\to uBv$ makes the transition
+This is regular: an automaton with states
+$V\times T\times T$ and an accepting state starts
+at $(S,1_T,1_T)$, updates
 $(A,\mu_L,\mu_R)\mapsto
-(B,\mu_L h(u),h(v)\mu_R)$.  A terminal rule $A\to w$ is accepted
-exactly when $\mu_L h(w)\mu_R\in \mathsf{Acc}_{\mathrm{ctrl}}$.  The invariant is that a sentential
-form $uAv$ is represented by $(A,h(u),h(v))$, so the accepted label words are
-exactly those of successful derivations whose yields have $h$-type in $\mathsf{Acc}_{\mathrm{ctrl}}$.
-Thus regular control by $\mathsf{Ctrl}_{h,\mathsf{Acc}_{\mathrm{ctrl}}}(G)$ generates precisely
-$L(G)\cap h^{-1}(\mathsf{Acc}_{\mathrm{ctrl}})$.
-For the $Q_h$-typed copy $A_\mu$, instead use the
-same finite-state construction with $Q_h$ and
-$q_h$, starting in $(A,\mathbf e,\mathbf e)$ and
-accepting exactly the type $\mu\in Q_h$.
-It generates $L_G(A)\cap q_h^{-1}(\{\mu\})$,
-as in Proposition~\ref{prop:typed-core}.
-The fresh identity is essential when $A$ is nullable.
-This is a finite-state bridge to Takada's regular control
-languages~\cite{takada1995}; it does not claim that arbitrary Takada control
-sets arise from terminal yield typings.
+(B,\mu_Lt(u),t(v)\mu_R)$ for each
+$A\to uBv$, and accepts a terminal rule
+$A\to w$ iff $\mu_Lt(w)\mu_R\in
+\mathsf{Acc}_{\mathrm{ctrl}}$.
+The invariant is $(A,t(u),t(v))$ for a
+sentential form $uAv$; thus the controlled
+grammar generates $L(G)\cap
+t^{-1}(\mathsf{Acc}_{\mathrm{ctrl}})$.
+
+Taking $t=h$ recovers the original $h$-control.
+Taking $t=q_h$, start symbol $A$, and
+$\mathsf{Acc}_{\mathrm{ctrl}}=\{\mu\}$
+realizes exactly
+$L_G(A)\cap q_h^{-1}(\{\mu\})$,
+the fiber in Proposition~\ref{prop:typed-core},
+including the nullable type $\mathbf e$.
+This is a finite-state bridge to Takada's
+regular control languages~\cite{takada1995};
+we do not claim arbitrary Takada control sets
+arise from yield typings.
 
 \section{Expressiveness and Boundaries}
 \label{sec:boundaries}
