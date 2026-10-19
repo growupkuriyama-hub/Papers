@@ -55,3 +55,27 @@ These are proposed mathematical proofs; build success is not a proof certificate
 - Replaced the `s_U x s_U` detour for `L_n^-` by the direct fiber-filter argument using `L_n cap shat_U^{-1}({zeta})`.
 - Standardized the learning-facing notation `s_0`, `s_{k,l}`, `s_U`, and `s_{pm,e}`; monoid-valued maps are retained for the actual auxiliary calculations, notably `h_star` and the DFA transition morphisms `h_rho`, whose restrictions give `s_star` and `s_rho`.
 - Replaced domain-mismatched products by explicit `g|_{Sigma+}` where necessary. Still experimental: R1 Response/Marked and TCS submission form abstracts remain tied to the v230 baseline.
+
+## One self-audit pass: fixed-semigroup unification (2026-10-19)
+
+**Scope.** Independent read-through of the changed proof steps in Propositions 3.3 and 3.5, Lemma 7.4, the semilattice `s_U` family, the Section 7 window-group bound and the newly restricted auxiliary maps. Auditing is not formal proof certification; untouched sections and former R1 files remain outside the edited branch's verification scope.
+
+**Algebraic proof review.**
+- Proposition 3.3 defines `s_{k,l}` only for positive words, with a short/long tag and the positive-word congruence; concatenation retains the shared window on long factors. The quotient inherits multiplication and the Yoshinaka four-word condition.
+- Proposition 3.5 uses the *positive* image. Its short classes are not idempotent, and long classes obey `ete=e`; conversely the Pin finite-LI identities imply the `(n,n)` window refinement with `n=|S|+1`. Fresh-identity `S-sharp` is not asserted locally trivial.
+- Lemma 7.4 uses arbitrary lifts of each letter through a divisor `V subset T x G`, the resulting *positive* projections and the LI criterion; the group projection extends uniquely to `Sigma*` and no monoid on the LI side is needed.
+- The filter `L_n-minus = L_n cap shat_U^{-1}({zeta})` retains `s_U`-substitutability, since equal positive types yield identical filter membership inside any common context; intersection with a regular language preserves context-freeness.
+- The auxiliary finite monoid morphisms `h_star` and `h_rho` remain only where whole-word summaries are used, with learning-facing restrictions `s_star` and `s_rho`; all remaining `g` products use its restriction to positive words.
+
+**Finite reproducibility checks (sanity only).**
+- Alphabet `{a,b}`; each `(k,l)` with `0 <= k,l <= 2`; positive words of length at most 8, and added left/right contexts up to length 3: no counterexample to the short/long congruence. Quotient representative multiplication was associative and locally trivial for all nine cases, including `(0,0)`.
+- Enumerated finite bracketed-doubling `L_n` for `n=1,2,3` (respectively 2, 6, 42 words). Constructed all factor distributions and found no counterexample to `L_n` being trivially substitutable, nor to `L_n minus {w_n*}` being `s_U`-substitutable. These are finite checks, not a proof for all n.
+
+**Three consistency defects found and repaired during the pass.**
+1. The inherited phrase `s_{0,0}` 'separates lambda from nonempty words' was mathematically invalid since `s_{0,0}` is defined only on `Sigma+`. Replaced it by `s_{0,0}=s_0` on `Sigma+` in both languages.
+2. The algorithm section still called the carrier of `s` a 'fixed monoid'. Changed this to a finite semigroup.
+3. Japanese nonlinear proof still described positive factor equality as an `h_star`-type; aligned its prose with `s_star`, retaining `h_star` for monoid-valued whole-word calculations.
+
+**Static consistency checks.** Both manuscripts retain 58 labels and 39 proof environments, no duplicate labels, no missing LaTeX references, no `SSBNF`, and no learning-facing `h_U`/`h_{k,l}`/`h_0` uses. The same English content is used for main and Clean.
+
+**Open gates.** Compile EN/JP at the final commit; check PDF layouts and representative edited passages; audit the substantive BUNF window-group shortening and all other untouched results independently before adopting. Stored official v230 R1 Marked PDF, 49 responses/77 locators and the old form abstract are intentionally not synchronized.
