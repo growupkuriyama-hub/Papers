@@ -2,9 +2,14 @@
 
 Public source repository for Takayuki Kuriyama's research papers.
 
+## Latest TCS #1 revision — **v231 (2026-10-19)**
+
+**[TCS-D-26-00494: current submission files and exact three-file ZIP](01_fixed-h-cfg/README.md)** — revised manuscript, marked PDF, and synchronized response. The package is prepared, **not yet submitted to Editorial Manager**. Historical experiments and older versions are not current.
+
+
 ## Contents
 
-- `01_fixed-h-cfg/` — *Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing* (TCS-D-26-00494)
+- **[`01_fixed-h-cfg/`](01_fixed-h-cfg/)** — *Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing* (**TCS-D-26-00494, current R1 v231**; [submission ZIP](01_fixed-h-cfg/TCS-D-26-00494_R1_3files.zip))
 - `02_fixed-h-mcfg/` — *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing* (working manuscript; arXiv:2605.11644)
 - `03_scl-compression/` — *Finite-Monoid Compression in Syntactic Concept Lattices: Arity Hierarchies and a Pseudovariety Trichotomy* (arXiv:2608.29639)
 - `04_relative-factorization/` — *Relative Prime Factorization and Finite-State Presentations under Fixed Finite-Monoid Observation*
