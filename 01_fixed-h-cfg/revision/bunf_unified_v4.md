@@ -79,3 +79,9 @@ These are proposed mathematical proofs; build success is not a proof certificate
 **Static consistency checks.** Both manuscripts retain 58 labels and 39 proof environments, no duplicate labels, no missing LaTeX references, no `SSBNF`, and no learning-facing `h_U`/`h_{k,l}`/`h_0` uses. The same English content is used for main and Clean.
 
 **Open gates.** Compile EN/JP at the final commit; check PDF layouts and representative edited passages; audit the substantive BUNF window-group shortening and all other untouched results independently before adopting. Stored official v230 R1 Marked PDF, 49 responses/77 locators and the old form abstract are intentionally not synchronized.
+
+## Restoration of Yoshinaka (2015) attribution detail (2026-10-19)
+- Restored the substantive explanation from v230 Section 1.1 while retaining the concise PR #62 Introduction: the 2014 preprint precedes the publication of Yoshinaka's (2015) general many-sorted signature theorem; nonempty fixed-semigroup fibers are modeled as disjoint sorts with typed concatenation and whole-string promotion.
+- Explicitly distinguish the author's specific choice of sorts from Yoshinaka's contribution, and acknowledge the prior qualitative positive-data existence theorem without treating it as original.
+- Retain the focus on explicit reconstruction, encoded characteristic-data bounds, and algebraic/expressive consequences; identify the LI fixed-window criterion as classical.
+- English canonical and Clean TeX are exact mirrors; Japanese has corresponding semantic wording. No changes to definitions, results, numbering or proofs. Existing official marked revision/response package is not synchronized with this experimental PR.
