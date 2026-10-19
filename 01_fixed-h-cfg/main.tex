@@ -147,23 +147,29 @@ We give a finite-witness reconstruction operator $\mathsf{Rec}_s$
 and a separate conservative Gold learner $\mathsf{Learn}_s$, with
 polynomial-time reconstruction and updates. These qualitative and
 polynomial-time guarantees specialize Yoshinaka's general framework
-~\cite{yoshinaka2015}. The new characteristic-data \emph{length}
-bounds concern $\mathsf{Rec}_s$; no incremental polynomial-data
+~\cite{yoshinaka2015}. Beyond the classical fixed-window case, our characteristic-data
+\emph{length} results concern $\mathsf{Rec}_s$; no incremental polynomial-data
 guarantee is asserted for $\mathsf{Learn}_s$.
 
 The main contributions concern the cost and scope of finite typing:
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
 \item \emph{Characteristic-data bounds and lower bounds.}
-For each fixed $s$, encoded characteristic-data size is polynomial
-in the size and typed shortest yields of a reduced grammar in binary--unit--nullable
-form.  Ordinary thickness suffices for window--finite-group typings,
-and linear grammar size alone for linear targets.
+For every fixed $s$ and every target in $\Ccf{s}$ represented
+by a CFG, finite characteristic data exist for $\mathsf{Rec}_s$.
+A polynomial-size BUNF normalization supplies a bound on their
+encoded length in terms of its typed shortest yields
+(Corollary~\ref{cor:typed-thickness-data}).
+For typings whose positive image lies in the locally trivial--group
+join $\mathbf{LI}\vee\mathbf{Grp}$, the size and ordinary thickness
+of the original CFG suffice (Corollary~\ref{cor:li-thickness});
+for linear targets, the size of an arbitrary linear CFG alone
+suffices (Theorem~\ref{thm:linear-poly}).
 Conversely, a fixed two-element semilattice typing gives finite
 targets with grammar size and ordinary thickness $O(n)$ but
 characteristic-sample length $\Omega(2^n)$.  This lower bound applies
 to every set-driven operator admitting characteristic samples for
-both targets of a distinguishing pair; every reduced grammar of the
-above form for these targets also has exponential typed thickness
+both members of a distinguishing pair; the target $L_n$ also has
+exponential typed thickness under every reduced BUNF presentation
 (Proposition~\ref{prop:typed-thickness-gap};
 Corollary~\ref{cor:typed-gap-intrinsic}).
 
@@ -846,8 +852,11 @@ $A\to a$, or $A\to\lambda$.
 \end{definition}
 Terminal isolation and binarization turn an arbitrary CFG into
 an equivalent BUNF grammar in polynomial time, without deleting
-nullable or unit rules.  The qualitative completeness argument
-uses an arbitrary reduced BUNF grammar for a nonempty language.
+nullable or unit rules.  The BUNF condition is imposed only on the auxiliary target
+representation used in the witness construction and its proofs;
+it is not a restriction on $\mathsf{Rec}_s$, $\mathsf{Learn}_s$,
+or the class of CFG targets.  An arbitrary CFG can be normalized
+before applying the BUNF-specific argument.
 
 No start-symbol separation is needed; the quantitative
 normalization is Proposition~\ref{prop:thick-bunf-normal}.
@@ -991,12 +1000,18 @@ and the original Rule~\textup{(S)} emits $\lambda$.
 
 \begin{theorem}[exact finite-sample reconstruction]
 \label{thm:reconstruction-fixed-s}
-Let $L\in\Ccf{s}$ be nonempty, let $G$ be any reduced BUNF
-grammar for $L$, and let $\widetilde G$ be its $\mathsf S^\sharp$-typed refinement.  If
-$\WitnessSet(\widetilde G)\subseteq K\subseteq L$, then $L(\mathsf{Rec}_s(K))=L$.
+Let $L\in\Ccf{s}$ be nonempty and let $G_*$ be any
+reduced CFG for $L$.  Choose an equivalent reduced BUNF
+normalization $G$ of $G_*$, and let $\widetilde G$ be its
+$\mathsf S^\sharp$-typed refinement.
+If $\WitnessSet(\widetilde G)\subseteq K\subseteq L$, then
+$L(\mathsf{Rec}_s(K))=L$.
 \end{theorem}
 \begin{proof}
-Combine Theorems~\ref{thm:soundness} and~\ref{thm:complete}.
+Terminal isolation and binarization give
+$L(G)=L(G_*)=L$.  Apply Theorem~\ref{thm:complete}
+to the BUNF grammar $G$, and Theorem~\ref{thm:soundness}
+to $K\subseteq L$.
 \end{proof}
 
 Thus $\WitnessSet(\widetilde G)$ is characteristic for every
@@ -1006,9 +1021,11 @@ This proves Theorem~\ref{thm:main}(ii).
 
 \begin{corollary}[Gold identification]\label{cor:ilt}
 For a fixed surjective semigroup homomorphism $s:\Sigma^+\to\mathsf S$ to a finite semigroup, the learner
-$\mathsf{Learn}_s$ identifies every nonempty language in $\Ccf{s}$ from positive data.  More precisely, for any reduced BUNF target
-grammar $G$ and its $\mathsf S^\sharp$-typed refinement $\widetilde G$, once
-$\WitnessSet(\widetilde G)\subseteq K_{n_0}$, among stages $n\ge n_0$ at most one hypothesis change
+$\mathsf{Learn}_s$ identifies every nonempty language in $\Ccf{s}$ from positive data.  More precisely, for any reduced CFG $G_*$ representing
+the target, choose an equivalent reduced BUNF grammar $G$
+and its $\mathsf S^\sharp$-typed refinement $\widetilde G$.
+Once $\WitnessSet(\widetilde G)\subseteq K_{n_0}$,
+among stages $n\ge n_0$ at most one hypothesis change
 can occur.
 \end{corollary}
 
@@ -1142,22 +1159,31 @@ $|P_{\mathrm{bin}}||\mathsf S^\sharp|^2$ binary typed rules.
 Summing $|w|+1$ over the witness set proves the claim.
 \end{proof}
 
-\begin{corollary}[characteristic data from typed thickness]
+\begin{corollary}[characteristic data via BUNF normalization]
 \label{cor:typed-thickness-data}
-Fix $s$.  If $G$ is a reduced BUNF grammar for a nonempty
-$L(G)\in\Ccf{s}$, then $\WitnessSet(\widetilde G)$ is a characteristic
-sample for $\mathsf{Rec}_s$ whose encoded size is polynomial in
-$|G|$ and $\tau_s^{\mathrm{typ}}(G)$.
+Fix $s$.  Let $G_*$ be any reduced CFG for a nonempty
+$L(G_*)\in\Ccf{s}$, and let $G$ be an equivalent reduced
+BUNF normalization of size polynomial in $|G_*|$.
+(If $G_*$ is already BUNF, take $G=G_*$.)
+Then $\WitnessSet(\widetilde G)$ is a characteristic sample
+for $\mathsf{Rec}_s$ whose encoded size is polynomial in
+$|G_*|$ and $\tau_s^{\mathrm{typ}}(G)$.
 \end{corollary}
 
 \begin{proof}
-Lemma~\ref{lem:typed-thickness-bound} gives the quantitative bound, and
-Theorem~\ref{thm:reconstruction-fixed-s} gives the characteristic-sample property.
+Theorem~\ref{thm:reconstruction-fixed-s} supplies the
+characteristic-sample property for the original CFG $G_*$.
+Apply Lemma~\ref{lem:typed-thickness-bound} to its chosen
+BUNF normalization $G$, using that $|G|$ is polynomial
+in $|G_*|$.
 \end{proof}
 
-The dependence on typed thickness in Corollary~\ref{cor:typed-thickness-data}
-cannot in general be replaced by ordinary thickness, even for the
-reconstruction operator itself under a single fixed typing.
+The typed-thickness parameter in Corollary~\ref{cor:typed-thickness-data}
+belongs to the chosen BUNF normalization, not directly to $G_*$.
+For arbitrary fixed $s$, this does not imply a polynomial bound
+in the original grammar size and ordinary thickness; indeed,
+ordinary thickness cannot in general replace typed thickness
+even for the reconstruction operator.
 
 \paragraph{A bracketed doubling family.}
 Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$.

@@ -1,13 +1,13 @@
-# #1 TCS — 最新改訂稿 / CURRENT REVISION **v233**
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v234**
 
-> **最新版は `main` の internal v233（2026-10-20）。**  
+> **最新版は `main` の internal v234（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v233の原稿更新を完了。PDF・ZIPは再生成・検証待ちです。旧版パッケージは提出しないでください。Editorial Managerへの再提出は著者の操作が必要です。**
+> **v234ではBUNFを技術的補題に限定し、一般CFGへの帰結を明示しました。PDF・ZIPの再生成と査読回答の再照合が完了するまで旧版パッケージを提出しないでください。Editorial Managerへの再提出は著者の操作が必要です。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（いずれも v233）
+## 提出に使用する3ファイル（いずれも v234）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,16 +23,16 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v233`** と原稿SHA-256を参照
-- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v233英文Abstractのプレーンテキスト
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v234`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v234英文Abstractのプレーンテキスト
 
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v233の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成と検証待ち。
-- v232では **査読回答49項目・位置参照77か所**を照合済み。v233でも自動再照合する。
-- v233の唯一の本文変更：Appendix A.1の保護位置集合について `d:=|P|` を `d:=|\\mathrm{Prot}|` に訂正（内容・定理番号・量的上界は不変）。
-- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v233の対訳としては使用しないでください（TCS提出ZIPには含みません）。
+- v234の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成と再検証待ち（v233のPDF・ZIPは生成成功済み）。
+- v233で **査読回答49項目・位置参照**を再検証済み。v234も自動再照合する。
+- v234の変更：一般CFGからBUNF正規化を経由して完全性・Gold収束・typed-thickness標本長上界を述べる。BUNF固有の証明補題・定義は維持。定理番号・量的結果は不変。
+- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v234の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
 ## どのファイルが正本か
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v233**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; fresh v233 marked-PDF and response-locator verification is pending. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v234**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; fresh v234 marked-PDF and response-locator verification is pending. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
