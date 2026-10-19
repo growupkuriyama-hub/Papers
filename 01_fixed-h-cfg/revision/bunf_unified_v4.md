@@ -26,3 +26,14 @@ Keep original unit and epsilon rules. Convert only longer linear productions int
 6. Existing binary PDFs, marked R1 response documents (49 items/77 locators), and ZIP are not valid v4 submission packages. Regenerate only if author adopts v4.
 
 These are proposed mathematical proofs; build success is not a proof certificate.
+
+## First independent-audit repair pass (2026-10-19)
+
+- **F01 (fixed):** Removed the false general-BUNF implication `tau_{h0}^{typ}(G) <= max(1,tau_G)` from Proposition `prop:typed-thickness-gap` (ii). The existing explicit characteristic sample `F_n`, its encoded-size calculation, reconstruction monotonicity, and soundness give the result independently.
+- **F05 (simplified):** Added the unnumbered fiber-minimum bound implied by retaining typed copies of the original start symbol. Deduce the intrinsic type-1 exponential gap directly from its singleton fiber; no new theorem numbering.
+- **F02 (strengthened):** Clarified disjoint window positions when `|w|>=k+l`, the nonempty anchor (which may overlap protected window positions), equal-mark tree grafting, and noncommutative ordered-product group cancellation. Retained the same quantitative bound.
+- **F03 (strengthened):** Defined the continuing spine excluding terminal wrapper children, and explicitly justified grafting identical typed spine states while preserving a typed derivation.
+- **F04 (strengthened):** Clarified fresh per-original-production binarization symbols, their contiguous RHS blocks, and preserved original shortest yields.
+- **F06 (selective):** Removed the redundant argument in gap (ii), compressed the intrinsic-gap corollary, retained the normalization proposition and control-set discussion to avoid shifting reviewer landmarks before R1 response synchronization.
+
+**Publication gate:** Independent adversarial mathematical verification is still pending. Existing R1 marked PDFs, 49 replies, 77 marked-page locators and submission ZIP are NOT synchronized with this experiment. Do not merge with main or submit without author approval.
