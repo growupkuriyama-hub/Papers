@@ -37,3 +37,13 @@ These are proposed mathematical proofs; build success is not a proof certificate
 - **F06 (selective):** Removed the redundant argument in gap (ii), compressed the intrinsic-gap corollary, retained the normalization proposition and control-set discussion to avoid shifting reviewer landmarks before R1 response synchronization.
 
 **Publication gate:** Independent adversarial mathematical verification is still pending. Existing R1 marked PDFs, 49 replies, 77 marked-page locators and submission ZIP are NOT synchronized with this experiment. Do not merge with main or submit without author approval.
+
+## R1-directed front-matter compression (2026-10-19)
+
+- Revised English Abstract from approximately 172 to 132 whitespace-delimited words (the count includes TeX fragments), retaining the fixed-semigroup learning problem, set-driven versus Gold-learner distinction, general typed-yield upper bound, window-group/linear quantitative regimes, semilattice exponential lower bound with operator-level scope, and expressive boundaries.
+- Reduced Introduction Section 1.2, `Contributions and main results`, from about 291 to 218 English whitespace-delimited words; preserved two, and only two, high-level contributions as requested by Reviewer 1 (R1.3 and R1.5), instead of enumerating proof-local lemmas.
+- Responds to Reviewer 1's R1.2 verbosity and undefined-technical-term concerns. The qualitative existence from Yoshinaka's many-sorted theory and classical finite-semigroup window criterion are expressly not presented as new.
+- Replaced unexplained early acronym "BUNF" in that section with a descriptive binary–unit–nullable form (formal definition later); no claim of uniform ordinary-thickness or incremental polynomial-data learning.
+- Changed **only** Abstract and Section 1.2 in the manuscript sources; synchronized `main.tex`, `TCS-D-26-00494_Manuscript_Clean.tex`, and `japanese/main_JP.tex`.
+- The **existing TCS submission form abstract** and stored marked/response PDF packages remain tied to the earlier official baseline. This is PR #62 experimental drafting only, NOT an R1 submission.
+
