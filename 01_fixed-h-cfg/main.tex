@@ -825,169 +825,195 @@ for this phenomenon with $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$.
 
 \subsection{Target refinement and finite witnesses}
 
-For the completeness proof only, we refine a target grammar by yield type and
-show that the hypothesis can mimic finitely witnessed typed derivations.  We use
-the following normal form as a proof device.
+For completeness, we type the \emph{target} grammar over
+$Q_h$ while leaving the already-defined hypothesis grammar
+$\mathsf{Rec}_h(K)$ unchanged: its factor nonterminals remain
+indexed only by nonempty words, and it retains the direct start
+rule for $\lambda$.  This distinction is crucial to the proof.
 
+A \emph{binary--unit--nullable normal form} (BUNF) grammar has
+productions $A\to BC$, $A\to B$, $A\to a$, or $A\to\lambda$.
+Terminal isolation and binarization turn an arbitrary CFG into
+an equivalent BUNF grammar in polynomial time, without deleting
+nullable or unit rules.  The qualitative completeness argument
+uses an arbitrary reduced BUNF grammar for a nonempty language.
+
+The quantitative bounds below use the more restrictive normal form.
 \begin{definition}[start-separated binary normal form]
 A CFG $G=(V,\Sigma,P,S_0)$ is in \emph{start-separated binary normal form}
 (SSBNF) if $S_0$ never occurs on a right-hand side,
 every start rule is $S_0\to A$ or $S_0\to\lambda$, and every non-start rule
 is either $A\to a$ or $A\to BC$.
 \end{definition}
-Start separation confines $\lambda$ to the start symbol and
-ensures nonempty internal yields for the witness construction.
+Every nonempty context-free language has an equivalent reduced
+SSBNF grammar.  This normal form is used only where its nonempty
+internal yields support quantitative estimates.
+The empty target is represented by $H_0$ and
+$\mathsf{Rec}_h(\emptyset)$.
 
-Every nonempty context-free language has an equivalent reduced SSBNF grammar by
-the standard start-separation, useless-symbol elimination, $\lambda$/unit elimination
-away from the start, and binarization procedures.  The refinement below is
-therefore defined for nonempty context-free languages; the empty target is
-represented separately by $H_0$ and $\mathsf{Rec}_h(\emptyset)$.
-
-Let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar for a nonempty language
-$L$.  Form the following yield-typed grammar with start symbol
-$\widetilde S$ and non-start symbols $A_\mu$ with
-$A\in V\setminus\{S_0\}$ and $\mu\in M$.  Here and below, juxtaposition of type indices denotes multiplication in
-$M$; thus $\mu\nu=\mu\cdot\nu$.  The rules are
+Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar generating
+a nonempty language $L$.  Its \emph{$Q_h$-typed refinement}
+has a fresh start symbol $\widetilde S$ and symbols
+$A_\mu$ for every $A\in V$ and $\mu\in Q_h$, with rules
 \[
 \begin{array}{ll}
-\widetilde S\to A_\mu & (S_0\to A\in P,\ \mu\in M),\\
-\widetilde S\to\lambda & (S_0\to\lambda\in P),\\
-A_{h(a)}\to a & (A\to a\in P),\\
-A_{\mu\nu}\to B_\mu C_\nu & (A\to BC\in P,\ \mu,\nu\in M).
+\widetilde S\to (S_0)_\mu
+ &( \mu\in Q_h),\\
+A_{\mu\nu}\to B_\mu C_\nu
+ &( A\to BC\in P,\ \mu,\nu\in Q_h),\\
+A_\mu\to B_\mu
+ &( A\to B\in P,\ \mu\in Q_h),\\
+A_{q_h(a)}\to a
+ &( A\to a\in P),\\
+A_{\mathbf e}\to\lambda
+ &( A\to\lambda\in P).
 \end{array}
 \]
-The reduced part of this grammar is denoted
-$\widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S)$ and called
-the \emph{typed refinement}.  Since $\widetilde G$ is obtained by trimming the yield-typed grammar,
-every remaining symbol is reachable and productive.
+Trim this grammar to its reduced part $\widetilde G$.
+All retained symbols are reachable and productive.
+For a retained typed symbol $A_\mu$, every terminal yield
+has type $\mu$; in particular $A_{\mathbf e}$ generates
+\emph{only} $\lambda$, while a typed symbol of type
+$\mu\ne\mathbf e$ generates only nonempty words.
 
-Fix an order on $\Sigma$ and use the induced \emph{shortlex} order:
-shorter strings come first, with lexicographic order breaking equal-length
-ties.  For every non-start symbol $X$ of $\widetilde G$, let $\omega(X)$
-be its shortlex-minimal terminal yield, called the \emph{canonical yield} of
-$X$.  This is well-defined because $\widetilde G$ is reduced.
-
-The yield-type split is used in the present completeness proof: the canonical
-yield of a typed parent and the concatenated canonical yields of
-its typed children must have equal $h$-types to license unary
-Rule~\textup{(U)} (Theorem~\ref{thm:complete}).
-
-The role of this split in the present completeness argument can already be seen
-before typing.  Let
-$h(w)=|w|\bmod 2$ and let $G$ be the SSBNF grammar with start symbol $S_0$
-and rules
-$S_0\to A$, $A\to a\mid BC$, $B\to a$, and $C\to a$.  The shortest yield of $A$
-is $a$, of odd type, while the concatenation of shortest yields of
-$B$ and $C$ is $aa$, of even type.  Without separating $A$ by yield type,
-the corresponding unary-rule step is therefore not licensed.
-Splitting by yield type makes the required equality an invariant.  By
-contrast, no types are attached to the surrounding left or right contexts,
-because the reconstruction operator never tests such types.
+Fix a shortlex order on $\Sigma^*$.
+For each retained non-start symbol $X$, let $\omega(X)$
+be its shortlex-minimal terminal yield, possibly $\lambda$.
+Splitting by yield type ensures that the canonical yield
+of a typed parent and the yield specified by any of its
+productions have the same $q_h$-type.  The need for a
+yield split is illustrated by $h(w)=|w|\bmod 2$
+and $A\to a\mid BC$, $B\to a$, $C\to a$:
+the shortest yield $a$ of $A$ and the yield $aa$
+of $BC$ have different types.
+No types are attached to surrounding contexts.
 
 \begin{proposition}[typed lifting and yield invariant]\label{prop:typed-core}
-The typed refinement satisfies $L(\widetilde G)=L(G)$.  For every retained
-non-start symbol $A_\mu$,
+The typed refinement satisfies $L(\widetilde G)=L(G)$.
+For every retained $A_\mu$, including typed copies of $S_0$,
 \[
-L_{\widetilde G}(A_\mu)=L_G(A)\cap h^{-1}(\{\mu\}).
+L_{\widetilde G}(A_\mu)
+ =L_G(A)\cap q_h^{-1}(\{\mu\}).
 \]
-In particular, $A_\mu\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$.
+In particular, $A_\mu\Rightarrow_{\widetilde G}^*w$
+entails $q_h(w)=\mu$.
 \end{proposition}
 \begin{proof}
-The terminal and binary rules above are exactly the bottom-up propagation
-laws for yield types.  Hence, by induction on typed derivations,
-$A_\mu\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$, and erasing type
-annotations maps typed derivations to derivations of $G$; this gives
-$L(\widetilde G)\subseteq L(G)$ and the inclusion $\subseteq$ in the display.
-
-Conversely, annotating each non-start node of a derivation tree of $G$ by
-the $h$-type of its yield gives a derivation tree of the untrimmed
-yield-typed grammar.  For a successful tree all its symbols survive
-trimming, so $L(G)\subseteq L(\widetilde G)$.  For retained $A_\mu$ and
-$w\in L_G(A)$ with $h(w)=\mu$, graft the annotated tree of
-$A\Rightarrow_G^*w$, whose root has type $\mu$, at an occurrence of $A_\mu$
-in a successful typed tree; the result is successful, so its symbols and
-rules survive trimming and $A_\mu\Rightarrow_{\widetilde G}^*w$.
+Induct on typed derivations to obtain the yield-type
+invariant and erase indices to obtain a $G$-derivation.
+Conversely, annotate each node in any successful
+$G$-derivation by the $q_h$-type of its yield.
+The resulting typed derivation survives trimming.
+For any retained $A_\mu$ and any $w\in L_G(A)$
+of type $\mu$, graft its annotated derivation
+at an occurrence of $A_\mu$ in a successful typed
+derivation.  This proves the reverse inclusion.
 \end{proof}
 
-For every non-start symbol $X$ of $\widetilde G$, choose
-$\chi(X)=(u_X,v_X)$ among the terminal reaching contexts of $X$ so as to
-minimize $|u_X|+|v_X|$, breaking ties by the shortlex orders of $u_X$ and
-then $v_X$; call $\chi(X)$ the \emph{canonical context} of $X$.  Such a
-terminal reaching context exists because $\widetilde G$ is reduced:
-reachability places $X$ in a reachable sentential form, and productivity of
-the surrounding nonterminals lets all symbols to its left and right be
-expanded to terminal strings.  Proposition~\ref{prop:typed-core} gives
-$h(\omega(A_\mu))=\mu$ for every typed non-start symbol.
+For each retained non-start symbol $X$, choose a
+\emph{canonical context} $\chi(X)=(u_X,v_X)$ among its
+terminal reaching contexts, minimizing $|u_X|+|v_X|$
+and breaking ties by the shortlex order of $u_X$,
+then $v_X$.  It exists by reduction.
+Proposition~\ref{prop:typed-core} yields
+$q_h(\omega(A_\mu))=\mu$.
 
-Define the finite witness set
+Define the finite set of \emph{canonical positive witnesses}
 \begin{equation}\label{eq:W}
 \begin{split}
 \WitnessSet(\widetilde G):={}&
  \{u_X\omega(X)v_X:X\in\widetilde V\setminus\{\widetilde S\}\}\\
 &\cup\{u_Xav_X:X\to a\in\widetilde P\}\\
-&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}\\
-&\cup\bigl(\{\lambda\}\text{ if }\lambda\in L\bigr).
+&\cup\{u_X\omega(Y)v_X:X\to Y\in\widetilde P,\
+  X,Y\ne\widetilde S\}\\
+&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}.
 \end{split}
 \end{equation}
-Every displayed word belongs to $L$, and the set is finite.  In particular,
-for a binary rule $X\to YZ$ the word in the third family is justified by
-$\widetilde S\Rightarrow^*u_XXv_X\Rightarrow u_XYZv_X
-\Rightarrow^*u_X\omega(Y)\omega(Z)v_X$; the first and second families are
-justified analogously.  We call the elements of $\WitnessSet(\widetilde G)$
-the \emph{canonical positive witnesses}.  The first family records one
-canonical occurrence of each typed symbol, and the second and third families
-record the terminal and binary productions, respectively.
-
+Every witness belongs to $L$, as witnessed by a successful
+reaching derivation and the displayed production.
+A distinct empty-word witness family is unnecessary:
+if $\lambda\in L$, the typed start copy
+$(S_0)_{\mathbf e}$ has canonical context
+$(\lambda,\lambda)$ and canonical yield $\lambda$;
+hence $\lambda\in\WitnessSet(\widetilde G)$.
 
 \subsection{Exact reconstruction and Gold convergence}
 
 \begin{theorem}[completeness from the finite witnesses]\label{thm:complete}
-Let $G$ be any reduced SSBNF grammar for a nonempty language $L$, and let
-$\widetilde G$ be its typed refinement with respect to the fixed
-homomorphism $h$.  If a finite set $K$ satisfies
-$\WitnessSet(\widetilde G)\subseteq K$, then $L\subseteq L(\mathsf{Rec}_h(K))$.
+Let $G$ be any reduced BUNF grammar for a nonempty language
+$L$, and let $\widetilde G$ be its $Q_h$-typed refinement.
+If $\WitnessSet(\widetilde G)\subseteq K$, then
+$L\subseteq L(\mathsf{Rec}_h(K))$.
 \end{theorem}
-
-Neither substitutability nor $K\subseteq L$ is needed for
-this combinatorial completeness statement.
+Neither substitutability nor $K\subseteq L$ is needed.
 \begin{proof}
-For each non-start $X$ write $\widehat X:=\NT{\omega(X)}$.
-The corresponding word in the first family of~\eqref{eq:W} ensures that
-$\widehat X$ exists.  We prove by induction on a typed derivation
-$X\Rightarrow^*w$ that
-$\widehat X\Rightarrow_{\mathsf{Rec}_h(K)}^*w$.
+We simulate only \emph{positive-yield} typed symbols:
+for every retained $X=A_\mu$ with $\mu\ne\mathbf e$
+and every $X\Rightarrow_{\widetilde G}^*w$, we prove
+\[
+\NT{\omega(X)}\Rightarrow_{\mathsf{Rec}_h(K)}^*w.
+\]
+Both $\omega(X)$ and $w$ are nonempty.  The first
+witness family ensures that $\NT{\omega(X)}$ exists.
 
-If the first rule is $X\to a$, the first and second witness families contain
-$u_X\omega(X)v_X$ and $u_Xav_X$, respectively.  Hence
-$\omega(X)\approx_{K,h}a$ because
-$h(\omega(X))=h(a)$ by Proposition~\ref{prop:typed-core}.  Rule~\textup{(U)}
-moves $\widehat X$ to $\NT{a}$ when necessary, and Rule~\textup{(L)} yields $a$.
+Induct on the size of the typed derivation tree.
+For $X\to a$, the first and terminal witnesses put
+$\omega(X)$ and $a$ in the same sample context.
+Their equal $q_h$-types imply equal $h$-types
+because both words are nonempty.
+Rule~\textup{(U)} reaches $\NT a$, and
+Rule~\textup{(L)} emits $a$.
+For $X\to Y$, its type is not $\mathbf e$, so $Y$
+also has positive type.  The unary witness and
+the first witness for $X$ license
+$\NT{\omega(X)}\to\NT{\omega(Y)}$ under Rule~\textup{(U)};
+apply induction to $Y$.
 
-Suppose the first rule is $X=A_{\mu\nu}\to B_\mu C_\nu$; put
-$Y:=B_\mu$ and $Z:=C_\nu$.  The first and third witness families contain
-$u_X\omega(X)v_X$ and
-$u_X\omega(Y)\omega(Z)v_X$.  Since
-$h(\omega(X))=\mu\nu=h(\omega(Y))h(\omega(Z)) =h(\omega(Y)\omega(Z))$,
-Rule~\textup{(U)} moves $\widehat X$ to
-$\NT{\omega(Y)\omega(Z)}$ when necessary.  The third witness also makes
-$\omega(Y)\omega(Z)$ an observed factor, so Rule~\textup{(B)} gives
-$\NT{\omega(Y)\omega(Z)}\to\NT{\omega(Y)}\NT{\omega(Z)}$.
-The induction hypotheses finish the two subderivations.
+For $X\to YZ$, the product of the child types is
+not $\mathbf e$.  Since $Q_h=S_h\sqcup\{\mathbf e\}$
+with $S_h$ closed under multiplication, at least one
+child has positive type.  There are two cases.
 
-Finally, every nonempty $w\in L$ has a lifted start derivation
-$\widetilde S\to X\Rightarrow^*w$.  The start rule itself shows that
-$(\lambda,\lambda)$ is a terminal reaching context of $X$; its total length is
-$0$, which is minimal, so the canonical choice is
-$\chi(X)=(\lambda,\lambda)$.  The first witness family therefore gives
-$\omega(X)\in K$, and Rule~\textup{(S)} starts the preceding derivation.
-The case $w=\lambda$ is immediate from~\eqref{eq:W} and Rule~\textup{(S)}.
+If both child types are positive, the binary witness
+and the first witness for $X$ license Rule~\textup{(U)}
+from $\NT{\omega(X)}$ to
+$\NT{\omega(Y)\omega(Z)}$, since these nonempty
+factors have equal $h$-type.  Rule~\textup{(B)}
+splits the latter into $\NT{\omega(Y)}\NT{\omega(Z)}$,
+and the two induction hypotheses finish.
+
+If exactly one child, say $Y$, has type $\mathbf e$,
+then Proposition~\ref{prop:typed-core} says its
+only possible terminal yield is $\lambda$, so
+$\omega(Y)=\lambda$.  The binary witness is now
+$u_X\omega(Z)v_X$; paired with the first witness
+for $X$, it licenses the \emph{direct} unary rule
+$\NT{\omega(X)}\to\NT{\omega(Z)}$.
+Apply induction to $Z$.  The symmetric case
+$Z$ of type $\mathbf e$ is identical.
+Crucially, no rule containing $\NT{\lambda}$ is
+needed in the hypothesis.  If both children have
+type $\mathbf e$, then $X$ also has that type,
+so this case is outside the positive-yield induction.
+
+For $w\in L\cap\Sigma^+$, a typed derivation starts
+$\widetilde S\to(S_0)_\mu\Rightarrow^*w$
+with $\mu\ne\mathbf e$.  Its typed start copy
+has canonical context $(\lambda,\lambda)$,
+so the first witness family includes
+$\omega((S_0)_\mu)\in K\cap\Sigma^+$.
+The \emph{original}, unchanged Rule~\textup{(S)}
+enters $\NT{\omega((S_0)_\mu)}$; simulation gives $w$.
+If $\lambda\in L$, the first witness for
+$(S_0)_{\mathbf e}$ ensures $\lambda\in K$,
+and the original direct start rule
+$\widehat S\to\lambda$ gives the remaining yield.
 \end{proof}
 
 \begin{theorem}[exact finite-sample reconstruction]
 \label{thm:reconstruction-fixed-h}
-Let $L\in\Ccf{h}$ be nonempty, let $G$ be a reduced SSBNF grammar for $L$,
-and let $\widetilde G$ be its typed refinement.  If
+Let $L\in\Ccf{h}$ be nonempty, let $G$ be any reduced BUNF
+grammar for $L$, and let $\widetilde G$ be its $Q_h$-typed refinement.  If
 $\WitnessSet(\widetilde G)\subseteq K\subseteq L$, then $L(\mathsf{Rec}_h(K))=L$.
 \end{theorem}
 \begin{proof}
