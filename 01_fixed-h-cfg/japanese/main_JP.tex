@@ -1018,62 +1018,71 @@ $\sim_h$-代入可能である．
 \section{一般の固定型付けに対する型付き厚み}
 \label{sec:typed-thickness}
 
-任意の固定 $h$ に対し，生成語型付けの費用を明示的に測れば，有限証拠構成から
-直接的な定量上界が得られる．$G=(V,\Sigma,P,S_0)$ を縮約済み SSBNF 文法，
-$\widetilde G$ をその型付き精密化とし，
-$N:=|V\setminus\{S_0\}|$,
-$N_t:=|\widetilde V\setminus\{\widetilde S\}|$
-とおく．この表現の \emph{型付き厚み}を
+固定 $h$ に対し，$Q_h$-型付き精緻化の標準生成語長から
+証拠サイズを評価する．$G=(V,\Sigma,P,S_0)$ を縮約済み
+BUNF 文法，$\widetilde G$ をその型付き精緻化とし，
+$N:=|V|$，$N_t:=|\widetilde V\setminus\{\widetilde S\}|$
+とおく．この表現の\emph{型付き厚み}を
 \[
- \tau_h^{\mathrm{typ}}(G):=
- \max\Bigl(\{\,|\omega(X)|:
- X\in\widetilde V\setminus\{\widetilde S\}\,\}\cup\{1\}\Bigr)
+\tau_h^{\mathrm{typ}}(G):=
+\max\Bigl(\{|\omega(X)|:
+X\in\widetilde V\setminus\{\widetilde S\}\}\cup\{1\}\Bigr)
 \]
-と定める．これは完全な生成語型分割とトリミング後の最短終端生成語を測る
-表現依存パラメータであり，学習器への追加仮定ではない．
+と定める．これは文法表示依存の量であり，
+学習器への追加の仮定ではない．
+$G$ が縮約済み SSBNF なら，元の開始記号の
+$Q_h$-型付きコピーの標準生成語は，
+非開始記号の正語型コピーから得られる語か
+$\lambda$ に等しい．その他の生産的型付き記号は
+旧版の非空 $h$-型付き精緻化のものと一致する．
+従って型付き厚みだけでなく，
+\emph{集合としての}標準証拠もv230のSSBNF構成と一致する．
+開始コピーによる証拠は既存の正語開始証拠または
+$\lambda$ であるから，新しい語を増やさない．
 
 \begin{lemma}[型付き厚みによる証拠上界]
 \label{lem:typed-thickness-bound}
-$G,\widetilde G$ を上の通りとし，$\tau:=\tau_h^{\mathrm{typ}}(G)$ と書く．
-任意の非開始型付き記号 $X$ に対し
-$|u_X|+|v_X|\le (N_t-1)\tau$
-であり，任意の $w\in\WitnessSet(\widetilde G)$ に対し
-$|w|\le (N_t+1)\tau$
-である．$P_{\mathrm{ter}},P_{\mathrm{bin}}$ をそれぞれ $G$ の非開始終端規則と
-二項規則の集合とすると
+$G,\widetilde G$ を上記の通りとし，
+$\tau:=\tau_h^{\mathrm{typ}}(G)$ とする．
+任意の非開始型付き記号 $X$ に対して
+$|u_X|+|v_X|\le(N_t-1)\tau$，
+任意の $w\in\WitnessSet(\widetilde G)$ に対して
+$|w|\le(N_t+1)\tau$ が成立する．
+$P_{\mathrm{ter}}$，$P_{\mathrm{unit}}$，
+$P_{\mathrm{bin}}$ を元の文法の終端・単位・二項規則の
+集合とすると，
 \[
- \|\WitnessSet(\widetilde G)\|
- \le
- \bigl(N|M|+|P_{\mathrm{ter}}|
-       +|P_{\mathrm{bin}}||M|^2+1\bigr)
- \bigl((N|M|+1)\tau+1\bigr).
+\|\WitnessSet(\widetilde G)\|
+\le\bigl(N|Q_h|+|P_{\mathrm{ter}}|
++|P_{\mathrm{unit}}||Q_h|
++|P_{\mathrm{bin}}||Q_h|^2\bigr)
+\bigl((N|Q_h|+1)\tau+1\bigr).
 \]
-特に固定 $h$ の下で，この上界は $|G|$ と
-$\tau_h^{\mathrm{typ}}(G)$ の多項式である．
+従って固定した $h$ について
+$|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式上界を得る．
 \end{lemma}
-
 \begin{proof}
-$\widetilde G$ の非開始記号を頂点とし，二項規則で親から各子へ辺を張る依存有向グラフを
-作る．$\widetilde G$ は縮約済みなので任意の非開始記号 $X$ は到達可能であり，
-ある開始子 $A$ から $X$ への経路がある．最短経路を選ぶと型付き記号を反復せず，
-辺数は高々 $N_t-1$ である．
-
-経路の各辺について，その辺を実現する二項規則を選び，経路外の子をその標準生成語へ
-展開する．$\widetilde S\to A$ から始めれば，これらの展開は $X$ の終端到達文脈を
-与える．各経路外の標準生成語長は高々 $\tau$ なので文脈全長は
-$(N_t-1)\tau$ 以下であり，標準文脈 $(u_X,v_X)$ はそれより長くない．
-
-第一族の語は標準文脈に標準生成語を一つ，第二族は終端記号を一つ，
-第三族は標準生成語を二つ加える．$\tau\ge1$ だから，式~\eqref{eq:W} の各語の長さは
-$(N_t+1)\tau$ 以下である．さらに $N_t\le N|M|$ であり，元の終端規則から生じる
-型付き終端規則は高々一つ，元の各二項規則からは高々 $|M|^2$ 個の型付き規則が生じる．
-従って第一因子が $\lambda$ の可能な証拠も含めた証拠個数を，第二因子が各
-$|w|+1$ を抑える．積をとれば主張が従う．
+残存する非開始型付き記号の依存グラフに
+単位規則と二項規則の親子の辺を張る．
+各記号は元の開始記号の型付きコピーから到達可能であり，
+最短路は高々 $N_t-1$ 辺をもつ．
+二項規則の経路外の子を標準生成語で展開すると，
+一辺あたり長さ高々 $\tau$ が加わり，
+単位規則の辺では語が加わらない．
+従って標準文脈長は $(N_t-1)\tau$ 以下である．
+四種類の証拠語は標準文脈に標準生成語を高々二つ，
+または終端記号一つを加えるので，語長の上界が得られる．
+型付き記号は高々 $N|Q_h|$ 個，
+終端・単位・二項規則の型付きコピーはそれぞれ
+$|P_{\mathrm{ter}}|$，
+$|P_{\mathrm{unit}}||Q_h|$，
+$|P_{\mathrm{bin}}||Q_h|^2$ 個である．
+各語の符号長 $|w|+1$ を合計すれば主張が従う．
 \end{proof}
 
 \begin{corollary}[型付き厚みからの特徴データ]
 \label{cor:typed-thickness-data}
-$h$ を固定する．$G$ が非空な $L(G)\in\Ccf{h}$ の縮約済み SSBNF 文法なら，
+$h$ を固定する．$G$ が非空な $L(G)\in\Ccf{h}$ の縮約済み BUNF 文法なら，
 $\WitnessSet(\widetilde G)$ は $\mathsf{Rec}_h$ に対する特徴標本であり，
 その符号化サイズは $|G|$ と $\tau_h^{\mathrm{typ}}(G)$ の多項式である．
 \end{corollary}
