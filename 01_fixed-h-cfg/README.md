@@ -1,13 +1,13 @@
-# #1 TCS — 最新改訂稿 / CURRENT REVISION **v231**
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v232**
 
-> **最新版は `main` の internal v231（2026-10-19）。**  
+> **最新版は `main` の internal v232（2026-10-19）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
 > **提出用パッケージの生成・検証は完了。Editorial Managerへの再提出は著者の操作が必要です。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（いずれも v231）
+## 提出に使用する3ファイル（いずれも v232）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,8 +23,8 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v231`** と原稿SHA-256を参照
-- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v231英文Abstractのプレーンテキスト
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v232`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v232英文Abstractのプレーンテキスト
 
 ### 検証状態（2026-10-19）
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v231**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; the reviewer response was synchronized against the newly built Marked PDF (49 responses / 77 verified anchors). The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v232**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; the reviewer response was synchronized against the newly built Marked PDF (49 responses / 77 verified anchors). The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
