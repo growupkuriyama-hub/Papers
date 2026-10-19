@@ -75,15 +75,22 @@ signature framework~\cite{yoshinaka2015}.
 For a fixed semigroup morphism $s:\Sigma^+\to\mathsf S$,
 its nonempty fibers can be represented as disjoint sorts,
 equipped with typed concatenation and promotion to the
-whole-string sort. This specialization shows that qualitative
-positive-data learnability is also covered by Yoshinaka's
-general theorem~\cite[Theorem~1]{yoshinaka2015};
-the particular choice of sorts is not attributed to that work.
+whole-string sort. Under this specialization, Yoshinaka's
+general framework~\cite[Theorem~1 and Lemma~3]{yoshinaka2015}
+already supplies positive-data identification, polynomial-time
+hypothesis updates, and characteristic witnesses of polynomial
+cardinality in a typed target grammar. The particular choice
+of sorts is not attributed to that work.
 
-Our contributions instead concern explicit reconstruction,
-encoded characteristic-data bounds, and the algebraic and
-expressive consequences of finite typing. The locally trivial
-fixed-window criterion itself is classical.
+The procedures below give an explicit fixed-typing realization,
+including a direct completeness proof for nullable and unit
+productions. Their existence, update-time bound, and finite-witness
+cardinality are not claimed as independent learning-theoretic
+novelties. Our principal new questions concern the \emph{encoded
+length} of characteristic data, its polynomial upper and
+exponential lower bounds, and the algebraic and expressive
+consequences of finite typing. The locally trivial fixed-window
+criterion itself is classical.
 
 We study a finite-semigroup-congruence version of this program.  Let
 $s:\Sigma^+\to\mathsf S$ be a homomorphism into a finite semigroup and
@@ -138,9 +145,11 @@ the linear setting of Section~\ref{sec:linear}.
 \subsection{Contributions and main results}
 We give a finite-witness reconstruction operator $\mathsf{Rec}_s$
 and a separate conservative Gold learner $\mathsf{Learn}_s$, with
-polynomial-time reconstruction and updates.  The characteristic-data
-bounds concern $\mathsf{Rec}_s$; no incremental polynomial-data guarantee
-is asserted for $\mathsf{Learn}_s$.
+polynomial-time reconstruction and updates. These qualitative and
+polynomial-time guarantees specialize Yoshinaka's general framework
+~\cite{yoshinaka2015}. The new characteristic-data \emph{length}
+bounds concern $\mathsf{Rec}_s$; no incremental polynomial-data
+guarantee is asserted for $\mathsf{Learn}_s$.
 
 The main contributions concern the cost and scope of finite typing:
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
@@ -327,9 +336,12 @@ the all-fragment condition
 \]
 Conversely, every finite-monoid typing
 $h:\Sigma^*\to M$ induces the finite-semigroup typing
-$s=h|_{\Sigma^+}:\Sigma^+\to h(\Sigma^+)$,
-which yields exactly the same substitutability class
-and the same nonempty-factor reconstruction.
+$s=h|_{\Sigma^+}:\Sigma^+\to h(\Sigma^+)$.
+If substitutability relative to $h$ compares \emph{nonempty}
+factors, as in Definition~\ref{def:hsubst}, it defines
+exactly the same class and nonempty-factor reconstruction.
+No equivalence is asserted for the different condition that
+also compares $\lambda$ with nonempty factors of type $h(\lambda)$.
 \end{lemma}
 \begin{proof}
 Adjoining the identity extends multiplication
@@ -1312,7 +1324,7 @@ characteristic-data bound for $\mathsf{Rec}_s$
 Fix $k,\ell\ge0$ and a morphism $g:\Sigma^*\to\mathsf G$
 into a finite group. In products with $s_{k,\ell}$,
 the group component is restricted to $\Sigma^+$.
-Put $m:=k+\ell$ and $q_{\mathrm{grp}}:=|\mathsf G|$.
+Put $m:=k+\ell$.
 
 \begin{lemma}[window--group typed-yield bound]
 \label{lem:window-typed-yield}
@@ -1424,7 +1436,7 @@ all finite-group typings.
 By Lemma~\ref{lem:li-group-factor}, Theorem~\ref{thm:window-thick}
 applies to the BUNF grammar given by
 Proposition~\ref{prop:thick-bunf-normal}; compose the polynomials.
-The target $\{\lambda\}$ is handled separately.
+
 \end{proof}
 
 Let $\mathbf{LI}$ and $\mathbf{Grp}$ be the pseudovarieties of finite locally
@@ -2043,7 +2055,7 @@ responsibility.
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
 Put $m=k+\ell$, $q=|\mathsf G|$, $N=|V|$,
-$\bar\tau:=\tau_G+1$, $D:=(m+2)Nq$ and $W:=m+q$.
+$\bar\tau:=\tau_G+1$, $D_{\mathrm{dep}}:=(m+2)Nq$ and $W_{\mathrm{ess}}:=m+q$.
 Fix any retained typed copy $A_\mu$, including a
 copy of the original start symbol. If $\mu=\mathbf e$,
 its only yield is $\lambda$. Otherwise choose a positive
@@ -2061,7 +2073,7 @@ last $\ell$ positions are disjoint (either window
 block may be empty). Protect these letters and
 one additional letter as a \emph{nonemptiness
 anchor}; it may already lie in a window block.
-Let $P$ be the protected position set, with
+Let $\mathrm{Prot}$ be the protected position set, with
 $1\le d:=|P|\le m+1$. In particular, the
 anchor also prevents a shortening to $\lambda$
 when $m=0$. Any replacement retaining the
@@ -2090,7 +2102,7 @@ has strictly fewer nonterminal nodes. Strict
 shortening contradicts minimal word length,
 and equal length contradicts the tie break.
 Thus the tree has depth at most
-$(d+1)Nq\le D$.
+$(d+1)Nq\le D_{\mathrm{dep}}$.
 
 Call a node \emph{essential} when its yield span
 contains a protected position or its yield has
@@ -2128,18 +2140,18 @@ preserves the ordered group value, the
 protected letters, and nonemptiness, while
 strictly shortening the word. The argument
 does not assume $\mathsf G$ abelian. Thus every
-depth has at most $W=m+q$ essential nodes.
+depth has at most $W_{\mathrm{ess}}=m+q$ essential nodes.
 
 Essential nodes are ancestor-closed and
-there are at most $WD$ of them. Since BUNF
+there are at most $W_{\mathrm{ess}}D_{\mathrm{dep}}$ of them. Since BUNF
 has at most two children per node, the
 number of maximal nonessential subtrees
-is at most $1+2WD$. Each contributes
+is at most $1+2W_{\mathrm{ess}}D_{\mathrm{dep}}$. Each contributes
 at most $\bar\tau$ letters. All remaining
 terminal positions are protected (at most
 $d$ of them), so
 \[
- |w|\le d+(1+2WD)\bar\tau
+ |w|\le d+(1+2W_{\mathrm{ess}}D_{\mathrm{dep}})\bar\tau
  \le m+1+[1+2(m+q)(m+2)Nq](\tau_G+1).
 \]
 The same argument treats positive start
