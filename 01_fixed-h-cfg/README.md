@@ -313,7 +313,7 @@
 - The temporary `archive/pre-wakatsuki-v106/` snapshot mentioned in the original v107 note was later intentionally deleted and is not part of the current repository. **No claim is made that v107 has been submitted.**
 
 
-**Title:** Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing  
+**Title (experimental PR #62):** Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Journal:** Theoretical Computer Science  
 **Manuscript ID:** TCS-D-26-00494
 

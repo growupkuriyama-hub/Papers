@@ -23,7 +23,7 @@
 \newcommand{\Clin}[1]{\mathcal C_{#1}^{\lin}}
 \newcommand{\pref}{\mathrm{pref}}
 \newcommand{\suf}{\mathrm{suf}}
-\title{Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing}
+\title{Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing}
 \author{Takayuki Kuriyama\\
 Independent Researcher\\
 \texttt{growup.kuriyama@gmail.com}}
@@ -33,86 +33,66 @@ Independent Researcher\\
 \maketitle
 
 \begin{abstract}
-We study positive-data learning of context-free languages under a fixed
-homomorphism $h:\Sigma^*\to M$ to a finite monoid. For each fixed $h$, a
-polynomial-time set-driven operator reconstructs context-free
-targets substitutable relative to $h$ from finite positive witnesses, while a
-separate conservative learner identifies all nonempty targets in Gold's sense.
-
-Characteristic-data bounds depend on shortest yields in type-refined
-grammars. For a two-element semilattice typing, we construct finite targets
-of grammar size and ordinary thickness $O(n)$ that require exponentially
-long positive characteristic data for every set-driven operator admitting
-characteristic samples throughout the fixed-typing class. The same family
-forces exponential typed thickness for every reduced grammar presentation in our start-separated binary normal form,
-regardless of its size.
-
-Polynomial characteristic-data bounds in grammar size and ordinary thickness
-hold for typings determined by a fixed prefix--suffix window together with
-a finite-group value; for every fixed $h$, linear targets admit
-characteristic data polynomial in linear grammar size. The classical locally
-trivial-semigroup criterion characterizes fixed-window-determined typings.
-Nonregular linear and nonlinear targets occur beyond fixed windows, whereas
-the one-bracket Dyck language lies outside every fixed-typing class.
+We study positive-data learning of context-free languages whose nonempty
+factors are typed by a fixed morphism $s:\Sigma^+\to\mathsf S$ into a finite
+semigroup.  A polynomial-time set-driven operator reconstructs each
+substitutable target from finite positive witnesses; a separate conservative
+learner identifies nonempty targets in Gold's sense.  The encoded
+characteristic-data size is polynomial in grammar size and a typed
+shortest-yield parameter.  Ordinary grammar thickness suffices when the
+typing is determined by a fixed prefix--suffix window and a finite-group
+value; for linear targets, linear grammar size alone suffices.  Conversely,
+a fixed two-element semilattice typing yields finite targets with
+linear-size, small-thickness grammars that require exponentially long
+characteristic samples.  The lower bound applies to any set-driven
+operator admitting characteristic samples for the fixed-typing class.
+Retyping closure, examples beyond fixed windows, and a Dyck-language
+obstruction delineate the framework's scope.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Grammatical inference; Context-free languages;
-Distributional learning; Positive-data identification; Finite monoids
+Distributional learning; Positive-data identification; Finite semigroups
 \par\medskip
 
 \section{Introduction}
 
 \subsection{Background and motivation}
 
-Gold~\cite{gold1967} showed that no language class containing all finite
-languages and at least one infinite language is identifiable in the limit
-from positive data alone.  For context-free languages, distributional
-learning recovers positive results by restricting which substrings may be
-compared across contexts; classical examples are Clark--Eyraud
+Gold~\cite{gold1967} established limitations of positive-data
+identification. Distributional learning yields positive results
+for restricted context-free classes, notably Clark--Eyraud
 substitutability~\cite{clark-eyraud2007} and Yoshinaka's
-$(k,\ell)$-substitutability~\cite{yoshinaka2008}.  See
-de~la~Higuera~\cite{higuera2010} for general background and
-Kanazawa~\cite{kanazawa1996,kanazawa1998} for positive-data learning of
-categorial grammars.  In particular, Kanazawa's monograph develops
-characteristic samples for rigid grammars and finite-elasticity arguments
-for the string languages of $k$-valued categorial grammars
-\cite[Chapters~5 and~8]{kanazawa1998}.  This is a complementary line of
-research: here the learning bias instead fixes a finite-monoid typing
-of terminal factors and requires distributional substitutability.
+$(k,\ell)$-substitutability~\cite{yoshinaka2008}.
+For background see de~la~Higuera~\cite{higuera2010};
+positive-data learning of categorial grammars follows a
+complementary approach~\cite{kanazawa1996,kanazawa1998}.
 
-\paragraph{Relation to earlier work and general signature learning.}
-This paper substantially corrects and extends the author's 2014 preprint
-(arXiv v3)~\cite{kuriyama2014}, which introduced substitutability
-relative to recognizable equivalence relations and proposed positive-data
-learning in that setting. The 2014 preprint predates the publication of
-Yoshinaka's general framework of signatures with disjoint sorts~\cite{yoshinaka2015}.
-In Yoshinaka's framework, for the finite-monoid homomorphism
-$h:\Sigma^*\to M$ considered in this paper, the nonempty fibers
-$h^{-1}(m)\cap\Sigma^+$ can be represented as disjoint sorts, with
-typed concatenation and an operation promoting a typed factor to the
-whole-string sort. The resulting signature has the same
-substitutability condition on nonempty factors as the fixed-$h$ definition below.
-Consequently, the \emph{existence} of a positive-data learner for a fixed
-$h$ is also covered by the qualitative signature-based result of
-\cite[Theorem~1]{yoshinaka2015}; our particular batch and sequential
-constructions are analyzed directly here.
-The finite-monoid-specific contributions are retyping closure,
-encoded characteristic-data bounds (rather than merely witness cardinality),
-their extension to window--finite-group typings, and the linear and
-expressive-boundary results.  The locally trivial semigroup criterion itself
-is classical. The broader distributional
-learning setting is surveyed by Clark and Yoshinaka~\cite{clark-yoshinaka2016};
-local substitutability is studied by Coste, Garet, and
-Nicolas~\cite{coste-garet-nicolas2012} and Coste and Nicolas~\cite{coste-nicolas2019}.
+\paragraph{Relation to earlier work.}
+The author's 2014 preprint~\cite{kuriyama2014} introduced
+substitutability relative to recognizable equivalence relations,
+preceding the publication of Yoshinaka's general many-sorted
+signature framework~\cite{yoshinaka2015}.
+For a fixed semigroup morphism $s:\Sigma^+\to\mathsf S$,
+its nonempty fibers can be represented as disjoint sorts,
+equipped with typed concatenation and promotion to the
+whole-string sort. This specialization shows that qualitative
+positive-data learnability is also covered by Yoshinaka's
+general theorem~\cite[Theorem~1]{yoshinaka2015};
+the particular choice of sorts is not attributed to that work.
 
-We study a recognizable-congruence version of this program.  Let
-$h:\Sigma^*\to M$ be a homomorphism into a finite monoid and
-$\sim_h:=\ker h$.  For $x\in\Sigma^*$, write
+Our contributions instead concern explicit reconstruction,
+encoded characteristic-data bounds, and the algebraic and
+expressive consequences of finite typing. The locally trivial
+fixed-window criterion itself is classical.
+
+We study a finite-semigroup-congruence version of this program.  Let
+$s:\Sigma^+\to\mathsf S$ be a homomorphism into a finite semigroup and
+$\sim_s:=\ker s\subseteq\Sigma^+\times\Sigma^+$.  For $x\in\Sigma^*$, write
 $\D_L(x):=\{(u,v):uxv\in L\}$.  A language $L$ is
-\emph{$\sim_h$-substitutable} if, for nonempty $x,y$,
-$h(x)=h(y)$ and $\D_L(x)\cap\D_L(y)\ne\emptyset$ imply
-$\D_L(x)=\D_L(y)$. Write $\Ccf{h}$ for the context-free
-$\sim_h$-substitutable languages, and call this the \emph{fixed-$h$ slice}.
+\emph{$\sim_s$-substitutable} if, for nonempty $x,y$,
+$s(x)=s(y)$ and $\D_L(x)\cap\D_L(y)\ne\emptyset$ imply
+$\D_L(x)=\D_L(y)$. Write $\Ccf{s}$ for the context-free
+$\sim_s$-substitutable languages, and call this the \emph{fixed-$s$ slice}.
 Thus full distributional equality is required only after a fixed finite
 algebraic comparison.
 
@@ -120,97 +100,73 @@ For a minimal example, take $\Sigma=\{a\}$ and $L=\{a,aa\}$.
 Although $(\lambda,\lambda)\in\D_L(a)\cap\D_L(aa)$,
 the context $(a,\lambda)$ belongs to $\D_L(a)$ but not to $\D_L(aa)$.
 Thus $L$ is not Clark--Eyraud substitutable.
-Under the parity morphism $h(a^n)=n\bmod 2$ into
+Under the parity morphism $s(a^n)=n\bmod 2$ into
 $\mathbb Z/2\mathbb Z$, however, $a$ and $aa$ have distinct types
-and $L\in\Ccf{h}$.
+and $L\in\Ccf{s}$.
 
-Finite-index monoid congruences, equivalently kernels of morphisms into
-finite monoids, provide finite typings.  For each fixed $h$,
-write $\mathsf{RS}_h$ for the class of all $\sim_h$-substitutable
+Finite-index semigroup congruences on $\Sigma^+$,
+equivalently kernels of finite-semigroup homomorphisms,
+provide finite typings.  For each fixed $s$,
+write $\mathsf{RS}_s$ for the class of all $\sim_s$-substitutable
 languages, without a context-freeness restriction.  For expressive
 comparison, let
-$\mathsf{RS}:=\bigcup_h\mathsf{RS}_h$,
-where $h$ ranges over finite-monoid homomorphisms on $\Sigma^*$.
+$\mathsf{RS}:=\bigcup_s\mathsf{RS}_s$,
+where $s$ ranges over finite-semigroup homomorphisms on $\Sigma^+$.
 Every regular language belongs to this union.  Our learning results,
-however, concern only $\Ccf{h}$ for one fixed $h$; no learner is
+however, concern only $\Ccf{s}$ for one fixed $s$; no learner is
 claimed for $\mathsf{RS}$.
 
-Unlike one fixed prefix--suffix window, $h$ can combine independent
+Unlike one fixed prefix--suffix window, $s$ can combine independent
 finite-state factor features by a product.  If the finite typing is allowed
 to be refined accordingly, the framework is stable under regular filtering
 and arbitrary inverse homomorphisms, including erasing ones
 (Proposition~\ref{prop:finite-info-closure}).  This is a
-change-of-typing statement, not closure of one fixed-$h$ slice.  An algebraic criterion identifies the typings determined by fixed
+change-of-typing statement, not closure of one fixed-$s$ slice.  An algebraic criterion identifies the typings determined by fixed
 prefix--suffix windows on nonempty factors
 (Proposition~\ref{prop:li-window}); combining windows with finite groups
 yields a broader characteristic-data bound (Corollary~\ref{cor:li-thickness}).
 Examples below exhibit nonregular linear and nonlinear targets
 outside every fixed-window class, while counter and Dyck obstructions
-delimit the reach of fixed finite-monoid typing.
+delimit the reach of fixed finite-semigroup typing.
 
-Specifying $h$ is a prior choice, related to typing or domain bias in
-automata inference~\cite{coste-typing2004}; here types apply to entire
-terminal factors, not to occurrences with their outer contexts.
-For linear grammars, yield typing also induces a regular control set
-of production-label sequences, giving a limited but concrete
-connection with Takada's regular control-set approach
-\cite{takada1988,takada1995}
-(Section~\ref{sec:linear}), without an equivalence claim.
-
+The choice of $s$ supplies a typing bias on terminal
+factors~\cite{coste-typing2004}, not their occurrences.
+Its connection with regular control sets
+~\cite{takada1988,takada1995} is confined to
+the linear setting of Section~\ref{sec:linear}.
 
 \subsection{Contributions and main results}
+We give a finite-witness reconstruction operator $\mathsf{Rec}_s$
+and a separate conservative Gold learner $\mathsf{Learn}_s$, with
+polynomial-time reconstruction and updates.  The characteristic-data
+bounds concern $\mathsf{Rec}_s$; no incremental polynomial-data guarantee
+is asserted for $\mathsf{Learn}_s$.
 
-The qualitative existence of a positive-data learner also follows from
-Yoshinaka's general many-sorted signature framework.  Here we give a direct
-construction for context-free targets under a fixed finite-monoid typing and
-prove its correctness.  Specifically, the set-driven operator
-$\mathsf{Rec}_h$ reconstructs every target in $\Ccf{h}$ exactly from finitely
-many canonical positive witnesses.  A separate conservative sequential
-learner $\mathsf{Learn}_h$ identifies every nonempty target in Gold's sense;
-reconstruction and each update take time polynomial in the accumulated
-sample size.
-
-Building on this learning construction, we emphasize two main contributions.
-
+The main contributions concern the cost and scope of finite typing:
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
-\item \emph{Quantitative guarantees.}
-For each fixed $h$, characteristic-data size for $\mathsf{Rec}_h$ is
-polynomial in the size and typed thickness of a grammar in our normal
-form.  When a fixed prefix--suffix window and a finite-group value
-jointly determine the $h$-type, ordinary grammar thickness suffices,
-extending Yoshinaka's fixed-window bound.  For fixed-$h$ substitutable
-linear targets, the bound depends polynomially on linear CFG size alone.
+\item \emph{Characteristic-data bounds and lower bounds.}
+For each fixed $s$, encoded characteristic-data size is polynomial
+in the size and typed shortest yields of a reduced grammar in binary--unit--nullable
+form.  Ordinary thickness suffices for window--finite-group typings,
+and linear grammar size alone for linear targets.
+Conversely, a fixed two-element semilattice typing gives finite
+targets with grammar size and ordinary thickness $O(n)$ but
+characteristic-sample length $\Omega(2^n)$.  This lower bound applies
+to every set-driven operator admitting characteristic samples for
+both targets of a distinguishing pair; every reduced grammar of the
+above form for these targets also has exponential typed thickness
+(Proposition~\ref{prop:typed-thickness-gap};
+Corollary~\ref{cor:typed-gap-intrinsic}).
 
-In contrast, we construct finite Clark--Eyraud substitutable targets
-$L_n$ with grammar size and ordinary thickness $O(n)$.  Their
-characteristic data for $\mathsf{Rec}_{h_0}$ are polynomial, but a fixed
-two-element semilattice typing $h_{\mathrm U}$ forces exponentially long
-characteristic sample words for $\mathsf{Rec}_{h_{\mathrm U}}$.
-The distinguishing pair $L_n,L_n^-$ extends this lower bound to every
-set-driven operator admitting characteristic samples for both targets
-(Proposition~\ref{prop:typed-thickness-gap}).
-Moreover, every reduced start-separated binary-normal-form grammar
-for $L_n$ has exponential typed thickness under $h_{\mathrm U}$,
-irrespective of grammar size
-(Corollary~\ref{cor:typed-gap-intrinsic}).
-
-\item \emph{Structural and expressive position.}
-We establish closure properties obtained by refinement and products of
-finite typings (not closure of an individual fixed-$h$ slice), record
-the classical algebraic criterion for typings determined by fixed
-prefix--suffix windows, and relate linear yield typing to regular
-control sets.  Explicit nonregular linear and nonlinear examples lie
-beyond all fixed-window classes; counter/Dyck obstructions and
-comparison with Clark's congruential family delimit the framework.
+\item \emph{Algebraic and expressive scope.}
+We establish closure under regular filtering and inverse
+homomorphisms by changing the finite typing, rather than keeping
+one fixed-$s$ slice.  We record the classical algebraic
+characterization of fixed-window typings and exhibit nonregular
+targets beyond all fixed-window classes, together with counter/Dyck
+obstructions.  For linear grammars, typing also induces regular
+control sets.
 \end{enumerate}
-
-\subsection{Organization of the paper}
-Sections~\ref{sec:prelim}--\ref{sec:framework} set up the framework,
-Sections~\ref{sec:algo}--\ref{sec:typing} prove learnability,
-Sections~\ref{sec:typed-thickness}--\ref{sec:linear} give the quantitative
-results, and Section~\ref{sec:boundaries} gives the expressiveness
-comparisons.  Long normalization proofs are deferred to the appendices.
-
 \section{Preliminaries}
 \label{sec:prelim}
 
@@ -297,99 +253,151 @@ Polynomial update time and polynomial characteristic data are distinct
 criteria~\cite[Sections~7.3.2--7.3.3]{higuera2010}.  In the terms of
 Eyraud--Heinz--Yoshinaka~\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016},
 our polynomial characteristic-data guarantees are \emph{set-based}
-(correct reconstruction by $\mathsf{Rec}_h$ from every finite sample
+(correct reconstruction by $\mathsf{Rec}_s$ from every finite sample
 containing a characteristic sample); the \emph{incremental} criterion,
-a correct and stable hypothesis of $\mathsf{Learn}_h$ as soon as such a sample
-has appeared, is not claimed.  Gold stabilization of $\mathsf{Learn}_h$ is
+a correct and stable hypothesis of $\mathsf{Learn}_s$ as soon as such a sample
+has appeared, is not claimed.  Gold stabilization of $\mathsf{Learn}_s$ is
 proved in Corollary~\ref{cor:ilt}.
 
-\subsection{Fixed finite-monoid typing}\label{sec:fixed-typing}
+\subsection{Fixed finite-semigroup typing}\label{sec:fixed-typing}
+Fix a finite semigroup $\mathsf S$ and a \emph{surjective}
+semigroup homomorphism $s:\Sigma^+\twoheadrightarrow\mathsf S$,
+represented by the multiplication table of $\mathsf S$
+and the letter images $s(a)$ for $a\in\Sigma$.
+Thus $s(w)$ is computed by a left-to-right product in
+$O(|w|)$ time for nonempty $w$.
+Surjectivity is without loss of generality: an arbitrary
+finite semigroup typing may be replaced by its positive image.
+Whenever a later construction produces a non-surjective
+semigroup map (notably a product or inverse-image typing),
+its type codomain is implicitly restricted to the positive
+image before taking the fresh-identity completion.
+We work over a nonempty alphabet unless stated otherwise;
+for $\Sigma=\emptyset$, the only possible target languages
+are $\emptyset$ and $\{\lambda\}$, which the unchanged learner
+handles directly.
 
-Fix a finite monoid $M$ and a homomorphism $h:\Sigma^*\to M$, represented
-by the multiplication table of $M$ and the letter images $h(a)$ for
-$a\in\Sigma$.  Thus $h(w)$ is computable by a left-to-right product in
-$O(|w|)$ time; this is the sense in which the fixed homomorphism is
-\emph{efficiently computable} below.
+For a finite semigroup $\mathsf T$, an element
+$e\in\mathsf T$ is \emph{idempotent} if $e^2=e$;
+write $E(\mathsf T)$ for its idempotents.
+Call $\mathsf T$ \emph{locally trivial} when
+$ete=e$ for all $e\in E(\mathsf T)$ and $t\in\mathsf T$.
+Every nonempty finite semigroup has an idempotent.
+Consequently local triviality is preserved by
+surjective finite-semigroup morphisms:
+if $\pi:\mathsf T\to\mathsf S$ is surjective,
+every idempotent of $\mathsf S$ lifts to one in
+its preimage subsemigroup.
 
-For a finite semigroup $\mathsf{S}$, an element $e\in\mathsf{S}$ is
-\emph{idempotent} if $e^2=e$; let $E(\mathsf{S})$ denote the set of all
-idempotents.  We call $\mathsf{S}$
-\emph{locally trivial} if $ete=e$ for all $e\in E(\mathsf{S})$ and $t\in \mathsf{S}$.
-Every nonempty finite semigroup has an idempotent.  Hence, if
-$\pi:\mathsf{T}\to \mathsf{S}$ is a surjective morphism of finite semigroups, each
-$e\in E(\mathsf{S})$ has an idempotent preimage $f$ in the subsemigroup
-$\pi^{-1}(e)$, and $\mathsf{S}$ is locally trivial whenever $\mathsf{T}$ is, since then
-$e\pi(t)e=\pi(ftf)=e$.
-The \emph{positive image semigroup} of $h$ is $h(\Sigma^+)$; it
-need not contain the identity of $M$.
-
-\begin{definition}[fixed-$h$ substitutability]\label{def:hsubst}
-A language $L\subseteq\Sigma^*$ is \emph{$\sim_h$-substitutable} if for all
-$x,y\in\Sigma^+$, equality $h(x)=h(y)$ together with
+\begin{definition}[fixed-$s$ substitutability]\label{def:hsubst}
+A language $L\subseteq\Sigma^*$ is \emph{$\sim_s$-substitutable} if for all
+$x,y\in\Sigma^+$, equality $s(x)=s(y)$ together with
 $\D_L(x)\cap\D_L(y)\ne\varnothing$ implies $\D_L(x)=\D_L(y)$.
 \end{definition}
-\begin{lemma}[fresh-identity completion]\label{lem:fresh-identity}
-Let $M^\sharp=M\sqcup\{\mathbf{1}\}$ be the monoid obtained by
-adjoining a \emph{new} identity $\mathbf{1}$ to the underlying semigroup
-of $M$, even when $M$ already has an identity $1_M$.  Define
+\begin{lemma}[canonical fresh-identity completion]\label{lem:fresh-identity}
+Let $\mathsf S^\sharp=\mathsf S\sqcup\{\mathbf e\}$
+be the monoid obtained by adjoining a \emph{fresh}
+identity $\mathbf e$ to the finite semigroup $\mathsf S$,
+even if $\mathsf S$ already has an identity.
+The empty-alphabet case is handled separately as above.
+There is a unique monoid extension
+$\widehat s:\Sigma^*\twoheadrightarrow\mathsf S^\sharp$
+of $s$, given by
 \[
-h^\sharp(w):=
+\widehat s(w)=
 \begin{cases}
-\mathbf{1},&w=\lambda,\\
-h(w),&w\in\Sigma^+.
+\mathbf e,&w=\lambda,\\
+s(w),&w\in\Sigma^+.
 \end{cases}
 \]
-Then $h^\sharp:\Sigma^*\to M^\sharp$ is a finite-monoid
-homomorphism, its positive image semigroup is $h(\Sigma^+)$,
-and for every $L\subseteq\Sigma^*$, Definition~\ref{def:hsubst}
-is equivalent to the all-fragment condition
+It is surjective, and
+$\mathsf S^\sharp\cong\Sigma^*/\ker\widehat s$, with
+\[
+\widehat s(x)=\widehat s(y)\quad\Longleftrightarrow\quad
+(x=y=\lambda)\ \text{or}\
+(x,y\in\Sigma^+\text{ and }s(x)=s(y)).
+\]
+Thus Definition~\ref{def:hsubst} is equivalent to
+the all-fragment condition
 \[
 \forall x,y\in\Sigma^*,\quad
-\bigl(h^\sharp(x)=h^\sharp(y)\ \land\
+\bigl(\widehat s(x)=\widehat s(y)\land
 \D_L(x)\cap\D_L(y)\ne\emptyset\bigr)
-\ \Longrightarrow\ \D_L(x)=\D_L(y).
+\Longrightarrow\D_L(x)=\D_L(y).
 \]
+Conversely, every finite-monoid typing
+$h:\Sigma^*\to M$ induces the finite-semigroup typing
+$s=h|_{\Sigma^+}:\Sigma^+\to h(\Sigma^+)$,
+which yields exactly the same substitutability class
+and the same nonempty-factor reconstruction.
 \end{lemma}
 \begin{proof}
-The homomorphism law follows from that of $h$ and the new identity;
-the positive image is unchanged by definition.
-Since $(h^\sharp)^{-1}(\{\mathbf{1}\})=\{\lambda\}$,
-equal $h^\sharp$-types compare either $\lambda$ with itself or two
-nonempty words, for which type equality is precisely $h(x)=h(y)$.
+Adjoining the identity extends multiplication
+and makes $\widehat s$ a monoid morphism.
+Every element of $\mathsf S$ is attained by a
+positive word, while $\lambda$ attains $\mathbf e$,
+so the map is surjective.  The displayed
+kernel description follows because
+$\mathbf e\notin\mathsf S$.
+Equal extended types compare either $\lambda$
+with itself or nonempty words of equal $s$-type,
+proving equivalence with Definition~\ref{def:hsubst}.
+For the converse, restricting $h$ preserves
+all nonempty equalities, which alone define
+substitutability and the reconstruction rules.
 \end{proof}
 
-For a nonempty internal factor $x$, we call $h(x)$ its
-\emph{yield type}.  As above, $\Ccf{h}$ denotes the context-free
-$\sim_h$-substitutable languages, and we define
-$\Clin{h}:=\{L\in\Ccf{h}:L\text{ is generated by some linear CFG}\}$.
+Throughout, subscripts of substitutability classes,
+reconstruction operators, and typed-thickness parameters
+denote semigroup morphisms on \emph{nonempty} words.
+Write $s_0$ for the unique one-element semigroup typing,
+on whichever alphabet is in use. When a monoid morphism
+$h:\Sigma^*\to M$ is convenient for recognizing a regular
+language or evaluating empty contexts, its restriction
+$s=h|_{\Sigma^+}$ is the learning bias. The extension
+$\widehat s$ handles nullable yields
+(Lemma~\ref{lem:fresh-identity}); algebraic conditions
+are tested on the positive image, not on its completion.
+
+For $x\in\Sigma^*$ we call $\widehat s(x)$ its \emph{yield type};
+for nonempty $x$ it equals $s(x)$.  As above, $\Ccf{s}$ denotes the context-free
+$\sim_s$-substitutable languages, and we define
+$\Clin{s}:=\{L\in\Ccf{s}:L\text{ is generated by some linear CFG}\}$.
 
 \section{Fixed Recognizable Substitutability}
 \label{sec:framework}
 
-For fixed $h$, put
-$\mathsf{RS}_h:=\{L\subseteq\Sigma^*:L\text{ is $\sim_h$-substitutable}\}$.
-Then the fixed-$h$ slice is
-$\Ccf{h}=\mathsf{RS}_h\cap\mathrm{CFL}$, while $\Clin{h}$ consists
+For fixed $s$, put
+$\mathsf{RS}_s:=\{L\subseteq\Sigma^*:L\text{ is $\sim_s$-substitutable}\}$.
+Then the fixed-$s$ slice is
+$\Ccf{s}=\mathsf{RS}_s\cap\mathrm{CFL}$, while $\Clin{s}$ consists
 of its linearly generated members.  For expressive comparisons only, let
-$\mathsf{RS}:=\bigcup_h\mathsf{RS}_h$, where $h$ ranges over finite-monoid
-homomorphisms on $\Sigma^*$.  We write $\mathsf{RS}_h(\Gamma)$ and
+$\mathsf{RS}:=\bigcup_s\mathsf{RS}_s$, where $s$ ranges over finite-semigroup
+homomorphisms on $\Sigma^+$.  We write $\mathsf{RS}_s(\Gamma)$ and
 $\mathsf{RS}(\Gamma)$ when the alphabet matters; all inclusions below are
-alphabetwise.  The learning results always concern one fixed $h$.
+alphabetwise.  The learning results always concern one fixed $s$.
 
 \begin{proposition}\label{prop:regular-auto}
-A language is regular iff it has the form $h^{-1}(\mathsf{Acc})$ for some
-homomorphism $h:\Sigma^*\to M$ into a finite monoid and some
-$\mathsf{Acc}\subseteq M$.  For regular $L$, $h$ may be taken to be its
-syntactic morphism, whose kernel is $\equiv_L$.  For every fixed $h$ and
-$\mathsf{Acc}\subseteq M$, the language $h^{-1}(\mathsf{Acc})$ is
-$\sim_h$-substitutable.  Thus every regular language belongs to
+A language $L\subseteq\Sigma^*$ is regular iff
+$L=\widehat s^{-1}(\mathsf{Acc})$ for some finite-semigroup
+typing $s:\Sigma^+\to\mathsf S$ and some
+$\mathsf{Acc}\subseteq\mathsf S^\sharp$.
+Every language recognized in this way belongs to
+$\mathsf{RS}_s$, so all regular languages belong to
 $\mathsf{RS}$.
 \end{proposition}
-
 \begin{proof}
-The first two statements follow from the classical syntactic-monoid
-characterization~\cite[Chapter~III, Propositions~10.1--10.2]{eilenberg1974}.  If $L=h^{-1}(\mathsf{Acc})$ and $h(x)=h(y)$, then
-$h(uxv)=h(uyv)$ for all $u,v$, so $\D_L(x)=\D_L(y)$.
+For regular $L$, restrict its syntactic-monoid
+morphism to $\Sigma^+$, replace the codomain by
+its positive image $\mathsf S$, and extend by a
+fresh identity.  The positive types still determine
+membership for nonempty words; include $\mathbf e$
+among the accepting types exactly if $\lambda\in L$.
+Conversely, $\widehat s$ recognizes a regular
+language since $\mathsf S^\sharp$ is finite.
+For nonempty $x,y$ with $s(x)=s(y)$,
+$\widehat s(uxv)=\widehat s(uyv)$ for all contexts
+$u,v\in\Sigma^*$, hence $\D_L(x)=\D_L(y)$.
 \end{proof}
 
 By Proposition~\ref{prop:regular-auto}, $\mathsf{RS}$ and
@@ -397,19 +405,30 @@ $\mathsf{RS}\cap\mathrm{CFL}$ contain every finite language and
 $\Sigma^*$; Gold's theorem makes both unions nonlearnable from
 positive data on nonempty alphabets.  Yoshinaka
 \cite[Section~4]{yoshinaka2008} notes the analogous issue for
-the union of fixed-window classes.  We learn only fixed-$h$ slices.
+the union of fixed-window classes.  We learn only fixed-$s$ slices.
 
-Typing refinement is monotone on the nonempty factors that enter
-Definition~\ref{def:hsubst}.  If
-$\ker h'|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$, then
-$\mathsf{RS}_h\subseteq\mathsf{RS}_{h'}$, since $h'$ requires fewer
-factor comparisons.  Refinement may nevertheless enlarge the typed grammar
-used in the quantitative analysis.  For two finite typings $h,g$,
-$\ker(h\times g)|_{\Sigma^+}
- =\ker h|_{\Sigma^+}\cap\ker g|_{\Sigma^+}$, hence
-$\mathsf{RS}_h\cup\mathsf{RS}_g\subseteq\mathsf{RS}_{h\times g}$;
-in particular, window information and another finite feature can be combined
-without making the typing target-specific.
+The fresh-identity completion reduces refinement and
+product typing to ordinary monoid-kernel operations.
+For finite-semigroup typings $s,t$ of $\Sigma^+$,
+where each codomain is reduced to its positive image,
+\[
+\ker\widehat{s'}\subseteq\ker\widehat s
+\ \Longleftrightarrow\
+\ker s'\subseteq\ker s,\qquad
+\ker\widehat{s\times t}
+=\ker\widehat s\cap\ker\widehat t.
+\]
+Here $\widehat{s\times t}$ completes the \emph{image}
+$(s\times t)(\Sigma^+)$ with a fresh identity.
+In fact its image monoid is isomorphic to
+$\operatorname{im}(\widehat s\times\widehat t)$,
+a submonoid of $\mathsf S^\sharp\times\mathsf T^\sharp$.
+Consequently $\mathsf{RS}_s\subseteq\mathsf{RS}_{s'}$
+under the first inclusion, and
+$\mathsf{RS}_s\cup\mathsf{RS}_t
+\subseteq\mathsf{RS}_{s\times t}$.
+A refinement may increase the typed grammar size
+used in quantitative bounds.
 
 Yoshinaka~\cite[Proposition~1]{yoshinaka2008} showed that
 fixed-window substitutable languages are not closed under intersection
@@ -425,60 +444,57 @@ The following proposition shows that regular filtering
 and erasing inverse images can be accommodated by changing the finite typing.
 
 \begin{proposition}[closure under finite information]\label{prop:finite-info-closure}
-Let $h:\Sigma^*\to M$ and $g:\Sigma^*\to N$ be finite-monoid
-homomorphisms.
+Let $s:\Sigma^+\to\mathsf S$ and
+$t:\Sigma^+\to\mathsf T$ be finite-semigroup typings.
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item If $L\in\mathsf{RS}_h$ and $J\in\mathsf{RS}_g$, then
-$L\cap J\in\mathsf{RS}_{h\times g}$.
-\item If $R_{\mathrm{reg}}=g^{-1}(\mathsf{Acc}_{g})$ is regular and $L\in\Ccf{h}$, then
-$L\cap R_{\mathrm{reg}}\in\Ccf{h\times g}$.
-\item Let $\varphi:\Gamma^*\to\Sigma^*$ be any homomorphism, possibly
-erasing.  Let $U_1=\{1,\zeta\}$ be the two-element monoid with zero
-$\zeta$, define $e_\varphi(w)=1$ iff $\varphi(w)=\lambda$ and
-$e_\varphi(w)=\zeta$ otherwise, and put
-$\widehat h=(h\circ\varphi)\times e_\varphi$.\footnote{%
-The flag $e_\varphi$ cannot in general be omitted.  For $L=a^+$ and
-trivial $h$, let $\varphi(a)=a$ and $\varphi(b)=\lambda$.
-In $\varphi^{-1}(L)$, the factors $a,b$ have equal
-$(h\circ\varphi)$-types and share the context $(a,\lambda)$,
-but $a$ belongs to the inverse image whereas $b$ does not.}
-If $L\in\mathsf{RS}_h$, then
-$\varphi^{-1}(L)\in\mathsf{RS}_{\widehat h}$; if moreover
-$L\in\Ccf{h}$, then
-$\varphi^{-1}(L)\in\Ccf{\widehat h}$.
+\item If $L\in\mathsf{RS}_s$ and $J\in\mathsf{RS}_t$, then
+$L\cap J\in\mathsf{RS}_{s\times t}$.
+\item If $R_{\mathrm{reg}}=\widehat t^{-1}(\mathsf{Acc}_t)$
+is regular and $L\in\Ccf{s}$, then
+$L\cap R_{\mathrm{reg}}\in\Ccf{s\times t}$.
+\item Let $\varphi:\Gamma^*\to\Sigma^*$ be any
+homomorphism, possibly erasing, and put
+$r=(\widehat s\circ\varphi)|_{\Gamma^+}:
+\Gamma^+\to\mathsf S^\sharp$.
+If $L\in\mathsf{RS}_s$, then
+$\varphi^{-1}(L)\in\mathsf{RS}_r$;
+if moreover $L\in\Ccf{s}$, then
+$\varphi^{-1}(L)\in\Ccf{r}$.\footnote{%
+The fresh identity in $\mathsf S^\sharp$ replaces
+a separate erasure flag.  For trivial $s$,
+$L=a^+$, $\varphi(a)=a$ and $\varphi(b)=\lambda$,
+the two nonempty inverse-image factors $a,b$
+share a context but have different distributions.}
 \end{enumerate}
 \end{proposition}
-
 \begin{proof}
-For (i), suppose nonempty $x,y$ have equal $(h\times g)$-type and share a
-context in $L\cap J$.  They then have equal $h$-type and a common context in
-$L$, and equal $g$-type and a common context in $J$.  Hence
-$\D_L(x)=\D_L(y)$ and $\D_J(x)=\D_J(y)$, so
-$\D_{L\cap J}(x)=\D_{L\cap J}(y)$.  Item~(ii) follows from (i),
-Proposition~\ref{prop:regular-auto}, and closure of CFLs under intersection
-with regular languages.
-
-For (iii), $e_\varphi$ is a homomorphism because
-$\varphi(uv)=\lambda$ iff both $\varphi(u)$ and $\varphi(v)$ are empty.
-Let equal-$\widehat h$-type nonempty $x,y$ share a context in
-$\varphi^{-1}(L)$.  If $e_\varphi(x)=e_\varphi(y)=1$, then
-$\varphi(x)=\varphi(y)=\lambda$, so the two factors have identical
-distributions in the inverse image.  Otherwise both images are nonempty,
-have equal $h$-type, and the shared inverse-image context maps to a common
-context of $\varphi(x),\varphi(y)$ in $L$.  Fixed-$h$ substitutability in
-$L$ gives equal distributions there, and pulling contexts back through
-$\varphi$ gives
-$\D_{\varphi^{-1}(L)}(x)=\D_{\varphi^{-1}(L)}(y)$.
-The context-free statement uses closure of CFLs under inverse homomorphism.
+For (i), nonempty factors of equal $(s\times t)$-type
+with a common context in $L\cap J$ have equal
+distributions in each language, and hence in
+their intersection. Item (ii) follows from (i)
+and closure of CFLs under regular intersection.
+For (iii), $r$ is a semigroup morphism, since
+$\widehat s\circ\varphi$ is a monoid morphism.
+If two nonempty factors of equal $r$-type share
+a context in $\varphi^{-1}(L)$, their images are
+either both empty or both nonempty and of equal
+$s$-type.  In the first case their inverse-image
+distributions coincide.  In the second case,
+substitutability of $L$ and the shared image
+context give the same conclusion after pulling
+back contexts.  The context-free assertion uses
+closure of CFLs under inverse homomorphism.
 \end{proof}
 
 \paragraph{Typing adequacy.}
-By Definition~\ref{def:hsubst}, $L\in\mathsf{RS}_h$ exactly when $\ker h$
-identifies no two nonempty factors having a common context but different
-distributions; typing adequacy is thus a finite-index monoid-congruence
-separation condition, preserved by refinement and product typing at a
-possible quantitative cost (Proposition~\ref{prop:typed-thickness-gap}).
-The stronger requirement $\ker h|_{\Sigma^+}\subseteq\equiv_L$
+By Lemma~\ref{lem:fresh-identity},
+$L\in\mathsf{RS}_s$ exactly when $\ker \widehat s$
+distinguishes every pair of factors with intersecting but
+unequal distributions.  Thus typing adequacy is a
+finite-index congruence separation condition, preserved
+under refinement and products at a possible quantitative
+cost (Proposition~\ref{prop:typed-thickness-gap}).
+The stronger condition $\ker \widehat s\subseteq\equiv_L$
 is sufficient but forces $L$ to be regular.
 
 \subsection{Classical special cases}
@@ -489,12 +505,13 @@ in excluding $\lambda$.  This distinction matters even for $L=a^+$:
 $(a,\lambda)$ belongs to both $\D_L(\lambda)$ and $\D_L(a)$,
 whereas $(\lambda,\lambda)$ belongs to $\D_L(a)$ but not to
 $\D_L(\lambda)$.  Thus comparing $\lambda$ with nonempty factors
-would exclude $a^+$.
+\emph{without type separation} would exclude $a^+$;
+$\widehat s$ makes those factors incomparable in type.
 Call $L$
 \emph{Clark--Eyraud substitutable} when
 $\D_L(x)\cap\D_L(y)\ne\emptyset$ implies
 $\D_L(x)=\D_L(y)$ for all $x,y\in\Sigma^+$.  This is exactly the
-trivial-monoid case of Definition~\ref{def:hsubst}, and hence also
+trivial-semigroup case of Definition~\ref{def:hsubst}, and hence also
 Yoshinaka's $(0,0)$ case.
 
 
@@ -504,69 +521,69 @@ $\min\{\ell,|w|\}$, respectively; in particular,
 $\pref_0(w)=\suf_0(w)=\lambda$.  Renaming Yoshinaka's variables so that
 $u_i,v_i$ denote outer contexts, $L$ is \emph{$(k,\ell)$-substitutable}
 if, for all $p\in\Sigma^k$, $q\in\Sigma^\ell$, and
-$u_1,u_2,v_1,v_2,r,s\in\Sigma^*$ with $prq,psq\ne\lambda$,
+$u_1,u_2,v_1,v_2,r_1,r_2\in\Sigma^*$ with $pr_1q,pr_2q\ne\lambda$,
 \[
 \begin{split}
-&u_1prqv_1\in L,\quad u_1psqv_1\in L,\quad
-u_2prqv_2\in L\\
-&\hspace{35mm}\Longrightarrow\quad u_2psqv_2\in L.
+&u_1pr_1qv_1\in L,\quad u_1pr_2qv_1\in L,\quad
+u_2pr_1qv_2\in L\\
+&\hspace{35mm}\Longrightarrow\quad u_2pr_2qv_2\in L.
 \end{split}
 \]
 
-\begin{proposition}\label{prop:yl-special}
-For every fixed $k,\ell\ge0$ there is a finite monoid homomorphism
-$h_{k,\ell}$ such that, for every $L\subseteq\Sigma^*$,
-$L$ is $(k,\ell)$-substitutable iff it is
-$\sim_{h_{k,\ell}}$-substitutable.
+\begin{proposition}[finite-semigroup realization of fixed windows]
+\label{prop:yl-special}
+For every $k,\ell\ge0$ there is a surjective
+finite-semigroup morphism $s_{k,\ell}:\Sigma^+\to W_{k,\ell}$
+such that $L\subseteq\Sigma^*$ is $(k,\ell)$-substitutable
+if and only if it is $\sim_{s_{k,\ell}}$-substitutable.
 \end{proposition}
-
 \begin{proof}
-Put $m_0:=\max\{1,k+\ell\}$, let $h_{k,\ell}(w):=w$ for
-$|w|<m_0$, and otherwise let
-$h_{k,\ell}(w):=\langle\pref_k(w),\suf_\ell(w)\rangle$, with a tag
-separating the two cases.  Denote the finite image by
-$M_{k,\ell}:=h_{k,\ell}(\Sigma^*)$.  On $M_{k,\ell}$ define, for
-$x,y$ with $|x|,|y|<m_0$,
+Put $m_0:=\max\{1,k+\ell\}$. For $w\in\Sigma^+$ define
 \[
-\begin{aligned}
-x\cdot y&:=h_{k,\ell}(xy),&
-x\cdot\langle p,q\rangle&:=\langle\pref_k(xp),q\rangle,\\
-\langle p,q\rangle\cdot y&:=\langle p,\suf_\ell(qy)\rangle,&
-\langle p,q\rangle\cdot\langle p',q'\rangle&:=\langle p,q'\rangle.
-\end{aligned}
+s_{k,\ell}(w):=
+\begin{cases}
+(\mathrm{short},w),&0<|w|<m_0,\\
+(\mathrm{long},\pref_k(w),\suf_\ell(w)),&|w|\ge m_0.
+\end{cases}
 \]
-Then $h_{k,\ell}(xy)=h_{k,\ell}(x)\cdot h_{k,\ell}(y)$; surjectivity
-gives associativity and $h_{k,\ell}(\lambda)$ is the identity.
+The displayed equivalence on $\Sigma^+$ is a two-sided
+congruence: equal short types represent the same word;
+equal long types retain their length-$k$ prefix and
+length-$\ell$ suffix after any common left and right
+concatenation. Its finite quotient $W_{k,\ell}$ thus
+inherits an associative product, and $s_{k,\ell}$
+is a surjective semigroup morphism.
 
-For nonempty $x,y$, equal types mean either $x=y$ or
-$x=prq$, $y=psq$ for a common length-$k$ prefix $p$ and length-$\ell$
-suffix $q$ (including $k=\ell=0$).  If $L$ is
-$(k,\ell)$-substitutable, a shared context plus any context of one factor
-instantiates Yoshinaka's four-word condition, and symmetry gives equal
-distributions.  Conversely, in any Yoshinaka premise the factors
-$x:=prq$ and $y:=psq$ are nonempty and lie in the long-word part of the
-coding, hence have equal $h_{k,\ell}$-type; fixed-$h_{k,\ell}$
-substitutability transfers the third context and yields the fourth word.
+For nonempty $x,y$, equal types mean either $x=y$
+or $x=pr_1q$, $y=pr_2q$ for common
+$p\in\Sigma^k$, $q\in\Sigma^\ell$ and
+$r_1,r_2\in\Sigma^*$. In the latter case a common
+context and an arbitrary context of one factor
+instantiate Yoshinaka's four-word condition;
+symmetry gives equal distributions.
+Conversely, the nonempty factors of any such
+premise have equal $s_{k,\ell}$-types, so relative
+substitutability supplies the fourth word.
 \end{proof}
 
 Yoshinaka~\cite[Example~4]{yoshinaka2015} already represented
 $(k,\ell)$-substitutability by the sorted signature $\Sigma_{k,\ell}$.
-Proposition~\ref{prop:yl-special} makes the inducing finite-monoid
-morphism explicit; no priority for the window-signature encoding is claimed.
+Proposition~\ref{prop:yl-special} makes the inducing finite-semigroup
+quotient explicit; no priority for the window-signature encoding is claimed.
 
 \phantomsection\label{crit:kl}
 \paragraph{Fixed-window counterexample criterion.}
 If $x,y$ have length at least $\max\{1,k+\ell\}$, the same length-$k$
 prefix and length-$\ell$ suffix, a common context, and unequal
 distributions, then $L$ is not $(k,\ell)$-substitutable: the first
-three conditions give equal $h_{k,\ell}$-types and a shared context, while
-the last contradicts $\sim_{h_{k,\ell}}$-substitutability.
+three conditions give equal $s_{k,\ell}$-types and a shared context, while
+the last contradicts $\sim_{s_{k,\ell}}$-substitutability.
 
 Thus the fixed $(k,\ell)$ class is exactly
-$\mathsf{RS}_{h_{k,\ell}}$.  Section~\ref{sec:fixed-window-thick} gives
+$\mathsf{RS}_{s_{k,\ell}}$.  Section~\ref{sec:fixed-window-thick} gives
 its polynomial thick-data bound.  For $k=\ell=0$,
-$h_{0,0}$ merely separates $\lambda$ from nonempty words and induces the
-same substitutability condition as the one-element monoid.  For an alphabet
+$s_{0,0}$ maps all nonempty words to one type,
+so it coincides with $s_0$ on $\Sigma^+$.  For an alphabet
 $\Gamma$, set
 \[
 \mathsf{KL}(\Gamma):=
@@ -577,36 +594,36 @@ and abbreviate $\mathsf{KL}:=\mathsf{KL}(\Sigma)$.
 
 \subsection{Main theorem}
 
-\begin{theorem}[fixed-$h$ learning theorem]\label{thm:main}
-Fix an efficiently computable homomorphism $h:\Sigma^*\to M$ into a finite
-monoid.  There are a set-driven reconstruction operator $\mathsf{Rec}_h$ and a
-conservative sequential learner $\mathsf{Learn}_h$ such that:
+\begin{theorem}[fixed-$s$ learning theorem]\label{thm:main}
+Fix an efficiently computable finite-semigroup homomorphism
+$s:\Sigma^+\twoheadrightarrow\mathsf S$.  There are a set-driven reconstruction operator $\mathsf{Rec}_s$ and a
+conservative sequential learner $\mathsf{Learn}_s$ such that:
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $\mathsf{Rec}_h$ is sample-consistent and $\mathsf{Rec}_h(K)$ is
+\item $\mathsf{Rec}_s$ is sample-consistent and $\mathsf{Rec}_s(K)$ is
 constructible in time polynomial in $\|K\|$;
-\item every $L\in\Ccf{h}$ has a finite characteristic sample for
-$\mathsf{Rec}_h$;
-\item $\mathsf{Learn}_h$ identifies every nonempty $L\in\Ccf{h}$ in Gold's
+\item every $L\in\Ccf{s}$ has a finite characteristic sample for
+$\mathsf{Rec}_s$;
+\item $\mathsf{Learn}_s$ identifies every nonempty $L\in\Ccf{s}$ in Gold's
 sense, each update taking time polynomial in the data seen so far;
-\item if the positive image semigroup $h(\Sigma^+)$ is a
+\item if the positive image semigroup $s(\Sigma^+)$ is a
 homomorphic image of a subsemigroup of the direct product of
 a finite locally trivial semigroup and a finite group,
 then for every nonempty target the sample in~(ii) can be chosen polynomial in $|G_*|$
 and $\tau_{G_*}+1$ for any reduced CFG $G_*$ representing that target;
 this includes every fixed-window and every finite-group typing;
-\item for arbitrary fixed $h$ and $L\in\Clin{h}$, the sample in~(ii) can
+\item for arbitrary fixed $s$ and $L\in\Clin{s}$, the sample in~(ii) can
 be chosen polynomial in $|G_*|$ for any linear CFG $G_*$ representing $L$.
 \end{enumerate}
-The polynomials in~(iv)--(v) may depend on the fixed $h$ and $\Sigma$,
+The polynomials in~(iv)--(v) may depend on the fixed $s$ and $\Sigma$,
 but not on the chosen target grammar $G_*$. The quantitative mechanism behind items~(iv)--(v), together with its
 limitation for arbitrary fixed typings, is developed in
 Sections~\ref{sec:typed-thickness}--\ref{sec:linear}.
 \end{theorem}
 
 This is consistent with Gold's theorem: on a nonempty alphabet choose
-distinct $x,y\in\Sigma^+$ with $h(x)=h(y)$, and choose
+distinct $x,y\in\Sigma^+$ with $s(x)=s(y)$, and choose
 $z\in\Sigma^*$ with $|z|>\max\{|x|,|y|\}$.  The finite language $\{x,y,zx\}$
-is not $\sim_h$-substitutable: $x,y$ share the empty context
+is not $\sim_s$-substitutable: $x,y$ share the empty context
 but only $x$ admits $(z,\lambda)$.
 
 \paragraph{Algebraic position of fixed windows.}
@@ -615,61 +632,57 @@ The following positive-image/kernel criterion is classical
 the generalized definite language characterization is likewise known
 \cite[Proposition~5.18]{pin1997}.
 Its learning-specific application is Corollary~\ref{cor:li-thickness}.
+These algebraic conditions must be tested on
+$\mathsf S=s(\Sigma^+)$, \emph{not} on $\mathsf S^\sharp$.
+Indeed, for nonempty $\mathsf S$, the new identity
+$\mathbf e$ and any $t\in \mathsf S$ satisfy
+$\mathbf e t\mathbf e=t\ne\mathbf e$;
+thus $\mathsf S^\sharp$ itself is not locally trivial.
 
 \begin{proposition}[locally trivial typings and fixed windows]
 \label{prop:li-window}
-Let $h:\Sigma^*\to M$ be a finite-monoid homomorphism on a nonempty
-alphabet, and put $n:=|h(\Sigma^+)|+1$.  The following are equivalent:
+Let $s:\Sigma^+\twoheadrightarrow\mathsf S$ be a
+finite-semigroup typing on a nonempty alphabet and set
+$n:=|\mathsf S|+1$. The following are equivalent:
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $h(\Sigma^+)$ is locally trivial;
-\item there are $k,\ell\ge0$ such that
-$\ker h_{k,\ell}|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$.
+\item $\mathsf S$ is locally trivial;
+\item $\ker s_{k,\ell}\subseteq\ker s$ for some $k,\ell\ge0$.
 \end{enumerate}
-If these conditions hold, $(k,\ell)=(n,n)$ works.  Moreover every positive
-image semigroup $h_{k,\ell}(\Sigma^+)$ is locally trivial, and therefore
+In (ii), $k=\ell=n$ suffices. Every window semigroup
+$W_{k,\ell}=s_{k,\ell}(\Sigma^+)$ is locally trivial.
+Consequently,
 \[
- \mathsf{KL}(\Sigma)
- =
- \bigcup_{\substack{h:\Sigma^*\to M\\ h(\Sigma^+)\text{ locally trivial}}}
- \mathsf{RS}_h(\Sigma).
+\mathsf{KL}(\Sigma)=
+\bigcup_{\substack{s:\Sigma^+\to\mathsf S\\
+\mathsf S\text{ finite locally trivial}}}
+\mathsf{RS}_s(\Sigma),
 \]
-The same equality holds after intersecting both sides with $\mathrm{CFL}$.
+also after intersecting both sides with $\mathrm{CFL}$.
 \end{proposition}
-
 \begin{proof}
-Put $\mathsf{S}=h(\Sigma^+)$ and $n=|\mathsf{S}|+1$.
-First, every $h_{k,\ell}(\Sigma^+)$ is locally trivial: no short-word
-type is idempotent, since squaring either changes the represented short
-word or enters the long-word component, and by the multiplication in
-Proposition~\ref{prop:yl-special} every long-word type satisfies
-$\langle p,q\rangle t\langle p,q\rangle=\langle p,q\rangle$
-for every $t$ in the positive image.
+A short-word class in $W_{k,\ell}$ cannot be idempotent:
+squaring a positive word either changes its short
+representative or reaches the long part. If $e=s_{k,\ell}(x)$
+is a long type, then $xux$ retains the prefix and
+suffix of $x$ for every $u\in\Sigma^+$.
+Thus $ete=e$ for all $t\in W_{k,\ell}$.
 
-(i)$\Rightarrow$(ii).  If $\mathsf{S}$ is locally trivial, the classical identities
-$\mathsf{S}^n=\mathsf{S} E(\mathsf{S})\mathsf{S}$ and $esf=ef$
-for $e,f\in E(\mathsf{S})$ and $s\in \mathsf{S}$ hold
-\cite[Corollary~II.6.35 and
+For a locally trivial $\mathsf S$, the classical
+identities $\mathsf S^n=\mathsf S E(\mathsf S)\mathsf S$
+and $etf=ef$ for idempotents $e,f$ and all $t\in\mathsf S$
+hold~\cite[Corollary~II.6.35 and
 Proposition~XI.4.17]{pin2025}.
 For $p,q\in\Sigma^n$, write
-$h(p)=aeb$ and $h(q)=cfd$,
-where $e,f$ are idempotent.
-Then, for every $r\in\Sigma^*$,
-\[
-h(prq)=a\,e\,(b\,h(r)\,c)\,f\,d
-       =aefd=h(pq).
-\]
-Thus the length-$n$ prefix and suffix determine
-$h(w)$ whenever $|w|\ge 2n$.
-Since $h_{n,n}$ distinguishes shorter words individually,
-(ii) follows with $(k,\ell)=(n,n)$.
-
-(ii)$\Rightarrow$(i).  The kernel inclusion makes
-$h_{k,\ell}(w)\mapsto h(w)$ a well-defined surjective morphism from the
-locally trivial semigroup $h_{k,\ell}(\Sigma^+)$ onto $\mathsf{S}$, so $\mathsf{S}$ is
-locally trivial (Section~\ref{sec:fixed-typing}).
-The union equalities follow from these facts and
-kernel-refinement monotonicity, also after
-restriction to $\mathrm{CFL}$.
+$s(p)=aeb$, $s(q)=cfd$ with $e,f$ idempotent.
+For every $r\in\Sigma^*$, including $\lambda$,
+$b\widehat s(r)c\in\mathsf S$, so
+$s(prq)=a\,e\,(b\widehat s(r)c)\,f\,d=aefd=s(pq)$.
+Hence length-$n$ windows determine the type
+of every word of length at least $2n$; shorter
+words are separated by $s_{n,n}$. Conversely,
+(ii) induces a surjective semigroup morphism
+$W_{k,\ell}\to\mathsf S$, preserving local triviality.
+The union identities follow by kernel refinement.
 \end{proof}
 \section{Reconstruction Operator and Sequential Learner}
 \label{sec:algo}
@@ -685,18 +698,18 @@ Thus there is one hypothesis nonterminal for each distinct nonempty factor
 observed in the sample; the double brackets are part of the nonterminal name and do
 not denote a quotient class or literal terminal symbols.  For observed nonempty factors $x,y$, write
 \[
- x\approx_{K,h}y
+ x\approx_{K,s}y
  \quad\Longleftrightarrow\quad
- h(x)=h(y)\ \text{ and }\ \D_K(x)\cap\D_K(y)\ne\emptyset .
+ s(x)=s(y)\ \text{ and }\ \D_K(x)\cap\D_K(y)\ne\emptyset .
 \]
-The grammar $\mathsf{Rec}_h(K)$ has nonterminal set
+The grammar $\mathsf{Rec}_s(K)$ has nonterminal set
 $\widehat V(K)\cup\{\widehat S\}$, start symbol $\widehat S$, and the following
 \emph{set} of productions whenever every displayed bracketed nonterminal belongs to
 $\widehat V(K)$:
 \[
 \begin{array}{rll}
 \textup{(B)}&\NT{xy}\to\NT{x}\NT{y},&x,y\in\Sigma^+,\\[1mm]
-\textup{(U)}&\NT{x}\to\NT{y},&x\approx_{K,h}y,\\[1mm]
+\textup{(U)}&\NT{x}\to\NT{y},&x\approx_{K,s}y,\\[1mm]
 \textup{(L)}&\NT{a}\to a,&a\in\Sigma,\\[1mm]
 \textup{(S)}&\widehat S\to\NT{w},&w\in K\cap\Sigma^+.
 \end{array}
@@ -705,26 +718,26 @@ If $\lambda\in K$, Rule~\textup{(S)} also contains
 $\widehat S\to\lambda$.
 
 For finite samples $K\subseteq K'$, every nonterminal and production
-of $\mathsf{Rec}_h(K)$ also occurs in $\mathsf{Rec}_h(K')$.
+of $\mathsf{Rec}_s(K)$ also occurs in $\mathsf{Rec}_s(K')$.
 Consequently,
-$L(\mathsf{Rec}_h(K))\subseteq L(\mathsf{Rec}_h(K'))$.
+$L(\mathsf{Rec}_s(K))\subseteq L(\mathsf{Rec}_s(K'))$.
 
 The construction follows the substring-indexed grammar scheme of
 Yoshinaka~\cite[Section~4, Algorithm~1]{yoshinaka2008}, also recalled
 by Clark~\cite[Section~4, Algorithm~1]{clark2013}.
-For $h=h_{k,\ell}$, the nontrivial instances of Rule~\textup{(U)}
+For the semigroup typing $s=s_{k,\ell}$, the nontrivial instances of Rule~\textup{(U)}
 coincide with Yoshinaka's unary rules: distinct observed nonempty factors
 are connected when they share a sample context and have equal
-$h_{k,\ell}$-type; equivalently, both factors have length at least
+$s_{k,\ell}$-type; equivalently, both factors have length at least
 $\max\{1,k+\ell\}$ and have the same length-$k$ prefix and
 length-$\ell$ suffix.
 The constructions agree up to redundant identity rules, the
 representation of initial productions by a separate start symbol, and
-the treatment of $\lambda$.  For general fixed $h$, the
-prefix--suffix test is replaced by equality of $h$-types.
+the treatment of $\lambda$.  For general fixed $s$, the
+prefix--suffix test is replaced by equality of $s$-types.
 
 \begin{lemma}[sample consistency]\label{lem:sample-consistency}
-For every finite sample $K$, $K\subseteq L(\mathsf{Rec}_h(K))$.
+For every finite sample $K$, $K\subseteq L(\mathsf{Rec}_s(K))$.
 \end{lemma}
 \begin{proof}
 If $w=a_1\cdots a_m\in K\cap\Sigma^+$, Rule~\textup{(S)} enters $\NT{w}$.
@@ -735,16 +748,16 @@ $a_1\cdots a_m$.  If $\lambda\in K$, the start rule emits it directly.
 \end{proof}
 
 \begin{theorem}[soundness]\label{thm:soundness}
-If $K\subseteq L$ and $L$ is $\sim_h$-substitutable, then
-$L(\mathsf{Rec}_h(K))\subseteq L$.
+If $K\subseteq L$ and $L$ is $\sim_s$-substitutable, then
+$L(\mathsf{Rec}_s(K))\subseteq L$.
 \end{theorem}
 
 \begin{proof}
 Induct on the height of a derivation tree rooted at $\NT{x}$ to prove
 \begin{equation}\label{eq:soundness-invariant}
- \NT{x}\Rightarrow_{\mathsf{Rec}_h(K)}^*w
+ \NT{x}\Rightarrow_{\mathsf{Rec}_s(K)}^*w
  \quad\Longrightarrow\quad
- x\equiv_L w\ \text{ and }\ h(w)=h(x).
+ x\equiv_L w\ \text{ and }\ s(w)=s(x).
 \end{equation}
 Every factor nonterminal is indexed by a nonempty observed word,
 so the fragments compared by Rule~\textup{(U)} satisfy the nonempty
@@ -752,17 +765,17 @@ requirement of Definition~\ref{def:hsubst}.  Moreover,
 Rules~\textup{(B)}--\textup{(L)} cannot derive $\lambda$ from a
 factor nonterminal.  Rule~\textup{(L)} is immediate.  For Rule~\textup{(U)}, suppose
 $\NT{x}\to\NT{y}$.  By definition there is a sample context $(u,v)$ with
-$uxv,uyv\in K\subseteq L$ and $h(x)=h(y)$.  Fixed-$h$ substitutability gives
+$uxv,uyv\in K\subseteq L$ and $s(x)=s(y)$.  Fixed-$s$ substitutability gives
 $x\equiv_L y$; the induction hypothesis gives $y\equiv_L w$ and
-$h(w)=h(y)$, proving~\eqref{eq:soundness-invariant}.
+$s(w)=s(y)$, proving~\eqref{eq:soundness-invariant}.
 
 For Rule~\textup{(B)}, write the derived word as $w_1w_2$ from
 $\NT{xy}\to\NT{x}\NT{y}$.  The induction hypotheses give
 $x\equiv_L w_1$, $y\equiv_L w_2$,
-$h(w_1)=h(x)$, and $h(w_2)=h(y)$.
+$s(w_1)=s(x)$, and $s(w_2)=s(y)$.
 Because $\equiv_L$ is a monoid congruence,
 $xy\equiv_L w_1w_2$, and the homomorphism law gives
-$h(w_1w_2)=h(xy)$.
+$s(w_1w_2)=s(xy)$.
 
 Finally, if a start rule $\widehat S\to\NT{x}$ is used, then $x\in K\subseteq L$,
 so $(\lambda,\lambda)\in\D_L(x)$.  The invariant gives
@@ -772,7 +785,7 @@ only when $\lambda\in K\subseteq L$.
 
 \subsection{The sequential learner}
 
-Recomputing $\mathsf{Rec}_h$ after every datum need not stabilize
+Recomputing $\mathsf{Rec}_s$ after every datum need not stabilize
 syntactically: for $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$, longer examples
 introduce new factor nonterminals such as $\NT{a^ncb^n}$.
 We therefore use the conservative wrapper of Clark--Eyraud's
@@ -785,22 +798,22 @@ Starting from the fixed empty grammar $H_0$, after reading $w_n$ put
  H_n:=
  \begin{cases}
  H_{n-1},&w_n\in L(H_{n-1}),\\
- \mathsf{Rec}_h(K_n),&w_n\notin L(H_{n-1}),
+ \mathsf{Rec}_s(K_n),&w_n\notin L(H_{n-1}),
  \end{cases}
  \qquad
- \mathsf{Learn}_h(\mathcal T[n]):=H_n.
+ \mathsf{Learn}_s(\mathcal T[n]):=H_n.
 \]
-Every rebuild uses the whole accumulated sample $K_n$.  Although
-$\mathsf{Rec}_h$ is set-driven, the grammar on which $\mathsf{Learn}_h$ stabilizes
-may depend on the presentation order; only eventual syntactic stabilization
-to a grammar for the target is claimed (Corollary~\ref{cor:ilt}).
-This order dependence is genuine: for any infinite target and a
-convergent text $\mathcal T$, choose $w\in L$ longer than all examples at
-the last rebuild.  The limiting grammar for $\mathcal T$ omits $\NT{w}$,
-but prepending $w$ to $\mathcal T$ puts $\NT{w}$ in every rebuilt grammar,
-so the two limiting grammars differ.
-See also Clark~\cite[Section~4, Example~1]{clark2013}
-for this phenomenon with $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$.
+Every rebuild uses the whole accumulated sample $K_n$. Although
+$\mathsf{Rec}_s$ is set-driven, $\mathsf{Learn}_s$ can stabilize on
+different grammars for different presentation orders. Indeed, let
+$\mathcal T$ be a text for an infinite target and choose a word
+$w\in L$ longer than every sample word at its last rebuild.
+The limiting grammar for $\mathcal T$ has no symbol $\NT{w}$,
+whereas the text obtained by prepending $w$ rebuilds on a sample
+containing $w$ and therefore retains $\NT{w}$ in its limiting
+grammar. Both hypotheses generate $L$; only eventual syntactic
+stabilization is asserted (Corollary~\ref{cor:ilt}).
+See also Clark~\cite[Section~4, Example~1]{clark2013}.
 
 \section{Finite Witnesses, Exact Reconstruction, and Complexity}
 \label{sec:typing}
@@ -808,170 +821,167 @@ for this phenomenon with $L_{\mathrm c}=\{a^ncb^n:n\ge0\}$.
 
 \subsection{Target refinement and finite witnesses}
 
-For the completeness proof only, we refine a target grammar by yield type and
-show that the hypothesis can mimic finitely witnessed typed derivations.  We use
-the following normal form as a proof device.
+For completeness, we type the \emph{target} grammar over
+$\mathsf S^\sharp$ while leaving the already-defined hypothesis grammar
+$\mathsf{Rec}_s(K)$ unchanged: its factor nonterminals remain
+indexed only by nonempty words, and it retains the direct start
+rule for $\lambda$.  This distinction is crucial to the proof.
 
-\begin{definition}[start-separated binary normal form]
-A CFG $G=(V,\Sigma,P,S_0)$ is in \emph{start-separated binary normal form}
-(SSBNF) if $S_0$ never occurs on a right-hand side,
-every start rule is $S_0\to A$ or $S_0\to\lambda$, and every non-start rule
-is either $A\to a$ or $A\to BC$.
+\begin{definition}[binary--unit--nullable normal form]
+A CFG is in \emph{binary--unit--nullable normal form} (BUNF)
+if every production is $A\to BC$, $A\to B$,
+$A\to a$, or $A\to\lambda$.
 \end{definition}
-Start separation confines $\lambda$ to the start symbol and
-ensures nonempty internal yields for the witness construction.
+Terminal isolation and binarization turn an arbitrary CFG into
+an equivalent BUNF grammar in polynomial time, without deleting
+nullable or unit rules.  The qualitative completeness argument
+uses an arbitrary reduced BUNF grammar for a nonempty language.
 
-Every nonempty context-free language has an equivalent reduced SSBNF grammar by
-the standard start-separation, useless-symbol elimination, $\lambda$/unit elimination
-away from the start, and binarization procedures.  The refinement below is
-therefore defined for nonempty context-free languages; the empty target is
-represented separately by $H_0$ and $\mathsf{Rec}_h(\emptyset)$.
+No start-symbol separation is needed; the quantitative
+normalization is Proposition~\ref{prop:thick-bunf-normal}.
 
-Let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar for a nonempty language
-$L$.  Form the following yield-typed grammar with start symbol
-$\widetilde S$ and non-start symbols $A_\mu$ with
-$A\in V\setminus\{S_0\}$ and $\mu\in M$.  Here and below, juxtaposition of type indices denotes multiplication in
-$M$; thus $\mu\nu=\mu\cdot\nu$.  The rules are
+The empty target is represented by $H_0$ and
+$\mathsf{Rec}_s(\emptyset)$.
+
+Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar generating
+a nonempty language $L$.  Its \emph{$\mathsf S^\sharp$-typed refinement}
+has a fresh start symbol $\widetilde S$ and symbols
+$A_\mu$ for every $A\in V$ and $\mu\in \mathsf S^\sharp$, with rules
 \[
 \begin{array}{ll}
-\widetilde S\to A_\mu & (S_0\to A\in P,\ \mu\in M),\\
-\widetilde S\to\lambda & (S_0\to\lambda\in P),\\
-A_{h(a)}\to a & (A\to a\in P),\\
-A_{\mu\nu}\to B_\mu C_\nu & (A\to BC\in P,\ \mu,\nu\in M).
+\widetilde S\to (S_0)_\mu
+ &( \mu\in \mathsf S^\sharp),\\
+A_{\mu\nu}\to B_\mu C_\nu
+ &( A\to BC\in P,\ \mu,\nu\in \mathsf S^\sharp),\\
+A_\mu\to B_\mu
+ &( A\to B\in P,\ \mu\in \mathsf S^\sharp),\\
+A_{\widehat s(a)}\to a
+ &( A\to a\in P),\\
+A_{\mathbf e}\to\lambda
+ &( A\to\lambda\in P).
 \end{array}
 \]
-The reduced part of this grammar is denoted
-$\widetilde G=(\widetilde V,\Sigma,\widetilde P,\widetilde S)$ and called
-the \emph{typed refinement}.  Since $\widetilde G$ is obtained by trimming the yield-typed grammar,
-every remaining symbol is reachable and productive.
+Trim this grammar to its reduced part $\widetilde G$.
+All retained symbols are reachable and productive.
+For a retained typed symbol $A_\mu$, every terminal yield
+has type $\mu$; in particular $A_{\mathbf e}$ generates
+\emph{only} $\lambda$, while a typed symbol of type
+$\mu\ne\mathbf e$ generates only nonempty words.
 
-Fix an order on $\Sigma$ and use the induced \emph{shortlex} order:
-shorter strings come first, with lexicographic order breaking equal-length
-ties.  For every non-start symbol $X$ of $\widetilde G$, let $\omega(X)$
-be its shortlex-minimal terminal yield, called the \emph{canonical yield} of
-$X$.  This is well-defined because $\widetilde G$ is reduced.
-
-The yield-type split is used in the present completeness proof: the canonical
-yield of a typed parent and the concatenated canonical yields of
-its typed children must have equal $h$-types to license unary
-Rule~\textup{(U)} (Theorem~\ref{thm:complete}).
-
-The role of this split in the present completeness argument can already be seen
-before typing.  Let
-$h(w)=|w|\bmod 2$ and let $G$ be the SSBNF grammar with start symbol $S_0$
-and rules
-$S_0\to A$, $A\to a\mid BC$, $B\to a$, and $C\to a$.  The shortest yield of $A$
-is $a$, of odd type, while the concatenation of shortest yields of
-$B$ and $C$ is $aa$, of even type.  Without separating $A$ by yield type,
-the corresponding unary-rule step is therefore not licensed.
-Splitting by yield type makes the required equality an invariant.  By
-contrast, no types are attached to the surrounding left or right contexts,
-because the reconstruction operator never tests such types.
+Fix a shortlex order on $\Sigma^*$.
+For each retained non-start symbol $X$, let $\omega(X)$
+be its shortlex-minimal terminal yield, possibly $\lambda$.
+Splitting by yield type ensures that the canonical yield
+of a typed parent and the yield specified by any of its
+productions have the same $\widehat s$-type.  The need for a
+yield split is illustrated by $s(w)=|w|\bmod 2$
+and $A\to a\mid BC$, $B\to a$, $C\to a$:
+the shortest yield $a$ of $A$ and the yield $aa$
+of $BC$ have different types.
+No types are attached to surrounding contexts.
 
 \begin{proposition}[typed lifting and yield invariant]\label{prop:typed-core}
-The typed refinement satisfies $L(\widetilde G)=L(G)$.  For every retained
-non-start symbol $A_\mu$,
+The typed refinement satisfies $L(\widetilde G)=L(G)$.
+For every retained $A_\mu$, including typed copies of $S_0$,
 \[
-L_{\widetilde G}(A_\mu)=L_G(A)\cap h^{-1}(\{\mu\}).
+L_{\widetilde G}(A_\mu)
+ =L_G(A)\cap \widehat s^{-1}(\{\mu\}).
 \]
-In particular, $A_\mu\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$.
+In particular, $A_\mu\Rightarrow_{\widetilde G}^*w$
+entails $\widehat s(w)=\mu$.
 \end{proposition}
 \begin{proof}
-The terminal and binary rules above are exactly the bottom-up propagation
-laws for yield types.  Hence, by induction on typed derivations,
-$A_\mu\Rightarrow_{\widetilde G}^*w$ implies $h(w)=\mu$, and erasing type
-annotations maps typed derivations to derivations of $G$; this gives
-$L(\widetilde G)\subseteq L(G)$ and the inclusion $\subseteq$ in the display.
-
-Conversely, annotating each non-start node of a derivation tree of $G$ by
-the $h$-type of its yield gives a derivation tree of the untrimmed
-yield-typed grammar.  For a successful tree all its symbols survive
-trimming, so $L(G)\subseteq L(\widetilde G)$.  For retained $A_\mu$ and
-$w\in L_G(A)$ with $h(w)=\mu$, graft the annotated tree of
-$A\Rightarrow_G^*w$, whose root has type $\mu$, at an occurrence of $A_\mu$
-in a successful typed tree; the result is successful, so its symbols and
-rules survive trimming and $A_\mu\Rightarrow_{\widetilde G}^*w$.
+Induct on typed derivations to obtain the yield-type
+invariant and erase indices to obtain a $G$-derivation.
+Conversely, annotate each node in any successful
+$G$-derivation by the $\widehat s$-type of its yield.
+The resulting typed derivation survives trimming.
+For any retained $A_\mu$ and any $w\in L_G(A)$
+of type $\mu$, graft its annotated derivation
+at an occurrence of $A_\mu$ in a successful typed
+derivation.  This proves the reverse inclusion.
 \end{proof}
 
-For every non-start symbol $X$ of $\widetilde G$, choose
-$\chi(X)=(u_X,v_X)$ among the terminal reaching contexts of $X$ so as to
-minimize $|u_X|+|v_X|$, breaking ties by the shortlex orders of $u_X$ and
-then $v_X$; call $\chi(X)$ the \emph{canonical context} of $X$.  Such a
-terminal reaching context exists because $\widetilde G$ is reduced:
-reachability places $X$ in a reachable sentential form, and productivity of
-the surrounding nonterminals lets all symbols to its left and right be
-expanded to terminal strings.  Proposition~\ref{prop:typed-core} gives
-$h(\omega(A_\mu))=\mu$ for every typed non-start symbol.
+For each retained non-start symbol $X$, choose a
+\emph{canonical context} $\chi(X)=(u_X,v_X)$ among its
+terminal reaching contexts, minimizing $|u_X|+|v_X|$
+and breaking ties by the shortlex order of $u_X$,
+then $v_X$.  It exists by reduction.
+Proposition~\ref{prop:typed-core} yields
+$\widehat s(\omega(A_\mu))=\mu$.
 
-Define the finite witness set
+Define the finite set of \emph{canonical positive witnesses}
 \begin{equation}\label{eq:W}
 \begin{split}
 \WitnessSet(\widetilde G):={}&
  \{u_X\omega(X)v_X:X\in\widetilde V\setminus\{\widetilde S\}\}\\
 &\cup\{u_Xav_X:X\to a\in\widetilde P\}\\
-&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}\\
-&\cup\bigl(\{\lambda\}\text{ if }\lambda\in L\bigr).
+&\cup\{u_X\omega(Y)v_X:X\to Y\in\widetilde P,\
+  X,Y\ne\widetilde S\}\\
+&\cup\{u_X\omega(Y)\omega(Z)v_X:X\to YZ\in\widetilde P\}.
 \end{split}
 \end{equation}
-Every displayed word belongs to $L$, and the set is finite.  In particular,
-for a binary rule $X\to YZ$ the word in the third family is justified by
-$\widetilde S\Rightarrow^*u_XXv_X\Rightarrow u_XYZv_X
-\Rightarrow^*u_X\omega(Y)\omega(Z)v_X$; the first and second families are
-justified analogously.  We call the elements of $\WitnessSet(\widetilde G)$
-the \emph{canonical positive witnesses}.  The first family records one
-canonical occurrence of each typed symbol, and the second and third families
-record the terminal and binary productions, respectively.
-
+Every witness belongs to $L$, as witnessed by a successful
+reaching derivation and the displayed production.
+A distinct empty-word witness family is unnecessary:
+if $\lambda\in L$, the typed start copy
+$(S_0)_{\mathbf e}$ has canonical context
+$(\lambda,\lambda)$ and canonical yield $\lambda$;
+hence $\lambda\in\WitnessSet(\widetilde G)$.
 
 \subsection{Exact reconstruction and Gold convergence}
 
 \begin{theorem}[completeness from the finite witnesses]\label{thm:complete}
-Let $G$ be any reduced SSBNF grammar for a nonempty language $L$, and let
-$\widetilde G$ be its typed refinement with respect to the fixed
-homomorphism $h$.  If a finite set $K$ satisfies
-$\WitnessSet(\widetilde G)\subseteq K$, then $L\subseteq L(\mathsf{Rec}_h(K))$.
+Let $G$ be any reduced BUNF grammar for a nonempty language
+$L$, and $\widetilde G$ its $\mathsf S^\sharp$-typed refinement.
+If $\WitnessSet(\widetilde G)\subseteq K$, then
+$L\subseteq L(\mathsf{Rec}_s(K))$.
 \end{theorem}
-
-Neither substitutability nor $K\subseteq L$ is needed for
-this combinatorial completeness statement.
+Neither substitutability nor $K\subseteq L$ is required.
 \begin{proof}
-For each non-start $X$ write $\widehat X:=\NT{\omega(X)}$.
-The corresponding word in the first family of~\eqref{eq:W} ensures that
-$\widehat X$ exists.  We prove by induction on a typed derivation
-$X\Rightarrow^*w$ that
-$\widehat X\Rightarrow_{\mathsf{Rec}_h(K)}^*w$.
+For each retained $X=A_\mu$ with $\mu\ne\mathbf e$, put
+$\widehat X:=\NT{\omega(X)}$; it exists by the first
+witness family, and $\omega(X)$ is nonempty.
+We show by induction on a typed derivation
+$X\Rightarrow^*w$ that $\widehat X\Rightarrow^*w$
+in the unchanged $\mathsf{Rec}_s(K)$.
 
-If the first rule is $X\to a$, the first and second witness families contain
-$u_X\omega(X)v_X$ and $u_Xav_X$, respectively.  Hence
-$\omega(X)\approx_{K,h}a$ because
-$h(\omega(X))=h(a)$ by Proposition~\ref{prop:typed-core}.  Rule~\textup{(U)}
-moves $\widehat X$ to $\NT{a}$ when necessary, and Rule~\textup{(L)} yields $a$.
+Let its first rule be $\rho:X\to\alpha$, and let
+$t_\rho$ be the word obtained from $\alpha$ by replacing
+each nonterminal $Y$ with $\omega(Y)$.
+Since $\widehat s(t_\rho)=\widehat s(\omega(X))=\mu\ne\mathbf e$,
+both words are nonempty and have equal $s$-type.
+The first witness family and the witness for $\rho$
+put them in the same sample context; hence Rule~\textup{(U)}
+gives $\widehat X\to\NT{t_\rho}$.
+Here $X\to\lambda$ is impossible.
 
-Suppose the first rule is $X=A_{\mu\nu}\to B_\mu C_\nu$; put
-$Y:=B_\mu$ and $Z:=C_\nu$.  The first and third witness families contain
-$u_X\omega(X)v_X$ and
-$u_X\omega(Y)\omega(Z)v_X$.  Since
-$h(\omega(X))=\mu\nu=h(\omega(Y))h(\omega(Z)) =h(\omega(Y)\omega(Z))$,
-Rule~\textup{(U)} moves $\widehat X$ to
-$\NT{\omega(Y)\omega(Z)}$ when necessary.  The third witness also makes
-$\omega(Y)\omega(Z)$ an observed factor, so Rule~\textup{(B)} gives
-$\NT{\omega(Y)\omega(Z)}\to\NT{\omega(Y)}\NT{\omega(Z)}$.
-The induction hypotheses finish the two subderivations.
+If $\rho$ is terminal, Rule~\textup{(L)} finishes;
+if unary, its child has positive type and induction
+finishes.  If $\rho:X\to YZ$ and both children have
+positive type, Rule~\textup{(B)} splits $\NT{t_\rho}$
+into $\NT{\omega(Y)}\NT{\omega(Z)}$, and induction
+finishes each child.  Otherwise exactly one child
+has type $\mathbf e$ and yields only $\lambda$.
+Then $t_\rho$ is the other child's nonempty
+canonical yield, so induction applies directly.
+Two empty-type children would make $X$ empty-type.
 
-Finally, every nonempty $w\in L$ has a lifted start derivation
-$\widetilde S\to X\Rightarrow^*w$.  The start rule itself shows that
-$(\lambda,\lambda)$ is a terminal reaching context of $X$; its total length is
-$0$, which is minimal, so the canonical choice is
-$\chi(X)=(\lambda,\lambda)$.  The first witness family therefore gives
-$\omega(X)\in K$, and Rule~\textup{(S)} starts the preceding derivation.
-The case $w=\lambda$ is immediate from~\eqref{eq:W} and Rule~\textup{(S)}.
+Finally a positive target word is derived from a
+typed start copy $(S_0)_\mu$ of positive type.
+Its canonical context is $(\lambda,\lambda)$;
+the first witness puts its nonempty $\omega$ in $K$,
+so the original start Rule~\textup{(S)} enters
+the simulation.  If $\lambda\in L$, the first
+witness for $(S_0)_{\mathbf e}$ puts $\lambda\in K$,
+and the original Rule~\textup{(S)} emits $\lambda$.
 \end{proof}
 
 \begin{theorem}[exact finite-sample reconstruction]
-\label{thm:reconstruction-fixed-h}
-Let $L\in\Ccf{h}$ be nonempty, let $G$ be a reduced SSBNF grammar for $L$,
-and let $\widetilde G$ be its typed refinement.  If
-$\WitnessSet(\widetilde G)\subseteq K\subseteq L$, then $L(\mathsf{Rec}_h(K))=L$.
+\label{thm:reconstruction-fixed-s}
+Let $L\in\Ccf{s}$ be nonempty, let $G$ be any reduced BUNF
+grammar for $L$, and let $\widetilde G$ be its $\mathsf S^\sharp$-typed refinement.  If
+$\WitnessSet(\widetilde G)\subseteq K\subseteq L$, then $L(\mathsf{Rec}_s(K))=L$.
 \end{theorem}
 \begin{proof}
 Combine Theorems~\ref{thm:soundness} and~\ref{thm:complete}.
@@ -979,13 +989,13 @@ Combine Theorems~\ref{thm:soundness} and~\ref{thm:complete}.
 
 Thus $\WitnessSet(\widetilde G)$ is characteristic for every
 nonempty target, including $\{\lambda\}$.  For $L=\emptyset$,
-the empty sample gives $L(\mathsf{Rec}_h(\emptyset))=\emptyset$.
+the empty sample gives $L(\mathsf{Rec}_s(\emptyset))=\emptyset$.
 This proves Theorem~\ref{thm:main}(ii).
 
 \begin{corollary}[Gold identification]\label{cor:ilt}
-For a fixed homomorphism $h:\Sigma^*\to M$ into a finite monoid $M$, the learner
-$\mathsf{Learn}_h$ identifies every nonempty language in $\Ccf{h}$ from positive data.  More precisely, for any reduced SSBNF target
-grammar $G$ and its typed refinement $\widetilde G$, once
+For a fixed surjective semigroup homomorphism $s:\Sigma^+\to\mathsf S$ to a finite semigroup, the learner
+$\mathsf{Learn}_s$ identifies every nonempty language in $\Ccf{s}$ from positive data.  More precisely, for any reduced BUNF target
+grammar $G$ and its $\mathsf S^\sharp$-typed refinement $\widetilde G$, once
 $\WitnessSet(\widetilde G)\subseteq K_{n_0}$, among stages $n\ge n_0$ at most one hypothesis change
 can occur.
 \end{corollary}
@@ -994,11 +1004,11 @@ can occur.
 Let $\mathcal T$ be a text for a nonempty $L$, and choose $n_0$ with
 $\WitnessSet(\widetilde G)\subseteq K_{n_0}$.  Since
 $w_1\notin L(H_0)=\emptyset$, the learner rebuilds at stage $1$, so for
-$n\ge1$ the hypothesis $H_n$ is $\mathsf{Rec}_h(K_m)$ for the most recent
+$n\ge1$ the hypothesis $H_n$ is $\mathsf{Rec}_s(K_m)$ for the most recent
 rebuild stage $m\le n$.  Sample consistency of that rebuild and the rebuild
 rule for the later data give $K_n\subseteq L(H_n)$, and soundness gives
 $L(H_n)\subseteq L$, as $K_m\subseteq L$.  If a rebuild occurs at some
-$n\ge n_0$, Theorem~\ref{thm:reconstruction-fixed-h} gives $L(H_n)=L$, and
+$n\ge n_0$, Theorem~\ref{thm:reconstruction-fixed-s} gives $L(H_n)=L$, and
 no later datum triggers a change.  Otherwise $H_n=H_{n_0}$ for all
 $n\ge n_0$, so every word of $\mathcal T$ lies in some
 $K_n\subseteq L(H_n)=L(H_{n_0})$ with $n\ge n_0$; since every word of $L$
@@ -1006,15 +1016,11 @@ occurs in $\mathcal T$, $L(H_{n_0})=L$.  In both cases at most one change occurs
 after stage $n_0$.
 \end{proof}
 
-A missed-positive rebuild can be delayed after a characteristic
-sample appears; compare Eyraud--Heinz--Yoshinaka
-\cite[Appendix]{eyraud-heinz-yoshinaka2016}.
-
 \subsection{Complexity of the reconstruction step}
 \label{sec:complexity}
 
 \begin{theorem}[polynomial-time reconstruction]\label{thm:poly-build}
-For fixed $h$, $\mathsf{Rec}_h(K)$ is constructible in time polynomial in
+For fixed $s$, $\mathsf{Rec}_s(K)$ is constructible in time polynomial in
 $\|K\|$.
 \end{theorem}
 \begin{proof}
@@ -1027,112 +1033,114 @@ Since $|\mathcal O_K|=O(n_K^2)$, there are at most
 $O(n_K^2)$ factor nonterminals.
 Extending factors one symbol at a time from each starting
 position of each sample word computes and caches all their
-$h$-values using $O(n_K^2)$ multiplications in the fixed monoid.
+$s$-values using $O(n_K^2)$ multiplications in the fixed semigroup.
 
 Rule~\textup{(B)} has at most $O(n_K^3)$ candidates,
 obtained by choosing an observed factor occurrence and a split point.
 For Rule~\textup{(U)}, for each $(u,x,v)\in\mathcal O_K$
 and each $w\in K$, check whether there is a nonempty word $y$
 with $w=uyv$. Such a $y$, if it exists, is unique;
-if $h(x)=h(y)$, emit the rule $\NT{x}\to\NT{y}$.
+if $s(x)=s(y)$, emit the rule $\NT{x}\to\NT{y}$.
 This enumerates all Rule~\textup{(U)} candidates, at most
 $|\mathcal O_K||K|=O(n_K^3)$ of them.
 
 Lexical and start rules are lower-order.  Checking, encoding and
 inserting a candidate take $O(n_K)$ time, and a trie of the explicit rule
 encodings removes duplicates, so the output is a rule set independent of
-the enumeration order.  Thus $\mathsf{Rec}_h(K)$ is constructible in
+the enumeration order.  Thus $\mathsf{Rec}_s(K)$ is constructible in
 $O(n_K^4)$ time.
 \end{proof}
 
-Each update of $\mathsf{Learn}_h$ is also polynomial in the data seen so far,
+Each update of $\mathsf{Learn}_s$ is also polynomial in the data seen so far,
 since CFG membership is polynomial and hypotheses and rebuilds are
 polynomial by Theorem~\ref{thm:poly-build}.
 Together with sample consistency (Section~\ref{sec:algo}),
-Theorem~\ref{thm:reconstruction-fixed-h} and Corollary~\ref{cor:ilt}, this
+Theorem~\ref{thm:reconstruction-fixed-s} and Corollary~\ref{cor:ilt}, this
 proves Theorem~\ref{thm:main}(i)--(iii); items~(iv)--(v) are proved in
 Sections~\ref{sec:fixed-window-thick}--\ref{sec:linear}.  Grammar size alone
 cannot bound witness lengths: $S_0\to D_n$, $D_0\to a$,
 $D_i\to D_{i-1}D_{i-1}$ has size $O(n)$ but generates
-$\{a^{2^n}\}$, substitutable for every $h$
+$\{a^{2^n}\}$, substitutable for every $s$
 \cite[Example~2]{clark-eyraud2007},
 \cite[Example~2.3]{eyraud-heinz-yoshinaka2016}.
 
 \section{Typed Thickness for General Fixed Typings}
 \label{sec:typed-thickness}
 
-For an arbitrary fixed $h$, the finite-witness construction admits a direct
-quantitative bound once the cost of yield typing is measured explicitly.  Let
-$G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar and let $\widetilde G$ be its typed refinement.  Put
-$N:=|V\setminus\{S_0\}|$ and
-$N_t:=|\widetilde V\setminus\{\widetilde S\}|$
-and define the \emph{typed thickness} of this presentation by
+For any fixed $s$, the witness bound depends on shortest
+terminal yields of the $\mathsf S^\sharp$-typed refinement.
+Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar,
+$\widetilde G$ its refinement, and put
+$N:=|V|$ and
+$N_t:=|\widetilde V\setminus\{\widetilde S\}|$.
+Define its \emph{typed thickness} by
 \[
- \tau_h^{\mathrm{typ}}(G):=
- \max\Bigl(\{\,|\omega(X)|:
- X\in\widetilde V\setminus\{\widetilde S\}\,\}\cup\{1\}\Bigr).
+\tau_s^{\mathrm{typ}}(G):=
+\max\Bigl(\{\,|\omega(X)|:
+X\in\widetilde V\setminus\{\widetilde S\}\,\}\cup\{1\}\Bigr).
 \]
-Thus $\tau_h^{\mathrm{typ}}(G)$ measures shortest terminal yields after the
-full yield-type split and trimming.  It is a presentation-dependent
-parameter, not an additional assumption on the learner.
+It is a presentation-dependent parameter, not an
+additional assumption on the learner.
+The typed thickness includes copies of the original start symbol,
+even if it occurs on a right-hand side or derives $\lambda$.
+In particular, every nonempty $L=L(G)$ satisfies
+\[
+ \tau_s^{\mathrm{typ}}(G)\ge
+ \max_{\mu\in\widehat s(L)}
+ \min\{\,|w|:w\in L,\ \widehat s(w)=\mu\,\},
+\]
+since each nonempty fiber has a retained typed start copy.
 
 \begin{lemma}[typed-thickness witness bound]
 \label{lem:typed-thickness-bound}
-Let $G$ and $\widetilde G$ be as above and write
-$\tau:=\tau_h^{\mathrm{typ}}(G)$.  Every non-start typed symbol $X$ has
-$|u_X|+|v_X|\le (N_t-1)\tau$,
-and every word $w\in\WitnessSet(\widetilde G)$ satisfies
-$|w|\le (N_t+1)\tau$.
-If $P_{\mathrm{ter}}$ and $P_{\mathrm{bin}}$ are respectively the terminal
-and binary non-start productions of $G$, then
+Let $G$ and $\widetilde G$ be as above, and put
+$\tau:=\tau_s^{\mathrm{typ}}(G)$.
+Every non-start typed symbol $X$ satisfies
+$|u_X|+|v_X|\le(N_t-1)\tau$, and each
+$w\in\WitnessSet(\widetilde G)$ satisfies
+$|w|\le(N_t+1)\tau$.
+Let $P_{\mathrm{ter}}$, $P_{\mathrm{unit}}$ and
+$P_{\mathrm{bin}}$ be the terminal, unit and binary
+productions of $G$.  Then
 \[
- \|\WitnessSet(\widetilde G)\|
- \le
- \bigl(N|M|+|P_{\mathrm{ter}}|
-       +|P_{\mathrm{bin}}||M|^2+1\bigr)
- \bigl((N|M|+1)\tau+1\bigr).
+\|\WitnessSet(\widetilde G)\|
+\le\bigl(N|\mathsf S^\sharp|+|P_{\mathrm{ter}}|
+ +|P_{\mathrm{unit}}||\mathsf S^\sharp|
+ +|P_{\mathrm{bin}}||\mathsf S^\sharp|^2\bigr)
+ \bigl((N|\mathsf S^\sharp|+1)\tau+1\bigr).
 \]
-In particular, for fixed $h$ this bound is polynomial in $|G|$ and
-$\tau_h^{\mathrm{typ}}(G)$.
+For fixed $s$, this is polynomial in $|G|$ and
+$\tau_s^{\mathrm{typ}}(G)$.
 \end{lemma}
-
 \begin{proof}
-Form the directed dependency graph whose vertices are the non-start symbols of
-$\widetilde G$ and whose edges join a parent to each child occurring in a
-binary production.  Since $\widetilde G$ is reduced, every non-start symbol
-$X$ is reachable.  Hence some start child $A$ has a path to $X$ in this
-graph.  Choose a shortest such path.  It repeats no typed symbol, so it has at
-most $N_t-1$ edges.
-
-For each edge of the path, choose a witnessing binary production and expand
-the child not lying on the path to its canonical yield.  Starting from
-$\widetilde S\to A$, these expansions produce a terminal reaching context of
-$X$.  Each off-path canonical yield has length at most $\tau$, so the total
-context length is at most $(N_t-1)\tau$.  The canonical context
-$(u_X,v_X)$ is no longer than this one.
-
-A word in the first family adds one canonical yield to the canonical context;
-the second family adds one terminal, and the third adds two canonical yields.
-Since $\tau\ge1$, every word in~\eqref{eq:W} therefore has length at most
-$(N_t+1)\tau$.  Finally, $N_t\le N|M|$; each source terminal production has
-at most one typed terminal copy, and each source binary production has at
-most $|M|^2$ typed copies.  Thus the displayed first factor bounds the number
-of witnesses, including the possible witness $\lambda$, while the second
-factor bounds $|w|+1$ for each witness.  Multiplying the two bounds proves the
-claim.
+In the dependency graph of retained typed symbols
+include unit and binary dependencies.  Each symbol
+is reachable from a typed copy of $S_0$; a shortest
+path has at most $N_t-1$ edges.  Expand off-path
+siblings of binary rules by canonical yields,
+each of length at most $\tau$.  Unit steps contribute
+no sibling.  Hence the canonical reaching context has
+length at most $(N_t-1)\tau$.
+The four witness families add at most two canonical
+yields or one terminal, giving the length bound.
+There are at most $N|\mathsf S^\sharp|$ typed symbols,
+$|P_{\mathrm{ter}}|$ terminal typed rules,
+$|P_{\mathrm{unit}}||\mathsf S^\sharp|$ unit typed rules, and
+$|P_{\mathrm{bin}}||\mathsf S^\sharp|^2$ binary typed rules.
+Summing $|w|+1$ over the witness set proves the claim.
 \end{proof}
 
 \begin{corollary}[characteristic data from typed thickness]
 \label{cor:typed-thickness-data}
-Fix $h$.  If $G$ is a reduced SSBNF grammar for a nonempty
-$L(G)\in\Ccf{h}$, then $\WitnessSet(\widetilde G)$ is a characteristic
-sample for $\mathsf{Rec}_h$ whose encoded size is polynomial in
-$|G|$ and $\tau_h^{\mathrm{typ}}(G)$.
+Fix $s$.  If $G$ is a reduced BUNF grammar for a nonempty
+$L(G)\in\Ccf{s}$, then $\WitnessSet(\widetilde G)$ is a characteristic
+sample for $\mathsf{Rec}_s$ whose encoded size is polynomial in
+$|G|$ and $\tau_s^{\mathrm{typ}}(G)$.
 \end{corollary}
 
 \begin{proof}
 Lemma~\ref{lem:typed-thickness-bound} gives the quantitative bound, and
-Theorem~\ref{thm:reconstruction-fixed-h} gives the characteristic-sample property.
+Theorem~\ref{thm:reconstruction-fixed-s} gives the characteristic-sample property.
 \end{proof}
 
 The dependence on typed thickness in Corollary~\ref{cor:typed-thickness-data}
@@ -1141,19 +1149,16 @@ reconstruction operator itself under a single fixed typing.
 
 \paragraph{A bracketed doubling family.}
 Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$.
-Recall the two-element monoid $U_1=\{1,\zeta\}$ from Section~3.
-Define $h_{\mathrm U}:\Gamma_{\mathrm{br}}^*\to U_1$ by
-\[
-h_{\mathrm U}(\mathtt a)
-=h_{\mathrm U}(\lfloor)
-=h_{\mathrm U}(\rfloor)=1,
-\qquad
-h_{\mathrm U}(\lceil)
-=h_{\mathrm U}(\rceil)=\zeta,
-\]
-and let $h_0$ be the trivial typing.
-Thus $h_{\mathrm U}(w)=1$ if and only if
-$w$ contains neither $\lceil$ nor $\rceil$.
+Let $U_1=\{1,\zeta\}$ be the two-element semilattice
+with identity $1$ and absorbing element $\zeta$:
+$1\zeta=\zeta1=\zeta^2=\zeta$.
+Define the surjective semigroup morphism
+$s_{\mathrm U}:\Gamma_{\mathrm{br}}^+\to U_1$ by sending
+$\mathtt a,\lfloor,\rfloor$ to $1$ and
+$\lceil,\rceil$ to $\zeta$.
+Thus $s_{\mathrm U}(w)=1$ exactly for positive
+words without ceiling brackets, whereas
+$\widehat{s}_{\mathrm U}(\lambda)=\mathbf e\ne1$.
 
 For $n\ge1$, define the reduced CFG $G_n$ by
 \[
@@ -1175,39 +1180,33 @@ derivation is the unique complete binary tree of height $n$.
 For every $n\ge1$ the following hold.
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
 \item $L_n$ is Clark--Eyraud substitutable, and hence
-$L_n\in\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$.
-\item $L_n$ has a characteristic sample for $\mathsf{Rec}_{h_0}$
+$L_n\in\Ccf{s_0}\cap\Ccf{s_{\mathrm U}}$.
+\item $L_n$ has a characteristic sample for $\mathsf{Rec}_{s_0}$
 of encoded size polynomial in $n$.
 \item Every finite $K\subseteq L_n$ such that
-$w^*_n\in L(\mathsf{Rec}_{h_{\mathrm U}}(K))$ contains $w^*_n$.
+$w^*_n\in L(\mathsf{Rec}_{s_{\mathrm U}}(K))$ contains $w^*_n$.
 Consequently, every characteristic sample $\mathcal F$ of $L_n$ for
-$\mathsf{Rec}_{h_{\mathrm U}}$ satisfies
+$\mathsf{Rec}_{s_{\mathrm U}}$ satisfies
 $\|\mathcal F\|\ge 3\cdot 2^n-1$.
 \item Put $L^-_n:=L_n\setminus\{w_n^*\}$. Then
-$L^-_n\in\Ccf{h_{\mathrm U}}$. For any set-driven reconstruction
+$L^-_n\in\Ccf{s_{\mathrm U}}$. For any set-driven reconstruction
 operator $\mathsf{Op}$ with characteristic samples for both $L_n$
 and $L^-_n$, every characteristic sample $\mathcal F$ of $L_n$ for
 $\mathsf{Op}$ contains $w_n^*$ and hence satisfies
 $\|\mathcal F\|\ge3\cdot2^n-1$. In particular, this holds for every
 set-driven operator having characteristic samples for the entire
-fixed-$h_{\mathrm U}$ class.
+fixed-$s_{\mathrm U}$ class.
 \end{enumerate}
-In particular, for the fixed typing $h_{\mathrm U}$ no bound on
-characteristic-data size for $\mathsf{Rec}_{h_{\mathrm U}}$
+In particular, for the fixed typing $s_{\mathrm U}$ no bound on
+characteristic-data size for $\mathsf{Rec}_{s_{\mathrm U}}$
 polynomial in source grammar size and ordinary thickness holds over
-all reduced CFG presentations of targets in $\Ccf{h_{\mathrm U}}$.
+all reduced CFG presentations of targets in $\Ccf{s_{\mathrm U}}$.
 \end{proposition}
 
 \begin{proof}
 The substitutability assertion (i) is proved in
 Appendix~\ref{app:bracketed-substitutability}.
-For (ii), Proposition~\ref{prop:thick-ssbnf-normal}
-gives a reduced SSBNF grammar $G'_n$ of polynomial size and
-ordinary thickness. Since $h_0$ is trivial,
-$\tau_{h_0}^{\mathrm{typ}}(G'_n)\le\max\{1,\tau_{G'_n}\}$,
-so Corollary~\ref{cor:typed-thickness-data} applies.
-
-An explicit sample is obtained by setting $u_0=\mathtt a$,
+For (ii), an explicit sample suffices. Set $u_0=\mathtt a$,
 $u_i=\lceil{}u_{i-1}\rceil$, and
 \[
 \mathcal F_n=\{u_n\}\cup
@@ -1218,25 +1217,29 @@ For each $i$, the two sample words provide a common context for
 $u_i$ and $\lfloor u_{i-1}u_{i-1}\rfloor$;
 Rules~\textup{(U)} and \textup{(B)} therefore recover both
 $E_i$ alternatives, so
-$L_n\subseteq L(\mathsf{Rec}_{h_0}(\mathcal F_n))$.
+$L_n\subseteq L(\mathsf{Rec}_{s_0}(\mathcal F_n))$.
 For any $\mathcal F_n\subseteq K\subseteq L_n$, monotonicity
 applied to $\mathcal F_n\subseteq K$ gives
-$L_n\subseteq L(\mathsf{Rec}_{h_0}(K))$, while soundness
+$L_n\subseteq L(\mathsf{Rec}_{s_0}(K))$, while soundness
 (Theorem~\ref{thm:soundness}) applied to $K\subseteq L_n$ gives
-$L(\mathsf{Rec}_{h_0}(K))\subseteq L_n$.
+$L(\mathsf{Rec}_{s_0}(K))\subseteq L_n$.
 Thus $\mathcal F_n$ is characteristic, with
 $|\mathcal F_n|=n+1$ and $\|\mathcal F_n\|=3n^2+4n+2$.
 
-For (iii)--(iv), put
-$L_n^-=L_n\cap h_{\mathrm U}^{-1}(\{\zeta\})$.
-By (i) and Proposition~\ref{prop:finite-info-closure}(ii),
-$L_n^-\in\Ccf{h_{\mathrm U}\times h_{\mathrm U}}$.
-Since $\ker(h_{\mathrm U}\times h_{\mathrm U})=\ker h_{\mathrm U}$,
-we obtain $L_n^-\in\Ccf{h_{\mathrm U}}$.
+For (iii)--(iv), the deleted-word target is the type-fiber
+filter
+$L_n^-=L_n\cap\widehat{s}_{\mathrm U}^{-1}(\{\zeta\})$.
+It belongs to $\Ccf{s_{\mathrm U}}$: equal
+$s_{\mathrm U}$-types of nonempty factors remain
+equal $\widehat{s}_{\mathrm U}$-types inside any
+common outer context. Thus intersection with
+a union of $\widehat{s}_{\mathrm U}$-fibers
+preserves relative substitutability, and the
+intersection is context-free by regular filtering.
 
 For (iii), if $K\subseteq L_n$ omits $w_n^*$, then
 $K\subseteq L_n^-$. Soundness (Theorem~\ref{thm:soundness})
-gives $L(\mathsf{Rec}_{h_{\mathrm U}}(K))\subseteq L_n^-$,
+gives $L(\mathsf{Rec}_{s_{\mathrm U}}(K))\subseteq L_n^-$,
 so $w_n^*$ cannot be generated. Hence every characteristic
 sample $\mathcal F$ contains $w_n^*$ and satisfies
 $\|\mathcal F\|\ge |w_n^*|+1=3\cdot2^n-1$.
@@ -1250,49 +1253,39 @@ Then $\mathcal F\cup\mathcal F'\subseteq L_n^-\subsetneq L_n$,
 so the same output $\mathsf{Op}(\mathcal F\cup\mathcal F')$
 would have to generate both languages, a contradiction.
 
-For $n\ge2$, $L_n^-\notin\Ccf{h_0}$:
+For $n\ge2$, $L_n^-\notin\Ccf{s_0}$:
 $u_{n-1}$ and $w_{n-1}^*$ share the context
 $(\lfloor,u_{n-1}\rfloor)$ in $L_n^-$, but only the former
 admits $(\lfloor w_{n-1}^*,\rfloor)$.
-Thus (iv) does not conflict with the $h_0$ upper bound in (ii).
+Thus (iv) does not conflict with the $s_0$ upper bound in (ii).
 \end{proof}
 
 The contradiction in part~(iv) follows the classical distinguishing-pair
 principle using a word in the symmetric difference of two targets;
-compare~\cite[Theorem~15.1.4]{higuera2010}.  The fixed-$h$
+compare~\cite[Theorem~15.1.4]{higuera2010}.  The fixed-$s$
 distinguishing pair $L_n,L_n^-$ and its exponential witness length
 are specific to the present construction.
 
 \begin{corollary}[presentation-independent typed-thickness gap]
 \label{cor:typed-gap-intrinsic}
-Let $G=(V,\Gamma_{\mathrm{br}},P,S_0)$ be any reduced SSBNF
-grammar for $L_n$.
-Then
+Every reduced BUNF grammar $G=(V,\Gamma_{\mathrm{br}},P,S_0)$
+for $L_n$ satisfies
 \[
- \boxed{\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)
- \ge 3\cdot2^n-2.}
+ \boxed{\tau_{s_{\mathrm U}}^{\mathrm{typ}}(G)\ge3\cdot2^n-2.}
 \]
-The bound holds for every such reduced SSBNF presentation,
-without a restriction on its size.
-On the other hand, the proof of Proposition~\ref{prop:typed-thickness-gap}(ii)
-already gives a reduced SSBNF presentation of $L_n$ with
-both grammar size and ordinary thickness polynomial in $n$.
+This holds regardless of grammar size. Conversely, $L_n$
+has a reduced BUNF presentation with both size and ordinary
+thickness polynomial in $n$.
 \end{corollary}
-
 \begin{proof}
-Choose a successful derivation of $w_n^*$ in $G$; its first
-production is $S_0\to A$ for a non-start symbol $A$. The typed
-refinement retains $A_1$, because $A\Rightarrow_G^*w_n^*$ and
-$h_{\mathrm U}(w_n^*)=1$. By Proposition~\ref{prop:typed-core},
-\[
- L_{\widetilde G}(A_1)=L_G(A)\cap h_{\mathrm U}^{-1}(\{1\})
- =\{w_n^*\},
-\]
-since every yield of a start child belongs to $L_n$ and
-$w_n^*$ is its unique type-$1$ word. Thus the canonical yield
-of the retained non-start symbol $A_1$ is exactly $w_n^*$,
-so $\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)\ge|w_n^*|$.  The second
-claim was shown in the proof of Proposition~\ref{prop:typed-thickness-gap}(ii).
+The positive fiber of type $1$ is
+$L_n\cap\widehat{s}_{\mathrm U}^{-1}(\{1\})=\{w_n^*\}$,
+with $1\ne\mathbf e$.
+The fiber-minimum bound above therefore gives
+$\tau_{s_{\mathrm U}}^{\mathrm{typ}}(G)\ge
+|w_n^*|=3\cdot2^n-2$ for every such $G$.
+For the ordinary-thickness upper construction,
+apply Proposition~\ref{prop:thick-bunf-normal} to $G_n$.
 \end{proof}
 
 \section{Polynomial Thick Data Beyond Fixed Windows}
@@ -1303,7 +1296,7 @@ polynomial thick-data learnability for fixed $(k,\ell)$-substitutable
 context-free languages using $(k,\ell)$-Greibach normal form
 and characteristic-set bounds~\cite[Lemmas~2 and~7]{yoshinaka2008}.
 Here we instead bound the shortest yields of the typed refinement used by
-$\mathsf{Rec}_h$.  One argument covers both fixed windows and
+$\mathsf{Rec}_s$.  One argument covers both fixed windows and
 typings that additionally track finite-group values.
 The corresponding batch bounds establish
 identification in polynomial time and thick data (IPTtD),
@@ -1312,123 +1305,125 @@ in the set-driven sense of~\cite{yoshinaka2008} and
 They do not assert the stronger incremental stabilization requirement
 of \cite[Definition~2.5]{eyraud-heinz-yoshinaka2016}.
 We claim no improvement in Yoshinaka's polynomial degree.
-For general fixed $h$, ordinary thickness need not give a polynomial
-characteristic-data bound for $\mathsf{Rec}_h$
+For general fixed $s$, ordinary thickness need not give a polynomial
+characteristic-data bound for $\mathsf{Rec}_s$
 (Proposition~\ref{prop:typed-thickness-gap}).
 
-Fix $k,\ell\ge0$ and a morphism $g:\Sigma^*\to \mathsf{G}$ into a finite group.
-Put $m:=k+\ell$ and $q_{\mathrm{grp}}:=|\mathsf{G}|$.
+Fix $k,\ell\ge0$ and a morphism $g:\Sigma^*\to\mathsf G$
+into a finite group. In products with $s_{k,\ell}$,
+the group component is restricted to $\Sigma^+$.
+Put $m:=k+\ell$ and $q_{\mathrm{grp}}:=|\mathsf G|$.
 
 \begin{lemma}[window--group typed-yield bound]
 \label{lem:window-typed-yield}
-Let $G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar and
-$N:=|V\setminus\{S_0\}|\ge1$. If a finite typing $h$ satisfies
-$\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$, then
+Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar,
+$N:=|V|\ge1$, $m:=k+\ell$ and $q:=|\mathsf G|$.
+If $\ker\bigl(s_{k,\ell}\times(g|_{\Sigma^+})\bigr)
+ \subseteq\ker s$, then
 \[
- \tau_h^{\mathrm{typ}}(G)
- \le m+\bigl[1+2(m+q_{\mathrm{grp}}-1)(m+1)Nq_{\mathrm{grp}}\bigr]\tau_G.
+ \tau_s^{\mathrm{typ}}(G)
+ \le m+1+[1+2(m+q)(m+2)Nq](\tau_G+1).
 \]
+This includes nullable and unit productions, including
+productions whose right-hand sides contain $S_0$.
 \end{lemma}
 \begin{proof}
-Inverses in $\mathsf{G}$ compare group values before and after subtree
-replacement; the pigeonhole principle then gives a shortening
-interval that preserves the group value.
-See Appendix~\ref{app:fixed-window-bounds} for details.
+See Appendix~\ref{app:fixed-window-bounds}, where a
+nonemptiness anchor and derivation-size tie break
+handle the additional BUNF cases.
 \end{proof}
 
 \begin{theorem}[polynomial thick data under window--group refinement]
 \label{thm:window-thick}
-Fix $h,\Sigma$ and suppose that
-$\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker h|_{\Sigma^+}$
+Fix $s,\Sigma$ and suppose
+$\ker\bigl(s_{k,\ell}\times(g|_{\Sigma^+})\bigr)
+ \subseteq\ker s$
 for some fixed $k,\ell$ and finite-group morphism $g$.
-Every nonempty $L\in\Ccf{h}$ represented by a reduced SSBNF grammar
-$G$ with a non-start symbol has a characteristic sample
-$\WitnessSet(\widetilde G)$ for $\mathsf{Rec}_h$ whose encoded size
-is polynomial in $|G|$ and $\tau_G$.
+Every nonempty $L\in\Ccf{s}$ represented by a
+reduced BUNF grammar $G$ has a characteristic sample
+$\WitnessSet(\widetilde G)$ for $\mathsf{Rec}_s$
+of encoded size polynomial in $|G|$ and $\tau_G+1$.
 \end{theorem}
 \begin{proof}
-Apply Lemma~\ref{lem:window-typed-yield} and
+Combine Lemma~\ref{lem:window-typed-yield} and
 Corollary~\ref{cor:typed-thickness-data}.
-The singleton target $\{\lambda\}$ is handled separately.
 \end{proof}
 
-Theorem~\ref{thm:window-thick} includes fixed windows by taking
-$\mathsf{G}$ trivial.  The following normalization transfers the bound
-to arbitrary reduced CFG presentations.
+Theorem~\ref{thm:window-thick} includes fixed windows
+when $\mathsf G$ is trivial. For arbitrary CFG presentations
+we need only terminal isolation and binarization.
 
-\begin{proposition}[polynomial thickness-preserving SSBNF normalization]
-\label{prop:thick-ssbnf-normal}
-There are fixed polynomials $q_{\mathrm{size}}$ and $q_{\mathrm{thick}}$ such that every reduced CFG
-$G_*$ generating a nonempty language can be converted in polynomial time into
-an equivalent reduced SSBNF grammar $G$ satisfying
+\begin{proposition}[polynomial thickness-preserving BUNF normalization]
+\label{prop:thick-bunf-normal}
+There are fixed polynomials $q_{\mathrm{size}}$ and
+$q_{\mathrm{thick}}$ such that every reduced CFG $G_*$
+generating a nonempty language can be converted in
+polynomial time into an equivalent reduced BUNF grammar $G$
+with
 $|G|\le q_{\mathrm{size}}(|G_*|)$ and
 $\tau_G\le q_{\mathrm{thick}}(|G_*|,\tau_{G_*}+1)$.
+The construction retains nullable and unit productions.
 \end{proposition}
-
-The proof is in Appendix~\ref{app:thick-ssbnf}; terminal isolation and
-binarization precede non-start $\lambda$-elimination so that grammar size and
-shortest nonempty yields remain polynomially bounded.
+See Appendix~\ref{app:thick-bunf}.
 
 \begin{lemma}[locally trivial--group divisors and window refinements]
 \label{lem:li-group-factor}
-Let $h:\Sigma^*\to M$ be a finite-monoid morphism with
-$\Sigma$ nonempty.  The following are equivalent:
+Let $s:\Sigma^+\twoheadrightarrow\mathsf S$
+be a finite-semigroup typing on a nonempty alphabet.
+The following are equivalent:
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
-\item $h(\Sigma^+)$ is a homomorphic image of a subsemigroup
-of $\mathsf{S}\times \mathsf{G}$ for some finite locally trivial semigroup $\mathsf{S}$
-and finite group $\mathsf{G}$.
-\item There are $k,\ell\ge0$ and a morphism $g:\Sigma^*\to \mathsf{G}$
-into a finite group such that
-$\ker(h_{k,\ell}\times g)|_{\Sigma^+} \subseteq\ker h|_{\Sigma^+}$.
+\item $\mathsf S$ divides a product $\mathsf T\times\mathsf G$,
+where $\mathsf T$ is a finite locally trivial semigroup
+and $\mathsf G$ is a finite group;
+\item for some $k,\ell\ge0$ and a group morphism
+$g:\Sigma^*\to\mathsf G$,
+\[
+\ker\bigl(s_{k,\ell}\times(g|_{\Sigma^+})\bigr)
+\subseteq\ker s.
+\]
 \end{enumerate}
 \end{lemma}
 \begin{proof}
-Assume (i).  Choose a subsemigroup $\mathsf{T}\subseteq \mathsf{S}\times \mathsf{G}$ and
-a surjective semigroup morphism
-$\pi:\mathsf{T}\twoheadrightarrow h(\Sigma^+)$.
-For each $a\in\Sigma$, choose $(s_a,q_a)\in \mathsf{T}$ with
-$\pi(s_a,q_a)=h(a)$.  Extend $a\mapsto(s_a,q_a)$
-multiplicatively to $\varphi:\Sigma^+\to \mathsf{T}$.
-Projecting to the two factors, and assigning the respective
-identities to $\lambda$, gives monoid morphisms
-$s:\Sigma^*\to \mathsf{S}^1$ and $g:\Sigma^*\to \mathsf{G}$,
-where $\mathsf{S}^1$ adjoins an identity only if needed.
-For every $w\in\Sigma^+$,
-$h(w)=\pi(s(w),g(w))$.  As $s(\Sigma^+)$ is a subsemigroup of the locally
-trivial semigroup $\mathsf{S}$, Proposition~\ref{prop:li-window} supplies
-$k,\ell$ with
-$\ker h_{k,\ell}|_{\Sigma^+}\subseteq\ker s|_{\Sigma^+}$,
-which implies (ii).
+For (i), choose a subsemigroup
+$V\subseteq\mathsf T\times\mathsf G$ and a surjective
+morphism $\pi:V\to\mathsf S$. Lift the letter images
+$s(a)$ to $V$, obtaining $\varphi:\Sigma^+\to V$
+with $\pi\varphi=s$. The factor projections are
+$\sigma:\Sigma^+\to\mathsf T$ and
+$g_+:\Sigma^+\to\mathsf G$. The latter extends
+to $g:\Sigma^*\to\mathsf G$ with
+$g(\lambda)=1_{\mathsf G}$. Since
+$\sigma(\Sigma^+)$ is locally trivial,
+Proposition~\ref{prop:li-window} supplies
+$k,\ell$ with $\ker s_{k,\ell}\subseteq\ker\sigma$.
+Together with $g_+$ this implies (ii).
 
-Conversely, (ii) induces a well-defined surjective
-semigroup morphism
+Conversely (ii) induces a surjective semigroup morphism
 \[
- (h_{k,\ell}\times g)(\Sigma^+)
- \longrightarrow h(\Sigma^+),\qquad
- (h_{k,\ell}(w),g(w))\longmapsto h(w).
+(s_{k,\ell}\times g)(\Sigma^+)\longrightarrow\mathsf S,
+\qquad(s_{k,\ell}(w),g(w))\longmapsto s(w).
 \]
-By Proposition~\ref{prop:li-window},
-$h_{k,\ell}(\Sigma^+)$ is locally trivial, so the
-domain is a subsemigroup of a product of a locally
-trivial finite semigroup and a finite group.  Thus (i)
-holds.
+The domain is a subsemigroup of
+$W_{k,\ell}\times\mathsf G$, with $W_{k,\ell}$
+locally trivial by Proposition~\ref{prop:li-window};
+hence (i).
 \end{proof}
 
 \begin{corollary}[ordinary-thickness bounds for locally trivial--group typings]
 \label{cor:li-thickness}
-Fix $h:\Sigma^*\to M$. Suppose $h(\Sigma^+)$ is a homomorphic
+Fix $s:\Sigma^+\twoheadrightarrow\mathsf S$. Suppose $\mathsf S$ is a homomorphic
 image of a subsemigroup of the direct product of a finite locally
 trivial semigroup and a finite group.
-Then every nonempty $L\in\Ccf{h}$ represented by a reduced CFG $G_*$
-has characteristic data for $\mathsf{Rec}_h$ of encoded size
+Then every nonempty $L\in\Ccf{s}$ represented by a reduced CFG $G_*$
+has characteristic data for $\mathsf{Rec}_s$ of encoded size
 polynomial in $|G_*|$ and $\tau_{G_*}+1$.
 This includes all locally trivial positive-image typings and
 all finite-group typings.
 \end{corollary}
 \begin{proof}
 By Lemma~\ref{lem:li-group-factor}, Theorem~\ref{thm:window-thick}
-applies to the SSBNF grammar given by
-Proposition~\ref{prop:thick-ssbnf-normal}; compose the polynomials.
+applies to the BUNF grammar given by
+Proposition~\ref{prop:thick-bunf-normal}; compose the polynomials.
 The target $\{\lambda\}$ is handled separately.
 \end{proof}
 
@@ -1439,7 +1434,7 @@ the divisors (homomorphic images of subsemigroups) of products $\mathsf{S}\times
 with $\mathsf{S}\in\mathbf{LI}$ and $\mathsf{G}\in\mathbf{Grp}$; such joins were studied by
 Costa~\cite{costa2002li,costa2002lig}.  The hypothesis of
 Corollary~\ref{cor:li-thickness} thus reads
-$h(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$.
+$s(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$.
 
 \begin{lemma}[the two-element semilattice lies outside the window--group join]
 \label{lem:U1-outside}
@@ -1460,12 +1455,12 @@ $1\cdot\zeta\cdot1=1$, contradicting $\zeta\ne1$.
 \end{proof}
 
 \begin{remark}
-The positive image of $h_{\mathrm U}$ is $U_1$, which lies outside
+The positive image of $s_{\mathrm U}$ is $U_1$, which lies outside
 $\mathbf{LI}\vee\mathbf{Grp}$ by Lemma~\ref{lem:U1-outside}.
 Proposition~\ref{prop:typed-thickness-gap} shows that the
 ordinary-thickness characteristic-data bound in
 Corollary~\ref{cor:li-thickness} can fail for
-$\mathsf{Rec}_h$ when its algebraic hypothesis is removed.
+$\mathsf{Rec}_s$ when its algebraic hypothesis is removed.
 This does not establish that the hypothesis is necessary
 for every fixed typing. Proposition~\ref{prop:typed-thickness-gap}(iv)
 does give a reconstruction-operator-independent lower bound
@@ -1485,10 +1480,10 @@ automata~\cite{ginsburg-spanier1966,autebert1997}.  The normalization below
 gives the grammatical counterpart: every successful derivation has one
 continuing nonterminal path, which we call its \emph{spine}.
 
-\begin{proposition}[linear-spine SSBNF normalization]\label{prop:linear-normal}
+\begin{proposition}[linear-spine BUNF normalization]\label{prop:linear-normal}
 There is a fixed polynomial $q_{\mathrm{lin}}$ such that every linear CFG
 $G$ generating a nonempty language can be converted in polynomial time into
-an equivalent reduced SSBNF grammar $G_0=(V_0,\Sigma,P_0,S_0)$ with
+an equivalent reduced BUNF grammar $G_0=(V_0,\Sigma,P_0,S_0)$ with
 $|G_0|\le q_{\mathrm{lin}}(|G|)$ in which every binary production has
 exactly one fresh terminal-wrapper child $W_a$ with $W_a\to a$ and exactly
 one other nonterminal child.
@@ -1496,31 +1491,39 @@ one other nonterminal child.
 
 The construction is given in Appendix~\ref{app:linear-normalization}.  Let
 $\widetilde G_0$ be its typed refinement and
-$N_t:=|\widetilde V_0\setminus\{\widetilde S\}|\le|V_0\setminus\{S_0\}|\,|M|$.
+$N_t:=|\widetilde V_0\setminus\{\widetilde S\}|\le|V_0|\,|\mathsf S^\sharp|$.
 
 \begin{lemma}[short canonical yields]\label{lem:linear-short}
 Every typed non-start symbol $X$ of $\widetilde G_0$ satisfies
 $|\omega(X)|\le N_t$.
-Hence $\tau_h^{\mathrm{typ}}(G_0)\le N_t$.
+Hence $\tau_s^{\mathrm{typ}}(G_0)\le N_t$.
 \end{lemma}
 
 \begin{proof}
-By Proposition~\ref{prop:linear-normal}, each binary spine step
-$A\to W_aB$ or $A\to BW_a$ emits exactly one terminal outside the
-continuing nonterminal.  If $X$ is a terminal-wrapper symbol then $|\omega(X)|=1$.  Otherwise choose
-a shortest terminal derivation from the typed spine symbol $X$ and write its
-spine as $X=X_0,X_1,\ldots,X_t$, where $X_t$ uses a terminal rule.  Its
-yield has length $t+1$.  No typed spine symbol can repeat: if
-$X_i=X_j$ with $i<j$, deleting the segment between the two occurrences gives
-a valid derivation with fewer spine steps and hence a shorter yield.  Thus the
-$t+1$ typed spine symbols are distinct non-start symbols, so
-$t+1\le N_t$.  Hence $|\omega(X)|\le N_t$ in all cases.
+The \emph{continuing spine} follows the unique
+non-wrapper child of each binary rule.
+The wrapper child generates exactly one terminal
+and never continues the spine. Unit rules add
+no terminals; lexical and nullable rules end
+the spine. Choose a derivation of $\omega(X)$
+with the fewest nonterminal occurrences.
+A repeated \emph{typed} spine symbol permits
+grafting its lower subderivation at the upper
+occurrence, preserving a valid typed derivation.
+A segment containing a binary rule would strictly
+shorten $\omega(X)$; a unit-only segment would
+decrease the number of nodes. Both contradict
+the lexicographic choice of the derivation.
+At most $N_t$ spine symbols occur, and each contributes
+at most one terminal, including the final lexical rule.
+Therefore $|\omega(X)|\le N_t$. Wrapper symbols
+also satisfy this estimate.
 \end{proof}
 
 \begin{theorem}[polynomial characteristic data for linear targets]
 \label{thm:linear-poly}
-For fixed $h$, every $L\in\Clin{h}$ represented by a linear CFG $G$ has
-a characteristic sample for $\mathsf{Rec}_h$ whose $\|\cdot\|$-size is
+For fixed $s$, every $L\in\Clin{s}$ represented by a linear CFG $G$ has
+a characteristic sample for $\mathsf{Rec}_s$ whose $\|\cdot\|$-size is
 polynomial in $|G|$.
 \end{theorem}
 
@@ -1528,26 +1531,26 @@ polynomial in $|G|$.
 For $L=\emptyset$ and $L=\{\lambda\}$ use the samples from
 Section~\ref{sec:typing}.  Otherwise take $G_0$ from
 Proposition~\ref{prop:linear-normal}.  Lemma~\ref{lem:linear-short} gives
-$\tau_h^{\mathrm{typ}}(G_0)\le N_t\le
-|V_0\setminus\{S_0\}|\,|M|$, and
+$\tau_s^{\mathrm{typ}}(G_0)\le N_t\le
+|V_0|\,|\mathsf S^\sharp|$, and
 Corollary~\ref{cor:typed-thickness-data} yields a characteristic sample
 polynomial in $|G_0|\le q_{\mathrm{lin}}(|G|)$. More explicitly, the bound in
 Lemma~\ref{lem:typed-thickness-bound} gives
-$\|\WitnessSet(\widetilde G_0)\|=O(|G_0|^3|M|^4)$;
+$\|\WitnessSet(\widetilde G_0)\|=O(|G_0|^3|\mathsf S^\sharp|^4)$;
 the polynomial dependence on the original $|G|$ also uses
 the normalization bound $q_{\mathrm{lin}}$.
 \end{proof}
 
 Together with Theorem~\ref{thm:poly-build}, this gives
 polynomial-time batch reconstruction and polynomial characteristic data
-relative to a chosen linear CFG for targets in $\Clin{h}$.
+relative to a chosen linear CFG for targets in $\Clin{s}$.
 This does not contradict de~la~Higuera's negative result for
 the unrestricted class of linear languages
 \cite[Theorem~2]{higuera1997}: our theorem concerns only the
-fixed-$h$ substitutable subclass.  Moreover, no incremental
-polynomial-data guarantee for $\mathsf{Learn}_h$ is asserted.
+fixed-$s$ substitutable subclass.  Moreover, no incremental
+polynomial-data guarantee for $\mathsf{Learn}_s$ is asserted.
 
-\paragraph{A nonregular linear \texorpdfstring{fixed-$h$}{fixed-h} example.}
+\paragraph{A nonregular linear \texorpdfstring{fixed-$s$}{fixed-s} example.}
 
 The preceding theorem is not confined to regular targets, nor to the
 Clark--Eyraud or fixed-window classes.  Define
@@ -1580,7 +1583,7 @@ Call $c,d,e$ the \emph{center symbols}.
 
 \begin{proposition}\label{prop:linear-separator-example}
 The language $L_{\pm,e}$ is linear, nonregular, and belongs to
-$\Clin{h}$ for some homomorphism $h$ into a finite monoid.
+$\Clin{s}$ for some homomorphism $s$ into a finite semigroup.
 It is neither Clark--Eyraud substitutable nor
 $(k,\ell)$-substitutable for any fixed $k,\ell\ge0$.
 \end{proposition}
@@ -1596,12 +1599,13 @@ The linear language $L_{\mathrm{all}}$ is Clark--Eyraud substitutable
 under the nonempty-factor convention: a shared context uniquely determines
 a center-free factor, while the distribution of a factor
 $a^i\xi b^j$ containing one center depends only on $i-j$.
-Thus $L_{\mathrm{all}}\in\Clin{h_0}$ for the trivial typing $h_0$.
+Thus $L_{\mathrm{all}}\in\Clin{s_0}$ for the trivial typing $s_0$.
 Since $R_{\mathrm{reg}}$ is regular and $L_{\pm,e}=L_{\mathrm{all}}\cap R_{\mathrm{reg}}$,
 Proposition~\ref{prop:finite-info-closure}(ii), together with closure
 of linear languages under regular intersection, gives
-$L_{\pm,e}\in\Clin{h_0\times g}$ for a finite-monoid homomorphism
-$g$ recognizing $R_{\mathrm{reg}}$.
+$L_{\pm,e}\in\Clin{s_0\times(g|_{\Sigma^+})}$ for a
+finite-monoid morphism $g:\Sigma^*\to M$ recognizing
+$R_{\mathrm{reg}}$.
 
 Moreover, $L_{\pm,e}\cap a^*eb^*=\{a^neb^n:n\ge0\}$ proves nonregularity.
 The factors $c,e$ share the empty context, but
@@ -1625,20 +1629,20 @@ finite typing. In fact, a four-element typing already suffices.
 Let $M_{\pm,e}:=\{1,\kappa_{cd},\kappa_e,0\}$ be the monoid with identity
 $1$ and $\mu\nu=0$ for all
 $\mu,\nu\in\{\kappa_{cd},\kappa_e,0\}$, and define
-$h_{\pm,e}:\{a,b,c,d,e\}^*\to M_{\pm,e}$ by
-\begin{equation}\label{eq:lpm-h}
- h_{\pm,e}(a)=h_{\pm,e}(b)=1,\qquad
- h_{\pm,e}(c)=h_{\pm,e}(d)=\kappa_{cd},\qquad
- h_{\pm,e}(e)=\kappa_e.
+$s_{\pm,e}:\{a,b,c,d,e\}^+\to M_{\pm,e}$ by
+\begin{equation}\label{eq:lpm-s}
+ s_{\pm,e}(a)=s_{\pm,e}(b)=1,\qquad
+ s_{\pm,e}(c)=s_{\pm,e}(d)=\kappa_{cd},\qquad
+ s_{\pm,e}(e)=\kappa_e.
 \end{equation}
-Then $L_{\pm,e}$ is $\sim_{h_{\pm,e}}$-substitutable.
+Then $L_{\pm,e}$ is $\sim_{s_{\pm,e}}$-substitutable.
 Indeed, two center-free nonempty factors sharing a context
 must coincide. The distribution of $a^ieb^j$ depends only on $i-j$,
 while that of $a^i\xi b^j$ for $\xi\in\{c,d\}$ depends only on
 $(i-j,\operatorname{par}(\xi)-i\bmod2)$, where
 $\operatorname{par}(c)=0$ and $\operatorname{par}(d)=1$.
 A shared context forces these invariants to agree, and equal
-$h_{\pm,e}$-types distinguish $e$-factors from $c/d$-factors;
+$s_{\pm,e}$-types distinguish $e$-factors from $c/d$-factors;
 thus equal-type factors with a common context have the same distribution.
 
 Thus Theorem~\ref{thm:linear-poly} applies to a nonregular linear language
@@ -1646,30 +1650,44 @@ outside $\mathsf{KL}$. The displayed grammar is even-linear, so no
 separation from Takada's control-set framework is claimed.
 
 \paragraph{Finite-state control induced by yield typing.}
-The following straightforward product construction gives a limited
-connection with Takada's control-set viewpoint. Give each production of a linear grammar $G=(V,\Sigma,P,S)$ a distinct label
-from $\mathsf{ProdLab}$, and write $A\Rightarrow_G^\alpha w$ when
-$\alpha\in\mathsf{ProdLab}^*$ is the production-label word of a derivation.  For
-$\mathsf{Acc}_{\mathrm{ctrl}}\subseteq M$, let
+A single finite-state construction covers both the
+original typing $s$ and its completion $\widehat s$.
+Let $t:\Sigma^*\to T$ be any finite-monoid
+morphism, and label each production of a linear
+grammar $G=(V,\Sigma,P,S)$ distinctly over
+$\mathsf{ProdLab}$.  Write $A\Rightarrow_G^\alpha w$
+for a derivation with production-label word $\alpha$.
+For $\mathsf{Acc}_{\mathrm{ctrl}}\subseteq T$, put
 \[
- \mathsf{Ctrl}_{h,\mathsf{Acc}_{\mathrm{ctrl}}}(G):=
- \{\alpha\in\mathsf{ProdLab}^*:S\Rightarrow_G^\alpha w
-   \text{ for some }w\in\Sigma^*,\ h(w)\in \mathsf{Acc}_{\mathrm{ctrl}}\}.
+\mathsf{Ctrl}_{t,\mathsf{Acc}_{\mathrm{ctrl}}}(G):=
+\{\alpha\in\mathsf{ProdLab}^*:S\Rightarrow_G^\alpha w
+\text{ for some }w\in\Sigma^*,\
+t(w)\in\mathsf{Acc}_{\mathrm{ctrl}}\}.
 \]
-This is a regular control set.  A finite automaton uses states
-$V\times M\times M$ (and one accepting state), starts in $(S,1,1)$, and for
-a labeled rule $A\to uBv$ makes the transition
+This is regular: an automaton with states
+$V\times T\times T$ and an accepting state starts
+at $(S,1_T,1_T)$, updates
 $(A,\mu_L,\mu_R)\mapsto
-(B,\mu_L h(u),h(v)\mu_R)$.  A terminal rule $A\to w$ is accepted
-exactly when $\mu_L h(w)\mu_R\in \mathsf{Acc}_{\mathrm{ctrl}}$.  The invariant is that a sentential
-form $uAv$ is represented by $(A,h(u),h(v))$, so the accepted label words are
-exactly those of successful derivations whose yields have $h$-type in $\mathsf{Acc}_{\mathrm{ctrl}}$.
-Thus regular control by $\mathsf{Ctrl}_{h,\mathsf{Acc}_{\mathrm{ctrl}}}(G)$ generates precisely
-$L(G)\cap h^{-1}(\mathsf{Acc}_{\mathrm{ctrl}})$.  Starting from any nonterminal $A$ with
-$\mathsf{Acc}_{\mathrm{ctrl}}=\{\mu\}$ gives the same interpretation for a typed copy $A_\mu$.
-This is a finite-state bridge to Takada's regular control
-languages~\cite{takada1995}; it does not claim that arbitrary Takada control
-sets arise from terminal yield typings.
+(B,\mu_Lt(u),t(v)\mu_R)$ for each
+$A\to uBv$, and accepts a terminal rule
+$A\to w$ iff $\mu_Lt(w)\mu_R\in
+\mathsf{Acc}_{\mathrm{ctrl}}$.
+The invariant is $(A,t(u),t(v))$ for a
+sentential form $uAv$; thus the controlled
+grammar generates $L(G)\cap
+t^{-1}(\mathsf{Acc}_{\mathrm{ctrl}})$.
+
+The semigroup typing $s$ is used through its monoid extension:
+taking $t=\widehat s$, start symbol $A$, and
+$\mathsf{Acc}_{\mathrm{ctrl}}=\{\mu\}$
+realizes exactly
+$L_G(A)\cap \widehat s^{-1}(\{\mu\})$,
+the fiber in Proposition~\ref{prop:typed-core},
+including the nullable type $\mathbf e$.
+This is a finite-state bridge to Takada's
+regular control languages~\cite{takada1995};
+we do not claim arbitrary Takada control sets
+arise from yield typings.
 
 \section{Expressiveness and Boundaries}
 \label{sec:boundaries}
@@ -1729,7 +1747,9 @@ the endpoints concatenate in the evident way and a new $ba$ can arise only
 across a boundary $b|a$. Hence the finite image
 $M_\star:=h_\star(\{a,b\}^*)$ carries the product
 $h_\star(x)h_\star(y):=h_\star(xy)$, making $h_\star$ a finite-monoid
-homomorphism.
+homomorphism. Write
+$s_\star:=h_\star|_{\{a,b\}^+}$ for the positive-word
+learning typing.
 
 Appending a word on the right cannot enlarge the admissible entry-height set; more precisely, the following concatenation identity holds:\footnote{Indeed, the conditions for reading $st$ from height $q$ split into those within $s$, namely $q\in\mathcal Q(s)$; those within $t$, namely $q+\beta(s)\in\mathcal Q(t)$; and the condition at the boundary $s|t$. Only when this boundary is $b|a$ must the height immediately after that $b$ be $0$, requiring $q+\beta(s)=0$. These conditions are also sufficient, and the identity follows.}
 \begin{equation}\tag{$\star\star$}
@@ -1745,12 +1765,12 @@ Appending a word on the right cannot enlarge the admissible entry-height set; mo
  \end{cases}
 \end{aligned}
 \end{equation}
-\begin{proposition}[a nonlinear fixed-$h_\star$ target]
+\begin{proposition}[a nonlinear fixed-$s_\star$ target]
 \label{prop:nonlinear-rs-example}
 The language $\Delta^*$ is deterministic context-free, nonregular, and
-nonlinear, and it is $\sim_{h_\star}$-substitutable.  Moreover it is not
+nonlinear, and it is $\sim_{s_\star}$-substitutable.  Moreover it is not
 $(k,\ell)$-substitutable for any fixed $k,\ell\ge0$.  Hence
-$\Delta^*\in\mathsf{RS}_{h_\star}(\{a,b\})\cap\mathrm{CFL}$ and
+$\Delta^*\in\mathsf{RS}_{s_\star}(\{a,b\})\cap\mathrm{CFL}$ and
 $\Delta^*\in\mathsf{RS}(\{a,b\})\setminus\mathsf{KL}(\{a,b\})$.
 \end{proposition}
 
@@ -1766,12 +1786,12 @@ $\Delta^*\cap a^*b^*a^*b^*=\Delta\Delta$.
 The nonlinearity of $\Delta\Delta$ is explicitly recorded by
 Autebert--Berstel--Boasson~\cite[Section~6.1, before Theorem~6.1]{autebert1997}.
 
-For substitutability, let nonempty $x,y$ have equal $h_\star$-type
+For substitutability, let nonempty $x,y$ have equal $s_\star$-type
 and a common context $(u,v)$. By the preceding characterization of
 $\mathcal Q$ and additivity of $\beta$, the memberships
 $uxv,uyv\in\Delta^*$ imply $\beta(x)=\beta(y)$ and
 $\beta(u)\in\mathcal Q(x)\cap\mathcal Q(y)$.
-Since $h_\star(x)=h_\star(y)$, either both contain $ba$ or neither does.
+Since $s_\star(x)=s_\star(y)$, either both contain $ba$ or neither does.
 
 In the former case, write $x=rbat$ with $r,t\in\{a,b\}^*$.
 In any word of $\Delta^*$, the height immediately after the $b$
@@ -1789,7 +1809,7 @@ it follows immediately that $\mathcal Q(x)=\mathcal Q(y)$.
 
 Thus $\beta(x)=\beta(y)$ and $\mathcal Q(x)=\mathcal Q(y)$.
 Also, $\operatorname{fst}(x)=\operatorname{fst}(y)$ and
-$\operatorname{lst}(x)=\operatorname{lst}(y)$ by equality of $h_\star$-types.
+$\operatorname{lst}(x)=\operatorname{lst}(y)$ by equality of $s_\star$-types.
 Applying \textup{($\star\star$)} twice gives, for all $u',v'$,
 $\beta(u'xv')=\beta(u'yv')$ and
 $\mathcal Q(u'xv')=\mathcal Q(u'yv')$.
@@ -1854,21 +1874,24 @@ of the length-$2$ factors $\uparrow\uparrow$,
 $\downarrow\downarrow$, and $\#\downarrow$. Thus, for nonempty factors occurring in words of $\mathrm{CTR}_1$
 with a common context, equality of their first and last symbols
 ensures equal membership under every context.}.
-The DFA transition monoid gives a typing $h_\rho$
-recognizing each regular $\mathrm{CTR}_\rho$; only $\rho\ge2$
-lies outside the fixed-window hierarchy.
+Let $h_\rho:\Sigma_c^*\to M_\rho$ be the
+DFA transition-monoid morphism recognizing
+$\mathrm{CTR}_\rho$. Its positive restriction
+$s_\rho:=h_\rho|_{\Sigma_c^+}$ is a finite-semigroup
+typing witnessing $\mathrm{CTR}_\rho\in\Ccf{s_\rho}$;
+only $\rho\ge2$ lies outside the fixed-window hierarchy.
 
 \subsection{Natural deterministic context-free languages outside \texorpdfstring{$\mathsf{RS}$}{RS}}\label{sec:outside-rs}
 
-\begin{lemma}[finite-monoid obstruction]\label{lem:finite-monoid-obstruction}
+\begin{lemma}[finite-semigroup obstruction]\label{lem:finite-monoid-obstruction}
 Let $L\subseteq\Sigma^*$.  Suppose an infinite
 $\Xi\subseteq\Sigma^+$ satisfies, for all distinct $x,y\in\Xi$,
 $\D_L(x)\cap\D_L(y)\ne\emptyset$ and
 $\D_L(x)\ne\D_L(y)$.  Then $L\notin\mathsf{RS}(\Sigma)$.
 \end{lemma}
 \begin{proof}
-Any finite $h$ identifies two elements of $\Xi$; their common context and
-unequal distributions contradict $\sim_h$-substitutability.
+Any finite $s$ identifies two elements of $\Xi$; their common context and
+unequal distributions contradict $\sim_s$-substitutability.
 \end{proof}
 
 Removing the upper cap gives the deterministic context-free language
@@ -1910,11 +1933,11 @@ $b^ia^i$; for $b^ja^j$ the prefix $a^ib^j$ underflows.
 Thus unbounded stack behavior alone is not the obstruction: the nonregular
 one-turn language $L_{\pm,e}$ lies in $\mathsf{RS}$, but an infinite family
 of mutually comparable factors with distinct contextual behavior cannot be
-separated by any finite $h$.
+separated by any finite $s$.
 
 \begin{lemma}[fixed-word quotient]\label{lem:rs-fixed-quotient}
-If $L$ is $\sim_h$-substitutable and $z\in\Sigma^*$, then
-$L/z:=\{w:wz\in L\}$ is $\sim_h$-substitutable.
+If $L$ is $\sim_s$-substitutable and $z\in\Sigma^*$, then
+$L/z:=\{w:wz\in L\}$ is $\sim_s$-substitutable.
 \end{lemma}
 \begin{proof}
 A common context $(u,v)$ in $L/z$ becomes $(u,vz)$ in $L$; equality of
@@ -1941,33 +1964,34 @@ $I\subseteq V$; write $L_G[I]:=\bigcup_{A\in I}L_G(A)$.  Such a grammar is
 of $L_G[I]$.  Let $\mathsf{CONG}(\Gamma)$ be the languages over $\Gamma$
 generated by such grammars.  Clark already places substitutable and
 $(k,\ell)$-substitutable languages in this family; the following extends
-the containment to every fixed-$h$ slice.
+the containment to every fixed-$s$ slice.
 
 \begin{proposition}[comparison with Clark's congruential family]
 \label{prop:clark-congruential-comparison}
-For every finite alphabet $\Gamma$ and finite-monoid homomorphism
-$h:\Gamma^*\to M$,
-$\Ccf{h}\subseteq\mathsf{CONG}(\Gamma)$.  Consequently
+For every finite alphabet $\Gamma$ and finite-semigroup typing
+$s:\Gamma^+\to\mathsf S$,
+$\Ccf{s}\subseteq\mathsf{CONG}(\Gamma)$.  Consequently
 $\mathsf{RS}(\Gamma)\cap\mathrm{CFL}
 \subseteq\mathsf{CONG}(\Gamma)$, and for $\Gamma=\{a,b\}$ the
 inclusion is proper.
 \end{proposition}
 
 \begin{proof}
-Let nonempty $L\in\Ccf{h}$ and take its reduced SSBNF grammar and typed
-refinement $\widetilde G$.  Every non-start typed symbol $X=A_\mu$ has a
-terminal reaching context $(u,v)$, and every
-$w\in L_{\widetilde G}(X)$ is nonempty with $h(w)=\mu$ by
-Proposition~\ref{prop:typed-core}.  Hence any
-$x,y\in L_{\widetilde G}(X)$ have the same type and the common context
-$(u,v)$; fixed-$h$ substitutability gives $x\equiv_L y$.  Thus each typed
-nonterminal generates strings from one syntactic-congruence class.
+For nonempty $L\in\Ccf{s}$, take a reduced BUNF
+grammar and its $\mathsf S^\sharp$-typed refinement $\widetilde G$.
+The yields of each retained typed symbol $A_\mu$
+have equal $\widehat s$-type and share a terminal reaching
+context.  Lemma~\ref{lem:fresh-identity} implies
+that they lie in one syntactic-congruence class.
+This argument includes nullable symbols.
 
-Delete the separated start symbol and use its typed successors as the finite
-initial set; if $\lambda\in L$, add one fresh initial symbol generating only
-$\lambda$.  Proposition~\ref{prop:typed-core} then gives a congruential
-grammar for $L$.  The empty language is handled by an initial symbol with no
-productions.  This proves the inclusion after taking the union over $h$.
+Delete the auxiliary $\widetilde S$ and use its
+typed successors $(S_0)_\mu$ as a finite initial set.
+The type $\mathbf e$ already accounts for $\lambda$
+when it belongs to $L$; no extra initial symbol
+is necessary.  A productionless initial symbol
+handles the empty language.  Taking the union
+over all finite typings gives the inclusion.
 
 For properness over $\{a,b\}$, use the Dyck example also discussed by
 Clark~\cite{clark2010congruential}.  Every $x\in D_1$ satisfies
@@ -1979,23 +2003,17 @@ $D_1\notin\mathsf{RS}(\{a,b\})$.
 
 \section{Conclusion}
 
-Finite-monoid typing brings context-free targets beyond
-fixed-window substitutability into positive-data learning,
-but refinement can make characteristic data exponentially
-larger. Our results separate polynomial-time reconstruction
-and conservative Gold identification from quantitative data
-guarantees. The exponential lower bounds persist across all
-reduced SSBNF presentations in typed thickness and extend
-to every set-driven operator admitting characteristic samples
-for both targets of a distinguishing pair.
-
-The polynomial characteristic-data bounds established here
-hold under stated sufficient algebraic conditions or for
-linear targets. We claim neither necessity of those conditions
-nor polynomial bounds in grammar size and ordinary thickness
-for arbitrary fixed typings. The lower bounds do not concern
-the running time or convergence stage of arbitrary Gold
-learners. Characterizing
+Finite-semigroup typing extends positive-data learning beyond
+fixed windows, but characteristic samples may be exponentially
+large. We distinguish polynomial-time set-driven reconstruction
+from conservative Gold identification and bound encoded
+characteristic data under explicit algebraic hypotheses and
+for linear targets. The exponential gap holds across BUNF
+presentations in typed thickness and for characteristic
+samples of any set-driven operator covering a distinguishing
+target pair; it does not bound arbitrary Gold-learner
+convergence. The sufficient window--group condition is not
+claimed necessary. Characterizing
 $\mathsf{RS}\cap\mathrm{CFL}$ remains open.
 
 \section*{Data availability}
@@ -2024,166 +2042,153 @@ responsibility.
 
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-Put $m:=k+\ell$, $q_{\mathrm{grp}}:=|\mathsf{G}|$, $N:=|V\setminus\{S_0\}|$,
-$D_{\mathrm{bd}}:=(m+1)Nq_{\mathrm{grp}}$, and $W_{\mathrm{bd}}:=m+q_{\mathrm{grp}}-1$.
-Every non-start symbol of the reduced SSBNF grammar $G$ derives
-a nonempty word of length at most $\tau_G$, so $\tau_G\ge1$.
+Put $m=k+\ell$, $q=|\mathsf G|$, $N=|V|$,
+$\bar\tau:=\tau_G+1$, $D:=(m+2)Nq$ and $W:=m+q$.
+Fix any retained typed copy $A_\mu$, including a
+copy of the original start symbol. If $\mu=\mathbf e$,
+its only yield is $\lambda$. Otherwise choose a positive
+$w_0\in L_G(A)$ of type $\mu$ and put
+$\eta:=(s_{k,\ell}(w_0),g(w_0))$.
+Select a shortest \emph{nonempty} word $w\in L_G(A)$
+in this $(s_{k,\ell}\times g)$-fiber, and a derivation
+tree for $w$ with the fewest nonterminal nodes.
+The kernel hypothesis shows $\widehat s(w)=\mu$,
+and $|\omega(A_\mu)|\le|w|$. If $|w|<m$, the
+claimed bound is immediate.
 
-\emph{Fiber and shortening.}
-Fix a retained non-start $A_\mu$ of $\widetilde G$.
-By Proposition~\ref{prop:typed-core}, choose
-$w_0\in L_{\widetilde G}(A_\mu)
-=L_G(A)\cap h^{-1}(\{\mu\})$ and put
-$\eta:=(h_{k,\ell}(w_0),g(w_0))$.
-The kernel inclusion gives
+Since $|w|\ge m=k+\ell$, the first $k$ and
+last $\ell$ positions are disjoint (either window
+block may be empty). Protect these letters and
+one additional letter as a \emph{nonemptiness
+anchor}; it may already lie in a window block.
+Let $P$ be the protected position set, with
+$1\le d:=|P|\le m+1$. In particular, the
+anchor also prevents a shortening to $\lambda$
+when $m=0$. Any replacement retaining the
+protected letters in order and the group value
+preserves nonemptiness and the prefix--suffix
+window, hence the $(s_{k,\ell}\times g)$-value.
+
+Consider all nonterminal occurrences of the chosen
+BUNF derivation, including unit and nullable nodes.
+At each node $z$ let $\operatorname{nt}(z)$ be its
+nonterminal label, $y(z)$ its possibly empty yield
+and $\operatorname{Mark}(z)$ the protected positions
+contained in its span. Marks are nested along
+each ancestor chain and assume at most $d+1$
+different values. The triple
+$(\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))$
+cannot recur along a chain. Indeed, equal nonterminal
+labels permit grafting the lower derivation at
+the higher occurrence. Equality of $g(y(z))$
+preserves the group value of the entire word
+by the homomorphism property, and equality
+of marks retains all protected letters in order.
+The new word lies in the same nonempty fiber,
+and its length cannot increase. The grafted tree
+has strictly fewer nonterminal nodes. Strict
+shortening contradicts minimal word length,
+and equal length contradicts the tie break.
+Thus the tree has depth at most
+$(d+1)Nq\le D$.
+
+Call a node \emph{essential} when its yield span
+contains a protected position or its yield has
+length exceeding $\bar\tau$. At any depth at
+most $d$ nodes meet protected positions.
+If there were $d+q$ essential nodes at the
+same depth, choose $q$ disjoint unprotected
+long-yield nodes, ordered left-to-right, with
+yields $a_1,\ldots,a_q$ longer than $\bar\tau$.
+By the definition of ordinary thickness choose
+$b_i$ in the terminal language of each
+corresponding nonterminal, $|b_i|\le\tau_G$;
+the $b_i$ may be $\lambda$.
+
+Write $w=c_0a_1c_1\cdots a_qc_q$.
+Let
 \[
-L_G(A)\cap(h_{k,\ell}\times g)^{-1}(\{\eta\})
-\subseteq L_{\widetilde G}(A_\mu).
+ r_j=g(a_1c_1\cdots a_jc_j),\quad
+ t_j=g(b_1c_1\cdots b_jc_j),\quad
+ x_j=t_jr_j^{-1},\qquad x_0=1_{\mathsf G}.
 \]
-The left side contains $w_0$. Let $w$ be its shortest word; then
-$|\omega(A_\mu)|\le|w|$. If $|w|<m$, the bound follows.
-Otherwise write $w=\alpha\beta\gamma$, with $|\alpha|=k$ and
-$|\gamma|=\ell$, and protect the $m$ positions of $\alpha,\gamma$,
-denoting their set by $\mathsf{GuardPos}$ (possibly empty).
-Any $w'=\alpha\beta'\gamma\in L_G(A)$ with $g(w')=g(w)$
-has $|w'|\ge|w|$: all such yields are nonempty and have the
-same $(h_{k,\ell}\times g)$-type as $w$.
-We use this shortest-fiber property throughout.
-
-Fix a derivation tree of $A\Rightarrow_G^*w$, taking nonterminal
-occurrences as nodes and lexical rules $B\to a$ as leaves.
-For a node $z$, let $\operatorname{nt}(z)$ be its non-start label,
-$y(z)$ its nonempty yield, $\operatorname{span}(z)$ its yield interval, and
-$\operatorname{Mark}(z):=\operatorname{span}(z)\cap\mathsf{GuardPos}$. Subtrees at incomparable nodes may be
-replaced independently by derivations from their respective labels.
-
-\emph{Depth.}
-The triple $(\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))$ cannot repeat along an
-ancestor chain: replacing the higher subtree by the lower one
-preserves the protected letters and group value but strictly
-shortens the yield (each proper descendant lies below a binary
-branching with a nonempty sibling yield). Since the two marks coincide,
-all deleted positions avoid $\mathsf{GuardPos}$, so the new yield retains
-prefix $\alpha$ and suffix $\gamma$. This contradicts shortestness. Along any root-to-leaf path, the nested sets $\operatorname{Mark}(z)$
-take at most $m+1$ values; labels and group values have at most
-$N$ and $q_{\mathrm{grp}}$ choices. Hence every node has depth less than $D_{\mathrm{bd}}$.
-
-\emph{Width.}
-Call $z$ \emph{essential} if $\operatorname{Mark}(z)\ne\varnothing$ or
-$|y(z)|>\tau_G$, and let $\mathsf{Ess}$ be the set of essential nodes.
-At any fixed depth, at most $m$ nodes of $\mathsf{Ess}$ meet $\mathsf{GuardPos}$.
-If a depth contains at least $m+q_{\mathrm{grp}}$ essential nodes, at least $q_{\mathrm{grp}}$
-of them do not meet $\mathsf{GuardPos}$; choose $z_1,\ldots,z_{q_{\mathrm{grp}}}$ among these,
-ordered from left to right. Their disjoint yields
-$a_i:=y(z_i)$ lie inside $\beta$ and satisfy $|a_i|>\tau_G$.
-Choose $b_i\in L_G(\operatorname{nt}(z_i))$ with $|b_i|\le\tau_G$, and write
-$w=c_0a_1c_1\cdots a_{q_{\mathrm{grp}}}c_{q_{\mathrm{grp}}}$. For $1\le j\le q_{\mathrm{grp}}$, set
+Among the $q+1$ values $x_0,\ldots,x_q$
+two agree, say $x_i=x_j$ for $i<j$.
+Writing $r_j=r_i r_{i:j}$ and
+$t_j=t_i t_{i:j}$ for the corresponding
+ordered interval products, cancellation in
+$t_i r_i^{-1} =t_i t_{i:j}r_{i:j}^{-1}r_i^{-1}$
+gives $t_{i:j}=r_{i:j}$, that is,
 \[
-r_j:=g(a_1c_1\cdots a_jc_j),\quad
-s_j:=g(b_1c_1\cdots b_jc_j),\quad
-x_j:=s_jr_j^{-1},
+ g(b_{i+1}c_{i+1}\cdots b_jc_j)
+ =g(a_{i+1}c_{i+1}\cdots a_jc_j).
 \]
-with $r_0=s_0=x_0=1_{\mathsf{G}}$. Among $x_0,\ldots,x_{q_{\mathrm{grp}}}$ two coincide,
-say $x_i=x_j$ for $i<j$. Put $r_{i:j}:=g(a_{i+1}c_{i+1}\cdots a_jc_j)$ and
-$s_{i:j}:=g(b_{i+1}c_{i+1}\cdots b_jc_j)$.
-Since $r_j=r_i r_{i:j}$ and $s_j=s_i s_{i:j}$,
-$s_ir_i^{-1}=s_i s_{i:j}r_{i:j}^{-1}r_i^{-1}\Longrightarrow s_{i:j}=r_{i:j}$.
-Replacing $z_{i+1},\ldots,z_j$ by derivations of the corresponding
-$b$-words therefore preserves $g(w)$ and the protected positions,
-but strictly shortens $w$, a contradiction.
-This uses no commutativity of $\mathsf{G}$. Thus each depth contains at most
-$W_{\mathrm{bd}}=m+q_{\mathrm{grp}}-1$ essential nodes.
+Replacing the indicated disjoint subtrees
+preserves the ordered group value, the
+protected letters, and nonemptiness, while
+strictly shortening the word. The argument
+does not assume $\mathsf G$ abelian. Thus every
+depth has at most $W=m+q$ essential nodes.
 
-\emph{Count.}
-As $\mathsf{Ess}$ is ancestor-closed, $|\mathsf{Ess}|\le W_{\mathrm{bd}}D_{\mathrm{bd}}$.
-Every unprotected position lies below a nonessential lexical leaf
-(of yield length $1\le\tau_G$). The maximal nonessential subtrees
-are pairwise disjoint, each has yield length at most $\tau_G$,
-and their roots number at most $2|\mathsf{Ess}|$ if $\mathsf{Ess}\ne\varnothing$,
-or one if $\mathsf{Ess}=\varnothing$. Consequently,
+Essential nodes are ancestor-closed and
+there are at most $WD$ of them. Since BUNF
+has at most two children per node, the
+number of maximal nonessential subtrees
+is at most $1+2WD$. Each contributes
+at most $\bar\tau$ letters. All remaining
+terminal positions are protected (at most
+$d$ of them), so
 \[
-|w|\le m+(1+2|\mathsf{Ess}|)\tau_G
-\le m+\bigl[1+2(m+q_{\mathrm{grp}}-1)(m+1)Nq_{\mathrm{grp}}\bigr]\tau_G.
+ |w|\le d+(1+2WD)\bar\tau
+ \le m+1+[1+2(m+q)(m+2)Nq](\tau_G+1).
 \]
-Taking the maximum over retained $A_\mu$ proves the lemma.
+The same argument treats positive start
+copies; empty-type copies yield only
+$\lambda$. This proves the lemma.
 \end{proof}
 
-\subsection{Thickness-preserving SSBNF normalization}
-\label{app:thick-ssbnf}
-
-\begin{proof}[Proof of Proposition~\ref{prop:thick-ssbnf-normal}]
-Let $G_*=(V,\Sigma,P,S)$ be reduced with $L(G_*)\ne\emptyset$, and put
-$s_*:=|G_*|$ and $\bar\tau:=\tau_{G_*}+1$.
-The standard CFG normalization operations are classical
+\subsection{Thickness-preserving BUNF normalization}
+\label{app:thick-bunf}
+\begin{proof}[Proof of Proposition~\ref{prop:thick-bunf-normal}]
+Let $G_*$ be reduced and put $n:=|G_*|$,
+$\bar\tau:=\tau_{G_*}+1$.
+First isolate terminals in right-hand sides
+of length at least two, using wrappers
+$W_a\to a$, and then binarize.
+Retain all nullable and unit rules.
+These standard operations preserve all
+original nonterminal languages
 \cite[Section~3.1]{autebert1997}
 \cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}.
-We specify their order and the shortest-yield estimates required here;
-the latter do not follow merely from existence of a normal form.
-
-Introduce a fresh start symbol $S_0\to S$, retaining
-$S_0\to\lambda$ precisely when $\lambda\in L(G_*)$.
-First isolate terminals in longer right-hand sides using
-$W_a\to a$, and then binarize.  The resulting $G_{\mathrm{bin}}$
-has $O(s_*)$ nonterminals and productions in symbol-count size
-(and polynomial encoded size); original nonterminals retain their
-terminal languages.  Each fresh binarization symbol represents a
-contiguous block of an original right-hand side with $O(s_*)$ symbols.
-Replacing these symbols by shortest terminal yields, each of length
-at most $\bar\tau$, gives
-$\tau_{G_{\mathrm{bin}}}=O(s_*\bar\tau)$.
-
-For any nonterminal $A$ deriving a nonempty word, mark a terminal
-leaf in a derivation tree and follow its root-to-leaf path.
-Whenever a nonterminal repeats on that path, replace the subtree
-at its higher occurrence by that at its lower occurrence.
-The marked leaf survives, and the resulting path contains at most
-$|V_{G_{\mathrm{bin}}}|$ nonterminal occurrences.
-Replace each off-path sibling by a shortest terminal yield,
-possibly $\lambda$.  This still gives a nonempty word and shows
-\[
-\min\{\,|w|>0:A\Rightarrow_{G_{\mathrm{bin}}}^*w\,\}
-\le 1+|V_{G_{\mathrm{bin}}}|\tau_{G_{\mathrm{bin}}}
-=O(s_*^2\bar\tau).
-\]
-
-Now eliminate non-start $\lambda$-productions.  Because binarization
-has already been performed, each $A\to BC$ yields at most the
-nonempty-right-hand-side variants $A\to BC$, $A\to B$, and $A\to C$;
-there is no exponential nullable-subset expansion.  Unit-closure
-elimination then copies at most $O(s_*^2)$ non-unit productions, since
-there are $O(s_*)$ nonterminals and $O(s_*)$ such productions beforehand.
-Both eliminations preserve the nonempty terminal language of each
-non-start symbol, so the preceding bound survives.  Finally trim
-useless symbols, retaining $\lambda$ only at $S_0$.
-The result is an equivalent reduced SSBNF grammar of polynomial
-encoded size and thickness $O(s_*^2(\tau_{G_*}+1))$.
-Every step is computable in polynomial time.
+Each auxiliary binarization symbol is fresh
+for its original production and represents a
+contiguous block of that production's right-hand
+side, containing at most $O(n)$ original symbols.
+Substituting shortest yields gives a terminal
+word of length $O(n\bar\tau)$.
+The original nonterminal languages and their
+shortest yields are unchanged.
+Trim unreachable or unproductive symbols.
+The resulting BUNF grammar is equivalent,
+has polynomial size and
+$\tau_G=O(n(\tau_{G_*}+1))$.
 \end{proof}
 
-\section{Proof of the linear-spine SSBNF normalization}
+\section{Proof of the linear-spine BUNF normalization}
 \label{app:linear-normalization}
-
 \begin{proof}[Proof of Proposition~\ref{prop:linear-normal}]
-The standard start-symbol, $\lambda$-rule, and unit-rule normalizations
-are classical \cite[Section~3.1]{autebert1997}
-\cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}.
-The point here is to preserve the one-wrapper-child spine structure.
-If $L(G)=\{\lambda\}$, the single rule $S_0\to\lambda$ suffices.
-Otherwise introduce a fresh start symbol $S_0\to S$, and add
-$S_0\to\lambda$ exactly when $\lambda\in L(G)$.
-Trim useless symbols, eliminate non-start $\lambda$-rules, and then
-eliminate non-start unit rules, without changing the start rules.
-Linearity ensures at most one additional nonempty right-hand side
-per rule during $\lambda$-elimination; unit-closure elimination also
-preserves polynomial size and linearity.
+A linear CFG has rules $A\to uBv$
+or $A\to w$, for terminal words
+$u,v,w\in\Sigma^*$.
+Retain $A\to B$ and $A\to\lambda$.
+No nullable or unit elimination is needed.
 
-For each $a\in\Sigma$, introduce a fresh \emph{wrapper} $W_a\to a$,
-disjoint from all existing nonterminals.
-All other new nonterminals below are \emph{spine symbols}, chosen
-afresh for each production except at the indicated endpoints.
-For a remaining rule
-$A\to a_1\cdots a_m B b_1\cdots b_n$, where $m+n>0$,
-form the right and left spine chains
+For each $a\in\Sigma$ introduce a fresh
+terminal wrapper $W_a\to a$, and choose
+all other auxiliary spine symbols freshly
+per production. For a rule
+$A\to a_1\cdots a_m B b_1\cdots b_n$
+with $m+n>0$, form the chains
 \[
 \begin{aligned}
 C^{\mathrm R}_0&:=B,&
@@ -2194,23 +2199,22 @@ C^{\mathrm L}_i&\to W_{a_{m-i+1}}C^{\mathrm L}_{i-1}
   &&(1\le i\le m).
 \end{aligned}
 \]
-Identify $C^{\mathrm R}_n=A$ if $m=0$, and
-$C^{\mathrm L}_m=A$ otherwise; a zero-length chain contributes no
-rules.  These chains derive exactly the original right-hand side.
-
-For a terminal-only rule $A\to a_1\cdots a_k$, retain it if $k=1$;
-otherwise set $C^{\mathrm T}_1:=A$, take fresh
-$C^{\mathrm T}_2,\ldots,C^{\mathrm T}_k$, and use
+Identify $C^{\mathrm R}_n=A$ when $m=0$,
+and $C^{\mathrm L}_m=A$ otherwise.
+For terminal-only $A\to a_1\cdots a_k$,
+keep $k=0,1$ unchanged. If $k\ge2$,
+let $C^{\mathrm T}_1=A$ and use fresh
+$C^{\mathrm T}_2,\ldots,C^{\mathrm T}_k$ with
 \[
 C^{\mathrm T}_i\to W_{a_i}C^{\mathrm T}_{i+1}
-\quad(1\le i<k),\qquad C^{\mathrm T}_k\to a_k.
+\ (1\le i<k),\qquad C^{\mathrm T}_k\to a_k.
 \]
-Consequently, each binary rule has exactly one wrapper child,
-while its other child continues the spine.
-Final trimming preserves this property and gives an equivalent
-reduced SSBNF grammar.  Since each chain has length linear in the
-right-hand side it replaces, the construction has polynomial
-encoded size and running time.
+Every new binary rule has one wrapper
+child producing exactly one terminal,
+and one continuing spine child.
+The original languages are preserved.
+Trim to obtain a reduced BUNF grammar
+of polynomial encoded size.
 \end{proof}
 
 \section{Substitutability of the bracketed doubling family}
@@ -2372,7 +2376,7 @@ Proposition~\ref{prop:app-path-congruence} gives
 $\D_{L_n}(x)=\D_{L_n}(y)$.
 Since $L_n$ is finite and hence context-free, it is
 Clark--Eyraud substitutable and belongs to
-$\Ccf{h_0}\cap\Ccf{h_{\mathrm U}}$.
+$\Ccf{s_0}\cap\Ccf{s_{\mathrm U}}$.
 \end{proof}
 
 \begin{thebibliography}{99}
@@ -2424,27 +2428,6 @@ R.~Yoshinaka.
 \newblock General perspective on distributionally learnable classes.
 \newblock In \emph{Proceedings of the 14th Meeting on the Mathematics
 of Language (MoL 14)}, pp.~87--98, 2015.
-
-\bibitem{clark-yoshinaka2016}
-A.~Clark and R.~Yoshinaka.
-\newblock Distributional learning of context-free and multiple
-context-free grammars.
-\newblock In J.~Heinz and J.~M.~Sempere (Eds.),
-\emph{Topics in Grammatical Inference}, pp.~143--172, Springer, 2016.
-\newblock doi:10.1007/978-3-662-48395-4\_6.
-
-\bibitem{coste-garet-nicolas2012}
-F.~Coste, G.~Garet, and J.~Nicolas.
-\newblock Locally substitutable languages for enhanced inductive leaps.
-\newblock In \emph{Proceedings of the Eleventh International Conference
-on Grammatical Inference}, PMLR 21:97--111, 2012.
-
-\bibitem{coste-nicolas2019}
-F.~Coste and J.~Nicolas.
-\newblock Learning local substitutable context-free languages from
-positive examples in polynomial time and data by reduction.
-\newblock In \emph{Proceedings of the 14th International Conference
-on Grammatical Inference}, PMLR 93:155--168, 2019.
 
 \bibitem{coste-typing2004}
 F.~Coste, D.~Fredouille, C.~Kermorvant, and C.~de~la~Higuera.
