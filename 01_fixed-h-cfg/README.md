@@ -1,13 +1,13 @@
-# #1 TCS — 最新改訂稿 / CURRENT REVISION **v236**
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v237**
 
-> **最新版は `main` の internal v236（2026-10-20）。**  
+> **最新版は `main` の internal v237（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v236：BUNF定義をSection 5から定量解析のSection 6へ移動。Section 5は一般CFGだけで構成。番号変更に伴い査読回答を同期済み。PDF・ZIPは新規生成と49項目の再検証待ち。Editorial Manager未提出。**
+> **v237：Section 5の一般CFG証明を簡潔化し、不要なdisplay数式3本をインライン化。重複説明を削減し、定理・証明の論理は維持。査読回答のPDF位置照合プログラムを修正し、PDF・ZIPを再生成中（投稿は未実施）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（いずれも v236）
+## 提出に使用する3ファイル（いずれも v237）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,16 +23,16 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v236`** と原稿SHA-256を参照
-- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v236英文Abstractのプレーンテキスト
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v237`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v237英文Abstractのプレーンテキスト
 
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v236の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成と検証待ち（v235は既に検証済み）。
-- v236で定理・命題の番号が変更されたため、査読回答 **49項目・Marked PDF位置参照77か所**の再照合をGitHub Actionsで実施する。
-- v236の変更：Section 5のBUNF定義を完全に削除し、Section 6冒頭へ移動（Definition 6.1）。学習の定性的証明には正規形仮定がなく、BUNFは定量データ解析だけで導入される。Section 5・6の命題番号と査読回答を更新。
-- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v236の対訳としては使用しないでください（TCS提出ZIPには含みません）。
+- v237の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち。v236 Clean PDFは26ページ。
+- v236では位置照合コードに旧命題番号が残りMarked/回答生成ジョブが失敗。v237でコードを訂正し、49項目・77か所の再照合を実施する。
+- v237の変更：一般CFG右辺・型積・canonical rule yieldをインライン化し、Section 5の説明・完全性証明とSection 6冒頭を整理。BUNFはSection 6以降の定量的な仮定のみ。
+- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v237の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
 ## どのファイルが正本か
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v236**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v236 marked-PDF and synchronized response locators must be reverified before author resubmission. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v237**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v237 marked-PDF and synchronized response locators must be reverified before author resubmission. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.

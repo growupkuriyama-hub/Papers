@@ -51,11 +51,11 @@ def locate_statement_bbox(kind, number):
                     or abs((y0 + y1) - (ny0 + ny1)) > 16
                     or nx0 - x1 > 48):
                 continue
-            # Corollary 5.5 is also mentioned earlier as a forward
+            # Corollary 5.4 is also mentioned earlier as a forward
             # reference. Its actual heading includes "Gold identification".
             # Require that heading text rather than selecting the first
             # in-prose mention on an earlier page.
-            if kind.lower() == "corollary" and number == "5.5":
+            if kind.lower() == "corollary" and number == "5.4":
                 if not any(
                     "gold" in value.lower()
                     and abs((my0 + my1) - (y0 + y1)) < 28
@@ -133,8 +133,8 @@ def locate(section_or_statement):
                     and number_at_anchor == int(number)
                     and not re.search(r"\s{2,}\d{1,4}\s*$", line)):
                 number_at_anchor = None
-            if number_at_anchor is None and statement and kind == "Theorem" and number == "5.3":
-                # Theorem 5.3's marked heading wraps onto several lines.
+            if number_at_anchor is None and statement and kind == "Theorem" and number == "5.2":
+                # Theorem 5.2's marked heading may wrap across several lines.
                 # Its own margin anchor is l.439; the preceding l.438 belongs
                 # to Section 5.2 and must not be used.
                 for distance in range(1, 15):
@@ -168,9 +168,9 @@ def locate(section_or_statement):
                 return page_number, number_at_anchor
     return None
 
-# Require theorem anchors in the mathematical order of the manuscript.
+# Require heading anchors in their current mathematical order (v236+ numbering).
 ordered_statements = [
-    ("Proposition", "6.3"),
+    ("Proposition", "6.4"),
     ("Lemma", "7.6"),
     ("Lemma", "8.2"),
     ("Theorem", "8.3"),
