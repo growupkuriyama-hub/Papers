@@ -1,430 +1,57 @@
-# #1 — fixed-h CFG
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v231**
 
-## Always-latest English and Japanese PDFs (automatic)
+> **最新版は `main` の internal v231（2026-10-19）。**  
+> 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
+> 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
+> **提出用パッケージの生成・検証は完了。Editorial Managerへの再提出は著者の操作が必要です。**
 
-- **English clean manuscript (GitHub viewer):** [TCS-D-26-00494_Manuscript_Clean.pdf](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf)
-- **Japanese reference translation (GitHub viewer):** [main_JP.pdf](https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/japanese/main_JP.pdf)
-- **Direct English PDF:** https://raw.githubusercontent.com/growupkuriyama-hub/Papers/main/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf
-- **Direct Japanese PDF:** https://raw.githubusercontent.com/growupkuriyama-hub/Papers/main/01_fixed-h-cfg/japanese/main_JP.pdf
-- English source: `main.tex`, byte-identical to `TCS-D-26-00494_Manuscript_Clean.tex`.
-- Japanese source: `japanese/main_JP.tex`, a reference translation; mathematical/source synchronization remains an editorial responsibility.
-- The `publish-tcs1-clean-pdf.yml` workflow automatically recompiles **both** PDFs (pdfLaTeX for English, LuaLaTeX for Japanese) and updates these tracked PDFs on `main` whenever either English or Japanese source is changed. URLs stay stable; PDF content updates after the workflow succeeds.
-- The journal submission uses the English manuscript; the Japanese PDF is a reading/reference translation.
+**最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## v177 — 2026-10-12 Independent referee audit integration (EN/JP)
+## 提出に使用する3ファイル（いずれも v231）
 
-- Reconciled English and Japanese revisions: pinned the 2014 priority source to arXiv v3 and expressly attributed the sorted window signature to Yoshinaka (2015, Example 4).
-- Added concise checks for nonerasing inverse images, the locally trivial semigroup factorization, entry-height realizability in the nonlinear example, and Appendix A.1's width counting.
-- The linear-subclass proof now displays the normalized-grammar encoded witness bound O(|G_0|^3 |M|^4), without asserting that degree for unnormalized input grammars.
-- Revised main theorem item (iv) to use tau_{G_*}+1 for nullable-presentation clarity; no theorem scope or bound is strengthened.
-- Updated the reviewer response overview, and modified marked-reviewer package generation to require observed PDF page/margin-line anchors for all 49 response items. Do not treat the journal package as final until the workflows and PDF locator audit succeed.
-- Automated checks passed: English and Japanese clean PDFs, additions-marked revised PDF, and reviewer-response PDF. The 49 response items have 73 checked marked-PDF page/margin-line anchors; final Editorial Manager selection and upload remain separate.
-- No arXiv version change and no Editorial Manager resubmission.
+| TCS提出物 | ファイル | 役割 |
+|---|---|---|
+| **1. Clean TeX** | [TCS-D-26-00494_Manuscript_Clean.tex](TCS-D-26-00494_Manuscript_Clean.tex) | 改訂後の英文原稿（[編集正本 `main.tex`](main.tex)とバイト一致） |
+| **2. Marked PDF** | [TCS-D-26-00494_Manuscript_Marked.pdf](TCS-D-26-00494_Manuscript_Marked.pdf) | 初回提出版に対して改訂箇所を表示 |
+| **3. Response PDF** | [TCS-D-26-00494_Response_to_Reviewers.pdf](TCS-D-26-00494_Response_to_Reviewers.pdf) | 上記 **同一のMarked PDF** に位置参照を合わせた査読回答 |
 
-## v176 — 2026-10-11 Appendix A.1 shortest-fiber pruning proof (EN/JP)
+**まとめて取得： [TCS-D-26-00494_R1_3files.zip](TCS-D-26-00494_R1_3files.zip)**（上記の3ファイルのみ）。ZIPから取り出し、Editorial Managerでそれぞれ適切な文書種別を選択してください。ここでいう「提出用」は *投稿済み* の意味ではありません。
 
-- Reworked the Lemma 7.1 Appendix proof around a single shortest-fiber replacement principle, a strict full-tree height bound, a finite-group width argument, and a maximal nonessential-subtree count.
-- Replaced the old conjugated group corrections with paired prefix products `r_j,s_j` and `x_j=s_j r_j^{-1}`; the equality of two `x_j` yields equality of group values for a consecutive replacement block by cancellation, without commutativity.
-- Explicitly justified shorter ancestor-to-descendant replacements using SSBNF binary branching and separated the small-window case.
-- Preserved all theorem statements, group assumptions, labels, and the precise thickness bound `m+[1+2(m+q-1)(m+1)Nq] tau_G`.
-- Synchronized English Clean source, Japanese proof, response 49 items / 73 source-line spans and SHA-256 metadata. Additions-marked PDF page/paragraph/margin-line audit remains pending.
+## 閲覧・編集用（提出ZIPには入れない）
 
-## v175 — 2026-10-11 concise elementary proof (EN/JP)
+- **[英文Clean PDF](TCS-D-26-00494_Manuscript_Clean.pdf)** — 論文を読むための最新版
+- **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
+- [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
+- [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v231`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v231英文Abstractのプレーンテキスト
 
-- Condensed Corollary 7.4's proof without omitting the letterwise product definition, the reason it is a semigroup homomorphism, the convention for S union {1}, or the kernel inclusion.
-- Retained the original algebraic hypothesis, finite-group generalization and all quantitative conclusions; synchronized the English Clean source and Japanese translation.
-- Refreshed the reviewer-response source-line map (73 spans). Final additions-marked PDF page/margin-line audit remains pending.
+### 検証状態（2026-10-19）
 
-## v174 — 2026-10-11 elementary letterwise proof of Corollary 7.4 (EN/JP)
+- `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
+- GitHub Actionsの **Clean PDF / Marked PDF / Response PDF / ZIP** 生成に成功。
+- **査読回答49項目・Marked PDFの位置参照77か所**を、生成したMarked PDFのページ・余白行から再検証。
+- 以前のv230、PR #62の実験PDF・旧回答書・旧Abstractは最新版ではありません。
+- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v231の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
-- Expanded the proof to explicitly choose a pair `(s_a,q_a)` mapping to `h(a)` for each letter, and define `varphi(a_1...a_n)` as the product of those chosen pairs.
-- Explained why the definition is unambiguous (unique spelling, semigroup closure and associativity), why it is a semigroup morphism, and why its image under `pi` recovers `h(w)`.
-- Wrote `S union {1}` instead of `S^1`, explicitly distinguishing the case of an existing identity from adjoining one, and defined both coordinate maps on the empty word.
-- Kept the corollary, finite-group theorem, algebraic assumption and polynomial-thickness bound unchanged. Synced English Clean mirror, Japanese text, referee response 73 source-line ranges and SHA-256 metadata.
-- Additions-marked PDF page/paragraph/margin-line audit remains outstanding before TCS resubmission.
+## どのファイルが正本か
 
-## v173 — 2026-10-11 uniform subsemigroup-image terminology (EN/JP)
+| 用途 | 正本・参照先 |
+|---|---|
+| 数学的な本文の修正 | `main.tex` |
+| 査読回答の修正 | `response/response_round1.tex` |
+| バージョン確認 | `PAPER.yaml` の `current_baseline` |
+| 投稿用PDF・ZIP | GitHub Actionsの成功後に更新される、上の**固定名**のファイル |
 
-- Standardized all live statements and explanations to **homomorphic image of a subsemigroup** (EN) / **部分半群の準同型像** (JP), including Main Theorem (iv), Corollary 7.4 and its proof, scope limitations, conclusion, and referee response.
-- The algebraic condition and all mathematical results remain unchanged; removed the alternative technical term rather than weakening the hypothesis.
-- Synchronized English Clean mirror, Japanese translation, reviewer-response 49 items / 73 source-line spans, and SHA-256 metadata. Marked PDF margin/page audit remains pending.
+PDFを手で置き換えず、ソースを直してから `.github/workflows/publish-tcs1-clean-pdf.yml` と `publish-tcs1-revision-package.yml` による再生成・参照位置再検証を行います。**今後の数理原稿の変更では版番号も更新**してください。
 
-## v172 — 2026-10-11 explicit window–group product notation (EN/JP)
+### 履歴（最新版と区別）
 
-- Dropped the local shorthand `t := h_{k,ell} × g` throughout Lemma 7.1 and Appendix A.1, consistently writing `h_{k,ell} × g`, including its fibers.
-- Defined `eta := (h_{k,ell}(w_0),g(w_0))` in the Appendix. Other unrelated semigroup variables and the letter-image lift `t_a` are unchanged.
-- Bounds, mathematical reasoning, and numbered results are unchanged. EN Clean mirror remains identical to `main.tex` and Japanese reference text is synchronized.
-- Reviewer-response 49 items / 73 source-line ranges remain valid without renumbering; version and SHA-256 metadata refreshed. Additions-marked PDF audit still pending.
+- [初回提出版・基準アーカイブ](archive/) — Marked PDF生成に必要な旧稿、修士論文など。**削除しない**。
+- [研究・査読履歴メモ](revision/) / [補足メモ](notes/) — 過去版と実験・監査の記録。提出用の正本ではありません。
+- [v231の変更をmainへマージしたPR #63](https://github.com/growupkuriyama-hub/Papers/pull/63)。
+- 詳細な旧版変更履歴はGitのcommit履歴と `PAPER.yaml` に保存しています（旧READMEの長大な逐次履歴は掲載しません）。
 
-## v171 — 2026-10-11 short subsemigroup-image reduction proof (EN/JP)
+---
 
-- Compressed Corollary 7.4 (locally trivial semigroup x finite group typing) proof to its logical core: a subsemigroup-image representation lifts letter images, projected morphisms induce a window-group refinement, and Theorem 7.2 plus SSBNF normalization applies.
-- Kept the corollary statement, assumptions, generalized finite-group conclusion, and Appendix A.1 proof unchanged. Did not restrict the result to Yoshinaka's fixed-window case.
-- Updated English main.tex and its byte-identical Clean mirror, Japanese translation, reviewer-response v171 source-line ranges, and current SHA256 metadata.
-- Additions-marked PDF page/paragraph/margin-line audit remains pending before the TCS resubmission.
-
-## v170 — 2026-10-11 concise typing-adequacy discussion (EN/JP)
-
-- Compressed the Section 3 "When is a typing useful?" discussion into one paragraph on finite-index congruence separation and quantitative cost.
-- Removed repeated refinement/product explanation and the local Clark--Eyraud language example; strengthened the final contrast by noting that refining the entire syntactic congruence would force regularity.
-- The finite-monoid obstruction lemma, exponential typed-thickness gap, and Sections 7--8 sufficient-regime references remain explicit, preserving R2.1 typing-bias coverage.
-- Main theorems, hypotheses, proofs, examples elsewhere, and typed-thickness bounds unchanged. English Clean mirror identical to source; Japanese source and hashes refreshed.
-- R2.1 reviewer response synchronized; 73 TeX source-line spans remapped against v170. Final additions-marked PDF page/paragraph/margin-line audit is still pending.
-
-## v169 — 2026-10-11 Claude-review clarity corrections (EN/JP)
-
-- Clarified SSBNF lexical leaves, essential-set ancestor closure and depth levels, and coverage of unprotected positions.
-- Explicitly fixed the increasing-index product order for simultaneous finite-group subtree replacements, including noncommutative groups.
-- Replaced the vague retained h-typed occurrence with an explicit witness word; spelled out the lifting morphism from Sigma+ to the source subsemigroup and its extension to the empty word.
-- No change to the Main Theorem (iv), lemma assumptions, typed-thickness formula, or shortening argument.
-- English/Japanese source synchronization, byte-identical Clean English mirror, v169 SHA-256 metadata and 49-item/73-span response source audit refreshed.
-- Final additions-marked PDF page/paragraph/margin-line audit remains necessary before TCS resubmission.
-
-## v168 — 2026-10-11 editorial alignment while external review is pending
-
-- Expanded the initial semigroup homomorphic-image wording in Main Theorem (iv) as 'a homomorphic image of a subsemigroup'; synchronized English/Japanese abstract and Conclusion with the wider group--window bound.
-- Synchronized the reviewer response (including R1.2, R1.3, R2.1, R2.4) with the new Section 7. Reviewer quotations were not altered.
-- Re-audited all 73 original source-line spans in the 49-item locator table against v168 English TeX. Marked-PDF page/paragraph/margin-line locators remain pending and must not be inferred from source lines.
-- Theorem statements and Appendix proof unchanged pending independent Claude review. Clean English TeX mirror remains byte-identical and SHA-256 metadata refreshed.
-
-## v167 — 2026-10-11 group--window typed-thickness generalization (EN/JP)
-
-- Independently checked the noncommutative finite-group simultaneous pruning identity, essential-node antichain and path bounds, and semigroup homomorphic-image reduction.
-- Replaced Appendix A.1 with the unified group × window argument: `tau_h^typ(G) <= m + [1 + 2(m+q-1)(m+1)Nq] tau_G` under `ker(h_{k,l} × g)|Sigma+ <= ker h|Sigma+`.
-- Main Theorem (iv) and Section 7 now cover positive-image semigroups that are homomorphic images of subsemigroups of a direct product of a finite locally trivial semigroup and a finite group. The fixed-window case is the trivial-group specialization, though its coefficient is less sharp than v166.
-- Explicitly acknowledged Yoshinaka (2008) fixed-window IPTtD, preserving all existing separation examples, legacy labels and EN/JP source synchronization.
-- The tracked English Clean TeX mirrors main.tex; EN/JP PDFs are rebuilt by workflow. Marked-reviewer PDF page/line locators must be re-audited before journal resubmission.
-
-## v166 — 2026-10-11 Appendix A.1 clarity (EN/JP)
-
-- Defined the protected word-position set explicitly as `P={1,...,k} ∪ {n-ell+1,...,n}`, interpreting either side as empty when its window length is zero. This removes ambiguity at `k=0` or `ell=0`.
-- In the `2m-1` count, made explicit that nodes with the same nonempty mark `X=M(z)` form an ancestor chain, so their lowest carrier exists uniquely. English `main.tex` and Clean mirror are byte-identical; Japanese text has the corresponding clarification. Lemma statement and quantitative bound unchanged. EN/JP PDFs are rebuilt by the existing workflow; marked-reviewer line locators still require a separate re-audit.
-
-## v165 — 2026-10-11 shorter proof of Lemma 7.1 (Appendix A.1)
-
-- Rewrote the proof of Lemma `window-typed-yield` in EN/JP around the marked sets `M(z)=I(z) ∩ P`. Minimality of the shortest typed yield is isolated once as `ux'v ∈ L_G(A) ⇒ |x'| ≥ |x|` (`eq:fw-min`); the proof then shows (a) unmarked yields are at most `tau_G`, (b) equal marks along an ancestor chain force distinct labels, (c) marks take at most `2m-1` values, hence `|C| ≤ (2m-1)N`, and (d) positions outside `P` are partitioned by unmarked nodes with marked parents.
-- Removes the F/D/J partition, the map `phi` and the labels `eq:fixed-window-*` (not referenced elsewhere). Lemma statement and `theta_{k,l}` unchanged. English canonical/Clean TeX byte-identical; EN/JP SHA256 refreshed. Local pdfLaTeX and LuaLaTeX builds succeeded with no errors or undefined references.
-- Reviewer-response source/margin line locators were not changed and still require re-audit before resubmission.
-
-## v158 — 2026-10-10 Round-1 reviewer-response synchronization
-
-- Updated `response/response_round1.tex` to match the latest v157 English manuscript: revised the Section 9 overview and Reviewer 1 answers R1.33--R1.35 to describe the canonical-completion entry-height argument, footnoted concatenation formula, and footnoted sharpness of the capped-counter boundary.
-- Replaced the obsolete 49-entry v132 marked-PDF page/line table with a verified map to exact v157 `main.tex` source lines and statement/section anchors. These are **not PDF margin-line locators**. The marked PDF was confirmed to build as 25 pages and the clean PDF as 24 pages, but editorial page/paragraph/margin-line references require final PDF-level re-audit before TCS resubmission.
-- All 49 response items retained, current response SHA256 updated. Manuscript EN/JP source unchanged from v157; English canonical/Clean TeX remain byte-identical. This response update does not constitute journal resubmission.
-
-## v157 — 2026-10-10 footnote on capped-counter sharpness
-
-- Moved the explanation that `CTR_1` is `(1,1)`-substitutable from the main text into a footnote attached to the statement that `rho>=2` is the sharp bound, in English and Japanese.
-- The footnote states the initial-letter restriction and three forbidden adjacent pairs and explains why common-context nonempty factors with equal endpoints have identical distribution. No theorem or proof changed. English canonical/Clean TeX byte-identical, JP synced and hashes refreshed; reviewer response unchanged.
-- Verify PDF rebuilds and marked reviewer-response line locators before resubmission.
-
-## v156 — 2026-10-10 clarify right-concatenation restriction
-
-- Revised the lead-in to the admissible entry-height concatenation identity in EN/JP to state that appending a word on the right cannot enlarge `Q(s)`; equivalently, `Q(st) subseteq Q(s)`.
-- Kept the proof footnote attached to the sentence and the complete displayed (star-star) identity unchanged. No theorem, example, substitutability proof or reviewer-response edits. English canonical/Clean TeX identical, Japanese synced and SHA256 updated.
-- Verify rebuilt PDFs and marked-PDF response locators before journal resubmission.
-
-## v155 — 2026-10-10 footnoted proof of concatenation identity
-
-- Attached a concise three-condition proof as a footnote on the introduction of the admissible entry-height concatenation identity (star-star), in EN and JP. The footnote separates requirements in `s`, shifted entry height in `t`, and the `b|a` boundary forcing zero height, and states their sufficiency.
-- Removed the redundant post-equation explanation. The formula, examples, nonlinear substitutability proof, other claims, and reviewer response remain unchanged. English canonical and Clean TeX byte-identical; JP reference and EN/JP checksums synchronized.
-- Rebuild the English and Japanese PDFs and recheck marked-PDF reviewer-response line locators before TCS resubmission.
-
-## v154 — 2026-10-10 compact nonlinear substitutability proof
-
-- Explicitly connect `beta(x)=beta(y)` (established from the shared context) to `Q(x)=Q(y)` in the `x,y in a*b*` case, using the existing `Q(z)` formula.
-- Recast five displayed formula blocks in this proof as inline mathematics in both EN and JP; retain logical steps, short paragraphs, the `ba` zero-height explanation, the common-entry-height singleton argument, and both context-persistence equalities.
-- Seven examples, the standalone (star)/(star-star) identities, theorem and other proof sections remain unchanged; English canonical and Clean TeX match byte-for-byte. EN/JP SHA256 refreshed; reviewer response unchanged. Audit PDFs and marked line locators before resubmission.
-
-## v153 — 2026-10-10 explain zero height at ba
-
-- In EN/JP nonlinear substitutability proof, explicitly state that in every word of `Delta^*`, after the `b` in each occurrence of `ba`, the prefix height is zero. Thus `q+beta(rb)=0` follows directly when `x=rbat`.
-- Retain the explicit at-most-singleton argument and common-entry-height conclusion, seven examples, definitions, (star)/(star-star), other proof cases, and fixed-window witnesses. English canonical/Clean TeX identical, JP synced, SHA256 refreshed, reviewer response unchanged.
-- Verify automatic PDF builds and marked-PDF response page/line locators before journal resubmission.
-
-## v152 — 2026-10-10 explicit singleton argument for Q
-
-- Clarified the `ba` case of nonlinear substitutability: `x=rbat` forces `q+beta(rb)=0` for each `q in Q(x)`, so `Q(x)` is at most singleton; likewise `Q(y)`. Their common `beta(u)` then gives `Q(x)={beta(u)}=Q(y)`.
-- EN/JP proof paragraphs synchronized; English Clean mirror identical, hashes updated. Seven examples, membership and concatenation identities, the other case, theorem and reviewer response unchanged. Verify PDF builds and marked line locators.
-
-## v151 — 2026-10-10 eliminate temporary entry-height alias
-
-- Eliminated the one-use `q_0` notation from the nonlinear Delta-star substitutability proof in English and Japanese, writing `beta(u)` directly in the common-context entry-height condition and singleton `Q(x)={beta(u)}=Q(y)` conclusion.
-- The surrounding proof, Q definition, all seven examples, membership criterion (star), concatenation identity (star-star), and separation witnesses are unchanged. EN canonical and Clean TeX match byte-for-byte; JP synced and EN/JP checksums refreshed. Reviewer response unchanged.
-- Rebuild PDFs and re-audit marked-PDF reviewer response locators before TCS resubmission.
-
-## v150 — 2026-10-10 shorten entry-height explanation
-
-- Removed redundant explanation about replacing external context without changing internal heights or creating a boundary `ba` in EN/JP. The direct definition of `Q(x)` and concise realized-height interpretation remain.
-- Seven examples, star/star-star identities, proposition and proof unaffected. EN Clean mirror synchronized, EN/JP hashes refreshed; reviewer response unchanged. PDF builds and marked line references require review.
-
-## v149 — 2026-10-10 remove redundant Japanese completion sentence
-
-- In `japanese/main_JP.tex`, deleted the explicit `uxv in Delta^* => a^q x b^(q+beta(x)) in Delta^*` sentence just after the canonical-completion definition. The concise interpretation as realizable entry heights and its boundary-replacement justification remain.
-- English explanation was already concise and is unchanged; English canonical and Clean TeX remain byte-identical. Seven examples, star/star-star identities, nonlinear proof and reviewer response unchanged. Japanese SHA256 and baseline version refreshed.
-- PDF build and marked reviewer-response page/line locator checks remain pending before TCS resubmission.
-
-## v148 — 2026-10-10 remove unused entry-height recursion
-
-- Removed the displayed one-letter recurrence for `Q(lambda)`, `Q(xa)`, and `Q(xb)` and the immediately following explanation from both English and Japanese. After the canonical-completion definition and seven examples, the text now directly presents the concatenation identity (star-star).
-- Kept the complete star-star formula and its separate boundary-condition explanation, the star membership criterion, all seven examples, and the nonlinear substitutability and fixed-window proofs unchanged.
-- English canonical/clean TeX are byte-identical, JP reference synchronized, SHA256 metadata updated. Reviewer response unchanged; PDF build and marked-response locators need a final check before TCS resubmission.
-
-## v147 — 2026-10-10 canonical-completion definition of admissible entry heights
-
-- Changed the definition of `Q(x)` in English and Japanese directly to `{q in Z_{>=0}: q+beta(x)>=0 and a^q x b^(q+beta(x)) in Delta^*}`.
-- Removed the duplicate "more precisely, iff" exposition. Retained a short proof that these are exactly the entry heights of contextual occurrences; the substitutability proof cites this characterization instead of the former definition.
-- Kept the seven examples, one-letter recurrence, (star) membership criterion, (star-star) concatenation identity, theorem and fixed-window separation intact. English canonical and Clean TeX match, JP reference synced, SHA256 updated, reviewer response unchanged; final PDFs and marked reviewer-response locators still require verification.
-
-## v146 — 2026-10-10 direct admissible entry-height definition
-
-- Redefined `Q(x)` directly as the set of realized heights `beta(u)` over contexts `uxv in Delta^*`. Canonical completion `a^q x b^(q+beta(x))` gives a concrete witness without auxiliary `Occ_ba`, `eta`, or prefix-minimum notation.
-- Added the one-letter recursions for `Q(lambda)`, `Q(xa)`, and `Q(xb)`, and retained the seven examples, membership criterion (star), and concatenation identity (star-star). The substitutability proof explicitly treats the case `x=rbat` and uses the same formal two-step concatenation argument.
-- Updated both English and Japanese TeX and verified English main equals Clean TeX; refreshed SHA256 metadata. All numbered claims and fixed-window witness unchanged. Round-1 reviewer response unchanged. PDF builds and final marked-PDF locators must be checked before resubmission.
-
-## v145 — 2026-10-10 seven admissible entry-height examples
-
-- Expanded the `Q(x)` examples immediately before the membership criterion in both EN and JP: `ab, aa, lambda` give `Z_{>=0}`, `bb` gives `Z_{>=2}`, `ba` gives `{1}`, `bbaa` gives `{2}`, and `baaba` gives the empty set.
-- Checked all seven against the defining prefix-minimum and `ba`-occurrence conditions. No mathematical theorem, formula, or proof was changed. English main and Clean TeX remain byte-identical, Japanese synced, EN/JP checksums refreshed; reviewer response unchanged. Verify PDF builds and marked response line locators before journal resubmission.
-
-## v144 — 2026-10-10 algebraic concatenation proof for nonlinear Delta-star example
-
-- Define the named concepts height, `ba` occurrence set, and admissible entry-height set `Q(x)` for every word (including the empty word). Preserve `Q(ab)=Z_{>=0}` and `Q(ba)={1}`.
-- Criterion (star) now expresses whole-word `Delta^*` membership as `beta(w)=0` and `0 in Q(w)`; identity (star-star) explicitly computes `Q(st)` from `Q(s)`, `Q(t)`, `beta(s)`, and the boundary letters. The substitutability proof uses this identity twice instead of prose tracking of two boundaries.
-- EN `main.tex` and clean TeX mirror are identical, JP reference synchronized, hashes updated, all numbered results and fixed-window witnesses retained. Review response unchanged. PDF builds and marked-PDF line locators require checking; journal revision not submitted.
-
-## v143 — 2026-10-10 height and entry-height clarification for nonlinear example
-
-- In the nonlinear `Delta^*` example, explicitly define the height at a prefix `p` as `beta(p)` before using height terminology; an occurrence `w=ubav` of `ba` has height `beta(ub)`.
-- Define `Occ_ba(x)` by the factorization `x=ubav`, put `eta_x((u,v))=beta(ub)`, name `Q(x)` the admissible entry-height set, and add `Q(ab)=Z_{>=0}` versus `Q(ba)={1}`. Statement (star-star) is specifically about conditions *within x*, not membership of the whole word `uxv` in `Delta^*`. The proof cites this scoped statement.
-- English source and Clean mirror identical; Japanese synchronized and SHA-256 metadata updated. Mathematical proposition and Round-1 reviewer response unchanged. Recompile both PDFs and re-audit marked-PDF response page/line locators before resubmission.
-
-## v142 — 2026-10-10 regular-filter proof of the nonregular linear example
-
-- The main proof of `prop:linear-separator-example` now derives a fixed finite typing from the Clark--Eyraud substitutable linear language `L_all` intersected with regular `Q`, using Proposition 3.2(ii) and the linear regular-intersection closure. Linearity, nonregularity, and separation from Clark--Eyraud and all fixed-window classes are retained.
-- The four-element `h_{pm,e}` is retained in a short, unnumbered paragraph after the proof with a concise verification. No theorem numbering is changed; the former long direct proof and membership equation are removed.
-- English canonical and Clean TeX are identical, Japanese reference matches the new organization, and R2.3 reviewer-response wording is synchronized. All three SHA-256 metadata fields updated. Recompile PDFs and audit page/line locators before TCS resubmission; not yet submitted.
-
-## v141 — 2026-10-10 direct enumeration proof for polynomial-time reconstruction
-
-- Replaced the proof of `thm:poly-build` in English and Japanese with direct enumeration. Rule (U) pairs each observed nonempty factor occurrence `(u,x,v)` with every sample word `w`; when `w=uyv` with nonempty `y` and the `h`-values agree, emit `[x] -> [y]`.
-- Removed buckets, tries and identifier sorting from the proof, and used no displayed equations. The bounds remain `O(n_K^3)` rule candidates and `O(n_K^4)` explicit construction. Japanese proof matches the user's supplied TeX; English source and Clean TeX are byte-identical.
-- Reviewer response unchanged. Verify PDF workflows and re-audit response page/line references against the final marked PDF before TCS resubmission; journal resubmission not performed.
-
-## v140 — 2026-10-10 formal reconstruction-complexity proof
-
-- Theorem `thm:poly-build` now defines the observed occurrence set `O_K`, the prefix-extended `h`-value cache `H_w(i,j)`, context/type buckets `B_{u,v,mu}`, and the nonempty-bucket index set `I_K`. The bucket sum is explicitly indexed; each EN/JP proof has just one display.
-- Rule (B)/(U) enumeration stays `O(n_K^3)` and full explicit reconstruction remains `O(n_K^4)`. English canonical source, Clean TeX mirror, Japanese reference, and SHA-256 metadata are synchronized. The referee response is unchanged.
-- **Pre-resubmission:** verify PDF builds and re-audit all response references against the final marked PDF; no journal resubmission has been performed.
-
-## v139 — 2026-10-10 short-word idempotent explanation in footnote
-
-- Added brief English and Japanese footnotes to the locally trivial positive-image argument, explaining why short-word types in `h_{k,l}(Sigma+)` cannot be idempotent: a large enough positive power is encoded as a distinct long-word type.
-- The surrounding proof text, theorem statements and reviewer response were left unchanged; `main.tex`, Clean TeX, and the Japanese reference TeX are synchronized, with SHA-256 metadata refreshed.
-- **Before TCS resubmission:** verify rebuilt PDFs and the marked-PDF page/line locators. No journal resubmission has occurred.
-
-## v138 — 2026-10-10 explicit short-word bound in the fixed-window product
-
-- In the proof constructing $M_{k,\ell}$, English and Japanese manuscript text now states that the short-word factors satisfy $|x|,|y|<m_0$, where $m_0=\max\{1,k+\ell\}$; the case $|w|=m_0$ remains in the long-word tag.
-- Synchronized canonical `main.tex`, Clean TeX mirror, Japanese reference TeX, and source SHA-256 metadata. The theorem and proof argument, as well as the existing reviewer response, are unchanged.
-- **Before TCS resubmission:** check PDF builds and re-audit response page/line references against the final marked PDF. No journal resubmission has been made.
-
-## v137 — 2026-10-10 explicit universal idempotent quantifier
-
-- English and Japanese proofs of the locally trivial typing/fixed-window criterion now explicitly state the identity for **all `e,f` in `E(S)`** and all middle elements of `S`, following Pin (2025, Proposition XI.4.17).
-- `main.tex`, the canonical Clean TeX mirror, the Japanese reference manuscript, and `PAPER.yaml` SHA-256 metadata are synchronized. No theorem or proof argument changed; reviewer-response text is unchanged.
-- **Pre-resubmission:** rebuild the clean/marked/JP PDFs and re-audit response page/line locators against the final marked PDF. No journal resubmission performed.
-
-## v136 — 2026-10-10 fixed-h fiber attribution in Yoshinaka framework
-
-- The EN/JP Introduction explicitly attributes nonempty fibers `h^{-1}(m) ∩ Σ+` to the **finite-monoid homomorphism fixed in this paper**, represented as sorts within Yoshinaka (2015)'s general signature framework.
-- Synchronized the response overview, R1.3 and R2.1; clean TeX mirror and SHA-256 metadata updated, including repair of a previously stale response checksum. No theorem or proof was changed.
-- **Before journal resubmission:** rebuild/review the clean, marked, Japanese, and response PDFs, then re-audit marked-PDF page/line locators. No journal resubmission has been made.
-
-## v135 — 2026-10-09 concise Yoshinaka comparison and L0 placement
-
-- Section 3 now states only Yoshinaka (2008, Proposition 1)'s regular-intersection and erasing-inverse-image nonclosure, his nonerasing inverse-image closure, and the contrast with Proposition 3.2 under a changed finite typing.
-- Moved the regular counterexample's **inline definition** `L0=ae*ce*a ∪ ae*de*a ∪ be*ce*b` to Section 9.2, where it is first used for the regular counter separation comparison.
-- Synchronized English, Japanese, canonical Clean TeX, Round-1 referee replies R1.34/R2.1, and SHA-256 metadata; no theorem or proof changed.
-- **Pre-resubmission:** rebuild clean/marked/JP/response PDFs and re-audit all response page/line locators against the v135 marked manuscript. No journal resubmission has been made.
-
-## v134 — 2026-10-09 minimal typing example in the Introduction
-
-- Added the concise example `L={a,aa}` immediately after the fixed-`h` definition in Section 1.1 in English and Japanese. Trivial typing fails due to overlapping but unequal distributions; the parity morphism separates the factors.
-- No early introduction of substring-grammar inference rules and no claim of a new separation from fixed-window classes.
-- Synchronized Round-1 reviewer answers R1.5 and R2.1, the English clean TeX mirror, and `PAPER.yaml` hashes. No theorem or proof changed.
-- Before journal resubmission, rebuild clean, marked, Japanese and response PDFs and check response page/line references against the new marked PDF. No journal submission has been made.
-
-## v133 — 2026-10-09 Yoshinaka comparison before Proposition 3.2
-
-- Moved the existing Yoshinaka (2008, Proposition 1) paragraph and known regular language `L0` directly before Proposition 3.2 in English and Japanese.
-- The transition distinguishes regular-filter and erasing-inverse-image closure under **refinement of finite typing** from nonclosure of an unchanged fixed-window or fixed-`h` class.
-- Updated Round-1 referee responses R1.34 and R2.1; the clean TeX mirror remains identical to canonical `main.tex`. No theorem/proof was changed.
-- Updated `PAPER.yaml` SHA-256 checksums and metadata. Before TCS resubmission, rebuild English clean/marked, Japanese, and referee-response PDFs and re-audit marked-PDF page/line locators: the v132 25-page/971-line audit is historical. No journal resubmission has been made.
-
-## v132 — 2026-10-09 final R1 pre-submission source sync
-
-- Corrected the 2014 preprint title to *Learning Algorithm for Relation-Substitutable Context-Free Languages* and the Coste--Garet--Nicolas (2012) title to *Locally Substitutable Languages for Enhanced Inductive Leaps*; synchronized English and Japanese citations.
-- Aligned the 49 editor/reviewer response locators with the freshly compiled **25-page** additions-only marked PDF (margin lines 1--971), including corrected locations for Proposition 5.2, Theorem 5.6, Proposition 8.4, and Lemma 9.6. Removed obsolete 24-page/929-line notice.
-- Added marked-only `\\AtBeginDocument{\\sloppy}` in `response/latexdiff_compat.tex` to eliminate marked-up overfull boxes without altering the clean or Japanese manuscript typography.
-- Local builds: English clean 24 pages, marked 25 pages, Japanese 28 pages, response 14 pages; all compiled. The first-submission source remains unchanged in `archive/tcs-round1-arxiv-v4/`.
-- `TCS-D-26-00494_Manuscript_Clean.tex` mirrors canonical `main.tex` exactly. This is a working **unsubmitted** revision; journal upload must be performed separately.
-
-
-## 2026-10-09 — R1 prior-art and response synchronization (working draft)
-
-- Updated \`main.tex\`, \`japanese/main_JP.tex\`, and \`response/response_round1.tex\` with the 2014 Kuriyama preprint chronology, the general many-sorted signature perspective of Yoshinaka (2015), and explicit distinctions between qualitative learner existence and finite-monoid-specific quantitative/algebraic results.
-- Added citations for Clark--Yoshinaka (2016), Coste--Garet--Nicolas (2012), and Coste--Nicolas (2019), and corrected the response to R2.5 to cite Eilenberg (1974), matching the manuscript.
-- These are **working source changes, not an already submitted R1 revision**. The reviewer-response page/line locator table is **stale** after insertion and MUST be regenerated from the final marked PDF. Verify clean and marked PDFs, bibliography and CI before resubmission.
-- The 2014 historical draft remains an earlier formulation, not a claim that all its older proofs and polynomial-data assertions were correct.
-
-
-
-## v117 — Post-v116 source audit (2026-10-07)
-
-- Corrected the explanatory sentence after Theorem 9.2: for $\rho=1$, the proposed distinguishing context $(\uparrow,\lambda)$ fails because $\uparrow s$ itself already violates the cap; the common context is not the issue.
-- Rechecked the Wakatsuki--Tomita originals supplied by M. Wakatsuki. The manuscript now cites 1992 p.951 for the stack-symbol thickness parameter and 1993 p.1229 for the later inclusion algorithm's explicit computation/use of those thicknesses.
-- Cleaned Section 3.1 notation: $p,q$ are the fixed prefix/suffix windows, $r,s$ the variable interiors, and the compared factors are $prq,psq$. The duplicate local definition of $m_0$ in the fixed-window counterexample criterion was removed.
-- Replaced the broad Pin citation by the exact finite-monoid recognition result, Theorem IV.3.21.
-- Synchronized the Japanese reference manuscript and Round-1 response. The English source remains 2143 lines and the clean revised PDF remains 24 pages, so the audited response's page/line locator table remains valid.
-- Removed stale repository metadata claiming that `archive/pre-wakatsuki-v106/` exists. That temporary snapshot had been intentionally deleted; the first-submission baseline `archive/tcs-round1-arxiv-v4/` remains the historical archive.
-- Main theorem statements and the v116 substring-indexed learning construction are unchanged. The Lean v88 archive remains the theorem-facing formalization baseline.
-- **No claim is made that v117 has been submitted.**
-
-## v116 — Substring-indexed reconstruction and round-2 preflight (2026-10-07)
-
-- Collapsed the occurrence/context-indexed hypothesis states `[x:u,v]` to one state `[x]` per observed nonempty factor. The old and new batch constructors are language-equivalent for every finite sample; the exact two-way simulation is recorded in `revision/v115_to_v116_context_index_collapse.md`.
-- The resulting reconstruction is Clark (2013, Algorithm 1)'s substring-indexed architecture with unary rules filtered by the fixed `h`-type, plus the paper's explicit start/empty-word convention.
-- Replaced the old context-sensitive soundness invariant by `[x] =>* w => x ≡_L w and h(w)=h(x)`. The existing canonical witness set still proves completeness without change.
-- Tightened the explicit reconstruction bound from `O(n_K^5)` to `O(n_K^4)`.
-- Narrowed the parity toy example to the role of yield-type splitting in the present completeness proof; promoted the exponential typed-thickness gap from a remark to a proposition; moved formula-adjacent footnote markers; reduced metavariable collisions and singleton subsection fragmentation.
-- Added one sentence explaining the design of the nonregular linear separator: `c` and `d` deliberately share one `h`-value, so the example does not merely encode center-symbol names as types.
-- English manuscript, Japanese reference translation, and Round-1 response are synchronized at the theorem/label level. Source-level preflight finds balanced environments/braces, no duplicate labels, and no unresolved internal references. GitHub Actions also passes the English, Japanese, response, and marked-up-revision builds; all four generated PDFs pass basic PDF preflight.
-- Final response audit: corrected the stale v115 terminal-rule response to use v116 Rules `(U)` and `(L)`, replaced the overstrong congruence-class wording by the proved soundness invariant, clarified the precise Clark (2013) relationship, corrected the main-text subsection count to 16, and added a complete E.1/R1.1–R1.37/R2.1–R2.11 locator table.
-- The archived Lean v88 release remains the theorem-facing verification baseline; v116 is not claimed to be an exact separately formalized artifact.
-- **No claim is made that v116 has been submitted.**
-
-## v107 — Source-verified Wakatsuki primary-source positioning (2026-10-05)
-
-- Citation-source improvement only: the Wakatsuki--Tomita originals were directly examined. The later v117 audit refined the exact locators to 1992 p. 951 for the stack-symbol thickness parameter and 1993 p. 1229 for its explicit use in the inclusion algorithm.
-- **Model boundary:** the DPDA stack-configuration shortest-accepting-input parameter is historically related, but not identical as a mathematical object, to Yoshinaka's shortest-CFG-yield thickness; this manuscript's *typed* thickness after finite-monoid splitting is separate again.
-- Note the distinct **membership/equivalence-query plus representative-sample** assumptions of Tajima--Tomita--Wakatsuki (2000), not a result for positive-text-only characteristic data.
-- Main theorems, algorithm, definitions of ordinary/typed thickness, proofs and separation examples are unchanged. EN/JP source edits are synchronized.
-- The temporary `archive/pre-wakatsuki-v106/` snapshot mentioned in the original v107 note was later intentionally deleted and is not part of the current repository. **No claim is made that v107 has been submitted.**
-
-
-**Title (experimental PR #62):** Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing  
-**Journal:** Theoretical Computer Science  
-**Manuscript ID:** TCS-D-26-00494
-
-## Current working baseline
-
-- `main.tex` — English major-revision manuscript, internal v158 (manuscript text v157); this is the source of truth.
-- `japanese/main_JP.tex` — Japanese reference translation manuscript text synchronized to v157; response package v158.
-- `response/response_round1.tex` — Round-1 Response to Reviewers, updated in v158 to synchronize with manuscript v157; 49 source-line/statement locators checked, but marked-PDF page/paragraph/line locators still require final pre-submission audit.
-
-## v106 Yoshinaka prior-art correction
-
-This pass corrects the positioning of the regular fixed-window separation against Yoshinaka (2008, Proposition 1). Yoshinaka's proof already gives the regular language `L0 = ae*ce*a ∪ ae*de*a ∪ be*ce*b`, which is not `(k,l)`-substitutable for any `k,l`. The abstract, Introduction, contribution summary, Section 3, Section 9.2, Conclusion, Japanese translation, and reviewer response now state this explicitly. Ordinary intersection is also no longer presented as a contrast with the fixed-window hierarchy; the relevant structural differences are regular filtering and erasing inverse homomorphisms. The capped family `CTR_rho` is retained only as the finite-state companion to the uncapped counter obstruction. Two small wording issues were also fixed: the nonempty-fragment convention now points back to Definition 2.1, and the height of a `ba` occurrence is defined grammatically. No theorem statement or learning result is strengthened by this pass.
-
-## v105 Round-2 preflight synchronization
-
-The v105 pass incorporates the final preflight corrections identified after the v104 reviewer-response audit. Proposition 3.1 (regular languages via finite monoids) is moved before its first use, the finite-information closure result is promoted from an unnumbered statement to Proposition 3.2, and the fixed-window correspondence becomes Proposition 3.3. The Yoshinaka (2008) comparison now distinguishes the full `(k,l)`-substitutable class from its context-free subfamily and points to Theorem 9.2 as the manuscript's own regular-filter counterexample. The doubling-family attribution is corrected to Clark--Eyraud Example 2 and Eyraud--Heinz--Yoshinaka Example 2.3, with de la Higuera Theorem 3 described as a related variant. The optional `L_x` comparison is removed, the nonlinear `Delta^*` substitutability proof is made explicit at both factor boundaries, and the pushdown connection is stated as an open direction. The Japanese reference translation and response letter are synchronized with these changes. The revised English manuscript has 31 numbered theorem-like environments and compiles to 22 pages under the current preamble.
-
-## v104 R2.1 structural-closure response
-
-The v104 pass answers Reviewer 2.1 with a low-risk structural consequence of the existing product-typing framework rather than a new large theorem. An unnumbered proposition in Section 3 proves closure of `RS` under intersection and arbitrary inverse homomorphism, and shows that regular filtering preserves context-free fixed-`h` slices after passing to a product typing. This is contrasted explicitly with Yoshinaka (2008, Proposition 1), whose fixed-window hierarchy has counterexamples to closure under regular filtering and arbitrary inverse homomorphism. Section 3 also separates correctness of a typing (it must separate shared-context factors with unequal distributions) from quantitative efficiency (typed-thickness control). The English manuscript, Japanese reference translation, and R2.1 response are synchronized. The proposition is intentionally unnumbered, so downstream theorem numbering remains unchanged and the manuscript still has 30 numbered theorem-like environments.
-
-## v103 Literature-grounded quantitative limitation
-
-To reduce review risk, the revision removes the post-submission operator-independent ordinary-thickness lower-bound theorem and its level-coded-tree Appendix D. Section 6 now keeps only the direct source-to-typed thickness gap needed for the paper's reconstruction analysis, and explicitly positions the representation-sensitivity issue against Clark--Eyraud (2007), Yoshinaka (2008), and Eyraud--Heinz--Yoshinaka (2016). The abstract, contribution summary, conclusion, Japanese reference translation, and reviewer response are synchronized. The manuscript now has three technical appendices (A--C) and 30 numbered theorem-like environments. No new theorem claim is introduced by this pass.
-
-## v101 Reviewer-response audit
-
-The manuscript sources remain at the v100 mathematical/expository state. The v101 project pass revises the English Round-1 response letter: newly added material is mapped explicitly to the reviewer comments that motivated it; Section 6.2 and Appendix D are acknowledged as genuinely new lower-bound material; R2.1 now corrects the reading that a separate morphism is required for each target and states instead that one homomorphism h is fixed for the entire slice, exactly as one pair (k,l) is fixed in Yoshinaka's hierarchy; and three claims withdrawn or narrowed from the submitted manuscript are listed near the opening. The old Japanese response memo has been replaced by an archival stub and is not authoritative.
-
-## v100 Section consolidation and final exposition cleanup
-
-The v100 pass folds the former standalone complexity section into Section 5, reducing the main-text section count from 11 to 10 while leaving the four appendices as repositories for displaced technical proofs. It also removes redundant productivity/reachability qualifiers from Appendix A.1, makes the conjunction spacing in $\mathcal E(x)$ explicit, rewrites the ordinary-thickness lower-bound theorem statement as one sentence, removes an abstract-level forward reference to an undefined refinement parameter, and repairs the occurrence-recognition argument in Appendix D by using bracket matching directly rather than an unstated induction hypothesis. English, Japanese, and the reviewer-response numbering are synchronized.
-
-## v99 de la Higuera comparison clarification
-
-The v99 pass corrects the explanatory paragraph after the linear characteristic-data theorem. De la Higuera (1997, Theorem 2) concerns the full representation class of linear grammars. The manuscript now states instead that the present positive result is restricted to the fixed-$h$ substitutable subclass $\mathcal C_h^{\mathrm{lin}}$ and uses the paper's positive-data characteristic-sample notion for $\mathcal B_h$; it therefore makes no polynomial time-and-data claim for the full LIN representation class. The Response to Reviewer 2.3 and the Japanese reference translation are synchronized.
-
-## v98 Source and response audit
-
-The v98 pass aligns the manuscript and response letter with the final source audit before resubmission. It corrects the IPTtD attribution to Yoshinaka (2008), cites Eyraud--Heinz--Yoshinaka (2016) as a later formulation, adds an explicit explanation of why the fixed-$h$ linear result does not contradict de la Higuera's negative result for the full linear-grammar representation class, clarifies the $\rho\ge2$ endpoint, and weakens source claims that had not been directly verified at the required level of specificity. The response letter now matches the actual manuscript: the unsupported bounded-advice paragraph is removed, the Section 10 description is corrected, the reduction in numbered theorem-like environments (86 to 34) is recorded, and a selected renumbering guide is included.
-
-## v97 Metavariable and terminology audit
-
-The v97 pass removes the metavariable collisions identified in the round-2 precheck, including competing uses of $P$, $r$, $N$, $d$, $A_i$, and $Z_i$, and unifies $N_t$. Proof-local labels such as `anchor`, `rule witness`, `residual height`, `difference core`, and `replay-admissible` were removed or replaced by direct descriptions. Appendix D was rewritten with a smaller vocabulary while preserving its mathematical claim. English and Japanese sources were synchronized.
-
-## v96 Data-availability cleanup
-
-The manuscript Data availability statement now says only that no empirical data were used. The Lean/Zenodo archive is no longer mentioned in the manuscript itself; formalization metadata remain project-internal.
-
-## Historical baseline
-
-- `archive/tcs-round1-arxiv-v4/main.tex` — exact historical source for the first TCS submission; this is also the arXiv v4 manuscript baseline.
-- SHA-256 of that historical source: `fcdcff7fc09140e7f3e83982d6cd57fa297f30ece0bc607f7f7859bb91c71b0d`.
-
-The historical file is preserved as an immutable archival baseline and should not be edited in place.
-
-## v95 Display-math editorial pass
-
-Reviewed all standalone display equations in the English main manuscript and Japanese reference translation. Converted 22 English and 32 Japanese unnecessary displays to inline math, preserving multi-line grammars, long or structurally important definitions and inequalities, and all numbered/labeled equations. The ordinary-thickness lower-bound theorem has smoother prose around its inline target identities. Claims, equation labels, theorem numbers, bibliography, and proofs are unchanged.
-
-## v94 Explicit shortcut grammar
-
-In the ordinary-thickness lower-bound proof (Section 7), the grammar `R_n^-` now has its complete production list written out, including `S^-`, all `Z_i`, the ordinary `A_i` for `0 <= i < n`, and shortcut-bearing `A_i^-` for `0 <= i <= n`. The follow-up witness argument is self-contained. Both English and Japanese texts are synchronized; theorem claims and numbering are unchanged.
-
-## v93 Typed-thickness exposition
-
-Section 7's exponential source-to-typed thickness gap remark now explicitly explains why the untyped grammar has ordinary thickness 1 and why the type-1 branch must generate words of length 2^n. It links the exponential gap to the failure of polynomial bounds in grammar size and ordinary thickness, while preserving the limitation to full-refinement witnesses. Both language versions are synchronized; the response letter needs no change in numbering or substance.
-
-## v92 SGL motivation inline
-
-In Section 4.2, the footnote illustrating syntactic instability of naive batch rebuilding with the center-marker language was folded into the running prose and joined to the conservative SGL wrapper motivation, retaining the Eyraud--Heinz--Yoshinaka Appendix citation. This removes one footnote in both English and Japanese without changing any theorem, proof, or citation key. The Response to Reviewers remains applicable as written.
-
-## v91 Order-dependence compression
-
-The standalone paragraph on presentation-order dependence in Section 4.2 was replaced with a brief continuation of the learner description. Both language versions and reviewer notes are synchronized; the underlying argument is unchanged.
-
-## v90 Reviewer 1 terminology and redundancy preflight
-
-The v90 preflight defines RNF and letter-count notation, expands SGL and the initial acceptance-set notation, and specifies short-word prefix/suffix conventions. Three trivial numbered statements, an unused syntactic-class symbol and an unused macro are removed; the center-marker example uses $P$ throughout. Substantive theorem claims and proofs are unchanged, but numbering shifts downstream of the removed statements. The Japanese reference translation and reviewer responses have been synchronized. The archived Lean v88 baseline does not separately certify v90 as an exact artifact.
-
-## v85 citation-source audit
-
-The current revision tightens three literature attributions without changing any theorem or proof:
-
-- Kanazawa (1998) is not directly held in the project library. The current manuscript therefore cites the available Kanazawa (1993) CWI Report CS-R9351 for the general positive-data categorial-grammar learning background. The 1996 JoLLI article is not used as a source claim in the current manuscript.
-- The standard finite-monoid characterization is cited to the directly checked modern source Pin (2025) rather than relying on Eilenberg (1974).
-- The thickness attribution to Wakatsuki--Tomita is made through Yoshinaka (2008); the 1993 paper is no longer presented as independently checked support.
-
-The exact first-submission snapshot under `archive/tcs-round1-arxiv-v4/` remains untouched.
-
-## Submission-format preflight
-
-The current manuscript remains on the `article` class while the journal-specific
-submission requirement is being confirmed.  Elsevier recommends `elsarticle`
-for LaTeX manuscripts, but a template change should be made only if required
-for this TCS revision because it changes every page/line locator in the response.
-
-## Formalization
-
-The theorem-facing Lean 4 formalization is maintained separately in
-`growupkuriyama-hub/tcs1-lean-formalization`.
-
-- The current theorem-facing public archive is `tcs1-v88-formalization-3.0.0`, archived on Zenodo at DOI `10.5281/zenodo.23120560`. The preceding v87 release remains available at DOI `10.5281/zenodo.23114558`, and the immutable historical v79 release remains available at DOI `10.5281/zenodo.22939434`.
-- The v83 development remains the completed mathematical proof layer; v86 and v87 were synchronized against that theorem surface by their exact-version audit modules and coverage reports.
-- The archived v88 theorem-facing source is synchronized by `V88FullManuscriptAudit.lean` and `FORMALIZATION_TCS1_V88.md`. The current v116 manuscript contains later presentation, notation, source-attribution, numbering, reconstruction-simplification, and response-consistency revisions; v103 removed the later operator-independent lower-bound construction, v104 added the product-typing closure argument, and v105 numbers that result, tightens the nonlinear boundary proof, and removes the optional `L_x` comparison. No separate v116 Lean archive has been minted. The v88 archive therefore remains the theorem-facing verification baseline rather than an exact synchronization claim for v105.
-- The v88 Lean delta verifies the endpoint-complete Section 10.1 center-marker language $P=\{a^ncb^n:n\ge0\}$, prefix/suffix freeness, substitutability of $L_\times=PdP$, its $(0,0)$ fixed-window membership, exact semantics of the displayed CFG $S\to XdX$, $X\to aXb\mid c$, the erasing image onto $\Delta\Delta$, and an internal pumping proof that $L_\times$ is nonlinear. The later parity-typing footnote is covered by the existing yield-typing invariant.
-- The archived v88 verification source is fixed by GitHub release `tcs1-v88-formalization-3.0.0` at commit `0c917ba836ff830feeac9dcd31a91e6569afe8c7`. The exact archival commit passed the theorem-facing critical path, full `TCS1.All`, no-`sorry`, and no-project-axiom gates before publication.
-
-The manuscript proofs remain self-contained; the Lean development is a reproducibility and verification artifact, not a substitute for the paper proofs.
-
-
-## v89 preflight note
-
-The v89 manuscript/response pass resolves the round-2 precheck issues around forward use of $\omega$, keeps the yield-typing motivation in the main text, compresses the unnumbered $L_\times$ comparison, and marks response-letter page/line locators for regeneration from the final frozen PDF. Appendix D is unchanged because the occurrence-recognition and replay-admissibility arguments were already explicit in v88.
+**English:** Latest #1 TCS revision: **internal v231**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; the reviewer response was synchronized against the newly built Marked PDF (49 responses / 77 verified anchors). The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
