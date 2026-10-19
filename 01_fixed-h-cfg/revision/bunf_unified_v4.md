@@ -47,3 +47,11 @@ These are proposed mathematical proofs; build success is not a proof certificate
 - Changed **only** Abstract and Section 1.2 in the manuscript sources; synchronized `main.tex`, `TCS-D-26-00494_Manuscript_Clean.tex`, and `japanese/main_JP.tex`.
 - The **existing TCS submission form abstract** and stored marked/response PDF packages remain tied to the earlier official baseline. This is PR #62 experimental drafting only, NOT an R1 submission.
 
+
+## Finite-semigroup / fixed-window systematic refactor (2026-10-19)
+- Retained all original numbering and labels for Propositions 3.3/3.5 and Lemma 7.4. Replaced the four-case monoid multiplication table for the window congruence by a direct positive-word quotient-semigroup proof.
+- The LI criterion operates on the positive image `S=s(Sigma+)`, not fresh-identity `S-sharp`. Lemma 7.4 uses factor projections of chosen letter lifts into a divisor of LI x finite group; no monoid adjunction is needed in this proof.
+- The bracketed doubling family defines `U1` and `s_U:Gamma_br+->U1` on the spot; its empty-word type is `e`, not the existing identity `1` of `U1`. Deleted the false Section 3 forward reference.
+- Replaced the `s_U x s_U` detour for `L_n^-` by the direct fiber-filter argument using `L_n cap shat_U^{-1}({zeta})`.
+- Standardized the learning-facing notation `s_0`, `s_{k,l}`, `s_U`, and `s_{pm,e}`; monoid-valued maps are retained for the actual auxiliary calculations, notably `h_star` and the DFA transition morphisms `h_rho`, whose restrictions give `s_star` and `s_rho`.
+- Replaced domain-mismatched products by explicit `g|_{Sigma+}` where necessary. Still experimental: R1 Response/Marked and TCS submission form abstracts remain tied to the v230 baseline.
