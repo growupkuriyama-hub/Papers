@@ -44,8 +44,8 @@
 二元半束による型付けに対し，文法サイズと通常厚みが $O(n)$ でありながら，
 その型付けのクラス全体で特徴標本をもつ任意の集合駆動型作用素に
 指数長の正例特徴データを要求する有限標的を構成する．
-同じ言語族では，文法サイズによらず，本稿で用いる開始記号分離二分標準形の
-任意の縮約済み文法表示の型付き厚みに指数下界が成立する．
+同じ言語族では，文法サイズによらず任意の縮約済みBUNF文法の
+型付き厚みに指数下界が成立する．
 
 固定接頭辞--接尾辞窓と有限群値から型が決まる場合，文法サイズと
 通常厚みに関する多項式特徴データ上界が得られる．また任意の固定 $s$ について，
@@ -177,7 +177,7 @@ $\mathsf{Rec}_{h_{\mathrm U}}$ の特徴標本に指数長の語が必要とな�
 同じ固定型付けクラスの識別対 $L_n,L_n^-$ により，
 双方に特徴標本をもつ任意の集合駆動型作用素にもこの下界が及ぶ
 （命題~\ref{prop:typed-thickness-gap}）．
-さらに $L_n$ の任意の縮約済み開始記号分離二分標準形文法は，
+さらに $L_n$ の任意の縮約済みBUNF文法は，
 文法サイズによらず，$h_{\mathrm U}$ に関して指数的な型付き厚みをもつ
 （系~\ref{cor:typed-gap-intrinsic}）．
 
@@ -796,17 +796,10 @@ $A\to\lambda$ のいずれかである文法を
 同値な BUNF へ変換でき，空語規則・単位規則の除去は不要である．
 定性的な完全性証明には非空標的の任意の縮約済み BUNF 文法を用いる．
 
-定量的評価には，より制約の強い次の標準形を用いる．
-\begin{definition}[開始記号分離二分標準形]
-CFG $G=(V,\Sigma,P,S_0)$ が \emph{開始記号分離二分標準形}
-（SSBNF）にあるとは，$S_0$ がいかなる右辺にも現れず，
-すべての開始規則が $S_0\to A$ または $S_0\to\lambda$，
-すべての非開始規則が $A\to a$ または $A\to BC$
-の形であることをいう．
-\end{definition}
-任意の非空 CFL は同値な縮約済み SSBNF 文法をもつ．
-定量的評価でこの形式を用いるのは，
-内部非終端記号の生成語が非空となるためである．
+定性的学習定理と定量的な特徴データ評価の双方をBUNFで扱う．
+開始記号の分離や空語・単位規則の除去は仮定しない．
+一般CFGからBUNFへの厚み保存変換は
+命題~\ref{prop:thick-bunf-normal} で述べる．
 空言語は $H_0$ と $\mathsf{Rec}_s(\emptyset)$ で表す．
 
 非空言語 $L$ を生成する縮約済み BUNF 文法
@@ -1028,7 +1021,7 @@ $O(n_K^4)$ 時間で構成できる．
 ~\cite[Example~2]{clark-eyraud2007} および
 Eyraud--Heinz--Yoshinaka~\cite[Example~2.3]{eyraud-heinz-yoshinaka2016}
 の標準的な doubling family を開始記号分離し添字を付け替えた版は，
-縮約済み SSBNF 文法
+縮約済み BUNF 文法
 $S_0\to D_n$, $D_0\to a$, $D_i\to D_{i-1}D_{i-1}$ をもち，
 生成規則記号数は $O(n)$ だが生成言語は $\{a^{2^n}\}$ である．
 de~la~Higuera の定理~3~\cite{higuera1997} は，これと密接に関連する
@@ -1050,15 +1043,9 @@ X\in\widetilde V\setminus\{\widetilde S\}\}\cup\{1\}\Bigr)
 \]
 と定める．これは文法表示依存の量であり，
 学習器への追加の仮定ではない．
-$G$ が縮約済み SSBNF なら，元の開始記号の
-$\mathsf S^\sharp$-型付きコピーの標準生成語は，
-非開始記号の正語型コピーから得られる語か
-$\lambda$ に等しい．その他の生産的型付き記号は
-旧版の非空 $s$-型付き精緻化のものと一致する．
-従って型付き厚みだけでなく，
-\emph{集合としての}標準証拠もv230のSSBNF構成と一致する．
-開始コピーによる証拠は既存の正語開始証拠または
-$\lambda$ であるから，新しい語を増やさない．
+型付き厚みの定義には，元の開始記号の型付きコピーも含める．
+これにより開始記号が右辺に現れる場合，あるいは空語を生成する場合も
+別の正規形なしに同じ定義を使用できる．
 
 \begin{lemma}[型付き厚みによる証拠上界]
 \label{lem:typed-thickness-bound}
@@ -1179,9 +1166,9 @@ $\mathsf{Rec}_{h_{\mathrm U}}$ の特徴データ量を
 
 \begin{proof}
 (i) の代入可能性は付録~\ref{app:bracketed-substitutability} で示す．
-(ii) 命題~\ref{prop:thick-ssbnf-normal} より
+(ii) 命題~\ref{prop:thick-bunf-normal} より
 サイズと通常厚みが $n$ の多項式となる縮約済み
-SSBNF 文法 $G'_n$ がある．自明型付け $h_0$ では
+BUNF 文法 $G'_n$ がある．自明型付け $h_0$ では
 $\tau_{h_0}^{\mathrm{typ}}(G'_n)\le\max\{1,\tau_{G'_n}\}$
 なので，系~\ref{cor:typed-thickness-data} を適用できる．
 
@@ -1242,32 +1229,30 @@ $\mathcal F\cup\mathcal F'\subseteq L_n^-\subsetneq L_n$ である．
 \begin{corollary}[文法表示によらない型付き厚みの指数下界]
 \label{cor:typed-gap-intrinsic}
 $G=(V,\Gamma_{\mathrm{br}},P,S_0)$ を $L_n$ の任意の
-縮約済み SSBNF 文法とする．このとき
+縮約済み BUNF 文法とすると，
 \[
  \boxed{\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)\ge3\cdot2^n-2}
 \]
-である．この下界は文法サイズに関する仮定なしに成立する．
-一方，命題~\ref{prop:typed-thickness-gap}(ii) の証明により，
-文法サイズと通常厚みがともに $n$ の多項式である
-縮約済み SSBNF 表示も存在する．
+が成り立つ．文法サイズに制限はない．また $L_n$ には
+文法サイズ・通常厚みがともに $n$ の多項式となる
+縮約済み BUNF 表示が存在する．
 \end{corollary}
-
 \begin{proof}
-$G$ における $w_n^*$ の成功導出を取り，最初の規則を
-$S_0\to A$ とする．$A\Rightarrow_G^*w_n^*$ であり，
-$\widehat{s}_{\mathrm U}(w_n^*)=h_{\mathrm U}(w_n^*)=1$ だから，型付き精緻化に $A_1$ が残る．
-ここで $1$ は元の $U_1$ の単位元であり，
-$(h_{\mathrm U}(\Sigma^+))^\sharp$ の新単位元 $\mathbf e$ とは異なる．
+$S_0\Rightarrow_G^*w_n^*$ であり，
+$\widehat{s}_{\mathrm U}(w_n^*)=1\ne\mathbf e$ なので，
+開始記号の型付きコピー $(S_0)_1$ は縮約後も残る．
 命題~\ref{prop:typed-core} より
 \[
- L_{\widetilde G}(A_1)=L_G(A)\cap\widehat{s}_{\mathrm U}^{-1}(\{1\})
+ L_{\widetilde G}((S_0)_1)
+ =L_n\cap\widehat{s}_{\mathrm U}^{-1}(\{1\})
  =\{w_n^*\}
 \]
-である．開始記号直下の $A$ の生成語はすべて $L_n$ に属し，
-その型 $1$ の語は $w_n^*$ のみだからである．
-従って非開始記号 $A_1$ の標準生成語は $w_n^*$ に等しく，
-$\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)\ge|w_n^*|$ が従う．
-後半は命題~\ref{prop:typed-thickness-gap}(ii) の証明で示した．
+である．したがって $\omega((S_0)_1)=w_n^*$ であり，
+型付き厚みの定義に開始記号の型付きコピーも含めたため，
+$\tau_{h_{\mathrm U}}^{\mathrm{typ}}(G)\ge
+ |w_n^*|=3\cdot2^n-2$ が直接従う．
+後半は $G_n$ に命題~\ref{prop:thick-bunf-normal}
+を適用すればよい．
 \end{proof}
 
 \section{固定窓を超える多項式厚み付きデータ}
@@ -1295,20 +1280,23 @@ $\mathsf{Rec}_s$ の特徴データを多項式で抑えられない
 $k,\ell\ge0$ と有限群 $\mathsf{G}$ への準同型 $g:\Sigma^*\to \mathsf{G}$ を固定し，
 $m:=k+\ell$，$q_{\mathrm{grp}}:=|\mathsf{G}|$ とおく．
 
-\begin{lemma}[固定窓と有限群による型付き生成語の評価]
+\begin{lemma}[固定窓と有限群によるBUNF型付き生成語上界]
 \label{lem:window-typed-yield}
-$G=(V,\Sigma,P,S_0)$ を縮約済み SSBNF 文法とし，
-$N:=|V\setminus\{S_0\}|\ge1$ とする．有限型付け $s$ が
-$\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker s|_{\Sigma^+}$ を満たすなら，
+$G=(V,\Sigma,P,S_0)$ を縮約済み BUNF 文法とし，
+$N:=|V|\ge1$, $m:=k+\ell$, $q:=|\mathsf G|$ とおく．
+有限型付け $s$ が
+$\ker(h_{k,\ell}\times g)|_{\Sigma^+}
+\subseteq\ker s|_{\Sigma^+}$ を満たせば，
 \[
  \tau_s^{\mathrm{typ}}(G)
- \le m+\bigl[1+2(m+q_{\mathrm{grp}}-1)(m+1)Nq_{\mathrm{grp}}\bigr]\tau_G.
+ \le m+1+[1+2(m+q)(m+2)Nq](\tau_G+1).
 \]
+開始記号が右辺に現れる場合も，空語規則・単位規則も許す．
 \end{lemma}
 \begin{proof}
-群の逆元により置換前後の群値のずれを比較し，
-鳩の巣原理によって群値を保存する短縮区間を得る．
-詳細は付録~\ref{app:fixed-window-bounds} を参照されたい．
+詳細は付録~\ref{app:fixed-window-bounds} に与える．
+非空性を保存する保護文字と，導出木の節点数による
+第二の最小化を用いる．
 \end{proof}
 
 \begin{theorem}[固定窓と有限群の精密化による多項式厚み付きデータ]
@@ -1316,31 +1304,31 @@ $\ker(h_{k,\ell}\times g)|_{\Sigma^+}\subseteq\ker s|_{\Sigma^+}$ を満たす�
 $s,\Sigma$ を固定し，ある固定 $k,\ell$ と有限群準同型 $g$ が
 $\ker(h_{k,\ell}\times g)|_{\Sigma^+}
  \subseteq\ker s|_{\Sigma^+}$ を満たすとする．
-非開始記号をもつ縮約済み SSBNF 文法 $G$ で表される任意の
+縮約済み BUNF 文法 $G$ で表される任意の
 非空 $L\in\Ccf{s}$ は，$\mathsf{Rec}_s$ に対し，
-$|G|$ と $\tau_G$ の多項式符号長の特徴標本
+$|G|$ と $\tau_G+1$ の多項式符号長の特徴標本
 $\WitnessSet(\widetilde G)$ をもつ．
 \end{theorem}
 \begin{proof}
 補題~\ref{lem:window-typed-yield} と
 系~\ref{cor:typed-thickness-data} を適用する．
-$\{\lambda\}$ だけの標的は別途扱う．
 \end{proof}
 
-$\mathsf{G}$ を自明群とすれば固定窓の場合を含む．
-次の正規化で任意の縮約済み CFG 表現へ移す．
+群 $\mathsf G$ を自明に取れば固定窓の場合を含む．
+一般のCFG表現には終端記号の分離と二分化のみを用いる．
 
-\begin{proposition}[厚みを多項式的に保存する SSBNF 正規化]
-\label{prop:thick-ssbnf-normal}
-固定多項式 $q_{\mathrm{size}},q_{\mathrm{thick}}$ が存在し，非空言語を生成する任意の縮約済み CFG $G_*$ を
-多項式時間で同値な縮約済み SSBNF 文法 $G$ へ変換でき，
-$|G|\le q_{\mathrm{size}}(|G_*|)$,
-$\tau_G\le q_{\mathrm{thick}}(|G_*|,\tau_{G_*}+1)$
-が成り立つ．
+\begin{proposition}[厚みを多項式的に保存するBUNF正規化]
+\label{prop:thick-bunf-normal}
+固定多項式 $q_{\mathrm{size}},q_{\mathrm{thick}}$ が存在し，
+非空言語を生成する任意の縮約済みCFG $G_*$ は，
+多項式時間で同値な縮約済みBUNF文法 $G$ に変換でき，
+\[
+ |G|\le q_{\mathrm{size}}(|G_*|),\qquad
+ \tau_G\le q_{\mathrm{thick}}(|G_*|,\tau_{G_*}+1)
+\]
+を満たす．空語規則・単位規則を除去する必要はない．
 \end{proposition}
-
-証明は付録~\ref{app:thick-ssbnf} に与える．文法サイズと最短非空生成語を
-多項式に保つため，終端分離と二分化を非開始 $\lambda$-規則除去より先に行う．
+証明は付録~\ref{app:thick-bunf} に与える．
 
 \begin{lemma}[局所自明半群・有限群の除数と窓型付け]
 \label{lem:li-group-factor}
@@ -1408,7 +1396,7 @@ $\mathsf{Rec}_s$ に対して $|G_*|$ と $\tau_{G_*}+1$ の
 定理~\ref{thm:window-thick} の核の精密化条件が成り立つ．
 同定理の上界は，補題~\ref{lem:window-typed-yield} と
 系~\ref{cor:typed-thickness-data} から従う．
-命題~\ref{prop:thick-ssbnf-normal} の正規化を施して
+命題~\ref{prop:thick-bunf-normal} の正規化を施して
 定理~\ref{thm:window-thick} を適用する．
 標的 $\{\lambda\}$ は別途扱う．
 \end{proof}
@@ -1470,9 +1458,9 @@ $\mathsf{Rec}_s$ の通常厚みに関する特徴データ上界が
 ~\cite{ginsburg-spanier1966,autebert1997}．以下の正規化はその文法的対応物を与える．
 成功導出には一つの継続する非終端記号の経路があり，これを \emph{spine} と呼ぶ．
 
-\begin{proposition}[linear-spine SSBNF 正規化]\label{prop:linear-normal}
+\begin{proposition}[linear-spine BUNF 正規化]\label{prop:linear-normal}
 固定多項式 $q_{\mathrm{lin}}$ が存在し，非空言語を生成する任意の線形 CFG $G$ を
-多項式時間で同値な縮約済み SSBNF 文法 $G_0=(V_0,\Sigma,P_0,S_0)$ へ変換でき，
+多項式時間で同値な縮約済み BUNF 文法 $G_0=(V_0,\Sigma,P_0,S_0)$ へ変換でき，
 $|G_0|\le q_{\mathrm{lin}}(|G|)$ である．さらに各二項生成規則は，
 $W_a\to a$ を満たすちょうど一つの新鮮な終端ラッパー子と，
 ちょうど一つのそれ以外の非終端子をもつ．
@@ -1491,17 +1479,18 @@ $|\omega(X)|\le N_t$
 \end{lemma}
 
 \begin{proof}
-SSBNF の型付き単位規則は元の開始記号からだけ生じ，
-終端記号を放出しない．各二項 spine step は
-終端ラッパーの子から一文字を放出する．
-$X$ の最短生成語を与える導出のうち，
-spine step が最少のものを選ぶ．
-その spine が同じ型付き記号を繰り返すことはない．
-二項規則を含む巡回を消せば語が短くなり，
-単位規則だけの巡回も削除できるからである．
-従って spine 上の相異なる記号は高々 $N_t$ 個であり，
-生成語長も $N_t$ 以下である．
-終端ラッパーにも同じ上界が成り立つ．
+各二項規則は一つの終端ラッパー子をもち，
+spine を進むたびにちょうど一文字を寄与する．
+単位規則は文字を寄与せず，空語規則はそこで
+spine を終了できる．$\omega(X)$ を与える導出のうち
+非終端節点数が最少のものを選ぶ．
+spine 上で同じ型付き非終端記号が二度現れれば，
+上側を下側の部分木で置換できる．二項規則を含む
+区間なら生成語が短くなり，単位規則のみの区間なら
+節点数が減るため，いずれも最小性に反する．
+従って spine 上の型付き記号は重複せず，
+終端規則の最後の一文字も含めて生成語長は
+高々 $N_t$ である．ラッパー記号にも同じ上界が成立する．
 \end{proof}
 
 \begin{theorem}[線形標的に対する多項式特徴データ]
@@ -1980,7 +1969,7 @@ $D_1\notin\mathsf{RS}(\{a,b\})$ である．
 射程に入れる一方，特徴データを指数的に増大させ得る．
 本論文の要点は，多項式時間の再構成と保守的な Gold 極限同定を，
 特徴データの量的保証から切り分けたことにある．
-指数下界は，任意の縮約済み SSBNF 表示の型付き厚みに現れ，
+指数下界は，任意の縮約済み BUNF 表示の型付き厚みに現れ，
 さらに区別対の両標的に特徴標本をもつ任意の
 集合駆動型作用素にも及ぶ．
 
@@ -2016,181 +2005,125 @@ $\mathsf{RS}\cap\mathrm{CFL}$ の完全な特徴づけも未解決である．
 
 \subsection{補題~\ref{lem:window-typed-yield} の証明}
 \begin{proof}[補題~\ref{lem:window-typed-yield} の証明]
-$m:=k+\ell$，$q_{\mathrm{grp}}:=|\mathsf{G}|$，$N:=|V\setminus\{S_0\}|$，
-$D_{\mathrm{bd}}:=(m+1)Nq_{\mathrm{grp}}$，$W_{\mathrm{bd}}:=m+q_{\mathrm{grp}}-1$ とおく．
-縮約済み SSBNF 文法 $G$ の各非開始記号は，長さ
-$\tau_G$ 以下の非空語を生成するので $\tau_G\ge1$ である．
+$m=k+\ell$, $q=|\mathsf G|$, $N=|V|$,
+$\bar\tau:=\tau_G+1$,
+$D:=(m+2)Nq$, $W:=m+q$ とおく．
+縮約後に残る任意の型付き記号 $A_\mu$ を考える．
+$A$ が元の開始記号であってもよい．
+$\mu=\mathbf e$ なら生成語は $\lambda$ のみである．
+以下 $\mu\ne\mathbf e$ とする．このとき
+正語 $w_0\in L_G(A)$ で $\widehat s(w_0)=\mu$
+となるものが存在する．
+$\eta:=(h_{k,\ell}(w_0),g(w_0))$ とおき，
+$L_G(A)$ のうち $(h_{k,\ell}\times g)$-型が
+$\eta$ と等しい\emph{非空語}の最短語を $w$ とする．
+さらに $w$ の導出木のうち非終端節点数が最少のものを選ぶ．
+核の包含から $\widehat s(w)=\mu$ であり，
+$|\omega(A_\mu)|\le|w|$ となる．
+$|w|<m$ なら主張する上界は明らかである．
 
-\emph{型のファイバーと短縮．}
-元の縮約済み SSBNF 文法の非開始記号 $A$ の型付きコピーとして，
-$\widetilde G$ に残る $A_\mu$ を固定する．
-命題~\ref{prop:typed-core} により
-$w_0\in L_{\widetilde G}(A_\mu)
-=L_G(A)\cap \widehat s^{-1}(\{\mu\})$ を選び，
-$\eta:=(h_{k,\ell}(w_0),g(w_0))$ とおく．
-核の包含から
+$w$ の最初の $k$ 文字と最後の $\ell$ 文字，
+さらに\emph{非空性のための一文字}を保護する．
+これらの位置の集合を $P$ とし，
+$1\le d:=|P|\le m+1$ とする．特に $m=0$ の場合も
+一文字が保護され，短縮後に空語となることはない．
+保護されない部分木だけを変更して群値を保存すれば，
+接頭辞・接尾辞の窓と非空性も保存される．
+
+BUNF導出木の非終端記号の出現を節点とする．
+単位規則・空語規則の節点も含める．節点 $z$ の
+ラベルを $\operatorname{nt}(z)$，生成語（空語も可）を
+$y(z)$，部分木が含む保護位置を
+$\operatorname{Mark}(z)$ とする．祖先から子孫へ進むと
+マーク集合は包含で単調となり，高々 $d+1$ 種類の値を取る．
+三つ組
 \[
-L_G(A)\cap(h_{k,\ell}\times g)^{-1}(\{\eta\})
-\subseteq L_{\widetilde G}(A_\mu)
+ (\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))
 \]
-であり，左辺は $w_0$ を含む．左辺の最短語を $w$ とすれば
-$|\omega(A_\mu)|\le|w|$．$|w|<m$ なら評価は明らかである．
-それ以外では $w=\alpha\beta\gamma$，
-$|\alpha|=k$，$|\gamma|=\ell$ と書き，
-$\alpha,\gamma$ の計 $m$ 個の位置を保護位置とし，
-その集合を $\mathsf{GuardPos}$ とする（空集合でもよい）．
-$w'=\alpha\beta'\gamma\in L_G(A)$ が
-$g(w')=g(w)$ を満たせば $|w'|\ge|w|$ である．
-実際，これらの生成語は非空であり，$w$ と同じ
-$(h_{k,\ell}\times g)$-型を持つ．以下，この最短性を用いる．
+は同じ祖先鎖上で二度現れない．もし二度現れれば，
+上側の部分木を下側の同じラベルの部分木で置換する．
+保護位置・群値・非空性は保存され，語長は増えず，
+導出木の非終端節点数は真に減る．語長が減れば
+最短ファイバー性，そうでなければ節点数最小性に
+反する．この議論は空語を生成する子や単位規則の
+巡回があっても成立する．従って深さは高々
+$(d+1)Nq\le D$ である．
 
-$A\Rightarrow_G^*w$ の導出木を固定し，非終端記号の出現を
-節点，終端規則 $B\to a$ を葉とする．節点 $z$ の
-非開始ラベルを $\operatorname{nt}(z)$，非空生成語を $y(z)$，
-その位置区間を $\operatorname{span}(z)$，$\operatorname{Mark}(z):=\operatorname{span}(z)\cap\mathsf{GuardPos}$ と書く．
-互いに比較不能な節点の部分木は，各ラベルからの導出木で
-独立に置換できる．
-
-\emph{深さ．}
-異なる祖先・子孫節点で
-$(\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))$ が一致することはない．
-一致すれば，上側の部分木を下側の部分木で置換して，
-保護文字と群値を保ったまま語長を真に短くできる．
-真の短縮は SSBNF の非開始規則が二分規則か終端規則
-だけであることによる．両節点のマークが一致するので，
-削除される位置は $\mathsf{GuardPos}$ と交わらず，置換後の語の
-接頭部 $\alpha$ と接尾部 $\gamma$ は保存される．
-これは最短性に反する．
-根から葉への経路上で $\operatorname{Mark}(z)$ は包含に関して単調で，
-高々 $m+1$ 種類の値しか取らず，
-非開始ラベルと群値の選択肢はそれぞれ高々 $N$，$q_{\mathrm{grp}}$ 個である．
-従って全節点の深さは $D_{\mathrm{bd}}$ 未満である．
-
-\emph{幅．}
-$\operatorname{Mark}(z)\ne\varnothing$ または $|y(z)|>\tau_G$ の節点を
-\emph{重要節点}とし，その集合を $\mathsf{Ess}$ とする．
-同じ深さの重要節点のうち，$\mathsf{GuardPos}$ と交わるものは高々 $m$ 個である．
-ある深さに $m+q_{\mathrm{grp}}$ 個以上の重要節点があれば，$\mathsf{GuardPos}$ と交わらない
-重要節点が少なくとも $q_{\mathrm{grp}}$ 個存在する．そのうち $q_{\mathrm{grp}}$ 個を
-左から $z_1,\ldots,z_{q_{\mathrm{grp}}}$ とする．生成語
-$a_i:=y(z_i)$ は互いに交わらず，$\beta$ 内にあり，
-$|a_i|>\tau_G$ を満たす．
-$|b_i|\le\tau_G$ を満たす
-$b_i\in L_G(\operatorname{nt}(z_i))$ を選び，
-$w=c_0a_1c_1\cdots a_{q_{\mathrm{grp}}}c_{q_{\mathrm{grp}}}$ と書く．
-$1\le j\le q_{\mathrm{grp}}$ について
+節点の生成語が保護位置を含むか，その長さが
+$\bar\tau$ を超えるとき\emph{重要節点}と呼ぶ．
+同じ深さで保護位置を含む節点は高々 $d$ 個である．
+重要節点が $d+q$ 個以上あれば，保護位置を含まない
+生成語長が $\bar\tau$ より大きい節点を
+左から $q$ 個選ぶ．その生成語を $a_1,\ldots,a_q$ とする．
+各節点と同じ非終端記号が生成する長さ
+$\tau_G$ 以下の語 $b_i$ を選ぶ（空語でもよい）．
 \[
-r_j:=g(a_1c_1\cdots a_jc_j),\quad
-s_j:=g(b_1c_1\cdots b_jc_j),\quad
-x_j:=s_jr_j^{-1}
+ w=c_0a_1c_1\cdots a_qc_q,\quad
+ r_j=g(a_1c_1\cdots a_jc_j),\quad
+ t_j=g(b_1c_1\cdots b_jc_j),\quad
+ x_j=t_jr_j^{-1},\quad x_0=1_{\mathsf G}
 \]
-とし，$r_0=s_0=x_0=1_{\mathsf{G}}$ とおく．
-$q_{\mathrm{grp}}+1$ 個の群元 $x_0,\ldots,x_{q_{\mathrm{grp}}}$ のうち
+とおく．$q+1$ 個の群元 $x_j$ のうち
 $x_i=x_j$ ($i<j$) となる二つが存在する．
-区間群値 $r_{i:j}:=g(a_{i+1}c_{i+1}\cdots a_jc_j)$ と
-$s_{i:j}:=g(b_{i+1}c_{i+1}\cdots b_jc_j)$ をおく．
-$r_j=r_i r_{i:j}$，$s_j=s_i s_{i:j}$ だから
-$s_ir_i^{-1}=s_i s_{i:j}r_{i:j}^{-1}r_i^{-1}\Longrightarrow s_{i:j}=r_{i:j}$.
-従って $z_{i+1},\ldots,z_j$ の部分木を
-対応する $b$-語の導出木で置換すると，
-群値と保護位置を変えずに語長を真に短縮でき，矛盾する．
-ここでは $\mathsf{G}$ の可換性を仮定しない．
-よって各深さの重要節点は高々 $W_{\mathrm{bd}}=m+q_{\mathrm{grp}}-1$ 個である．
-
-\emph{個数．}
-$\mathsf{Ess}$ は祖先閉なので $|\mathsf{Ess}|\le W_{\mathrm{bd}}D_{\mathrm{bd}}$ である．
-保護位置以外の各位置は，長さ $1\le\tau_G$ の
-非重要な終端規則の葉の下にある．
-極大な非重要部分木は互いに交わらず，
-その生成語長は各々 $\tau_G$ 以下である．
-その根の個数は $\mathsf{Ess}\ne\varnothing$ なら高々 $2|\mathsf{Ess}|$，
-$\mathsf{Ess}=\varnothing$ なら $1$ 個である．従って
+群での消去律により
 \[
-|w|\le m+(1+2|\mathsf{Ess}|)\tau_G
-\le m+\bigl[1+2(m+q_{\mathrm{grp}}-1)(m+1)Nq_{\mathrm{grp}}\bigr]\tau_G.
+ g(b_{i+1}c_{i+1}\cdots b_jc_j)
+ =g(a_{i+1}c_{i+1}\cdots a_jc_j)
 \]
-元の開始記号 $S_0$ の型付きコピーの標準生成語は，
-その型の非開始型付き子の標準生成語か $\lambda$ である．
-従ってそれらにも同じ上界が成立し，
-全ての残存型付き記号について最大を取れば補題が従う．
+が従う．該当する互いに交わらない部分木を置換すると，
+順序を保った群積，保護文字，非空性を変えずに
+語長が真に短くなり，最短性に矛盾する．
+群の可換性は使わない．従って各深さの重要節点数は
+高々 $W=m+q$ 個である．
+
+重要節点の集合は祖先閉であり，その総数は
+高々 $WD$ 個である．極大な非重要部分木は
+BUNFの二分性により高々 $1+2WD$ 個，
+それぞれの生成語長は高々 $\bar\tau$ である．
+その外側に残る終端位置はすべて保護位置であり
+高々 $d$ 個だから，
+\[
+ |w|\le d+(1+2WD)\bar\tau
+ \le m+1+[1+2(m+q)(m+2)Nq](\tau_G+1).
+\]
+元の開始記号の型付きコピーも同様であり，
+空語型コピーは $\lambda$ のみを生成する．
+全コピーについて最大を取ればよい．
 \end{proof}
 
-\subsection{厚みを多項式的に保存する SSBNF 正規化}
-\label{app:thick-ssbnf}
-
-\begin{proof}[命題~\ref{prop:thick-ssbnf-normal} の証明]
-$G_*=(V,\Sigma,P,S)$ を非空言語を生成する縮約済み CFG とし，
-$s_*:=|G_*|$，$\bar\tau:=\tau_{G_*}+1$ とおく．
-CFG の標準形変換は古典的である
+\subsection{厚みを多項式的に保存するBUNF正規化}
+\label{app:thick-bunf}
+\begin{proof}[命題~\ref{prop:thick-bunf-normal} の証明]
+$G_*$ を縮約済みCFGとし，$n:=|G_*|$,
+$\bar\tau:=\tau_{G_*}+1$ とおく．
+元の単位規則と空語規則を保持したまま，
+まず長い右辺の終端記号を
+$W_a\to a$ というラッパーで分離し，
+次に右辺を二分化する．この古典的操作は
+元の各非終端記号の生成言語を保つ
 \cite[Section~3.1]{autebert1997}
 \cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}．
-ここでは変換順序と最短生成語長の評価を明示する．
-後者は標準形の存在だけからは従わない．
-
-新しい開始記号 $S_0$ と規則 $S_0\to S$ を導入し，
-$\lambda\in L(G_*)$ の場合に限り $S_0\to\lambda$ を残す．
-まず長い右辺の終端記号を $W_a\to a$ によって分離し，
-次に二分化して $G_{\mathrm{bin}}$ を得る．
-非終端記号数・規則数は記号数で $O(s_*)$
-（符号化サイズでも多項式）であり，
-元の各非終端記号の生成言語は保たれる．
-新しい二分化記号は元の規則の右辺の連続部分を表し，
-構成記号数は $O(s_*)$，各記号の最短終端生成語長は
-高々 $\bar\tau$ だから，
-$\tau_{G_{\mathrm{bin}}}=O(s_*\bar\tau)$ である．
-
-非空語を生成する任意の非終端記号 $A$ について，
-導出木の終端葉を一つ選び，根からの経路を考える．
-経路上に同じ非終端記号が二度現れれば，上側の部分木を
-下側の部分木で置き換える．選んだ葉を保ちながら
-経路上の非終端記号数を高々
-$|V_{G_{\mathrm{bin}}}|$ にできる．
-経路外の兄弟部分木を最短生成語（空語も可）で置き換えると，
-選んだ葉が一文字を寄与するので，
-\[
-\min\{\,|w|>0:A\Rightarrow_{G_{\mathrm{bin}}}^*w\,\}
-\le 1+|V_{G_{\mathrm{bin}}}|\tau_{G_{\mathrm{bin}}}
-=O(s_*^2\bar\tau).
-\]
-
-ここで非開始 $\lambda$-規則を除去する．
-二分化済みなので $A\to BC$ から生じる非空右辺は
-高々 $A\to BC$, $A\to B$, $A\to C$ であり，
-指数的な規則増加は起こらない．
-続く単位閉包による単位規則除去は，
-非終端記号数と除去前の非単位規則数が $O(s_*)$ なので，
-高々 $O(s_*^2)$ 個の非単位規則を生成する．
-両操作は各非開始記号の非空終端生成語言語を保存するから，
-上の長さ上界も保たれる．最後に無用記号を除去し，
-空語規則は必要な場合の $S_0\to\lambda$ だけを残す．
-得られる文法は同値な縮約済み SSBNF 文法で，
-符号化サイズは $s_*$ の多項式，通常厚みは
-$O(s_*^2(\tau_{G_*}+1))$ である．
-各操作は多項式時間で計算できる．
+新しい非終端記号は元の生成規則右辺の連続部分を表し，
+その長さは高々 $O(n)$ 個の記号である．
+各記号を元の文法での最短生成語へ置換すれば，
+新記号の最短生成語長は
+$O(n(\tau_{G_*}+1))$ 以下になる．
+最後に非到達・非生産的な記号を除去する．
+得られる縮約済みBUNF文法は元の言語を生成し，
+サイズは $n$ の多項式で，厚みは
+$O(n(\tau_{G_*}+1))$ である．
 \end{proof}
 
-\section{linear-spine SSBNF 正規化の証明}
+\section{linear-spine BUNF 正規化の証明}
 \label{app:linear-normalization}
-
 \begin{proof}[命題~\ref{prop:linear-normal} の証明]
-開始記号分離と空語・単位規則の除去は古典的である
-\cite[Section~3.1]{autebert1997}
-\cite[Sections~7.1 and~7.4.2]{hopcroft-motwani-ullman2007}．
-ここでは二項規則のラッパー子を一つに保つことが重要である．
-$L(G)=\{\lambda\}$ なら $S_0\to\lambda$ の一規則でよい．
-それ以外では新しい開始記号 $S_0$ と規則 $S_0\to S$ を導入し，
-$\lambda\in L(G)$ のときに限り $S_0\to\lambda$ も加える．
-無用記号を除去し，非開始空語規則，次いで非開始単位規則を
-開始規則を変えずに除去する．線形性により，
-空語規則除去で追加される非空右辺は各規則につき高々一つであり，
-単位閉包による除去も線形性と多項式サイズを保存する．
-
-各 $a\in\Sigma$ に対し，既存の非終端記号とは異なる新しい
-\emph{ラッパー} $W_a\to a$ を導入する．
-以下の新しい非終端記号は \emph{spine 記号} とし，
-指定する端点を除いて規則ごとに新鮮に取る．
-残った規則 $A\to a_1\cdots a_m B b_1\cdots b_n$
-（$m+n>0$）に対して，右鎖と左鎖を
+線形CFGの生成規則は $A\to uBv$ または
+$A\to w$ ($u,v,w\in\Sigma^*$) と書ける．
+単位規則 $A\to B$ と空語規則 $A\to\lambda$ は残す．
+新しいラッパー $W_a\to a$ を各 $a\in\Sigma$ に導入し，
+他の補助非終端記号は規則ごとに新たに取る．
+規則 $A\to a_1\cdots a_m B b_1\cdots b_n$
+（$m+n>0$）には，右鎖と左鎖
 \[
 \begin{aligned}
 C^{\mathrm R}_0&:=B,&
@@ -2201,24 +2134,21 @@ C^{\mathrm L}_i&\to W_{a_{m-i+1}}C^{\mathrm L}_{i-1}
   &&(1\le i\le m)
 \end{aligned}
 \]
-で定める．$m=0$ なら $C^{\mathrm R}_n=A$，
+を作る．$m=0$ なら $C^{\mathrm R}_n=A$，
 それ以外なら $C^{\mathrm L}_m=A$ と同一視する．
-長さ0の鎖は規則を加えない．
-これらの鎖は元の右辺をちょうど生成する．
-
+$m=n=0$ なら $A\to B$ をそのまま残す．
 終端のみの規則 $A\to a_1\cdots a_k$ は
-$k=1$ ならそのまま残し，$k\ge2$ なら
+$k=0,1$ なら残す．$k\ge2$ なら
 $C^{\mathrm T}_1:=A$ と新しい
 $C^{\mathrm T}_2,\ldots,C^{\mathrm T}_k$ により
 \[
-C^{\mathrm T}_i\to W_{a_i}C^{\mathrm T}_{i+1}
-\quad(1\le i<k),\qquad C^{\mathrm T}_k\to a_k
+ C^{\mathrm T}_i\to W_{a_i}C^{\mathrm T}_{i+1}
+ \quad(1\le i<k),\qquad C^{\mathrm T}_k\to a_k
 \]
-とする．こうして各二項規則はちょうど一つのラッパー子をもち，
-他方の子が spine を継続する．
-最後に無用記号を除去すれば，この性質を保つ同値な
-縮約済み SSBNF 文法を得る．各鎖の長さは元の右辺長に比例するので，
-符号化サイズと実行時間はともに $|G|$ の多項式である．
+とする．各二項規則はちょうど一つの終端ラッパー子と
+一つのspine子を持つ．最後に非到達・非生産的記号を
+除去すれば，同値な縮約済みBUNF文法となり，
+符号化サイズは元の文法サイズの多項式である．
 \end{proof}
 
 \section{括弧付き倍増言語族の代入可能性}

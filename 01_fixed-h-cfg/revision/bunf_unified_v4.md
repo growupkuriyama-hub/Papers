@@ -1,3 +1,28 @@
-# BUNF-only experiment v4
+# BUNF-only proof refactor v4 (2026-10-19)
 
-Based on PR #61 commit 1c4c49f. Replace SSBNF throughout the CFG paper. Working proof gates: window–group shortening with nullable/unit productions, BUNF-preserving thickness normalization, direct linear-spine BUNF normalization, and intrinsic typed-thickness gap via the typed start copy. This is experimental; independent proof audit and renewed English/Japanese builds are required. No merge or journal submission.
+Status: EXPERIMENTAL, independent mathematical audit pending. No merge, TCS resubmission, arXiv update or reviewer-response refresh. Source base: PR #61 `1c4c49fcefd7684bc310715ea974408451fcd7ab`.
+
+## Uniform structural decision
+Use reduced BUNF (`A->BC`, `A->B`, `A->a`, `A->lambda`) for every target/normalization/quantitative argument. Neither start-symbol isolation nor unit/nullable deletion is imposed. The hypothesis grammar is the PR #61 positive-factor `Rec_s(K)` with no empty-factor nonterminal. The typed refinement includes typed copies of the original start symbol.
+
+## New argument A: presentation-independent typed-thickness gap
+Every reduced BUNF grammar for `L_n` has the productive typed start copy `(S_0)_1`. Its typed language is `L_n ∩ shat_U^{-1}(1) = {w_n^*}`, hence its canonical yield has exponential length. No root `S_0->A` shape is needed. This strengthens the previous SSBNF-only conclusion.
+
+## New argument B: window x group bound in arbitrary BUNF
+For each positive typed copy (including start copies) choose shortest NONEMPTY word in the finer window x group fiber. For `m=k+l`, protect all prefix/suffix window letters and one anchor letter, giving at most `m+1` protected positions. The anchor is essential for `m=0`, where erasing nullable subtrees could otherwise collapse a positive word to lambda. Choose a derivation with the fewest nonterminal nodes among minimum-length witnesses. On a path, a repeated (protected-position set, nonterminal, group value) produces a shorter witness or an equally short witness with fewer nodes, even across unit or nullable edges. Bounding essential nodes per depth uses ordered (possibly noncommutative) group products, and allows shortest sibling words to be empty. Quantitative displayed bound: `m+1 + [1+2(m+q)(m+2)|V|q](tau_G+1)`.
+
+## New argument C: CFG-to-BUNF thickness-preserving conversion
+Terminal isolation + RHS binarization already preserve original nonterminal languages and give polynomial length bounds for fresh block symbols; no nullable or unit elimination needed.
+
+## New argument D: linear-spine BUNF
+Keep original unit and epsilon rules. Convert only longer linear productions into left/right unary-terminal-wrapper chains. Every binary rule has one wrapper (one terminal) plus one continuing spine child. For a shortest typed yield, choose a minimum-node derivation. No typed spine label can repeat; otherwise replacement shortens the yield (binary step) or reduces derivation nodes (unit-only). This gives `|omega(X)|<=N_t`.
+
+## Review gates / possible pitfalls
+1. Review the window prefix/suffix protected-position argument for overlapping windows and words of length below `k+l`.
+2. Review zero-output children, pure unit cycles, nullable cycles and start symbols on RHS.
+3. Inspect group cancellation for nonabelian `G`, maximal nonessential frontier counting, and the `m=0` anchor.
+4. Check polynomial encoded size of BUNF normalization and linear spine; no accidental multi-wrapper binary productions.
+5. Verify the enriched BUNF witness count, proof labels, EN/JP source parity, and full source ref/citation compilation.
+6. Existing binary PDFs, marked R1 response documents (49 items/77 locators), and ZIP are not valid v4 submission packages. Regenerate only if author adopts v4.
+
+These are proposed mathematical proofs; build success is not a proof certificate.
