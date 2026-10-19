@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v240（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v240：Conclusionを定性的学習可能性と定量的データ長の対比で始め、重複していた結果の再列挙を削除。指数下界の範囲、十分条件、未解決問題は保持。英文PDFと提出ZIPは再検証待ち（未提出）。**
+> **v240：Conclusionを定性的学習可能性と定量的データ長の対比で始め、重複を削減。重要な限定は維持。英文Clean・Marked・回答PDFと3ファイルZIPは検証済み（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v240の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち。旧v239版ではClean 25p／Marked 26p／査読回答14p。
-- v239では査読回答49項目・位置参照77か所の検証成功。v240の新しいMarked PDFに対して改めて照合する。
+- v240の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 25p／Marked 26p／査読回答14p。
+- v240で査読回答49項目・位置参照77か所の検証に成功。ZIPのCRC整合性とClean TeXのSHA-256一致も確認済み。
 - v240の変更：Conclusionの冒頭にqualitative／quantitativeの対比を配置し、重複する概要だけを圧縮。数学的な主張・論証は不変。
 - **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v240の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v240**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v240 marked-PDF and response anchors await fresh validation; author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v240**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v240 marked-PDF and response anchors verified (49 reviewer items / 77 reference locations); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
