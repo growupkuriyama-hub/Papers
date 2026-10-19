@@ -1104,70 +1104,74 @@ $\{a^{2^n}\}$, substitutable for every $h$
 \section{Typed Thickness for General Fixed Typings}
 \label{sec:typed-thickness}
 
-For an arbitrary fixed $h$, the finite-witness construction admits a direct
-quantitative bound once the cost of yield typing is measured explicitly.  Let
-$G=(V,\Sigma,P,S_0)$ be a reduced SSBNF grammar and let $\widetilde G$ be its typed refinement.  Put
-$N:=|V\setminus\{S_0\}|$ and
-$N_t:=|\widetilde V\setminus\{\widetilde S\}|$
-and define the \emph{typed thickness} of this presentation by
+For any fixed $h$, the witness bound depends on shortest
+terminal yields of the $Q_h$-typed refinement.
+Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar,
+$\widetilde G$ its refinement, and put
+$N:=|V|$ and
+$N_t:=|\widetilde V\setminus\{\widetilde S\}|$.
+Define its \emph{typed thickness} by
 \[
- \tau_h^{\mathrm{typ}}(G):=
- \max\Bigl(\{\,|\omega(X)|:
- X\in\widetilde V\setminus\{\widetilde S\}\,\}\cup\{1\}\Bigr).
+\tau_h^{\mathrm{typ}}(G):=
+\max\Bigl(\{\,|\omega(X)|:
+X\in\widetilde V\setminus\{\widetilde S\}\,\}\cup\{1\}\Bigr).
 \]
-Thus $\tau_h^{\mathrm{typ}}(G)$ measures shortest terminal yields after the
-full yield-type split and trimming.  It is a presentation-dependent
-parameter, not an additional assumption on the learner.
+It is a presentation-dependent parameter, not an
+additional assumption on the learner.
+For a reduced SSBNF presentation, the $Q_h$-typed
+copies of $S_0$ have canonical yields either inherited
+from its positive typed start children or equal to
+$\lambda$.  The other productive typed symbols are
+exactly the positive-type copies in the original
+SSBNF refinement.  Consequently, both the typed
+thickness and the \emph{set} of canonical witnesses
+coincide with those from the SSBNF construction
+using nonempty $h$-types and a separate $\lambda$
+start witness: the start-copy witnesses add only
+the already-present positive start yields or $\lambda$.
 
 \begin{lemma}[typed-thickness witness bound]
 \label{lem:typed-thickness-bound}
-Let $G$ and $\widetilde G$ be as above and write
-$\tau:=\tau_h^{\mathrm{typ}}(G)$.  Every non-start typed symbol $X$ has
-$|u_X|+|v_X|\le (N_t-1)\tau$,
-and every word $w\in\WitnessSet(\widetilde G)$ satisfies
-$|w|\le (N_t+1)\tau$.
-If $P_{\mathrm{ter}}$ and $P_{\mathrm{bin}}$ are respectively the terminal
-and binary non-start productions of $G$, then
+Let $G$ and $\widetilde G$ be as above, and put
+$\tau:=\tau_h^{\mathrm{typ}}(G)$.
+Every non-start typed symbol $X$ satisfies
+$|u_X|+|v_X|\le(N_t-1)\tau$, and each
+$w\in\WitnessSet(\widetilde G)$ satisfies
+$|w|\le(N_t+1)\tau$.
+Let $P_{\mathrm{ter}}$, $P_{\mathrm{unit}}$ and
+$P_{\mathrm{bin}}$ be the terminal, unit and binary
+productions of $G$.  Then
 \[
- \|\WitnessSet(\widetilde G)\|
- \le
- \bigl(N|M|+|P_{\mathrm{ter}}|
-       +|P_{\mathrm{bin}}||M|^2+1\bigr)
- \bigl((N|M|+1)\tau+1\bigr).
+\|\WitnessSet(\widetilde G)\|
+\le\bigl(N|Q_h|+|P_{\mathrm{ter}}|
+ +|P_{\mathrm{unit}}||Q_h|
+ +|P_{\mathrm{bin}}||Q_h|^2\bigr)
+ \bigl((N|Q_h|+1)\tau+1\bigr).
 \]
-In particular, for fixed $h$ this bound is polynomial in $|G|$ and
+For fixed $h$, this is polynomial in $|G|$ and
 $\tau_h^{\mathrm{typ}}(G)$.
 \end{lemma}
-
 \begin{proof}
-Form the directed dependency graph whose vertices are the non-start symbols of
-$\widetilde G$ and whose edges join a parent to each child occurring in a
-binary production.  Since $\widetilde G$ is reduced, every non-start symbol
-$X$ is reachable.  Hence some start child $A$ has a path to $X$ in this
-graph.  Choose a shortest such path.  It repeats no typed symbol, so it has at
-most $N_t-1$ edges.
-
-For each edge of the path, choose a witnessing binary production and expand
-the child not lying on the path to its canonical yield.  Starting from
-$\widetilde S\to A$, these expansions produce a terminal reaching context of
-$X$.  Each off-path canonical yield has length at most $\tau$, so the total
-context length is at most $(N_t-1)\tau$.  The canonical context
-$(u_X,v_X)$ is no longer than this one.
-
-A word in the first family adds one canonical yield to the canonical context;
-the second family adds one terminal, and the third adds two canonical yields.
-Since $\tau\ge1$, every word in~\eqref{eq:W} therefore has length at most
-$(N_t+1)\tau$.  Finally, $N_t\le N|M|$; each source terminal production has
-at most one typed terminal copy, and each source binary production has at
-most $|M|^2$ typed copies.  Thus the displayed first factor bounds the number
-of witnesses, including the possible witness $\lambda$, while the second
-factor bounds $|w|+1$ for each witness.  Multiplying the two bounds proves the
-claim.
+In the dependency graph of retained typed symbols
+include unit and binary dependencies.  Each symbol
+is reachable from a typed copy of $S_0$; a shortest
+path has at most $N_t-1$ edges.  Expand off-path
+siblings of binary rules by canonical yields,
+each of length at most $\tau$.  Unit steps contribute
+no sibling.  Hence the canonical reaching context has
+length at most $(N_t-1)\tau$.
+The four witness families add at most two canonical
+yields or one terminal, giving the length bound.
+There are at most $N|Q_h|$ typed symbols,
+$|P_{\mathrm{ter}}|$ terminal typed rules,
+$|P_{\mathrm{unit}}||Q_h|$ unit typed rules, and
+$|P_{\mathrm{bin}}||Q_h|^2$ binary typed rules.
+Summing $|w|+1$ over the witness set proves the claim.
 \end{proof}
 
 \begin{corollary}[characteristic data from typed thickness]
 \label{cor:typed-thickness-data}
-Fix $h$.  If $G$ is a reduced SSBNF grammar for a nonempty
+Fix $h$.  If $G$ is a reduced BUNF grammar for a nonempty
 $L(G)\in\Ccf{h}$, then $\WitnessSet(\widetilde G)$ is a characteristic
 sample for $\mathsf{Rec}_h$ whose encoded size is polynomial in
 $|G|$ and $\tau_h^{\mathrm{typ}}(G)$.
