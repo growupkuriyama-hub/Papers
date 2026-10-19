@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v239（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v239：Section 5の定性的結果から元CFGへの不要な`reduced`仮定5か所を削除。型付き精密化後のtrimmingは維持し、定量的なreduced BUNF仮定は不変。英文PDF・査読回答・ZIPは再生成待ち（未提出）。**
+> **v239：Section 5から元CFGへの不要な`reduced`仮定5か所を削除。型付き文法のtrimmingと定量的なreduced BUNF仮定は維持。英文Clean/Marked/査読回答・3ファイルZIP検証済み（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v239の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証待ち。旧版ZIPと混用しない。
-- v237では査読回答49項目／位置参照77か所の照合に成功。v239でも再検証する。
+- v239の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 25p／Marked 26p／査読回答14p。
+- v239でも査読回答49項目／位置参照77か所の照合に成功。3ファイルZIPのCRC検査とClean TeX／正本のSHA-256一致を確認。
 - v239の変更：Section 5の原文法は任意CFGとし、型付き文法のtrimmingでreductionを保証。Section 6以降の定量的なreduced BUNF仮定は維持。
 - **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v239の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v239**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v239 marked-PDF and response anchors await fresh verification; author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v239**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v239 marked-PDF and response anchors verified (49 reviewer items / 77 references); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
