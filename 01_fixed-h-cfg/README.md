@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v243（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v243：fresh identityの記号を $\mathbf{1}_{\sharp}$ に統一。Introductionの略語、未導入のs-prime、Lemma 7.4・Theorem 9.2・Proposition 9.7、および回答書R1.2/R1.32の参照・表現を修正。英文PDFと提出ZIPは再検証待ち（未提出）。**
+> **v243：fresh identityの記号を $\mathbf{1}_{\sharp}$ に統一。Introductionの略語、未導入のs-prime、Lemma 7.4・Theorem 9.2・Proposition 9.7、回答書R1.2/R1.32を修正。英文PDF・査読回答・3ファイルZIPは検証済み（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v243の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち。旧v242はClean 26p／Marked 26p／査読回答14p。
-- v242では査読回答49項目・位置参照77か所の照合に成功。v243のMarked PDFで位置を再検証する。
+- v243の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 26p／Marked 26p／査読回答14p。
+- v243で査読回答49項目・位置参照77か所の照合に成功。3ファイルZIPのCRC検査、Clean TeXのSHA-256一致も確認済み。
 - v243の変更：新単位元を1-sharpに統一し、Introduction・s-prime・group-valued monoid morphism・Prop 9.7・Theorem 9.2・回答書R1.2/R1.32を修正。利益相反申告は変更していない。
 - **注意：** 日本語版は記号と対応する一部記述のみv243に合わせていますが、Section 5など本文全体は旧参考訳です。`response/japanese/`の査読回答も旧稿で、英文v243の完全な対訳ではありません（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v243**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v243 marked-PDF and response anchors require a fresh build and locator check; the author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v243**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v243 marked-PDF and response anchors VERIFIED (49 reviewer items / 77 marked-PDF locations); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
