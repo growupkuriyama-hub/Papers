@@ -41,7 +41,16 @@ if len(bbox_pages) != len(pages):
     raise SystemExit("BBox and layout page counts disagree")
 
 def locate_statement_bbox(kind, number):
+    # Section 2 contains a forward reference to Corollary 5.4.
+    # Only accept a heading after Theorem 5.3 in Section 5.
+    lower_bound = None
+    if kind.lower() == "corollary" and number == "5.4":
+        lower_bound = locate_statement_bbox("Theorem", "5.3")
+        if lower_bound is None:
+            return None
     for page_number, (width, words) in enumerate(bbox_pages, 1):
+        if lower_bound is not None and page_number < lower_bound[0]:
+            continue
         # On latexdiff PDFs the word stream can interleave change-markup
         # strokes and following text; heading words need not be adjacent.
         # Match statement number on the *same visual line* instead.
@@ -127,6 +136,8 @@ def locate(section_or_statement):
         exact = locate_statement_bbox(kind, number)
         if exact is not None:
             return exact
+        if kind.lower() == "corollary" and number == "5.4":
+            raise SystemExit("Corollary 5.4 heading not verified after Theorem 5.3")
         heading = re.compile(r"^\s*(?:\d{1,4}\s+)?"
                              + re.escape(kind) + r"\s+" + re.escape(number)
                              + r"\b", re.I)
