@@ -1,13 +1,13 @@
-# #1 TCS — 最新改訂稿 / CURRENT REVISION **v242**
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v243**
 
-> **最新版は `main` の internal v242（2026-10-20）。**  
+> **最新版は `main` の internal v243（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v242：AcknowledgmentsにAlexander Clark先生のICGI 2014での助言への謝辞を一文追加。数学的内容・AI Declarationは不変。英文PDF・査読回答・3ファイルZIP検証済み（未提出）。**
+> **v243：fresh identityの記号を $\mathbf{1}_{\sharp}$ に統一。Introductionの略語、未導入のs-prime、Lemma 7.4・Theorem 9.2・Proposition 9.7、および回答書R1.2/R1.32の参照・表現を修正。英文PDFと提出ZIPは再検証待ち（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（いずれも v242）
+## 提出に使用する3ファイル（いずれも v243）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,16 +23,16 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v242`** と原稿SHA-256を参照
-- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v242英文Abstractのプレーンテキスト
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v243`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v243英文Abstractのプレーンテキスト
 
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v242の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 26p／Marked 26p／査読回答14p。
-- v242でも査読回答49項目・位置参照77か所の照合に成功。ZIPは3ファイルのみ、CRC検査に成功、Clean TeXと正本SHA-256一致。
-- v242の変更：AcknowledgmentsにClark先生への謝辞を追加。v241の生成AI Declarationとそれ以外の論文本文は変更なし。
-- **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v242の対訳としては使用しないでください（TCS提出ZIPには含みません）。
+- v243の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち。旧v242はClean 26p／Marked 26p／査読回答14p。
+- v242では査読回答49項目・位置参照77か所の照合に成功。v243のMarked PDFで位置を再検証する。
+- v243の変更：新単位元を1-sharpに統一し、Introduction・s-prime・group-valued monoid morphism・Prop 9.7・Theorem 9.2・回答書R1.2/R1.32を修正。利益相反申告は変更していない。
+- **注意：** 日本語版は記号と対応する一部記述のみv243に合わせていますが、Section 5など本文全体は旧参考訳です。`response/japanese/`の査読回答も旧稿で、英文v243の完全な対訳ではありません（TCS提出ZIPには含みません）。
 
 ## どのファイルが正本か
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v242**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v242 marked-PDF and response anchors verified (49 reviewer items / 77 marked-PDF locations); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v243**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v243 marked-PDF and response anchors require a fresh build and locator check; the author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
