@@ -12,3 +12,11 @@ Reviewer response updates (no mathematical proof edited):
 - Overview: explicitly mention title change, correctly cite prior works throughout the manuscript rather than incorrectly locating Eilenberg in Introduction, and explain additions-heavy marked PDF.
 - CI build must resynchronize numbered PDF locator page/line positions against newly rendered Marked PDF. English submission 3-file ZIP must contain Clean TeX, Marked PDF, Response PDF; clean PDF additionally available for separate Editorial Manager upload.
 - Separate conflict of interest declaration already handled by author and untouched. Japanese reviewer response remains old v229; not TCS submission.
+
+## v245 release validation — 2026-10-20
+- GitHub Actions run 39379888935 SUCCESS. All 49 reviewer-item PDF page/margin-line anchors checked against 26-page Marked PDF; 77 reference locators retained.
+- Marked PDF: 26 A4 pages / 615012 bytes; response PDF: 14 A4 pages / 324535 bytes.
+- Exact submission ZIP artifact 12244493642 downloaded; exactly Clean TeX, Marked PDF, and Response PDF, CRC pass.
+- Clean TeX SHA-256 87c68654f02de2675deaeab6081ae8db3315cad251f65ab99f5714799342021a = official main.tex (v244 mathematical manuscript with published Pin 1986). No deprecated Pin 2025 note remains. Pin (1986) appears as bibliography item [17] in marked manuscript.
+- Clean unmarked PDF v245 is byte-identical with v244 since the mathematical source was unchanged; 26 A4 pages. Submission Clean PDF requires user upload in Editorial Manager separately if available.
+- Separate COI declaration untouched. User has not yet resubmitted via Editorial Manager.
