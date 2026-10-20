@@ -57,6 +57,10 @@ def locate_statement_bbox(kind, number):
             )
             if not is_heading:
                 continue
+            if kind.lower() == "corollary" and number == "5.4":
+                if not any("gold" in v.lower() and abs((vy0 + vy1) / 2 - center) < 28
+                           for v, vx0, vx1, vy0, vy1 in words):
+                    continue
             # Corollary 5.4 also occurs in an earlier body-text citation.
             # The actual theorem heading has x0 at the left text margin;
             # same-line matching distinguishes the heading reliably.
