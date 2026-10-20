@@ -32,7 +32,7 @@
 - v243の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 26p／Marked 26p／査読回答14p。
 - v243で査読回答49項目・位置参照77か所の照合に成功。3ファイルZIPのCRC検査、Clean TeXのSHA-256一致も確認済み。
 - v243の変更：新単位元を1-sharpに統一し、Introduction・s-prime・group-valued monoid morphism・Prop 9.7・Theorem 9.2・回答書R1.2/R1.32を修正。利益相反申告は変更していない。
-- **注意：** 日本語版は記号と対応する一部記述のみv243に合わせていますが、Section 5など本文全体は旧参考訳です。`response/japanese/`の査読回答も旧稿で、英文v243の完全な対訳ではありません（TCS提出ZIPには含みません）。
+- **日本語版（2026-10-20更新）：** `japanese/main_JP.tex` は英文v243を基準に、一般CFGの型付き精密化・標準右辺証拠・完全性証明、BUNF正規化と型付き厚みの対応、窓・群の記号を再同期しました。英語版の数理的正本は引き続き `main.tex` であり、JP版は研究・確認用の参考訳です。`response/japanese/` の査読回答は旧稿で、英文v243の完全な対訳ではありません（TCS提出ZIPには含みません）。
 
 ## どのファイルが正本か
 
