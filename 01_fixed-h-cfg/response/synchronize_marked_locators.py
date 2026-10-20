@@ -42,6 +42,34 @@ if len(bbox_pages) != len(pages):
 
 def locate_statement_bbox(kind, number):
     for page_number, (width, words) in enumerate(bbox_pages, 1):
+        # On latexdiff PDFs the word stream can interleave change-markup
+        # strokes and following text; heading words need not be adjacent.
+        # Match statement number on the *same visual line* instead.
+        for value, x0, x1, y0, y1 in words:
+            if value.lower() != kind.lower() or not (55 <= x0 <= 100):
+                continue
+            center = (y0 + y1) / 2
+            is_heading = any(
+                v.rstrip(".") == number
+                and x1 - 1 <= vx0 <= x1 + 65
+                and abs((vy0 + vy1) / 2 - center) < 7
+                for v, vx0, vx1, vy0, vy1 in words
+            )
+            if not is_heading:
+                continue
+            # Corollary 5.4 also occurs in an earlier body-text citation.
+            # The actual theorem heading has x0 at the left text margin;
+            # same-line matching distinguishes the heading reliably.
+            margin = [
+                (abs((my0 + my1) / 2 - center), int(v))
+                for v, mx0, mx1, my0, my1 in words
+                if v.isdigit() and 100 <= int(v) <= 3000
+                and (mx1 < 67 or mx0 > width - 85)
+                and abs((my0 + my1) / 2 - center) < 8
+            ]
+            if margin:
+                margin.sort()
+                return page_number, margin[0][1]
         for i in range(len(words) - 1):
             word, x0, x1, y0, y1 = words[i]
             nxt, nx0, nx1, ny0, ny1 = words[i + 1]
