@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v242（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v242：AcknowledgmentsにAlexander Clark先生のICGI 2014での助言への謝辞を一文追加。それ以外の数学的内容、AI Declarationは不変。PDF・ZIP再検証待ち（未提出）。**
+> **v242：AcknowledgmentsにAlexander Clark先生のICGI 2014での助言への謝辞を一文追加。数学的内容・AI Declarationは不変。英文PDF・査読回答・3ファイルZIP検証済み（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v242の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・再検証待ち（v241はClean 26p／Marked 26p／査読回答14p）。
-- v241では査読回答49項目・位置参照77か所の照合に成功。v242でも新Marked PDFとの一致を検証する。
+- v242の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 26p／Marked 26p／査読回答14p。
+- v242でも査読回答49項目・位置参照77か所の照合に成功。ZIPは3ファイルのみ、CRC検査に成功、Clean TeXと正本SHA-256一致。
 - v242の変更：AcknowledgmentsにClark先生への謝辞を追加。v241の生成AI Declarationとそれ以外の論文本文は変更なし。
 - **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v242の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v242**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v242 marked-PDF and response anchors await revalidation; author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v242**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v242 marked-PDF and response anchors verified (49 reviewer items / 77 marked-PDF locations); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
