@@ -1,13 +1,13 @@
-# #1 TCS — 最新改訂稿 / CURRENT REVISION **v245**
+# #1 TCS — 最新改訂稿 / CURRENT REVISION **v246**
 
-> **最新版は `main` の internal v245（2026-10-20）。**  
+> **最新版は `main` の internal v246（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v245検証完了：Pin (1986) の出版書と査読回答R1.1／R1.2／R1.18／R2.1／R2.2／R2.3・Overviewの修正を反映。Clean 26p、Marked 26p、回答14p、49項目／77参照照合済み（未提出）。**
+> **v246検証完了：yield typing説明、Cor. 6.3の適用先、congruential family、LI/Grp表記の修正を反映。Clean/Marked 26p、回答14p、49項目／77参照照合済み（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（いずれも v245）
+## 提出に使用する3ファイル（いずれも v246）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,16 +23,16 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v245`** と原稿SHA-256を参照
-- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v245英文Abstractのプレーンテキスト
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`current_baseline.internal_version: v246`** と原稿SHA-256を参照
+- [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
 
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v245の **Clean PDF / Marked PDF / Response PDF / ZIP** は検証済み。Clean 26p／Marked 26p／査読回答14p。
-- v245の新Marked PDFで査読回答49項目・位置参照77か所の照合に成功。ZIPは指定3ファイルのみ、CRC正常、英文Clean TeXは正本とSHA-256一致。
-- v245の変更：Pin (1986) の出版済み書籍（Ch. 1 Prop. 1.12／Ch. 2 Prop. 3.5・Thm. 3.6）を正本として維持し、回答書のEHY引用先、parity例誤記、一般CFGとの説明一致、論文短縮、タイトル変更、Kanazawaの参照形式を修正。英文数学原稿・利益相反申告は変更なし。
-- **日本語版（2026-10-20更新）：** 英文v245を基準に、一般CFGの型付き証拠と完全性証明、BUNFの定量評価、窓・群の記号、結論、謝辞（Alexander Clarkを含む）、ChatGPT・Claudeの生成AI利用申告を同期しました。参考文献は英文とバイト一致。数式・定理環境・ラベルの構造検査を実施しましたが、全文章の逐語的な翻訳校閲を完了したという主張ではありません。数学的正本は引き続き `main.tex`。`response/japanese/` は旧版v229のままで、TCS提出ZIPには含みません。
+- v246の **Clean PDF / Marked PDF / Response PDF / ZIP** は検証済み。Clean 26p／Marked 26p／査読回答14p。
+- v246の新Marked PDFで査読回答49項目・位置参照77か所の照合に成功。ZIPは指定3ファイルのみ、CRC正常、英文Clean TeXは正本とSHA-256一致。
+- v246の変更：§1.2にcongruential familyの位置づけを追加、§5.1に型付き精密化の目的とRule (U)の説明を追加、Cor. 6.3の適用先を明確化、§7の半群・群の変数を統一。回答書のClean TeX提供説明を実態に合わせ、Marked版の余白行番号を再同期。利益相反申告に変更なし。
+- **日本語版（2026-10-20更新）：** 英文v245を基準に、一般CFGの型付き証拠と完全性証明、BUNFの定量評価、窓・群の記号、結論、謝辞（Alexander Clarkを含む）、ChatGPT・Claudeの生成AI利用申告を同期しました。参考文献は英文v245と一致（英文v246への翻訳同期は未実施）。数式・定理環境・ラベルの構造検査を実施しましたが、全文章の逐語的な翻訳校閲を完了したという主張ではありません。数学的正本は引き続き `main.tex`。`response/japanese/` は旧版v229のままで、TCS提出ZIPには含みません。
 
 ## どのファイルが正本か
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v245**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v245 marked-PDF and response anchors are VERIFIED (49 reviewer items / 77 locations); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v246**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v246 marked-PDF and response anchors are VERIFIED (49 reviewer items / 77 locations); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
