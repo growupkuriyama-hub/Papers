@@ -3,7 +3,7 @@
 > **最新版は `main` の internal v241（2026-10-20）。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v241：Acknowledgmentsの後に生成AI利用に関する簡潔な標準Declaration（ChatGPT・Claude、英文校正・構成・数学的議論の検討、著者の責任）を追加。それ以外の本文は不変。PDF・ZIP再生成待ち（未提出）。**
+> **v241：Acknowledgments直後に生成AI利用の簡潔な標準Declarationを追加。それ以外の本文は不変。英文PDF・査読回答・3ファイルZIPの再生成・検証完了（未提出）。**
 
 **最初に開くファイル： [最新版・TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
@@ -29,8 +29,8 @@
 ### 検証状態（2026-10-20）
 
 - `main.tex` と `TCS-D-26-00494_Manuscript_Clean.tex` の一致を確認。
-- v241の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証待ち（前版v240はClean 25p／Marked 26p／回答14p）。
-- v240では査読回答49項目・位置参照77か所の照合に成功。v241の新Marked PDFでも再照合する。
+- v241の **Clean PDF / Marked PDF / Response PDF / ZIP** は再生成・検証済み。Clean 26p／Marked 26p／査読回答14p。
+- v241で査読回答49項目・位置参照77か所の再照合に成功。ZIPは3ファイルのみ、CRC検査成功、Clean TeX／正本SHA-256一致。
 - v241の変更：Acknowledgments直後にElsevier標準型の生成AI利用Declarationを一つ追加。数学的結果・証明・参考文献・謝辞は不変。
 - **注意：** `response/japanese/` の日本語査読回答訳は旧稿ベースのままです。v241の対訳としては使用しないでください（TCS提出ZIPには含みません）。
 
@@ -54,4 +54,4 @@ PDFを手で置き換えず、ソースを直してから `.github/workflows/pub
 
 ---
 
-**English:** Latest #1 TCS revision: **internal v241**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v241 marked-PDF and response anchors await fresh verification; author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
+**English:** Latest #1 TCS revision: **internal v241**, on the `main` branch. Download the **exact three-file submission ZIP** above. The Clean TeX mirrors `main.tex`; v241 marked-PDF and response anchors verified (49 reviewer items / 77 marked-PDF references); author has not yet resubmitted. The author must submit these files to Editorial Manager; GitHub publication is **not journal resubmission**.
