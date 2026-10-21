@@ -1,13 +1,13 @@
-# #1 TCS — 編集正本 v258（PDF/ZIP再生成待ち） / 凍結記録 v249
+# #1 TCS — 現行編集版 v258（PDF/ZIP CI検証済み） / 凍結記録 v249
 
-> **編集正本：`main` のv258 TeX（2026-10-21）。Appendix A.1の補題7.1の証明をDepth・Width・Countingに再構成し、保護位置の重複と非終端節点の数え方を厳密化。英文・日本語を同期。PDF／Marked PDF／回答書PDF／ZIPはv258用CI検証待ち。TCSへは未再投稿です。**  
+> **編集正本：`main` のv258 TeX（2026-10-21）。Appendix A.1の補題7.1の証明をDepth・Width・Countingに再構成し、保護位置の重複と非終端節点の数え方を厳密化。英文・日本語Clean PDF、Marked PDF、英文回答書PDF、3ファイルZIPのCI再生成・検証に成功しました。TCSへは未再投稿です。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
 > **v258の編集：Appendix A.1をDepth・Width・Countingで整理し、非空性アンカー重複・nullable/unit節点・非可換群での区間積消去を明記。v257のAppendix C等の修正は維持。v249は最後の凍結記録。**
 
-**v258のCI検証後に取得： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
+**v258検証済み： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（v258、CI再生成待ち）
+## 提出に使用する3ファイル（v258、CI検証済み）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -25,6 +25,13 @@
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
 - [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v258`** とv249凍結履歴を参照
 - [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
+
+### v258自動検証（2026-10-21）
+
+- [英文・日本語Clean PDF（Actions 39580899314）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39580899314)：成功。英文26ページ、日本語31ページ。Overfull `\\hbox` 0件。
+- [Marked PDF・英文査読回答PDF・3ファイルZIP（Actions 39580899262）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39580899262)：成功。回答49項目／Marked PDFの77箇所を同期。ZIPは `unzip -t` と3ファイル確認を通過。
+- `main.tex` と投稿用Clean TeXは同一Git blob。Appendix A.1のDepth/Width/Countingは英日同期。
+- 日本語の査読回答旧訳は更新していない（英文提出ZIPには含まず）。TCSへの再投稿は未実施。
 
 ### v257の過去検証記録（2026-10-21。v258の検証ではない）
 
