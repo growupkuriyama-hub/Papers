@@ -2177,162 +2177,222 @@ $C^{\mathrm T}_2,\ldots,C^{\mathrm T}_k$ により
 \section{括弧付き倍増言語族の代入可能性}
 \label{app:bracketed-substitutability}
 
-$L_0=\{\mathtt a\}$ とおく．命題~\ref{prop:typed-thickness-gap} の
-$L_n=L(G_n)$ は $n\ge1$ について
-$L_n=\lceil{}L_{n-1}\rceil\cup\lfloor{}L_{n-1}L_{n-1}\rfloor$
-を満たし，$L_{G_n}(E_i)=L_i$（$0\le i\le n$）である．
-高さ $i$ の帰納法により，$L_i$ の任意の語は，ちょうど $i$ 個の
-開き括弧に続いて $\mathtt a$ が現れる形で始まる．
-以下では可逆な決定的トップダウン解析器を用いて，
-代入可能性を直接証明する．
+$L_0=\{\mathtt a\}$ とおき，
+$i\ge1$ に対して
+$L_i=\lceil{}L_{i-1}\rceil\cup\lfloor{}L_{i-1}L_{i-1}\rfloor$
+と定める．従って $0\le i\le n$ では
+$L_{G_n}(E_i)=L_i$，かつ $L_n=L(G_n)$ である．
+$n\ge1$ を固定する．以下では，入力文字を固定したときに
+遷移が単射となる決定的トップダウン解析器を用いて，
+命題~\ref{prop:typed-thickness-gap}(i) を証明する．
 
-\paragraph{解析器とスタックの性質．}
-$n\ge1$ を固定する．スタックは $E_0,\ldots,E_n$ と閉じ記号
-$\rceil$，$\rfloor$ 上の語で，左端が頂点であり，
-空スタックを $\lambda$ とする．
-以下では，$L_n$ を認識する計算の初期スタックを $E_n$，
-受理スタックを $\lambda$ とする．
-任意のスタック $\psi$ と $1\le i\le n$ について，
-遷移は次のものに限る．
+\paragraph{解析器．}
+\emph{スタック}とは $E_0,\ldots,E_n,\rceil,\rfloor$
+上の語であり，左端を頂点，$\lambda$ を空スタックとする．
+任意のスタック $\psi$ と $1\le i\le n$ に対し，
+遷移は次のものに限られる．
 \[
 \begin{aligned}
 E_0\psi&\xrightarrow{\mathtt a}\psi,&
 E_i\psi&\xrightarrow{\lceil}E_{i-1}\rceil\psi,&
-E_i\psi&\xrightarrow{\lfloor}E_{i-1}E_{i-1}\rfloor \psi,\\
+E_i\psi&\xrightarrow{\lfloor}E_{i-1}E_{i-1}\rfloor\psi,\\
 \rceil\psi&\xrightarrow{\rceil}\psi,&
-\rfloor \psi&\xrightarrow{\rfloor}\psi.
+\rfloor\psi&\xrightarrow{\rfloor}\psi.
 \end{aligned}
 \]
-$\sigma\xrightarrow{w}\theta$ は $\sigma$ から $w$ を読んで $\theta$ に至る計算を表す．
-遷移は決定的であり，各入力文字について単射でもある．
-実際，開き括弧の遷移の出力から展開前の $E_i$ と残りのスタックが
-一意に復元でき，他の遷移では入力文字が決める頂記号だけが削除される．
-よって任意の語 $v$ の作用は部分単射であり，
-$\sigma\xrightarrow{v}\theta_{\mathrm{out}}$ と $\theta\xrightarrow{v}\theta_{\mathrm{out}}$ から $\sigma=\theta$ が従う．
+これ以外の遷移はなく，特に空スタックからは遷移できない．
+$\sigma\xrightarrow{w}\theta$ は $\sigma$ から $w$ を読んで
+$\theta$ に至る計算を表す．この解析器の初期スタックは
+$E_n$ で，$E_n\xrightarrow{w}\lambda$ のとき $w$ を受理する．
+補題~\ref{lem:app-recognition} により，受理言語はちょうど
+$L_n$ である．次の三つの性質を用いる．
 
-$E_i$ の重みを $4^i$，閉じ記号の重みを $1$ とし，
-スタック全体の重みをその総和とする．
-文字 $\mathtt a$ の遷移と二つの閉じ記号の pop は
-重みを $1$ 減らし，$i\ge1$ に対して
-$4^i>2\cdot4^{i-1}+1>4^{i-1}+1$ が成立するから，
-すべての遷移で重みが厳密に減少する．特に $\sigma\xrightarrow{w}\sigma$ なら $w=\lambda$ である．
-次の二つの基本事実を使う．第一に，$\upsilon\ne\lambda$ とし，
-$\upsilon\vartheta$ から始まる計算が初めて $\vartheta$ に到達するまでは，
-スタックは $\upsilon'\vartheta$（$\upsilon'\ne\lambda$）の形を保ち，遷移は $\upsilon'$ にのみ作用する．
-$\vartheta$ に到達すれば，入力は $w=w_1w_2$ と分解され，
-$\upsilon\xrightarrow{w_1}\lambda$ の後に $\vartheta\xrightarrow{w_2}\theta$ が続く．
-到達しなければ，最後は $\upsilon'\vartheta$（$\upsilon'\ne\lambda$）となる．
-重みの厳密減少性から，$\vartheta$ への到達は高々一度である．
-第二に，遷移は頂記号のみを書き換えるので，
-最後の記号が $\rceil$（それぞれ $\rfloor$）の非空スタックは，
-空になるまで同じ末尾記号を保つ．
+\begin{enumerate}[label=\textup{(P\arabic*)},leftmargin=2.6em]
+\item \emph{決定性と文字ごとの単射性．}
+入力文字 $c$ を固定すると，遷移はスタック上の部分単射写像を
+定める．すなわち，各スタックからの $c$-遷移先は高々一つであり，
+同じ遷移先をもつ二つの $c$-遷移の出発スタックは一致する．
+開き括弧では遷移先の頂部から展開前の $E_i$ と保存された接尾部が
+復元でき，$\mathtt a,\rceil,\rfloor$ では入力文字により
+取り除かれた頂記号が一意に決まる．従って任意の語は
+スタック上の部分単射写像として作用する．すなわち，
+$\sigma\xrightarrow{w}\theta$ と
+$\sigma\xrightarrow{w}\theta'$ なら $\theta=\theta'$，
+また $\sigma\xrightarrow{w}\theta$ と
+$\sigma'\xrightarrow{w}\theta$ なら $\sigma=\sigma'$ である．
+
+\item \emph{重み．}
+$E_i$ の重みを $4^i$，各閉じ記号の重みを $1$ とし，
+スタック $\sigma$ の総重みを $\operatorname{wt}(\sigma)$ とする．
+各 pop 遷移は重みを $1$ 減らし，$i\ge1$ では
+$4^i>2\cdot4^{i-1}+1$ だから，
+すべての遷移は重みを厳密に減らす．
+従って $\sigma\xrightarrow{w}\sigma$ なら $w=\lambda$ である．
+
+\item \emph{局所性．}
+遷移は頂記号だけを調べて書き換え，閉じ記号は pop されるだけである．
+従って $\sigma\xrightarrow{w}\theta$ なら
+$\sigma\psi\xrightarrow{w}\theta\psi$ も成り立つ．
+逆に $\sigma_1\ne\lambda$ かつ
+$\sigma_1\psi\xrightarrow{w}\theta$ とする．
+このとき次のいずれかが成立する．
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item 計算が $\psi$ に到達する場合：
+最初の到達時点で分割すると，$w=w_1w_2$，
+$\sigma_1\xrightarrow{w_1}\lambda$，
+$\psi\xrightarrow{w_2}\theta$ となる．従って
+$\operatorname{wt}(\theta)\le\operatorname{wt}(\psi)$ である．
+\item $\psi$ に到達しない場合：
+$\theta=\theta_1\psi$，
+$\sigma_1\xrightarrow{w}\theta_1\ne\lambda$ となる．
+従って $\operatorname{wt}(\theta)>\operatorname{wt}(\psi)$
+であり，$\sigma_1$ の末尾記号が閉じ記号なら，
+$\theta_1$ の末尾も同じ閉じ記号である．
+\end{enumerate}
+よって固定した接尾部 $\psi$ に対しては，
+$\operatorname{wt}(\theta)$ と $\operatorname{wt}(\psi)$
+を比較すれば，いずれの場合か判定できる．
+\end{enumerate}
 
 \begin{lemma}\label{lem:app-recognition}
-$0\le i\le n$，任意のスタック $\psi$ と $w\in\Gamma_{\mathrm{br}}^*$ について，
+$0\le i\le n$，任意のスタック $\psi$ について，
 $E_i\psi\xrightarrow{w}\psi$ と $w\in L_i$ は同値である．
-さらに $\sigma\xrightarrow{w}\theta$ かつ $w\in L_i$ なら，
-あるスタック $\psi$ について $\sigma=E_i\psi$，$\theta=\psi$ となる．
+特に解析器はちょうど $L_n$ を受理する．
+さらに $\sigma\xrightarrow{w}\theta$ かつ $w\in L_i$ なら
+$\sigma=E_i\theta$ である．
 \end{lemma}
 \begin{proof}
-$E_i\psi\xrightarrow{w}\psi$ とする．前述の接尾部保存性より，計算は必ず
-$\psi$ に初めて到達する．到達しなければ終状態は
-$\upsilon'\psi$（$\upsilon'\ne\lambda$）となるからである．
-厳密な重み減少性により，その後の入力は空でなければならない．
-従ってこの計算は，$E_i\xrightarrow{w}\lambda$ に
-接尾部 $\psi$ を保持したものに等しい．逆方向の持ち上げも可能である．
+$E_i\psi\xrightarrow{w}\psi$ とする．(P3)を
+$\sigma_1=E_i$ として適用すると，(b)では終状態が
+$\theta_1\psi\ne\psi$ となるから，(a)でなければならない．
+従って $w=w_1w_2$，
+$E_i\xrightarrow{w_1}\lambda$，
+$\psi\xrightarrow{w_2}\psi$ と分割される．
+(P2)から $w_2=\lambda$ である．(P3)の接尾部を保持した
+持ち上げも使えば，$E_i\xrightarrow{w}\lambda$ と
+$w\in L_i$ の同値性を示せば十分である．
+これを $i$ に関する帰納法で示す．
+$i=0$ では $E_0$ から唯一可能な $\mathtt a$-遷移が
+空スタックに至り，その後は遷移できない．
+$i\ge1$ では最初の入力文字は $\lceil$ または
+$\lfloor$ である．$\lceil$ の後のスタックは
+$E_{i-1}\rceil$ であり，これを空にする必要がある．
+終状態が $\lambda$ なので(P3)の(b)は不可能であり，
+$\sigma_1=E_{i-1}$，$\psi=\rceil$ として(a)を適用すると，
+残りの入力は $zz'$ と分かれ，
+$E_{i-1}\xrightarrow{z}\lambda$，
+$\rceil\xrightarrow{z'}\lambda$ となる．
+従って $z'=\rceil$ である．$\lfloor$ の後は
+$E_{i-1}E_{i-1}\rfloor$ に同じ分割を二度適用すれば，
+入力は $z_1z_2\rfloor$ の形で，
+$E_{i-1}\xrightarrow{z_j}\lambda$ を満たす．
+帰納法から，$E_i\xrightarrow{w}\lambda$ と
+$w\in\lceil{}L_{i-1}\rceil\cup\lfloor{}L_{i-1}L_{i-1}\rfloor=L_i$
+は同値であり，逆方向の計算は(P3)の持ち上げで構成できる．
 
-$E_i\xrightarrow{w}\lambda$ と $w\in L_i$ の同値性を
-$i$ に関する帰納法で示す．$i=0$ では唯一の遷移が
-$\mathtt a$ を読んで空スタックに至る．$i\ge1$ では，
-最初の文字は $\lceil$ または $\lfloor$ に限られる．
-単項の場合，遷移後のスタックは $E_{i-1}\rceil$ であり，
-接尾部保存性により，最後の $\rceil$ を読む前に
-$E_{i-1}$ を完全に処理する必要がある．
-従って $w=\lceil{}z\rceil$ で
-$E_{i-1}\xrightarrow{z}\lambda$，すなわち帰納法から $z\in L_{i-1}$ である．
-二分の場合，遷移後は $E_{i-1}E_{i-1}\rfloor$ である．
-二つの $E_{i-1}$ に順に同じ接尾部保存性を適用すれば，
-$w=\lfloor z_1z_2\rfloor$，$z_1,z_2\in L_{i-1}$ を得る．
-逆に，これらの形の任意の語は対応する遷移で読み終えられる．
-
-最後の主張を示す．$w$ の先頭の $i$ 文字は開き括弧で，
-次が $\mathtt a$ である．最初の文字（$i=0$ なら $\mathtt a$）を
-読むには $\sigma=E_k\psi$ が必要である．開き括弧を読むたびに
-頂点の添字は1ずつ減り，次の $\mathtt a$ が読めるのは $k=i$ の場合だけである．
-前半の同値性と決定性から $\theta=\psi$ が従う．
+最後の主張は，前半から
+$E_i\theta\xrightarrow{w}\theta$ が成り立つので，
+(P1)の単射性により $\sigma=E_i\theta$ を得る．
 \end{proof}
 
 \begin{lemma}\label{lem:app-complete-subtree-exchange}
-$0\le i\le n$，$w,w'\in L_i$ なら $w\equiv_{L_n}w'$ である．
+$0\le i\le n$，$w,w'\in L_i$ なら
+$w\equiv_{L_n}w'$ である．
 \end{lemma}
 \begin{proof}
-任意の受理計算
-$E_n\xrightarrow{p}\sigma\xrightarrow{w}\theta\xrightarrow{q}\lambda$ を考える．
-補題~\ref{lem:app-recognition} より $\sigma=E_i\psi$，$\theta=\psi$ である．
-同じ補題より $E_i\psi\xrightarrow{w'}\psi$ も成立する．
-従って $(p,q)\in\D_{L_n}(w)$ なら $(p,q)\in\D_{L_n}(w')$ である．
-対称性から両分布は等しい．
+$pwq\in L_n$ とする．補題~\ref{lem:app-recognition} により
+\[
+E_n\xrightarrow{p}\sigma\xrightarrow{w}\theta
+\xrightarrow{q}\lambda
+\]
+という計算が存在し，$\sigma=E_i\theta$ となる．
+同じ補題により
+$E_i\theta\xrightarrow{w'}\theta$ だから
+$pw'q\in L_n$ である．$w,w'$ を入れ替えると
+逆向きの含意も成立する．
 \end{proof}
 
 \begin{lemma}[分岐同期]\label{lem:app-branch-synchronization}
-非空語 $x,y$ の先頭文字が異なり，
-$\sigma\xrightarrow{x}\theta$，$\sigma\xrightarrow{y}\theta$ なら，
-ある $1\le i\le n$ とスタック $\psi$ について $\sigma=E_i\psi$ であり，
-$x=wx'$，$y=w'y'$，$w,w'\in L_i$ と分解でき，
-$\psi\xrightarrow{x'}\theta$，$\psi\xrightarrow{y'}\theta$ が成り立つ．
+$\sigma\xrightarrow{x}\theta$ と
+$\sigma\xrightarrow{y}\theta$ を満たす非空語 $x,y$ の
+先頭文字が異なるとする．このとき，
+ある $1\le i\le n$ とスタック $\psi$ について
+$\sigma=E_i\psi$ であり，$x=wx'$，$y=w'y'$，
+$w,w'\in L_i$ と分解でき，
+$\psi\xrightarrow{x'}\theta$，
+$\psi\xrightarrow{y'}\theta$ が成り立つ．
 \end{lemma}
 \begin{proof}
-初手が二通りあるのは $E_i\psi$ の場合だけで，
-読む文字は $\lceil$ と $\lfloor$ である．
-$x$ が前者，$y$ が後者とすると，最初の遷移後の状態は
-$E_{i-1}\rceil\psi$ と $E_{i-1}E_{i-1}\rfloor \psi$ になる．
-初めて $\psi$ に到達するまでは，接尾部保存性と末尾記号保存性から，
-それぞれ $A\rceil\psi$，$B\rfloor \psi$ の形を保つ．
-その重みは $\operatorname{wt}(\psi)$ より大きい．
-$\psi$ に到達した時の重みは等しく，その後の遷移では小さくなる．
-従って両計算が同じ $\theta$ で終わるなら，双方とも $\psi$ に到達するか，
-双方とも到達しないかのいずれかである．
-後者では $A\rceil\psi=B\rfloor \psi$ となるが，
-自由モノイドの右消去律より $A\rceil=B\rfloor$ が従い，
-末尾記号が異なるので矛盾する．
-よって双方とも $\psi$ に到達する．その時点までに読んだ接頭語
-$w,w'$ は補題~\ref{lem:app-recognition} より $L_i$ に属し，
-残りの語はともに $\psi$ から $\theta$ に至る．
+異なる二文字を初手で読めるのは，頂点が $E_i$
+（$i\ge1$）の場合だけであり，その二文字は
+$\lceil,\lfloor$ である．$x=\lceil x_0$，
+$y=\lfloor y_0$ とすると，
+\[
+E_{i-1}\rceil\psi\xrightarrow{x_0}\theta,\qquad
+E_{i-1}E_{i-1}\rfloor\psi\xrightarrow{y_0}\theta
+\]
+となる．双方に共通の接尾部 $\psi$ について(P3)を適用する．
+$\operatorname{wt}(\theta)$ と $\operatorname{wt}(\psi)$
+の比較により，双方は同じ場合に属する．
+(b)なら $\theta=\theta_1\psi=\theta_2\psi$ であり，
+右消去律から $\theta_1=\theta_2$ となる．しかし
+$\theta_1$ の末尾は $\rceil$，
+$\theta_2$ の末尾は $\rfloor$ であり矛盾する．
+従って(a)が成立し，$x_0=x_1x'$ と分割されて
+$E_{i-1}\rceil\xrightarrow{x_1}\lambda$，
+$\psi\xrightarrow{x'}\theta$ を満たす．
+$w:=\lceil x_1$ とおくと
+$E_i\xrightarrow{w}\lambda$ なので，
+補題~\ref{lem:app-recognition} より $w\in L_i$ である．
+$y$ についても同様に $y=w'y'$ を得る．
 \end{proof}
 
 \begin{proposition}\label{prop:app-path-congruence}
-任意のスタック $\sigma,\theta$ と $x,y\in\Gamma_{\mathrm{br}}^*$ について，
-$\sigma\xrightarrow{x}\theta$ かつ $\sigma\xrightarrow{y}\theta$ なら $x\equiv_{L_n}y$ である．
+$\sigma\xrightarrow{x}\theta$ かつ
+$\sigma\xrightarrow{y}\theta$ なら
+$x\equiv_{L_n}y$ である．
 \end{proposition}
 \begin{proof}
 $|x|+|y|$ に関する帰納法を用いる．
-$x=\lambda$ なら $\sigma=\theta$ なので，重みの厳密減少性により $y=\lambda$ である．
-$y=\lambda$ の場合も同様．
-$x=cx'$，$y=cy'$ と先頭文字が等しければ，
-決定性により一文字読んだ後の状態は共通であり，
-帰納法から $x'\equiv_{L_n}y'$，従って $x\equiv_{L_n}y$ となる．
-先頭文字が異なるときは補題~\ref{lem:app-branch-synchronization}
-によって $x=wx'$，$y=w'y'$（$w,w'\in L_i$）と分解され，
-$\psi\xrightarrow{x'}\theta$，$\psi\xrightarrow{y'}\theta$ となる．
-取り除いた接頭語は非空だから，帰納法で $x'\equiv_{L_n}y'$ を得る．
-補題~\ref{lem:app-complete-subtree-exchange} により
-$w\equiv_{L_n}w'$ である．構文合同のモノイド合同性から
+$x$ または $y$ が空語なら $\sigma=\theta$ であり，
+(P2)から他方も空語である．
+$x=cx'$，$y=cy'$ と先頭文字が同じなら，
+決定性から $\sigma\xrightarrow{c}\sigma'$ かつ
+$\sigma'\xrightarrow{x'}\theta$，
+$\sigma'\xrightarrow{y'}\theta$ である．
+帰納法により $x'\equiv_{L_n}y'$，従って
+$x\equiv_{L_n}y$ となる．
+先頭文字が異なる場合は
+補題~\ref{lem:app-branch-synchronization} により
+$x=wx'$，$y=w'y'$ と分解できる．
+$w,w'$ は非空なので帰納法から
+$x'\equiv_{L_n}y'$ を得る．
+補題~\ref{lem:app-complete-subtree-exchange} より
+$w\equiv_{L_n}w'$ であり，構文合同のモノイド合同性から
 $wx'\equiv_{L_n}w'y'$ が従う．
 \end{proof}
 
 \begin{proof}[命題~\ref{prop:typed-thickness-gap}(i) の証明]
-$x,y\in\Gamma_{\mathrm{br}}^+$ および
-$(u,v)\in\D_{L_n}(x)\cap\D_{L_n}(y)$ とする．
-$E_n$ から空スタックへの二つの受理計算は，
-決定性により共通接頭語 $u$ の直後で同じ状態 $\sigma$ に至る．
-共通接尾語 $v$ の直前の状態を $\theta_x,\theta_y$ とすれば，
-$\theta_x\xrightarrow{v}\lambda$，$\theta_y\xrightarrow{v}\lambda$ である．
-語作用の部分単射性から $\theta_x=\theta_y=:\theta$ となる．
-従って $\sigma\xrightarrow{x}\theta$，$\sigma\xrightarrow{y}\theta$ であり，
-命題~\ref{prop:app-path-congruence} より
+有限言語 $L_n$ は文脈自由である．
+$x,y\in\Gamma_{\mathrm{br}}^+$ と
+$(u,v)\in\D_{L_n}(x)\cap\D_{L_n}(y)$ を取る．
+補題~\ref{lem:app-recognition} より
+\[
+E_n\xrightarrow{u}\sigma\xrightarrow{x}\theta
+\xrightarrow{v}\lambda,\qquad
+E_n\xrightarrow{u}\sigma'\xrightarrow{y}\theta'
+\xrightarrow{v}\lambda
+\]
+となる受理計算が存在する．(P1)の決定性により
+$\sigma=\sigma'$，さらに(P1)の単射性により
+$\theta=\theta'$ となる．従って
+命題~\ref{prop:app-path-congruence} から
+$x\equiv_{L_n}y$，すなわち
 $\D_{L_n}(x)=\D_{L_n}(y)$ である．
-$L_n$ は有限ゆえ文脈自由であり，Clark--Eyraud の意味で代入可能だから
-$L_n\in\Ccf{s_0}\cap\Ccf{s_{\mathrm U}}$ が従う．
+よって $L_n$ は Clark--Eyraud の意味で代入可能である．
+条件 $s(x)=s(y)$ を追加すると前提が弱まるだけなので，
+$L_n$ は任意の $s$ に関して $\sim_s$-代入可能であり，
+特に $L_n\in\Ccf{s_0}\cap\Ccf{s_{\mathrm U}}$ が従う．
 \end{proof}
 
 \begin{thebibliography}{99}

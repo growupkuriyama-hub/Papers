@@ -2323,164 +2323,172 @@ of polynomial encoded size.
 \section{Substitutability of the bracketed doubling family}
 \label{app:bracketed-substitutability}
 
-Set $L_0=\{\mathtt a\}$. The languages $L_n=L(G_n)$ from
-Proposition~\ref{prop:typed-thickness-gap} satisfy
-$L_n=\lceil{}L_{n-1}\rceil\cup\lfloor{}L_{n-1}L_{n-1}\rfloor$
-for $n\ge1$, and $L_{G_n}(E_i)=L_i$ for $0\le i\le n$.
-Induction on $i$ shows that every word of $L_i$ starts with exactly
-$i$ opening brackets followed by $\mathtt a$.
-We prove substitutability directly by a deterministic, reversible
-top-down parser.
+Put $L_0=\{\mathtt a\}$ and
+$L_i=\lceil{}L_{i-1}\rceil\cup\lfloor{}L_{i-1}L_{i-1}\rfloor$ for $i\ge1$;
+thus $L_{G_n}(E_i)=L_i$ for $0\le i\le n$, and $L_n=L(G_n)$.
+Fix $n\ge1$. We prove
+Proposition~\ref{prop:typed-thickness-gap}(i) with a deterministic
+top-down parser for $G_n$ whose transitions are injective for
+each fixed input letter.
 
-\paragraph{Parser and stack properties.}
-Fix $n\ge1$. A stack is a word over $E_0,\ldots,E_n$ and the closing
-terminals $\rceil$ and $\rfloor$, with its top on the left.
-The empty stack is $\lambda$. When recognizing $L_n$, we take
-$E_n$ as the initial stack and $\lambda$ as the accepting stack.
-For an arbitrary stack $\psi$ and $1\le i\le n$, all transitions are
+\paragraph{The parser.}
+A \emph{stack} is a word over $E_0,\ldots,E_n,\rceil,\rfloor$, with its
+top on the left; $\lambda$ is the empty stack. For every stack $\psi$
+and $1\le i\le n$ the moves are
 \[
 \begin{aligned}
 E_0\psi&\xrightarrow{\mathtt a}\psi,&
 E_i\psi&\xrightarrow{\lceil}E_{i-1}\rceil\psi,&
-E_i\psi&\xrightarrow{\lfloor}E_{i-1}E_{i-1}\rfloor \psi,\\
+E_i\psi&\xrightarrow{\lfloor}E_{i-1}E_{i-1}\rfloor\psi,\\
 \rceil\psi&\xrightarrow{\rceil}\psi,&
-\rfloor \psi&\xrightarrow{\rfloor}\psi.
+\rfloor\psi&\xrightarrow{\rfloor}\psi,
 \end{aligned}
 \]
-Write $\sigma\xrightarrow{w}\theta$ for the run reading $w$ from $\sigma$ to $\theta$.
-These transitions are deterministic. For each fixed input letter they
-are also injective: its output either reveals the unique expanded
-$E_i$ and the untouched suffix, or results from deleting a top
-symbol determined by that input letter. Hence every word acts as a
-partial injection: if $\sigma\xrightarrow{v}\theta_{\mathrm{out}}$ and $\theta\xrightarrow{v}\theta_{\mathrm{out}}$,
-then $\sigma=\theta$.
+and there are no others; in particular, no move leaves $\lambda$.
+Write $\sigma\xrightarrow{w}\theta$ if reading $w$ from $\sigma$ ends
+in $\theta$. The parser starts with the stack $E_n$ and accepts $w$ if
+$E_n\xrightarrow{w}\lambda$; Lemma~\ref{lem:app-recognition} shows that
+it accepts exactly $L_n$. We use three properties.
 
-Assign weight $4^i$ to $E_i$ and weight $1$ to either closing marker,
-and sum over stacks. Every transition strictly decreases weight:
-the $\mathtt a$-transition and both closing-marker pops remove weight $1$,
-while $4^i>2\cdot4^{i-1}+1>4^{i-1}+1$ for $i\ge1$.
-In particular $\sigma\xrightarrow{w}\sigma$ implies $w=\lambda$.
-Two elementary stack facts will be used. First, in a run from $\upsilon\vartheta$
-with $\upsilon\ne\lambda$, until its first visit to $\vartheta$ the stack has the
-form $\upsilon'\vartheta$ with $\upsilon'\ne\lambda$ and its moves affect only $\upsilon'$.
-If it visits $\vartheta$, the run splits as $\upsilon\xrightarrow{w_1}\lambda$
-followed by $\vartheta\xrightarrow{w_2}\theta$, where $w=w_1w_2$;
-otherwise it ends at $\upsilon'\vartheta$ with $\upsilon'\ne\lambda$.
-The visit to $\vartheta$ can occur at most once by strict weight decrease.
-Second, since only the top symbol is rewritten, a nonempty stack
-whose last symbol is $\rceil$ (respectively $\rfloor$) retains
-that last symbol until the entire stack is popped.
+\begin{enumerate}[label=\textup{(P\arabic*)},leftmargin=2.6em]
+\item \emph{Determinism and letterwise injectivity.}
+For each input letter $c$, the transition relation
+defines a partial injective map on stacks:
+there is at most one $c$-successor of each stack,
+and two $c$-transitions with the same target
+have the same source.
+For opening brackets, the output reveals the
+expanded $E_i$ and the untouched suffix;
+for $\mathtt a$, $\rceil$, and $\rfloor$,
+the input letter identifies the popped top symbol.
+Consequently every word acts as a partial injection
+on stacks: if $\sigma\xrightarrow{w}\theta$ and
+$\sigma\xrightarrow{w}\theta'$, then $\theta=\theta'$;
+if $\sigma\xrightarrow{w}\theta$ and
+$\sigma'\xrightarrow{w}\theta$, then $\sigma=\sigma'$.
+
+\item \emph{Weight.} Give $E_i$ weight $4^i$ and each closing marker
+weight $1$, and let $\operatorname{wt}(\sigma)$ be the total weight of
+a stack $\sigma$. Every move lowers $\operatorname{wt}$:
+each pop removes weight $1$, and
+$4^i>2\cdot4^{i-1}+1$ for $i\ge1$.
+Hence $\sigma\xrightarrow{w}\sigma$ only for $w=\lambda$.
+
+\item \emph{Locality.} Moves inspect and rewrite only the top symbol,
+and closing markers are only popped. Hence
+$\sigma\xrightarrow{w}\theta$ implies
+$\sigma\psi\xrightarrow{w}\theta\psi$. Conversely, let
+$\sigma_1\ne\lambda$ and $\sigma_1\psi\xrightarrow{w}\theta$. Then
+either
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item the run visits $\psi$: splitting at the first visit gives
+$w=w_1w_2$ with $\sigma_1\xrightarrow{w_1}\lambda$ and
+$\psi\xrightarrow{w_2}\theta$, so
+$\operatorname{wt}(\theta)\le\operatorname{wt}(\psi)$; or
+\item it does not: $\theta=\theta_1\psi$ with
+$\sigma_1\xrightarrow{w}\theta_1\ne\lambda$, so
+$\operatorname{wt}(\theta)>\operatorname{wt}(\psi)$, and $\theta_1$ ends
+with the last symbol of $\sigma_1$ whenever that symbol is a closing
+marker.
+\end{enumerate}
+Thus, for the fixed suffix $\psi$, the comparison of
+$\operatorname{wt}(\theta)$ with $\operatorname{wt}(\psi)$
+determines which case occurs.
+\end{enumerate}
 
 \begin{lemma}\label{lem:app-recognition}
-For $0\le i\le n$, every stack $\psi$ and $w\in\Gamma_{\mathrm{br}}^*$,
-$E_i\psi\xrightarrow{w}\psi$ if and only if $w\in L_i$.
-Moreover, if $\sigma\xrightarrow{w}\theta$ and $w\in L_i$, then
-$\sigma=E_i\psi$ and $\theta=\psi$ for some stack $\psi$.
+For $0\le i\le n$ and every stack $\psi$,
+$E_i\psi\xrightarrow{w}\psi$ if and only if $w\in L_i$; in particular,
+the parser accepts exactly $L_n$. Moreover, if
+$\sigma\xrightarrow{w}\theta$ and $w\in L_i$, then $\sigma=E_i\theta$.
 \end{lemma}
 \begin{proof}
-If $E_i\psi\xrightarrow{w}\psi$, the suffix property forces a first
-visit to $\psi$ (otherwise the final stack would be $\upsilon'\psi$ with
-$\upsilon'\ne\lambda$). The remaining input must be empty by strict
-weight decrease. Thus this run is exactly a run
-$E_i\xrightarrow{w}\lambda$ with the suffix $\psi$ retained.
-Conversely, any such run from $E_i$ lifts to one from $E_i\psi$.
+A run $E_i\psi\xrightarrow{w}\psi$ falls under case~(a) of (P3) with
+$\sigma_1=E_i$, since case~(b) would end at $\theta_1\psi\ne\psi$. So
+$w=w_1w_2$ with $E_i\xrightarrow{w_1}\lambda$ and
+$\psi\xrightarrow{w_2}\psi$, and $w_2=\lambda$ by (P2). Together with
+the lifting in (P3), it suffices to show that $E_i\xrightarrow{w}\lambda$
+iff $w\in L_i$. We induct on $i$. From $E_0$ only the $\mathtt a$-move
+is possible, and $\lambda$ admits no further move. For $i\ge1$, the
+first move reads $\lceil$ or $\lfloor$. After $\lceil$, the stack
+$E_{i-1}\rceil$ must be emptied; as its target $\lambda$ excludes
+case~(b), (P3) with $\sigma_1=E_{i-1}$ and $\psi=\rceil$ splits the
+remaining input as $zz'$ with $E_{i-1}\xrightarrow{z}\lambda$ and
+$\rceil\xrightarrow{z'}\lambda$, whence $z'=\rceil$. After $\lfloor$,
+two such splittings of $E_{i-1}E_{i-1}\rfloor$ give
+$z_1z_2\rfloor$ with $E_{i-1}\xrightarrow{z_j}\lambda$. By induction,
+$E_i\xrightarrow{w}\lambda$ iff
+$w\in\lceil{}L_{i-1}\rceil\cup\lfloor{}L_{i-1}L_{i-1}\rfloor=L_i$, the
+required runs being obtained by lifting.
 
-We prove $E_i\xrightarrow{w}\lambda$ iff $w\in L_i$ by induction
-on $i$. For $i=0$, the only possible run is the single
-$\mathtt a$-transition. For $i\ge1$, a run must start with
-$\lceil$ or $\lfloor$. In the unary case the stack becomes
-$E_{i-1}\rceil$. The suffix property forces the child
-$E_{i-1}$ to be completely processed before the final
-$\rceil$ is popped. Hence $w=\lceil{}z\rceil$
-with $E_{i-1}\xrightarrow{z}\lambda$, equivalently
-$z\in L_{i-1}$ by induction. In the binary case the stack becomes
-$E_{i-1}E_{i-1}\rfloor$. Applying the same suffix property
-successively to its first and second $E_{i-1}$ forces
-$w=\lfloor z_1z_2\rfloor$ with $z_1,z_2\in L_{i-1}$.
-Both decompositions conversely give accepting runs, proving
-the equivalence.
-
-For the final assertion, the first $i$ letters of $w$ are openers,
-followed by $\mathtt a$. The first opener (or $\mathtt a$ if $i=0$)
-requires $\sigma=E_k\psi$. Each opener decreases the exposed index by
-one, so the following $\mathtt a$ requires $k=i$.
-The established equivalence and determinism give $\theta=\psi$.
+For the last claim, the first part gives
+$E_i\theta\xrightarrow{w}\theta$, and (P1) gives $\sigma=E_i\theta$.
 \end{proof}
 
 \begin{lemma}\label{lem:app-complete-subtree-exchange}
-If $0\le i\le n$ and $w,w'\in L_i$, then
-$w\equiv_{L_n}w'$.
+If $0\le i\le n$ and $w,w'\in L_i$, then $w\equiv_{L_n}w'$.
 \end{lemma}
 \begin{proof}
-In any run $E_n\xrightarrow{p}\sigma\xrightarrow{w}\theta
-\xrightarrow{q}\lambda$, Lemma~\ref{lem:app-recognition}
-forces $\sigma=E_i\psi$ and $\theta=\psi$.
-The same lemma permits $E_i\psi\xrightarrow{w'}\psi$.
-Thus $(p,q)\in\D_{L_n}(w)$ implies
-$(p,q)\in\D_{L_n}(w')$; symmetry gives equality.
+If $pwq\in L_n$, Lemma~\ref{lem:app-recognition} gives a run
+$E_n\xrightarrow{p}\sigma\xrightarrow{w}\theta\xrightarrow{q}\lambda$
+with $\sigma=E_i\theta$. The same lemma gives
+$E_i\theta\xrightarrow{w'}\theta$, so $pw'q\in L_n$. Exchanging
+$w$ and $w'$ proves the converse.
 \end{proof}
 
 \begin{lemma}[branch synchronization]\label{lem:app-branch-synchronization}
-If $\sigma\xrightarrow{x}\theta$ and $\sigma\xrightarrow{y}\theta$ for nonempty
-words with different first letters, then $\sigma=E_i\psi$ for some
-$1\le i\le n$ and some stack $\psi$, and there are decompositions
-$x=wx'$ and $y=w'y'$ with $w,w'\in L_i$ such that
+Let $\sigma\xrightarrow{x}\theta$ and $\sigma\xrightarrow{y}\theta$,
+where $x,y$ are nonempty and begin with different letters. Then
+$\sigma=E_i\psi$ for some $1\le i\le n$ and some stack $\psi$, and
+$x=wx'$, $y=w'y'$ with $w,w'\in L_i$,
 $\psi\xrightarrow{x'}\theta$ and $\psi\xrightarrow{y'}\theta$.
 \end{lemma}
 \begin{proof}
-Only $E_i\psi$ admits two initial moves, reading $\lceil$
-and $\lfloor$. Say these occur for $x$ and $y$, leaving
-$E_{i-1}\rceil\psi$ and $E_{i-1}E_{i-1}\rfloor \psi$.
-Until the first visit to $\psi$, the suffix property and the
-last-marker property force the respective stacks to have the
-forms $A\rceil\psi$ and $B\rfloor \psi$. Each then has weight
-strictly greater than that of $\psi$. At the first visit to $\psi$
-the weight equals that of $\psi$, and after any further move it
-is smaller. Thus, if both runs end at the same $\theta$, either
-both visit $\psi$ or neither does. In the latter case
-$A\rceil\psi=B\rfloor \psi$ at $\theta$; right cancellation
-would give $A\rceil=B\rfloor$, impossible because
-the last markers differ. Both runs therefore visit $\psi$.
-Their prefixes up to these visits are in $L_i$ by
-Lemma~\ref{lem:app-recognition}, and their remaining
-suffixes take $\psi$ to $\theta$, as required.
+Only a top $E_i$ with $i\ge1$ admits two different letters, namely
+$\lceil$ and $\lfloor$. Say $x=\lceil x_0$ and $y=\lfloor y_0$, so
+$E_{i-1}\rceil\psi\xrightarrow{x_0}\theta$ and
+$E_{i-1}E_{i-1}\rfloor\psi\xrightarrow{y_0}\theta$. Apply (P3) to both
+runs with this $\psi$. Since the comparison of
+$\operatorname{wt}(\theta)$ with $\operatorname{wt}(\psi)$ decides the
+case, both runs are in the same case. Case~(b) is impossible:
+$\theta=\theta_1\psi=\theta_2\psi$ would give $\theta_1=\theta_2$,
+although $\theta_1$ ends with $\rceil$ and $\theta_2$ with $\rfloor$.
+In case~(a), $x_0=x_1x'$ with $E_{i-1}\rceil\xrightarrow{x_1}\lambda$
+and $\psi\xrightarrow{x'}\theta$. Thus $w:=\lceil x_1$ satisfies
+$E_i\xrightarrow{w}\lambda$, and $w\in L_i$ by
+Lemma~\ref{lem:app-recognition}. The same argument gives $y=w'y'$.
 \end{proof}
 
 \begin{proposition}\label{prop:app-path-congruence}
-For arbitrary stacks $\sigma,\theta$ and words $x,y\in\Gamma_{\mathrm{br}}^*$,
-if $\sigma\xrightarrow{x}\theta$ and $\sigma\xrightarrow{y}\theta$, then
+If $\sigma\xrightarrow{x}\theta$ and $\sigma\xrightarrow{y}\theta$, then
 $x\equiv_{L_n}y$.
 \end{proposition}
 \begin{proof}
-Induct on $|x|+|y|$. If $x=\lambda$, then $\sigma=\theta$, so
-$y=\lambda$ by strict weight decrease; the symmetric case
-is identical. If $x=cx'$ and $y=cy'$ share their first letter,
-determinism gives a common state after $c$, and induction
-gives $x'\equiv_{L_n}y'$, hence $x\equiv_{L_n}y$.
-Otherwise Lemma~\ref{lem:app-branch-synchronization}
-gives $x=wx'$ and $y=w'y'$ with $w,w'\in L_i$ and
-$\psi\xrightarrow{x'}\theta$, $\psi\xrightarrow{y'}\theta$.
-The removed prefixes are nonempty, so induction applies to
-$x',y'$. Lemma~\ref{lem:app-complete-subtree-exchange}
-gives $w\equiv_{L_n}w'$. The monoid congruence property
-then gives $wx'\equiv_{L_n}w'y'$, as desired.
+Induct on $|x|+|y|$. If $x$ or $y$ is empty, then $\sigma=\theta$, and
+the other is empty by (P2). If $x=cx'$ and $y=cy'$ for a letter $c$,
+determinism gives $\sigma\xrightarrow{c}\sigma'$ with
+$\sigma'\xrightarrow{x'}\theta$ and $\sigma'\xrightarrow{y'}\theta$, so
+$x'\equiv_{L_n}y'$ by induction and hence $x\equiv_{L_n}y$. Otherwise
+Lemma~\ref{lem:app-branch-synchronization} gives $x=wx'$ and $y=w'y'$
+as there. Since $w,w'$ are nonempty, induction gives
+$x'\equiv_{L_n}y'$, Lemma~\ref{lem:app-complete-subtree-exchange} gives
+$w\equiv_{L_n}w'$, and $\equiv_{L_n}$ is a monoid congruence.
 \end{proof}
 
 \begin{proof}[Proof of Proposition~\ref{prop:typed-thickness-gap}(i)]
-Let $x,y\in\Gamma_{\mathrm{br}}^+$ and
-$(u,v)\in\D_{L_n}(x)\cap\D_{L_n}(y)$.
-The two accepting runs from $E_n$ to $\lambda$
-reach the same stack $\sigma$ after $u$ by determinism.
-Their stacks $\theta_x,\theta_y$ before $v$ satisfy
-$\theta_x\xrightarrow{v}\lambda$ and
-$\theta_y\xrightarrow{v}\lambda$. Partial injectivity of
-the word action gives $\theta_x=\theta_y=:\theta$.
-Thus $\sigma\xrightarrow{x}\theta$ and $\sigma\xrightarrow{y}\theta$.
-Proposition~\ref{prop:app-path-congruence} gives
-$\D_{L_n}(x)=\D_{L_n}(y)$.
-Since $L_n$ is finite and hence context-free, it is
-Clark--Eyraud substitutable and belongs to
-$\Ccf{s_0}\cap\Ccf{s_{\mathrm U}}$.
+The finite language $L_n$ is context-free. Let
+$x,y\in\Gamma_{\mathrm{br}}^+$ and
+$(u,v)\in\D_{L_n}(x)\cap\D_{L_n}(y)$. By
+Lemma~\ref{lem:app-recognition} there are runs
+$E_n\xrightarrow{u}\sigma\xrightarrow{x}\theta\xrightarrow{v}\lambda$
+and
+$E_n\xrightarrow{u}\sigma'\xrightarrow{y}\theta'\xrightarrow{v}\lambda$.
+By (P1), $\sigma=\sigma'$ and $\theta=\theta'$, so
+Proposition~\ref{prop:app-path-congruence} gives $x\equiv_{L_n}y$, that
+is, $\D_{L_n}(x)=\D_{L_n}(y)$. Thus $L_n$ is Clark--Eyraud
+substitutable. Adding the premise $s(x)=s(y)$ only weakens this
+condition, so $L_n$ is $\sim_s$-substitutable for every $s$; in
+particular $L_n\in\Ccf{s_0}\cap\Ccf{s_{\mathrm U}}$.
 \end{proof}
 
 \begin{thebibliography}{99}
