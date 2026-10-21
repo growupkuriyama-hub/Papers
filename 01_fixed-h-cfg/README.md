@@ -1,13 +1,13 @@
-# #1 TCS — 現行編集版 v255（PDF/ZIP CI検証済み） / 凍結記録 v249
+# #1 TCS — 編集正本 v256（PDF/ZIP再生成待ち） / 凍結記録 v249
 
-> **編集正本：`main` のv255 TeX（2026-10-21）。付録Cの解析器で初期スタック `E_n` と受理スタック `λ` を英日両方に明記。英文・和文Clean PDF／Marked PDF／英文回答書PDF／提出ZIPのv255向けCI再生成は成功。TCSへは未再投稿です。**  
+> **編集正本：`main` のv256 TeX（2026-10-21）。査読回答の最終小修正、§1.2用語の説明、完全性証明の記号整理、黒下線リンクの改行可能化を英日同期。PDF／回答書／ZIPはv256向けCI再生成待ち。TCSへは未再投稿です。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v255の編集：付録C「解析器とスタックの性質」に初期／受理スタックの明示を追加。v254の§1.2改訂・査読回答修正は維持。v249は最後の凍結・検証済み記録。**
+> **v256の編集：LI∨Grpと識別対の説明、h→ν、Yoshinaka帰属の重複除去、R2.1の研究意義、Overfull対策。v255の付録C修正とv254の§1.2改訂は維持。v249は最後の凍結・検証済み記録。**
 
-**v255検証済み： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
+**v256のCI検証後に取得： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（v255、CI検証済み）
+## 提出に使用する3ファイル（v256、CI再生成待ち）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,10 +23,10 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v255`** とv249凍結履歴を参照
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v256`** とv249凍結履歴を参照
 - [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
 
-### v255自動検証（2026-10-21）
+### v255の過去検証記録（2026-10-21。v256の検証を意味しない）
 
 - [英文・日本語Clean PDF（Actions 39570364619）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39570364619)：成功。
 - [Marked PDF・英文査読回答PDF・3ファイルZIP（Actions 39570364497）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39570364497)：成功。回答49項目・新Marked PDFに同期した77位置参照、ZIP3ファイルのCRC検証。
