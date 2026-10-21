@@ -1,13 +1,13 @@
-# #1 TCS — 現行編集版 v259（PDF/ZIP CI検証済み） / 凍結記録 v249
+# #1 TCS — 編集正本 v260（PDF/ZIP再生成待ち） / 凍結記録 v249
 
-> **編集正本：`main` のv259 TeX（2026-10-21）。Appendix A.1のdisplay数式を7箇所から1箇所に縮減し、Depth・Width・Countingの短い式を本文へ統合。英文・日本語を同期。Clean PDF・Marked PDF・英文回答書PDF・提出ZIPのCI再生成・検証に成功。TCSへは未再投稿です。**  
+> **編集正本：`main` のv260 TeX（2026-10-21）。§9の非線形標的 Δ* の証明で、境界整合入口オフセット集合を導入し、(★)/(★★)の特徴づけと代入可能性の論証を簡潔化。英日同期。PDF・Marked PDF・英文回答書・提出ZIPはv260向けCI検証待ち。TCSへは未再投稿です。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
-> **v259の編集：Appendix A.1の独立表示数式を最終上界の1箇所に限定（従前は7箇所）。補題の主張・数値的上界とv258までの証明内容を維持。v249は最後の凍結記録。**
+> **v260の編集：§9の Δ* の境界高さ特徴づけ、Qの形式的整数オフセットへの変更、7元型付けと代入可能性証明の整理。v259のAppendix A.1のコンパクト組版を維持。v249は最後の凍結記録。**
 
-**v259検証済み： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
+**v260のCI検証後に取得： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（v259、CI検証済み）
+## 提出に使用する3ファイル（v260、CI再生成待ち）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -23,10 +23,10 @@
 - **[英文編集正本 `main.tex`](main.tex)** — 数理原稿の唯一の編集正本。上記Clean TeXは同一内容の提出用コピー
 - [日本語論文PDF](japanese/main_JP.pdf) / [日本語論文TeX](japanese/main_JP.tex) — 研究・著者確認用
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
-- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v259`** とv249凍結履歴を参照
+- [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v260`** とv249凍結履歴を参照
 - [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
 
-### v259自動検証（2026-10-21）
+### v259の過去検証記録（2026-10-21。v260の検証ではない）
 
 - [英文・日本語Clean PDF（Actions 39583718360）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39583718360)：成功。英文26ページ、日本語30ページ。Overfull `\\hbox` 0件。
 - [Marked PDF・英文査読回答PDF・3ファイルZIP（Actions 39583718269）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39583718269)：成功。49項目／77箇所のMarked PDF参照を同期。ZIPは `unzip -t` と3ファイル件数検査を通過。
