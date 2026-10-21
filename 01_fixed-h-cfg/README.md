@@ -1,13 +1,13 @@
-# #1 TCS — 編集正本 v257（PDF/ZIP再生成待ち） / 凍結記録 v249
+# #1 TCS — 現行編集版 v257（PDF/ZIP CI検証済み） / 凍結記録 v249
 
-> **編集正本：`main` のv257 TeX（2026-10-21）。Appendix Cの証明を(P1)〜(P3)で整理し、文字ごとの単射性と固定接尾部との重み比較を明示。英文・日本語を同期。PDF・Marked PDF・英文回答書PDF・提出ZIPはv257用の再生成・検証待ち。TCSへは未再投稿です。**  
+> **編集正本：`main` のv257 TeX（2026-10-21）。Appendix Cの証明を(P1)〜(P3)で整理し、文字ごとの単射性と固定接尾部との重み比較を明示。英日同期。英文・日本語Clean PDF／Marked PDF／英文回答書PDF／提出ZIPのCI再生成・検証が成功。TCSへは未再投稿です。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
 > **v257の編集：Appendix Cを(P1)決定性・文字ごとの単射性、(P2)重み、(P3)局所性による明晰な証明へ改訂。v256までの本文・回答書修正は維持し、全補題ラベルも保存。v249は最後の凍結・検証済み記録。**
 
-**v257のCI検証後に取得： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
+**v257検証済み： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（v257、CI再生成待ち）
+## 提出に使用する3ファイル（v257、CI検証済み）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -25,6 +25,13 @@
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
 - [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v257`** とv249凍結履歴を参照
 - [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
+
+### v257自動検証（2026-10-21）
+
+- [英文・日本語Clean PDF（Actions 39576827492）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39576827492)：成功。英文26ページ、日本語30ページ、Overfull `\\hbox` 0件。
+- [Marked PDF・英文査読回答PDF・提出用3ファイルZIP（Actions 39576827244）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39576827244)：成功。Marked PDFに対応する回答49項目・余白行番号77箇所の参照を同期。ZIPは`unzip -t`と3ファイル件数検査を通過。
+- Appendix Cの5ラベルは英日とも保持。`main.tex`と提出用Clean TeXは同一Git blob。
+- 査読回答の日本語旧訳は未同期（英文提出ZIPには含まれない）。TCSには未再投稿。
 
 ### v256の過去検証記録（2026-10-21。v257の検証ではない）
 
