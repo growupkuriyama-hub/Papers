@@ -2145,109 +2145,134 @@ responsibility for the results and proofs presented in this article.
 
 \subsection{Proof of Lemma~\ref{lem:window-typed-yield}}
 \begin{proof}[Proof of Lemma~\ref{lem:window-typed-yield}]
-Put $m=k+\ell$, $q=|\mathsf H|$, $N=|V|$,
-$\bar\tau:=\tau_G+1$, $D_{\mathrm{dep}}:=(m+2)Nq$ and $W_{\mathrm{ess}}:=m+q$.
-Fix any retained typed copy $A_\mu$, including a
-copy of the original start symbol. If $\mu=\mathbf{1}_{\sharp}$,
-its only yield is $\lambda$. Otherwise choose a positive
-$w_0\in L_G(A)$ of type $\mu$ and put
-$\eta:=(s_{k,\ell}(w_0),g(w_0))$.
-Select a shortest \emph{nonempty} word $w\in L_G(A)$
-in this $(s_{k,\ell}\times g)$-fiber, and a derivation
-tree for $w$ with the fewest nonterminal nodes.
-The kernel hypothesis shows $\widehat s(w)=\mu$,
-and $|\omega(A_\mu)|\le|w|$. If $|w|<m$, the
-claimed bound is immediate.
+Put $m:=k+\ell$, $q:=|\mathsf H|$, $N:=|V|$, and
+$\bar\tau:=\tau_G+1$.
+Fix $A\in V$, possibly $S_0$, and a retained
+typed copy $A_\mu$ with $\mu\ne\mathbf{1}_{\sharp}$;
+the copy $A_{\mathbf{1}_{\sharp}}$ yields only $\lambda$.
+Let $\eta$ be the $(s_{k,\ell}\times g)$-value of some
+nonempty $w_0\in L_G(A)$ of $\widehat s$-type $\mu$.
+Among all derivation trees from $A$ yielding a nonempty word
+of $(s_{k,\ell}\times g)$-value $\eta$, choose $T$, with
+yield $w$, minimizing first $|w|$ and then the number
+of nonterminal nodes. The kernel hypothesis gives
+$\widehat s(w)=\mu$, so
+$|\omega(A_\mu)|\le|w|$ by
+Proposition~\ref{prop:typed-core}.
+The bound is immediate if $|w|<m$; hence assume
+$|w|\ge m$.
 
-Since $|w|\ge m=k+\ell$, the first $k$ and
-last $\ell$ positions are disjoint (either window
-block may be empty). Protect these letters and
-one additional letter as a \emph{nonemptiness
-anchor}; it may already lie in a window block.
-Let $\mathrm{Prot}$ be the protected position set, with
-$1\le d:=|\mathrm{Prot}|\le m+1$. In particular, the
-anchor also prevents a shortening to $\lambda$
-when $m=0$. Any replacement retaining the
-protected letters in order and the group value
-preserves nonemptiness and the prefix--suffix
-window, hence the $(s_{k,\ell}\times g)$-value.
+The first $k$ and last $\ell$ positions of $w$ are
+disjoint. Protect them and choose one arbitrary position
+of $w$ as a \emph{nonemptiness anchor}, which may already
+belong to a protected window. Let $\mathrm{Prot}$ be the
+union of these positions. Then
+$1\le d:=|\mathrm{Prot}|\le m+1$.
+In particular, when $m=0$ the anchor still prevents
+the word from becoming empty. We use the following
+minimality consequence:
+\begin{itemize}[leftmargin=2.2em]
+\item[$(\ast)$]
+If $w'$ arises by replacing pairwise disjoint factors of
+$w$ whose occurrences contain no protected position,
+and $g(w')=g(w)$, then $w'$ is nonempty and has the same
+$(s_{k,\ell}\times g)$-value $\eta$ as $w$.
+Thus a derivation tree from $A$ for such a $w'$ cannot
+have shorter yield, or the same yield length and
+fewer nonterminal nodes, than $T$.
+\end{itemize}
+Indeed, the first $k$ and last $\ell$ protected letters
+remain the corresponding windows, and
+$|w'|\ge d\ge1$.
 
-Consider all nonterminal occurrences of the chosen
-BUNF derivation, including unit and nullable nodes.
-At each node $z$ let $\operatorname{nt}(z)$ be its
-nonterminal label, $y(z)$ its possibly empty yield
-and $\operatorname{Mark}(z)$ the protected positions
-contained in its span. Marks are nested along
-each ancestor chain and assume at most $d+1$
-different values. The triple
-$(\operatorname{Mark}(z),\operatorname{nt}(z),g(y(z)))$
-cannot recur along a chain. Indeed, equal nonterminal
-labels permit grafting the lower derivation at
-the higher occurrence. Equality of $g(y(z))$
-preserves the group value of the entire word
-by the homomorphism property, and equality
-of marks retains all protected letters in order.
-The new word lies in the same nonempty fiber,
-and its length cannot increase. The grafted tree
-has strictly fewer nonterminal nodes. Strict
-shortening contradicts minimal word length,
-and equal length contradicts the tie break.
-Thus the tree has depth at most
-$(d+1)Nq\le D_{\mathrm{dep}}$.
+Consider only \emph{nonterminal occurrences} in $T$,
+including those arising from unit and nullable productions.
+For each such node $z$, let $X_z\in V$ be its label,
+$y_z$ its possibly empty terminal yield, and
+$P_z\subseteq\mathrm{Prot}$ the protected positions
+in its yield span. Call $z$ \emph{essential} if
+$P_z\ne\emptyset$ or $|y_z|>\bar\tau$.
 
-Call a node \emph{essential} when its yield span
-contains a protected position or its yield has
-length exceeding $\bar\tau$. At any depth at
-most $d$ nodes meet protected positions.
-If there were $d+q$ essential nodes at the
-same depth, choose $q$ disjoint unprotected
-long-yield nodes, ordered left-to-right, with
-yields $a_1,\ldots,a_q$ longer than $\bar\tau$.
-By the definition of ordinary thickness choose
-$b_i$ in the terminal language of each
-corresponding nonterminal, $|b_i|\le\tau_G$;
-the $b_i$ may be $\lambda$.
-
-Write $w=c_0a_1c_1\cdots a_qc_q$.
-Let
+\emph{Depth.}
+If a proper descendant $z'$ of $z$ satisfies
 \[
- r_j=g(a_1c_1\cdots a_jc_j),\quad
- t_j=g(b_1c_1\cdots b_jc_j),\quad
- x_j=t_jr_j^{-1},\qquad x_0=1_{\mathsf H}.
+(P_{z'},X_{z'},g(y_{z'}))
+=(P_z,X_z,g(y_z)),
 \]
-Among the $q+1$ values $x_0,\ldots,x_q$
-two agree, say $x_i=x_j$ for $i<j$.
-Writing $r_j=r_i r_{i:j}$ and
-$t_j=t_i t_{i:j}$ for the corresponding
-ordered interval products, cancellation in
-$t_i r_i^{-1} =t_i t_{i:j}r_{i:j}^{-1}r_i^{-1}$
-gives $t_{i:j}=r_{i:j}$, that is,
+graft the subtree at $z'$ in place of the subtree at $z$.
+The removed factors are disjoint from $\mathrm{Prot}$,
+and the group value is preserved, so $(\ast)$ applies.
+The grafted tree has no longer yield and strictly
+fewer nonterminal nodes, a contradiction.
+Along any path the sets $P_z$ are nested and
+take at most $d+1$ values. Hence no path contains
+more than
 \[
- g(b_{i+1}c_{i+1}\cdots b_jc_j)
- =g(a_{i+1}c_{i+1}\cdots a_jc_j).
+(d+1)Nq\le(m+2)Nq
 \]
-Replacing the indicated disjoint subtrees
-preserves the ordered group value, the
-protected letters, and nonemptiness, while
-strictly shortening the word. The argument
-does not assume $\mathsf H$ abelian. Thus every
-depth has at most $W_{\mathrm{ess}}=m+q$ essential nodes.
+nonterminal nodes.
 
-Essential nodes are ancestor-closed and
-there are at most $W_{\mathrm{ess}}D_{\mathrm{dep}}$ of them. Since BUNF
-has at most two children per node, the
-number of maximal nonessential subtrees
-is at most $1+2W_{\mathrm{ess}}D_{\mathrm{dep}}$. Each contributes
-at most $\bar\tau$ letters. All remaining
-terminal positions are protected (at most
-$d$ of them), so
+\emph{Width.}
+If a level contained $d+q$ essential nodes,
+their disjoint yield spans would leave at least
+$q$ nodes avoiding $\mathrm{Prot}$. Choose $q$
+such nodes, in left-to-right order, with yields
+$a_1,\ldots,a_q$ of length greater than $\bar\tau$.
+For each, choose a word $b_i$ generated by its
+nonterminal label with $|b_i|\le\tau_G$;
+$b_i=\lambda$ is permitted.
+Write $w=c_0a_1c_1\cdots a_qc_q$, and for
+$0\le j\le q$ put
 \[
- |w|\le d+(1+2W_{\mathrm{ess}}D_{\mathrm{dep}})\bar\tau
- \le m+1+[1+2(m+q)(m+2)Nq](\tau_G+1).
+r_j=g(a_1c_1\cdots a_jc_j),\quad
+t_j=g(b_1c_1\cdots b_jc_j),\quad
+x_j=t_jr_j^{-1},
+\qquad x_0=1_{\mathsf H}.
 \]
-The same argument treats positive start
-copies; empty-type copies yield only
-$\lambda$. This proves the lemma.
+Two of $x_0,\ldots,x_q$ coincide, say
+$x_i=x_j$ with $i<j$. Writing the ordered
+interval products as $r_j=r_i r_{i:j}$
+and $t_j=t_i t_{i:j}$ gives
+\[
+t_i r_i^{-1}
+=t_i t_{i:j}r_{i:j}^{-1}r_i^{-1}.
+\]
+Cancellation in this order yields
+$t_{i:j}=r_{i:j}$; equivalently,
+\[
+g(b_{i+1}c_{i+1}\cdots b_jc_j)
+=g(a_{i+1}c_{i+1}\cdots a_jc_j).
+\]
+Replace the corresponding pairwise disjoint
+subtrees by derivations of $b_{i+1},\ldots,b_j$.
+This preserves the group value and all protected
+positions, but strictly shortens the yield,
+contradicting $(\ast)$. No commutativity
+of $\mathsf H$ is used. Therefore every
+level has at most $d+q-1\le m+q$
+essential nodes.
+
+\emph{Counting.}
+The essential nonterminal nodes are closed under
+ancestors and include the root, since
+$d\ge1$. Their total number is at most
+\[
+E:=(m+q)(m+2)Nq.
+\]
+As $G$ is in BUNF, at most $2E$ maximal
+nonessential subtrees hang below them, each
+yielding at most $\bar\tau$ letters.
+Every remaining terminal letter is emitted
+by an essential lexical node, hence is
+protected, because a lexical node has yield
+length $1\le\bar\tau$.
+There are at most $d$ such letters. Thus
+\[
+|w|\le d+2E\bar\tau
+\le m+1+
+[1+2(m+q)(m+2)Nq](\tau_G+1).
+\qedhere
+\]
 \end{proof}
 
 \subsection{Thickness-preserving BUNF normalization}
