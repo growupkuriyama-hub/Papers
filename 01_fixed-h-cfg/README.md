@@ -1,13 +1,13 @@
-# #1 TCS — 編集正本 v261（回答書／提出ZIP再検証待ち） / 凍結記録 v249
+# #1 TCS — 現行編集版 v261（回答書／提出ZIP CI検証済み） / 凍結記録 v249
 
-> **編集正本：`main` のv261（2026-10-21）。論文本体はv260のまま維持し、査読回答R1.35を§9の新しい整数オフセット Q と式(★★)に整合させました。Marked PDF・回答書PDF・提出ZIPはv261のCI再検証待ちです。TCSへは未再投稿です。**  
+> **編集正本：`main` のv261（2026-10-21）。論文本体はv260のまま維持し、査読回答R1.35を§9の新しい整数オフセット Q と式(★★)に整合させました。Marked PDF・英文回答書PDF・3ファイルZIPのCI再生成・検証は成功。TCSへは未再投稿です。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
 > **v261の編集：査読回答書R1.35の旧表現を本文§9の境界整合入口オフセット集合と明示的な式(★★)に合わせて修正。v260論文本体を維持。v249は最後の凍結記録。**
 
-**v261検証後に取得： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
+**v261検証済み： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（v261、CI再検証待ち）
+## 提出に使用する3ファイル（v261、CI検証済み）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -25,6 +25,12 @@
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
 - [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v261`** とv249凍結履歴を参照
 - [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
+
+### v261自動検証（2026-10-21）
+
+- [Marked PDF・英文回答書・3ファイルZIP（Actions 39592711566）](https://github.com/growupkuriyama-hub/Papers/actions/runs/39592711566)：成功。R1.35の形式的整数オフセットと式(★★)の記述を同期。回答書49項目／Marked PDF参照77箇所を確認。
+- 回答PDF 14ページ、Marked PDF 26ページ。ZIPの3ファイル件数とCRC検査を通過。収録した各ファイルはGitHub原本とGit blob SHAが一致。
+- 投稿用Clean TeXはv260から変更なし。日本語査読回答書は旧訳のまま（英文提出ZIPには含まず）。TCSの再投稿操作は未実施。
 
 ### v260の過去検証記録（2026-10-21。v261の検証を意味しない）
 
