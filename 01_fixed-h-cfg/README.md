@@ -1,13 +1,13 @@
-# #1 TCS — 編集正本 v254（新PDF/ZIP検証待ち） / 凍結記録 v249
+# #1 TCS — 現行編集版 v254（PDF/ZIP CI検証済み） / 凍結記録 v249
 
-> **編集正本：`main` のv254 TeX（2026-10-21）。今回§1.2を再構成し、R1.3/R1.5の回答も整合化しました。PDF・回答書・提出ZIPのv254再生成が完了するまで最新版として使用しないでください。TCSへは未再投稿です。**  
+> **編集正本：`main` のv254 TeX（2026-10-21）。§1.2とR1.3/R1.5を改訂し、英文・日本語Clean PDF／Marked PDF／英文回答書PDF／提出ZIPのCI再生成が成功しました。TCSへは未再投稿です。**  
 > 論文：**Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing**  
 > 雑誌：*Theoretical Computer Science* / **TCS-D-26-00494** / **Round 1 major revision**  
 > **v254の編集：§1.2の貢献説明を二本柱に再構成（LI∨Grpの上界、二元半束型付けの指数下界、表現力と限界）。R1.3/R1.5を整合化。v253の先行研究帰属修正も保持。v249は最後の凍結・検証済み記録。**
 
-**v254のCI再生成後に取得： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
+**v254検証済み： [TCS再投稿用3ファイルZIP](TCS-D-26-00494_R1_3files.zip)**
 
-## 提出に使用する3ファイル（v254、CI再生成待ち）
+## 提出に使用する3ファイル（v254、CI検証済み）
 
 | TCS提出物 | ファイル | 役割 |
 |---|---|---|
@@ -25,6 +25,13 @@
 - [査読回答の編集ソース](response/response_round1.tex) — PDFの正本（提出用PDFは自動生成）
 - [最新管理情報 `PAPER.yaml`](PAPER.yaml) — **`pending_release: v254`** とv249凍結履歴を参照
 - [TCSフォーム用最新版Abstract](revision/TCS_FORM_ABSTRACT_CURRENT.txt) — v246英文Abstractのプレーンテキスト
+
+### v254の自動検証（2026-10-21）
+
+- [英文・日本語Clean PDFの再生成](https://github.com/growupkuriyama-hub/Papers/actions/runs/39565101494)：成功。
+- [Marked PDF・査読回答書PDF・3ファイルZIP](https://github.com/growupkuriyama-hub/Papers/actions/runs/39565101537)：成功。49査読項目・77参照を新Marked PDFと同期し、ZIPの3ファイルとCRCを検証。
+- `main.tex` と提出用英文Clean TeXは同一Git blob。日本語論文本体§1.2も対応済み。TCSへの再投稿は未実施。
+- 査読回答書の日本語旧訳は英文v254に未同期であり、翻訳の鮮度チェックは意図通り停止。英文提出ZIPには含まない。
 
 ### v253の検証履歴（2026-10-21。v254の検証ではない）
 
