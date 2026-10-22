@@ -1,8 +1,14 @@
-# #2 MCFG v75 — 日本語査読版（英語正本との対照）
+# #2 MCFG v82-stage2 — 日本語査読用作業稿
 
-対象論文: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing*（I&C 投稿準備中）
+対象論文: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*（I&C 投稿準備中、未投稿）
 
 英語版 `../main.tex` と付録が**数学的な正本**です。日本語版は独立査読・定理の仮定の確認用であり、英語版と同じ数学的主張・同じ `\\label` の集合を保ちます。
+
+## v82半群化作業（2026-10-22）
+
+TCS #1 R1に合わせて $s:\Sigma^+\to S$ を基本型、$\widehat{s}:\Sigma^*\to S^\sharp$ を生成語計算用とする改稿を実施。非空成分に限った既存のMCFG代入可能性は変わらない。学習定理、二次・三次上界、希少型、Yoshinaka対応と結論節の配置を英日で対応させた。3本の独立付録（局所群を含む）にも読み替えを明記した。
+
+**本作業稿は主張と証明の最終独立監査が未了であり、mainブランチの既存PDFはv81のままです。** 詳細：[`../revision/v82_semigroup_migration_stage2.md`](../revision/v82_semigroup_migration_stage2.md)。
 
 ## v75 の更新（2026-10-18）
 
