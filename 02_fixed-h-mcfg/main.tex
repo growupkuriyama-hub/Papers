@@ -691,10 +691,14 @@ If $\eps\notin L(G_{\mathrm{in}})$, the two grammars are equivalent.
 \end{proposition}
 
 \begin{proof}
-First delete unreachable or unproductive nonterminals, then apply the
-nondeleting step (f3) from the proof of Seki et al.'s
-Lemma~2.2, in the rank-preserving form recorded by
-Kanazawa~\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}.
+First delete unreachable or unproductive nonterminals; then
+use the nondeleting construction (f3) from the proof of Seki et al.'s
+Lemma~2.2~\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}.
+Kanazawa~\cite[Section~2.1]{Kanazawa2019Ogden} records the
+existence of an equivalent nondeleting, nonpermuting form
+preserving fan-out and rule rank.  Our size estimate instead follows
+from the explicit finite-subset construction in
+Appendix~\ref{app:normalization-details}.
 Decorating nonterminals by component permutations makes the grammar
 nonpermuting.  Next decorate by nonempty-component patterns realizable by terminal
 derivations, as made explicit in Appendix~\ref{app:normalization-details}, and
@@ -2116,8 +2120,11 @@ $K=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$, with
 where $\bar\theta_G=\max\{1,\theta_G\}$.  For a reduced $\lambda$-free input
 presentation $G_{\mathrm{in}}$ (deleting rules allowed), the structural
 good-form conversion of Proposition~\ref{prop:structural-good-thickness}
-yields total data polynomial in
-$\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}$.
+yields the explicit presentation-relative bound
+\[
+ O_{f,r_{\max},k,\ell,s,\Sigma}\!\left(
+ \|G_{\mathrm{in}}\|^3\max\{1,t_{G_{\mathrm{in}}}\}\right).
+\]
 \end{theorem}
 
 \begin{proof}
@@ -3154,12 +3161,26 @@ nondeleting and nonmerging conversions is standard
 \cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011}.
 
 \paragraph{Nondeleting conversion and component permutations.}
-After trimming, use only the nondeleting step (f3) from
-the proof of Seki et al.'s Lemma~2.2, in Kanazawa's rank-preserving form
-\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}\cite[Section~2.1]{Kanazawa2019Ogden}.
-Retained-component subsets give at most $O_f(1)$ decorated copies per
-nonterminal and $O_{f,r_{\max}}(1)$ projected copies per rule; deleting an
-empty child cannot increase rank.  For nonpermutation, decorate a fan-out-$d$
+After trimming, implement the nondeleting construction (f3)
+in the proof of Seki et al.'s Lemma~2.2
+\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}
+by retaining nonempty subsets $I$ of output components.
+For $R:A\to\rho(B_1,\ldots,B_q)$ and such $I$, let $J_j$
+comprise exactly the child-$j$ components used by the
+$I$-indexed outputs.  Keep those outputs, reindex their
+variables, use $B_j^{J_j}$ for $J_j\ne\emptyset$, and omit
+a child for $J_j=\emptyset$.  The new rule is nondeleting,
+and omitting children cannot increase rank.
+For reduced input, every omitted child is productive,
+so the projected rule can be lifted to a source rule:
+$L_{A^I}=\pi_I(L_A)$.  Without prior trimming only
+$\pi_I(L_A)\subseteq L_{A^I}$ is automatic.
+This also establishes the quantitative bound directly:
+there are $O_f(1)$ projected copies of each nonterminal
+and $O_{f,r_{\max}}(1)$ copies of each rule.
+Kanazawa's existence statement
+\cite[Section~2.1]{Kanazawa2019Ogden} does not
+by itself establish these size or thickness bounds.  For nonpermutation, decorate a fan-out-$d$
 nonterminal by $\sigma\in\mathfrak S_d$.  The parent permutation determines
 the child permutations, so there are at most $f!$ copies, no child is
 duplicated, and rank is preserved.  Denote the result by $G_{\mathrm{nd}}$.
@@ -3188,9 +3209,14 @@ $O_{f,r_{\max}}(\|G_{\mathrm{nd}}\|)$ size.
 
 \paragraph{Nonmerging.}
 Apply Yoshinaka's nonmerging conversion
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  Each decorated nonterminal denotes exactly the projected tuples associated
-with its retained component pattern, and adjacent-component concatenation
-preserves $\lambda$-freeness, nonpermutation, fan-out, and rule rank.
+\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  For the construction in the proof of the cited lemma,
+a merge-decorated nonterminal generates the \emph{image}
+of its preceding tuple language under consecutive-component
+concatenation.  The merge need not be injective: this
+image equality, not a claim about unique preimages,
+is the fact used in Proposition~\ref{prop:structural-good-thickness}.
+The construction preserves $\lambda$-freeness,
+nonpermutation, fan-out, and rule rank.
 For fixed fan-out and rank Yoshinaka's combined good-form conversion has
 $O(\|G\|)$ size~\cite[Section~2.3, after Example~2]{Yoshinaka2011}; trimming
 can only decrease all bounds.  This proves
