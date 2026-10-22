@@ -48,6 +48,25 @@ English/Japanese both have:
   references across main plus all three included math appendices;
 - No old Proposition 6.3 references to TCS #1 in the LG appendices.
 
+## Verified branch-only bilingual build
+
+The final mathematical TeX changes were built and validated on
+commit \`b6773e1adffe437ef7747d928d6802099dd6c843\`,
+GitHub Actions **run 39776717646**:
+
+- English PDF: **50 pages** (lean predecessor 49, full v82 54).
+- Japanese PDF: **54 pages** (lean predecessor 53, full v82 59).
+- Both compilers, reference-validation script and preview-artifact upload:
+  **passed**.
+- No overfull boxes; English reported two minor underfull boxes.
+- Artifact: \`mcfg2-v82-semigroup-preview\` (historical workflow artifact name)
+  from run **39776717646**, ID **12423959424**.
+- Build success verifies TeX integrity and final references only.
+  It is **not** independent mathematical certification or visual PDF QA.
+
+Build URL:
+https://github.com/growupkuriyama-hub/Papers/actions/runs/39776717646
+
 ## NOT settled by the review or these edits
 
 1. **M6 / highest mathematical hold:** Independent line-by-line
