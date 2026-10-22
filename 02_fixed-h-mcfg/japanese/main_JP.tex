@@ -52,7 +52,7 @@
   }%
 }
 
-\title{固定有限モノイド型付けの下での多重文脈自由言語の正例学習}
+\title{固定有限半群型付けの下での多重文脈自由言語の正例学習}
 \author{Takayuki Kuriyama\\
 独立研究者（東京）\\
 \texttt{growup.kuriyama@gmail.com}}
@@ -63,8 +63,9 @@
 \maketitle
 
 \begin{abstract}
-有限モノイド準同型 $h:\Sigma^*\to M$ とファンアウト上界 $f$ を固定し，
-成分別の $h$-型に基づく代入可能性の下で，
+有限半群準同型 $s:\Sigma^+\twoheadrightarrow\mathsf S$ とファンアウト上界 $f$ を固定し，
+非空成分の $s$-型に基づく代入可能性の下で，
+空語を区別する新しい単位元の添加 $\widehat s:\Sigma^*\to\mathsf S^\sharp$ を用いる．
 多重文脈自由言語の正例学習を研究する．
 厳密な集合駆動型再構成と保守的な極限同定学習器を与え，
 規則ランクが有界な場合に仮説更新が多項式時間で可能であることを示す．
@@ -97,7 +98,7 @@ $\mathbf{LG}$ に属する型付け全体へ拡張する．
 
 \medskip
 \noindent\textbf{キーワード：}
-文法推論；多重文脈自由文法；正例データ；有限モノイド型付け；
+文法推論；多重文脈自由文法；正例データ；有限半群型付け；
 多次元代入可能性；Gold の極限同定；規則ランク
 \medskip
 
@@ -131,9 +132,10 @@ Yoshinaka の2011年の観測タプルに基づく学習器が，
 本稿の問題は，元の MCFG 表示に相対的な正例特徴データの
 \emph{総文字数}，および有限型付け・ファンアウト・規則ランクに関する分離である．
 
-本稿では学習対象クラスの一部として，有限モノイドへの準同型
-$h:\Sigma^*\to M$ を固定する．観測されたタプルは，
-対応する成分の $h$-値が等しい場合に限って比較する．
+本稿では学習対象クラスの一部として，有限半群への準同型
+$s:\Sigma^+\to\mathsf S$ を固定する．観測された非空タプル成分は，
+対応する成分の $s$-値が等しい場合に限って比較する．
+空の終端ギャップの評価には新単位元を添加した $h=\widehat s$ を用いる．
 合成可能な型による制約は正例テキストが与えられる前から固定されており，
 有限なバイアスの選択と，そのバイアスの下での学習を分離する
 ~\cite{CosteTyping2004}．
@@ -339,7 +341,84 @@ $\mathcal B(K)$ が構文的に安定する必要はない．
 と書く．
 \end{definition}
 
-\subsection{有限モノイド型付け}
+\subsection{固定有限半群型付けと新単位元添加}
+\label{subsec:semigroup-typing}
+
+関連 CFG 論文の TCS R1 改訂版~\cite{kuriyamaCFG} に合わせ，
+学習バイアスは全射な有限半群準同型
+\(s:\Sigma^+\twoheadrightarrow\mathsf S\) とする．
+半群の乗法表と文字の像で表示し，
+正語の型は語長に線形な時間で計算できる．
+一般の有限型付けは正語像に値域を制限すればよい．
+\(\Sigma=\emptyset\) なら標的は \(\emptyset\) または
+\(\{\eps\}\) で，直接扱える．
+
+\begin{definition}[正語型と空語の分離]
+\label{def:semigroup-typing}
+有限半群 \(\mathsf S\) に，既に単位元がある場合にも
+\emph{新しい}単位元 \(\mathbf1_\sharp\) を添加して
+\(\mathsf S^\sharp=\mathsf S\uplus\{\mathbf1_\sharp\}\) とおく．
+\[
+h=\widehat s:\Sigma^*\twoheadrightarrow\mathsf S^\sharp,
+\qquad
+\widehat s(w)=
+\begin{cases}
+\mathbf1_\sharp,&w=\eps,\\
+s(w),&w\in\Sigma^+
+\end{cases}
+\]
+と定める．これはモノイド準同型である．
+文法のテンプレート評価には \(h=\widehat s\) および
+\(M=\mathsf S^\sharp\) を使用する．
+非空の各タプル成分では \(h\) の値は \(s\) の値に等しい．
+\end{definition}
+
+\begin{lemma}[有限モノイド表示との同値性]
+\label{lem:semigroup-transfer}
+任意の有限モノイド準同型
+\(h_0:\Sigma^*\to M_0\) から
+\(s_0=h_0|_{\Sigma^+}:\Sigma^+\twoheadrightarrow h_0(\Sigma^+)\)
+を作る．全ての非空タプル
+\(\tuple x,\tuple y\in(\Sigma^+)^d\) について
+\[
+h_0^{(d)}(\tuple x)=h_0^{(d)}(\tuple y)
+\iff s_0^{(d)}(\tuple x)=s_0^{(d)}(\tuple y)
+\iff \widehat{s_0}^{(d)}(\tuple x)=\widehat{s_0}^{(d)}(\tuple y).
+\]
+したがって，両表示の標的クラスと，
+定義~\ref{def:reconstruction} の集合駆動再構成規則は一致する．
+良形 MCFG の縮約済み生成語型精密化も型添字の改名で同型となり，
+対応して選んだ規則証拠も同じである．
+\end{lemma}
+\begin{proof}
+非空のタプル成分について三つの写像の等号関係は同じである．
+置換リンクが検査するのはこの等号と共通文脈だけである．
+良形 MCFG の非終端記号が導出する終端タプルの全成分は非空なので，
+型付き導出は規則ごとの帰納法で対応する．
+不要な型付き記号を削除すれば同型性が従う．
+空語は開始規則で別途扱う．
+\end{proof}
+
+半群型付け $s,t$ では，
+\(\ker t\subseteq\ker s\) を精密化 \(s\preceq t\) と定義する．
+その新単位元添加についても
+\(\ker\widehat t\subseteq\ker\widehat s\iff\ker t\subseteq\ker s\)
+である．積型付けは正語像に制限してから単位元を添加するので
+\(\ker\widehat{(s,t)}=\ker\widehat s\cap\ker\widehat t\)
+が成り立つ．
+
+以下のモノイド表示 $h:\Sigma^*\to M$ は計算上の記法である．
+その意味論的な学習型は常に $s=h|_{\Sigma^+}$ である．
+従来の $\Cmcf{f}{h}$ は
+$\Cmcf{f}{h|_{\Sigma^+}}$ の略記とする．
+型添字の数値上界には $M=\mathsf S^\sharp$ を使え，
+$|M|=|\mathsf S|+1$ なので多項式次数は不変である．
+ただし局所群 $\mathbf{LG}$ 等の代数的仮定は
+\emph{正語像半群}に適用し，新単位元添加には適用しない．
+
+\paragraph{既存のモノイド表示と境界型付け．}
+
+
 
 \begin{definition}[有限型付けの表示]
 \label{def-monoid-morphism}
@@ -419,6 +498,9 @@ $h_\Sigma^{k,\ell}(\eps)$ は単位元である．
 よって
 $h_\Sigma^{k,\ell}:\Sigma^*\to M_{k,\ell}$
 は有限モノイド準同型である．
+正語への制限 $s_\Sigma^{k,\ell}=h_\Sigma^{k,\ell}|_{\Sigma^+}$ が
+対応する半群の境界型付けである．短語タグは空語を区別するため，
+その新単位元添加は元のモノイド型付けと同型である．
 
 有限型付け $h$ が
 \emph{$(k,\ell)$-境界決定的}であるとは，
@@ -703,16 +785,16 @@ $\tuple x\in(\Sigma^*)^d$ に対して，
 \(\D_L^{(d)}(\tuple x):= \{E\in\mathcal E_d:E[\tuple x]\in L\}\)
 と定義する．アリティが明白なら上付きの $(d)$ を省略する．
 
-\begin{definition}[$(f,h)$-タプル代入可能性]
+\begin{definition}[$(f,s)$-タプル代入可能性]
 \label{def:tuple-substitutable}
-$f\ge1$ と有限モノイド準同型
-$h:\Sigma^*\to M$ を固定する．
+$f\ge1$ と有限半群準同型
+$s:\Sigma^+\to\mathsf S$ を固定する．
 言語 $L\subseteq\Sigma^*$ が
-\emph{$(f,h)$-タプル代入可能}であるとは，
+\emph{$(f,s)$-タプル代入可能}であるとは，
 任意の $1\le d\le f$ と
 $\tuple x,\tuple y\in(\Sigma^+)^d$ に対し，
 \[
- h^{(d)}(\tuple x)=h^{(d)}(\tuple y),\qquad
+ s^{(d)}(\tuple x)=s^{(d)}(\tuple y),\qquad
  \D_L^{(d)}(\tuple x)\cap\D_L^{(d)}(\tuple y)\ne\emptyset
 \]
 ならば
@@ -738,7 +820,7 @@ $\D_L^{(1)}(x)$ は通常の両側分布
 と自然に同一視できる．
 よって定義~\ref{def:tuple-substitutable} は，
 外部の規約を仮定することなく，
-非空因子に対する通常の固定 $h$ の
+非空因子に対する通常の固定 $s$ の
 両側代入可能性条件に特殊化する．
 
 \paragraph{型付けと分布による同値関係．}
@@ -756,9 +838,11 @@ $L,h,d$ を固定すると，これは同値関係である．
 
 \begin{definition}[標的言語クラス]
 \label{def:class-cmcf}
-$f\ge1$ と有限モノイド準同型 $h$ を固定する．
-$\Cmcf{f}{h}$ は，
-$(f,h)$-タプル代入可能な $f$-MCFL 全体のクラスである．
+$f\ge1$ と有限半群準同型 $s$ を固定する．
+$\Cmcf{f}{s}$ は $(f,s)$-タプル代入可能な
+$f$-MCFL 全体のクラスである．
+有限モノイド準同型 $h$ に対しては
+$\Cmcf{f}{h}:=\Cmcf{f}{h|_{\Sigma^+}}$ とする．
 \end{definition}
 
 $L\in\Cmcf{f}{h}$ において，
