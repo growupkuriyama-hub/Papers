@@ -1,9 +1,17 @@
 # #2 — fixed-h MCFG
 
-**Title:** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing  
+**Title (v82 work in progress):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
+
+## v82半群化（作業ブランチ・未投稿）
+
+#1 TCS R1凍結版に合わせ、基本学習型を $s:\Sigma^+\to S$ にし、空語とテンプレートの評価だけに新単位元添加 $\widehat s$ を使う作業中です。英日本文・独立付録を改稿し、Gold学習器、主要特徴データ上界、希少型、倍化族、Yoshinakaとの対応を半群側へ移しています。
+
+- [v82移行 Stage 1](revision/v82_semigroup_migration_stage1.md) ／ [v82移行 Stage 2](revision/v82_semigroup_migration_stage2.md)
+- [v82専用PDFビルド検査](../../.github/workflows/check-mcfg-semigroup-v82.yml)
+- **以下のmain上のPDFはv81のままです。v82の完成稿ではありません。**
 
 ## いつでも同じURLで読める最新PDF（英語／日本語）
 
@@ -35,7 +43,7 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 対応検査，LuaLaTeX PDF のビルド方法を記録しています。
 提出用の英語版 `main.tex` は変更しません。
 
-**#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
+**#1 companion manuscript (R1 frozen version):** [TCS-D-26-00494R1 Clean TeX](https://github.com/growupkuriyama-hub/Papers/blob/bbbcabfd948dea815b94bd21a3d78999a6a3e54f/01_fixed-h-cfg/archive/tcs-r1-2026-10-22/TCS-D-26-00494_Manuscript_Clean.tex) — new title uses finite-*semigroup* typing. The public arXiv:1409.6247v4 is older and should not be cited as the 2026-10-22 frozen revision.
 
 ## Current working baseline
 
