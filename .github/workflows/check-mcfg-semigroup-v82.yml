@@ -1,0 +1,53 @@
+name: Check MCFG #2 v82 semigroup migration (branch only)
+
+on:
+  push:
+    branches:
+      - mcfg2-v82-semigroup-migration-stage1
+    paths:
+      - "02_fixed-h-mcfg/**/*.tex"
+      - ".github/workflows/check-mcfg-semigroup-v82.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  latex:
+    name: Build EN and JP without publishing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build English full MCFG
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: 02_fixed-h-mcfg
+          texlive_version: 2026
+      - name: Build Japanese full MCFG
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02_fixed-h-mcfg/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+      - name: Verify outputs and cross references
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s 02_fixed-h-mcfg/main.pdf
+          test -s 02_fixed-h-mcfg/japanese/main_JP.pdf
+          test "$(head -c 4 02_fixed-h-mcfg/main.pdf)" = "%PDF"
+          test "$(head -c 4 02_fixed-h-mcfg/japanese/main_JP.pdf)" = "%PDF"
+          if grep -nE "LaTeX Warning: (Reference|Citation).*undefined|There were undefined references"              02_fixed-h-mcfg/main.log 02_fixed-h-mcfg/japanese/main_JP.log; then
+            echo "::error::Unresolved references or citations"
+            exit 1
+          fi
+      - name: Upload preview PDFs (no publication to main)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcfg2-v82-semigroup-preview
+          path: |
+            02_fixed-h-mcfg/main.pdf
+            02_fixed-h-mcfg/japanese/main_JP.pdf
+          if-no-files-found: error
