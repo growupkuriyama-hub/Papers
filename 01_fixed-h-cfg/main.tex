@@ -43,7 +43,7 @@ shortest-yield parameter.  Ordinary grammar thickness suffices when the
 typing is determined by a fixed prefix--suffix window and a finite-group
 value; for linear targets, linear grammar size alone suffices.  Conversely,
 a fixed two-element semilattice typing yields finite targets with
-linear-size, small-thickness grammars that require exponentially long
+grammars of size and ordinary thickness both $O(n)$ that require exponentially long
 characteristic samples.  The lower bound applies to any set-driven
 operator admitting characteristic samples for the fixed-typing class.
 Retyping closure, examples beyond fixed windows, and a Dyck-language
@@ -82,7 +82,7 @@ hypothesis updates, and characteristic witnesses of polynomial
 cardinality in a typed target grammar. The particular choice
 of sorts is not attributed to that work.
 
-The procedures below give an explicit fixed-typing realization,
+The procedures below give an explicit fixed-typing construction,
 including a direct completeness proof for nullable and unit
 productions. Their existence, update-time bound, and finite-witness
 cardinality are not claimed as independent learning-theoretic
@@ -296,10 +296,12 @@ Polynomial update time and polynomial characteristic data are distinct
 criteria~\cite[Sections~7.3.2--7.3.3]{higuera2010}.  In the terms of
 Eyraud--Heinz--Yoshinaka~\cite[Definitions~2.5 and~2.8]{eyraud-heinz-yoshinaka2016},
 our polynomial characteristic-data guarantees are \emph{set-based}
-(correct reconstruction by $\mathsf{Rec}_s$ from every finite positive
+(correct reconstruction by $\mathsf{Rec}_s$, defined in Section~4.1,
+from every finite positive
 sample $K$ satisfying $\mathcal F\subseteq K\subseteq L$, where
 $\mathcal F$ is a characteristic sample for $L$); the \emph{incremental} criterion,
-a correct and stable hypothesis of $\mathsf{Learn}_s$ as soon as such a sample
+a correct and stable hypothesis of $\mathsf{Learn}_s$ (defined in Section~4.2)
+as soon as such a sample
 has appeared, is not claimed.  Gold stabilization of $\mathsf{Learn}_s$ is
 proved in Corollary~\ref{cor:ilt}.
 
@@ -505,8 +507,9 @@ $t:\Sigma^+\to\mathsf T$ be finite-semigroup typings.
 \begin{enumerate}[label=\textup{(\roman*)},nosep]
 \item If $L\in\mathsf{RS}_s$ and $J\in\mathsf{RS}_t$, then
 $L\cap J\in\mathsf{RS}_{s\times t}$.
-\item If $R_{\mathrm{reg}}=\widehat t^{-1}(\mathsf{Acc}_t)$
-is regular and $L\in\Ccf{s}$, then
+\item If Let $\mathsf{Acc}_t\subseteq\mathsf T^\sharp$ be arbitrary and put
+$R_{\mathrm{reg}}:=\widehat t^{-1}(\mathsf{Acc}_t)$.
+If $L\in\Ccf{s}$, then
 $L\cap R_{\mathrm{reg}}\in\Ccf{s\times t}$.
 \item Let $\varphi:\Gamma^*\to\Sigma^*$ be any
 homomorphism, possibly erasing, and put
@@ -586,7 +589,7 @@ u_2pr_1qv_2\in L\\
 \end{split}
 \]
 
-\begin{proposition}[finite-semigroup realization of fixed windows]
+\begin{proposition}[finite-semigroup representation of fixed windows]
 \label{prop:yl-special}
 For every $k,\ell\ge0$ there is a surjective
 finite-semigroup morphism $s_{k,\ell}:\Sigma^+\to W_{k,\ell}$
@@ -894,7 +897,7 @@ factors and a direct start rule for $\lambda$.
 
 Let $G=(V,\Sigma,P,S_0)$ be a CFG for
 a nonempty $L$.  Write a rule as
-$\rho:A\to u_0B_1u_1\cdots B_ru_r$
+$\pi:A\to u_0B_1u_1\cdots B_ru_r$
 with $u_i\in\Sigma^*$, $B_i\in V$, and $r\ge0$.
 For each $(\mu_1,\ldots,\mu_r)\in(\mathsf S^\sharp)^r$,
 set $\mu=\widehat s(u_0)\prod_{i=1}^r
@@ -947,16 +950,16 @@ For each retained non-start symbol $X$, choose a
 $\chi(X)=(u_X,v_X)$ minimizing $|u_X|+|v_X|$,
 with shortlex tie breaks on $u_X$ and then $v_X$.
 It exists because $\widetilde G$ was trimmed.  For each typed rule
-$\rho:X\to u_0Y_1u_1\cdots Y_ru_r$
+$\pi:X\to u_0Y_1u_1\cdots Y_ru_r$
 ($X\ne\widetilde S$), let its
 \emph{canonical right-hand-side yield} be
-$t_\rho=u_0\omega(Y_1)u_1\cdots\omega(Y_r)u_r$.
-Both $t_\rho$ and $\omega(X)$ belong to
+$t_\pi=u_0\omega(Y_1)u_1\cdots\omega(Y_r)u_r$.
+Both $t_\pi$ and $\omega(X)$ belong to
 $L_{\widetilde G}(X)$ and have the same type.
 For nonempty-type $X$, these yields are nonempty and occur
 in their shared canonical reaching context $\chi(X)$;
 the corresponding witnesses therefore license the unary
-Rule~\textup{(U)} from $\NT{\omega(X)}$ to $\NT{t_\rho}$.
+Rule~\textup{(U)} from $\NT{\omega(X)}$ to $\NT{t_\pi}$.
 For empty-type $X$, both yields are $\lambda$ and no factor
 nonterminal or unary rule is needed. Thus typing is used for
 this witness-based simulation, not claimed to be an
@@ -967,13 +970,13 @@ Define the finite set of \emph{canonical positive witnesses}
 \WitnessSet(\widetilde G):={}&
  \{u_X\omega(X)v_X:
      X\in\widetilde V\setminus\{\widetilde S\}\}\\
- &{}\cup\{u_Xt_\rho v_X:
-     \rho=(X\to\alpha)\in\widetilde P,\
+ &{}\cup\{u_Xt_\pi v_X:
+     \pi=(X\to\alpha)\in\widetilde P,\
      X\ne\widetilde S\}.
 \end{split}
 \end{equation}
 Every witness belongs to $L$.
-For an empty-type rule, $t_\rho=\omega(X)=\lambda$,
+For an empty-type rule, $t_\pi=\omega(X)=\lambda$,
 so its witness is redundant.  If $\lambda\in L$,
 the start copy $(S_0)_{\mathbf{1}_{\sharp}}$ has context
 $(\lambda,\lambda)$ and yield $\lambda$; hence
@@ -997,23 +1000,23 @@ $X\Rightarrow_{\widetilde G}^*w$ implies
 $\widehat X\Rightarrow_{\mathsf{Rec}_s(K)}^*w$.
 
 Let the root rule be
-$\rho:X\to u_0Y_1u_1\cdots Y_ru_r$, with child yields $w_i$.
+$\pi:X\to u_0Y_1u_1\cdots Y_ru_r$, with child yields $w_i$.
 Both $\omega(X)$ and
-$t_\rho=u_0\omega(Y_1)u_1\cdots\omega(Y_r)u_r$
+$t_\pi=u_0\omega(Y_1)u_1\cdots\omega(Y_r)u_r$
 are nonempty, have the same $s$-type, and occur in
 the shared context $(u_X,v_X)$ in $K$.
-Thus Rule~\textup{(U)} gives $\widehat X\to\NT{t_\rho}$.
+Thus Rule~\textup{(U)} gives $\widehat X\to\NT{t_\pi}$.
 
 Delete the empty entries from
 $(u_0,\omega(Y_1),u_1,\ldots,\omega(Y_r),u_r)$,
 and denote the remaining entries in order by
 $z_1,\ldots,z_\nu$.  Since $X$ has nonempty type,
-$\nu\ge1$ and $t_\rho=z_1\cdots z_\nu$.
+$\nu\ge1$ and $t_\pi=z_1\cdots z_\nu$.
 Each entry and every concatenation of consecutive
 entries is an observed nonempty factor of
-$u_Xt_\rho v_X\in K$.  Repeated Rule~\textup{(B)}
+$u_Xt_\pi v_X\in K$.  Repeated Rule~\textup{(B)}
 therefore gives
-$\NT{t_\rho}\Rightarrow_{\mathsf{Rec}_s(K)}^*
+$\NT{t_\pi}\Rightarrow_{\mathsf{Rec}_s(K)}^*
 \NT{z_1}\cdots\NT{z_\nu}$
 (zero steps if $\nu=1$).
 Terminal blocks are emitted by Rules~\textup{(B)}
@@ -1348,6 +1351,23 @@ admits $(\lfloor w_{n-1}^*,\rfloor)$.
 Thus (iv) does not conflict with the $s_0$ upper bound in (ii).
 \end{proof}
 
+\begin{remark}[finite targets and linear grammar size]
+Although each $L_n$ is finite and hence linear as a language,
+the displayed $O(n)$-size grammar $G_n$ is not linear.
+For a finite language generated by a linear CFG, a productive
+derivation with a repeated nonterminal on its unique spine
+cannot produce a nonempty terminal string around the cycle:
+iterating such a cycle would generate infinitely many words.
+Cycles producing only the empty word can be omitted.
+Consequently a derivation can be chosen without repeated
+nonterminals, and its terminal word length is bounded by
+the total number of terminal occurrences in the grammar's
+production listing. Since $|w_n^*|=3\cdot2^n-2$, every
+linear CFG generating $L_n$ has exponentially many terminal
+occurrences in its productions. This is consistent with
+Theorem~\ref{thm:linear-poly}.
+\end{remark}
+
 The contradiction in part~(iv) follows the classical distinguishing-pair
 principle using a word in the symmetric difference of two targets;
 compare~\cite[Theorem~15.1.4]{higuera2010}.  The fixed-$s$
@@ -1400,8 +1420,6 @@ characteristic-data bound for $\mathsf{Rec}_s$
 Fix $k,\ell\ge0$ and a morphism $g:\Sigma^*\to\mathsf H$
 into a finite group. In products with $s_{k,\ell}$,
 the group component is restricted to $\Sigma^+$.
-Put $m:=k+\ell$.
-
 \begin{lemma}[window--group typed-yield bound]
 \label{lem:window-typed-yield}
 Let $G=(V,\Sigma,P,S_0)$ be a reduced BUNF grammar,
@@ -1776,7 +1794,7 @@ t^{-1}(\mathsf{Acc}_{\mathrm{ctrl}})$.
 The semigroup typing $s$ is used through its monoid extension:
 taking $t=\widehat s$, start symbol $A$, and
 $\mathsf{Acc}_{\mathrm{ctrl}}=\{\mu\}$
-realizes exactly
+selects precisely
 $L_G(A)\cap \widehat s^{-1}(\{\mu\})$,
 the fiber in Proposition~\ref{prop:typed-core},
 including the nullable type $\mathbf{1}_{\sharp}$.
@@ -1815,8 +1833,8 @@ For a word $x$, define its \emph{boundary-compatible
 entry-offset set} by
 \[
 \mathcal Q(x):=
-\{z\in\mathbb Z:
- z+\beta(pb)=0\text{ for every factorization }x=pba p'\}.
+\{\delta\in\mathbb Z:
+ \delta+\beta(pb)=0\text{ for every factorization }x=pba p'\}.
 \]
 These are formal integer offsets, not necessarily reachable
 nonnegative stack heights. If $x$ contains no $ba$, then
@@ -1903,8 +1921,9 @@ u'xv'\in\Delta^*\iff u'yv'\in\Delta^*.
 Therefore $\D_{\Delta^*}(x)=\D_{\Delta^*}(y)$.
 
 For the fixed-window separation, fix $k,\ell\ge0$
-and set $m:=\max\{1,k+\ell\}$,
-$x:=a^mb^m$, and $y:=a^mb^ma^mb^m$.
+and set $m_0:=\max\{1,k+\ell\}$,
+$x:=a^{m_0}b^{m_0}$, and
+$y:=a^{m_0}b^{m_0}a^{m_0}b^{m_0}$.
 The words share the same length-$k$ prefix and
 length-$\ell$ suffix, and the empty context.
 But $axb\in\Delta^*$, while the central $ba$ in
