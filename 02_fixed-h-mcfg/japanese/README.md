@@ -1,10 +1,16 @@
-# #2 MCFG v84 — main正本と同期する日本語査読稿
+# #2 MCFG v85 — main正本と同期する日本語査読稿
 
 対象論文: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*（I&C 投稿準備中、未投稿）
 
 英語版 `../main.tex` と付録が**数学的な正本**です。日本語版は独立査読・定理の仮定の確認用であり、英語版と同じ数学的主張・同じ `\\label` の集合を保ちます。
 
-## v84 M6証明拡充（2026-10-22）
+## v85 Yoshinaka (2015)を基礎にした再構成（2026-10-23）
+
+Yoshinaka (2015) の型付きsignatureへの埋め込みを第3節に移し，質的学習の系と特徴証拠語総長の独自評価を明確に分離。規則ランク無制限の直接論証および量的上界は維持。
+
+[改訂記録](../revision/v85_yoshinaka2015_qualitative_reorganization.md) を参照。日本語版も英語版と同じ構成で更新した。
+
+## v84 M6証明拡充（改訂履歴）
 
 縮約済み $\lambda$-自由入力MCFGから良形MCFGへの非消去化・置換・非融合化・刈り込みを，タプル言語の等式に沿って証明した。英語版と日本語版の数学的主張を同期し，引用・固定窓の入力文法に対する三次上界を明示した。
 
