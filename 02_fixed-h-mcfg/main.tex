@@ -3214,18 +3214,97 @@ reduced good grammar $G$ with the same fan-out and rule-rank bounds such that
 \end{proposition}
 
 \begin{proof}
-For $\lambda$-free $G_{\mathrm{in}}$, every derived component is nonempty.
-The nondeleting conversion therefore needs no later empty-pattern split, and
-each retained decoration $A^I$ generates exactly the projection of
-$L_A(G_{\mathrm{in}})$ onto $I$.  Hence its minimum total yield cannot exceed
-that of $A$.  Component permutations preserve total length, and Yoshinaka's
-nonmerging copies are exact adjacent-component images
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}, so
-$t_G\le t_{G_{\mathrm{in}}}$.  All decorations have fixed-parameter
-linear overhead, giving
-$\|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$; then
-Lemma~\ref{lem:thickness-equivalence} yields the displayed bound on
-$\theta_G$.
+We track the generated tuple languages through the normalization.
+For $\tuple w=(w_1,\ldots,w_d)$ and nonempty $I\subseteq[d]$, let
+$\pi_I(\tuple w)$ retain the components indexed by $I$ in increasing
+order.  Write $\sigma\tuple w$ for a component permutation and
+$\mu(\tuple w)$ for concatenation of consecutive blocks of components.
+Then
+\[
+ \|\pi_I(\tuple w)\|_1\le\|\tuple w\|_1,\qquad
+ \|\sigma\tuple w\|_1=\|\mu(\tuple w)\|_1=\|\tuple w\|_1.
+\]
+Because $G_{\mathrm{in}}$ is $\lambda$-free, every component
+of every derived tuple is nonempty, by induction on derivations.
+
+\emph{Nondeletion.}
+For each nonterminal $A$ and nonempty $I\subseteq[\fan(A)]$,
+introduce $A^I$.  Given
+$R:A\to\rho(B_1,\ldots,B_q)$, let $J_j$ collect precisely
+the indices of the components of $B_j$ occurring in the
+$I$-indexed output components of $\rho$.  Keep those outputs,
+rename their variables and use $B_j^{J_j}$ for $J_j\ne\emptyset$;
+omit children with $J_j=\emptyset$.  This produces a nondeleting
+rule with no larger fan-out or rank and with nonempty outputs.
+For arbitrary derived child tuples the identity
+\[
+ \pi_I\bigl(\rho(\tuple v_1,\ldots,\tuple v_q)\bigr)
+ =\rho^I\bigl((\pi_{J_j}\tuple v_j)_{J_j\ne\emptyset}\bigr)
+\]
+holds.  Induction on derivations gives
+\[
+ L_{A^I}=\pi_I\bigl(L_A(G_{\mathrm{in}})\bigr).
+ \tag{*}
+\]
+For the reverse inclusion, lift all retained child tuples
+using the induction hypothesis and supply a terminal derivation
+of each omitted child.  This is possible because the source
+grammar was reduced.  Thus deleting an entirely unused child
+does not change the projected tuple language.
+
+\emph{Nonpermutation and empty components.}
+For each $\sigma\in\mathfrak S_{\fan(A)}$, decorate $A$
+by $\sigma$.  The order in which a permuted parent template
+uses each child's variables determines the permutation of
+that child, since the grammar is linear and nondeleting.
+An induction on derivations identifies the new tuple
+language with $\sigma L_A$, preserving total length,
+$\lambda$-freeness, fan-out and rank.  Since all derived
+components are nonempty, the later empty-component-pattern
+elimination is the identity on this grammar.
+
+\emph{Nonmerging.}
+Use the construction in the proof of
+\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.
+Decorate each nonterminal with a composition $\mu$ of
+its fan-out, representing concatenation of consecutive
+blocks.  In the merged parent template, maximal adjacent
+runs of consecutive variables of a child determine that
+child's merge $\mu_j$.  Nonpermutation makes these runs
+compatible with the child's component order, while
+nondeletion ensures that they cover all its components.
+The resulting nonmerging template satisfies
+\[
+ \rho^\mu\bigl(\mu_1(\tuple v_1),\ldots,
+                \mu_q(\tuple v_q)\bigr)
+   =\mu\bigl(\rho(\tuple v_1,\ldots,\tuple v_q)\bigr).
+\]
+Induction gives the \emph{image equality} for every
+merge-decorated nonterminal.  No inverse-image claim
+is needed, because the merge map need not be injective.
+Concatenation preserves total length, $\lambda$-freeness,
+fan-out and rank.
+
+Consequently every final nonterminal $X$ is associated
+with an original nonterminal $A$ such that
+\[
+ L_X(G)=\mu\bigl(\sigma\pi_I(L_A(G_{\mathrm{in}}))\bigr),
+ \qquad
+ \min_{\tuple u\in L_X(G)}\|\tuple u\|_1
+ \le\min_{\tuple w\in L_A(G_{\mathrm{in}})}\|\tuple w\|_1.
+\]
+Trimming leaves the tuple languages of surviving
+nonterminals unchanged, so $t_G\le t_{G_{\mathrm{in}}}$.
+For fixed $f,r_{\max}$, the subset, permutation and merge
+decorations yield only fixed-parameter linearly many
+rule copies of no greater template size.  Hence
+$\|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$.
+Finally Lemma~\ref{lem:thickness-equivalence} gives
+\[
+ \theta_G\le2\|G\|\max\{1,t_G\}
+ =O_{f,r_{\max}}\!\left(
+ \|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}\right).
+\]
 \end{proof}
 
 Thus deleting rules do not by themselves obstruct polynomial thickness
