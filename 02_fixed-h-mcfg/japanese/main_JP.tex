@@ -1134,6 +1134,228 @@ $\mathcal B_{f,h}(\emptyset)$ を
 符号化順序を固定すれば，両作用素は決定的かつ集合駆動型となる．
 \end{definition}
 
+以下の質的な正例学習は，Yoshinaka~\cite{Yoshinaka2015General}
+のsignatureによる一般枠組みに基づく．
+後で与える特徴証拠語の具体的な構成は，
+第~\ref{sec:char-data}節の総文字数上界を証明するために必要となる．
+
+\subsection{Yoshinaka (2015) のsignatureへの特殊化}
+\label{sec:general-framework}
+
+規則ランク有界の学習器は，Yoshinaka の代入可能な
+signature に関する枠組み~\cite{Yoshinaka2015General} の
+型付きの特別な場合である．
+この対応を明示するのは，先行研究の質的な学習結果と，
+第~\ref{sec:char-data}節の総文字数上界とを区別するためである．
+
+有限アルファベット $\Sigma$，$f,r\ge1$ および有限半群型付け
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
+$h=\widehat s$，$M=\mathsf S^\sharp$，$M^+=\mathsf S$ とおく．
+signature $\mathfrak S_{f,r,h}$ は，
+開始ソート $O_*=\{\overline w:w\in\Sigma^*\}$
+（$\Sigma^*$ のタグ付きコピー）と，タグ付きソート
+\[
+ T_{d,\boldsymbol\mu}
+ =\{\tuple w\in(\Sigma^+)^d:
+ h^{(d)}(\tuple w)=\boldsymbol\mu\},
+ \qquad
+ 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d
+\]
+をもつ．
+各 $T_{d,\boldsymbol\mu}$ も固有のソートタグを付けたコピーとし，
+以下では読みやすさのため元のタプルで表す．
+したがってすべてのソートは互いに素である
+~\cite[Example~4]{Yoshinaka2015General}．
+その関数記号は，子の規則ランクが高々 $r$ である
+型の整合したすべての良形 MCFG テンプレート
+（ランク0を含む），
+$(w)$ を $\overline w$ に送る昇格演算 $T_{1,\mu}\to O_*$，
+および $O_*$ に属する零項の $\overline{\eps}$ 定数からなる．
+$O_*$ を入力として受け取る関数はない．
+型のタグを忘れると，これは
+~\cite[Section~8]{Yoshinaka2015General}
+の意味で，非空タプル上の良形
+$\lambda$-自由 MCFG 演算の signature を
+有限ソート精密化したものである．
+この型なし signature は
+~\cite[Example~3]{Yoshinaka2015General}
+の例と文字どおり同一ではなく，
+\emph{非空成分に制限した変種}である．
+ファンアウト1における接頭辞--接尾辞型付けの場合は，
+~\cite[Example~4]{Yoshinaka2015General}
+に対応する．
+この signature 上のある文法で実現可能な
+部分構造と文脈を，それぞれ
+$\mathcal S_O,\mathcal C_O$ と書く．
+
+\begin{lemma}[Signature の文脈は許容文文脈である]
+\label{lem:signature-contexts}
+開始ソート以外の各ソートについて
+\[
+ \mathcal S_{T_{d,\boldsymbol\mu}}
+ =T_{d,\boldsymbol\mu},
+ \qquad
+ \mathcal C_{T_{d,\boldsymbol\mu}}
+ =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}
+\]
+が成り立つ．
+後者の等式は $T_{d,\boldsymbol\mu}$ 上の
+\emph{関数}の集合の等式である．
+また $\mathcal C_{O_*}$ に含まれるのは
+恒等関数だけである．
+\end{lemma}
+
+\begin{proof}
+開始ソート以外の各ソートの要素は，
+ランク0の良形テンプレート定数として表現できる．
+$O_*$ を入力に取る演算は存在しない．
+開始ソート以外のソートに対する文脈について，
+穴から開始記号へ至る経路に沿って帰納法を行う．
+良形テンプレートと許容される親文脈を合成しても，
+区別した子の変数の出現順序と
+各変数の一回限りの出現は保存される．
+同じ出力成分内の連続する穴は，
+終端記号または非空の兄弟成分で分離される
+（非融合性）．
+別々の出力成分にある穴は，
+非空の親文脈の区切り語によって分離される．
+したがって補題~\ref{lem:filling-identity} を
+繰り返し適用すれば，
+得られるすべての文文脈は $\mathcal E_d$ に属する．
+
+逆に，任意の
+$E=v_0\blank_1v_1\cdots\blank_dv_d
+\in\mathcal E_d$ に対し，
+単項の良形テンプレート
+$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$ を，
+ランク0の子と開始ソートへの昇格演算とともに用いれば，
+関数 $\tuple x\mapsto\overline{E[\tuple x]}$ が実現する．
+内部区切り語 $v_i$ は良形性により非空であり，
+出力の型は $h$ によって決まる．
+\end{proof}
+
+\begin{proposition}[Yoshinaka の2015年の枠組みによる規則ランク有界クラスの包含]
+\label{prop:yoshinaka2015-embedding}
+signature $\mathfrak S_{f,r,h}$ は
+~\cite{Yoshinaka2015General} の
+Assumptions~1--3 を満たし，
+\(\mathsf{Subst}(\mathfrak S_{f,r,h}) =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)\)
+となる．
+したがって，規則ランク有界のクラスには
+Yoshinaka の同定定理
+~\cite[Theorem~1]{Yoshinaka2015General}
+を適用できる．
+$f,r,h$ を固定すれば，
+蓄積標本に関する更新時間は多項式であり，
+刈り込まれた signature 文法表示について，
+特徴集合の要素数は
+$|N^\sharp|+|P^\sharp|$ 以下である
+~\cite[Lemma~3]{Yoshinaka2015General} の直後の本文で与えられる
+$\mathrm{SUBST}_{\mathrm D}$ に対する上界である．
+ただし，これは特徴語の\emph{総文字数}を
+抑えるものではない．
+\end{proposition}
+
+\begin{proof}
+signature 文法の型タグを忘れれば，
+ファンアウトが高々 $f$，
+規則ランクが高々 $r$ の MCFG になる．
+逆に，ランク保存の良形標準化
+（命題~\ref{prop:good-normalization}），
+刈り込んだ生成語型精密化
+（定義~\ref{def:output-refinement}），
+開始ソートへの昇格演算と独立の $\eps$ 定数によって，
+$\mathsf{MCFL}(f,r)$ のすべての言語を
+この signature 上で表現できる．
+開始ソートでは代入可能性の条件は自明である．
+それ以外のソートでは，
+補題~\ref{lem:signature-contexts} により，
+signature における四例の含意は，
+各アリティと成分別型について
+定義~\ref{def:tuple-substitutable} と一致する．
+刈り込んだ表示には不要な非終端記号や
+関数が含まれないので，
+~\cite[Section~6]{Yoshinaka2015General}
+の要求も満たす．
+これで表示した言語クラスの等式が従う．
+
+実効性に関する仮定については，
+ソートや文脈への所属判定と
+テンプレートの評価が，
+上の補題と有限型付けによって多項式時間で行える．
+規則ランク有界の MCFG の一様な所属判定も
+多項式時間である
+~\cite[Proposition~4]{Yoshinaka2011}．
+すべての演算のアリティは高々 $r$ である．
+長さ $n$ の文について，
+開始語，非空の内部区切り語をはさみ
+互いに重ならない高々 $f$ 個の非空区間による
+タグ付きタプル，および対応する文脈関数を列挙する．
+各親タプル出現について，
+子の成分に対応する順序付き区間
+（高々 $fr$ 個）と残りの終端部分で決まる
+ランク高々 $r$ の良形テンプレートを列挙する．
+ここでは実際の\emph{関数記号}を記録する．
+必要に応じて昇格演算と $\eps$ 定数も加える．
+補題~\ref{lem:composition-witness-materialization} により，
+実現可能な関数のインスタンスはすべて列挙に現れる．
+必要な切断位置は高々 $2f(r+1)$ 個なので，
+$f,r,h$ を固定すれば列挙は $n$ の多項式時間である．
+これらはまさに Assumptions~1--3 に対応する．
+したがって Yoshinaka の Theorem~1 と Lemma~3 を適用すると，
+主張した学習に関する帰結が得られる．
+\end{proof}
+
+\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
+\label{lem:substp}
+上の signature と列挙を用いると，
+任意の有限正例標本 $K\subseteq\Sigma^*$ について，
+Yoshinaka の $\mathrm{SUBST}_{\mathrm P}(K)$ と
+$\mathcal B^{\le r}_{f,h}(K)$ は
+同じ言語を生成する．
+\end{lemma}
+
+\begin{proof}
+まず同じ観測タプルと型付きソートで添字づけられた
+開始記号以外の非終端記号を対応させる．
+親 $s_0$ とテンプレート値
+$z=\rho(s_1,\ldots,s_t)$ をもつ
+$\mathrm{SUBST}_{\mathrm P}$ の規則には，
+~\cite{Yoshinaka2015General} の記法で
+\(c\in\mathrm{CON}_O(K),\qquad c\odot s_0,\ c\odot z\in K\)
+を満たす共通文脈 $c$ が必要である．
+補題~\ref{lem:signature-contexts} により，
+これは許容される文文脈である．
+型制約付き Rule~(Link) は
+$[s_0]$ から $[z]$ へ遷移する．
+さらに Rule~(Comp)，または $t=0$ なら
+Rule~(Const) が続く．
+その証拠の存在は
+補題~\ref{lem:composition-witness-materialization}
+で保証される．
+逆に，型制約付きの各 Link は，
+単項恒等テンプレートに対する
+$\mathrm{SUBST}_{\mathrm P}$ のインスタンスであり，
+各 Comp と Const は
+それ自体が親の出現によって裏づけられたインスタンスである．
+したがって導出に関する帰納法により，
+開始記号以外の対応する非終端記号が
+生成する言語は一致する．
+
+開始ソートにおける文脈は恒等関数だけであり，
+開始ソートを引数に取る演算は存在しない．
+したがって観測された各開始記号は，
+昇格演算と直接の $\eps$ 定数によって，
+同じ言語
+\(\bigcup_{w\in K\cap\Sigma^+}L([(w)]) \ \cup\ (\{\eps\}\cap K)\)
+を生成する．
+これは型制約付きの Rule~(Start) と正確に一致する．
+$K=\emptyset$ の場合は両構成とも空言語を生成する．
+\end{proof}
+
+
+
+
 \paragraph{Yoshinaka の有限標本文法との厳密な関係．}
 有限型付けによる変更点は，
 Yoshinaka の文法構成における代入リンクだけである．
@@ -1682,6 +1904,31 @@ $G=(V,\Sigma,P,S,\fan)$ とし，
 新しい開始リンクは別途扱い，
 追加の証拠語を必要としない．
 \end{proof}
+
+\paragraph{特徴証拠の対応．}
+Yoshinaka の証明では文脈添字付きの
+$\mathrm{SUBST}_{\mathrm D}$ を使用するが，
+同論文の第7節では追加の仮定の下で
+$\mathrm{SUBST}_{\mathrm P}$ についても論じている
+~\cite{Yoshinaka2015General}．
+本稿の標本ごとの言語の一致は，
+補題~\ref{lem:substp} によって直接証明した．
+開始ソート以外の証拠を
+$c_X=\chi(X)$ と $s_X=\omega(X)$
+として選ぶと，
+$\Wit(\widetilde G_0)$ と正確に対応する．
+開始ソートへの昇格に関する証拠は
+選ばれた語の中に既に含まれ，
+$\eps$ が必要な場合には
+その直接の証拠を加える．
+ここで同一視しているのは，
+開始ソートの規約をそろえたときの
+正例語からなる証拠の\emph{構成パターン}であり，
+仮説文法の構文的な同一性を主張するものではない．
+
+
+
+
 
 命題~\ref{prop:witness-cardinality} が制御するのは
 選択した語の個数だけであり，
@@ -3975,242 +4222,6 @@ $(\mathtt a^{2^i},\eps)$ である．
 有限状態への精密化により，
 一つの精密化状態の内部で必要な最短証拠が
 指数的に長くなり得る．
-
-\section{Yoshinaka の一般枠組みとの関係}
-\label{sec:general-framework}
-
-規則ランク有界の学習器は，Yoshinaka の代入可能な
-signature に関する枠組み~\cite{Yoshinaka2015General} の
-型付きの特別な場合である．
-この対応を明示するのは，先行研究の質的な学習結果と，
-第~\ref{sec:char-data}節の総文字数上界とを区別するためである．
-
-有限アルファベット $\Sigma$，$f,r\ge1$ および有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
-$h=\widehat s$，$M=\mathsf S^\sharp$，$M^+=\mathsf S$ とおく．
-signature $\mathfrak S_{f,r,h}$ は，
-開始ソート $O_*=\{\overline w:w\in\Sigma^*\}$
-（$\Sigma^*$ のタグ付きコピー）と，タグ付きソート
-\[
- T_{d,\boldsymbol\mu}
- =\{\tuple w\in(\Sigma^+)^d:
- h^{(d)}(\tuple w)=\boldsymbol\mu\},
- \qquad
- 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d
-\]
-をもつ．
-各 $T_{d,\boldsymbol\mu}$ も固有のソートタグを付けたコピーとし，
-以下では読みやすさのため元のタプルで表す．
-したがってすべてのソートは互いに素である
-~\cite[Example~4]{Yoshinaka2015General}．
-その関数記号は，子の規則ランクが高々 $r$ である
-型の整合したすべての良形 MCFG テンプレート
-（ランク0を含む），
-$(w)$ を $\overline w$ に送る昇格演算 $T_{1,\mu}\to O_*$，
-および $O_*$ に属する零項の $\overline{\eps}$ 定数からなる．
-$O_*$ を入力として受け取る関数はない．
-型のタグを忘れると，これは
-~\cite[Section~8]{Yoshinaka2015General}
-の意味で，非空タプル上の良形
-$\lambda$-自由 MCFG 演算の signature を
-有限ソート精密化したものである．
-この型なし signature は
-~\cite[Example~3]{Yoshinaka2015General}
-の例と文字どおり同一ではなく，
-\emph{非空成分に制限した変種}である．
-ファンアウト1における接頭辞--接尾辞型付けの場合は，
-~\cite[Example~4]{Yoshinaka2015General}
-に対応する．
-この signature 上のある文法で実現可能な
-部分構造と文脈を，それぞれ
-$\mathcal S_O,\mathcal C_O$ と書く．
-
-\begin{lemma}[Signature の文脈は許容文文脈である]
-\label{lem:signature-contexts}
-開始ソート以外の各ソートについて
-\[
- \mathcal S_{T_{d,\boldsymbol\mu}}
- =T_{d,\boldsymbol\mu},
- \qquad
- \mathcal C_{T_{d,\boldsymbol\mu}}
- =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}
-\]
-が成り立つ．
-後者の等式は $T_{d,\boldsymbol\mu}$ 上の
-\emph{関数}の集合の等式である．
-また $\mathcal C_{O_*}$ に含まれるのは
-恒等関数だけである．
-\end{lemma}
-
-\begin{proof}
-開始ソート以外の各ソートの要素は，
-ランク0の良形テンプレート定数として表現できる．
-$O_*$ を入力に取る演算は存在しない．
-開始ソート以外のソートに対する文脈について，
-穴から開始記号へ至る経路に沿って帰納法を行う．
-良形テンプレートと許容される親文脈を合成しても，
-区別した子の変数の出現順序と
-各変数の一回限りの出現は保存される．
-同じ出力成分内の連続する穴は，
-終端記号または非空の兄弟成分で分離される
-（非融合性）．
-別々の出力成分にある穴は，
-非空の親文脈の区切り語によって分離される．
-したがって補題~\ref{lem:filling-identity} を
-繰り返し適用すれば，
-得られるすべての文文脈は $\mathcal E_d$ に属する．
-
-逆に，任意の
-$E=v_0\blank_1v_1\cdots\blank_dv_d
-\in\mathcal E_d$ に対し，
-単項の良形テンプレート
-$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$ を，
-ランク0の子と開始ソートへの昇格演算とともに用いれば，
-関数 $\tuple x\mapsto\overline{E[\tuple x]}$ が実現する．
-内部区切り語 $v_i$ は良形性により非空であり，
-出力の型は $h$ によって決まる．
-\end{proof}
-
-\begin{proposition}[Yoshinaka の2015年の枠組みによる規則ランク有界クラスの包含]
-\label{prop:yoshinaka2015-embedding}
-signature $\mathfrak S_{f,r,h}$ は
-~\cite{Yoshinaka2015General} の
-Assumptions~1--3 を満たし，
-\(\mathsf{Subst}(\mathfrak S_{f,r,h}) =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)\)
-となる．
-したがって，規則ランク有界のクラスには
-Yoshinaka の同定定理
-~\cite[Theorem~1]{Yoshinaka2015General}
-を適用できる．
-$f,r,h$ を固定すれば，
-蓄積標本に関する更新時間は多項式であり，
-刈り込まれた signature 文法表示について，
-特徴集合の要素数は
-$|N^\sharp|+|P^\sharp|$ 以下である
-~\cite[Lemma~3]{Yoshinaka2015General} の直後の本文で与えられる
-$\mathrm{SUBST}_{\mathrm D}$ に対する上界である．
-ただし，これは特徴語の\emph{総文字数}を
-抑えるものではない．
-\end{proposition}
-
-\begin{proof}
-signature 文法の型タグを忘れれば，
-ファンアウトが高々 $f$，
-規則ランクが高々 $r$ の MCFG になる．
-逆に，ランク保存の良形標準化
-（命題~\ref{prop:good-normalization}），
-刈り込んだ生成語型精密化
-（定義~\ref{def:output-refinement}），
-開始ソートへの昇格演算と独立の $\eps$ 定数によって，
-$\mathsf{MCFL}(f,r)$ のすべての言語を
-この signature 上で表現できる．
-開始ソートでは代入可能性の条件は自明である．
-それ以外のソートでは，
-補題~\ref{lem:signature-contexts} により，
-signature における四例の含意は，
-各アリティと成分別型について
-定義~\ref{def:tuple-substitutable} と一致する．
-刈り込んだ表示には不要な非終端記号や
-関数が含まれないので，
-~\cite[Section~6]{Yoshinaka2015General}
-の要求も満たす．
-これで表示した言語クラスの等式が従う．
-
-実効性に関する仮定については，
-ソートや文脈への所属判定と
-テンプレートの評価が，
-上の補題と有限型付けによって多項式時間で行える．
-規則ランク有界の MCFG の一様な所属判定も
-多項式時間である
-~\cite[Proposition~4]{Yoshinaka2011}．
-すべての演算のアリティは高々 $r$ である．
-長さ $n$ の文について，
-開始語，非空の内部区切り語をはさみ
-互いに重ならない高々 $f$ 個の非空区間による
-タグ付きタプル，および対応する文脈関数を列挙する．
-各親タプル出現について，
-子の成分に対応する順序付き区間
-（高々 $fr$ 個）と残りの終端部分で決まる
-ランク高々 $r$ の良形テンプレートを列挙する．
-ここでは実際の\emph{関数記号}を記録する．
-必要に応じて昇格演算と $\eps$ 定数も加える．
-補題~\ref{lem:composition-witness-materialization} により，
-実現可能な関数のインスタンスはすべて列挙に現れる．
-必要な切断位置は高々 $2f(r+1)$ 個なので，
-$f,r,h$ を固定すれば列挙は $n$ の多項式時間である．
-これらはまさに Assumptions~1--3 に対応する．
-したがって Yoshinaka の Theorem~1 と Lemma~3 を適用すると，
-主張した学習に関する帰結が得られる．
-\end{proof}
-
-\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
-\label{lem:substp}
-上の signature と列挙を用いると，
-任意の有限正例標本 $K\subseteq\Sigma^*$ について，
-Yoshinaka の $\mathrm{SUBST}_{\mathrm P}(K)$ と
-$\mathcal B^{\le r}_{f,h}(K)$ は
-同じ言語を生成する．
-\end{lemma}
-
-\begin{proof}
-まず同じ観測タプルと型付きソートで添字づけられた
-開始記号以外の非終端記号を対応させる．
-親 $s_0$ とテンプレート値
-$z=\rho(s_1,\ldots,s_t)$ をもつ
-$\mathrm{SUBST}_{\mathrm P}$ の規則には，
-~\cite{Yoshinaka2015General} の記法で
-\(c\in\mathrm{CON}_O(K),\qquad c\odot s_0,\ c\odot z\in K\)
-を満たす共通文脈 $c$ が必要である．
-補題~\ref{lem:signature-contexts} により，
-これは許容される文文脈である．
-型制約付き Rule~(Link) は
-$[s_0]$ から $[z]$ へ遷移する．
-さらに Rule~(Comp)，または $t=0$ なら
-Rule~(Const) が続く．
-その証拠の存在は
-補題~\ref{lem:composition-witness-materialization}
-で保証される．
-逆に，型制約付きの各 Link は，
-単項恒等テンプレートに対する
-$\mathrm{SUBST}_{\mathrm P}$ のインスタンスであり，
-各 Comp と Const は
-それ自体が親の出現によって裏づけられたインスタンスである．
-したがって導出に関する帰納法により，
-開始記号以外の対応する非終端記号が
-生成する言語は一致する．
-
-開始ソートにおける文脈は恒等関数だけであり，
-開始ソートを引数に取る演算は存在しない．
-したがって観測された各開始記号は，
-昇格演算と直接の $\eps$ 定数によって，
-同じ言語
-\(\bigcup_{w\in K\cap\Sigma^+}L([(w)]) \ \cup\ (\{\eps\}\cap K)\)
-を生成する．
-これは型制約付きの Rule~(Start) と正確に一致する．
-$K=\emptyset$ の場合は両構成とも空言語を生成する．
-\end{proof}
-
-\paragraph{特徴証拠の対応．}
-Yoshinaka の証明では文脈添字付きの
-$\mathrm{SUBST}_{\mathrm D}$ を使用するが，
-同論文の第7節では追加の仮定の下で
-$\mathrm{SUBST}_{\mathrm P}$ についても論じている
-~\cite{Yoshinaka2015General}．
-本稿の標本ごとの言語の一致は，
-補題~\ref{lem:substp} によって直接証明した．
-開始ソート以外の証拠を
-$c_X=\chi(X)$ と $s_X=\omega(X)$
-として選ぶと，
-$\Wit(\widetilde G_0)$ と正確に対応する．
-開始ソートへの昇格に関する証拠は
-選ばれた語の中に既に含まれ，
-$\eps$ が必要な場合には
-その直接の証拠を加える．
-ここで同一視しているのは，
-開始ソートの規約をそろえたときの
-正例語からなる証拠の\emph{構成パターン}であり，
-仮説文法の構文的な同一性を主張するものではない．
-
 
 \input{appendix_window_abelian_JP.tex}
 \input{appendix_window_group_JP.tex}
