@@ -78,6 +78,27 @@ https://aclanthology.org/W15-2308.pdf
   and O(||G||³ theta) theorems.
 - The exact page delta is to be determined by bilingual PDF build.
 
+## Validated bilingual proof-layout build
+
+The **final revision on PR #67** (commit
+\`122a3641b0bf3f13bd06d6a5d0d493756264099e\`)
+passed bilingual, cross-reference and artifact-upload checks in
+GitHub Actions run **39848545315**:
+
+https://github.com/growupkuriyama-hub/Papers/actions/runs/39848545315
+
+- English PDF **51 pages** (same as v84);
+- Japanese PDF **54 pages** (one fewer than v84);
+- Both built without LaTeX errors or overfull hboxes;
+- Two mild English underfull hboxes remain.
+- Publication to main is a separate GitHub Actions workflow
+  triggered by the PR merge; verify the fixed URLs independently.
+
+The point of the reorganization is to improve attribution and
+mathematical exposition; it is **not** a claim of a 4–7-page reduction.
+Full rendered-page visual inspection and independent proof
+certification remain open.
+
 ## Release gates
 
 - EN and JP LaTeX compilation and cross-reference validation;
