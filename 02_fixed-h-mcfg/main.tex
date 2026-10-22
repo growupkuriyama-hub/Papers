@@ -51,7 +51,7 @@
   }%
 }
 
-\title{Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing}
+\title{Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing}
 \author{Takayuki Kuriyama\\
 Independent Researcher, Tokyo, Japan\\
 \texttt{growup.kuriyama@gmail.com}}
@@ -61,9 +61,11 @@ Independent Researcher, Tokyo, Japan\\
 \maketitle
 
 \begin{abstract}
-Fix a finite-monoid morphism $h:\Sigma^*\to M$ and a fan-out bound $f$.
-We study positive-data learning of multiple context-free languages under
-componentwise $h$-typed substitutability. We give exact set-driven
+Fix a surjective finite-semigroup morphism $s:\Sigma^+\to\mathsf S$
+and a fan-out bound $f$.  We study positive-data learning of multiple
+context-free languages under componentwise $s$-typed substitutability.
+A canonical fresh-identity completion $\widehat s:\Sigma^*\to\mathsf S^\sharp$
+evaluates grammar yields, with empty words treated separately. We give exact set-driven
 reconstruction and a conservative explanatory learner, with polynomial-time
 hypothesis updates at bounded rule rank.
 
@@ -90,7 +92,7 @@ data lower-bound problem remains open.
 \end{abstract}
 
 \medskip
-\noindent\textbf{Keywords:} grammatical inference; multiple context-free grammars; positive data; finite-monoid typing; multidimensional substitutability; Gold identification; rule rank.
+\noindent\textbf{Keywords:} grammatical inference; multiple context-free grammars; positive data; finite-semigroup typing; multidimensional substitutability; Gold identification; rule rank.
 \medskip
 
 \section{Introduction}
@@ -133,11 +135,14 @@ A recent \emph{substitution lemma} for MCFL nonmembership
 it is a necessary condition for MCFL membership, not a
 distributional positive-data learning criterion.
 
-This paper fixes, as part of the learnable class, a homomorphism
-$h:\Sigma^*\to M$ into a finite monoid and compares observed tuples only
-when corresponding components have equal $h$-values.  The compositional type
-guard is fixed before the positive text is seen, separating the choice of a
-finite bias from learning under that bias~\cite{CosteTyping2004}.
+This paper fixes, as part of the learnable class, a surjective finite-semigroup
+homomorphism $s:\Sigma^+\to\mathsf S$ and compares observed \\emph{nonempty}
+tuple components only when their $s$-values agree.  The canonical
+fresh-identity completion $h=\\widehat s:\Sigma^*\to\mathsf S^\\sharp$
+is used only to evaluate templates, including empty terminal gaps.
+The compositional type guard is fixed before the positive text is seen,
+separating the choice of a finite bias from learning under that
+bias~\\cite{CosteTyping2004}.
 Prefix--suffix and DFA transition morphisms provide two useful families.
 A fixed prefix--suffix window is a uniform, independently chosen finite
 parameter of the target class, not a parameter tuned to each sample;
@@ -336,38 +341,132 @@ for its total component length.
 \end{definition}
 
 
-\subsection{Finite-Monoid Typing}
+\subsection{Fixed Finite-Semigroup Typing and Canonical Completion}
+\label{subsec:semigroup-typing}
 
-\begin{definition}[Finite typing representation]
+Following the fixed-semigroup formulation of the companion CFG revision
+\cite{kuriyamaCFG}, the \emph{learning bias} is a surjective semigroup
+homomorphism
+\(s:\Sigma^+\twoheadrightarrow\mathsf S\) into a finite semigroup
+\(\mathsf S\). It is represented by the multiplication table and letter
+images \(s(a)\) for \(a\in\Sigma\). In particular, \(s(w)\) is computable
+in linear time for nonempty \(w\). Surjectivity loses no generality:
+a finite semigroup codomain is always restricted to the positive image.
+If \(\Sigma=\emptyset\), only \(\emptyset\) and \(\{\eps\}\) are possible
+target languages and are handled directly.
+
+\begin{definition}[Fresh-identity completion and yield types]
 \label{def-monoid-morphism}
-A finite-monoid homomorphism \(h\colon\Sigma^*\to M\) is represented by the
-multiplication table of \(M\) together with the letter images \(h(a)\),
-\(a\in\Sigma\).  Hence \(h(w)\) is computable by a left-to-right product in
-linear time in \(|w|\).  For a tuple \(\tuple w=(w_1,\ldots,w_d)\), write
-\(h^{(d)}(\tuple w):=(h(w_1),\ldots,h(w_d))\in M^d\).
+\label{def:semigroup-typing}
+Let \(\mathsf S^\sharp=\mathsf S\uplus\{\mathbf 1_\sharp\}\)
+be obtained by adjoining a \emph{new} identity, even if
+\(\mathsf S\) already contains an identity. Define
+\[
+h=\widehat s:\Sigma^*\twoheadrightarrow\mathsf S^\sharp,
+\qquad
+\widehat s(w)=
+\begin{cases}
+ \mathbf 1_\sharp,&w=\eps,\\
+ s(w),&w\in\Sigma^+.
+\end{cases}
+\]
+This is a monoid homomorphism. When evaluating a grammar template,
+we write \(M=\mathsf S^\sharp\) and use \(h=\widehat s\).
+For a tuple \(\tuple w=(w_1,\ldots,w_d)\) put
+\(h^{(d)}(\tuple w)=(h(w_1),\ldots,h(w_d))\in M^d\).
+The semigroup tuple type \(s^{(d)}\) is defined when all components
+are nonempty, and then \(h^{(d)}=s^{(d)}\).
+The additional identity is an implementation value for the empty word,
+not a new positive type of the learning bias.
 \end{definition}
 
-\begin{definition}[Refinement of finite typings]
+\begin{lemma}[Nonempty-tuple transfer from monoids to semigroups]
+\label{lem:semigroup-transfer}
+Let \(h_0:\Sigma^*\to M_0\) be any finite-monoid morphism and let
+\(s_0=h_0|_{\Sigma^+}:\Sigma^+\twoheadrightarrow h_0(\Sigma^+)\).
+For all \(1\le d\le f\) and all
+\(\tuple x,\tuple y\in(\Sigma^+)^d\),
+\[
+h_0^{(d)}(\tuple x)=h_0^{(d)}(\tuple y)
+\quad\Longleftrightarrow\quad
+s_0^{(d)}(\tuple x)=s_0^{(d)}(\tuple y)
+\quad\Longleftrightarrow\quad
+\widehat{s_0}^{(d)}(\tuple x)=\widehat{s_0}^{(d)}(\tuple y).
+\]
+Consequently the finite-monoid and finite-semigroup definitions of
+tuple substitutability give the \emph{same} target class.
+For each positive sample \(K\), the capped and uncapped
+reconstruction grammars of Definition~\ref{def:reconstruction} have
+the same rules under \(h_0\), \(s_0\), and \(\widehat{s_0}\),
+up to type notation; the direct \(\eps\)-start rule is unchanged.
+For every good grammar \(G\), the \emph{trimmed} yield-type refinements
+using \(h_0\) and \(\widehat{s_0}\) are isomorphic after renaming their
+reachable/productive typed nonterminals. Their selected rule witnesses
+therefore coincide under corresponding choices.
+\end{lemma}
+\begin{proof}
+Each tuple component belongs to \(\Sigma^+\), where the three maps
+have exactly the same equality kernel. A substitution link in
+Definition~\ref{def:reconstruction} tests only these equalities and
+a common observed sentence context, so it is unchanged.
+Every terminal tuple produced by a nonterminal of a good grammar
+has nonempty components, by \(\lambda\)-freeness; its typed label is
+therefore determined solely by the positive kernel.
+All successful derivations and their component types correspond by
+induction over templates. The distinct image assigned to \(\eps\)
+can occur in the evaluation of empty \emph{terminal factors},
+but these are never nonterminal tuple components in a good grammar;
+the overall output type is the actual word type.
+Trimming thus removes all labels not representing successful
+positive component yields. Finally, the direct start rule handles
+\(\eps\) independently. This proves the claimed correspondences.
+\end{proof}
+
+\begin{definition}[Refinement of finite-semigroup typings]
 \label{def:h-refinement}
-Let \(h\colon\Sigma^*\to M\) and \(h'\colon\Sigma^*\to M'\) be finite
-homomorphisms.  We say that \(h'\) \emph{refines} \(h\), and write
-\(h\preceq h'\), when
-\(\ker h'\subseteq\ker h.\)
-Equivalently, the value of \(h\) factors through the image of \(h'\): there is
-a unique monoid homomorphism
-\(\upsilon\colon\operatorname{im}h'\to\operatorname{im}h\) satisfying
-\(h=\upsilon\circ h'\), after restricting the codomains to their images.
+For finite-semigroup typings \(s,t:\Sigma^+\to\mathsf S,\mathsf T\),
+write \(s\preceq t\) if \(\ker t\subseteq\ker s\) on \(\Sigma^+\).
+Equivalently, \(s\) factors through the positive image of \(t\)
+by a semigroup morphism. Fresh completion preserves this order:
+\[
+ \ker\widehat t\subseteq\ker\widehat s
+ \quad\Longleftrightarrow\quad
+ \ker t\subseteq\ker s.
+\]
+For product typings, put \((s,t)(w)=(s(w),t(w))\) for \(w\ne\eps\),
+restrict its codomain to the positive image, and adjoin a fresh
+identity. Then
+\(\ker\widehat{(s,t)}
+ =\ker\widehat s\cap\ker\widehat t\).
 \end{definition}
+\begin{proof}
+Under either fresh completion, the empty word has a unique type
+not attained by a nonempty word. On positive words, the kernel
+is exactly that of the underlying semigroup morphism.
+The refinement and product identities follow.
+\end{proof}
 
-For two typings $h$ and $g$, their product typing $(h,g)$ refines both and
-satisfies $\ker(h,g)=\ker h\cap\ker g$.
+We retain the convenient notation \(h:\Sigma^*\to M\) for
+\emph{monoid implementations} in the proofs and in the three
+quantitative appendices. In such statements the semantic typing is
+always \(s=h|_{\Sigma^+}\), with its positive-image codomain, and
+the completion \(\widehat s\) may be used instead without changing
+the target class, learner or selected witnesses.
+Likewise the legacy notation \(\Cmcf{f}{h}\) abbreviates
+\(\Cmcf{f}{h|_{\Sigma^+}}\).
+Bounds written in terms of \(|M|\) apply to the canonical
+implementation \(M=\mathsf S^\sharp\), with
+\(|M|=|\mathsf S|+1\); their polynomial exponents are unchanged.
+\emph{Algebraic} conditions (including \(\mathbf{LG}\)) apply to
+the positive image \(\mathsf S\), never to \(\mathsf S^\sharp\).
 
-Finite-monoid homomorphisms serve here as finite-state typings.  Let
-$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$ be the trivial typing.  A DFA
-transition morphism for a regular superset of the target is another example
-\cite{Pin1986}; only the induced finite summary is used, not a membership
-oracle.  We call $h^{(d)}(\tuple w)$ the \emph{yield type}.  The
-prefix--suffix morphism below supplies the boundary typing used later.
+The trivial semigroup typing \(s_{\mathrm{triv}}\) has one positive
+type. Its traditional monoid presentation is
+\(h_{\mathrm{triv}}:\Sigma^*\to\{1\}\).
+DFA transition morphisms and finite-group morphisms still serve as
+convenient representations; their positive restrictions are the
+learning biases. The prefix--suffix morphism below is another
+such representation.
 
 \begin{definition}[Prefix--suffix typing]
 \label{def:prefix-suffix-typing}
@@ -401,6 +500,11 @@ $h_\Sigma^{k,\ell}(xy)=h_\Sigma^{k,\ell}(x)\cdot h_\Sigma^{k,\ell}(y)$.
 Since $h_\Sigma^{k,\ell}$ is surjective, associativity is inherited from
 concatenation and $h_\Sigma^{k,\ell}(\eps)$ is the identity.  Thus
 $h_\Sigma^{k,\ell}:\Sigma^*\to M_{k,\ell}$ is a finite-monoid homomorphism.
+Its positive restriction $s_\Sigma^{k,\ell}:=h_\Sigma^{k,\ell}|_{\Sigma^+}$
+is the corresponding finite-semigroup boundary typing. Since the
+short-word tag distinguishes $\eps$ from all positive words,
+$h_\Sigma^{k,\ell}$ is isomorphic to the fresh completion of
+$s_\Sigma^{k,\ell}$.
 
 A finite typing $h$ is called \emph{$(k,\ell)$-boundary-determined} when
 $h\preceq h_\Sigma^{k,\ell}$.  Equivalently, equality of prefix--suffix types implies equality of $h$-types;
@@ -624,14 +728,14 @@ For $L\subseteq\Sigma^*$ and $\tuple x\in(\Sigma^*)^d$, define its
 \(\D_L^{(d)}(\tuple x):=\{E\in\mathcal E_d:E[\tuple x]\in L\}.\)
 When $d$ is clear, the superscript is omitted.
 
-\begin{definition}[$(f,h)$-tuple substitutability]
+\begin{definition}[$(f,s)$-tuple substitutability]
 \label{def:tuple-substitutable}
-Let $f\ge1$ and let $h:\Sigma^*\to M$ be a finite monoid
-homomorphism.  A language $L\subseteq\Sigma^*$ is
-\emph{$(f,h)$-tuple-substitutable} if, for every $1\le d\le f$ and all
+Let $f\ge1$ and let $s:\Sigma^+\to\mathsf S$ be a finite-semigroup
+homomorphism. A language $L\subseteq\Sigma^*$ is
+\emph{$(f,s)$-tuple-substitutable} if, for every $1\le d\le f$ and all
 $\tuple x,\tuple y\in(\Sigma^+)^d$,
 \[
- h^{(d)}(\tuple x)=h^{(d)}(\tuple y),\qquad
+ s^{(d)}(\tuple x)=s^{(d)}(\tuple y),\qquad
  \D_L^{(d)}(\tuple x)\cap\D_L^{(d)}(\tuple y)\ne\emptyset
 \]
 imply $\D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y)$.
@@ -649,7 +753,7 @@ At fan-out one, every sentence context has the form
 $u\blank_1v$, so $\D_L^{(1)}(x)$ is canonically the ordinary two-sided
 distribution $\D_L(x)=\{(u,v):uxv\in L\}$.  Hence Definition~\ref{def:tuple-substitutable}
 specializes, without any external convention, to the ordinary two-sided
-fixed-$h$ substitutability condition on nonempty factors.
+fixed-$s$ substitutability condition on nonempty factors.
 
 \paragraph{Typing--distribution equivalence.}
 For $\tuple x,\tuple y\in(\Sigma^+)^d$, write
@@ -664,9 +768,11 @@ when the arity is clear.
 
 \begin{definition}[The target class]
 \label{def:class-cmcf}
-Fix $f\ge1$ and a finite monoid homomorphism $h$.  The class
-$\Cmcf{f}{h}$ consists of all $f$-MCFLs that are
-$(f,h)$-tuple-substitutable.
+Fix $f\ge1$ and a finite-semigroup typing $s$. The class
+$\Cmcf{f}{s}$ consists of all $f$-MCFLs that are
+$(f,s)$-tuple-substitutable. For a finite-monoid morphism
+$h:\Sigma^*\to M$, the notation $\Cmcf{f}{h}$ means the same
+class as $\Cmcf{f}{h|_{\Sigma^+}}$.
 \end{definition}
 
 
@@ -3155,7 +3261,7 @@ target of minimum rule rank two across all finite fan-outs.
 \section{Conclusion}
 \label{sec:conclusion}
 
-Fixed finite-monoid typing yields exact positive-data reconstruction
+Fixed finite-semigroup typing yields exact positive-data reconstruction
 and TxtEx identification of the $(f,h)$-tuple-substitutable MCFG
 class.  At fixed rule rank, updates are polynomial in the observed
 sample size; this complexity statement is distinct from the cost
@@ -4024,11 +4130,14 @@ O.~Rambow and G.~Satta.
 \bibitem{kuriyamaCFG}
 T.~Kuriyama.
 \newblock Distributional learning of context-free languages under fixed
-finite-monoid typing.
-\newblock Companion manuscript under review at \emph{Theoretical Computer Science},
-2026. The semilattice characteristic-data lower bound cited here is in the
-\href{https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf}{publicly accessible revised manuscript (fixed GitHub commit 834e99a1, Proposition~6.3 and Appendix~C)};
-\href{https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex}{corresponding TeX source}.
+finite-semigroup typing.
+\newblock Companion manuscript, TCS-D-26-00494R1, revised submission,
+2026. The fixed two-element semilattice lower bound and the
+fresh-identity positive-typing convention are in the
+\href{https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/archive/tcs-r1-2026-10-22/TCS-D-26-00494_Manuscript_Clean.pdf}{frozen Round-1 revised manuscript};
+\href{https://github.com/growupkuriyama-hub/Papers/blob/main/01_fixed-h-cfg/archive/tcs-r1-2026-10-22/TCS-D-26-00494_Manuscript_Clean.tex}{the corresponding frozen TeX source}.
+The cited R1 result is Proposition~6.4, with normalization details in
+Appendix~C.
 \newblock Earlier public preprint: arXiv:1409.6247v4 [cs.FL].
 The updated arXiv version is not yet available.
 
