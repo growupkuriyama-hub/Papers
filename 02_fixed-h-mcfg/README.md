@@ -1,11 +1,17 @@
 # #2 — finite-semigroup-typed MCFG
 
-**Title (v84 canonical main working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v85 Yoshinaka (2015)-based main draft after merge):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
-## v84 M6（正規化と厚み移送）証明補強（未投稿）
+## v85 Yoshinaka (2015)を質的学習の基盤とする再編（未投稿）
+
+規則ランク有界なMCFGの型付きsignatureとYoshinaka (2015)から導く正例同定を，第3節の冒頭へ移動。\`SUBST_D\` と \`SUBST_P\` の相違を区別し，具体的再構成器との標本単位の対応を保持。質的学習の一般論の重複証明を削り，特徴証拠語の総文字数とrank無制限の直接論証は維持した。英日とも同じ構成。
+
+[改訂記録](revision/v85_yoshinaka2015_qualitative_reorganization.md)。全頁目視と独立数学監査を経るまでは投稿確定稿ではない。
+
+## v84 M6（正規化と厚み移送）証明補強（改訂履歴）
 
 Claude集中査読を吟味し，良形正規化の非消去化・成分置換・非融合化について，生成タプル集合の像の等式と証拠語長の不等式を英日双方で詳細に証明した。縮約済み入力で省略する子の生産性を明記し，Seki・Kanazawa・Yoshinakaの引用の射程を訂正。固定窓の入力文法に対する総特徴データ長を $O(\|G_{\mathrm{in}}\|^3\max\{1,t_{G_{\mathrm{in}}}\})$ と明示。
 
@@ -43,9 +49,9 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v84 英日同期版）
+## 日本語査読版（v85 英日同期版）
 
-英語版 v84 の定理・数式・証明・文献に対応する日本語版を
+英語版 v85 の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
