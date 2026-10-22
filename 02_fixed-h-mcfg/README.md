@@ -1,15 +1,21 @@
 # #2 — finite-semigroup-typed MCFG
 
-**Title (v83 canonical main working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v84 canonical main working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
-## v83 I&C短縮版・Claude査読反映（未投稿）
+## v84 M6（正規化と厚み移送）証明補強（未投稿）
+
+Claude集中査読を吟味し，良形正規化の非消去化・成分置換・非融合化について，生成タプル集合の像の等式と証拠語長の不等式を英日双方で詳細に証明した。縮約済み入力で省略する子の生産性を明記し，Seki・Kanazawa・Yoshinakaの引用の射程を訂正。固定窓の入力文法に対する総特徴データ長を $O(\|G_{\mathrm{in}}\|^3\max\{1,t_{G_{\mathrm{in}}}\})$ と明示。
+
+[**v84改訂記録**](revision/v84_m6_thickness_transfer_proof_audit.md)。定理自体は弱めていない。数学的独立最終監査・PDF全頁目視は引き続き必要。
+
+## v83 I&C短縮版・Claude査読反映（改訂履歴）
 
 49ページ実験版を基に、半群移行補題、Yoshinakaのソート、空語と正語の扱い、TCS R1引用、関連arXiv原稿の開示を英日で修正し、**v83をmainの正本として統合**。英語版は50ページ、日本語版は54ページ（公開PDFはGitHub Actionsが本ブランチ上で再生成）。
 [改訂と未解決事項](revision/v83_claude_review_corrections.md) を参照。
-なお **M6（正規化・厚み移送の原典照合）は未完了**であり、mainは現在の執筆正本であってI&Cへの最終投稿確定稿ではない。
+**この段落はv83時点の記録：** 当時未完了だったM6の証明をv84で拡充した。mainは執筆正本であり，I&Cへの最終投稿確定稿ではない。
 
 ## v82半群化（改訂履歴）
 
@@ -37,9 +43,9 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v83 英日同期版）
+## 日本語査読版（v84 英日同期版）
 
-英語版 v83 の定理・数式・証明・文献に対応する日本語版を
+英語版 v84 の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
