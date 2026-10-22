@@ -59,6 +59,25 @@ set of preimages.
   the group/abelian/LG appendices, or the previously parked
   separation results.
 
+## Bilingual preflight and fixed-path publication
+
+After the last source updates, GitHub Actions workflow run
+**39784982975** completed successfully:
+
+https://github.com/growupkuriyama-hub/Papers/actions/runs/39784982975
+
+- English full manuscript: **51 pages**, compiled successfully.
+- Japanese full manuscript: **55 pages**, compiled successfully.
+- GitHub workflow validation and commit of both PDF files to \`main\`:
+  **success**. Published PDF commit:
+  \`bf24aca3e9db3d3d749a1f234e1c1b34f7f77113\`.
+- Both sources had no missing internal \`ref/eqref\` targets or
+  duplicate labels across their included appendices (static check).
+- No LaTeX fatal errors or overfull hboxes in the build log;
+  two mild preexisting underfull hbox instances in the EN source.
+- A successful PDF build does not certify mathematical correctness
+  or the visual page layout.
+
 ## Submission gates remaining
 
 1. Bilingual LaTeX compile, reference validation and PDF publish.
