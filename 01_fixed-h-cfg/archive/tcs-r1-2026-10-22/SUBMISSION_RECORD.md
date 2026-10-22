@@ -17,7 +17,7 @@
 - `TCS-D-26-00494_Response_to_Reviewers.pdf` — submitted reviewer responses.
 - `TCS-D-26-00494_R1_3files.zip` — CI-built submission package.
 
-## Editorial Manager combined PDF — binary not yet added
+## Editorial Manager combined PDF — original binary archived
 
 **Original name:** `TCS-D-26-00494_R1(20261022-091912).pdf`
 
@@ -25,7 +25,7 @@
 
 **Size:** 1,591,344 bytes; **43 pages**; Editorial Manager cover (1), response (14), Clean TeX link page (1), marked paper (26), declaration (1).
 
-This PDF was byte-for-byte identical to the independently supplied `TCS-D-26-00494_R1(20261022-091301).pdf`. The PDF remains available as the author's original local/uploaded file; **it must be uploaded as an actual binary file to this directory to complete GitHub preservation.** Do not replace it with a reconstructed composite, a text pointer, or a regenerated PDF. Upon upload, verify SHA-256 against the hash above.
+This PDF was byte-for-byte identical to the independently supplied `TCS-D-26-00494_R1(20261022-091301).pdf`. The PDF remains available as the author's original local/uploaded file; **the original binary is now archived in this directory.** Do not replace it with a reconstructed composite, a text pointer, or a regenerated PDF. Its SHA-256 was verified against the hash above.
 
 ## Submission-stage cautions
 
