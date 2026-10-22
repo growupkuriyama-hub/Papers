@@ -1,0 +1,533 @@
+% Editorial experiment: unsubmitted/parked structural results extracted without modification.
+% Do not \input this file into the lean article. Original proof source retained here.
+
+\subsection{Finite Typings beyond the Trivial Baseline}
+\label{subsec:finite-typing-separations}
+
+
+The filtering results of Section~\ref{sec:prelim} give useful sufficient
+constructions, but finite typing is not merely regular post-filtering of the
+trivial-typing class.  The next linear example gives a stronger separation and,
+at the same time, a sharp fan-out effect.
+
+Let
+\[
+  L_{\mathrm{cd}}:=
+  \{\mathtt a^n\mathtt c\mathtt b^n:n\ge0\}
+  \cup
+  \{\mathtt a^n\mathtt d\mathtt b^{2n}:n\ge0\}
+\]
+over $\Sigma_{\mathrm{cd}}:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$.  Let
+$M_{\mathrm{cd}}:=\{1,\eta_{\mathtt c},\eta_{\mathtt d},0\}$, where $1$ is the identity, $0$ is a zero,
+and every product of two elements of $\{\eta_{\mathtt c},\eta_{\mathtt d},0\}$ is $0$.  Define
+\[
+ h_{\mathrm{cd}}(\mathtt a)=h_{\mathrm{cd}}(\mathtt b)=1,
+ \qquad
+ h_{\mathrm{cd}}(\mathtt c)=\eta_{\mathtt c},
+ \qquad
+ h_{\mathrm{cd}}(\mathtt d)=\eta_{\mathtt d}.
+\]
+
+\begin{proposition}[A fan-out-sensitive typed language]
+\label{prop:strong-fanout-separation}
+The language $L_{\mathrm{cd}}$ is linear and
+\(L_{\mathrm{cd}}\in\Cmcf{1}{h_{\mathrm{cd}}}.\)
+For every $k,\ell\ge0$,
+\(L_{\mathrm{cd}}\notin\Cmcf{1}{h_{\Sigma_{\mathrm{cd}}}^{k,\ell}}.\)
+There do not exist a language $L_0\in \YSub{1}$ and a regular language
+$L_{\mathrm{reg}}$ such that
+$L_{\mathrm{cd}}=L_0\cap L_{\mathrm{reg}}$.  Moreover, for every finite monoid
+homomorphism $g:\Sigma_{\mathrm{cd}}^*\to N$,
+\(L_{\mathrm{cd}}\notin\Cmcf{2}{g}.\)
+\end{proposition}
+
+\begin{proof}
+The linear grammar
+\[
+  S\to C\mid D,\qquad
+  C\to\mathtt c\mid\mathtt a C\mathtt b,\qquad
+  D\to\mathtt d\mid\mathtt a D\mathtt b\mathtt b
+\]
+generates $L_{\mathrm{cd}}$.
+
+For $(1,h_{\mathrm{cd}})$-substitutability, let equal-type nonempty factors
+$x,y$ share an accepting context.  Type $1$ contains no center symbol, so the
+context fixes the branch and side and the count constraint forces $x=y$.
+For type $\eta_{\mathtt c}$, writing
+$x=\mathtt a^{n_1}\mathtt c\mathtt b^{n_2}$ and
+$y=\mathtt a^{n_1'}\mathtt c\mathtt b^{n_2'}$, common acceptance gives
+$n_1-n_2=n_1'-n_2'$, the invariant for every other $\mathtt c$-context.
+For type $\eta_{\mathtt d}$ the invariant is
+$2n_1-n_2=2n_1'-n_2'$, while type $0$ has empty distribution.  Hence
+$L_{\mathrm{cd}}\in\Cmcf{1}{h_{\mathrm{cd}}}$.
+
+Fix $k,\ell$ and choose $m\ge\max\{1,k+\ell\}$.  The words
+$x=\mathtt a^m\mathtt c\mathtt b^m$ and
+$y=\mathtt a^m\mathtt d\mathtt b^{2m}$ have the same
+$h_{\Sigma_{\mathrm{cd}}}^{k,\ell}$-type and share the empty context, but
+$\mathtt a\blank_1\mathtt b$ accepts $x$ and rejects $y$.  Thus every
+prefix--suffix typing fails at fan-out one.
+
+Suppose $L_{\mathrm{cd}}=L_0\cap L_{\mathrm{reg}}$ with
+$L_0\in\YSub{1}$ and $L_{\mathrm{reg}}$ regular.  Since
+$\mathtt c,\mathtt d\in L_0$, substitutability gives
+$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$; using
+$\mathtt a\mathtt d\mathtt b^2,\mathtt a\mathtt c\mathtt b\in L_0$ then gives
+$\D_{L_0}(\mathtt c\mathtt b)=\D_{L_0}(\mathtt c\mathtt b^2)$.
+Consequently
+\(\mathtt a^m\mathtt c\mathtt b^{m+t}\in L_0 \qquad(m\ge1,\ t\ge0).\)
+For $m$ larger than the state number of a DFA for $L_{\mathrm{reg}}$, pumping
+the final $\mathtt b^m$ block of the accepted target word gives some $t>0$
+with the same word in $L_{\mathrm{reg}}$, contradicting the assumed
+intersection representation.
+
+Finally, for finite $g:\Sigma_{\mathrm{cd}}^*\to N$, choose $1\le i<j$ with
+\(g(\mathtt a^i)=g(\mathtt a^j),\qquad g(\mathtt b^i)=g(\mathtt b^j).\)
+The tuples $(\mathtt a^i,\mathtt b^i)$ and
+$(\mathtt a^j,\mathtt b^j)$ have equal componentwise $g$-type and are both
+accepted by $\blank_1\mathtt c\blank_2$, whereas
+$\blank_1\mathtt d\blank_2\mathtt b^i$ accepts only the first:
+$\mathtt a^j\mathtt d\mathtt b^{i+j}\notin L_{\mathrm{cd}}$ for $i<j$.
+Thus arity two fails for every finite $g$.
+\end{proof}
+
+Hence $L_{\mathrm{cd}}$ separates finite typing from every prefix--suffix
+typing and arbitrary regular filtering at fan-out one, while no finite typing
+repairs the language once arity two is tested.
+
+\subsection{Local Boundary Control and Arbitrary Regular Filtering}
+\label{subsec:comparison-separations}
+
+Following the standard local-testability terminology~\cite{McNaughtonPapert1971}, call
+$L_{\mathrm{sl}}\subseteq\Sigma^*$ \emph{strictly 2-local} if there is a set
+$\mathsf{Adj}\subseteq(\Sigma\cup\{\vdash,\dashv\})^2$ such that
+\[
+ w\in L_{\mathrm{sl}}
+ \quad\Longleftrightarrow\quad
+ \text{every adjacent pair in $\vdash w\dashv$ belongs to $\mathsf{Adj}$},
+\]
+where $\vdash,\dashv\notin\Sigma$ are fixed boundary markers.
+
+\begin{lemma}[Strictly 2-local constraints are boundary typed]
+\label{lem:sl2-boundary-control}
+If $L_{\mathrm{sl}}\subseteq\Sigma^*$ is strictly 2-local, then for every $f\ge1$,
+\(L_{\mathrm{sl}}\in\Cmcf{f}{h_\Sigma^{1,1}}.\)
+\end{lemma}
+
+\begin{proof}
+Let equal-$h_\Sigma^{1,1}$-type nonempty tuples $\tuple x,\tuple y$ share an
+accepting context $E_0$.  Internal adjacent pairs of each $y_i$ are permitted
+because they occur in $E_0[\tuple y]$.  If $E[\tuple x]\in L_{\mathrm{sl}}$,
+every adjacent pair of $E[\tuple y]$ is either in fixed material, internal to
+a $y_i$, or crosses a component boundary.  These are permitted respectively
+by $E[\tuple x]$, by $E_0[\tuple y]$, or by equality of the first/last letters
+encoded by the boundary type; end-marker pairs are unchanged.  Thus
+$E[\tuple y]\in L_{\mathrm{sl}}$, and symmetry finishes the proof.
+\end{proof}
+
+\paragraph{Arbitrary target-dependent regular filters.}
+For comparison, on a fixed alphabet define
+\[
+ \mathcal F_f^{\mathrm{arb}}
+ :=\bigl\{L_0\cap R:L_0\in\YSub{f},\ R\text{ regular}\bigr\}
+   \cap f\text{-}\mathrm{MCFL}.
+\]
+This class contains all regular languages
+(take $\Sigma^*\in\YSub{f}$) and is therefore
+not TxtEx-identifiable as a single
+positive-data class by Gold's obstruction.
+We use it only as an expressiveness baseline,
+not as an additional learnable class.
+
+The intrinsic-rank-two witness lies in this larger
+fragment:
+\(L_{\mathrm{intr}}=\Phi_{\mathrm{intr}}^{-1}(0)\cap Q_{\mathrm{intr}}.\)
+It demonstrates intrinsic rank rather than
+separation from arbitrary regular filtering.
+Proposition~\ref{prop:strong-fanout-separation}
+gives that separation at fan-out one;
+the next theorem establishes it for a
+finitely typed non-context-free fan-out-two target.
+
+\begin{theorem}[A fan-out-two typed language beyond arbitrary regular filtering]
+\label{thm:arbitrary-filter-separation}
+Let $\Sigma_\star:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$ and
+\[
+ L_\star
+ :=\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}
+   \cup
+   \{\mathtt a^n\mathtt d^{n+1}\mathtt b^{2n}:n\ge0\}.
+\]
+Let
+$g_\star:\Sigma_\star^*\to(\mathcal P(\{\mathtt c,\mathtt d\}),\cup)$
+be the homomorphism defined by
+\[
+ g_\star(\mathtt a)=g_\star(\mathtt b)=\varnothing,
+ \qquad
+ g_\star(\mathtt c)=\{\mathtt c\},
+ \qquad
+ g_\star(\mathtt d)=\{\mathtt d\},
+\]
+and put
+\(h_\star:=(h_{\Sigma_\star}^{1,1},g_\star).\)
+Then $L_\star$ is non-context-free, has minimum fan-out two and minimum
+fan-out-two rule rank one, and for every $f\ge2$,
+\(L_\star\in\Cmcf{f}{h_\star} \setminus\mathcal F_f^{\mathrm{arb}}.\)
+Equivalently, there are no $L_0\in\YSub{f}$ and regular $R_{\mathrm{reg}}$ such that
+$L_\star=L_0\cap R_{\mathrm{reg}}$.
+\end{theorem}
+
+\begin{proof}
+A good fan-out-two rank-one grammar is
+\[
+\begin{aligned}
+ A_{\mathtt c}
+   &\to(\mathtt a\mathtt c,\mathtt b)
+     \mid(\mathtt a\xi_1^1\mathtt c,\xi_1^2\mathtt b)(A_{\mathtt c}),\\
+ A_{\mathtt d}
+   &\to(\mathtt a\mathtt d,\mathtt b\mathtt b)
+     \mid(\mathtt a\xi_1^1\mathtt d,\xi_1^2\mathtt b\mathtt b)(A_{\mathtt d}),\\
+ S&\to\mathtt c\mid\mathtt d
+   \mid(\xi_1^1\mathtt c\xi_1^2)(A_{\mathtt c})
+   \mid(\xi_1^1\mathtt d\xi_1^2)(A_{\mathtt d}).
+\end{aligned}
+\]
+It generates exactly $L_\star$.  The intersection with the regular language
+$\mathtt a^*\mathtt c^+\mathtt b^*$ is
+$\{\mathtt a^n\mathtt c^{n+1}\mathtt b^n:n\ge0\}$, which is not
+context-free.  For a short closure proof, introduce a fresh symbol
+$\mathtt\#$ and the homomorphism fixing $\mathtt a,\mathtt b,\mathtt c$ and
+sending $\mathtt\#$ to $\mathtt c$.  The inverse image of this branch,
+intersected with
+$\mathtt a^*\mathtt c^*\mathtt\#\mathtt b^*$, is
+$\{\mathtt a^n\mathtt c^n\mathtt\#\mathtt b^n:n\ge0\}$; erasing
+$\mathtt\#$ would make $\{\mathtt a^n\mathtt c^n\mathtt b^n:n\ge0\}$
+context-free, a contradiction.  Thus the minimum fan-out is two, and
+infinitude together with the displayed grammar gives minimum fan-out-two rule
+rank one.
+
+For typed substitutability put
+\[
+ Q_\star:=\mathtt a^*\mathtt c^+\mathtt b^*
+          \cup\mathtt a^*\mathtt d^+\mathtt b^*,
+ \qquad
+ \Psi(w):=(|w|_{\mathtt a},|w|_{\mathtt b},
+            |w|_{\mathtt c},|w|_{\mathtt d}).
+\]
+The strictly $2$-local language $Q_\star$ is boundary typed by
+Lemma~\ref{lem:sl2-boundary-control}.  Let equal-$h_\star$-type tuples
+$\tuple x,\tuple y$ share an accepting context $E_0$, and set
+\(\Delta:=\sum_i\Psi(y_i)-\sum_i\Psi(x_i).\)
+Their equal $g_\star$-types put $E_0[\tuple x],E_0[\tuple y]$ on the same
+branch, so for some $q\in\mathbb Z$,
+\(\Delta=q(1,1,1,0)\quad\text{or}\quad\Delta=q(1,2,0,1)\)
+according as that branch is $\mathtt c$ or $\mathtt d$.
+
+If $F[\tuple x]\in L_\star$, boundary typing gives
+$F[\tuple y]\in Q_\star$, and equal $g_\star$-types put the two fillings on
+the same $F$-branch.  When $E_0$ and $F$ choose the same branch, the displayed
+count difference preserves its affine relation.  If they choose different
+branches, no tuple component can contain $\mathtt c$ or $\mathtt d$; hence the
+two center coordinates of $\Delta$ vanish, forcing $q=0$.  In either case
+$F[\tuple y]\in L_\star$, and symmetry proves
+$L_\star\in\Cmcf{f}{h_\star}$.
+
+Finally assume $L_\star=L_0\cap R_{\mathrm{reg}}$ with
+$L_0\in\YSub{f}$ and $R_{\mathrm{reg}}$ regular.  Since
+$\mathtt c,\mathtt d\in L_0$, arity-one substitutability gives
+$\D_{L_0}(\mathtt c)=\D_{L_0}(\mathtt d)$.  Hence, replacing the two occurrences of $\mathtt d$ successively,
+$\mathtt a\mathtt d^2\mathtt b^2\in L_0$ yields first
+$\mathtt a\mathtt c\mathtt d\mathtt b^2\in L_0$ and then
+$\mathtt a\mathtt c^2\mathtt b^2\in L_0$; together with
+$\mathtt a\mathtt c^2\mathtt b\in L_0$ gives
+\(\D_{L_0}(\mathtt c^2\mathtt b) =\D_{L_0}(\mathtt c^2\mathtt b^2).\)
+Thus $\mathtt a^m\mathtt c^{m+1}\mathtt b^{m+t}\in L_0$ for all
+$m\ge1,t\ge0$.  For $m$ at least the state number of a DFA for
+$R_{\mathrm{reg}}$, pumping the final $\mathtt b^m$ block of the accepted
+target word gives some $t>0$ with the same word in $R_{\mathrm{reg}}$, hence
+in the intersection but not in $L_\star$, a contradiction.
+\end{proof}
+
+Thus the single target $L_\star$ rules out representation by a Yoshinaka
+language followed by any finite-state filter, irrespective of how the filter
+typing refines $h_\star$.
+
+This rank-one separation complements
+Theorem~\ref{thm:intrinsic-ranktwo-witness},
+which gives a boundary-typed non-context-free
+target of minimum rule rank two across all finite fan-outs.
+
+\begin{proposition}[Fixed windows do not rescue the bracketed CFG family at fan-out two]
+\label{prop:fixed-window-doubling-fanout-two}
+Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$,
+let $L_n$ be generated by
+\[
+ E_0\to\mathtt a,\qquad
+ E_i\to\lfloor E_{i-1}E_{i-1}\rfloor
+       \mid\lceil E_{i-1}\rceil\quad(1\le i\le n),
+\]
+with start symbol $E_n$, as in the companion CFG
+manuscript~\cite{kuriyamaCFG}.
+Let $h_{\mathrm U}$ send $\lceil,\rceil$ to the absorbing
+element of the two-element semilattice and all other letters
+to its identity.
+For any $k,\ell\ge0$ and
+$n\ge\max\{3,k+\ell+1\}$,
+\[
+ L_n\notin\Cmcf{2}{h_{\Gamma_{\mathrm{br}}}^{k,\ell}},
+ \qquad
+ L_n\notin\Cmcf{2}{(h_{\Gamma_{\mathrm{br}}}^{k,\ell},h_{\mathrm U})}.
+\]
+Thus no \emph{fixed} prefix--suffix window, even combined with
+$h_{\mathrm U}$, repairs this family for the higher-arity
+substitutability required at fan-out two.
+\end{proposition}
+\begin{proof}
+Define $W_0=\mathtt a$ and
+$W_i=\lfloor W_{i-1}W_{i-1}\rfloor$.
+The unique word in $L_n$ with no ceiling symbols is $W_n$.
+Since $W_{n-1}$ is the complete binary-tree word, write
+$W_{n-1}=B\mathtt a R$ with
+$B=\lfloor^{n-1}$.
+Then
+\[
+ W_n=\lfloor B\mathtt a R\,B\mathtt a R\rfloor.
+\]
+Both $B$ and $R$ are nonempty, with
+$|B|=n-1\ge k+\ell$ and
+$|R|=3\cdot2^{n-1}-n-2\ge n-1\ge k+\ell$.
+
+Consider two tuples and two sentence contexts:
+\[
+ \begin{aligned}
+ \tuple x&=(B,\ R B\mathtt a R),&
+ \tuple y&=(B\mathtt a R B,\ R),\\
+ E&=\lfloor\blank_1\mathtt a\blank_2\rfloor,&
+ F&=\blank_1\lfloor\mathtt a\blank_2\rfloor.
+ \end{aligned}
+\]
+Both contexts have a nonempty internal separator, as
+required by Definition~\ref{def:tuple-substitutable}.
+The first components $B$ and $B\mathtt a R B$ share
+their length-$k$ prefix and length-$\ell$ suffix,
+and the second components $R B\mathtt a R$ and $R$
+do likewise. All four components have length at least
+$k+\ell$ and contain no ceiling symbol.
+Thus $\tuple x$ and $\tuple y$ have identical
+componentwise values for both typings in the statement.
+But
+\[
+ E[\tuple x]=E[\tuple y]=F[\tuple x]=W_n,
+ \qquad
+ F[\tuple y]=B\mathtt a R B\lfloor\mathtt a R\rfloor
+ \ne W_n.
+\]
+Indeed, $F[\tuple y]$ has its first $\mathtt a$
+after $n-1$ leading $\lfloor$ symbols, whereas
+$W_n$ has $n$ such symbols.
+As $F[\tuple y]$ also has no ceiling symbols,
+it does not belong to $L_n$.
+This contradicts $(2,h)$-tuple substitutability
+for each specified typing.
+\end{proof}
+
+\begin{remark}
+The proposition proves failure of \emph{class membership}
+for the original CFG family, not a superpolynomial
+characteristic-data lower bound at fan-out two.
+In particular, it does not resolve
+Open Problem~\ref{op:fanout-two}, which requires a
+\emph{different} family actually belonging to
+$\Cmcf{2}{h}$.
+\end{remark}
+
+
+
+\subsection{Rare Types and Two-Component Mobility}
+\label{subsec:rare-type-mobility}
+
+\begin{lemma}[Deleting a complete $h$-type]
+\label{lem:mcfg-delete-type}
+For any finite-semigroup typing $s:\Sigma^+\twoheadrightarrow\mathsf S$,
+$f\ge1$, $L\in\Cmcf{f}{s}$, and $m\in\mathsf S$,
+the language $L^{\setminus m}:=L\setminus s^{-1}(m)$
+also belongs to $\Cmcf{f}{s}$.
+\end{lemma}
+\begin{proof}
+Put $h=\widehat s$ and $M=\mathsf S^\sharp$. The fiber complement
+$h^{-1}(M\setminus\{m\})$ is regular and
+$(f,s)$-tuple-substitutable: equal componentwise
+types imply equal total types under every sentence context.
+Intersections preserve $(f,s)$-tuple substitutability
+(Proposition~\ref{prop:abelian-coset-filter}),
+and $f$-MCFLs are closed under regular intersection
+\cite{SekiEtAl1991}.
+\end{proof}
+
+\begin{proposition}[Rare types force long positive data]
+\label{prop:mcfg-rare-type-sample}
+Let $s:\Sigma^+\twoheadrightarrow\mathsf S$ be a finite-semigroup typing,
+$h=\widehat s$, $L\in\Cmcf{f}{s}$ and $m\in s(L\cap\Sigma^+)$.
+Put $\mu_m(L)=\min\{|w|:w\in L\cap\Sigma^+,\ s(w)=m\}$.
+Every characteristic sample for either
+$\mathcal B^{\le r}_{f,h}$ ($r\ge1$) or
+$\mathcal B_{f,h}$ contains a word of type $m$, and hence has
+encoded total length at least $\mu_m(L)+1$.
+More generally, the same necessity holds for any set-driven
+reconstruction operator admitting characteristic samples for
+both $L$ and $L^{\setminus m}$.
+\end{proposition}
+\begin{proof}
+For a sample $K\subseteq L$ avoiding type $m$ we have
+$K\subseteq L^{\setminus m}$.
+Lemma~\ref{lem:mcfg-delete-type} and
+Proposition~\ref{prop:reconstruction-soundness}, applied
+with target $L^{\setminus m}$, show that both reconstructions
+from $K$ are contained in this proper sublanguage of $L$.
+For the general set-driven claim, suppose $\mathcal F$ is
+characteristic for $L$ but avoids type $m$, and let
+$\mathcal F'$ be characteristic for $L^{\setminus m}$.
+The same finite set $\mathcal F\cup\mathcal F'$ belongs to
+both target languages and contains both characteristic
+samples, contradicting their distinct required outputs.
+\end{proof}
+
+\begin{lemma}[Power transfer at fan-out two]
+\label{lem:mcfg-power-transfer}
+Suppose $f\ge2$, $L\in\Cmcf{f}{h}$ and $u\in\Sigma^+$.
+Let $g=h(u)$ and choose $i_0,\pi\ge1$ such that
+$g^{i+\pi}=g^i$ for every $i\ge i_0$.
+If $s,r\ge i_0$, $d\in\pi\mathbb Z_{>0}$, and some
+word in $L$ contains $u^{s+d+r+2}$, then for
+all $X,Z\in\Sigma^*$ and $Y\in\Sigma^+$,
+\[
+ Xu^sYu^{d+r}Z\in L
+ \quad\Longleftrightarrow\quad
+ Xu^{s+d}Yu^rZ\in L.
+\]
+\end{lemma}
+\begin{proof}
+Write the assumed positive word as $Pu^{s+d+r+2}Q$.
+The tuples $\tuple x=(u^s,u^{d+r})$ and
+$\tuple y=(u^{s+d},u^r)$ have equal componentwise
+$h$-types.  Their common accepting sentence context
+is $E=Pu\,\blank_1u\blank_2Q$: indeed
+$E[\tuple x]=E[\tuple y]=Pu^{s+d+r+2}Q$.
+Tuple substitutability therefore equates their
+distributions.  Test these distributions in the
+arbitrary valid context $X\blank_1Y\blank_2Z$.
+\end{proof}
+
+\begin{lemma}[Bounded local shift pair]
+\label{lem:mcfg-local-shift}
+Fix a finite-semigroup typing $s:\Sigma^+\to\mathsf S$ on a nonempty
+alphabet $\Sigma$, and put $h=\widehat s$, $M=\mathsf S^\sharp$.
+Let $c=|M|^2|\Sigma|$
+and $R_c(5)$ be the
+$c$-colour Ramsey number for $K_5$.
+Every $w\in\Sigma^*$ with $|w|\ge R_c(5)$
+admits a factorization
+$w=P\,x\,p\,q\,p\,y\,Q$,
+where $x,y\in\Sigma^+$, $p\in\Sigma$, $q\in\Sigma^*$,
+\[
+ h(x)=h(xpq),\qquad h(qpy)=h(y).
+\]
+Consequently, if $w\in L\in\Cmcf{2}{h}$, the tuples
+$(x,qpy)$ and $(xpq,y)$ have the same distribution.
+\end{lemma}
+\begin{proof}
+Colour every pair of cuts $i<j$ among the first
+$R_c(5)$ cut positions by
+\[
+ (h(w[i:j]),\,h(w[i+1:j]),\,w[i]).
+\]
+A monochromatic five-set $i_1<\dots<i_5$ exists.
+Choose $x=w[i_1:i_2]$, $p=w[i_2]=w[i_3]$,
+$q=w[i_2+1:i_3]$,
+$y=w[i_3+1:i_5]$, and take $P,Q$ to be
+the prefix before $i_1$ and suffix after $i_5$.
+The first colours of $(i_1,i_2)$ and $(i_1,i_3)$
+give $h(x)=h(xpq)$; the second colours of
+$(i_2,i_5)$ and $(i_3,i_5)$ give $h(qpy)=h(y)$.
+The nonempty-separator context
+$P\blank_1p\blank_2Q$ accepts both tuples,
+so their distributions agree.
+\end{proof}
+
+\begin{theorem}[No fixed finite typing rescues the bracketed doubling family]
+\label{thm:mcfg-all-typing-doubling-obstruction}
+Let $s:\Gamma_{\mathrm{br}}^+\to\mathsf S$ be an
+\emph{arbitrary} finite-semigroup morphism.
+For the family $L_n$ of
+Proposition~\ref{prop:fixed-window-doubling-fanout-two},
+\[
+ n\ge2|\mathsf S|+3\quad\Longrightarrow\quad
+ L_n\notin\Cmcf{2}{s}.
+\]
+The same conclusion holds for $\Cmcf{f}{s}$ whenever
+$f\ge2$ and the representational fan-out is at least one.
+\end{theorem}
+\begin{proof}
+Let $g=s(\lfloor)$, and choose an eventual index
+$i_0\ge1$ and period $\pi\ge1$ for its powers,
+with $i_0+\pi\le |\mathsf S|+1$ and $i_0\le|\mathsf S|$.
+It suffices to consider $n\ge2i_0+\pi+2$.
+Put $a=i_0$, $d=\pi$ and $r=n-a-d-2\ge i_0$.
+The unique ceiling-free word
+$W_n=\lfloor W_{n-1}W_{n-1}\rfloor\in L_n$
+starts with $\lfloor^n$, so the hypothesis of
+Lemma~\ref{lem:mcfg-power-transfer} holds with $u=\lfloor$.
+
+Within this same $W_n$, take the first block
+$\lfloor^a$ from its initial run, starting after
+the very first $\lfloor$, and take the second
+block $\lfloor^{d+r}$ from the initial run of
+the \emph{second} copy of $W_{n-1}$.
+The substring $Y$ between these blocks contains
+the first $\mathtt a$ and is nonempty, so
+$W_n=X\lfloor^aY\lfloor^{d+r}Z$ for suitable $X,Z$.
+Power transfer would imply
+$X\lfloor^{a+d}Y\lfloor^rZ\in L_n$.
+This word has no ceiling brackets but has $n+d$
+initial $\lfloor$ symbols before its first $\mathtt a$,
+whereas the sole ceiling-free member $W_n$ has
+exactly $n$.  This is a contradiction.
+The uniform threshold follows from
+$2i_0+\pi+2\le2|\mathsf S|+3$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:mcfg-all-typing-doubling-obstruction}
+strengthens the restricted-window obstruction in
+Proposition~\ref{prop:fixed-window-doubling-fanout-two},
+whose sharper window-specific threshold is retained.
+It is a \emph{nonmembership} theorem, not the
+higher-fan-out sample-length lower bound sought in
+Open Problem~\ref{op:fanout-two}.
+\end{remark}
+
+The fixed-window--finite-group extension is proved in
+Appendix~\ref{app:window-group}; it applies to arbitrary
+finite groups, with the sharper abelian constant retained
+in Appendix~\ref{app:window-abelian}.
+Whether the exponents two and three in the respective
+window-only and window--finite-group characteristic-data bounds
+are optimal is open, as is whether the doubly exponential
+dependence on $f$ of the nonabelian constant $M_{A,f}$ can be reduced.
+Appendix~\ref{app:local-group} extends this original-thickness
+control to all typings whose positive image is a local group, the
+largest class excluding the two-element semilattice.  The matching
+lower bound is known only at fan-out one
+(Corollary~\ref{cor:pseudovariety-dichotomy}).
+Corollary~\ref{cor:mcfg-li-group-polydata} gives a
+transparent sufficient condition on the positive-image semigroup in
+$\mathbf{LI}\vee\mathbf{Grp}$.  The broader local-group extension and
+pseudovariety-level dichotomy are treated separately in
+Appendix~\ref{app:local-group}; higher-fan-out lower bounds remain open.
+
+Other directions include adaptive learning over several fan-out biases,
+learning useful typings without an a priori codomain bound, characterizing the
+rank-one subfamily inside the typed classes, understanding the relation with
+full-multicontext congruential MCFGs, and extending the reconstruction to
+PMCFG-style copying.
+
