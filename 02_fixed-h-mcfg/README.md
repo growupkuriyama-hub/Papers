@@ -1,9 +1,15 @@
 # #2 — fixed-h MCFG
 
-**Title (v82 work in progress):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v83 lean review draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
+
+## v83 I&C短縮版・Claude査読反映（未投稿）
+
+49ページ実験版を基に、半群移行補題、Yoshinakaのソート、空語と正語の扱い、TCS R1引用、関連arXiv原稿の開示を英日で修正。
+[改訂と未解決事項](revision/v83_claude_review_corrections.md) を参照。
+なお **M6（正規化・厚み移送の原典照合）は未完了**であり、このブランチも最終投稿稿ではない。
 
 ## v82半群化（作業ブランチ・未投稿）
 
