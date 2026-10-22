@@ -1,19 +1,10 @@
-name: Publish TCS 1 marked manuscript and synchronized reviewer response
+name: Build TCS 1 reviewer bundle (manual; artifact only)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "01_fixed-h-cfg/main.tex"
-      - "01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex"
-      - "01_fixed-h-cfg/response/response_round1.tex"
-      - "01_fixed-h-cfg/response/synchronize_marked_locators.py"
-      - "01_fixed-h-cfg/response/check_submission_consistency.py"
-      - ".github/workflows/publish-tcs1-revision-package.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: publish-tcs1-round1-package
@@ -27,9 +18,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: true
-
-      - name: Verify clean source mirror
-        run: cmp 01_fixed-h-cfg/main.tex 01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex
 
       - name: Install latexdiff and poppler-utils
         run: |
@@ -192,7 +180,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/tcs-r1-mobile-bundle"
-          cp 01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex "$RUNNER_TEMP/tcs-r1-mobile-bundle/TCS-D-26-00494_Manuscript_Clean.tex"
+          cp 01_fixed-h-cfg/main.tex "$RUNNER_TEMP/tcs-r1-mobile-bundle/TCS-D-26-00494_Manuscript_Clean.tex"
           cp 01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Marked.pdf "$RUNNER_TEMP/tcs-r1-mobile-bundle/TCS-D-26-00494_Manuscript_Marked.pdf"
           cp 01_fixed-h-cfg/response/response_round1.pdf "$RUNNER_TEMP/tcs-r1-mobile-bundle/TCS-D-26-00494_Response_to_Reviewers.pdf"
           cmp "$RUNNER_TEMP/tcs-r1-mobile-bundle/TCS-D-26-00494_Manuscript_Clean.tex" 01_fixed-h-cfg/main.tex
@@ -218,46 +206,3 @@ jobs:
           path: ${{ runner.temp }}/tcs-r1-mobile-bundle/*
           if-no-files-found: error
           retention-days: 7
-      - name: Publish marked PDF and its synchronized reviewer response
-        shell: bash
-        run: |
-          set -euo pipefail
-          cp 01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Marked.pdf "$RUNNER_TEMP/marked.pdf"
-          cp 01_fixed-h-cfg/response/response_round1.pdf "$RUNNER_TEMP/response.pdf"
-          cp 01_fixed-h-cfg/response/response_round1.tex "$RUNNER_TEMP/response.tex"
-          test -s "$RUNNER_TEMP/TCS-D-26-00494_R1_3files.zip"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for attempt in 1 2 3 4 5; do
-            git fetch --no-tags origin main
-            if ! git diff --quiet "$GITHUB_SHA" origin/main -- \
-              01_fixed-h-cfg/main.tex \
-              01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.tex \
-              01_fixed-h-cfg/response/response_round1.tex \
-              01_fixed-h-cfg/response/synchronize_marked_locators.py; then
-              echo "::error::Source changed during marked-PDF build; refusing stale output."
-              exit 1
-            fi
-            git reset --hard origin/main
-            cp "$RUNNER_TEMP/marked.pdf" 01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Marked.pdf
-            cp "$RUNNER_TEMP/response.pdf" 01_fixed-h-cfg/TCS-D-26-00494_Response_to_Reviewers.pdf
-            cp "$RUNNER_TEMP/response.tex" 01_fixed-h-cfg/response/response_round1.tex
-            cp "$RUNNER_TEMP/TCS-D-26-00494_R1_3files.zip" 01_fixed-h-cfg/TCS-D-26-00494_R1_3files.zip
-            git add \
-              01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Marked.pdf \
-              01_fixed-h-cfg/TCS-D-26-00494_Response_to_Reviewers.pdf \
-              01_fixed-h-cfg/TCS-D-26-00494_R1_3files.zip \
-              01_fixed-h-cfg/response/response_round1.tex
-            if git diff --cached --quiet; then
-              echo "Published artifacts already current."
-              exit 0
-            fi
-            git commit -m "Publish TCS #1 marked manuscript and PDF-anchored response [skip ci]"
-            if git push origin HEAD:main; then
-              echo "Published synchronized marked manuscript and reviewer response."
-              exit 0
-            fi
-            echo "Concurrent publish; retry $attempt/5"
-          done
-          echo "::error::Could not publish current review package."
-          exit 1

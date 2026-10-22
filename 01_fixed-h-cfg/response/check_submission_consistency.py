@@ -11,11 +11,8 @@ import subprocess
 
 root = Path(__file__).resolve().parents[1]
 english = (root / "main.tex").read_text(encoding="utf-8")
-clean = (root / "TCS-D-26-00494_Manuscript_Clean.tex").read_text(encoding="utf-8")
 response = (root / "response/response_round1.tex").read_text(encoding="utf-8")
 form = (root / "revision/TCS_FORM_ABSTRACT_CURRENT.txt").read_text(encoding="utf-8")
-if english != clean:
-    raise SystemExit("Clean manuscript does not match English main.tex")
 if re.search(r"\bIf\s+Let\b", english):
     raise SystemExit("Found broken 'If Let' wording")
 section5 = english.split(r"\section{Finite Witnesses, Exact Reconstruction, and Complexity}", 1)[1].split(
