@@ -59,7 +59,7 @@ for m in re.finditer(rf"\b({kind})~(\d+\.\d+)\b", response):
     prior = response[max(0, m.start()-115):m.start()].lower()
     if key in old_references and (
         re.search(r"\b(former|submitted|old|original|deleted)\b", prior)
-        or (key == ("Lemma", "9.8") and "Props.~9.2" in prior)
+        or (key == ("Lemma", "9.8") and "props.~9.2" in prior)
     ):
         continue
     raise SystemExit(f"Response references nonexistent revised {key[0]} {key[1]} "
