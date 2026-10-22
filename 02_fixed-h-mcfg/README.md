@@ -1,9 +1,23 @@
-# #2 — fixed-h MCFG
+# #2 — finite-semigroup-typed MCFG
 
-**Title:** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing  
+**Title (v83 canonical main working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
+
+## v83 I&C短縮版・Claude査読反映（未投稿）
+
+49ページ実験版を基に、半群移行補題、Yoshinakaのソート、空語と正語の扱い、TCS R1引用、関連arXiv原稿の開示を英日で修正し、**v83をmainの正本として統合**。英語版は50ページ、日本語版は54ページ（公開PDFはGitHub Actionsが本ブランチ上で再生成）。
+[改訂と未解決事項](revision/v83_claude_review_corrections.md) を参照。
+なお **M6（正規化・厚み移送の原典照合）は未完了**であり、mainは現在の執筆正本であってI&Cへの最終投稿確定稿ではない。
+
+## v82半群化（改訂履歴）
+
+#1 TCS R1凍結版に合わせ、基本学習型を $s:\Sigma^+\to S$ にし、空語とテンプレートの評価だけに新単位元添加 $\widehat s$ を使う作業中です。英日本文・独立付録を改稿し、Gold学習器、主要特徴データ上界、希少型、倍化族、Yoshinakaとの対応を半群側へ移しています。
+
+- [v82移行 Stage 1](revision/v82_semigroup_migration_stage1.md) ／ [v82移行 Stage 2](revision/v82_semigroup_migration_stage2.md)
+- v82専用PDFビルド検査は履歴ブランチに保存。mainでは既存のPR検査とPDF公開を使用。
+- main上の固定PDFは統合後の公開ワークフローでv83に更新する。過去のv81版は履歴として保持。
 
 ## いつでも同じURLで読める最新PDF（英語／日本語）
 
@@ -23,9 +37,9 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v81 投稿前点検版）
+## 日本語査読版（v83 英日同期版）
 
-英語版 v81 の定理・数式・証明・文献に対応する日本語版を
+英語版 v83 の定理・数式・証明・文献に対応する日本語版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
@@ -33,13 +47,13 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 局所群の付録 `appendix_local_group.tex` と `japanese/appendix_local_group_JP.tex` も読み込まれます。
 [`japanese/README.md`](japanese/README.md) に英語原稿の固定版，
 対応検査，LuaLaTeX PDF のビルド方法を記録しています。
-提出用の英語版 `main.tex` は変更しません。
+英語正本と日本語対照版をmain上で同時管理し、双方のTeXを更新する。
 
-**#1 companion manuscript (version-locked, prior to arXiv v5):** [TCS Clean PDF at commit 834e99a1](https://github.com/growupkuriyama-hub/Papers/blob/834e99a1f35b4a5fb949acc55a080658388d4480/01_fixed-h-cfg/TCS-D-26-00494_Manuscript_Clean.pdf). The public arXiv:1409.6247v4 is an earlier baseline; the new citation will be supplemented when v5 is actually released.
+**#1 companion manuscript (R1 frozen version):** [TCS-D-26-00494R1 Clean TeX](https://github.com/growupkuriyama-hub/Papers/blob/bbbcabfd948dea815b94bd21a3d78999a6a3e54f/01_fixed-h-cfg/archive/tcs-r1-2026-10-22/TCS-D-26-00494_Manuscript_Clean.tex) — new title uses finite-*semigroup* typing. The public arXiv:1409.6247v4 is older and should not be cited as the 2026-10-22 frozen revision.
 
-## Current working baseline
+## Historical v81 reference (not current main source)
 
-- `main.tex` — **v81** I&C pre-submission working revision: Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `main.tex` — **v83が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
 - `revision/v81_submission_preflight_review.md` — bilingual pre-submission editorial/mathematical source audit, repaired abstract/conclusion, journal disclosure and visual-PDF gates.
 - `revision/v80_mobility_distributional_review.md` — type-deletion lower-bound criterion, two-component mobility, universal finite-typing nonmembership, relaxed distribution classes and abelian-filtered polynomial data; algebraic/effective scope checked.
 - `revision/v79_rule_only_witness_budget.md` — proves redundant nonterminal samples can be dropped when minimizing canonical tuples, improving cardinality and computable encoded budget.
