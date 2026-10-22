@@ -1,8 +1,14 @@
-# #2 MCFG v82-stage2 — 日本語査読用作業稿
+# #2 MCFG v83 — 日本語査読用短縮稿
 
 対象論文: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*（I&C 投稿準備中、未投稿）
 
 英語版 `../main.tex` と付録が**数学的な正本**です。日本語版は独立査読・定理の仮定の確認用であり、英語版と同じ数学的主張・同じ `\\label` の集合を保ちます。
+
+## v83査読対応（2026-10-22）
+
+49ページ英語短縮版に対応する日本語稿について、ClaudeのM1/M2/M3/M4/M5/M8/M9の指摘を英日で修正。
+[改訂記録](../revision/v83_claude_review_corrections.md) を参照。
+正規化と厚み移送（M6）の一次文献照合および全頁目視検品は未完了。
 
 ## v82半群化作業（2026-10-22）
 
