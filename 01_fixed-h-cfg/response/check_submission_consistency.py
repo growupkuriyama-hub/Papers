@@ -18,6 +18,16 @@ if english != clean:
     raise SystemExit("Clean manuscript does not match English main.tex")
 if re.search(r"\bIf\s+Let\b", english):
     raise SystemExit("Found broken 'If Let' wording")
+section5 = english.split(r"\section{Finite Witnesses, Exact Reconstruction, and Complexity}", 1)[1].split(
+    r"\section{Typed Thickness for General Fixed Typings}", 1)[0]
+counter = english.split(r"\subsection{A capped regular counter family}", 1)[1].split(
+    r"\subsection{Natural deterministic context-free languages", 1)[0]
+if r"\pi" in section5 or r"t_\rho" not in section5:
+    raise SystemExit("Production label in Section 5 must be rho, not pi")
+if r"\rho" in counter or r"\mathrm{CTR}_B" not in counter:
+    raise SystemExit("Capped counter Section 9.2 must use B, not rho")
+if r"\mathrm{CTR}_\rho" in response or r"t_\pi" in response:
+    raise SystemExit("Reviewer response retains outdated counter / production notation")
 if "finite targets" not in english or "finite targets" not in form:
     raise SystemExit("The form and manuscript abstracts do not share 'finite targets'")
 if "finite target families" in form:
