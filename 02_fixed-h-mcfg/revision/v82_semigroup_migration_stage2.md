@@ -88,6 +88,23 @@ epsilon against positive words.
 * The working branch does not modify v81 PDFs, the public arXiv
   preprint, or the TCS #1 R1 archive.
 
+## Latest branch-only bilingual build (verified)
+
+The latest completed build for TeX commit
+\`f8646fbf588bc90f5070f9be7f305780bf24be48\`
+passed all steps at GitHub Actions run **39766467026**:
+English PDF **54 pages**, Japanese PDF **59 pages**.
+The final log files passed the check for unresolved citations/references;
+earlier compilation passes may emit temporary undefined-reference warnings.
+No overfull boxes were logged. The English build logged two minor
+underfull hboxes (source lines 2541--2552 and 2947--2958).
+The workflow uploaded preview artifact
+\`mcfg2-v82-semigroup-preview\` (artifact id **12419619837**).
+No PDFs were committed to \`main\`, and visual page-by-page inspection
+is still outstanding.
+
+Build: https://github.com/growupkuriyama-hub/Papers/actions/runs/39766467026
+
 ## Verification references
 
 * Branch: https://github.com/growupkuriyama-hub/Papers/tree/mcfg2-v82-semigroup-migration-stage1/02_fixed-h-mcfg
