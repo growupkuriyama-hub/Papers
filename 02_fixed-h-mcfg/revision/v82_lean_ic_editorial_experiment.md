@@ -41,6 +41,27 @@ This is a targeted focus test, **not** a claim that the removed results are inco
   labels, counting all three still-included mathematical appendices.
   Also checked equality of EN/JP theorem environment sequence.
 
+## Verified numerical results (final table revision)
+
+- Baseline semigroup v82 complete PDF: **54 EN / 59 JP pages**.
+- Initial lean cut, without summary table: **49 EN / 54 JP pages**.
+- Lean cut plus black-and-white front-matter bounds table:
+  **49 EN / 53 JP pages**.
+- EN saves **5 pages (~9.3%)**, JP saves **6 pages (~10.2%)**
+  versus the complete v82 semigroup submission candidate.
+- Final lean bilingual run **39773312020** passed English build,
+  Japanese build, final citation/reference validation and artifact upload.
+  No overfull hboxes in its logs; two pre-existing minor EN
+  underfull hboxes remain.
+- The front-matter now has a compact comparison table displaying
+  rank-one polynomial, fixed window quadratic, window+finite-group
+  cubic and positive-image LG cubic bounds, with exact theorem refs.
+- **Visual review of rendered PDF pages is not yet complete**;
+  successful compilation does not validate mathematical proofs.
+
+Final lean build:
+https://github.com/growupkuriyama-hub/Papers/actions/runs/39773312020
+
 ## Important: reduction vs hiding the proof
 
 This experiment truly deletes the three sections from the **compiled article**
