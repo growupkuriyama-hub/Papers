@@ -61,7 +61,7 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 対応検査，LuaLaTeX PDF のビルド方法を記録しています。
 英語正本と日本語対照版をmain上で同時管理し、双方のTeXを更新する。
 
-**#1 companion manuscript (R1 frozen version):** [TCS-D-26-00494R1 Clean TeX](https://github.com/growupkuriyama-hub/Papers/blob/bbbcabfd948dea815b94bd21a3d78999a6a3e54f/01_fixed-h-cfg/archive/tcs-r1-2026-10-22/TCS-D-26-00494_Manuscript_Clean.tex) — new title uses finite-*semigroup* typing. The public arXiv:1409.6247v4 is older and should not be cited as the 2026-10-22 frozen revision.
+**#1 companion CFG paper:** [arXiv:1409.6247v5](https://arxiv.org/abs/1409.6247v5) — *Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing*. For exact R1 theorem locators, retain the [frozen TCS-D-26-00494R1 Clean TeX](https://github.com/growupkuriyama-hub/Papers/blob/bbbcabfd948dea815b94bd21a3d78999a6a3e54f/01_fixed-h-cfg/archive/tcs-r1-2026-10-22/TCS-D-26-00494_Manuscript_Clean.tex) (2026-10-22); the public arXiv release and TCS submission are separate version references.
 
 ## Historical v81 reference (not current main source)
 
