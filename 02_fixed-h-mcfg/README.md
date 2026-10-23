@@ -1,11 +1,28 @@
 # #2 — finite-semigroup-typed MCFG
 
-**Title (v86 condensed Yoshinaka (2015)-based draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v87 logically condensed Yoshinaka (2015)-based draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
-## v86 質的学習の説明と証明を圧縮（未投稿）
+## v87 前半1–3節の論理的圧縮（main執筆正本、I&C未投稿）
+
+Claude圧縮案をもとに前半の定性理論を再構成し、六項目の形式的・数学的監査
+（空の非空核、ランク0、節ラベル、Yoshinaka (2015) の型付き関数列挙、
+`SUBST_P` の恒等関数証拠、任意代表元による完全性）を反映した。
+**英文PDFは44ページ（v86: 49ページ）**。第4節以降の英文定量的結果と独立付録の
+数学的主張は変更していない。日本語版は斉次性・任意代表元の完全性・
+ランク0を含む再構成定理・先行研究への帰属・緩和代表元の証明適用を同期し、
+**日本語PDFは53ページ（v86: 52ページ）**。日本語の文章構成全体の圧縮は未実施。
+
+[六項目監査](revision/v87_english_compression_six_point_audit.md) ／
+[PR #69](https://github.com/growupkuriyama-hub/Papers/pull/69)
+
+英日両方のLaTeXコンパイルと引用・相互参照検証はGitHub Actionsで成功。
+独立した数学的最終監査・PDF全頁目視・著者最終承認はなお必要。
+**mainへの統合はI&Cへの投稿や査読を意味しない。**
+
+## v86 質的学習の説明と証明を圧縮（改訂履歴）
 
 v85で実装したYoshinaka (2015)の有限ソートsignatureへの特殊化と
 `SUBST_P`の有限標本対応は維持し，重複する紹介文・再構成の説明・
@@ -67,9 +84,9 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 このワークフローは，既存の日本語TeXを再コンパイルするものであり，
 改訂箇所を機械翻訳して自動同期するものではありません。
 
-## 日本語査読版（v85 英日同期版）
+## 日本語査読版（v87 数学的同期版、構成圧縮は未実施）
 
-英語版 v85 の定理・数式・証明・文献に対応する日本語版を
+v86からの日本語版にv87の主要な定理・証明変更を反映した対照版を
 [`japanese/main_JP.tex`](japanese/main_JP.tex) に置きました。
 有限アーベル群の独立付録と任意有限群の追加付録も
 [`japanese/appendix_window_abelian_JP.tex`](japanese/appendix_window_abelian_JP.tex)
@@ -83,7 +100,7 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 ## Historical v81 reference (not current main source)
 
-- `main.tex` — **v86が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `main.tex` — **v87が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
 - `revision/v81_submission_preflight_review.md` — bilingual pre-submission editorial/mathematical source audit, repaired abstract/conclusion, journal disclosure and visual-PDF gates.
 - `revision/v80_mobility_distributional_review.md` — type-deletion lower-bound criterion, two-component mobility, universal finite-typing nonmembership, relaxed distribution classes and abelian-filtered polynomial data; algebraic/effective scope checked.
 - `revision/v79_rule_only_witness_budget.md` — proves redundant nonterminal samples can be dropped when minimizing canonical tuples, improving cardinality and computable encoded budget.
