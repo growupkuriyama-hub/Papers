@@ -1,11 +1,29 @@
 # #2 — finite-semigroup-typed MCFG
 
-**Title (v85 Yoshinaka (2015)-based main draft after merge):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v86 condensed Yoshinaka (2015)-based draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
-## v85 Yoshinaka (2015)を質的学習の基盤とする再編（未投稿）
+## v86 質的学習の説明と証明を圧縮（未投稿）
+
+v85で実装したYoshinaka (2015)の有限ソートsignatureへの特殊化と
+`SUBST_P`の有限標本対応は維持し，重複する紹介文・再構成の説明・
+健全性やGold学習の証明文を英日で圧縮した．
+全ての定理・命題・系・定義の数学的主張とラベル，特徴データ総長の主定理，
+ランク無制限の独立論証および三つの付録は維持している．
+
+PR #68 の両言語ビルドにおけるPDFページ数は，
+**英語49ページ（v85: 51ページ），日本語52ページ（v85: 54ページ）**．
+TeXコンパイルおよび引用・相互参照チェックは成功．
+この圧縮はページ詰めや付録への単純移動ではない．
+PDFの全頁目視と数学的独立最終監査は未完了であり，
+I&C投稿用最終稿とは扱わない．
+
+[圧縮記録](revision/v86_qualitative_compression.md) ／
+[関連PR #68](https://github.com/growupkuriyama-hub/Papers/pull/68)
+
+## v85 Yoshinaka (2015)を質的学習の基盤とする再編（改訂履歴）
 
 規則ランク有界なMCFGの型付きsignatureとYoshinaka (2015)から導く正例同定を，第3節の冒頭へ移動。\`SUBST_D\` と \`SUBST_P\` の相違を区別し，具体的再構成器との標本単位の対応を保持。質的学習の一般論の重複証明を削り，特徴証拠語の総文字数とrank無制限の直接論証は維持した。英日とも同じ構成。
 
@@ -65,7 +83,7 @@ GitHub の **main ブランチ**上に固定したPDFパスです。論文を改
 
 ## Historical v81 reference (not current main source)
 
-- `main.tex` — **v83が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `main.tex` — **v86が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
 - `revision/v81_submission_preflight_review.md` — bilingual pre-submission editorial/mathematical source audit, repaired abstract/conclusion, journal disclosure and visual-PDF gates.
 - `revision/v80_mobility_distributional_review.md` — type-deletion lower-bound criterion, two-component mobility, universal finite-typing nonmembership, relaxed distribution classes and abelian-filtered polynomial data; algebraic/effective scope checked.
 - `revision/v79_rule_only_witness_budget.md` — proves redundant nonterminal samples can be dropped when minimizing canonical tuples, improving cardinality and computable encoded budget.
