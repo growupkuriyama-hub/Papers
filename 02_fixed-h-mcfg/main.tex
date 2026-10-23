@@ -1153,63 +1153,89 @@ $h\preceq h_\Sigma^{k,\ell}$, bounded rank
 window plus any finite group
   & $O(\|G\|^3\bar\theta_G)$
   & Theorem~\ref{thm:window-group-polydata} \\
+positive image in $\mathbf{LG}$
+  & $O(\|G\|^3\bar\theta_G)$
+  & Theorem~\ref{thm:local-group-polydata} \\
 \hline
 \end{tabularx}
 \end{center}
 
-The first row is the unconditional baseline for general $h$.
-Full yield-type refinement can make its thickness exponentially larger than
-the original presentation parameters
-(Proposition~\ref{prop:typed-thickness-exponential}), so that route alone
-gives no original-thickness bound.  Rank one removes the thickness dependence,
-whereas prefix--suffix-determined typing gives the
-main higher-rank transfer. The finite-abelian-group refinement has its direct
-zero-sum proof in Appendix~\ref{app:window-abelian};
-the nonabelian extension is established by a separate
-order-homogenization proof in Appendix~\ref{app:window-group}.
-The companion CFG result~\cite{kuriyamaCFG}
-separately excludes a universal original-thickness
-polynomial for arbitrary finite typing at fan-out one;
-the semilattice typing of that example is
-not determined by any fixed prefix--suffix window.
+The first row is the unconditional baseline. Full yield-type refinement can
+make its thickness exponentially larger than the original presentation
+parameters (Proposition~\ref{prop:typed-thickness-exponential}); rank one
+removes the thickness dependence, and the remaining rows transfer the
+\emph{original} thickness. All higher-rank rows rest on one window-skeleton
+lemma (Lemma~\ref{lem:boundary-short-canonical}) and, for groups, on one
+heavy-node count (Lemma~\ref{lem:heavy-node-count}) combined with a purely
+group-theoretic block-replacement lemma (Appendix~\ref{app:group-blocks}).
+At fan-out one the companion CFG paper~\cite{kuriyamaCFG} excludes a
+universal original-thickness polynomial for arbitrary finite typing; its
+semilattice typing is not determined by any fixed prefix--suffix window.
 Polynomial update time in the observed sample is independent of these
-data-length refinements
-(Theorem~\ref{thm:poly} and Corollary~\ref{cor:capped-gold-poly}).
+data-length refinements (Theorem~\ref{thm:poly} and
+Corollary~\ref{cor:capped-gold-poly}).
 
-\subsection{Thickness and reusable canonical contexts}
+\subsection{Thickness and the witness-length template}
 \label{subsec:thickness-contexts}
 
-\paragraph{Rule thickness and Yoshinaka's efficiency criterion.}
 For the quantitative results, presentations are reduced and \emph{good}, as in
 Yoshinaka's fixed-dimension, fixed-rank good form
 \cite[Section~2.3, after Example~2]{Yoshinaka2011}.  For a rule $R$ of $G$ let
 $\theta_G(R)$ be the minimum length of a successful sentence derivation using
-$R$, put $\theta_G:=\max_{R\in P}\theta_G(R)$, and define
+$R$, put $\theta_G:=\max_{R\in P}\theta_G(R)$,
+$\bar\theta_G:=\max\{1,\theta_G\}$, and
 \(t_G:=\max_A\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}.\)
-Thus $\theta_G$ is rule thickness and $t_G$ nonterminal thickness.
-Yoshinaka writes these quantities as $\tau_G$ and $t_G$, respectively, with
-$\tau_G\le\|G\|t_G$ in his notation
-\cite[Section~4.3]{Yoshinaka2011}.
+Thus $\theta_G$ is rule thickness and $t_G$ nonterminal thickness; Yoshinaka
+writes them $\tau_G$ and $t_G$ \cite[Section~4.3]{Yoshinaka2011}.
+If a target contains $\eps$, every statement below is applied to its
+$\lambda$-free core and the single datum $\eps$ is added, exactly as in
+Theorem~\ref{thm:exact-reconstruction}; this adds one to the encoded length.
 
-\begin{lemma}[Polynomial equivalence of the two thickness parameters]
+\begin{lemma}[Thickness lemma]
 \label{lem:thickness-equivalence}
-For every reduced good presentation $G$,
-\(t_G\le\theta_G \qquad\text{and}\qquad \theta_G\le 2\|G\|\max\{1,t_G\}.\)
+\label{lem:thickness-local-bounds}
+\label{lem:untyped-contexts}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item Every rule writes at most $\theta_G$ terminal symbols explicitly.
+\item $t_G\le\theta_G$; that is, every $A\in V$ has a tuple
+$\tuple u\in L_A(G)$ with $\|\tuple u\|_1\le\theta_G$.
+\item $\theta_G\le 2\|G\|\max\{1,t_G\}$.
+\item Every $A\in V$ of fan-out $d$ has a context $E_A\in\mathcal E_d$
+with $|E_A|_{\mathrm{fix}}\le\theta_G$ and $E_A[\tuple u]\in L(G)$
+for every $\tuple u\in L_A(G)$, and $E_S=\blank_1$.  For every finite
+typing $h$ and every non-start typed nonterminal $X=A_{\mathbf t}$ of
+$\widetilde G_0$, the choice $\chi(X):=E_A$ meets
+Definition~\ref{def:target-canonical}, and $E_A$ arises from a
+successful typed derivation by deleting an occurrence of an
+$X$-subtree.
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
-For $t_G\le\theta_G$, choose any rule with left-hand side $A$ and place it
-in a successful derivation.  Nondeletion preserves the tuple produced at that
-occurrence of $A$, so its total length is bounded by the final sentence.
-Minimize for $A$ and maximize over $A$.
+Fix a rule $R$ with left-hand side $A$ and a successful derivation $D_R$
+using $R$ of length $\theta_G(R)$; it exists because $G$ is reduced.  By
+nondeletion, every terminal written by $R$ and every component of the tuple
+produced at that occurrence of $A$ survives exactly once in the final
+sentence.  This gives (i), and also (ii) because every productive $A$ has a
+rule.  For (iv) with $A\ne S$, delete the subtree rooted at that occurrence
+of $A$ and put ordered holes in place of its components; iterating
+Lemma~\ref{lem:filling-identity} along the path to the root shows that the
+result $E_A$ lies in $\mathcal E_d$, and its fixed material is part of the
+selected sentence.  Substituting any $\tuple u\in L_A(G)$ yields another
+successful derivation.  Since $L_X\subseteq L_A(G)$ by
+Proposition~\ref{prop:output-invariants}(i), $E_A$ accepts $L_X$; a typed
+nonterminal with a start link has the form $S_{\mathbf t}$, for which
+$E_S=\blank_1$.  Filling $E_A$'s derivation with an $X$-derivation and
+lifting by Proposition~\ref{prop:output-invariants}(ii) places $X$ at the
+hole, so $E_A$ is derivational for $X$.
 
-For the converse, fix a rule $R$ with left-hand side $A$ and follow a shortest
-dependency path from the start symbol to $A$.  The path repeats no
-nonterminal.  Keep the path child open, complete each sibling by a shortest
-terminal tuple, then apply $R$ and complete its children likewise.  Across the
-distinct rules on this construction, both explicit terminal material and
-child-variable occurrences are bounded by $\|G\|$, giving a successful
-sentence of length at most
+For (iii), follow a shortest dependency path from $S$ to $A$; it repeats no
+nonterminal, so its rules are distinct and differ from $R$.  Keep the path
+child open, complete every sibling and every child of $R$ by a shortest
+terminal tuple (of length at most $t_G$), and apply $R$.  The distinct rules
+used write at most $\|G\|$ terminals and have at most $\|G\|$ child
+occurrences, so the resulting sentence has length at most
 $\|G\|+\|G\|t_G\le2\|G\|\max\{1,t_G\}$.
 \end{proof}
 
@@ -1218,46 +1244,66 @@ presentations.  Yoshinaka's efficiency criterion asks for polynomial
 hypothesis construction, characteristic-set cardinality, and total positive
 data in target size and rule thickness
 \cite[Definition~1]{Yoshinaka2011}; see also
-\cite{EyraudHeinzYoshinaka2016}.  Here characteristic-data bounds concern the
-capped set-driven reconstruction, while TxtEx stabilization is supplied by the
-conservative learner.  Proposition~\ref{prop:structural-good-thickness}
-transfers the size--thickness scale for reduced $\lambda$-free inputs; genuine
+\cite{EyraudHeinzYoshinaka2016}.  Proposition~\ref{prop:structural-good-thickness}
+transfers the size--thickness scale to reduced $\lambda$-free inputs; genuine
 empty components may instead cause the exponential growth of
 Proposition~\ref{prop:empty-component-blowup}.
 
-\begin{lemma}[Reusable canonical-context bound]
+All higher-rank bounds below are assembled by the following two lemmas.
 
-\label{lem:reusable-context-bound}
-Let $\mathcal G_{\mathrm t}$ be a trimmed good typed MCFG
-with $n_{\mathrm{typ}}$ non-start typed nonterminals and maximum non-start rule rank at most
-$r_0\ge1$.  Suppose that every non-start typed nonterminal $Y$ has a canonical tuple
-$\omega(Y)\in L_Y(\mathcal G_{\mathrm t})$ with
-$\|\omega(Y)\|_1\le b_{\mathrm{can}}$, and that every non-start typed rule writes at
-most $b_{\mathrm{rule}}$ terminal symbols explicitly.  Then the
-canonical contexts may be chosen so that
+\begin{lemma}[Witness-length template]
+\label{lem:witness-length-template}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$ and
+rule rank at most $r_{\max}\ge1$, let $h:\Sigma^*\to M$ be a finite typing,
+and let $\widetilde G_0$ be the trimmed $h$-refinement.  If every non-start
+typed nonterminal has a canonical tuple with $\|\omega(X)\|_1\le b_{\mathrm{can}}$
+and $\chi(X):=E_A$ is taken from Lemma~\ref{lem:thickness-equivalence}(iv),
+then every word of $\Wit(\widetilde G_0)$ has length at most
+$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$, and
 \[
-  |\chi(X)|_{\mathrm{fix}}
-  \le n_{\mathrm{typ}}\bigl(b_{\mathrm{rule}}+(r_0-1)b_{\mathrm{can}}\bigr)
+ |\Wit(\widetilde G_0)|\le|V||M|^f+|P||M|^{fr_{\max}},
+ \qquad
+ \|\Wit(\widetilde G_0)\|_+\le
+ \bigl(|V||M|^f+|P||M|^{fr_{\max}}\bigr)
+ \bigl(1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}\bigr).
 \]
-for every non-start typed nonterminal $X$.  With these contexts and canonical tuples,
-every selected witness word has length at most
-\[
-  n_{\mathrm{typ}}\bigl(b_{\mathrm{rule}}+(r_0-1)b_{\mathrm{can}}\bigr)+b_{\mathrm{rule}}+r_0b_{\mathrm{can}}.
-\]
+If moreover $L(G)=L\cap\Sigma^+$ for some $L\in\Cmcf{f}{h}$, then
+$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for
+$\mathcal B^{\le r_{\max}}_{f,h}$.
 \end{lemma}
 
 \begin{proof}
-If $\widetilde S\to X$ is present take $\chi(X)=\blank_1$; otherwise follow a
-shortest typed-nonterminal dependency path to $X$.  It has at most
-$n_{\mathrm{typ}}$ non-start steps.  Keeping the path child open and filling
-each sibling canonically costs at most
-$b_{\mathrm{rule}}+(r_0-1)b_{\mathrm{can}}$ terminals per step.  Goodness
-preserves the selected components, their order, and nonempty separators,
-giving the context bound.  Adding either one canonical tuple or one rule
-template with at most $r_0$ child tuples gives the displayed witness bound.
+A witness is $\chi(X)[\omega(X)]$, $\chi(X)[\tuple c]$ or
+$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$.  The context contributes at
+most $\bar\theta_G$ terminals, the source template at most $\bar\theta_G$ by
+Lemma~\ref{lem:thickness-equivalence}(i), and there are at most $r_{\max}$
+child tuples.  The count is
+Proposition~\ref{prop:witness-cardinality}; multiply.  The characteristic
+property is Proposition~\ref{prop:completeness} (the cap $r_{\max}$ bounds
+every typed rank) together with Proposition~\ref{prop:reconstruction-soundness}
+and the Start rule for $\eps$.
 \end{proof}
 
-\subsection{Refined-Thickness Baseline}
+\begin{lemma}[Type-preserving replacement]
+\label{lem:type-preserving-replacement}
+Let $G$ be reduced and good, let $h$ and $\lambda:\Sigma^*\to N$ be finite
+typings with $h\preceq\lambda$, and let $X=B_{\mathbf t}$ be a non-start
+typed nonterminal of the trimmed $h$-refinement $\widetilde G_0$.  If
+$\tuple u\in L_X$, $\tuple u'\in L_B(G)$ and
+$\lambda^{(d)}(\tuple u')=\lambda^{(d)}(\tuple u)$, then
+$\tuple u'\in L_X$; in particular $\tuple u'$ may be chosen as $\omega(X)$.
+\end{lemma}
+
+\begin{proof}
+Goodness makes all components nonempty, so $h\preceq\lambda$ gives
+$h^{(d)}(\tuple u')=\mathbf t$.  Proposition~\ref{prop:output-invariants}(ii)
+lifts a $G$-derivation of $\tuple u'$ to a $G^h$-derivation rooted at $X$.
+Inserting it at an occurrence of $X$ in a successful derivation of
+$\widetilde G_0$ gives a successful derivation, because typed rules depend
+only on typed symbols; hence all its rules survive trimming.
+\end{proof}
+
+\subsection{Baselines and Rule Rank One}
 \label{subsec:typed-thickness}
 
 For a reduced good presentation $G$ of an $\eps$-free target, let
@@ -1278,36 +1324,29 @@ $\bar\theta_{\mathrm{typ}}:=\max\{1,\theta_{\widetilde G_0}\}$.
 \end{lemma}
 
 \begin{proof}
-The trimmed refinement $\widetilde G_0$ remains reduced and good.  A
-minimum-yield successful derivation using a typed rule with left-hand side
-$X$ contains an $X$-tuple of total length at most
-$\bar\theta_{\mathrm{typ}}$, so use such tuples canonically.  If
-$\widetilde S\to X$ exists take $\chi(X)=\blank_1$; otherwise remove the
-chosen $X$-subtree from the same derivation to obtain a canonical context with
-fixed material at most $\bar\theta_{\mathrm{typ}}$.  Each typed rule writes at
-most that many terminals and has at most $r_{\max}$ canonical children, so
-every selected witness has length at most
-$(r_{\max}+2)\bar\theta_{\mathrm{typ}}$.  Therefore
+$\widetilde G_0$ is reduced and good, so
+Lemma~\ref{lem:thickness-equivalence}(i),(ii),(iv) applies to it with
+$\bar\theta_{\mathrm{typ}}$ in place of $\bar\theta_G$: canonical tuples
+and (derivational) canonical contexts of length at most
+$\bar\theta_{\mathrm{typ}}$ exist, with $\chi(X)=\blank_1$ for start links.
+Each typed rule writes at most $\bar\theta_{\mathrm{typ}}$ terminals and has at
+most $r_{\max}$ children, so every witness has length at most
+$(r_{\max}+2)\bar\theta_{\mathrm{typ}}$, and
 \[
- |\Wit(\widetilde G_0)|
- \le |V||M|^f+|P||M|^{fr_{\max}},
- \qquad
  \|\Wit(\widetilde G_0)\|_+
  \le
  (|V||M|^f+|P||M|^{fr_{\max}})
- (1+(r_{\max}+2)\bar\theta_{\mathrm{typ}}),
+ (1+(r_{\max}+2)\bar\theta_{\mathrm{typ}})
 \]
-which is polynomial for fixed $f,r_{\max},h$.
+by Proposition~\ref{prop:witness-cardinality}.
 \end{proof}
 
-For trivial typing, no nonterminal is split by
-yield type; consequently the original
-thickness scale is retained. This recovers
-Yoshinaka's untyped characteristic-data
-estimate~\cite[Lemma~7]{Yoshinaka2011}.
-Without this uniqueness, the refinement
-may have much larger thickness, as the next
-proposition demonstrates.
+For trivial typing no productive nonterminal has more than one yield type,
+so the original thickness scale is retained; this recovers Yoshinaka's
+untyped estimates $|K_G|\le|P|$ and $\|K_G\|\le|P|\tau_G$
+\cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.  The quantitative claims below
+therefore concern typed, multi-component settings.  Without uniqueness the
+refinement may be much thicker:
 
 \begin{proposition}[Exponential blow-up of full yield-type refinement]
 \label{prop:typed-thickness-exponential}
@@ -1323,44 +1362,26 @@ Let $M_{\mathtt c}=\{1,\zeta\}$ with $\zeta^2=\zeta$,
 $h_{\mathtt c}(\mathtt a)=1$, and
 $h_{\mathtt c}(\mathtt c)=\zeta$.  For $n\ge1$, view
 \[
-\begin{aligned}
- S&\to SS\mid\mathtt a\mid\mathtt c\mid A_0\mid\cdots\mid A_n,\\
- A_0&\to\mathtt a,\qquad
+ S\to SS\mid\mathtt a\mid\mathtt c\mid A_0\mid\cdots\mid A_n,\qquad
+ A_0\to\mathtt a,\qquad
  A_i\to A_{i-1}A_{i-1}\mid\mathtt c\quad(1\le i\le n)
-\end{aligned}
 \]
 as a fan-out-one MCFG.  It is reduced and good, has size $O(n)$ and rule rank
 two, generates $\{\mathtt a,\mathtt c\}^+$, and every rule has a successful
 use of length at most two, so $\theta_{G_n}\le2$.
-
 In the full refinement, the retained copy $(A_n)_1$ can derive only words
 without $\mathtt c$; recursively the unique such yield is
 $\mathtt a^{2^n}$.  Hence the typed rule
 $S_{(1)}\to(A_n)_1$ has successful thickness at least $2^n$.
 \end{proof}
 
-Thus full yield-type refinement admits no bound polynomial in
-$\|G\|\max\{1,\theta_G\}$ for arbitrary fixed typing, already at fan-out one
-and rank two.  This is a limitation of the full-refinement route, not of the
-language $\{\mathtt a,\mathtt c\}^+$ itself.
-
-\paragraph{Prior lower bound at fan-out one.}
-The revised companion CFG paper~\cite{kuriyamaCFG}
-(whose frozen TCS R1 source is linked in the bibliography) establishes an
-operator-independent exponential characteristic-data
-lower bound for fixed two-element semilattice typing,
-already at fan-out one and rule rank two
-\cite{kuriyamaCFG}.
-We do not reproduce this prior CFG result.
-It does not automatically extend to higher fan-out,
-whose tuple substitutability tests more arities.
-
-\subsection{Rule Rank One: Grammar-Size Polynomial Data}
-\label{subsec:rankone-polydata}
-
-Unary derivation chains admit a grammar-size bound
-independent of thickness, even under arbitrary fixed
-componentwise typing.
+This is a limitation of the full-refinement route, not of the language
+$\{\mathtt a,\mathtt c\}^+$.  Separately, the companion CFG
+paper~\cite{kuriyamaCFG} (whose frozen TCS R1 source is linked in the
+bibliography) proves an operator-independent exponential characteristic-data
+lower bound for a fixed two-element semilattice typing at fan-out one and
+rule rank two.  We do not reproduce it; it does not automatically extend to
+higher fan-out, whose tuple substitutability tests more arities.
 
 \begin{theorem}[Rank-one polynomial construction and characteristic data]
 \label{thm:rankone-polydata}
@@ -1383,33 +1404,35 @@ with polynomial time per datum.
 
 \begin{proof}
 Normalize without increasing rank
-(Proposition~\ref{prop:good-normalization}),
-and trim the typed refinement.
-Write $n_{\mathrm{typ}}\le|V||M|^f$ for its
-number of non-start typed nonterminals and
-$b_G\le\max\{1,\|G\|\}$ for the largest explicit
-terminal count of a rule, taking $b_G\ge1$.
-Choose a typed terminal unary derivation that
-minimizes first total yield length and then the
-number of rules. No typed nonterminal can repeat:
-splicing in the later suffix would not increase
-yield length and would strictly shorten the
-chain. Therefore
-$\|\omega(X)\|_1\le n_{\mathrm{typ}}b_G$.
-Lemma~\ref{lem:reusable-context-bound} bounds
-each witness word by $(2n_{\mathrm{typ}}+1)b_G$,
-while Proposition~\ref{prop:witness-cardinality}
-gives at most $n_{\mathrm{typ}}+|P||M|^f$
-witnesses. Hence
+(Proposition~\ref{prop:good-normalization}) and trim, obtaining a reduced
+good rank-$\le1$ grammar $G$ with $\|G\|=O_{f}(\|G_{\mathrm{in}}\|)$, and
+trim its typed refinement.  Let $n_{\mathrm{typ}}\le|V||M|^f$ be the number of
+non-start typed nonterminals and $b_G:=\max\{1,\text{largest explicit terminal
+count of a rule}\}\le\max\{1,\|G\|\}$.  A terminal derivation from $X$ is a
+chain of unary rules ending in a constant rule.  Choose one minimizing first
+the yield length and then the number of rules.  No typed nonterminal repeats:
+splicing in the later suffix would not increase the yield (nondeletion) and
+would shorten the chain.  Hence $\|\omega(X)\|_1\le n_{\mathrm{typ}}b_G$.
+For the context, take $\blank_1$ if $\widetilde S\to X$ is present; otherwise
+follow a shortest path $\widetilde S\to X_1\to\cdots\to X_p=X$ in the typed
+dependency graph, so $p\le n_{\mathrm{typ}}$.  Composing its unary templates
+and putting ordered holes for the variables of $X$ gives, by
+Lemma~\ref{lem:filling-identity} iterated with no siblings, a derivational
+context $\chi(X)\in\mathcal E_{\fan(X)}$ with
+$|\chi(X)|_{\mathrm{fix}}\le n_{\mathrm{typ}}b_G$ accepting all of $L_X$.
+Every witness word therefore has length at most
+$n_{\mathrm{typ}}b_G+b_G+n_{\mathrm{typ}}b_G$, and
+Proposition~\ref{prop:witness-cardinality} with $r_{\max}=1$ gives
 \[
  \|\Wit(\widetilde G_0)\|_+
  \le(n_{\mathrm{typ}}+|P||M|^f)
-        \bigl(1+(2n_{\mathrm{typ}}+1)b_G\bigr).
+        \bigl(1+(2n_{\mathrm{typ}}+1)b_G\bigr)
+ =O_{f,s}(\|G_{\mathrm{in}}\|^3).
 \]
-The polynomial overhead of normalization and the
-time and convergence bounds follow from
-Theorem~\ref{thm:poly} and
-Corollary~\ref{cor:capped-gold-poly}.
+This set, with $\eps$ when $\eps\in L$, is characteristic for
+$\mathcal B^{\le1}_{f,h}$ by Propositions~\ref{prop:completeness}
+and~\ref{prop:reconstruction-soundness}.  The time and convergence claims are
+Theorem~\ref{thm:poly} and Corollary~\ref{cor:capped-gold-poly}.
 \end{proof}
 
 This extends the rank-one untyped scale
@@ -1420,197 +1443,86 @@ Rank two cannot generally yield a
 grammar-size-only bound: the size-$O(n)$
 grammar $A_0\to\mathtt c$,
 $A_i\to A_{i-1}A_{i-1}$, $S\to A_n$
-generates the singleton $\{\mathtt c^{2^n}\}$,
+generates $\{\mathtt c^{2^n}\}$,
 which is $(f,h)$-tuple-substitutable for
-every fixed $f,h$: over a one-letter alphabet,
+every fixed $f,h$ (over a one-letter alphabet,
 sharing a sentence context forces equal total
-component lengths, so every context accepts
-both tuples or neither. Every characteristic
-sample for this singleton target contains a word
-of length at least $2^n$.
+component lengths), and every characteristic
+sample for it contains a word of length at least $2^n$.
 
-\subsection{Prefix--Suffix-Determined Typings: Thickness-Sensitive Data}
+\subsection{Boundary Windows and Auxiliary Invariants}
 \label{subsec:boundary-polydata}
 
-Lemma~\ref{lem:typed-thickness-baseline} gives an arbitrary-$h$
-characteristic-data bound in terms of the thickness of the refined typed
-presentation.  Proposition~\ref{prop:typed-thickness-exponential} shows that
-this refined thickness need not be polynomially controlled by the original
-good presentation.  A stronger transfer is nevertheless possible whenever the
-finite typing is determined by a fixed prefix--suffix window.  We formulate
-this boundary-determined regime in the same thickness-sensitive representation
-model used by Yoshinaka~\cite[Section~4.3]{Yoshinaka2011}.
+The refined thickness need not be polynomially controlled by the original
+good presentation (Proposition~\ref{prop:typed-thickness-exponential}).
+A transfer is nevertheless possible whenever the typing is determined by a
+fixed prefix--suffix window together with an auxiliary finite invariant that
+can itself be preserved by short replacements.  We use the
+thickness-sensitive representation model of
+Yoshinaka~\cite[Section~4.3]{Yoshinaka2011}.
 
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG and put
-\(\bar\theta_G:=\max\{1,\theta_G\}.\)
-Here $\theta_G$ is the rule-thickness parameter defined above.  The argument is stated for the
-$\lambda$-free good core.  If the target also contains $\eps$, apply
-the argument to $L\setminus\{\eps\}$ and add the single datum $\eps$ at
-the start symbol, exactly as in Theorem~\ref{thm:exact-reconstruction}; this
-adds only one length-zero example and does not affect either polynomial bound.
-
-\begin{lemma}[Rule thickness bounds local terminal material]
-\label{lem:thickness-local-bounds}
-Let $G$ be reduced and good.  Then:
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item for every rule $R$, the total number of terminal symbols written
-explicitly in the template of $R$ is at most $\theta_G$;
-\item for every nonterminal $A$, there exists a terminal tuple
-$\tuple u\in L_A(G)$ with $\|\tuple u\|_1\le\theta_G$.
-\end{enumerate}
-\end{lemma}
-
-\begin{proof}
-Reducedness places every rule in some successful derivation.  Because a good
-grammar is nondeleting, every terminal written by that rule and every component
-of the tuple produced at its left-hand side survives exactly once to the final
-sentence.  A minimum-yield successful derivation using the rule therefore bounds both
-its explicit terminal material and the total length of that occurrence's
-left-hand-side tuple.  Maximizing over rules gives (i) and (ii).
-\end{proof}
-
-\begin{lemma}[Untyped rule thickness controls canonical contexts]
-\label{lem:untyped-contexts}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good
-MCFG and $\widetilde G_0$ its trimmed
-yield-type refinement for any fixed finite typing
-$h$. For each $A\in V$ of fan-out $d$ there is
-an admissible sentence context $E_A\in\mathcal E_d$
-such that
-\[
- |E_A|_{\mathrm{fix}}\le\bar\theta_G,
- \qquad E_A[\tuple u]\in L(G)
- \quad\text{for all }\tuple u\in L_A(G),
-\]
-and $E_S=\blank_1$ may be chosen.
-Thus for every non-start typed nonterminal
-$X=A_{\mathbf t}$ the choice
-$\chi(X):=E_A$ meets
-Definition~\ref{def:target-canonical}.
-With canonical tuples satisfying
-$\|\omega(X)\|_1\le b_{\mathrm{can}}$
-and maximum rule rank $r_{\max}$,
-every word in $\Wit(\widetilde G_0)$
-has length at most
-\(2\bar\theta_G+r_{\max}b_{\mathrm{can}}.\)
-\end{lemma}
-
-\begin{proof}
-Take $E_S=\blank_1$. For $A\ne S$ choose
-a source rule $R$ with left-hand side $A$.
-Because $G$ is reduced, there is a successful
-sentence derivation using $R$ and having
-length $\theta_G(R)\le\theta_G$.
-Remove the subtree rooted at that occurrence
-of $A$, replacing its $d$ components by
-ordered holes. Lemma~\ref{lem:filling-identity},
-iterated along the path to the root, and
-goodness show that the resulting
-$E_A$ belongs to $\mathcal E_d$.
-Its fixed terminal material is part of the
-selected sentence, hence has length at most
-$\theta_G(R)$. Substituting any tuple from
-$L_A(G)$ gives another successful source
-derivation, so $E_A$ accepts every such tuple.
-
-By Proposition~\ref{prop:output-invariants}(i),
-$L_X\subseteq L_A(G)$; consequently $E_A$
-accepts every tuple of the typed $X$.
-The surrounding source derivation can also
-be lifted to the full typed refinement by
-Proposition~\ref{prop:output-invariants}(ii):
-the type of $X$ determines all ancestral
-types given the fixed sibling derivations,
-and the fresh start symbol admits every
-start type. In particular, $\chi(X)$
-has the required common-context property.
-For a direct start link, $X=S_{\mathbf t}$
-and the chosen context is $\blank_1$.
-
-A witness is $\chi(X)[\omega(X)]$,
-$\chi(X)[\tuple c]$, or
-$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_r))]$.
-Its context contributes at most
-$\bar\theta_G$ terminals; the source rule
-writes at most $\bar\theta_G$ by
-Lemma~\ref{lem:thickness-local-bounds}(i),
-and it has at most $r_{\max}$ child tuples.
-The displayed bound follows, with the
-rank-zero case included.
-\end{proof}
-
-Fix $k,\ell\ge0$ and let
-$h:\Sigma^*\to M$ be any finite typing with
-$h\preceq h_\Sigma^{k,\ell}$.  Thus $h$ factors through the surjective prefix--suffix typing
-$h_\Sigma^{k,\ell}$.  Let $G$ have fan-out at most $f$ and
-rule rank at most a fixed $r_{\max}\ge1$, and let $\widetilde G_0$ be its
-trimmed full yield-type refinement under $h$.  Let $n_{\mathrm{typ}}$ be the
-number of retained non-start $h$-typed nonterminals.
-
-\begin{lemma}[Short prefix--suffix-typed canonical tuples]
+\begin{lemma}[Window skeletons]
 \label{lem:boundary-short-canonical}
-For every non-start typed nonterminal $X$ of $\widetilde G_0$, the
-canonical tuple may be chosen so that
-\(\|\omega(X)\|_1 \le f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G.\)
+\label{lem:window-abelian-short}
+\label{lem:window-group-short}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$ and
+rule rank at most $r_{\max}\ge1$.  Fix $k,\ell\ge0$, a morphism
+$\kappa:\Sigma^*\to N$ into a finite monoid, and a finite typing
+$h\preceq(h_\Sigma^{k,\ell},\kappa)$.  Let $\widetilde G_0$ be the trimmed
+$h$-refinement and $n_{\mathrm{typ}}$ its number of non-start typed
+nonterminals.  Suppose that $\beta\ge0$ is such that for every $C\in V$ and
+$\tuple x\in L_C(G)$ there is $\tuple x'\in L_C(G)$ with
+$\kappa^{(\fan(C))}(\tuple x')=\kappa^{(\fan(C))}(\tuple x)$ and
+$\|\tuple x'\|_1\le\beta$.  Then every non-start typed nonterminal $X$ has a
+canonical tuple with
+\[
+ \|\omega(X)\|_1\le f(k+\ell+1)\,n_{\mathrm{typ}}\,
+ \bigl(\bar\theta_G+r_{\max}\beta\bigr).
+\]
+For trivial $\kappa$, $\beta=\bar\theta_G$ is admissible by
+Lemma~\ref{lem:thickness-equivalence}(ii), so
+\(\|\omega(X)\|_1\le f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G\)
+whenever $h\preceq h_\Sigma^{k,\ell}$.
 \end{lemma}
 
 \begin{proof}
-Choose, among all terminal derivations from $X$ in the trimmed typed grammar
-$\widetilde G_0$, one with the minimum number of grammar-rule nodes, and then mark the root terminals needed to
-determine its componentwise $h_\Sigma^{k,\ell}$-type: all terminals of a
-component shorter than $m_0=\max\{1,k+\ell\}$ from
-Definition~\ref{def:prefix-suffix-typing}, and otherwise its first $k$ and
-last $\ell$ terminals (one arbitrary terminal when $k=\ell=0$).  There are at most $f(k+\ell+1)$ marked terminals.
+Choose a terminal derivation $D$ from $X$ in $\widetilde G_0$ with the minimum
+number of grammar-rule nodes, and let $\tuple u$ be its root tuple.  No typed
+nonterminal occurs twice on a root-to-leaf path: replacing the upper subtree
+by the lower one would give a derivation from $X$ with fewer nodes.  Hence
+every path has at most $n_{\mathrm{typ}}$ grammar nodes.
 
-No typed nonterminal can occur twice on a root-to-leaf grammar path of this minimal
-derivation.  If an upper and a proper lower occurrence had the same typed
-label, the lower subtree would itself be a valid typed terminal derivation from
-the same typed nonterminal, and replacing the upper subtree by it would strictly reduce
-the number of grammar-rule nodes.  Every typed nonterminal occurring in this derivation is retained in $\widetilde G_0$; hence every root-to-marked-terminal path
-contains at most $n_{\mathrm{typ}}$ grammar nodes.  Their union therefore contains at most
-$f(k+\ell+1)n_{\mathrm{typ}}$ grammar nodes.
+Mark in each component of $\tuple u$ the terminals that determine its
+$h_\Sigma^{k,\ell}$-type (Definition~\ref{def:prefix-suffix-typing}): all
+terminals of a component shorter than $m_0=\max\{1,k+\ell\}$, and otherwise
+its first $k$ and last $\ell$ terminals (one arbitrary terminal when
+$k=\ell=0$).  There are at most $f(k+\ell+1)$ marks.  Each terminal is written
+explicitly by exactly one node, so the union $\mathcal K$ of the root paths to
+the marked terminals has at most $f(k+\ell+1)n_{\mathrm{typ}}$ nodes.  Call a
+child of a node of $\mathcal K$ that is not itself in $\mathcal K$
+\emph{omitted}.  By linearity and nondeletion, each component of an omitted
+child is one contiguous block of exactly one root component, and this block
+contains no mark.
 
-Keep the union of these marked root-to-leaf paths as the retained subderivation.  By linearity and nondeletion, each component
-of every omitted child contributes a contiguous interval to exactly one root
-component; it is never split between root components.  Replace every omitted
-child subtree by a shortest terminal tuple of its underlying untyped
-nonterminal.  Lemma~\ref{lem:thickness-local-bounds}(ii) bounds each such tuple
-by $\bar\theta_G$, and part~(i) bounds the explicit terminal material of each
-retained rule by $\bar\theta_G$.  Because the grammar is good, every
-replacement component is nonempty.  An omitted child cannot contribute to a
-short root component: every terminal of such a component was marked, so any
-nonempty contribution from that child would contain a marked terminal and the
-corresponding root-to-terminal path would place the child on the retained
-skeleton.  In a long root component no replaced block crosses a protected
-prefix or suffix position.
-Hence every replacement lies wholly in the unmarked interior of that component:
-the marked first $k$ and last $\ell$ terminals remain literal prefixes and
-suffixes, and the component stays on the long-word side of the threshold.
-Thus the root prefix--suffix type is unchanged (and when $k=\ell=0$ the single
-marked terminal preserves nonemptiness).  Applying the factor map supplied by
-$h\preceq h_\Sigma^{k,\ell}$ shows that its componentwise $h$-type is
-unchanged as well.
-Each retained node contributes at most $\bar\theta_G$ explicit terminals and
-has at most $r_{\max}$ omitted child subtrees.  The resulting root tuple has
-length at most
-\(f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G.\)
-It therefore has the $h$-type indexing $X$.  The replacements may change
-internal typed labels of the original typed derivation; this is harmless.  We
-retain only the underlying $G$-derivation and the preserved root type, and then
-Proposition~\ref{prop:output-invariants}(ii) uniquely lifts that derivation back
-to $G^h$ with root $X$.  Since $X$ belongs to $\widetilde G_0$, the lifted
-derivation can be inserted into a successful derivation through $X$ and hence
-survives trimming.  Its root tuple may therefore be chosen as $\omega(X)$.
+Replace each omitted subtree, with underlying nonterminal $C$ and yield
+$\tuple x$, by a $G$-derivation of a tuple $\tuple x'$ as in the hypothesis,
+and forget all typed labels; this gives a $G$-derivation from the underlying
+nonterminal $B$ of $X$ with root tuple $\tuple u'$.  A short root component
+consists only of marked terminals, so it receives no replaced block and is
+unchanged.  In a long component every replaced block lies strictly between the
+marked first $k$ and last $\ell$ terminals, and goodness keeps it nonempty;
+the marked prefix and suffix remain literal, and the component stays on the
+long side of the threshold.  Hence $h_\Sigma^{k,\ell}$-vectors agree.  Each
+root component is the ordered product of explicit terminals and child
+components, and every replaced block keeps its $\kappa$-value; so
+$\kappa$-vectors agree, with no commutativity used.  Thus
+$(h_\Sigma^{k,\ell},\kappa)^{(d)}(\tuple u')=
+(h_\Sigma^{k,\ell},\kappa)^{(d)}(\tuple u)$, and
+Lemma~\ref{lem:type-preserving-replacement} gives $\tuple u'\in L_X$.
+Each node of $\mathcal K$ writes at most $\bar\theta_G$ terminals
+(Lemma~\ref{lem:thickness-equivalence}(i)) and has at most $r_{\max}$ omitted
+children, each of length at most $\beta$; the bound follows.
 \end{proof}
-
-Apply Lemma~\ref{lem:untyped-contexts}
-with
-\(b_{\mathrm{can}} =f(k+\ell+1)n_{\mathrm{typ}} (r_{\max}+1)\bar\theta_G.\)
-Every selected witness word then has length at most
-$2\bar\theta_G+r_{\max}b_{\mathrm{can}}
- =O_{f,r_{\max},k,\ell,h,\Sigma}
-   (\|G\|\bar\theta_G)$, since
-$n_{\mathrm{typ}}\le|V||M|^f$.
 
 \begin{theorem}[Polynomial data for prefix--suffix-determined typings]
 \label{thm:boundary-polydata}
@@ -1641,51 +1553,192 @@ yields the explicit presentation-relative bound
 \end{theorem}
 
 \begin{proof}
-The $h$-refinement has at most $|V||M|^f$ typed nonterminals and
-$|P||M|^{fr_{\max}}$ typed rule instances.
-Lemma~\ref{lem:boundary-short-canonical} applies because preserving the finer
-$h_\Sigma^{k,\ell}$ boundary type preserves the coarser $h$-type.  Lemma~\ref{lem:untyped-contexts} now
-bounds every selected witness word by
-$O_{f,r_{\max},k,\ell,h,\Sigma}
-(\|G\|\bar\theta_G)$.
-Proposition~\ref{prop:witness-cardinality} gives
-\(|\Wit(\widetilde G_0)| \le n_{\mathrm{typ}}+|P||M|^{f r_{\max}},\)
-with $n_{\mathrm{typ}}\le |V||M|^f$.  Multiplying the polynomial number of
-witnesses by the preceding word-length bound, and adding at most one datum for
-$\eps$, proves the asserted total-positive-length bound.  The same successful
-witnesses also imply a polynomial bound on the refined typed rule thickness,
-but that intermediate parameter is not needed for the estimate.  Theorem~\ref{thm:poly} gives the hypothesis-construction claim.
+By Lemma~\ref{lem:semigroup-transfer} we may use $h$.
+Lemma~\ref{lem:boundary-short-canonical} with trivial $\kappa$ gives
+$b_{\mathrm{can}}=f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G$, and
+$n_{\mathrm{typ}}\le|V||M|^f=O(\|G\|)$.  Lemma~\ref{lem:witness-length-template}
+bounds every witness by $O(\|G\|\bar\theta_G)$ and their number by
+$O(\|G\|)$, and gives the characteristic property; the datum $\eps$ adds at
+most one.  Theorem~\ref{thm:poly} gives the construction time.
+For the input clause, Proposition~\ref{prop:structural-good-thickness} gives
+$\|G\|=O(\|G_{\mathrm{in}}\|)$ and
+$\bar\theta_G=O(\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\})$;
+nonterminal thickness is used because deleting source rules may erase
+material before good-form conversion.
 \end{proof}
 
-The input-presentation clause follows from
-Proposition~\ref{prop:structural-good-thickness}; nonterminal thickness is
-used because deleting source rules may erase material before good-form
-conversion.  Corollary~\ref{cor:capped-gold-poly} then gives polynomial time
-per processed datum for the corresponding capped conservative learner.
+Corollary~\ref{cor:capped-gold-poly} gives polynomial time per datum for the
+capped conservative learner.  At fan-out one this bound is not new:
+Yoshinaka's $(k,\ell)$-substitutable CFG learner already has polynomial
+characteristic data in size and thickness~\cite[Theorem~1]{Yoshinaka2008},
+and the companion CFG manuscript extends the window result to finite-group
+refinements~\cite{kuriyamaCFG}.  The contribution of
+Lemma~\ref{lem:boundary-short-canonical} is to preserve boundary information
+simultaneously across \emph{multiple} tuple components at every fixed
+$f\ge2$.  Theorem~\ref{thm:intrinsic-ranktwo-witness} shows that this
+higher-rank regime is needed at the language level: it gives a
+non-context-free $(1,1)$-typed target of minimum fan-out two and minimum rule
+rank two over all finite fan-outs, whereas the rank-one examples are covered
+by Theorem~\ref{thm:rankone-polydata}.
 
-At fan-out one, this polynomial boundary-typing bound
-is not new: Yoshinaka's learner for $(k,\ell)$-substitutable
-context-free languages already yields polynomial
-characteristic data in grammar size and
-thickness~\cite[Theorem~1]{Yoshinaka2008},
-and the revised companion CFG manuscript extends
-the window result to finite-group
-refinements~\cite{kuriyamaCFG}.
-The contribution of Lemma~\ref{lem:boundary-short-canonical}
-is to preserve boundary information simultaneously
-across \emph{multiple} tuple components, giving the
-same kind of bound at every fixed fan-out $f\ge2$.
+\subsection{Finite-Group Invariants}
+\label{subsec:group-invariants}
 
-The bound is relative to a reduced good bounded-rank presentation.
-Theorem~\ref{thm:intrinsic-ranktwo-witness} below shows that this higher-rank
-regime is needed at the language level: it gives a non-context-free
-$(1,1)$-typed target of minimum fan-out two and minimum rule rank two even
-when competing presentations may use arbitrary finite fan-out.
-Of the examples below, $L_{\mathrm{intr}}$ falls under the window theorem,
-whereas the rank-one languages $L_{\mathrm{cd}}$ and $L_\star$ fall under
-Theorem~\ref{thm:rankone-polydata}; thus each separation is compatible with
-a quantitative learning bound.
+Window--group typings require short tuples with \emph{prescribed}
+componentwise group values.  The length bound is obtained from a single
+count of heavy nodes, which we state for an arbitrary finite-monoid invariant
+because Appendix~\ref{app:local-group} reuses it.
 
+\begin{lemma}[Heavy-node count]
+\label{lem:heavy-node-count}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$ and
+rule rank at most $r_{\max}\ge1$, let $\lambda:\Sigma^*\to N$ be a morphism
+into a finite monoid, and let $b\ge\bar\theta_G$ and $c\ge0$.  Let $T$ be a
+terminal derivation from $B\in V$ that minimizes first the total yield length
+and then the number of nodes among derivations from $B$ with the same root
+$\lambda$-vector.  Call a node \emph{heavy} if its subtree yield has total
+length greater than $b$.  If every set of pairwise incomparable heavy nodes of
+$T$ has at most $c$ elements, then
+\[
+ \|\text{root tuple of }T\|_1\le(r_{\max}+1)\,b\,\max\{1,c\,|V||N|^f\}.
+\]
+\end{lemma}
+
+\begin{proof}
+Label each node by its nonterminal and the $\lambda$-vector of its yield;
+there are at most $|V||N|^f$ labels.  If an ancestor and a proper descendant
+had the same label, replacing the former subtree by the latter would keep the
+root $\lambda$-vector (templates evaluate homomorphically, as in
+Proposition~\ref{prop:output-invariants}), would not increase the yield
+(nondeletion) and would remove nodes.  So every root-to-leaf path has at most
+$|V||N|^f$ nodes.  If the root is light, its yield has length at most $b$.
+Otherwise the heavy nodes form an ancestor-closed subtree, whose leaves are
+pairwise incomparable; hence there are at most $c|V||N|^f$ heavy nodes.  Every
+terminal of the root yield is written either by a heavy node (at most
+$\bar\theta_G\le b$ per node, Lemma~\ref{lem:thickness-equivalence}(i)) or
+inside a light child of a heavy node (at most $r_{\max}$ children of length at
+most $b$ each).
+\end{proof}
+
+For a finite abelian group $H$ write $\mathsf d(H)$ for the maximal length of a
+zero-sum-free sequence over $H$, so that $\mathsf D(H)=\mathsf d(H)+1$ is its
+Davenport constant.  For a finite group $A$ and $f\ge1$ put
+\[
+ N_{A,f}=\max\{3,|A|^f\},\quad
+ U_f=f^{f+1}f!,\quad
+ M_{A,f}=U_f\,N_{A,f}^{\,2^{f^2}},
+ \qquad
+ c_{A,f}:=
+ \begin{cases}
+ \mathsf d(A^f),&A\text{ abelian},\\
+ M_{A,f}-1,&\text{otherwise}.
+ \end{cases}
+\]
+
+\begin{theorem}[Short tuples with prescribed finite-group values]
+\label{thm:group-typed-shortest}
+\label{lem:group-typed-shortest}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG
+of fan-out at most $f$ and maximum rule rank
+$r_{\max}\ge1$.  Let $g:\Sigma^*\to A$ be a
+homomorphism into \emph{any} finite group $A$.
+For every $B\in V$ and every realizable
+$\mathbf s\in A^{\fan(B)}$ there is
+$\tuple u\in L_B(G)$ with
+$g^{(\fan(B))}(\tuple u)=\mathbf s$ and
+\[
+ \|\tuple u\|_1\le
+ \beta_g:=
+ (r_{\max}+1)\bar\theta_G
+ \max\{1,c_{A,f}|V||A|^f\}.
+\]
+In particular $\beta_g=O_{A,f,r_{\max}}(\|G\|\bar\theta_G)$; when $A$ is
+abelian the antichain constant is the zero-sum constant $\mathsf d(A^f)$.
+\end{theorem}
+
+\begin{proof}
+Let $T$ be minimal as in Lemma~\ref{lem:heavy-node-count} with $\lambda=g$ and
+$b=\bar\theta_G$, and let $v_1,\ldots,v_m$ be pairwise incomparable heavy
+nodes.  For each $v_i$, labelled $C_i$, fix a $C_i$-derivation of length at most
+$\bar\theta_G$ (Lemma~\ref{lem:thickness-equivalence}(ii)); for
+$J\subseteq[m]$ let $T_J$ replace the subtrees at $v_i$, $i\in J$.  By
+linearity and nondeletion each component of $v_i$ is a contiguous block of
+one root component, and blocks of different $v_i$ are disjoint.  The $g$-value
+of a root component of $T_J$ is the ordered product of the $g$-values of its
+fixed segments and of its blocks, each block contributing its original or its
+replacement value according to whether its owner lies outside or inside $J$.
+This is a block-replacement family over $A$ in the sense of
+Definition~\ref{def:block-family}.  If $m>c_{A,f}$,
+Lemma~\ref{lem:block-replacement} yields a nonempty $J$ for which $T_J$ has the
+root $g$-vector of $T$; but $T_J$ is strictly shorter, since every replaced
+subtree has length greater than $\bar\theta_G$.  This contradicts minimality,
+so Lemma~\ref{lem:heavy-node-count} applies with $c=c_{A,f}$ and $N=A$.
+\end{proof}
+
+\begin{theorem}[Polynomial characteristic data for window--finite-group typing]
+\label{thm:window-group-polydata}
+Fix $f,r_{\max},k,\ell,\Sigma$, any finite group
+$A$, a homomorphism $g:\Sigma^*\to A$, and a
+fixed finite typing $h$ satisfying
+$h\preceq(h_\Sigma^{k,\ell},g)$.
+For every target $L\in\Cmcf{f}{h}$ and reduced good
+fan-out-$\le f$, rank-$\le r_{\max}$ grammar $G$ with
+$L(G)=L\cap\Sigma^+$, the capped reconstruction operator
+$\mathcal B^{\le r_{\max}}_{f,h}$ has a characteristic
+sample such that
+\[
+ |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ \|\Wit(\widetilde G_0)\|_+
+ =O_{f,r_{\max},k,\ell,h,g,\Sigma}
+   (\|G\|^3\bar\theta_G).
+\]
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:group-typed-shortest} makes $\beta=\beta_g$ admissible in
+Lemma~\ref{lem:boundary-short-canonical} with $\kappa=g$, so
+$b_{\mathrm{can}}\le f(k+\ell+1)n_{\mathrm{typ}}(\bar\theta_G+r_{\max}\beta_g)
+=O(\|G\|^2\bar\theta_G)$, using $n_{\mathrm{typ}}\le|V||M|^f=O(\|G\|)$.
+Lemma~\ref{lem:witness-length-template} and the $\eps$ datum give the bounds.
+\end{proof}
+
+\begin{theorem}[Polynomial data for window--abelian typing]
+\label{thm:window-abelian-polydata}
+Fix $f,r_{\max},k,\ell,\Sigma$, a
+finite abelian group $A$, a homomorphism
+$g:\Sigma^*\to A$, and a finite typing
+$h\preceq(h_\Sigma^{k,\ell},g)$.
+For every $L\in\Cmcf{f}{h}$ and reduced good
+fan-out-$\le f$, rank-$\le r_{\max}$ grammar $G$
+with $L(G)=L\cap\Sigma^+$, the capped
+reconstruction operator $\mathcal B^{\le r_{\max}}_{f,h}$
+has a characteristic sample
+satisfying
+\[
+ |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ \|\Wit(\widetilde G_0)\|_+
+   =O_{f,r_{\max},k,\ell,h,g,\Sigma}
+     (\|G\|^3\bar\theta_G).
+\]
+\end{theorem}
+
+\begin{proof}
+This is Theorem~\ref{thm:window-group-polydata} for abelian $A$.  Its
+content beyond that theorem is the constant: the proof gives the explicit
+bound of Lemma~\ref{lem:witness-length-template} with
+$b_{\mathrm{can}}=f(k+\ell+1)n_{\mathrm{typ}}(\bar\theta_G+r_{\max}\beta_g)$
+and $\beta_g=(r_{\max}+1)\bar\theta_G\max\{1,\mathsf d(A^f)|V||A|^f\}$, where
+$\mathsf d(A^f)=O(\exp(A)f\log|A|)$ (Remark~\ref{rem:davenport-size}) replaces
+the doubly exponential $M_{A,f}-1$.
+\end{proof}
+
+Commutativity is used only in the zero-sum case of
+Lemma~\ref{lem:block-replacement}.  For $f\ge2$ and nonabelian $A$, blocks of
+different subtrees can interleave differently in different root components;
+the order-homogenization proof of Appendix~\ref{app:window-group} handles this
+case.  The constant $M_{A,f}$ is polynomial in $|A|$ for fixed $f$ but doubly
+exponential in $f$.  No original-thickness polynomial is asserted for
+arbitrary finite \emph{monoid} typings.
 
 \subsection{An Algebraic Criterion for Polynomial Characteristic Data}
 \label{subsec:algebraic-typed-data}
@@ -1694,10 +1747,10 @@ Write $\mathbf{LI}$ for the pseudovariety of finite locally trivial
 semigroups and $\mathbf{Grp}$ for the pseudovariety of finite groups.
 Their join $\mathbf{LI}\vee\mathbf{Grp}$ consists of divisors of
 finite products $S\times A$, with $S\in\mathbf{LI}$ and $A$ a finite group
-\cite{Costa2002LI,Costa2002LIG}.  The following criterion makes
-the window--group hypothesis intrinsic to the positive image of
-the fixed typing.  Its finite-semigroup ingredient also occurs in
-the companion CFG manuscript~\cite{kuriyamaCFG}.
+\cite{Costa2002LI,Costa2002LIG}.  The following criterion makes the
+window--group hypothesis intrinsic to the positive image of the fixed typing;
+its finite-semigroup ingredient also occurs in the companion CFG
+manuscript~\cite{kuriyamaCFG}.
 
 \begin{lemma}[Locally trivial--group typings admit window--group refinements]
 \label{lem:mcfg-li-group-window}
@@ -1716,40 +1769,24 @@ be taken trivial, so $h\preceq h_\Sigma^{k,\ell}$.
 \begin{proof}
 Choose a finite locally trivial semigroup $S$, a finite group
 $A$, a subsemigroup $T\subseteq S\times A$, and an onto
-semigroup morphism $\pi:T\to\mathsf S$.  For each
-$a\in\Sigma$ lift $s(a)$ to a pair $(s_a,g_a)\in T$.
-Multiplying these pairs extends the lifts to a morphism
-$\rho:\Sigma^+\to T$ with $\pi\rho=s$.
-Let $\sigma:\Sigma^+\to S$ and $g:\Sigma^*\to A$ denote the two
-coordinate morphisms, with $g(\eps)=1_A$.
-
-The positive image $S_0=\sigma(\Sigma^+)$ is locally trivial.
-Put $q=|S_0|+1$.  The standard finite locally trivial
-identities $S_0^q=S_0E(S_0)S_0$ and
-$euf=ef$ for idempotents $e,f\in S_0$ and $u\in S_0$
-\cite{Pin1986,kuriyamaCFG}
-imply that $\sigma(w)$ is determined by its length-$q$
-prefix and suffix whenever $|w|\ge2q$:
-writing $w=pxz$ with $|p|=|z|=q$,
-choose $\sigma(p)=aeb$ and $\sigma(z)=cfd$; writing
-$\sigma^1(\eps)=1$ in the adjoined identity monoid, we obtain
+semigroup morphism $\pi:T\to\mathsf S$.  Lifting each $s(a)$ to some
+$(s_a,g_a)\in T$ defines a morphism $\rho:\Sigma^+\to T$ with $\pi\rho=s$;
+let $\sigma:\Sigma^+\to S$ and $g:\Sigma^*\to A$ (with $g(\eps)=1_A$) be its
+coordinates.  The positive image $S_0=\sigma(\Sigma^+)$ is locally trivial.
+Put $q=|S_0|+1$.  The finite locally trivial identities
+$S_0^q=S_0E(S_0)S_0$ and $euf=ef$ for idempotents $e,f$ and $u\in S_0$
+\cite{Pin1986,kuriyamaCFG} show that $\sigma(w)$ is determined by the
+length-$q$ prefix and suffix of $w$ when $|w|\ge2q$: writing $w=pxz$ with
+$|p|=|z|=q$, $\sigma(p)=aeb$, $\sigma(z)=cfd$ and $\sigma^1(\eps)=1$,
 \[
- \sigma(pxz)=ae\,(b\,\sigma^1(x)\,c)\,fd=aefd=\sigma(pz).
+ \sigma(pxz)=ae\,(b\,\sigma^1(x)\,c)\,fd=aefd=\sigma(pz),
 \]
-The parenthesized factor belongs to $S_0$ even if $x=\eps$,
-because $b,c\in S_0$.  Words shorter than $2q$
-are recorded individually by $h_\Sigma^{q,q}$.
-Therefore equality of $h_\Sigma^{q,q}$-values on
-$\Sigma^+$ implies equality of $\sigma$-values.  Equality of
-both window and $g$ values then implies equality of
-$\rho$ values and hence of $h$ values.
-
-The window typing distinguishes $\eps$ from every nonempty
-word, so the kernel inclusion extends to all of $\Sigma^*$.
-Taking $k=\ell=q$ proves the first assertion.
-If $\mathsf S$ itself is locally trivial, use
-$S=\mathsf S$, its identity projection for $\pi$,
-and the trivial group.
+where the parenthesized factor lies in $S_0$ because $b,c\in S_0$.  Words
+shorter than $2q$ are recorded exactly by $h_\Sigma^{q,q}$.  Hence equal
+$(h_\Sigma^{q,q},g)$-values on $\Sigma^+$ give equal $\rho$- and $h$-values;
+the window typing separates $\eps$ from $\Sigma^+$.  Take $k=\ell=q$.  If
+$\mathsf S\in\mathbf{LI}$, use $S=\mathsf S$, $\pi=\mathrm{id}$ and the
+trivial group.
 \end{proof}
 
 \begin{corollary}[Algebraic sufficient conditions for polynomial data]
@@ -1774,37 +1811,34 @@ of cardinality $O_{f,r_{\max},h}(\|G\|)$ with:
 \]
 \end{corollary}
 \begin{proof}
-For $\mathbf{LI}$, apply Lemma~\ref{lem:mcfg-li-group-window}
-with trivial group and Theorem~\ref{thm:boundary-polydata}.
-For $\mathbf{LI}\vee\mathbf{Grp}$, use the finite window--group
-refinement from that lemma and
-Theorem~\ref{thm:window-group-polydata}.
-The parameters of the refining morphisms depend only on the fixed
-typing and alphabet, not on $G$.  The bound on cardinality
-holds in both cases.
+Combine Lemma~\ref{lem:mcfg-li-group-window} with
+Theorem~\ref{thm:boundary-polydata} or
+Theorem~\ref{thm:window-group-polydata}; the refining parameters depend only
+on $s$ and $\Sigma$, not on $G$.
 \end{proof}
 
-\begin{remark}
-These are \emph{sufficient} algebraic conditions, not a
-characterization of all typings admitting polynomial
-original-thickness data.  The lower-bound question beyond
-fan-out one in Open Problem~\ref{op:fanout-two} remains open.
-The empty-alphabet case has only the word $\eps$ and is trivial.
-\end{remark}
+Appendix~\ref{app:local-group} extends the cubic bound to every typing whose
+positive image lies in the pseudovariety $\mathbf{LG}$ of local groups
+(Theorem~\ref{thm:local-group-polydata}); $\mathbf{LI}\vee\mathbf{Grp}$ is a
+proper subclass (Proposition~\ref{prop:li-g-strict}), and at fan-out one the
+two-element semilattice is the only pseudovariety-level obstruction
+(Corollary~\ref{cor:pseudovariety-dichotomy}).  These are \emph{sufficient}
+conditions, not a characterization of typings admitting polynomial
+original-thickness data; the question beyond fan-out one is
+Open Problem~\ref{op:fanout-two}.  The empty-alphabet case is trivial.
 
 \subsection{Computing Short Characteristic Data}
 \label{subsec:effective-char-data}
 
-The bounds above are existential: each proof exhibits a short
-tuple or context.  The shortest ones can be computed directly.
-Call a sentence context of a typed nonterminal $X$
-\emph{derivational} if it arises, as in the proof of
-Lemma~\ref{lem:identity-canonical-contexts}, from a successful
-typed derivation by deleting one occurrence of the subtree
-rooted at $X$.  Every such context is admissible for $X$.
-The contexts $E_A$ of Lemma~\ref{lem:untyped-contexts}, lifted
-to $X=A_{\mathbf t}$, and those of
-Lemma~\ref{lem:reusable-context-bound} are derivational.
+The bounds above exhibit some short tuple and some short context.  Call a
+sentence context of a typed nonterminal $X$ \emph{derivational} if it arises
+from a successful typed derivation by deleting one occurrence of an
+$X$-subtree; such contexts are admissible.  All canonical contexts used in
+Sections~\ref{subsec:thickness-contexts}--\ref{subsec:algebraic-typed-data}
+and Appendix~\ref{app:local-group} are derivational
+(Lemma~\ref{lem:thickness-equivalence}(iv) and the proofs of
+Lemma~\ref{lem:typed-thickness-baseline} and
+Theorem~\ref{thm:rankone-polydata}).
 
 \begin{proposition}[Effective short characteristic data]
 \label{prop:effective-char-data}
@@ -1824,10 +1858,14 @@ these tuples and contexts, and hence every word of the
 witness set $\Wit(\widetilde G_0)$ of
 Definition~\ref{def:witness-set} built from them.
 \end{enumerate}
-Every word-length and total-length bound proved in this section
-and in Appendices~\ref{app:window-abelian},
-\ref{app:window-group} and~\ref{app:local-group} holds for this computed witness set.
-Its words can be written out explicitly in time polynomial in
+Every word-length and total-length bound proved for
+$\Wit(\widetilde G_0)$ in
+Sections~\ref{subsec:thickness-contexts}--\ref{subsec:algebraic-typed-data}
+and in Appendix~\ref{app:local-group} holds for this computed witness set.
+This does not apply to the relaxed samples $K^\dagger$ of
+Section~\ref{subsec:short-distributional-representatives}, whose
+representatives need not be generated by their nonterminals.
+The words can be written out explicitly in time polynomial in
 $\|G\|+\|\Wit(\widetilde G_0)\|_+$.
 \end{proposition}
 
@@ -1836,58 +1874,46 @@ For fixed $f,r_{\max},h$ the full refinement $G^h$ has at most
 $|V||M|^f$ typed nonterminals and $|P||M|^{fr_{\max}}$ typed rules,
 and trimming is a linear-time productivity and reachability
 computation.  View the typed rules as weighted deduction steps.
-A rule $X\to\rho(Y_1,\ldots,Y_r)$ maps child lengths $x_j$ to
-$c_\rho+\sum_jx_j$, where $c_\rho$ is the number of terminals
-written by $\rho$; this function is superior.  To break
-zero-length ties without cyclic predecessor pointers, minimize the
-lexicographic pair (terminal length, derivation-node count), adding
-$(c_\rho,1)$ at each rule.  The pair-valued operation is strictly
-superior to each child even when no terminal is written.
-The shortest-derivation algorithm in the weighted deductive
-form of Nederhof~\cite{Nederhof2003}, building on Knuth's
-generalization of Dijkstra's method for the grammar problem
-(see also Ramalingam and Reps~\cite{RamalingamReps1996}),
-therefore computes the
-minimum length $\lambda(X)=\min\{\|\tuple u\|_1:\tuple u\in L_X\}$
-of every typed nonterminal together with an acyclic choice of
-minimizing rules.  These choices form a derivation DAG for
-$\omega(X)$, with shared subderivations.  A second Dijkstra
-pass computes outside lengths, breaking equal-length ties by
-the number of edges.  It
-starts with $\mu(X)=0$ when $\widetilde S\to X$ is present.  For
-every typed rule $X\to\rho(Y_1,\ldots,Y_r)$ and every $j$ it adds
-an edge from $X$ to $Y_j$ of weight
-$c_\rho+\sum_{i\ne j}\lambda(Y_i)$.  The value $\mu(X)$ is the
-minimum fixed length of a derivational context of $X$, and the
-shortest-path tree supplies its DAG.  The same two passes on $G$
-itself give $t_G=\max_A\lambda(A)$ and
+A rule $X\to\rho(Y_1,\ldots,Y_r)$ maps child weights to
+$(c_\rho,1)+\sum_j(x_j,n_j)$, where $c_\rho$ is the number of terminals
+written by $\rho$ and pairs are compared lexicographically (terminal length,
+derivation-node count).  This function is strictly superior to each argument
+even when no terminal is written, so the shortest-derivation algorithm in the
+weighted deductive form of Nederhof~\cite{Nederhof2003}, building on Knuth's
+generalization of Dijkstra's method (see also Ramalingam and
+Reps~\cite{RamalingamReps1996}), computes
+$\lambda(X)=\min\{\|\tuple u\|_1:\tuple u\in L_X\}$ together with an acyclic
+choice of minimizing rules, that is, a derivation DAG for $\omega(X)$.  A
+second Dijkstra pass computes outside lengths, breaking equal-length ties by
+the number of edges: it starts with $\mu(X)=0$ when $\widetilde S\to X$ is
+present, and for every typed rule $X\to\rho(Y_1,\ldots,Y_r)$ and every $j$
+adds an edge from $X$ to $Y_j$ of weight $c_\rho+\sum_{i\ne j}\lambda(Y_i)$.
+Then $\mu(X)$ is the minimum fixed length of a derivational context of $X$,
+and the shortest-path tree supplies its DAG.  The same two passes on $G$ give
+$t_G=\max_A\lambda(A)$ and
 $\theta_G(R)=\mu(A)+c_\rho+\sum_j\lambda(B_j)$ for
 $R:A\to\rho(B_1,\ldots,B_r)$.
 
-Each proof in this section and in the cited appendices bounds a
-witness word by bounding the length of its context, its rule
-template, and its canonical child tuples separately.  It does so
-by exhibiting some tuple in $L_X$ and some derivational context
-of length within the stated bound.  The computed minima are no
-longer, so every stated bound persists.  Expanding a DAG takes
-time linear in the length of the word it represents.
+Each of the cited proofs bounds a witness word through the length of its
+context, of its rule template and of its canonical child tuples, and does so
+by exhibiting \emph{some} tuple of $L_X$ and \emph{some} derivational context.
+The computed minima are no longer, and the number of witnesses is unchanged,
+so every stated bound persists.  Expanding a DAG takes time linear in the
+length of the word it represents.
 \end{proof}
 
-\begin{proposition}[Rule-only characteristic witnesses]
+\begin{proposition}[Rule-only witnesses and a computable data budget]
+\label{prop:computed-witness-budget}
 \label{prop:rule-only-witnesses}
 In the setting of Proposition~\ref{prop:effective-char-data},
-choose all canonical tuples by the consistent acyclic
-minimum-weight derivations described there.
-For each non-start typed nonterminal $X$, let
-$R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ be the first rule in
-its chosen minimizing derivation (including $q=0$).
-Then
-\[
- \omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q)).
-\]
-Consequently the witness set of
-Definition~\ref{def:witness-set} equals the set of
-rule-witness words alone:
+choose all canonical tuples by the consistent acyclic minimum-weight
+derivations described there, and let $\mathcal R$ be the non-start typed
+rules of $\widetilde G_0$ (rank-zero rules included).
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item For each non-start typed nonterminal $X$, let
+$R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ be the first rule of its chosen
+minimizing derivation (including $q=0$).  Then
+$\omega(X)=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))$.  Consequently
 \[
  \Wit(\widetilde G_0)=
  \bigl\{
@@ -1895,50 +1921,14 @@ rule-witness words alone:
  [\rho_R(\omega(Y_1),\ldots,\omega(Y_q))]:
  R\in\mathcal R
  \bigr\},
+ \qquad
+ |\Wit(\widetilde G_0)|\le|\mathcal R|\le|P||M|^{fr_{\max}},
 \]
-where $\mathcal R$ denotes the non-start typed rules
-and rank-zero rules are included.
-In particular,
-\[
- |\Wit(\widetilde G_0)|\le|\mathcal R|
- \le |P||M|^{fr_{\max}},
-\]
-for a fixed typing and rule-rank cap.
-The set remains characteristic for
-$\mathcal B^{\le r_{\max}}_{f,h}$ whenever the
-target is in $\Cmcf{f}{h}$.
-\end{proposition}
-\begin{proof}
-For each typed nonterminal $X$, an optimal derivation
-starts with a rule $R_X$. Every child derivation must
-have minimum weight: replacing a nonoptimal child by
-the chosen minimum would decrease the lexicographic
-weight of the whole derivation. The additional
-derivation-node tie-breaker makes the simultaneous
-choice of minimizing rules acyclic. Hence the displayed
-identity for $\omega(X)$ holds, also for rank zero.
-
-It follows that $\chi(X)[\omega(X)]$ is
-\emph{identical} to the witness word of $R_X$.
-Every other term in Definition~\ref{def:witness-set}
-is already a rule witness. Thus the two sets coincide
-as sets of terminal words; in particular, the
-completeness and characteristic-sample arguments using
-$\Wit(\widetilde G_0)$ are unchanged.
-There is at most one selected word per rule instance.
-The refinement bound on the number of typed rules
-gives the displayed cardinality estimate.
-\end{proof}
-
-\begin{proposition}[A computable presentation-sensitive data budget]
-\label{prop:computed-witness-budget}
-Under the hypotheses of Proposition~\ref{prop:effective-char-data},
-let $\mathcal R$ be the non-start typed rules
-of $\widetilde G_0$.
-Let $\lambda(X)$ be the minimum total yield length from $X$,
-and let $\mu(X)$ be the minimum fixed length of a derivational
-sentence context of $X$ (with $\mu(X)=0$ for a direct start link).
-For $R:X\to\rho(Y_1,\ldots,Y_q)$, put
+and this set remains characteristic for $\mathcal B^{\le r_{\max}}_{f,h}$
+whenever the target is in $\Cmcf{f}{h}$.
+\item Let $\lambda(X)$ be the minimum total yield length from $X$
+and $\mu(X)$ the minimum fixed length of a derivational context of $X$
+(with $\mu(X)=0$ for a direct start link).  For $R:X\to\rho(Y_1,\ldots,Y_q)$ put
 \[
  b(R):=c_\rho+\sum_{j=1}^q\lambda(Y_j),
  \qquad
@@ -1946,61 +1936,44 @@ For $R:X\to\rho(Y_1,\ldots,Y_q)$, put
  \sum_{R\in\mathcal R}
  \bigl(1+\mu(\operatorname{lhs}R)+b(R)\bigr).
 \]
-There is a computable witness set $\Wit(\widetilde G_0)$ with
-\[
- \|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h).
-\]
-The integer $\mathsf B_{\mathrm{rule}}(G,h)$ is computable in polynomial time in
-$\|G\|$ when $f,r_{\max},h$ are fixed, with its value represented in
-binary.  If $L(G)$ also contains the empty word and its nonempty
-core is treated separately, the optional $\eps$ datum adds at most one
-to the encoded budget.
+Then $\|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,h)$, and the
+integer $\mathsf B_{\mathrm{rule}}(G,h)$ is computable in time polynomial in
+$\|G\|$ for fixed $f,r_{\max},h$, its value being represented in binary.  If
+$L(G)$ also contains $\eps$ and its nonempty core is treated separately, the
+$\eps$ datum adds at most one to the budget.
+\end{enumerate}
 \end{proposition}
+
 \begin{proof}
-Use the minimizing canonical tuples and derivational contexts
-constructed in Proposition~\ref{prop:effective-char-data}.
-By Proposition~\ref{prop:rule-only-witnesses},
-every canonical-nonterminal witness is already one of
-the rule witnesses. For each positive-rank or rank-zero
-typed rule $R:X\to\rho(Y_1,\ldots,Y_q)$, its witness word
-$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$
-has length exactly $\mu(X)+b(R)$.
-Summing the encoded lengths $|w|+1$ over this indexed
-multiset of rule witnesses gives
-$\mathsf B_{\mathrm{rule}}(G,h)$.
-Passing to the set of distinct words can only lower
-the total length.  The computations of $\lambda,\mu$,
-the number of typed symbols and rules, and the binary lengths of
-these quantities are polynomially bounded as in
-Proposition~\ref{prop:effective-char-data}.
+(i) An optimal derivation of $X$ starts with $R_X$, and each of its child
+derivations is optimal, since replacing a nonoptimal child by the chosen
+minimum would decrease the lexicographic weight.  The node-count tie-breaker
+makes the simultaneous choice acyclic, which gives the identity, also for
+rank zero.  Hence $\chi(X)[\omega(X)]$ is \emph{identical} to the rule word of
+$R_X$, and every other term of Definition~\ref{def:witness-set} is a rule
+word; the two sets coincide as sets of terminal words, so completeness and the
+characteristic-sample property are unchanged.  There is at most one word per
+typed rule.
+(ii) The rule word of $R:X\to\rho(Y_1,\ldots,Y_q)$ has length exactly
+$\mu(X)+b(R)$.  Summing $|w|+1$ over the indexed family gives
+$\mathsf B_{\mathrm{rule}}(G,h)$; passing to distinct words can only lower
+it.  The values $\lambda,\mu$ and the number of typed rules are computed, with
+polynomial binary length, by Proposition~\ref{prop:effective-char-data}.
 \end{proof}
 
-\begin{remark}
-This \emph{rule-only} budget is presentation-sensitive and can be much smaller
-than substituting worst-case maxima into the polynomial bounds.
-It is an efficiently computable \emph{upper certificate}, not a
-claim of a minimum-size characteristic sample or an improved
-worst-case polynomial exponent.
-\end{remark}
-
-The singleton $\{\mathtt c^{2^n}\}$ after
-Theorem~\ref{thm:rankone-polydata} shows that explicit
-characteristic words can be exponentially longer than $\|G\|$.
-In that case the derivation DAGs of
-Proposition~\ref{prop:effective-char-data} remain of polynomial
-size, so the computed sample has a polynomial-size compressed
-description.
-
+This rule-only budget is presentation-sensitive and can be much smaller than
+the worst-case polynomial bounds; it is an efficiently computable \emph{upper
+certificate}, not a claim of a minimum-size characteristic sample or an
+improved worst-case exponent.  For the singleton $\{\mathtt c^{2^n}\}$ after
+Theorem~\ref{thm:rankone-polydata}, explicit words are exponentially longer
+than $\|G\|$, but the derivation DAGs remain of polynomial size.
 
 \subsection{Distributional Representatives and Abelian-Filtered Targets}
 \label{subsec:short-distributional-representatives}
 
-The computable rule-only budget above uses representatives
-\emph{generated by} the typed grammar.
-For an existential characteristic-sample bound there is a
-different option: choose short representatives of the same
-\emph{typed distribution classes}, even when the representatives
-themselves have no derivation from the corresponding nonterminal.
+For an existential characteristic-sample bound one may instead choose short
+representatives of the same \emph{typed distribution classes}, even when they
+have no derivation from the corresponding nonterminal.
 
 \begin{proposition}[Relaxed distributional witnesses]
 \label{prop:mcfg-relaxed-witnesses}
@@ -2030,64 +2003,34 @@ The bound concerns the nonempty core; if $\eps\in L$,
 add the sample word $\eps$ at encoded cost one.
 \end{proposition}
 \begin{proof}
-For each $X=A_{\mathbf t}$ choose a tuple
-$\omega^\dagger(X)\in[X]$ of total length
-$\kappa_G(X)$.  Choose a derivational sentence context
-$\chi^\dagger(X)$ for the \emph{untyped} $A$ using a
-shortest successful derivation containing an occurrence
-of $A$, with all sibling yields fixed.  The fixed
-material of this context is at most $\theta_G$,
-since any such successful derivation witnesses some
-rule involving $A$; if $\widetilde S\to X$ is a
-start link, use $\blank_1$ instead.
-This context accepts a tuple $u\in L_X$.
-As $\omega^\dagger(X)\equiv_{L,h}u$, it also
-accepts $\omega^\dagger(X)$.
-
-Form $K^\dagger$ from all words
-$\chi^\dagger(X)[\omega^\dagger(X)]$,
-all rule words
-$\chi^\dagger(X)[\rho(\omega^\dagger(Y_1),\ldots,
-\omega^\dagger(Y_q))]$, and all rank-zero
-rule witnesses.  By
-Lemma~\ref{lem:witnessed-composition}, the rule
-tuple in the second family is distributionally
-equivalent to a tuple in $L_X$, so every listed
-word belongs to $L$.
-The proof of
-Proposition~\ref{prop:completeness} now works with
-$\iota(X)=[\omega^\dagger(X)]$: the chosen contexts
-supply the Link instances, while the rule words
-expose the required composition witnesses.
-Proposition~\ref{prop:reconstruction-soundness}
-gives the reverse inclusion for arbitrary larger
-positive samples.
-
-There is one word per typed nonterminal and one per
-typed rule before deduplication.  A nonterminal
-witness has length at most $\theta_G+\kappa_G$,
-and a rule witness at most
-$\theta_G+\|G\|+r\kappa_G$.
-Summing the encoded costs gives the bound.
-Unlike Proposition~\ref{prop:rule-only-witnesses},
-these representatives need not be generated by
-their nonterminals, so the nonterminal words
-cannot in general be omitted.
+For each $X=A_{\mathbf t}$ choose $\omega^\dagger(X)\in[X]$ of total length
+$\kappa_G(X)$, and let $\chi^\dagger(X):=E_A$ from
+Lemma~\ref{lem:thickness-equivalence}(iv), of fixed length at most $\theta_G$
+($\blank_1$ for a start link).  It accepts every tuple of $L_X$, hence also
+$\omega^\dagger(X)\equiv_{L,h}\tuple u\in L_X$.  Let $K^\dagger$ consist of
+the words $\chi^\dagger(X)[\omega^\dagger(X)]$, the rule words
+$\chi^\dagger(X)[\rho(\omega^\dagger(Y_1),\ldots,\omega^\dagger(Y_q))]$ and the
+rank-zero rule words.  By Lemma~\ref{lem:witnessed-composition} the rule tuple
+is equivalent to a tuple of $L_X$, so $K^\dagger\subseteq L$; it also has the
+$h$-type of $X$.  Apply the generalized Proposition~\ref{prop:completeness} with
+$\iota(X)=\omega^\dagger(X)$ and $\chi(X)=\chi^\dagger(X)$:
+the first family of sample words is its representative evidence and
+the rule-word family is precisely its rule evidence. Componentwise
+types agree by the typed rules and Lemma~\ref{lem:witnessed-composition};
+all contexts are admissible and start-linked contexts are identities.
+The proposition supplies the capped and uncapped derivation simulations.  Proposition~\ref{prop:reconstruction-soundness} gives the
+reverse inclusion for all larger positive samples.  A nonterminal word has
+length at most $\theta_G+\kappa_G$ and a rule word at most
+$\theta_G+\|G\|+r\kappa_G$; sum the encoded costs.  Unlike
+Proposition~\ref{prop:computed-witness-budget}, the nonterminal words cannot in
+general be omitted.
 \end{proof}
 
-\begin{remark}
-For fixed $f,r,h$, the preceding bound implies that
-any family $G_n$ with
-$\|G_n\|\max\{1,\theta_{G_n}\}=n^{O(1)}$
-and superpolynomial characteristic-data requirements
-must satisfy $\kappa_{G_n}=n^{\omega(1)}$.
-This is a necessary condition, not a proof that such a
-family exists.  The relaxed construction is existential;
-the rule-only algorithm of
-Proposition~\ref{prop:computed-witness-budget} is a
-distinct, effective construction using grammar-generated
-representatives.
-\end{remark}
+For fixed $f,r,h$, a family $G_n$ with
+$\|G_n\|\max\{1,\theta_{G_n}\}=n^{O(1)}$ and superpolynomial
+characteristic-data requirements must therefore have
+$\kappa_{G_n}=n^{\omega(1)}$; this is a necessary condition, not a proof that
+such a family exists.
 
 \begin{theorem}[Polynomial data for abelian-filtered targets]
 \label{thm:mcfg-abelian-filter-data}
@@ -2120,118 +2063,74 @@ the degenerate cases $L\subseteq\{\eps\}$ are handled directly.
 \end{theorem}
 \begin{proof}
 Membership in $\Cmcf{f}{s}$ follows from
-Proposition~\ref{prop:abelian-coset-filter}; the
-positive part has the assumed MCFG presentation,
-and $\eps$ is admitted separately by the Start rule.
+Proposition~\ref{prop:abelian-coset-filter} and the remark preceding it; the
+positive part has the assumed presentation, and $\eps$ is admitted by Start.
+By Proposition~\ref{prop:mcfg-relaxed-witnesses} it suffices to bound
+$\kappa_G$ by a polynomial in $\|G\|\bar\theta_G$ with exponent depending only
+on $\Sigma,h,f,r$.
 
-Let $\psi:\Sigma^*\to\mathbb N^\Sigma$ be the
-Parikh map and write
-$\Psi(\tuple u)=\sum_i\psi(u_i)$.
-The morphism $\varphi$ factors through a group
-homomorphism $\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$.
-Put
+Let $\psi:\Sigma^*\to\mathbb N^\Sigma$ be the Parikh map,
+$\Psi(\tuple u)=\sum_i\psi(u_i)$, and let
+$\overline\varphi:\mathbb Z^\Sigma\to\mathbb A$ be the group homomorphism
+through which $\varphi$ factors; put
+$\Lambda=\{z\in\mathbb Z^\Sigma:\overline\varphi(z)\in\mathcal H\}$.  Fix for
+each $A\in V$ a tuple $\omega_A\in L_A(G)$ with
+$\|\omega_A\|_1\le t_G\le\theta_G$.  The context $E_A$ accepts every
+$A$-tuple, and all accepted words lie in one coset of $\mathcal H$, so
 \[
- \Lambda=\{z\in\mathbb Z^\Sigma:
-                 \overline\varphi(z)\in\mathcal H\}.
+ \Psi(\tuple u)-\Psi(\omega_A)\in\Lambda
+ \qquad(\tuple u\in L_A(G)).                                      \tag{*}
 \]
-Fix for each untyped nonterminal $A$ a productive
-tuple $\omega_A$ of length at most the
-untyped nonterminal thickness $t_G\le\theta_G$.
-Since any two $A$-tuples can be inserted into the
-same successful derivational context and their
-resulting words belong to $L$,
-\[
- \Psi(u)-\Psi(\omega_A)\in\Lambda
- \qquad(u\in L_A(G)).                                      \tag{*}
-\]
-For each rule $R:A\to\rho(B_1,\ldots,B_q)$,
-let $c_R\in\mathbb N^\Sigma$ count its explicit
-terminal letters and define
-\[
- \delta_R=\Psi(\omega_A)-c_R
-                 -\sum_{j=1}^q\Psi(\omega_{B_j}).
-\]
-By (*) this vector lies in $\Lambda$, and its
-$\ell_1$-norm is bounded by
-$T=(r+1)t_G+\|G\|$.
-Let
-$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$ and
-$\Lambda_T=\langle\Gamma_T\rangle$.
-Induction on a derivation, using
-\[
- \Psi(u)-\Psi(\omega_A)=
-   \sum_j(\Psi(u_j)-\Psi(\omega_{B_j}))-\delta_R,
-\]
-shows that every $u\in L_A(G)$ satisfies
-$\Psi(u)-\Psi(\omega_A)\in\Lambda_T$.
+For $R:A\to\rho(B_1,\ldots,B_q)$ let $c_R\in\mathbb N^\Sigma$ count its
+explicit letters and
+$\delta_R=\Psi(\omega_A)-c_R-\sum_j\Psi(\omega_{B_j})$.  By (*) applied to
+$\rho(\omega_{B_1},\ldots,\omega_{B_q})\in L_A(G)$, $\delta_R\in\Lambda$, and
+$\|\delta_R\|_1\le T:=(r+1)t_G+\|G\|$.  Let
+$\Gamma_T=\{z\in\Lambda:\|z\|_1\le T\}$ and $\Lambda_T=\langle\Gamma_T\rangle$.
+Induction on derivations, using
+$\Psi(\tuple u)-\Psi(\omega_A)
+=\sum_j(\Psi(\tuple u_j)-\Psi(\omega_{B_j}))-\delta_R$ for
+$\tuple u=\rho(\tuple u_1,\ldots,\tuple u_q)$, shows
+$\Psi(\tuple u)-\Psi(\omega_A)\in\Lambda_T$ for every $\tuple u\in L_A(G)$.
 
-Consider now any typed nonterminal
-$X=A_{\mathbf t}$ with $d\le f$, and fix
-$u=(u_1,\ldots,u_d)\in L_X$.
-For each component choose one linear set from
-a fixed semilinear representation of the Parikh
-image of the regular language
-$h^{-1}(t_i)\cap\Sigma^+$ containing $\psi(u_i)$.
-Write that linear set as
-$c_i+\sum_{p\in P_i}\mathbb N p$.
-The number and coefficients of all these
-generators are bounded by constants depending
-only on $\Sigma$ and $h$.
-The nonnegative integer system
+Now let $X=A_{\mathbf t}$ have arity $d\le f$ and fix
+$\tuple u\in L_X$.  For each $i$ choose, from a fixed semilinear
+representation of the Parikh image of the regular language
+$h^{-1}(t_i)\cap\Sigma^+$, a linear set $c_i+\sum_{p\in P_i}\mathbb Np$
+containing $\psi(u_i)$; the number and size of all such generators depend
+only on $\Sigma$ and $h$.  The nonnegative integer system
 \[
  \sum_{i=1}^d
-    \left(c_i+\sum_{p\in P_i}\nu_{i,p}p\right)
+    \Bigl(c_i+\sum_{p\in P_i}\nu_{i,p}p\Bigr)
  -
  \sum_{z\in\Gamma_T}(\mu_z^+-\mu_z^-)z
  =\Psi(\omega_A)
 \]
-is feasible: use the Parikh vectors of the
-original $u_i$ and the preceding
-$\Lambda_T$-membership.
-It has exactly $|\Sigma|$ equations,
-at most $O_{f,h,\Sigma}((T+1)^{|\Sigma|})$
-nonnegative variables, and coefficients
-of absolute value $O_{f,h,\Sigma}(T+1)$.
-Papadimitriou's small nonnegative integral
-solution bound~\cite{Papadimitriou1981} therefore
-gives a solution with every coefficient
-bounded by a fixed polynomial in $T+1$.
-For each resulting Parikh vector select a
-nonempty word $v_i\in h^{-1}(t_i)$ realizing it,
-and let $\tuple v=(v_1,\ldots,v_d)$.
-Then $\|\tuple v\|_1$ is polynomial in $T+1$,
-the componentwise $h$-types agree with $u$,
-and
-$\Psi(\tuple v)-\Psi(u)\in\Lambda_T\subseteq\Lambda$.
-
-Finally, for any sentence context $E$, the total
-$h$-type of $E[\tuple v]$ agrees with that of
-$E[u]$, and
-\[
- \varphi(E[\tuple v])-\varphi(E[u])
- =\overline\varphi(\Psi(\tuple v)-\Psi(u))
- \in\mathcal H.
-\]
-Hence $\tuple v\equiv_{L,h}\tuple u$.
-This constructs a representative of every
-typed distribution class with length polynomial
-in $T+1$.  Applying
-Proposition~\ref{prop:mcfg-relaxed-witnesses}
-and $t_G\le\theta_G$ yields the claimed
-total-length bound, with parameters independent
-of the auxiliary abelian group.
+is feasible (use the Parikh vectors of the $u_i$ and the
+$\Lambda_T$-membership of $\Psi(\tuple u)-\Psi(\omega_A)$).  It has
+$|\Sigma|$ equations, $O_{f,h,\Sigma}((T+1)^{|\Sigma|})$ variables, and
+coefficients and right-hand side of absolute value $O_{f,h,\Sigma}(T+1)$.
+Papadimitriou's bound for small nonnegative integral solutions of
+equality systems~\cite{Papadimitriou1981} (a solution with all entries at
+most $n(ma)^{2m+1}$ for $m$ equations, $n$ variables and entries bounded by
+$a$) gives a solution whose entries are bounded by a polynomial in $T+1$ with
+exponent depending only on $|\Sigma|$.  Realize each resulting Parikh vector by
+a nonempty word $v_i\in h^{-1}(t_i)$ and put $\tuple v=(v_1,\ldots,v_d)$.  Then
+$\|\tuple v\|_1$ is polynomial in $T+1$, $h^{(d)}(\tuple v)=\mathbf t$, and
+$\Psi(\tuple v)-\Psi(\tuple u)\in\Lambda_T\subseteq\Lambda$.  For every
+sentence context $E$, the words $E[\tuple v]$ and $E[\tuple u]$ have the same
+$h$-value and
+$\varphi(E[\tuple v])-\varphi(E[\tuple u])
+=\overline\varphi(\Psi(\tuple v)-\Psi(\tuple u))\in\mathcal H$; hence
+$\tuple v\equiv_{L,h}\tuple u$ and $\kappa_G(X)\le\|\tuple v\|_1$.  Since
+$T\le(r+1)\theta_G+\|G\|$, the claim follows, with parameters independent of
+the auxiliary abelian group.
 \end{proof}
 
-\begin{remark}
-Theorem~\ref{thm:mcfg-abelian-filter-data} applies
-even when the positive image of $h$ is
-\emph{outside} $\mathbf{LG}$.
-It is a sufficient condition on the target
-language, rather than on the finite control
-monoid.  It does not claim polynomial-time
-construction for arbitrary, possibly
-ineffectively presented auxiliary abelian groups.
-\end{remark}
+Theorem~\ref{thm:mcfg-abelian-filter-data} applies even when the positive
+image of $h$ lies \emph{outside} $\mathbf{LG}$: it is a sufficient condition on
+the target language, not on the finite control, and it claims no
+polynomial-time construction for ineffectively presented auxiliary groups.
 
 \section{Comparison with Multidimensional Substitutability}
 \label{sec:comparison}
@@ -2239,14 +2138,11 @@ ineffectively presented auxiliary abelian groups.
 Yoshinaka's multidimensional substitutability is the direct positive-data
 baseline~\cite{Yoshinaka2009,Yoshinaka2011}.  Under trivial typing the present
 framework reproduces that semantic class; finite typing refines which observed
-tuples may be identified while preserving compositional rule witnesses.
-The MCFG proofs additionally require componentwise type propagation and, for
-the quantitative boundary theorem, simultaneous control of several tuple
-components.  Yoshinaka's $(k,\ell)$ hierarchy is a separate CFG result
-\cite{Yoshinaka2008}; $h_\Sigma^{k,\ell}$ lifts the same boundary
-information componentwise.  Since every $(f,h)$ condition includes arity one,
+tuples may be identified while preserving compositional rule witnesses, and
+$h_\Sigma^{k,\ell}$ lifts the boundary information of Yoshinaka's CFG
+$(k,\ell)$ hierarchy~\cite{Yoshinaka2008} componentwise.  Since every
+$(f,h)$ condition includes arity one,
 \(\Cmcf{f}{h}\cap\mathrm{CFL}\subseteq\Cmcf{1}{h}.\)
-The boundary-typed example below exhibits intrinsic rule rank two.
 
 \subsection{Yoshinaka's Baseline and Prefix--Suffix Specialization}
 
@@ -2268,53 +2164,24 @@ permits empty components and separators
 \cite[Section~3.1 and footnote~3]{Yoshinaka2011}.
 \end{definition}
 
-Recall the finite monoid morphism $h_\Sigma^{k,\ell}$ from
-Definition~\ref{def:prefix-suffix-typing}.  In Yoshinaka's word-level
-definition, $w_1,y_1,w_1',w_2,y_2,w_2'\in\Sigma^*$,
-$u\in\Sigma^k$, and $v\in\Sigma^\ell$, with
-$uy_1v,uy_2v\ne\eps$; the condition is
+The trivial typing removes the componentwise type premise, so
+\(\Cmcf{f}{h_{\mathrm{triv}}} =\YSub{f}\cap f\text{-}\mathrm{MCFL} \subseteq\Cmcf{f}{h}.\)
+In Yoshinaka's word-level $(k,\ell)$ condition~\cite{Yoshinaka2008}, with
+$u\in\Sigma^k$, $v\in\Sigma^\ell$ and $uy_1v,uy_2v\ne\eps$,
 \[
  w_1uy_1vw_1',\ w_1uy_2vw_1'\in L
  \quad\Longrightarrow\quad
- \bigl(w_2uy_1vw_2'\in L\iff w_2uy_2vw_2'\in L\bigr)
+ \bigl(w_2uy_1vw_2'\in L\iff w_2uy_2vw_2'\in L\bigr).
 \]
-\cite{Yoshinaka2008}.  Thus the compared fragments $uy_iv$ are nonempty even
-though the middle words $y_i$ themselves may be empty.  Equality of their
-$h_\Sigma^{k,\ell}$-values is exactly equality of the boundary information
-used in this condition, including the exact identity of words shorter than
-$m_0=\max\{1,k+\ell\}$.
+The compared fragments $uy_iv$ are nonempty although the $y_i$ may be empty,
+and equality of their $h_\Sigma^{k,\ell}$-values is exactly the boundary
+information used here, including exact identity of words shorter than
+$m_0=\max\{1,k+\ell\}$.  Hence $(1,h_\Sigma^{k,\ell})$-substitutability is
+precisely Yoshinaka's $(k,\ell)$ condition, and the same correspondence
+applies componentwise at larger fan-out.
 
-\paragraph{Specializations of the semantic condition.}
-The trivial typing removes the componentwise
-type premise, so
-\(\Cmcf{f}{h_{\mathrm{triv}}} =\YSub{f}\cap f\text{-}\mathrm{MCFL} \subseteq\Cmcf{f}{h}.\)
-At fan-out one,
-$(1,h_\Sigma^{k,\ell})$-substitutability
-is precisely Yoshinaka's word-level
-$(k,\ell)$ condition~\cite{Yoshinaka2008}:
-equal window types mean identical short words
-or common prefixes and suffixes of lengths
-$k$ and $\ell$, respectively.
-The same correspondence applies
-componentwise at larger fan-out.
-
-\paragraph{Compatibility with Yoshinaka's efficiency scale.}
-For trivial typing no productive nonterminal
-has more than one yield type. Yoshinaka's
-untyped grammar witnesses already satisfy
-$|K_G|\le|P|$ and
-$\|K_G\|\le|P|\tau_G$
-\cite[Lemma~7]{Yoshinaka2011}, with polynomial
-time and data for fixed dimension and rank
-\cite[Theorem~1]{Yoshinaka2011}.
-Thus the present quantitative claims concern
-new typed, multi-component settings rather
-than re-proving the trivial-typing result.
-
-\paragraph{A boundary-typing fact used in the separation.}
 A language is \emph{strictly 2-local} if membership is determined by
 permitted adjacent pairs in $\vdash w\dashv$, for fixed endmarkers.
-The following elementary fact is needed in the intrinsic-rank example.
 
 \begin{lemma}[Strictly 2-local constraints are boundary typed]
 \label{lem:sl2-boundary-control}
@@ -2336,27 +2203,17 @@ $E[\tuple y]\in L_{\mathrm{sl}}$, and symmetry finishes the proof.
 \subsection{An Intrinsically Rank-Two Boundary-Typed Target}
 \label{subsec:intrinsic-ranktwo}
 
-The next example makes the distinction between the rank-one and higher-rank
-quantitative regimes intrinsic to the language.  Its rule-rank obstruction is
-not created by finite typing: the balanced-count factor used below already
-belongs to Yoshinaka's trivial-typing class.  The construction instead combines
-that obstruction with minimum fan-out two and a separation from the
-trivial-typing class inside one boundary-typed target.
-
 Let
 \[
  \Sigma_{\mathrm{intr}}
  :=\{\mathtt a,\mathtt b,\mathtt l,\mathtt r,\mathtt p,\mathtt q,
        \mathtt c,\mathtt d,\mathtt{\#},\mathtt{\$},
-       \mathtt u,\mathtt v,\mathtt w\}
-\]
-and put
-\[
+       \mathtt u,\mathtt v,\mathtt w\},
+ \qquad
  P_{\mathrm{intr}}
  :=\{\mathtt{lpc},\mathtt{lpd},\mathtt{lqc},
-       \mathtt{rpc},\mathtt{rpd}\}.
+       \mathtt{rpc},\mathtt{rpd}\},
 \]
-Define
 \[
  \mathrm{MIX}_2^+
  :=\{x\in\{\mathtt a,\mathtt b\}^+:
@@ -2364,32 +2221,18 @@ Define
  \qquad
  T_3^+
  :=\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\},
-\]
-and
-\[
+ \qquad
  L_{\mathrm{intr}}
  :=P_{\mathrm{intr}}\,\mathtt{\#}\,\mathrm{MIX}_2^+\,
    \mathtt{\$}\,T_3^+.
 \]
-
-To make the role of the witness explicit, let
-\[
- \varphi_{\mathrm{mix}}:\{\mathtt a,\mathtt b\}^*\to\mathbb Z,
- \qquad
- \varphi_{\mathrm{mix}}(\mathtt a)=1,\quad
- \varphi_{\mathrm{mix}}(\mathtt b)=-1.
-\]
-Then
-\(\mathrm{MIX}_2^+ =\{\mathtt a,\mathtt b\}^+\cap\varphi_{\mathrm{mix}}^{-1}(0).\)
-The language $\{\mathtt a,\mathtt b\}^+$ is trivially
-$f$-tuple-substitutable, so
-Proposition~\ref{prop:abelian-coset-filter}(ii) gives
-$\mathrm{MIX}_2^+\in\YSub{f}$ for every $f\ge1$; the rank-two CFG for $B$
-displayed below also shows that this ingredient is context-free.  Thus the
-intrinsic rank-two phenomenon used here already occurs inside the
-trivial-typing baseline.  The role of $L_{\mathrm{intr}}$ is to combine that
-known rule-rank obstruction with non-context-freeness, minimum fan-out two,
-and a separation from $\YSub{f}$ in a single finitely typed target.
+The $\mathrm{MIX}_2^+$ factor carries the rule-rank obstruction, which is not
+created by finite typing: $\mathrm{MIX}_2^+=\{\mathtt a,\mathtt b\}^+\cap
+\varphi_{\mathrm{mix}}^{-1}(0)$ for $\varphi_{\mathrm{mix}}(\mathtt a)=1$,
+$\varphi_{\mathrm{mix}}(\mathtt b)=-1$ in $\mathbb Z$, so
+Proposition~\ref{prop:abelian-coset-filter}(ii) already places it in
+$\YSub{f}$ for every $f$.  The $T_3^+$ factor forces minimum fan-out two, and
+the wrapper $P_{\mathrm{intr}}$ separates the target from $\YSub{f}$.
 
 \begin{theorem}[A non-context-free intrinsic-rank-two typed witness]
 \label{thm:intrinsic-ranktwo-witness}
@@ -2411,214 +2254,129 @@ Theorem~\ref{thm:rankone-polydata} at any finite fan-out.
 \end{theorem}
 
 \begin{proof}
-First we give a reduced good fan-out-two grammar of maximum rule rank two.
-Let $B$ generate the nonempty balanced-count language by
+\emph{Grammar.}  Let $B$ have the rules
 \[
-\begin{aligned}
- B\to{}&
+ B\to
  \mathtt a B\mathtt b B
  \mid \mathtt b B\mathtt a B
  \mid \mathtt a B\mathtt b
  \mid \mathtt a\mathtt b B
- \mid \mathtt a\mathtt b\\
- &{}\mid
- \mathtt b B\mathtt a
+ \mid \mathtt a\mathtt b
+ \mid \mathtt b B\mathtt a
  \mid \mathtt b\mathtt a B
- \mid \mathtt b\mathtt a .
-\end{aligned}
+ \mid \mathtt b\mathtt a ;
 \]
-The usual first-return induction on
-$|x|_{\mathtt a}-|x|_{\mathtt b}$ gives
-$L_B=\mathrm{MIX}_2^+$.
-
-Let the fan-out-two nonterminal $A$ have rules
-\(A\to(\mathtt u,\mathtt w) \mid (\mathtt u\xi_1^1\mathtt v,\mathtt w\xi_1^2)(A).\)
-It derives exactly the tuples
-\(\{(\mathtt u^n\mathtt v^{n-1},\mathtt w^n):n\ge1\}.\)
-For every $\alpha\in P_{\mathrm{intr}}$, add the start rule
+the first-return induction on $|x|_{\mathtt a}-|x|_{\mathtt b}$ gives
+$L_B=\mathrm{MIX}_2^+$.  Let the fan-out-two nonterminal $A$ have rules
+\(A\to(\mathtt u,\mathtt w) \mid (\mathtt u\xi_1^1\mathtt v,\mathtt w\xi_1^2)(A),\)
+so $L_A=\{(\mathtt u^n\mathtt v^{n-1},\mathtt w^n):n\ge1\}$, and for every
+$\alpha\in P_{\mathrm{intr}}$ add
 \(S\to \alpha\mathtt{\#}\xi_1^1\mathtt{\$} \xi_2^1\mathtt v\xi_2^2(B,A).\)
-The resulting grammar generates exactly $L_{\mathrm{intr}}$.  It is reduced,
-$\lambda$-free, linear, nondeleting, and nonpermuting.  It is also nonmerging:
-the two components of $A$ are separated by the literal terminal $\mathtt v$
-in every start rule.  Hence it is a good fan-out-two grammar of maximum rule
-rank two.
+The grammar generates $L_{\mathrm{intr}}$, is reduced, $\lambda$-free, linear,
+nondeleting and nonpermuting, and is nonmerging because the two components of
+$A$ are separated by the literal $\mathtt v$.  It is good, of fan-out two and
+rule rank two.
 
-The language is not context-free.  Intersect it with the regular language
-\(R:= \mathtt{lpc\#ab\$}\, \mathtt u^+\mathtt v^+\mathtt w^+ .\)
-Then
-\(L_{\mathrm{intr}}\cap R = \{\mathtt{lpc\#ab\$}\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}.\)
-A homomorphism erasing the fixed prefix and fixing
-$\mathtt u,\mathtt v,\mathtt w$ maps this language onto
-$\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}$, which is not context-free.
-Closure of context-free languages under intersection with regular languages
-and homomorphism therefore shows that $L_{\mathrm{intr}}$ is not
-context-free.  Since fan-out-one MCFGs are exactly context-free grammars in
-the present syntax, while the displayed grammar has fan-out two, the minimum
-fan-out is exactly two.
+\emph{Non-context-freeness.}  With
+\(R:= \mathtt{lpc\#ab\$}\, \mathtt u^+\mathtt v^+\mathtt w^+ \),
+$L_{\mathrm{intr}}\cap R=\{\mathtt{lpc\#ab\$}\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}$,
+which a homomorphism erasing the fixed prefix maps onto the non-context-free
+$\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\}$.  By closure of CFL under
+intersection with regular languages and homomorphism, $L_{\mathrm{intr}}$ is
+not context-free; fan-out-one MCFGs are exactly CFGs here, so the minimum
+fan-out is two.
 
-For typed membership, let
+\emph{Typed membership.}  Let
+\(Q_{\mathrm{intr}}
+:=P_{\mathrm{intr}}\,\mathtt{\#}\,\{\mathtt a,\mathtt b\}^+\,
+\mathtt{\$}\,\mathtt u^+\mathtt v^+\mathtt w^+ .\)
+It is strictly $2$-local, with the allowed adjacent pairs
 \[
- Q_{\mathrm{intr}}
- :=P_{\mathrm{intr}}\,\mathtt{\#}\,\{\mathtt a,\mathtt b\}^+\,
-   \mathtt{\$}\,\mathtt u^+\mathtt v^+\mathtt w^+ .
-\]
-This language is strictly $2$-local.  One complete set of allowed adjacent
-pairs, including end markers, is
-\[
-\begin{gathered}
- \vdash\mathtt l,\ \vdash\mathtt r,\quad
- \mathtt{lp},\ \mathtt{lq},\ \mathtt{rp},\quad
- \mathtt{pc},\ \mathtt{pd},\ \mathtt{qc},\\
- \mathtt{c\#},\ \mathtt{d\#},\quad
- \mathtt{\#a},\ \mathtt{\#b},\quad
+ \begin{gathered}
+ \vdash\mathtt l,\ \vdash\mathtt r,\
+ \mathtt{lp},\ \mathtt{lq},\ \mathtt{rp},\
+ \mathtt{pc},\ \mathtt{pd},\ \mathtt{qc},\
+ \mathtt{c\#},\ \mathtt{d\#},\
+ \mathtt{\#a},\ \mathtt{\#b},\
  \mathtt{aa},\ \mathtt{ab},\ \mathtt{ba},\ \mathtt{bb},\\
- \mathtt{a\$},\ \mathtt{b\$},\quad
- \mathtt{\$u},\quad
+ \mathtt{a\$},\ \mathtt{b\$},\
+ \mathtt{\$u},\
  \mathtt{uu},\ \mathtt{uv},\ \mathtt{vv},\ \mathtt{vw},\
- \mathtt{ww},\quad
+ \mathtt{ww},\
  \mathtt w\dashv .
-\end{gathered}
+ \end{gathered}
 \]
-Define the homomorphism
-\(\Phi_{\mathrm{intr}}:\Sigma_{\mathrm{intr}}^*\to\mathbb Z^3\)
-by
-\[
-\begin{aligned}
- \Phi_{\mathrm{intr}}(\mathtt a)&=(1,0,0),&
- \Phi_{\mathrm{intr}}(\mathtt b)&=(-1,0,0),\\
- \Phi_{\mathrm{intr}}(\mathtt u)&=(0,1,0),&
- \Phi_{\mathrm{intr}}(\mathtt v)&=(0,-1,1),&
- \Phi_{\mathrm{intr}}(\mathtt w)&=(0,0,-1),
-\end{aligned}
-\]
-and let every other terminal have image $(0,0,0)$.  Then
+Let $\Phi_{\mathrm{intr}}:\Sigma_{\mathrm{intr}}^*\to\mathbb Z^3$ send
+$\mathtt a,\mathtt b,\mathtt u,\mathtt v,\mathtt w$ to $(1,0,0)$, $(-1,0,0)$,
+$(0,1,0)$, $(0,-1,1)$, $(0,0,-1)$ and all other letters to $0$.  Its three
+coordinates impose $|x|_{\mathtt a}=|x|_{\mathtt b}$,
+$|x|_{\mathtt u}=|x|_{\mathtt v}$ and $|x|_{\mathtt v}=|x|_{\mathtt w}$, so
 \(L_{\mathrm{intr}} =Q_{\mathrm{intr}}\cap\Phi_{\mathrm{intr}}^{-1}(0).\)
-Indeed, the three coordinates impose respectively
-\[
- |x|_{\mathtt a}=|x|_{\mathtt b},\qquad
- |x|_{\mathtt u}=|x|_{\mathtt v},\qquad
- |x|_{\mathtt v}=|x|_{\mathtt w}.
-\]
 Lemma~\ref{lem:sl2-boundary-control} and
-Proposition~\ref{prop:abelian-coset-filter}(ii) show that the displayed
-intersection is $(f,h_{\Sigma_{\mathrm{intr}}}^{1,1})$-tuple-substitutable
-for every $f\ge1$.  Together with the fan-out-two grammar above, this gives
-\(L_{\mathrm{intr}} \in\Cmcf{f}{h_{\Sigma_{\mathrm{intr}}}^{1,1}} \qquad\text{for every }f\ge2.\)
+Proposition~\ref{prop:abelian-coset-filter}(ii) make this intersection
+$(f,h_{\Sigma_{\mathrm{intr}}}^{1,1})$-tuple-substitutable for every $f$;
+with the grammar above, $L_{\mathrm{intr}}\in
+\Cmcf{f}{h_{\Sigma_{\mathrm{intr}}}^{1,1}}$ for every $f\ge2$.
 
-The language is outside Yoshinaka's trivial-typing class already at arity one.
-Take
-\(x:=\mathtt p,\qquad y:=\mathtt q,\)
-and one-hole contexts
-\(E:=\mathtt l\blank_1\mathtt{c\#ab\$uvw}, \qquad F:=\mathtt r\blank_1\mathtt{d\#ab\$uvw}.\)
-Then
-\(E[x],\ E[y],\ F[x]\in L_{\mathrm{intr}}, \qquad F[y]\notin L_{\mathrm{intr}}.\)
-Thus the arity-one substitution implication fails, so
-$L_{\mathrm{intr}}\notin\YSub{f}$ for every $f\ge1$.  Notice again that the
-boundary typing distinguishes the offending one-letter factors:
-\(h_{\Sigma_{\mathrm{intr}}}^{1,1}(\mathtt p) \ne h_{\Sigma_{\mathrm{intr}}}^{1,1}(\mathtt q).\)
+\emph{Separation.}  For $x=\mathtt p$, $y=\mathtt q$,
+\(E=\mathtt l\blank_1\mathtt{c\#ab\$uvw}\) and
+\(F=\mathtt r\blank_1\mathtt{d\#ab\$uvw}\), we have
+$E[x],E[y],F[x]\in L_{\mathrm{intr}}$ but $F[y]\notin L_{\mathrm{intr}}$, so
+the arity-one substitution implication fails and
+$L_{\mathrm{intr}}\notin\YSub{f}$ for every $f\ge1$; the boundary typing
+separates the offending factors, $h^{1,1}(\mathtt p)\ne h^{1,1}(\mathtt q)$.
 
-It remains to prove intrinsic rule rank.  Put
-\(\mathrm{MIX}_2 :=\{x\in\{\mathtt a,\mathtt b\}^*: |x|_{\mathtt a}=|x|_{\mathtt b}\}.\)
-Gallot calls an MCFG \emph{non-branching} when every positive-rank rule has a
-single child nonterminal; in the present terminology this is exactly rule
-rank at most one, with no globally fixed fan-out bound
-\cite[Definition~38]{Gallot2021}.  Since every finite grammar has a finite
-maximum nonterminal arity, Gallot's non-branching MCFL class is
-\(\bigcup_{f'<\infty}\mathsf{MCFL}(f',1).\)
-Gallot's Theorem~29 identifies this class with the finite-index EDT0L
-languages, and Theorem~31 proves that
-$\mathrm{MIX}_2$ is not finite-index EDT0L.
-Definition~38 explicitly permits a child variable to
-occur at most once, and Theorem~28 confirms that
-non-permuting non-erasing presentations generate
-the same non-branching class; thus the use of
-erasing terminal homomorphisms below stays within
-the formalism of the cited lower bound.  Equivalently,
-$\mathrm{MIX}_2$ is not generated by any non-branching MCFG; Gallot's
-Propositions~5--6 give the underlying bounded-$k$-derivation contradiction
-\cite[Theorem~29, Theorem~31, Propositions~5--6]{Gallot2021}.
-
-Bishop et al. later give a peer-reviewed expansion of the same obstruction in
-the closely corresponding R-MCFG formalism.  Their Definition~6.1 uses
-\emph{rank} for nonterminal arity (the present fan-out), while
-\emph{non-branching} still means that a propagating rule has a single child
-nonterminal.  Lemma~6.8 supplies the normal form; Definition~7.1 identifies
-the same balanced language, and Section~7 proves the obstruction, culminating
-in the stronger non-EDT0L statement of Theorem~C
-\cite[Definition~6.1, Lemma~6.8, Definition~7.1, Section~7,
-Theorem~C]{BishopEtAl2026EDT0L}.  This is corroborating evidence; Gallot's
-Theorems~29 and~31 remain the direct implication used here.
-
-Now let $\pi$ fix $\mathtt a,\mathtt b$ and erase every other terminal in
-$\Sigma_{\mathrm{intr}}$.  Then
-\(\pi(L_{\mathrm{intr}})=\mathrm{MIX}_2^+.\)
-If $L_{\mathrm{intr}}$ had a fan-out-$f'$ rule-rank-one presentation,
-applying $\pi$ to the terminal material in its rule templates would preserve
-fan-out and rule rank and would give such a presentation of
-$\mathrm{MIX}_2^+$.  Empty terminal pieces created by erasure are permitted
-in the standard MCFG formalism.  Adding a fresh start symbol with one unary
-identity link to the old start and one rank-zero rule generating $\eps$ would
-then give a fan-out-$f'$ rule-rank-one presentation of $\mathrm{MIX}_2$,
-contradicting Gallot's non-branching lower bound.  Hence
-\(L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1) \qquad\text{for every finite }f'\ge1.\)
-Together with the displayed rank-two grammar, this proves the claimed
-intrinsic rule rank.
+\emph{Intrinsic rule rank.}  Gallot calls an MCFG \emph{non-branching} when
+every positive-rank rule has a single child nonterminal, with no global
+fan-out bound \cite[Definition~38]{Gallot2021}; his class is therefore
+\(\bigcup_{f'<\infty}\mathsf{MCFL}(f',1).\)  Definition~38 permits a child
+variable to occur at most once, and Theorem~28 shows that non-permuting
+non-erasing presentations generate the same class.  Theorem~29 identifies the
+class with finite-index EDT0L, and Theorem~31 (via Propositions~5--6) shows
+that $\mathrm{MIX}_2:=\{x\in\{\mathtt a,\mathtt b\}^*:
+|x|_{\mathtt a}=|x|_{\mathtt b}\}$ is not finite-index EDT0L
+\cite[Theorems~28, 29, 31 and Propositions~5--6]{Gallot2021}; Bishop et al.\
+give a peer-reviewed corroborating account in the R-MCFG formalism
+\cite[Definition~6.1, Lemma~6.8, Section~7, Theorem~C]{BishopEtAl2026EDT0L}.
+Let $\pi$ fix $\mathtt a,\mathtt b$ and erase all other letters, so
+$\pi(L_{\mathrm{intr}})=\mathrm{MIX}_2^+$.  Applying $\pi$ to the terminal
+material of a fan-out-$f'$ rank-one presentation of $L_{\mathrm{intr}}$ would
+give one of $\mathrm{MIX}_2^+$ (empty terminal pieces are allowed in the
+standard formalism), and a fresh start symbol with a unary identity link and a
+rank-zero $\eps$ rule would give one of $\mathrm{MIX}_2$, a presentation in Gallot's class (Definition~38, Theorem~28),
+contradicting his lower bound.  Hence $L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)$ for
+every finite $f'$, and the displayed grammar proves the claimed intrinsic
+rule rank.
 \end{proof}
 
-The construction is deliberately modular: the $\mathrm{MIX}_2^+$ factor
-carries the obstruction to rule rank one, while the $T_3^+$ factor forces the
-target outside CFL and hence to minimum fan-out two.  Thus the theorem
-establishes the coexistence of the two lower bounds in a single finitely typed
-target; the two bounds arise from separate factors rather than from an
-irreducible interaction between the resources.
-
-The non-branching lower bound itself is prior work.  What is specific to the
-present framework is that a strictly local wrapper and the $(1,1)$ boundary
-typing place this target inside the typed class, while the displayed four-instance substitution implication keeps it outside Yoshinaka's trivial-typing baseline.
-The wrapper retains the prior non-branching obstruction, so the same target
-also has intrinsic rule rank two across all finite fan-outs.
+The two lower bounds arise from separate factors rather than from an
+irreducible interaction between the resources, and the non-branching lower
+bound itself is prior work.  What is specific here is that a strictly local
+wrapper and the $(1,1)$ boundary typing place the target inside the typed
+class while the substitution implication keeps it outside Yoshinaka's
+trivial-typing baseline.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-We specialize Yoshinaka's positive-data signature framework
-\cite{Yoshinaka2015General} to fixed finite-semigroup typing.
-At bounded rule rank the qualitative reconstruction and
-polynomial-time updates are consequences of that framework,
-via the explicit substructure-grammar correspondence in
-Lemma~\ref{lem:substp}.  The uncapped-rank case retains a
-separate finite-sample argument.  These qualitative facts
-do not determine the total length of characteristic data.
-
-For total positive-data length, rank-one target rules admit a
-grammar-size polynomial for every fixed typing.  At higher rank,
-boundary windows give a quadratic bound in grammar size and
-original thickness, while windows combined with arbitrary finite
-groups give a cubic bound.  The local-group theorem
-(Appendix~\ref{app:local-group}) extends the latter to every
-typing with positive-image semigroup in $\mathbf{LG}$.
-The corresponding pseudovariety-level obstruction uses
-fan-out-one lower-bound examples; it is not a per-typing
-characterization at arbitrary fan-out.
-
-A complementary language-based result,
-Theorem~\ref{thm:mcfg-abelian-filter-data},
-establishes polynomial characteristic-data length for
-abelian-filtered targets with bounded-rank good presentations,
-including when the finite control is outside $\mathbf{LG}$.
-Proposition~\ref{prop:mcfg-relaxed-witnesses} isolates short
-representatives of target distribution classes as a sufficient
-condition; Proposition~\ref{prop:computed-witness-budget}
-instead gives a computable, presentation-sensitive rule-only
-certificate using grammar-generated representatives.
-These two constructions have different hypotheses and should
-not be conflated.
-
-The boundary-typed non-context-free example has intrinsic
-fan-out and rule rank two (Theorem~\ref{thm:intrinsic-ranktwo-witness}).
-Full yield-type refinement and empty-component elimination
-can also increase thickness exponentially
-(Appendix~\ref{app:normalization-details}).
+The qualitative bounded-rank reconstruction and polynomial-time updates are
+consequences of Yoshinaka's signature framework~\cite{Yoshinaka2015General},
+via the substructure-grammar correspondence of Lemma~\ref{lem:substp}; the
+uncapped case retains a separate finite-sample argument.  Neither determines
+the total length of characteristic data.  For that measure, rank-one rules
+admit a grammar-size polynomial for every fixed typing; at higher rank,
+boundary windows give a quadratic and windows with arbitrary finite groups a
+cubic bound in grammar size and original thickness, and the cubic bound
+extends to positive images in $\mathbf{LG}$.  The matching pseudovariety-level
+obstruction is established only at fan-out one.  Independently,
+abelian-filtered targets have polynomial data even outside $\mathbf{LG}$
+(Theorem~\ref{thm:mcfg-abelian-filter-data}), and
+Proposition~\ref{prop:computed-witness-budget} gives a computable,
+presentation-sensitive certificate; these two constructions have different
+hypotheses.  Full yield-type refinement and empty-component elimination can
+increase thickness exponentially, and the non-context-free target of
+Theorem~\ref{thm:intrinsic-ranktwo-witness} has intrinsic fan-out and rule
+rank two.
 
 \begin{openproblem}[Original-thickness bounds beyond fan-out one]
 \label{op:fanout-two}
@@ -2671,72 +2429,103 @@ mathematical claims, citations, and final content of this article.
 \section{Details of the Good Normalization}
 \label{app:normalization-details}
 
-The following bookkeeping records the fixed-parameter bounds used in
-Proposition~\ref{prop:good-normalization}; semantic correctness of the
-nondeleting and nonmerging conversions is standard
-\cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011}.
+We record the four conversions used in
+Proposition~\ref{prop:good-normalization} once, together with the
+tuple-language identity that each satisfies.  Both the fixed-parameter size
+bound of that proposition and the thickness transfer of
+Proposition~\ref{prop:structural-good-thickness} are read off from these
+identities.  Semantic correctness of the nondeleting and nonmerging
+conversions is standard \cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011};
+Kanazawa's existence statement \cite[Section~2.1]{Kanazawa2019Ogden} does not
+by itself give the size or thickness bounds, which are therefore derived here.
+For $\tuple w=(w_1,\ldots,w_d)$ and nonempty $I\subseteq[d]$, $\pi_I(\tuple w)$
+retains the components indexed by $I$ in increasing order, $\sigma\tuple w$
+permutes components, and $\mu(\tuple w)$ concatenates consecutive blocks of
+components; thus
+\(\|\pi_I(\tuple w)\|_1\le\|\tuple w\|_1\) and
+\(\|\sigma\tuple w\|_1=\|\mu(\tuple w)\|_1=\|\tuple w\|_1.\)
 
-\paragraph{Nondeleting conversion and component permutations.}
-After trimming, implement the nondeleting construction (f3)
-in the proof of Seki et al.'s Lemma~2.2
-\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}
-by retaining nonempty subsets $I$ of output components.
-For $R:A\to\rho(B_1,\ldots,B_q)$ and such $I$, let $J_j$
-comprise exactly the child-$j$ components used by the
-$I$-indexed outputs.  Keep those outputs, reindex their
-variables, use $B_j^{J_j}$ for $J_j\ne\emptyset$, and omit
-a child for $J_j=\emptyset$.  The new rule is nondeleting,
-and omitting children cannot increase rank.
-For reduced input, every omitted child is productive,
-so the projected rule can be lifted to a source rule:
-$L_{A^I}=\pi_I(L_A)$.  Without prior trimming only
-$\pi_I(L_A)\subseteq L_{A^I}$ is automatic.
-This also establishes the quantitative bound directly:
-there are $O_f(1)$ projected copies of each nonterminal
-and $O_{f,r_{\max}}(1)$ copies of each rule.
-Kanazawa's existence statement
-\cite[Section~2.1]{Kanazawa2019Ogden} does not
-by itself establish these size or thickness bounds.  For nonpermutation, decorate a fan-out-$d$
-nonterminal by $\sigma\in\mathfrak S_d$.  The parent permutation determines
-the child permutations, so there are at most $f!$ copies, no child is
-duplicated, and rank is preserved.  Denote the result by $G_{\mathrm{nd}}$.
-
-\paragraph{Removing empty tuple components.}
-For a fan-out-$d$ nonterminal $A$, let
+\begin{lemma}[Stagewise tuple languages]
+\label{lem:normalization-stages}
+Fix $f$ and $r_{\max}$, and let $G_0$ be a reduced $f$-MCFG of rule rank at
+most $r_{\max}$.  Each of the following conversions preserves linearity, does
+not increase fan-out or rule rank, and multiplies the number of nonterminal
+and rule copies by a factor depending only on $f$ and $r_{\max}$, without
+enlarging any template.
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item \emph{Nondeletion} (the construction (f3) in the proof of
+\cite[Lemma~2.2]{SekiEtAl1991}).  Introduce $A^I$ for nonempty
+$I\subseteq[\fan(A)]$.  For $R:A\to\rho(B_1,\ldots,B_q)$ let $J_j$ be the set
+of components of $B_j$ used by the $I$-indexed outputs of $\rho$; keep these
+outputs, rename their variables, use $B_j^{J_j}$ when $J_j\ne\emptyset$ and
+omit $B_j$ otherwise.  The resulting rules are nondeleting, and
 \[
- \mathsf{Pat}(A):=
- \{I\subseteq\{1,\ldots,d\}:\text{$I$ is the nonempty-component pattern of
- some }\tuple w\in L_A(G_{\mathrm{nd}})\}.
+ L_{A^I}=\pi_I\bigl(L_A(G_0)\bigr).
 \]
-Finite saturation computes these sets.  For realizable child patterns, replace
-variables from absent components by $\eps$, delete empty parent components,
-and omit all-empty children.  There are at most $2^f$ patterns per nonterminal
-and $2^{fr_{\max}}$ choices per rule.  Introduce $A^I$ for each nonempty
-pattern $I$.  Retained variables still occur once and in order, so
-nondeletion/nonpermutation, fan-out, and rank are preserved and the result is
-$\lambda$-free.
+\item \emph{Nonpermutation}.  Decorate a fan-out-$d$ nonterminal by
+$\sigma\in\mathfrak S_d$; the order in which a permuted parent template uses a
+child's variables determines the child's permutation.  The decorated
+nonterminal generates $\sigma L_A$.
+\item \emph{Empty components}.  Let $\mathsf{Pat}(A)$ be the set of
+nonempty-component patterns of tuples in $L_A$, computed by finite
+saturation.  For realizable child patterns, replace variables of absent
+components by $\eps$, delete empty parent components and omit all-empty
+children; introduce $A^I$ for each nonempty $I\in\mathsf{Pat}(A)$.  Then
+$L_{A^I}$ is the set of $\pi_I$-projections of the tuples of $L_A$ with
+pattern $I$, the result is $\lambda$-free, and $S^{\{1\}}$ generates the
+nonempty part of the language.  If every derived component is already
+nonempty, this stage is the identity.
+\item \emph{Nonmerging} (the construction in the proof of
+\cite[Section~2.3, Lemma~1]{Yoshinaka2011}).  Decorate a nonterminal by a
+composition $\mu$ of its fan-out; in a merged parent template, maximal
+adjacent runs of consecutive variables of a child determine that child's
+merge.  The merge-decorated nonterminal generates the \emph{image}
+\(L_{A^\mu}=\mu(L_A).\)
+\end{enumerate}
+Stages (b)--(d) preserve the conditions established by earlier stages.
+\end{lemma}
 
-Induction on derivations gives
-$L_{A^I}$ exactly as the projection of source tuples having pattern $I$;
-all-empty omitted children can be restored by terminal derivations realizing their all-empty component pattern.  Since
-the start symbol has fan-out one, $S^{\{1\}}$ generates precisely the nonempty
-part of the original language.  Projection shortens templates, giving
-$O_{f,r_{\max}}(\|G_{\mathrm{nd}}\|)$ size.
+\begin{proof}
+(a) For arbitrary child tuples,
+\(\pi_I(\rho(\tuple v_1,\ldots,\tuple v_q))
+=\rho^I\bigl((\pi_{J_j}\tuple v_j)_{J_j\ne\emptyset}\bigr)\), so induction on
+derivations gives $\subseteq$.  For $\supseteq$, lift every retained child
+tuple by the induction hypothesis and supply a terminal derivation of each
+omitted child; this uses that $G_0$ is reduced, hence every omitted child is
+productive.  Without prior trimming only
+$\pi_I(L_A)\subseteq L_{A^I}$ would be automatic.  There are at most $2^f$
+copies of each nonterminal, and $I$ determines the $J_j$, so at most $2^f$
+copies of each rule; omitting children cannot increase rank.
 
-\paragraph{Nonmerging.}
-Apply Yoshinaka's nonmerging conversion
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.  For the construction in the proof of the cited lemma,
-a merge-decorated nonterminal generates the \emph{image}
-of its preceding tuple language under consecutive-component
-concatenation.  The merge need not be injective: this
-image equality, not a claim about unique preimages,
-is the fact used in Proposition~\ref{prop:structural-good-thickness}.
-The construction preserves $\lambda$-freeness,
-nonpermutation, fan-out, and rule rank.
-For fixed fan-out and rank Yoshinaka's combined good-form conversion has
-$O(\|G\|)$ size~\cite[Section~2.3, after Example~2]{Yoshinaka2011}; trimming
-can only decrease all bounds.  This proves
-Proposition~\ref{prop:good-normalization}.
+(b) Linearity and nondeletion make the induced child permutations well
+defined; induction in both directions identifies the language with
+$\sigma L_A$.  There are at most $f!$ copies, no child is duplicated, and
+total length, $\lambda$-freeness, fan-out and rank are preserved.
+
+(c) Retained variables still occur once and in order, so nondeletion,
+nonpermutation, fan-out and rank are preserved.  Induction on derivations
+gives the projection identity; omitted all-empty children are restored by
+terminal derivations realizing their all-empty pattern.  There are at most
+$2^f$ patterns per nonterminal and $2^{fr_{\max}}$ choices per rule, and
+projection only shortens templates.
+
+(d) Nonpermutation makes the maximal runs compatible with each child's
+component order, and nondeletion makes them cover all its components.  The
+merged template satisfies
+\(\rho^\mu(\mu_1(\tuple v_1),\ldots,\mu_q(\tuple v_q))
+=\mu(\rho(\tuple v_1,\ldots,\tuple v_q)),\)
+and induction gives the image equality.  No inverse-image claim is made,
+because the merge map need not be injective.  Concatenation preserves total
+length, $\lambda$-freeness, nonpermutation, fan-out and rank; for fixed
+dimension and rank the conversion has linear size
+\cite[Section~2.3, after Example~2]{Yoshinaka2011}.
+\end{proof}
+
+\emph{Proof of the size bound in Proposition~\ref{prop:good-normalization}.}
+Apply (a)--(d) to the trimmed input and trim again.  Each stage multiplies the
+encoding by a factor depending only on $f,r_{\max}$ and trimming can only
+decrease it, so $\|G_{\mathrm{good}}\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$,
+and $L(G_{\mathrm{good}})=L(G_{\mathrm{in}})\setminus\{\eps\}$ by (c).
 
 \subsection*{Thickness transfer for $\lambda$-free presentations}
 
@@ -2756,97 +2545,22 @@ reduced good grammar $G$ with the same fan-out and rule-rank bounds such that
 \end{proposition}
 
 \begin{proof}
-We track the generated tuple languages through the normalization.
-For $\tuple w=(w_1,\ldots,w_d)$ and nonempty $I\subseteq[d]$, let
-$\pi_I(\tuple w)$ retain the components indexed by $I$ in increasing
-order.  Write $\sigma\tuple w$ for a component permutation and
-$\mu(\tuple w)$ for concatenation of consecutive blocks of components.
-Then
-\[
- \|\pi_I(\tuple w)\|_1\le\|\tuple w\|_1,\qquad
- \|\sigma\tuple w\|_1=\|\mu(\tuple w)\|_1=\|\tuple w\|_1.
-\]
-Because $G_{\mathrm{in}}$ is $\lambda$-free, every component
-of every derived tuple is nonempty, by induction on derivations.
-
-\emph{Nondeletion.}
-For each nonterminal $A$ and nonempty $I\subseteq[\fan(A)]$,
-introduce $A^I$.  Given
-$R:A\to\rho(B_1,\ldots,B_q)$, let $J_j$ collect precisely
-the indices of the components of $B_j$ occurring in the
-$I$-indexed output components of $\rho$.  Keep those outputs,
-rename their variables and use $B_j^{J_j}$ for $J_j\ne\emptyset$;
-omit children with $J_j=\emptyset$.  This produces a nondeleting
-rule with no larger fan-out or rank and with nonempty outputs.
-For arbitrary derived child tuples the identity
-\[
- \pi_I\bigl(\rho(\tuple v_1,\ldots,\tuple v_q)\bigr)
- =\rho^I\bigl((\pi_{J_j}\tuple v_j)_{J_j\ne\emptyset}\bigr)
-\]
-holds.  Induction on derivations gives
-\[
- L_{A^I}=\pi_I\bigl(L_A(G_{\mathrm{in}})\bigr).
- \tag{*}
-\]
-For the reverse inclusion, lift all retained child tuples
-using the induction hypothesis and supply a terminal derivation
-of each omitted child.  This is possible because the source
-grammar was reduced.  Thus deleting an entirely unused child
-does not change the projected tuple language.
-
-\emph{Nonpermutation and empty components.}
-For each $\sigma\in\mathfrak S_{\fan(A)}$, decorate $A$
-by $\sigma$.  The order in which a permuted parent template
-uses each child's variables determines the permutation of
-that child, since the grammar is linear and nondeleting.
-An induction on derivations identifies the new tuple
-language with $\sigma L_A$, preserving total length,
-$\lambda$-freeness, fan-out and rank.  Since all derived
-components are nonempty, the later empty-component-pattern
-elimination is the identity on this grammar.
-
-\emph{Nonmerging.}
-Use the construction in the proof of
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.
-Decorate each nonterminal with a composition $\mu$ of
-its fan-out, representing concatenation of consecutive
-blocks.  In the merged parent template, maximal adjacent
-runs of consecutive variables of a child determine that
-child's merge $\mu_j$.  Nonpermutation makes these runs
-compatible with the child's component order, while
-nondeletion ensures that they cover all its components.
-The resulting nonmerging template satisfies
-\[
- \rho^\mu\bigl(\mu_1(\tuple v_1),\ldots,
-                \mu_q(\tuple v_q)\bigr)
-   =\mu\bigl(\rho(\tuple v_1,\ldots,\tuple v_q)\bigr).
-\]
-Induction gives the \emph{image equality} for every
-merge-decorated nonterminal.  No inverse-image claim
-is needed, because the merge map need not be injective.
-Concatenation preserves total length, $\lambda$-freeness,
-fan-out and rank.
-
-Consequently every final nonterminal $X$ is associated
-with an original nonterminal $A$ such that
+Because $G_{\mathrm{in}}$ is $\lambda$-free, every component of every derived
+tuple is nonempty, by induction on derivations; this persists through (a) and
+(b), so stage (c) is the identity.  By Lemma~\ref{lem:normalization-stages},
+every nonterminal $X$ of the final grammar is associated with an original
+nonterminal $A$ such that
 \[
  L_X(G)=\mu\bigl(\sigma\pi_I(L_A(G_{\mathrm{in}}))\bigr),
  \qquad
  \min_{\tuple u\in L_X(G)}\|\tuple u\|_1
- \le\min_{\tuple w\in L_A(G_{\mathrm{in}})}\|\tuple w\|_1.
+ \le\min_{\tuple w\in L_A(G_{\mathrm{in}})}\|\tuple w\|_1 .
 \]
-Trimming leaves the tuple languages of surviving
-nonterminals unchanged, so $t_G\le t_{G_{\mathrm{in}}}$.
-For fixed $f,r_{\max}$, the subset, permutation and merge
-decorations yield only fixed-parameter linearly many
-rule copies of no greater template size.  Hence
-$\|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$.
-Finally Lemma~\ref{lem:thickness-equivalence} gives
-\[
- \theta_G\le2\|G\|\max\{1,t_G\}
- =O_{f,r_{\max}}\!\left(
- \|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}\right).
-\]
+Trimming leaves the tuple languages of surviving nonterminals unchanged, so
+$t_G\le t_{G_{\mathrm{in}}}$, and the size bound was shown above.  Finally
+Lemma~\ref{lem:thickness-equivalence}(iii) gives
+\(\theta_G\le2\|G\|\max\{1,t_G\}
+ =O_{f,r_{\max}}(\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}).\)
 \end{proof}
 
 Thus deleting rules do not by themselves obstruct polynomial thickness
@@ -2865,37 +2579,30 @@ $2^n$.
 \begin{proof}
 Let $E_n$ have fan-out-one $S$, fan-out-two $A_0,\ldots,A_n$, and
 \[
-\begin{aligned}
- A_0&\to(\mathtt a,\eps),\\
- A_i&\to(\eps,\mathtt c)\mid
+ A_0\to(\mathtt a,\eps),\qquad
+ A_i\to(\eps,\mathtt c)\mid
       (\xi_1^1\xi_2^1,\xi_1^2\xi_2^2)(A_{i-1},A_{i-1})
-      \quad(1\le i\le n),\\
- S&\to(\xi_1^1\mathtt d\,\xi_1^2)(A_n).
-\end{aligned}
+      \quad(1\le i\le n),\qquad
+ S\to(\xi_1^1\mathtt d\,\xi_1^2)(A_n).
 \]
 It is reduced, nondeleting, nonpermuting, and nonmerging.  Short side
 derivations give $t_{E_n}\le2$, and placing any chosen rule on one branch
 of the binary spine while completing siblings minimally gives
-$\theta_{E_n}=O(n)$.
-
-If an $A_i$-tuple has nonempty first component and empty second component, the
-rule $(\eps,\mathtt c)$ cannot occur.  Inductively the shortest such tuple is
-$(\mathtt a^{2^i},\eps)$.  Thus pattern $\{1\}$ for $A_n$ survives
-empty-component elimination, and the projected start rule
-\(S\to\xi_1^1\mathtt d\,(A_n^{\{1\}})\)
-can succeed only with a child of length at least $2^n$.  Hence the retained
-nonterminal and rule have thickness at least $2^n$.
+$\theta_{E_n}=O(n)$.  If an $A_i$-tuple has nonempty first and empty second
+component, the rule $(\eps,\mathtt c)$ cannot occur in it; inductively the
+shortest such tuple is $(\mathtt a^{2^i},\eps)$.  Thus pattern $\{1\}$ for
+$A_n$ survives, and the projected start rule
+\(S\to\xi_1^1\mathtt d\,(A_n^{\{1\}})\) succeeds only with a child of length
+at least $2^n$.
 \end{proof}
 
-This is the same obstruction exhibited by
+This is the obstruction of
 Proposition~\ref{prop:typed-thickness-exponential}: finite state refinement can
 force exponentially long shortest witnesses inside one refined state.
 
-\input{appendix_window_abelian.tex}
-\input{appendix_window_group.tex}
+\input{appendix_group_blocks.tex}
 \input{appendix_local_group.tex}
 
-\small
 \begin{thebibliography}{99}
 
 \bibitem{Gold1967}
