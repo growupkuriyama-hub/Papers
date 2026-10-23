@@ -102,73 +102,60 @@ Positive-data grammatical inference asks when a language can be recovered from
 an enumeration of its positive examples alone \cite{Gold1967,Angluin1980}.
 Distributional approaches make this possible for restricted grammar classes by
 turning observed interchangeability of substrings or tuples into grammar
-nonterminals.  For context-free grammars (CFGs) this includes substitutable languages
-\cite{ClarkEyraud2007} and Yoshinaka's $(k,\ell)$ hierarchy
-\cite{Yoshinaka2008}.  Yoshinaka extended the same idea to multiple
-context-free grammars (MCFGs), where nonterminals generate tuples and
-substitution is tested by multi-hole sentence contexts \cite{Yoshinaka2009,Yoshinaka2011}.
-MCFGs form a standard mildly context-sensitive formalism and can directly
-represent discontinuous and cross-serial dependencies
-\cite{SekiEtAl1991,Kallmeyer2010}.
+nonterminals.  For context-free grammars (CFGs) this includes substitutable
+languages \cite{ClarkEyraud2007} and Yoshinaka's $(k,\ell)$ hierarchy
+\cite{Yoshinaka2008}.  Yoshinaka extended the idea to multiple context-free
+grammars (MCFGs), whose nonterminals generate tuples and whose substitutions
+are tested by multi-hole sentence contexts \cite{Yoshinaka2009,Yoshinaka2011}.
+MCFGs are a standard mildly context-sensitive formalism for discontinuous and
+cross-serial dependencies \cite{SekiEtAl1991,Kallmeyer2010}.
 
-\paragraph{The general learning principle and its scope.}
-Yoshinaka's 2011 observed-tuple learner gives the
-untyped MCFG baseline~\cite{Yoshinaka2011}.
-His later signature framework includes bounded-arity
-MCFGs, finite refinements of sorts and
-prefix--suffix typing; it already provides
-positive-data identification, polynomial-time
-updates and characteristic sets of bounded
-cardinality~\cite[Theorem~1, Lemma~3 and
-Examples~3--4]{Yoshinaka2015General}.
-For bounded rank, Section~\ref{sec:general-framework}
-proves an exact signature characterization of our
-typed class and a correspondence of reconstruction
-operators.  Thus the qualitative learning principle
-is prior work.  The questions addressed here are
-the \emph{total length} of characteristic positive
-data relative to an original MCFG presentation and
-separations involving finite typing, fan-out and
-rule rank.
-A recent \emph{substitution lemma} for MCFL nonmembership
-\cite{DuncanEtAl2026Substitution} addresses a different question:
-it is a necessary condition for MCFL membership, not a
-distributional positive-data learning criterion.
+This paper fixes, as part of the learning bias, a surjective finite-semigroup
+homomorphism $s:\Sigma^+\twoheadrightarrow\mathsf S$ and compares observed
+\emph{nonempty} tuple components only when their $s$-values agree.  The
+canonical fresh-identity completion $\widehat s:\Sigma^*\to\mathsf S^\sharp$ is
+used only to evaluate grammar templates, including empty terminal gaps.  The
+typing and the fan-out bound are fixed before any data are seen, separating the
+choice of a finite bias from learning under that bias~\cite{CosteTyping2004};
+prefix--suffix windows and DFA transition morphisms are typical instances.
+Other biases restrict derivations by regular control sets
+\cite{Takada1988,Takada1995} or restrict the evidence used to compare factors
+\cite{CosteGaretNicolas2012,CosteNicolas2019}; positive-data learning of other
+mildly context-sensitive formalisms is studied in \cite{OatesEtAl2006}, and
+MCFG learning with membership queries or dual context sets in
+\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  A recent
+substitution lemma for MCFLs \cite{DuncanEtAl2026Substitution} is a necessary
+condition for membership, not a learning criterion.
 
-This paper fixes, as part of the learnable class, a surjective finite-semigroup
-homomorphism $s:\Sigma^+\to\mathsf S$ and compares observed \emph{nonempty}
-tuple components only when their $s$-values agree.  The canonical
-fresh-identity completion $h=\widehat s:\Sigma^*\to\mathsf S^\sharp$
-is used only to evaluate templates, including empty terminal gaps.
-The compositional type guard is fixed before the positive text is seen,
-separating the choice of a finite bias from learning under that
-bias~\cite{CosteTyping2004}.
-Prefix--suffix and DFA transition morphisms provide two useful families.
-A fixed prefix--suffix window is a uniform, independently chosen finite
-parameter of the target class, not a parameter tuned to each sample;
-the principal total-length bound applies to every target in that fixed
-window-typed class at the given fan-out and rule rank.
-Fan-out is part of the same bias because it determines which tuple arities are
-tested for substitution.  Thus a fixed typing supplies finite-state information
-while the MCFG carries the unbounded dependency.
+\paragraph{Prior work and what is not claimed.}
+The qualitative learning mechanism is not new.  The reconstruction operator of
+Section~\ref{sec:learner} is Yoshinaka's observed-tuple grammar
+\cite[Section~4.1]{Yoshinaka2011} with two changes: substitution links are
+guarded by equality of componentwise types, and $\eps$ is admitted by a separate
+start rule.  Its soundness and completeness
+proofs are typed transcriptions of \cite[Lemmas~3--5]{Yoshinaka2011}, and the
+unbounded-rank variant is the typed form of \cite[Corollary~2]{Yoshinaka2011}.
+At bounded rule rank the typed class is, moreover, the substitutable class of a
+finite sort refinement in Yoshinaka's signature framework
+(Proposition~\ref{prop:yoshinaka2015-embedding}), so identifiability, polynomial
+updates and characteristic sets of bounded \emph{cardinality} follow from
+\cite[Theorem~1 and Lemma~3]{Yoshinaka2015General}; that theorem is proved there
+for the context-indexed construction $\mathrm{SUBST}_{\mathrm D}$, and
+Lemma~\ref{lem:substp} relates our operator to the substructure-indexed
+$\mathrm{SUBST}_{\mathrm P}$.  Polynomial characteristic data for fixed
+prefix--suffix typing of CFGs is due to Yoshinaka~\cite{Yoshinaka2008}; the
+companion CFG paper~\cite{kuriyamaCFG} (arXiv v5, with a frozen TCS R1 source)
+treats fan-out one, including a window--group bound and an operator-independent
+semilattice lower bound.  The non-branching lower bound used in
+Section~\ref{sec:comparison} is due to Gallot~\cite{Gallot2021}.
 
-Other learning biases make different choices.  Takada uses regular control
-languages over derivations~\cite{Takada1988,Takada1995}, while local
-substitutability restricts the evidence used to compare factors
-\cite{CosteGaretNicolas2012,CosteNicolas2019}.  Positive-data learning has
-also been studied for other mildly context-sensitive formalisms
-\cite{OatesEtAl2006}.  MCFG learning with richer information includes
-membership-query and dual context-set approaches
-\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  The present
-paper instead remains positive-data-only, uses observed tuple values as the basic
-sample-derived objects, and lets a fixed finite typing guard substitutions.
-
-\paragraph{Contributions at a glance.}
-Our quantitative object is the \emph{total encoded length} of a
-characteristic positive sample, not merely the known existence
-or cardinality of a finite characteristic set.
-For a reduced good MCFG $G$, put
-$\bar\theta_G=\max\{1,\theta_G\}$.
+\paragraph{Contributions.}
+Our object is the \emph{total encoded length} of characteristic positive data
+relative to an MCFG presentation, for typed \emph{tuples} at higher rule rank,
+where several component boundaries must be preserved simultaneously.  For a
+reduced good MCFG $G$ put $\bar\theta_G=\max\{1,\theta_G\}$, where $\theta_G$ is
+rule thickness (Section~\ref{sec:char-data}).  With alphabet, fan-out,
+rule-rank bound and typing fixed:
 
 \begin{center}
 \small
@@ -193,303 +180,114 @@ Positive image in $\mathbf{LG}$
 \end{tabularx}
 \end{center}
 
-The alphabet, fan-out, rule-rank bound and typing are fixed.
-The rank-one line allows a general standard input grammar;
-the remaining bounds use the original thickness of a reduced
-good presentation. The group result includes noncommutative
-groups, while the abelian case has sharper constants
-(Theorem~\ref{thm:window-abelian-polydata}). The $\mathbf{LG}$
-hypothesis concerns the positive-image semigroup; the known
-algebraic characterization~\cite{AlmeidaEtAl2009} is distinct
-from the learning bound. The corresponding obstruction at
-the pseudovariety level is established only at fan-out one
-(Corollary~\ref{cor:pseudovariety-dichotomy}).
-
-We also give a computable rule-only characteristic-data budget
-(Proposition~\ref{prop:computed-witness-budget}) and an intrinsic
-fan-out-two/rank-two boundary-typed non-context-free witness
-(Theorem~\ref{thm:intrinsic-ranktwo-witness}).
-The qualitative reconstruction is a typed instance of
-Yoshinaka's observed-tuple learner; its placement in the
-general signature framework is stated precisely in
-Proposition~\ref{prop:yoshinaka2015-embedding}.
-
-
-\paragraph{Prior work and scope.}
-The observed-tuple constructor, conservative learning and qualitative
-identification originate in Yoshinaka~\cite{Yoshinaka2009,Yoshinaka2011};
-the finite-sort signature theory and characteristic-set cardinality
-are due to Yoshinaka~\cite{Yoshinaka2015General}.
-Yoshinaka~\cite[Theorem~1]{Yoshinaka2008} already proved
-polynomial characteristic data for fixed prefix--suffix CFG typing.
-The companion CFG revision~\cite{kuriyamaCFG} (arXiv v5, with a
-frozen TCS R1 source) proves the fan-out-one
-operator-independent semilattice lower bound.
-The present work does not reclaim these results: it studies
-encoded data length for typed \emph{tuples} and higher rule rank,
-including simultaneous preservation of component boundaries.
-The non-branching lower bound used in the intrinsic-rank example
-is also prior; our contribution there is the typed construction
-and separation from Yoshinaka's class.
+The group result includes noncommutative groups; the abelian case has sharper
+constants (Theorem~\ref{thm:window-abelian-polydata}).  The $\mathbf{LG}$
+hypothesis concerns the positive-image semigroup; its known algebraic
+characterization~\cite{AlmeidaEtAl2009} is distinct from the learning bound,
+and the matching pseudovariety-level obstruction is established only at fan-out
+one (Corollary~\ref{cor:pseudovariety-dichotomy}).  We also give a computable
+rule-only data budget (Proposition~\ref{prop:computed-witness-budget}), a
+language-based bound for abelian-filtered targets
+(Theorem~\ref{thm:mcfg-abelian-filter-data}), and a boundary-typed
+non-context-free target of intrinsic fan-out and rule rank two
+(Theorem~\ref{thm:intrinsic-ranktwo-witness}).  Characteristic data concern
+language-level exactness of a set-driven operator; syntactic stabilization is
+supplied by a separate conservative learner.
 
 \paragraph{Relationship to the public preprint.}
-An earlier, differently scoped draft of this research was circulated as
-arXiv:2605.11644. The present manuscript substantially revises its
-formulation, focuses on encoded characteristic-data length under fixed
-finite-semigroup typing, and states only the results proved here.
-The public preprint and this journal manuscript should not be treated
-as textually identical versions.
+An earlier, differently scoped draft was circulated as arXiv:2605.11644.  The
+present manuscript substantially revises its formulation and states only the
+results proved here; the two should not be treated as textually identical
+versions.
 
-Throughout the polynomial statements, fan-out, rank cap, and finite typing are
-fixed.  Characteristic data for the set-driven reconstruction concern
-language-level exactness; syntactic stabilization is supplied by the
-conservative sequential learner.  The full-refinement and
-empty-component obstructions concern only those
-constructions, not all learners.
-The distinct operator-independent lower bound
-at fan-out one is due to the companion
-CFG paper~\cite{kuriyamaCFG}.
-
-Sections~\ref{sec:prelim}--\ref{sec:char-data} develop the model,
-reconstruction, convergence, and quantitative bounds; Section~\ref{sec:comparison}
-gives the comparison with Yoshinaka's classes and the separation results.
+Section~\ref{sec:prelim} fixes the model, Section~\ref{sec:learner} the
+reconstruction and its exactness, Section~\ref{sec:char-data} the
+quantitative bounds, and Section~\ref{sec:comparison} the separations.
 
 \section{Preliminaries}
 \label{sec:prelim}
 
-Throughout, $\Sigma$ denotes a finite terminal alphabet, $\eps$ denotes the
-empty word, $\Sigma^*$ is the set of all finite words over $\Sigma$, and
-$\Sigma^+:=\Sigma^*\setminus\{\eps\}$.
+Throughout, $\Sigma$ is a finite alphabet, $\eps$ the empty word, and
+$\Sigma^+:=\Sigma^*\setminus\{\eps\}$.  If $\Sigma=\emptyset$, the only
+languages are $\emptyset$ and $\{\eps\}$ and are handled directly.
 
 \subsection{Positive-Data Learning}
 
-We use Gold's explanatory learning model and restate the needed conventions
-so that the MCFG development is self-contained.
-
-\begin{definition}[Text and TxtEx identification]
-We use Gold's explanatory identification criterion~\cite{Gold1967}.  To handle the empty language, fix a pause symbol
-\(\pausesym\notin\Sigma\); thus
-\(\pausesym,\pausesym,\ldots\) is a text for the empty language.
-A \emph{text} for \(L\subseteq\Sigma^*\) is an infinite sequence over
-\(L\cup\{\pausesym\}\) in which every element of \(L\) appears at least once.
-Pause symbols may occur arbitrarily, and \(\pausesym\) is not an end-of-text marker.
-
-The \emph{content} of a finite prefix is the finite set
-\(K\subseteq L\) of positive examples from \(\Sigma^*\) that occur in that
-prefix.  Thus neither the positions nor the number of pause symbols, nor repeated
-occurrences of the same positive example, affect the content.
-A learner is a computable function mapping each finite prefix to a hypothesis
-grammar.
-
-A learner \emph{TxtEx-identifies} \(L\) from positive data if, for every text
-for \(L\), there are \(n_0\) and a single hypothesis grammar \(H\) such that
-all stages from \(n_0\) onward output exactly \(H\), with \(L(H)=L\).  It
-TxtEx-identifies a class when it does so for every language in the class.  A
-sequential learner is \emph{conservative} if it keeps its current hypothesis
-whenever the newly observed positive datum is already in that hypothesis
-language, changing it only when the datum is not generated.
+\begin{definition}[Text, TxtEx identification, conservativeness]
+Fix a pause symbol $\pausesym\notin\Sigma$.  A \emph{text} for
+$L\subseteq\Sigma^*$ is an infinite sequence over $L\cup\{\pausesym\}$ in which
+every element of $L$ occurs; thus $\pausesym,\pausesym,\ldots$ is the text for
+$\emptyset$.  The \emph{content} of a finite prefix is the set of elements of
+$\Sigma^*$ occurring in it.  A \emph{learner} is a computable map from finite
+prefixes to grammars.  It \emph{TxtEx-identifies} $L$~\cite{Gold1967} if on
+every text for $L$ its outputs are, from some stage on, one fixed grammar $H$
+with $L(H)=L$, and it TxtEx-identifies a class if it does so for each member.
+A learner is \emph{conservative} if it changes its hypothesis only on a datum
+$w\in\Sigma^*$ not generated by the current hypothesis.  We fix a hypothesis
+$H_0$ with $L(H_0)=\emptyset$.
 \end{definition}
 
-For later use, fix a distinguished hypothesis code $H_0$ with
-$L(H_0)=\emptyset$.
-
-\begin{definition}[Set-driven reconstruction operator and characteristic sample]
+\begin{definition}[Set-driven operator and characteristic sample]
 \label{def:characteristic-sample}
-A \emph{set-driven reconstruction operator} \(\mathcal B\) maps each finite
-positive sample \(K\) to a grammar \(\mathcal B(K)\), depending only on the
-set \(K\), not on presentation order or multiplicity.  It is
-\emph{sample-consistent} if \(K\subseteq L(\mathcal B(K))\) for every
-finite \(K\).
-
-Following the characteristic-set viewpoint of de~la~Higuera
-\cite{deLaHiguera1997}, for a target language \(L\), a finite set
-\(K^\star\subseteq L\) is a \emph{characteristic sample for \(\mathcal B\)}
-if, for every finite set
-\(K\), \(K^\star\subseteq K\subseteq L\) implies
-\(L(\mathcal B(K))=L\).  The case \(K^\star=\emptyset\) is allowed.  We
-use \emph{characteristic data} as a neutral shorthand for the positive content
-of such a sample; whenever a polynomial bound is claimed, we state explicitly
-whether it concerns cardinality or total positive length.
-
-This finite-sample notion is distinct from TxtEx learning: \(\mathcal B(K)\)
-need not stabilize syntactically as the accumulated sample grows.  The
-sequential learner will be introduced separately after exact reconstruction is
-proved.
+A \emph{set-driven reconstruction operator} $\mathcal B$ maps each finite
+$K\subseteq\Sigma^*$ to a grammar $\mathcal B(K)$ depending only on the set
+$K$; it is \emph{sample-consistent} if $K\subseteq L(\mathcal B(K))$.  For a
+language $L$, a finite $K^\star\subseteq L$ is a \emph{characteristic sample
+for $\mathcal B$} if $K^\star\subseteq K\subseteq L$ implies
+$L(\mathcal B(K))=L$ for every finite $K$ (cf.~\cite{deLaHiguera1997}).  Unlike
+TxtEx identification this is a statement about generated languages: $\mathcal
+B(K)$ need not stabilize syntactically as $K$ grows.
 \end{definition}
 
-\begin{definition}[Positive sample size]
-For finite \(K\subseteq\Sigma^*\), define
-\(\|K\|_+:=\sum_{w\in K}(|w|+1)\).
-For a tuple \(\tuple u=(u_1,\ldots,u_d)\), write
-\(\|\tuple u\|_1:=\sum_{i=1}^d |u_i|\)
-for its total component length.
-\end{definition}
+For finite $K\subseteq\Sigma^*$ put $\|K\|_+:=\sum_{w\in K}(|w|+1)$, and for a
+tuple $\tuple u=(u_1,\ldots,u_d)$ put $\|\tuple u\|_1:=\sum_i|u_i|$.  Every
+polynomial bound below states whether it concerns cardinality or $\|\cdot\|_+$.
 
-
-\subsection{Fixed Finite-Semigroup Typing and Canonical Completion}
+\subsection{Fixed Finite-Semigroup Typing}
 \label{subsec:semigroup-typing}
 
-Following the fixed-semigroup formulation of the companion CFG revision
-\cite{kuriyamaCFG}, the \emph{learning bias} is a surjective semigroup
-homomorphism
-\(s:\Sigma^+\twoheadrightarrow\mathsf S\) into a finite semigroup
-\(\mathsf S\). It is represented by the multiplication table and letter
-images \(s(a)\) for \(a\in\Sigma\). In particular, \(s(w)\) is computable
-in linear time for nonempty \(w\). Surjectivity loses no generality:
-a finite semigroup codomain is always restricted to the positive image.
-If \(\Sigma=\emptyset\), only \(\emptyset\) and \(\{\eps\}\) are possible
-target languages and are handled directly.
+Following the companion CFG paper~\cite{kuriyamaCFG}, the learning bias is a
+surjective semigroup morphism $s:\Sigma^+\twoheadrightarrow\mathsf S$ onto a
+finite semigroup, given by its multiplication table and the letter images (so
+$s(w)$ is computable in linear time).  A finite codomain can always be replaced
+by the positive image, so surjectivity loses no generality.
 
-\begin{definition}[Fresh-identity completion and yield types]
+\begin{definition}[Fresh completion, tuple types, refinement]
 \label{def-monoid-morphism}
 \label{def:semigroup-typing}
-Let \(\mathsf S^\sharp=\mathsf S\uplus\{\mathbf 1_\sharp\}\)
-be obtained by adjoining a \emph{new} identity, even if
-\(\mathsf S\) already contains an identity. Define
-\[
-h=\widehat s:\Sigma^*\twoheadrightarrow\mathsf S^\sharp,
-\qquad
-\widehat s(w)=
-\begin{cases}
- \mathbf 1_\sharp,&w=\eps,\\
- s(w),&w\in\Sigma^+.
-\end{cases}
-\]
-This is a monoid homomorphism. When evaluating a grammar template,
-we write \(M=\mathsf S^\sharp\) and use \(h=\widehat s\).
-For a tuple \(\tuple w=(w_1,\ldots,w_d)\) put
-\(h^{(d)}(\tuple w)=(h(w_1),\ldots,h(w_d))\in M^d\).
-The semigroup tuple type \(s^{(d)}\) is defined when all components
-are nonempty, and then \(h^{(d)}=s^{(d)}\).
-The additional identity is an implementation value for the empty word,
-not a new positive type of the learning bias.
-\end{definition}
-
-\begin{lemma}[Nonempty-tuple transfer from monoids to semigroups]
-\label{lem:semigroup-transfer}
-Let $f\ge1$ and let $h_0:\Sigma^*\to M_0$ be a finite-monoid
-morphism. Put $S_0=h_0(\Sigma^+)$ and
-$s_0=h_0|_{\Sigma^+}:\Sigma^+\twoheadrightarrow S_0$.
-\begin{enumerate}[label=\textup{(\roman*)}]
-\item For every $1\le d\le f$ and all
-$\tuple x,\tuple y\in(\Sigma^+)^d$,
-\[
-h_0^{(d)}(\tuple x)=h_0^{(d)}(\tuple y)
-\iff s_0^{(d)}(\tuple x)=s_0^{(d)}(\tuple y)
-\iff \widehat{s_0}^{(d)}(\tuple x)=\widehat{s_0}^{(d)}(\tuple y).
-\]
-Thus $\Cmcf{f}{h_0}=\Cmcf{f}{s_0}$. For every
-positive sample $K$, the capped and uncapped reconstruction
-grammars have the same rules up to the natural relabeling
-of positive type indices.
-\item For every good MCFG $G$, the \emph{trimmed}
-yield-type refinements under $h_0$ and
-$\widehat{s_0}$ are isomorphic under that relabeling.
-The untrimmed refinements need not be isomorphic.
-\item These refinements generate $L(G)$ and permit
-identical choices of canonical tuples, contexts and
-characteristic words.
-\end{enumerate}
-\end{lemma}
-\begin{proof}
-On $\Sigma^+$ the maps $h_0$, $s_0$ and
-$\widehat{s_0}$ agree as maps into $S_0$.
-The Link test compares precisely positive tuple
-components and a shared sentence context; Const,
-Comp and the separate $\eps$-Start rule do not
-introduce any comparison of empty components.
-This proves (i).
-
-For (ii), $S_0$ is a subsemigroup of $M_0$ and
-of $S_0^\sharp$, with the same multiplication.
-By $\lambda$-freeness, every tuple produced by a good
-nonterminal has nonempty components. Each output
-component of a good template is a nonempty
-concatenation of explicit terminal letters and/or
-nonempty child components. When its child types
-belong to $S_0$, its output evaluates to the same
-element of $S_0$ under $h_0$ and $\widehat{s_0}$:
-empty terminal gaps are identities in either
-calculation. Induction on successful derivations
-matches the productive typed instances, their
-rule templates and positive start promotions.
-Reachability and productivity are determined by
-these instances, so trimming preserves the
-correspondence. The full refinements can differ:
-for $M_0=\{1\}$ the fresh completion provides
-an additional, possibly unused type.
-
-For (iii), apply the yield invariant
-(Proposition~\ref{prop:output-invariants}) to the
-isomorphic trimmed grammars. The same derivations
-realize the same canonical tuples and contexts;
-consistent selections yield the same witness words.
-\end{proof}
-
-\begin{definition}[Refinement of finite-semigroup typings]
 \label{def:h-refinement}
-For finite-semigroup typings $s,t$ on $\Sigma^+$,
-write $s\preceq t$ if $\ker t\subseteq\ker s$
-on $\Sigma^+$. Equivalently, $s$ factors through
-the positive image of $t$ by a semigroup morphism.
+Let $\mathsf S^\sharp=\mathsf S\uplus\{\mathbf 1_\sharp\}$ be obtained by
+adjoining a \emph{new} identity (even if $\mathsf S$ has one), and let
+$h=\widehat s:\Sigma^*\to M:=\mathsf S^\sharp$ be the monoid morphism with
+$\widehat s(\eps)=\mathbf 1_\sharp$ and $\widehat s|_{\Sigma^+}=s$.  For
+$\tuple w=(w_1,\ldots,w_d)$ put
+$h^{(d)}(\tuple w)=(h(w_1),\ldots,h(w_d))$; on $(\Sigma^+)^d$ this is the
+semigroup tuple type $s^{(d)}$.  The value $\mathbf 1_\sharp$ only evaluates
+empty template factors; it is not a type of the bias.  For typings $s,t$ on
+$\Sigma^+$ write $s\preceq t$ if $\ker t\subseteq\ker s$ on $\Sigma^+$
+(equivalently, $s$ factors through the positive image of $t$), and let $(s,t)$
+denote $w\mapsto(s(w),t(w))$ restricted to its positive image.
 \end{definition}
-\begin{lemma}[Fresh completion preserves refinement and products]
-\label{lem:fresh-refinement}
-For finite-semigroup typings $s,t$,
-\[
- \ker\widehat t\subseteq\ker\widehat s
- \iff\ker t\subseteq\ker s,\qquad
- \ker\widehat{(s,t)}=\ker\widehat s\cap\ker\widehat t.
-\]
-Here $(s,t)$ is restricted to its positive image
-before adjoining the fresh identity.
-\end{lemma}
-\begin{proof}
-The empty word is assigned a fresh value not
-attained on positive words. The kernel on positive
-words is unchanged by completion, and the
-product kernel is the intersection of its factors.
-\end{proof}
 
-For monoid implementations \(h_0,h_1\), the notation
-\(h_0\preceq h_1\) henceforth refers to
-\(\ker(h_1|_{\Sigma^+})\subseteq\ker(h_0|_{\Sigma^+})\),
-rather than to an extra comparison involving \(\eps\).
-Likewise \(\mathcal B_{f,s}\) and \(\mathcal A_{f,s}\)
-abbreviate \(\mathcal B_{f,\widehat s}\) and
-\(\mathcal A_{f,\widehat s}\), respectively; superscript rank
-caps are inherited. The typed-grammar evaluation always
-uses the monoid completion, but the substitution guard is
-tested only on positive component yields.
-
-We retain the convenient notation \(h:\Sigma^*\to M\) for
-\emph{monoid implementations} in the proofs and in the three
-quantitative appendices. In such statements the semantic typing is
-always \(s=h|_{\Sigma^+}\), with its positive-image codomain, and
-the completion \(\widehat s\) may be used instead without changing
-the target class, learner or selected witnesses.
-Likewise the legacy notation \(\Cmcf{f}{h}\) abbreviates
-\(\Cmcf{f}{h|_{\Sigma^+}}\).
-Bounds written in terms of \(|M|\) apply to the canonical
-implementation \(M=\mathsf S^\sharp\), with
-\(|M|=|\mathsf S|+1\); their polynomial exponents are unchanged.
-\emph{Algebraic} conditions (including \(\mathbf{LG}\)) apply to
-the positive image \(\mathsf S\), never to \(\mathsf S^\sharp\).
-
-The trivial semigroup typing \(s_{\mathrm{triv}}\) has one positive
-type. Its traditional monoid presentation is
-\(h_{\mathrm{triv}}:\Sigma^*\to\{1\}\).
-DFA transition morphisms and finite-group morphisms still serve as
-convenient representations; their positive restrictions are the
-learning biases. The prefix--suffix morphism below is another
-such representation.
+\emph{Monoid implementations.}  A finite-monoid morphism $h:\Sigma^*\to M$ is
+used as a presentation of the typing $h|_{\Sigma^+}$ onto its positive image;
+accordingly $h_0\preceq h_1$ means $h_0|_{\Sigma^+}\preceq h_1|_{\Sigma^+}$,
+products of implementations are formed componentwise, and
+$\Cmcf{f}{h}$, $\mathcal B_{f,h}$, $\mathcal A_{f,h}$ mean
+$\Cmcf{f}{h|_{\Sigma^+}}$, $\mathcal B_{f,\widehat s}$,
+$\mathcal A_{f,\widehat s}$ with $s=h|_{\Sigma^+}$.
+Lemma~\ref{lem:semigroup-transfer} shows that nothing below depends on the
+choice of implementation.  Bounds in terms of $|M|$ refer to
+$M=\mathsf S^\sharp$, so $|M|=|\mathsf S|+1$; algebraic conditions (such as
+$\mathbf{LG}$) always refer to the positive image $\mathsf S$.  The trivial
+typing $s_{\mathrm{triv}}$ has one positive type and is implemented by
+$h_{\mathrm{triv}}:\Sigma^*\to\{1\}$.
 
 \begin{definition}[Prefix--suffix typing]
 \label{def:prefix-suffix-typing}
-For $k,\ell\ge0$, put $m_0:=\max\{1,k+\ell\}$.  For a word $w$, let
-$\operatorname{pref}_k(w)$ and $\operatorname{suf}_\ell(w)$ denote its prefix
-and suffix of the indicated lengths whenever $|w|\ge m_0$, with the length-zero
-windows equal to $\eps$.  Define
+For $k,\ell\ge0$ put $m_0:=\max\{1,k+\ell\}$, and for $|w|\ge m_0$ let
+$\operatorname{pref}_k(w)$, $\operatorname{suf}_\ell(w)$ be the prefix and
+suffix of the indicated lengths (length-zero windows are $\eps$).  Define
 \[
  h_\Sigma^{k,\ell}(w)=
  \begin{cases}
@@ -498,9 +296,9 @@ windows equal to $\eps$.  Define
       & |w|\ge m_0,
  \end{cases}
 \]
-using disjoint tags for the short-word and prefix--suffix elements.  Put
-$M_{k,\ell}:=h_\Sigma^{k,\ell}(\Sigma^*)$.  For short words $x,y$ and long
-elements $\langle u,v\rangle$, define
+with disjoint tags for short words and pairs, and put
+$M_{k,\ell}:=h_\Sigma^{k,\ell}(\Sigma^*)$.  For short $x,y$ and pairs
+$\langle u,v\rangle,\langle u',v'\rangle$ define
 \[
 \begin{aligned}
  x\cdot y&:=h_\Sigma^{k,\ell}(xy), &
@@ -511,1207 +309,822 @@ elements $\langle u,v\rangle$, define
 \]
 \end{definition}
 
-With this multiplication,
-$h_\Sigma^{k,\ell}(xy)=h_\Sigma^{k,\ell}(x)\cdot h_\Sigma^{k,\ell}(y)$.
-Since $h_\Sigma^{k,\ell}$ is surjective, associativity is inherited from
-concatenation and $h_\Sigma^{k,\ell}(\eps)$ is the identity.  Thus
-$h_\Sigma^{k,\ell}:\Sigma^*\to M_{k,\ell}$ is a finite-monoid homomorphism.
-Its positive restriction $s_\Sigma^{k,\ell}:=h_\Sigma^{k,\ell}|_{\Sigma^+}$
-is the corresponding finite-semigroup boundary typing. Since the
-short-word tag distinguishes $\eps$ from all positive words,
-$h_\Sigma^{k,\ell}$ is isomorphic to the fresh completion of
-$s_\Sigma^{k,\ell}$.
-
-A finite typing $h$ is called \emph{$(k,\ell)$-boundary-determined} when
-$h\preceq h_\Sigma^{k,\ell}$.  Equivalently, equality of prefix--suffix types implies equality of $h$-types;
-a factor map exists on the image of the prefix--suffix typing.
-
-For brevity, we call such an $h$ a \emph{boundary typing}.
-
+A case check gives $h_\Sigma^{k,\ell}(xy)=h_\Sigma^{k,\ell}(x)\cdot
+h_\Sigma^{k,\ell}(y)$; since $h_\Sigma^{k,\ell}$ is onto $M_{k,\ell}$,
+associativity is inherited from concatenation and $h_\Sigma^{k,\ell}(\eps)$ is
+the identity.  Thus $h_\Sigma^{k,\ell}$ is a finite-monoid morphism; its
+positive restriction $s_\Sigma^{k,\ell}$ is the boundary typing, and since the
+short-word tag separates $\eps$ from $\Sigma^+$, $h_\Sigma^{k,\ell}$ is
+isomorphic to $\widehat{s_\Sigma^{k,\ell}}$.  A typing $h$ with
+$h\preceq h_\Sigma^{k,\ell}$ is called \emph{$(k,\ell)$-boundary-determined},
+or briefly a \emph{boundary typing}.
 
 \subsection{Multiple Context-Free Grammars}
 
-We use the standard tuple-generating definition of multiple context-free
-grammars \cite{SekiEtAl1991}; see also \cite{Kallmeyer2010} for a general
-overview of MCFGs and related mildly context-sensitive formalisms.
-The general-rank notation below is used throughout the reconstruction and proofs.
-
 \begin{definition}[Standard MCFG presentation]
 \label{def:standard-mcfg}
-A \emph{multiple context-free grammar} is a tuple
-\(G=(V,\Sigma,P,S,\fan)\), where \(V\) is a finite set of nonterminals,
-\(\Sigma\) is a finite terminal alphabet, \(S\in V\) has \(\fan(S)=1\), and
-\(\fan(A)\ge1\) is the fan-out of each \(A\in V\).  A rule \(R\) of rank \(r\ge0\) has the form
-\(R:\quad A\to\rho(B_1,\ldots,B_r), \qquad \rho=(\alpha_1,\ldots,\alpha_{d_0}),\)
-where \(\rho\) is the output template, \(d_0=\fan(A)\), \(d_j=\fan(B_j)\), and, with
-\[
-  \Xi_j:=\{\xi_j^1,\ldots,\xi_j^{d_j}\},
-  \qquad
-  \Gamma_\rho:=\Sigma\uplus\Xi_1\uplus\cdots\uplus\Xi_r,
-\]
-each \(\alpha_i\in\Gamma_\rho^*\) and every variable in
-\(\Xi_1\uplus\cdots\uplus\Xi_r\) occurs at most once in the complete tuple
-\((\alpha_1,\ldots,\alpha_{d_0})\).  We call this at-most-once condition
-\emph{linearity}.  The rule is \emph{nondeleting} if every such variable occurs
-exactly once.  Thus nondeleting does not mean that derived tuple components are
-nonempty; empty strings remain allowed.
-
-For child tuples
-\(\tuple u_j=(u_{j,1},\ldots,u_{j,d_j})\in(\Sigma^*)^{d_j}\), simultaneous substitution of
-\(u_{j,\kappa}\) for \(\xi_j^{\kappa}\) defines
-\(\rho(\tuple u_1,\ldots,\tuple u_r)\in(\Sigma^*)^{d_0}.\)
-When \(r=0\), the rule is a constant rule and derives the tuple
-\((\alpha_1,\ldots,\alpha_{d_0})\).  The tuple languages \(L_A(G)\) form the least family, ordered componentwise by
-inclusion, that is closed under all rule applications, and
-\(L(G):=\{w\in\Sigma^*:(w)\in L_S(G)\}.\)
-Equivalently, a finite derivation tree rooted at $A$ is evaluated bottom-up by
-the rule templates.  We write $A\Rightarrow_G^*\tuple u$ when such a tree
-yields $\tuple u\in(\Sigma^*)^{\fan(A)}$; this is a \emph{terminal
-derivation}, and $\tuple u$ is its \emph{terminal tuple}.  A terminal
-derivation $S\Rightarrow_G^*(w)$ from the start symbol is called
-\emph{successful}.
-An \(f\)-MCFG has \(\fan(A)\le f\) for every nonterminal, and an \(f\)-MCFL is
-a language generated by an \(f\)-MCFG.  A grammar has \emph{rule-rank cap} \(r_{\max}\) if every rule has rank at most \(r_{\max}\).
+An MCFG \cite{SekiEtAl1991,Kallmeyer2010} is
+$G=(V,\Sigma,P,S,\fan)$ with finite $V$, $S\in V$, $\fan(S)=1$ and
+$\fan(A)\ge1$.  A rule of rank $r\ge0$ is
+$A\to\rho(B_1,\ldots,B_r)$ with template
+$\rho=(\alpha_1,\ldots,\alpha_{d_0})$, $d_0=\fan(A)$, $d_j=\fan(B_j)$, where
+each $\alpha_i$ is a word over
+$\Gamma_\rho:=\Sigma\uplus\Xi_1\uplus\cdots\uplus\Xi_r$,
+$\Xi_j:=\{\xi_j^1,\ldots,\xi_j^{d_j}\}$, and every variable occurs at most once
+in $\alpha_1\cdots\alpha_{d_0}$ (\emph{linearity}); the rule is
+\emph{nondeleting} if every variable occurs exactly once (derived components
+may still be empty).  For $\tuple u_j\in(\Sigma^*)^{d_j}$,
+$\rho(\tuple u_1,\ldots,\tuple u_r)$ substitutes $u_{j,\kappa}$ for
+$\xi_j^\kappa$; for $r=0$ the rule is a constant rule.  The tuple languages
+$L_A(G)$ form the least family closed under the rules, and
+$L(G):=\{w:(w)\in L_S(G)\}$.  We write $A\Rightarrow_G^*\tuple u$ for a
+\emph{terminal derivation} (a finite derivation tree rooted at $A$ evaluated
+bottom-up); one from $S$ is \emph{successful}.  $G$ is an $f$-MCFG if
+$\fan(A)\le f$ for all $A$, and has rule-rank cap $r_{\max}$ if all ranks are
+at most $r_{\max}$.
 \end{definition}
 
-At fan-out one, the formalism includes ordinary context-free grammars.  A
-\emph{linear context-free grammar} is a CFG in which every production has at
-most one nonterminal on its right-hand side; a \emph{linear context-free
-language} is generated by such a grammar.  This is distinct from the
-``linearity'' condition on MCFG rule templates above, which means that each
-rule variable occurs at most once.
+We write $\mathsf{MCFL}(f,r)$ for the languages of MCFGs of fan-out $\le f$
+and rule rank $\le r$, so that
+$f\text{-}\mathrm{MCFL}=\bigcup_{r<\infty}\mathsf{MCFL}(f,r)$.  Minimum rule
+rank of a language refers to all presentations, not to a given grammar.
+$\|G\|$ is the length of a fixed symbol-level encoding counting nonterminal and
+rule records and every terminal or variable occurrence in templates.  For
+nonterminals of equal fan-out $d$, $A\to B$ abbreviates the identity-template
+rule $A\to(\xi_1^1,\ldots,\xi_1^d)(B)$, and $A\to\tuple c$ a constant rule.
+Rule variables are always $\xi_j^\kappa$; terminals in examples are in
+\texttt{typewriter} font.
 
-Fix a standard explicit symbol-level encoding of finite MCFG presentations and
-write $\|G\|$ for its length.  The encoding counts the nonterminal and rule
-records and every terminal or variable occurrence in each rule template.  All
-polynomial grammar-size bounds below refer to this encoding.
-
-For integers \(f\ge1\) and \(r\ge0\), write
-\[
-\begin{aligned}
-  \mathsf{MCFL}(f,r):=\{L(G):{}&G\text{ is an MCFG of fan-out at most }f,\\
-                   &\text{with rule rank at most }r\}.
-\end{aligned}
-\]
-Thus \(f\text{-}\mathrm{MCFL}=\bigcup_{r<\infty}\mathsf{MCFL}(f,r)\), because every
-finite MCFG presentation has finite rule rank.
-When minimum rule rank at fan-out \(f\) is mentioned below, it means the
-language-level minimum over all fan-out-\(f\) presentations, not the rank of a
-particular supplied grammar.
-
-
-We use $f$ throughout for fan-out/dimension and $r$ for a generic rule rank;
-$r_{\max}$ denotes a prescribed rank cap.  Rule-template variables are always
-written $\xi_j^\kappa$, so that $x,y,z$ (with or without arrows) remain free for
-words and observed tuples.  Terminals in examples, including digits and
-$\mathtt\#$, are typeset in \texttt{typewriter} font.
-
-
-When two nonterminals have the same fan-out \(d\), we use
-\(A\to B\)
-as shorthand for the unary identity-template rule
-\(A\to(\xi_1^1,\ldots,\xi_1^d)(B)\).  This denotes only the identity
-correspondence between components: at fan-out two, for example, it means
-\(A\to(\xi_1^1,\xi_1^2)(B)\), not a swapping rule such as
-\(A\to(\xi_1^2,\xi_1^1)(B)\).
-Likewise, \(A\to\tuple c\) denotes a rank-zero
-constant rule.  These abbreviations are used for typed start links and for Rule~(Link) of the
-reconstruction below.
-
-The standard formalism allows rank zero, nonidentity unary rules, arbitrary
-finite rule rank, and deleting rules.  A nondeleting rule
-\(R:A\to\rho(B_1,\ldots,B_r)\), with
-\(\rho=(\alpha_1,\ldots,\alpha_{d_0})\), is
-\emph{nonpermuting} if, for each child \(B_j\), the variables
-\(\xi_j^1,\ldots,\xi_j^{\fan(B_j)}\) occur in this order when the parent components
-are scanned from left to right.  Following Yoshinaka
-\cite[Section~2.3]{Yoshinaka2011}, a rule is \emph{$\lambda$-free} if no output
-template $\alpha_i$ is empty, and a nonpermuting rule is \emph{nonmerging} if
-no $\alpha_i$ contains adjacent variables $\xi_j^{\kappa} \xi_j^{\kappa+1}$ of the same child.
-A presentation is \emph{good} if all its rules are $\lambda$-free,
-nondeleting, nonpermuting, and nonmerging.  We write $\eps$ for the empty word
-throughout; ``$\lambda$-free'' is retained only as Yoshinaka's standard name
-for this rule condition.  We use good presentations in the completeness proof.  The nonmerging condition ensures that, after the siblings
-of a child are fixed, consecutive components of that child remain separated
-by nonempty terminal material or by a nonempty sibling yield.  This matches
-Yoshinaka's multidimensional-context convention.  In particular,
-$\lambda$-freeness implies by induction that every component of every terminal tuple derived from a
-nonterminal is nonempty.
-
-The normalization used below combines the explicit
-nondeleting step (f3) of Seki et al.
-\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}
-with component permutations, empty-component removal and
-Yoshinaka's nonmerging construction
-\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.
-Kanazawa~\cite[Section~2.1]{Kanazawa2019Ogden}
-records the existence of a rank-preserving equivalent form,
-while the quantitative overhead in our argument comes from
-the construction in Appendix~\ref{app:normalization-details}.  Yoshinaka also notes later in
-Section~2.3, after Example~2, that for fixed dimension and rule rank these
-standard conversions yield
-an equivalent good grammar of size $O(\|G\|)$~\cite[Section~2.3]{Yoshinaka2011}.
-
-Fan-out and rule rank are distinct grammar resources.  In particular, there is
-no blanket binarization theorem that preserves an arbitrary fixed fan-out for
-general MCFG/LCFRS presentations: reducing rule rank may require increased
-fan-out \cite{RambowSatta1999,GomezRodriguezEtAl2009}.
-Accordingly the qualitative reconstruction below is defined without imposing a
-binary normal form or a known rank cap.
-
-
-\paragraph{Reduced grammars.}
-The nonterminal dependency graph of an MCFG has an edge $A\to B$ whenever
-$B$ occurs as a child in a rule with left-hand side $A$.
-A nonterminal is \emph{reachable} if it is reachable from the start symbol in
-this graph, and \emph{productive} if its tuple language is nonempty.
-The grammar is \emph{reduced} if every nonterminal is both reachable and
-productive.
-
-
-\subsection{Normalization}
+A nondeleting rule is \emph{nonpermuting} if, for each $j$,
+$\xi_j^1,\ldots,\xi_j^{d_j}$ occur in this order in $\alpha_1\cdots\alpha_{d_0}$;
+following \cite[Section~2.3]{Yoshinaka2011} it is \emph{$\lambda$-free} if no
+$\alpha_i$ is empty, and a nonpermuting rule is \emph{nonmerging} if no
+$\alpha_i$ contains a factor $\xi_j^\kappa\xi_j^{\kappa+1}$.  A rule, template
+or presentation is \emph{good} if it is $\lambda$-free, nondeleting,
+nonpermuting and nonmerging.  By induction on derivations, every component of
+every tuple derived from a nonterminal of a $\lambda$-free grammar is
+nonempty.  A nonterminal is \emph{reachable} if it is reachable from $S$ in the
+graph with an edge $A\to B$ whenever $B$ is a child in a rule for $A$, and
+\emph{productive} if $L_A(G)\ne\emptyset$; $G$ is \emph{reduced} if all
+nonterminals are both.
 
 \begin{proposition}[Good normalization with rank preservation]
 \label{prop:good-normalization}
-Let $G_{\mathrm{in}}$ be a finite standard $f$-MCFG of maximum rule rank at
-most $r_{\max}$.  There is a finite good $f$-MCFG $G_{\mathrm{good}}$ of
-maximum rule rank at most $r_{\max}$ such that
-\(L(G_{\mathrm{good}})=L(G_{\mathrm{in}})\setminus\{\eps\}.\)
-For fixed $f$ and $r_{\max}$,
-$\|G_{\mathrm{good}}\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$.
-If $\eps\notin L(G_{\mathrm{in}})$, the two grammars are equivalent.
+Let $G_{\mathrm{in}}$ be a finite $f$-MCFG of rule rank at most $r_{\max}$.
+There is a finite good $f$-MCFG $G_{\mathrm{good}}$ of rule rank at most
+$r_{\max}$ with $L(G_{\mathrm{good}})=L(G_{\mathrm{in}})\setminus\{\eps\}$ and,
+for fixed $f,r_{\max}$, $\|G_{\mathrm{good}}\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$.
 \end{proposition}
 
 \begin{proof}
-First delete unreachable or unproductive nonterminals; then
-use the nondeleting construction (f3) from the proof of Seki et al.'s
-Lemma~2.2~\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}.
-Kanazawa~\cite[Section~2.1]{Kanazawa2019Ogden} records the
-existence of an equivalent nondeleting, nonpermuting form
-preserving fan-out and rule rank.  Our size estimate instead follows
-from the explicit finite-subset construction in
-Appendix~\ref{app:normalization-details}.
-Decorating nonterminals by component permutations makes the grammar
-nonpermuting.  Next decorate by nonempty-component patterns realizable by terminal
-derivations, as made explicit in Appendix~\ref{app:normalization-details}, and
-project away empty components; this removes $\eps$ at the start and makes every
-retained output template $\lambda$-free.  Finally apply Yoshinaka's nonmerging
-conversion~\cite[Section~2.3, Lemma~1]{Yoshinaka2011}.
-None of these steps increases fan-out or rule rank.  With $f,r_{\max}$ fixed,
-component-pattern choices contribute at most $2^f$ nonterminal decorations and
-$2^{f r_{\max}}$ child-pattern choices per rule, while permutation decoration
-contributes at most $f!$ copies.  Yoshinaka's conversion has the same
-fixed-parameter linear-size behavior.  Hence the total encoding size remains
-$O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$.  The derivation correspondence and the
-empty-component construction are recorded in
-Appendix~\ref{app:normalization-details}.
+Trim; apply the nondeleting construction (f3) of
+\cite[proof of Lemma~2.2]{SekiEtAl1991} by retaining subsets of output
+components; decorate nonterminals by component permutations; decorate them by
+realizable nonempty-component patterns and project away empty components (this
+removes $\eps$ and makes all templates $\lambda$-free); finally apply
+Yoshinaka's nonmerging conversion \cite[Section~2.3, Lemma~1]{Yoshinaka2011}.
+No step increases fan-out or rule rank, and with $f,r_{\max}$ fixed each step
+creates $O_{f,r_{\max}}(1)$ copies of each nonterminal and rule (at most $2^f$,
+$f!$ and $2^{fr_{\max}}$ decorations).  The derivation correspondences and the
+size bookkeeping are given in Appendix~\ref{app:normalization-details}; cf.\
+also \cite[Section~2.1]{Kanazawa2019Ogden} and
+\cite[Section~2.3, after Example~2]{Yoshinaka2011}.
 \end{proof}
 
-This proposition controls size, fan-out, and rule rank, but it does not
-identify the rule thickness of an arbitrary presentation with the thickness
-after normalization.  Thickness-sensitive statements are therefore first
-proved for good presentations.  For reduced $\lambda$-free input
-presentations, including presentations with deleting rules,
-Proposition~\ref{prop:structural-good-thickness} gives a polynomial
-grammar-size-and-thickness transfer to the good presentation used below.
+The proposition controls size, fan-out and rank, not thickness; thickness
+transfer for reduced $\lambda$-free inputs is
+Proposition~\ref{prop:structural-good-thickness}.  Fan-out and rule rank are
+distinct resources: there is no rank reduction preserving an arbitrary fixed
+fan-out \cite{RambowSatta1999,GomezRodriguezEtAl2009}.  The reconstruction
+below therefore imposes neither a binary normal form nor a known rank cap.
 
 \subsection{Tuple Contexts and Substitutability}
 
-\paragraph{Sentence contexts.}
 A \emph{sentence context of arity $d$} is a word
-$E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d$ in which each named hole occurs
-exactly once, $v_0,v_d\in\Sigma^*$, and every internal separator
-$v_1,\ldots,v_{d-1}$ belongs to $\Sigma^+$.  Let $\mathcal E_d$ be the set
-of such contexts.  This is Yoshinaka's multidimensional-context convention
-\cite[Section~3.1]{Yoshinaka2011}.
-For $\tuple w=(w_1,\ldots,w_d)$, write $E[\tuple w]$ for the result of filling
-$\blank_i$ by $w_i$, and put
-$|E|_{\mathrm{fix}}:=\sum_{i=0}^d|v_i|$.  For brevity, we say that a
-sentence context $E$ \emph{accepts} $\tuple w$ in a language $L$ when
-$E[\tuple w]\in L$.
+$E=v_0\blank_1v_1\cdots v_{d-1}\blank_dv_d$ with each hole occurring once,
+$v_0,v_d\in\Sigma^*$ and $v_1,\ldots,v_{d-1}\in\Sigma^+$; such contexts are
+\emph{admissible}, and $\mathcal E_d$ denotes their set
+(\cite[Section~3.1]{Yoshinaka2011}).  $E[\tuple w]$ fills $\blank_i$ by $w_i$,
+$|E|_{\mathrm{fix}}:=\sum_{i=0}^d|v_i|$, and $E$ \emph{accepts} $\tuple w$ in
+$L$ if $E[\tuple w]\in L$.
 
-\begin{definition}[Tuple occurrence in a sample word]
+\begin{definition}[Tuple occurrence]
 \label{def:tuple-occurrence}
-Let $K\subseteq\Sigma^*$ and $w=a_1\cdots a_n\in K$.  Number the cut
-positions of $w$ as
-$\cutpos{0}a_1\cutpos{1}\cdots a_n\cutpos{n}$.
-For $0\le i<i'\le n$, write
-$w[i:i']:=a_{i+1}\cdots a_{i'}$.
-
-An \emph{arity-$d$ tuple occurrence} in $w$ is a sequence of nonempty,
-left-to-right intervals
-\(0\le i_1<i_1'<i_2<i_2'<\cdots<i_d<i_d'\le n.\)
-It determines the tuple
-$\tuple x=(w[i_1:i_1'],\ldots,w[i_d:i_d'])\in(\Sigma^+)^d$ and the
-context $E\in\mathcal E_d$ obtained by replacing those intervals by
-$\blank_1,\ldots,\blank_d$.  We identify the occurrence with $(E,\tuple x)$.
-For example, the two intervals spelling $\mathtt a$ and $\mathtt c$ in $\mathtt{abc}$ give the tuple
-$(\mathtt a,\mathtt c)$ and the context $\blank_1\mathtt b\blank_2$.
+For $w=a_1\cdots a_n$ number the cut positions
+$\cutpos{0}a_1\cutpos{1}\cdots a_n\cutpos{n}$ and write
+$w[i:i']:=a_{i+1}\cdots a_{i'}$.  An \emph{arity-$d$ tuple occurrence} in $w$
+is a sequence $0\le i_1<i_1'<i_2<i_2'<\cdots<i_d<i_d'\le n$; it determines
+$\tuple x=(w[i_1:i_1'],\ldots,w[i_d:i_d'])\in(\Sigma^+)^d$ and the context
+$E\in\mathcal E_d$ obtained by replacing these intervals by
+$\blank_1,\ldots,\blank_d$, so that $E[\tuple x]=w$.  For a finite $K$,
+$\mathrm{Obs}_d(K)$ is the set of tuples $\tuple x$ arising from occurrences in
+words of $K$, i.e.\ $\tuple x\in(\Sigma^+)^d$ with $E[\tuple x]\in K$ for some
+$E\in\mathcal E_d$, and $\mathrm{Obs}(K):=\bigcup_{d\le f}\mathrm{Obs}_d(K)$.
 \end{definition}
 
-For $L\subseteq\Sigma^*$ and $\tuple x\in(\Sigma^*)^d$, define its
-\emph{$d$-tuple distribution}
-\(\D_L^{(d)}(\tuple x):=\{E\in\mathcal E_d:E[\tuple x]\in L\}.\)
-When $d$ is clear, the superscript is omitted.
+For $L\subseteq\Sigma^*$ and $\tuple x\in(\Sigma^*)^d$ the
+\emph{$d$-tuple distribution} is
+$\D_L^{(d)}(\tuple x):=\{E\in\mathcal E_d:E[\tuple x]\in L\}$.
 
 \begin{definition}[$(f,s)$-tuple substitutability]
 \label{def:tuple-substitutable}
-Let $f\ge1$ and let $s:\Sigma^+\to\mathsf S$ be a finite-semigroup
-homomorphism. A language $L\subseteq\Sigma^*$ is
-\emph{$(f,s)$-tuple-substitutable} if, for every $1\le d\le f$ and all
-$\tuple x,\tuple y\in(\Sigma^+)^d$,
+Let $f\ge1$ and $s:\Sigma^+\to\mathsf S$ a finite-semigroup morphism.  A language
+$L\subseteq\Sigma^*$ is \emph{$(f,s)$-tuple-substitutable} if for every
+$1\le d\le f$ and all $\tuple x,\tuple y\in(\Sigma^+)^d$,
 \[
- s^{(d)}(\tuple x)=s^{(d)}(\tuple y),\qquad
+ s^{(d)}(\tuple x)=s^{(d)}(\tuple y)\ \text{ and }\
  \D_L^{(d)}(\tuple x)\cap\D_L^{(d)}(\tuple y)\ne\emptyset
-\]
-imply $\D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y)$.
-Thus empty strings are not compared as tuple components; when $\eps$ belongs
-to the target, it is handled separately at the start symbol.  This is Yoshinaka's nonempty-component convention for multidimensional
-substitutability~\cite[Section~3.1 and footnote~3]{Yoshinaka2011}; see also
-Clark~\cite{Clark2013} for the CFG case.  The restriction is
-substantive already at fan-out one: if $\eps$ itself were allowed among the
-compared fragments, the ordinarily substitutable language $\mathtt a^+$ would fail
-the condition because $\mathtt a$ and $\eps$ share a context but do not have the same
-distribution.
-\end{definition}
-
-At fan-out one, every sentence context has the form
-$u\blank_1v$, so $\D_L^{(1)}(x)$ is canonically the ordinary two-sided
-distribution $\D_L(x)=\{(u,v):uxv\in L\}$.  Hence Definition~\ref{def:tuple-substitutable}
-specializes, without any external convention, to the ordinary two-sided
-fixed-$s$ substitutability condition on nonempty factors.
-
-\paragraph{Typing--distribution equivalence.}
-For $\tuple x,\tuple y\in(\Sigma^+)^d$, write
-$\tuple x\equiv_{L,h}^d\tuple y$ if and only if
-\[
- h^{(d)}(\tuple x)=h^{(d)}(\tuple y)
- \qquad\text{and}\qquad
+ \ \Longrightarrow\
  \D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y).
 \]
-For fixed $L,h,d$ this is an equivalence relation; the superscript is omitted
-when the arity is clear.
+\end{definition}
+
+Empty components are never compared (Yoshinaka's convention
+\cite[Section~3.1 and footnote~3]{Yoshinaka2011}; see \cite{Clark2013} for
+CFGs); $\eps\in L$ is handled at the start symbol.  The restriction matters
+already at fan-out one: $\mathtt a$ and $\eps$ share a context in
+$\mathtt a^+$ but have different distributions.  At fan-out one,
+$\D_L^{(1)}(x)$ is the two-sided distribution $\{(u,v):uxv\in L\}$.  For
+$\tuple x,\tuple y\in(\Sigma^+)^d$ write $\tuple x\equiv_{L,h}^d\tuple y$
+(or $\tuple x\equiv_{L,h}\tuple y$) if $h^{(d)}(\tuple x)=h^{(d)}(\tuple y)$
+and $\D_L^{(d)}(\tuple x)=\D_L^{(d)}(\tuple y)$; this is an equivalence
+relation.
 
 \begin{definition}[The target class]
 \label{def:class-cmcf}
-Fix $f\ge1$ and a finite-semigroup typing $s$. The class
-$\Cmcf{f}{s}$ consists of all $f$-MCFLs that are
-$(f,s)$-tuple-substitutable. For a finite-monoid morphism
-$h:\Sigma^*\to M$, the notation $\Cmcf{f}{h}$ means the same
-class as $\Cmcf{f}{h|_{\Sigma^+}}$.
+$\Cmcf{f}{s}$ is the class of $(f,s)$-tuple-substitutable $f$-MCFLs.  A target
+in $\Cmcf{f}{h}$ for a boundary typing $h$ is called \emph{boundary-typed}.
 \end{definition}
 
-
-A target $L\in\Cmcf{f}{h}$ is called \emph{boundary-typed} when $h$ is a
-boundary typing.
-
-If $h\preceq h'$, then
-$\Cmcf{f}{h}\subseteq\Cmcf{f}{h'}$: equality of the finer $h'$-types implies
-equality of the coarser $h$-types, so the substitution conclusion available
-under $h$ applies.  At fan-out one this is the context-free part of the
-two-sided fixed-$h$ condition just described.
-
-For every $f\ge1$,
-\(\Cmcf{f+1}{h}\cap f\text{-}\mathrm{MCFL} \subseteq \Cmcf{f}{h},\)
-because the fan-out-$f$ condition tests only the arities
-$1,\ldots,f$.  The possible loss of substitutability when the tested arity is
-increased is already present for trivial typing: Yoshinaka notes that
-$\mathsf{SL}(p,r)$ and $\mathsf{SL}(p+1,r)$ are generally incomparable and
-gives
-$L_{\mathrm{reverse}}=\{w\#w^R\}$ as a one-dimensional substitutable language
-that is not two-dimensional substitutable
-\cite[Section~3.1, Example~5]{Yoshinaka2011}.  What finite
-typed substitution adds an explicit equality guard, but $f$ remains
-part of the learning bias, not just a representational cap.
-No monotonicity of the learned classes in $f$ is claimed.
-
-For every $\mathsf{Acc}\subseteq M$, the language
-$h^{-1}(\mathsf{Acc})$ belongs to $\Cmcf{f}{h}$.  Indeed, it is regular, and equal componentwise $h$-types give the
-same total $h$-value in every sentence context, hence equal tuple
-distributions.
+If $h\preceq h'$ then $\Cmcf{f}{h}\subseteq\Cmcf{f}{h'}$, since equal finer
+types are equal coarser types; in particular
+$\Cmcf{f}{h_{\mathrm{triv}}}\subseteq\Cmcf{f}{h}$.  The class is not monotone
+in $f$: only $\Cmcf{f+1}{h}\cap f\text{-}\mathrm{MCFL}\subseteq\Cmcf{f}{h}$
+holds, and already for trivial typing
+$\{w\mathtt{\#}w^R\}$ is $1$- but not $2$-dimensionally substitutable
+\cite[Section~3.1, Example~5]{Yoshinaka2011}; Yoshinaka notes that
+$\mathsf{SL}(p,r)$ and $\mathsf{SL}(p+1,r)$ are incomparable for $r\ge1$
+\cite[Section~4.1]{Yoshinaka2011}.  Thus $f$ is part of the bias.  For every
+$\mathsf{Acc}\subseteq M$, $h^{-1}(\mathsf{Acc})\in\Cmcf{f}{h}$: it is regular,
+and equal componentwise types give equal total types in every context.
 
 \begin{proposition}[Intersection and abelian filtering]
 \label{prop:abelian-coset-filter}
 Fix $f$ and $h$.
 \begin{enumerate}[label=(\roman*),leftmargin=*]
-\item If $L_1$ and $L_2$ are $(f,h)$-tuple-substitutable, then
-$L_1\cap L_2$ is $(f,h)$-tuple-substitutable.
-\item Let $L$ be $(f,h)$-tuple-substitutable, let $\mathbb A$ be an abelian
-group, let $\varphi:\Sigma^*\to\mathbb A$ be a monoid homomorphism, let
-$\mathcal H\le\mathbb A$, and let $\gamma\in\mathbb A$.  Then
-$L\cap\varphi^{-1}(\gamma+\mathcal H)$ is $(f,h)$-tuple-substitutable.
+\item If $L_1,L_2$ are $(f,h)$-tuple-substitutable, so is $L_1\cap L_2$.
+\item If $L$ is $(f,h)$-tuple-substitutable, $\mathbb A$ is an abelian group,
+$\varphi:\Sigma^*\to\mathbb A$ a monoid morphism, $\mathcal H\le\mathbb A$ and
+$\gamma\in\mathbb A$, then $L\cap\varphi^{-1}(\gamma+\mathcal H)$ is
+$(f,h)$-tuple-substitutable.
 \end{enumerate}
-Whenever the resulting intersection is an $f$-MCFL, it therefore belongs to
-$\Cmcf{f}{h}$.
+Whenever the intersection is an $f$-MCFL, it belongs to $\Cmcf{f}{h}$.
 \end{proposition}
 
 \begin{proof}
-For (i), equal-type tuples $\tuple x,\tuple y$ with some context $E$ satisfying
-$E[\tuple x],E[\tuple y]\in L_1\cap L_2$ have equal tuple distributions in each $L_i$, hence in their intersection.
-For (ii), first observe that $\varphi^{-1}(\gamma+\mathcal H)$ is
-$(f,h_{\mathrm{triv}})$-tuple-substitutable.  Indeed, if a common context
-accepts tuples $\tuple x,\tuple y$, then
-$\sum_i(\varphi(y_i)-\varphi(x_i))\in\mathcal H$.  By commutativity, for every other sentence
-context $E'$ the difference
-$\varphi(E'[\tuple y])-\varphi(E'[\tuple x])$ is the same element of
-$\mathcal H$, so coset membership is preserved in both directions.  Trivial
-typing is coarser than $h$, hence the same coset language is
-$(f,h)$-tuple-substitutable.  Apply (i).
+(i) A context accepting equal-type $\tuple x,\tuple y$ in $L_1\cap L_2$ accepts
+both in each $L_i$, so their distributions agree in each $L_i$, hence in the
+intersection.  (ii) If a context accepts $\tuple x,\tuple y$ in
+$\varphi^{-1}(\gamma+\mathcal H)$, then
+$\delta:=\sum_i(\varphi(y_i)-\varphi(x_i))\in\mathcal H$; by commutativity
+$\varphi(E'[\tuple y])-\varphi(E'[\tuple x])=\delta$ for every $E'$, so coset
+membership transfers in both directions.  Thus
+$\varphi^{-1}(\gamma+\mathcal H)$ is $(f,h_{\mathrm{triv}})$-, hence
+$(f,h)$-tuple-substitutable; apply (i).
 \end{proof}
 
-As an immediate consequence, for any $\mathsf{Acc}\subseteq M$, abelian group
-$\mathbb A$, homomorphism $\varphi:\Sigma^*\to\mathbb A$, subgroup
-$\mathcal H\le\mathbb A$, and $\gamma\in\mathbb A$, every $f$-MCFL of the
-form
-\(h^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathcal H)\)
-belongs to $\Cmcf{f}{h}$.  Thus one typing can support a family of targets
-while the abelian constraint varies; these factorizations are not supplied to
-the learner.
+Consequently every $f$-MCFL of the form
+$h^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathcal H)$ lies in
+$\Cmcf{f}{h}$; such factorizations are not supplied to the learner.
+
+All interaction between templates and contexts below rests on one observation.
+
+\begin{lemma}[Induced child contexts]
+\label{lem:filling-identity}
+Let $\rho=(\alpha_1,\ldots,\alpha_e)$ be a good template of rank $r$ with child
+arities $d_1,\ldots,d_r$, let $E\in\mathcal E_e$, let $1\le j\le r$, and fix
+$\tuple u_i\in(\Sigma^+)^{d_i}$ for $i\ne j$.  Let $E_j$ be the word obtained
+from $E[(\alpha_1,\ldots,\alpha_e)]$ by replacing $\xi_j^\kappa$ by
+$\blank_\kappa$ and every other variable $\xi_i^\iota$ by $u_{i,\iota}$.  Then
+$E_j\in\mathcal E_{d_j}$ and
+$E_j[\tuple x]=E[\rho(\tuple u_1,\ldots,\tuple u_{j-1},\tuple x,
+\tuple u_{j+1},\ldots,\tuple u_r)]$ for every
+$\tuple x\in(\Sigma^*)^{d_j}$.
+\end{lemma}
+
+\begin{proof}
+The identity holds because substitutions commute.  By linearity and
+nondeletion each $\blank_\kappa$ occurs exactly once in $E_j$, and by
+nonpermutation in the order $\kappa=1,\ldots,d_j$, since $E$ places
+$\alpha_1,\ldots,\alpha_e$ from left to right.  Consider $\xi_j^\kappa$ and
+$\xi_j^{\kappa+1}$.  If both lie in one $\alpha_i$, nonmerging puts a terminal
+or a variable $\xi_i^\iota$ with $i\ne j$ between them, which becomes a
+nonempty word.  Otherwise they lie in $\alpha_i,\alpha_{i'}$ with $i<i'$, and
+the material between them contains the separator $v_i\in\Sigma^+$ of $E$.  So
+every internal separator of $E_j$ is nonempty.
+\end{proof}
 
 \section{Exact Reconstruction from Positive Data}
 \label{sec:learner}
 
-We first make the fixed-rank reconstruction operator explicit and
-specialize Yoshinaka's signature theorem~\cite{Yoshinaka2015General}
-to the finite-semigroup-typed setting. The inherited qualitative
-result is separated from the concrete finite witness construction,
-which is retained for the total-length bounds below.
-We give a direct argument for uncapped reconstruction, since
-a single bounded-arity signature does not cover arbitrary rule rank.
-Every observed tuple component is nonempty, so the rank
-of a composition witness is bounded by its containing sample word.
+The reconstruction operator is Yoshinaka's observed-tuple grammar
+\cite[Section~4.1]{Yoshinaka2011} with type-guarded substitution links; its
+soundness and completeness proofs (Sections~\ref{sec:soundness}
+and~\ref{sec:completeness}) transcribe \cite[Lemmas~3--5]{Yoshinaka2011}.
+They are given in full because they also cover unbounded rank and because the
+explicit witness set of Definition~\ref{def:witness-set} is what
+Section~\ref{sec:char-data} measures.  Section~\ref{sec:general-framework}
+places the bounded-rank case in Yoshinaka's signature framework.
 
-\subsection{Set-Driven Reconstruction and Sample-Bounded Rank}
-
-
-Following Definition~\ref{def:tuple-occurrence}, enumerate all tuple occurrences
-of arity at most $f$ in the sample $K$.  The reconstruction uses one nonterminal
-$[\tuple x]$ for every observed tuple value $\tuple x\in(\Sigma^+)^d$, together
-with a fresh start symbol $\widehat S$.  It is not told which occurrences
-correspond to target nonterminals or rules; all admissible segmentations are
-enumerated.
+\subsection{Set-Driven Reconstruction}
 
 \begin{definition}[Composition witness]
 \label{def:composition-witness}
-Let $r\ge1$.  A \emph{composition witness of rank $r$} in $K$ consists of an
-observed parent occurrence $(E_{\mathrm{par}},\tuple z)$ of arity $e\le f$ together with a
-segmentation of the parent components into terminal gaps and nonempty labelled
-intervals.  The labels are variables $\xi_j^{\kappa}$ with
-$1\le j\le r$ and $1\le\kappa\le d_j\le f$; every variable occurs exactly once,
-and for each fixed $j$ the variables
-$\xi_j^1,\ldots,\xi_j^{d_j}$ occur in this order when the parent components are
-scanned from left to right.  No output component may contain adjacent variables
-$\xi_j^{\kappa}\xi_j^{\kappa+1}$ of the same child.  The labelled intervals
-induce child tuples $\tuple u_j=(u_{j,1},\ldots,u_{j,d_j})$ and determine a
-unique linear template $\rho$ satisfying
-\(\tuple z=\rho(\tuple u_1,\ldots,\tuple u_r).\)
+Let $K$ be finite and $r\ge1$.  A \emph{composition witness of rank $r$} in $K$
+is a triple $(\tuple z,\rho,(\tuple u_1,\ldots,\tuple u_r))$ with
+$\tuple z\in\mathrm{Obs}(K)$, $\rho$ a good template of rank $r$ whose output
+and child arities are at most $f$, $\tuple u_j\in(\Sigma^+)^{d_j}$, and
+$\tuple z=\rho(\tuple u_1,\ldots,\tuple u_r)$.
 \end{definition}
 
-\begin{lemma}[Materialization of child tuples]
-\label{lem:composition-witness-materialization}
-Every child tuple induced by a composition witness is itself an observed tuple
-occurrence, and the induced template $\rho$ is good.
-\end{lemma}
-
-\begin{proof}
-Because the parent is an observed tuple occurrence, the components of each
-$\tuple u_j$ occur in their original left-to-right order in the same sample
-word.  If two consecutive components of the same child lie in one parent
-component, the definition of a composition witness excludes their direct
-adjacency.  They are therefore separated either by nonempty terminal material
-or by one or more nonempty labelled intervals belonging to other children.
-If they lie in different parent components, they are separated by the
-nonempty internal material of the parent sentence context.  Hence the
-components of each $\tuple u_j$ satisfy the separation condition for an
-observed tuple occurrence.
-
-Every variable occurs exactly once, the components of each child occur in
-order, and adjacent consecutive components of one child are excluded.
-Therefore $\rho$ is linear, nondeleting, nonpermuting, and nonmerging.
-Finally every parent component is nonempty, so every output component of
-$\rho$ is nonempty.  Thus $\rho$ is good.
-\end{proof}
-
-\begin{lemma}[Enumeration and sample-bounded rank]
-\label{lem:general-witness-enumeration}
-Fix $f$ and a finite sample $K$, and put $n_K:=\max\{1,\|K\|_+\}$.  If a
-rank-$r$ composition witness has parent tuple $\tuple z$ occurring in a sample
-word $w$, then
-\(r\le\|\tuple z\|_1\le |w|\le\|K\|_+.\)
-All composition witnesses are effectively enumerable.  Under a rule-rank cap
-$r_{\max}$, those of rank at most $r_{\max}$ are enumerable in
-$n_K^{O(f r_{\max})}$ time and space.
-\end{lemma}
-
-\begin{proof}
-Every child tuple has at least one nonempty component.  Linearity and
-nondeletion make the child components contribute disjointly to the parent, so
-$\|\tuple z\|_1\ge\sum_j\|\tuple u_j\|_1\ge r$; the remaining inequalities
-follow because the parent components are disjoint intervals of $w$.
-
-An arity-$d$ tuple occurrence is determined by $2d$ cuts.  For a fixed rank
-$r$, a candidate segmentation has at most $fr$ labelled child intervals, whose endpoints are chosen among the $|w|+1\le n_K+1$ cut positions of
-the parent sample word.  For $r\le r_{\max}$, assignments to parent components and
-terminal gaps contribute only a factor depending on $f$ and $r_{\max}$, and
-the nonpermuting and nonmerging conditions are directly checkable.  Summing
-over $r\le r_{\max}$ gives the stated bound.  Without a cap, the displayed
-rank inequality restricts the effective enumeration to
-$1\le r\le\|K\|_+$.
-\end{proof}
+Since each $\alpha_i(\tuple u_1,\ldots,\tuple u_r)=z_i$ fixes the positions of
+all child components inside $\tuple z$, a composition witness is the same as a
+segmentation of an observed occurrence of $\tuple z$ into terminal gaps and
+labelled child intervals.  If $E[\tuple z]\in K$ with $E\in\mathcal E_e$,
+Lemma~\ref{lem:filling-identity} shows that every $\tuple u_j\in\mathrm{Obs}(K)$.
+Linearity and nondeletion make the children contribute disjointly to
+$\tuple z$, and each contributes at least one letter, so
+\begin{equation}
+\label{eq:sample-rank}
+ r\le\textstyle\sum_j\|\tuple u_j\|_1\le\|\tuple z\|_1\le\max_{w\in K}|w|
+ \le\|K\|_+ .
+\end{equation}
 
 \begin{definition}[Capped and uncapped reconstruction operators]
 \label{def:reconstruction}
-Fix $f$ and $h$.  For $r_{\max}\ge1$, let
-$\mathcal B_{f,h}^{\le r_{\max}}(K)$ be the grammar
-$\widehat G_{\le r_{\max}}(K)$ with a fresh start symbol $\widehat S$, one nonterminal $[\tuple x]$ for each nonempty tuple value $\tuple x$ observed in $K$,
-and the following rules:
+Fix $f$ and $h=\widehat s$.  For $r_{\max}\ge1$ let
+$\mathcal B_{f,h}^{\le r_{\max}}(K)=\widehat G_{\le r_{\max}}(K)$ be the
+grammar with start symbol $\widehat S$, a nonterminal $[\tuple x]$ of arity
+$d$ for each $\tuple x\in\mathrm{Obs}_d(K)$, $d\le f$, and the rules
 \begin{enumerate}[leftmargin=*]
-\item[\textnormal{(Start)}] for every $w\in K\cap\Sigma^+$,
-      $\widehat S\to[(w)]$, and if $\eps\in K$, also
-      $\widehat S\to\eps$;
-\item[\textnormal{(Const)}] for every observed tuple, the constant rule
-      $[\tuple u]\to\tuple u$;
-\item[\textnormal{(Comp)}] for every composition witness of rank
-      $1\le r\le r_{\max}$ with parent tuple $\tuple z$, template $\rho$,
-      and induced child tuples $\tuple u_1,\ldots,\tuple u_r$, the rule
-      \([\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r]);\)
-\item[\textnormal{(Link)}] for observed nonempty tuples
-      $\tuple x,\tuple y$ of the same arity $d$, the identity-template rule
-      $[\tuple x]\to[\tuple y]$ whenever
-      $h^{(d)}(\tuple x)=h^{(d)}(\tuple y)$ and some $E\in\mathcal E_d$
-      satisfies $E[\tuple x],E[\tuple y]\in K$.
+\item[\textnormal{(Start)}] $\widehat S\to[(w)]$ for $w\in K\cap\Sigma^+$, and
+      $\widehat S\to\eps$ if $\eps\in K$;
+\item[\textnormal{(Const)}] $[\tuple x]\to\tuple x$ for every observed
+      $\tuple x$;
+\item[\textnormal{(Comp)}] $[\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r])$
+      for every composition witness of rank $1\le r\le r_{\max}$;
+\item[\textnormal{(Link)}] $[\tuple x]\to[\tuple y]$ for observed
+      $\tuple x,\tuple y$ of the same arity $d$ with
+      $h^{(d)}(\tuple x)=h^{(d)}(\tuple y)$ and $E[\tuple x],E[\tuple y]\in K$
+      for some $E\in\mathcal E_d$.
 \end{enumerate}
-If $K\ne\emptyset$, define
-$\mathcal B_{f,h}(K):=\widehat G(K):=
-\widehat G_{\le\|K\|_+}(K)$; for $K=\emptyset$, let
-$\mathcal B_{f,h}(\emptyset)$ be the grammar with no productive start rule.
-Fixed encoding orders make both reconstruction operators deterministic and
-set-driven.
+For $K\ne\emptyset$ put $\mathcal B_{f,h}(K):=\widehat G(K):=
+\widehat G_{\le\|K\|_+}(K)$; $\mathcal B_{f,h}(\emptyset)$ has no rules.
+Fixed encoding orders make both operators deterministic and set-driven.
 \end{definition}
 
-The qualitative positive-data learning mechanism now follows from the
-general signature framework of Yoshinaka~\cite{Yoshinaka2015General}.
-The remaining explicit target-witness construction is needed for the
-quantitative total-length estimates in Section~\ref{sec:char-data}.
-
-\subsection{Specialization of Yoshinaka's 2015 Signature}
-\label{sec:general-framework}
-
-The bounded-rank learner is a typed instance of
-Yoshinaka's substitutable-signature framework
-\cite{Yoshinaka2015General}. We make the
-correspondence explicit to distinguish prior
-qualitative learning results from the total-length
-bounds of Section~\ref{sec:char-data}.
-
-Fix finite $\Sigma$, $f,r\ge1$ and a finite-semigroup typing
-$s:\Sigma^+\twoheadrightarrow\mathsf S$. Put
-$h=\widehat s$, $M=\mathsf S^\sharp$ and $M^+=\mathsf S$.
-The signature $\mathfrak S_{f,r,h}$ has a
-start sort $O_*=\{\overline w:w\in\Sigma^*\}$, a tagged
-copy of $\Sigma^*$, and tagged non-start sorts
-\[
- T_{d,\boldsymbol\mu}
- =\{\tuple w\in(\Sigma^+)^d:
- h^{(d)}(\tuple w)=\boldsymbol\mu\},
- \qquad
- 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d.
-\]
-Every $T_{d,\boldsymbol\mu}$ is likewise a tagged copy,
-whose members we denote by their underlying tuples when
-there is no ambiguity. Thus all sorts are pairwise disjoint
-as in \cite[Example~4]{Yoshinaka2015General}.
-Its function names comprise all well-typed
-good MCFG templates of child rank at most $r$
-(including rank zero); promotions
-$T_{1,\mu}\to O_*$ sending $(w)$ to $\overline w$;
-and a nullary $\overline{\eps}$ constant of sort $O_*$. No function takes an
-$O_*$ input. After forgetting the type tags, this is a
-finite sort refinement, in the sense of
-\cite[Section~8]{Yoshinaka2015General}, of
-the signature of good $\lambda$-free MCFG
-operations on nonempty tuples. That
-untyped signature is a nonempty-component
-variant of \cite[Example~3]{Yoshinaka2015General},
-rather than literally the signature of that
-example; at fan-out one the prefix--suffix
-case corresponds to
-\cite[Example~4]{Yoshinaka2015General}.
-Write $\mathcal S_O,\mathcal C_O$ for the
-substructures and contexts realizable in
-some grammar over this signature.
-
-\begin{lemma}[Signature contexts are admissible sentence contexts]
-\label{lem:signature-contexts}
-For every non-start sort,
-\[
- \mathcal S_{T_{d,\boldsymbol\mu}}
- =T_{d,\boldsymbol\mu},
- \qquad
- \mathcal C_{T_{d,\boldsymbol\mu}}
- =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}.
-\]
-The latter equality is between \emph{functions}
-on $T_{d,\boldsymbol\mu}$.
-Also $\mathcal C_{O_*}$ contains only the identity.
-\end{lemma}
-
-\begin{proof}
-Rank-zero constants realize every non-start element; no operation
-accepts an $O_*$ input. Along a path from a non-start hole
-to the root, good templates preserve the distinguished child's
-variable order and single occurrences. Nonmerging and nonempty
-sibling components preserve each internal separator; applying
-Lemma~\ref{lem:filling-identity} inductively gives a context
-in $\mathcal E_d$. Conversely every $E=v_0\blank_1v_1\cdots
-\blank_dv_d\in\mathcal E_d$ is realized by the unary good
-template $(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$, a rank-zero child,
-and start promotion. Its internal separators are nonempty;
-the output type is determined by $h$.
-\end{proof}
-
-\begin{proposition}[Bounded-rank coverage by Yoshinaka's 2015 framework]
-\label{prop:yoshinaka2015-embedding}
-The signature $\mathfrak S_{f,r,h}$ satisfies
-Assumptions~1--3 of
-\cite{Yoshinaka2015General}, and
-\(\mathsf{Subst}(\mathfrak S_{f,r,h}) =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r).\)
-Consequently Yoshinaka's identification theorem
-applies to the bounded-rank class
-\cite[Theorem~1]{Yoshinaka2015General}:
-for fixed $f,r,h$, updates are polynomial
-in the accumulated sample, and characteristic
-sets have cardinality at most
-$|N^\sharp|+|P^\sharp|$ for a trimmed
-signature presentation (the bound stated immediately
-after \cite[Lemma~3]{Yoshinaka2015General}, for
-$\mathrm{SUBST}_{\mathrm D}$).
-This does not bound the total \emph{length}
-of those samples.  Section~7 of
-\cite{Yoshinaka2015General} explicitly permits the
-substructure-indexed constructor under Assumptions~1, 2 and~7;
-in the present fixed-rank signature, Assumption~3 provides the
-required enumerations, and every trimmed productive/reachable
-nonterminal has a substructure and a successful context.
-\end{proposition}
-
-\begin{proof}
-Erasing sort tags from a signature grammar yields an MCFG
-of fan-out $\le f$ and rank $\le r$. Conversely,
-rank-preserving good normalization
-(Proposition~\ref{prop:good-normalization}), yield-type
-refinement (Definition~\ref{def:output-refinement}), promotions
-and the $\eps$ constant represent every target in
-$\mathsf{MCFL}(f,r)$.
-The start sort has only the identity context; on other sorts,
-Lemma~\ref{lem:signature-contexts} turns the signature
-four-instance implication into
-Definition~\ref{def:tuple-substitutable}. Trimming removes
-useless symbols, proving the class equality.
-
-For Assumptions~1--3, all operations have arity $\le r$;
-type and context membership, evaluation, and
-bounded-rank MCFG membership are polynomial
-\cite[Proposition~4]{Yoshinaka2011}. On a sentence of
-length $n$, enumerate tagged tuples of at most $f$
-nonoverlapping nonempty intervals with nonempty internal
-gaps and their contexts; for each parent occurrence
-enumerate good rank-$\le r$ templates determined by
-ordered child intervals and residual terminal material,
-recording actual function names. There are at most
-$2f(r+1)$ cuts; the enumeration is polynomial for fixed
-$f,r,h$ and complete by
-Lemma~\ref{lem:composition-witness-materialization}.
-Yoshinaka's Theorem~1 and Lemma~3 now apply.
-\end{proof}
-
-\begin{lemma}[Substructure-indexed and guarded reconstruction]
-\label{lem:substp}
-For the preceding signature and enumerations,
-Yoshinaka's $\mathrm{SUBST}_{\mathrm P}(K)$
-and $\mathcal B^{\le r}_{f,h}(K)$ generate
-the same language for every finite
-positive sample $K\subseteq\Sigma^*$.
-\end{lemma}
-
-\begin{proof}
-Match the two constructions' non-start symbols by observed
-typed tuples. A $\mathrm{SUBST}_{\mathrm P}$ rule for
-$s_0$ and $z=\rho(s_1,\ldots,s_t)$ has a common
-$c\in\mathrm{CON}_O(K)$ with $c\odot s_0,c\odot z\in K$.
-By Lemma~\ref{lem:signature-contexts} this is an
-admissible sentence context, giving Link followed by Comp
-(or Const if $t=0$); the needed composition witness is
-materialized by
-Lemma~\ref{lem:composition-witness-materialization}.
-Conversely each guarded Link is a witnessed unary identity
-instance of $\mathrm{SUBST}_{\mathrm P}$, and each Comp/Const
-is a witnessed template instance. Induction equates the
-non-start languages. At the start sort only identity contexts
-occur and no operation has a start-sort argument, so both
-constructions generate
-$\bigcup_{w\in K\cap\Sigma^+}L([(w)])
-\cup(\{\eps\}\cap K)$, including the empty-sample case.
-\end{proof}
-
-\begin{corollary}[Qualitative bounded-rank learning from Yoshinaka (2015)]
-\label{cor:yoshinaka2015-qualitative}
-Fix $f,r\ge1$ and a finite-semigroup typing
-$s:\Sigma^+\twoheadrightarrow\mathsf S$, with $h=\widehat s$.
-Every $L\in\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$ has a finite
-positive characteristic sample $K_L$ such that
-\[
- K_L\subseteq K\subseteq L
- \quad\Longrightarrow\quad
- L\bigl(\mathcal B^{\le r}_{f,h}(K)\bigr)=L .
-\]
-The conservative set-driven learner using this operator
-identifies the class in the limit; for fixed $f,r,s$
-its updates are polynomial in the accumulated sample.
-No bound on the \emph{total length} of $K_L$ follows here.
-\end{corollary}
-\begin{proof}
-Proposition~\ref{prop:yoshinaka2015-embedding}
-verifies Assumptions~1--3 of
-\cite{Yoshinaka2015General}; these imply the
-enumerability and nonempty-productive-context requirements
-of Assumption~7 for trimmed target presentations.
-Yoshinaka's Theorem~1 and Section~7 therefore give
-positive-data identification using
-$\mathrm{SUBST}_{\mathrm P}$, and
-Lemma~\ref{lem:substp} identifies its generated language
-with our bounded-rank operator.  The finite witness
-criterion follows from the rule-witness construction
-in the proof of that theorem.  Its cardinality estimate,
-unlike the estimates below, controls no witness length.
-\end{proof}
-
-
-
-
-
-
-\paragraph{Consistency and reconstruction.}
-Lemma~\ref{lem:substp} gives finite-sample language equivalence
-with Yoshinaka's $\mathrm{SUBST}_{\mathrm P}$; the extra guard on
-links is equality of componentwise finite-semigroup types.
-Both operators are sample-consistent:
-$K\subseteq L(\mathcal B_{f,h}^{\le r_{\max}}(K))$
-and $K\subseteq L(\mathcal B_{f,h}(K))$, by direct
-Start--Const derivations (or the direct $\eps$ rule).
-Rule~(Comp) and the uncapped sample-rank bound follow from
-Lemma~\ref{lem:general-witness-enumeration}.
-Set-driven reconstruction need not stabilize \emph{syntactically};
-the conservative TxtEx wrapper below does.
+By \eqref{eq:sample-rank}, $\mathcal B_{f,h}(K)$ contains a Comp rule for every
+composition witness in $K$.  Both operators are sample-consistent, by
+$\widehat S\to[(w)]\to(w)$ and $\widehat S\to\eps$.  Every $[\tuple x]$
+derives only tuples with nonempty components, since Comp templates are
+$\lambda$-free; so $\widehat S\Rightarrow^*\eps$ only by the rule
+$\widehat S\to\eps$.  For trivial typing and $\eps\notin K$,
+Comp/Const, Link and Start are exactly the rules of Types~I, II and III of
+\cite[Section~4.1]{Yoshinaka2011}, and $\mathcal B_{f,h}$ is the operator of
+Yoshinaka's unbounded-rank learner $\mathcal A(p,*)$
+\cite[Corollary~2]{Yoshinaka2011}.
 
 \subsection{Soundness}
 \label{sec:soundness}
 
-\begin{lemma}[Induced child context]
-\label{lem:filling-identity}
-Let $\rho$ be the template of a good rule, let
-$E\in\mathcal E_e$ be a sentence context for its output tuple, and fix tuples of the arities required by the child nonterminals, with nonempty
-components, for all children except child $j$.
-Replacing every variable of child $j$ by its named hole and every other child
-variable by the corresponding fixed component produces a context
-$E_j\in\mathcal E_{d_j}$
-such that
-\(E_j[\tuple u_j]=E[\rho(\tuple u_1,\ldots,\tuple u_r)].\)
-If the sibling tuples are changed, the same construction gives the
-corresponding induced context $E_j$ for that new sibling choice; the context
-itself need not be identical.
-\end{lemma}
-
-\begin{proof}
-Linearity, nondeletion and nonpermutation leave the
-distinguished variables once each and in index order.
-By nonmerging, consecutive variables of that child
-are separated by a terminal, a sibling variable, or an
-output-component boundary; these become respectively a
-nonempty terminal, a nonempty fixed sibling component,
-or a nonempty separator from $E$.
-Replacing the distinguished variables by ordered holes
-therefore gives $E_j\in\mathcal E_{d_j}$ and the stated
-filling identity.
-\end{proof}
-
 \begin{lemma}[Composition preserves equivalence]
 \label{lem:witnessed-composition}
-Let $L\subseteq\Sigma^*$, let $\rho$ be the template of a good rank-$r$ rule, and let
-$\tuple x_j,\tuple u_j$ have the arities required by its children and have
-nonempty components.  If
-$\tuple u_j\equiv_{L,h}\tuple x_j$ for every $j$, then
-\(\rho(\tuple u_1,\ldots,\tuple u_r) \equiv_{L,h} \rho(\tuple x_1,\ldots,\tuple x_r).\)
+Let $L\subseteq\Sigma^*$, let $\rho$ be a good template of rank $r$, and let
+$\tuple x_j,\tuple u_j\in(\Sigma^+)^{d_j}$ satisfy
+$\tuple u_j\equiv_{L,h}\tuple x_j$ for every $j$.  Then
+$\rho(\tuple u_1,\ldots,\tuple u_r)\equiv_{L,h}\rho(\tuple x_1,\ldots,\tuple x_r)$.
 \end{lemma}
 
 \begin{proof}
-Homomorphic evaluation gives equal parent types; goodness
-makes the parent components nonempty. Fix a sentence
-context $E$ and replace the children one at a time.
-Lemma~\ref{lem:filling-identity} gives an admissible
-induced context for each child under the current sibling
-choice; $\equiv_{L,h}$ preserves acceptance at that step.
-Reverse the replacements for the converse implication.
-Since $E$ was arbitrary, the parent distributions agree.
+Each output component is the concatenation of the terminals of $\rho$ and of
+child components in a fixed order, and is nonempty by $\lambda$-freeness;
+since $h$ is a monoid morphism, the parent types agree.  Fix
+$E\in\mathcal E_e$ and put
+$\tuple p_j:=\rho(\tuple x_1,\ldots,\tuple x_j,\tuple u_{j+1},\ldots,\tuple u_r)$
+for $0\le j\le r$.  Lemma~\ref{lem:filling-identity} with siblings
+$\tuple x_1,\ldots,\tuple x_{j-1},\tuple u_{j+1},\ldots,\tuple u_r$ gives
+$E_j\in\mathcal E_{d_j}$ with $E[\tuple p_{j-1}]=E_j[\tuple u_j]$ and
+$E[\tuple p_j]=E_j[\tuple x_j]$; as
+$\D_L(\tuple u_j)=\D_L(\tuple x_j)$, $E[\tuple p_{j-1}]\in L$ iff
+$E[\tuple p_j]\in L$.  Chaining over $j$ gives
+$\D_L(\tuple p_0)=\D_L(\tuple p_r)$.
 \end{proof}
 
-\begin{proposition}[Soundness of every capped hypothesis]
+\begin{proposition}[Soundness of every hypothesis]
 \label{prop:reconstruction-soundness}
-Let $L$ be $(f,h)$-tuple-substitutable and $K\subseteq L$.  For every
+Let $L$ be $(f,s)$-tuple-substitutable and $K\subseteq L$ finite.  For every
 $r_{\max}\ge1$, if $[\tuple x]\Rightarrow^*\tuple u$ in
-$\widehat G_{\le r_{\max}}(K)$, then every component of $\tuple u$ is nonempty
-and $\tuple u\equiv_{L,h}\tuple x$.  Consequently
-\[
- L\bigl(\mathcal B_{f,h}^{\le r_{\max}}(K)\bigr)\subseteq L,
- \qquad L\bigl(\mathcal B_{f,h}(K)\bigr)\subseteq L.
-\]
+$\widehat G_{\le r_{\max}}(K)$, then $\tuple u\equiv_{L,h}\tuple x$.
+Consequently $L(\mathcal B_{f,h}^{\le r_{\max}}(K))\subseteq L$ and
+$L(\mathcal B_{f,h}(K))\subseteq L$.
 \end{proposition}
 
 \begin{proof}
-This is the substructure-indexed soundness invariant
-behind Yoshinaka's substitutable-signature learner
-\cite[Section~6.1 and Section~7]{Yoshinaka2015General}.
-Induct on a non-start derivation.  Const gives the
-witnessed tuple; Link joins tuples of the same tagged
-sort with a common positive sample context, so they
-are distributionally equivalent in $L$.
-For Comp, apply the induction hypothesis to each
-child and the congruence under good templates
-(Lemma~\ref{lem:witnessed-composition}).
-All derived components remain nonempty.
-At Start, a witnessed nonempty sentence belongs
-to $L$ by the empty context, and a direct $\eps$
-rule exists only when $\eps\in K\subseteq L$.
-The uncapped operator is the capped one with
-$r_{\max}=\|K\|_+$ for $K\ne\emptyset$;
-the empty sample is immediate.
+This is \cite[Lemmas~3--4]{Yoshinaka2011} with typed links.  Induct on the
+derivation, according to its first rule.  Const: $\tuple u=\tuple x$.  Link
+$[\tuple x]\to[\tuple y]$: $\tuple x,\tuple y$ have equal types and share a
+context in $K\subseteq L$, so substitutability gives
+$\tuple x\equiv_{L,h}\tuple y$, and $\tuple u\equiv_{L,h}\tuple y$ by
+induction.  Comp $[\tuple z]\to\rho([\tuple u_1],\ldots,[\tuple u_r])$ with
+$[\tuple u_j]\Rightarrow^*\tuple v_j$: by induction
+$\tuple v_j\equiv_{L,h}\tuple u_j$, and
+Lemma~\ref{lem:witnessed-composition} gives
+$\rho(\tuple v_1,\ldots,\tuple v_r)\equiv_{L,h}\tuple z$.  A nonempty word $w$
+is derived from $\widehat S$ via some $[(w_0)]$ with $w_0\in K$; then
+$(w)\equiv_{L,h}(w_0)$ and $\blank_1\in\D_L((w_0))$, so $w\in L$; and $\eps$
+is derived only if $\eps\in K\subseteq L$.  The uncapped operator is the capped
+one with $r_{\max}=\|K\|_+$.
 \end{proof}
 
-
-\subsection{Yield-Typed Target Refinement and Finite Witnesses}
+\subsection{Yield-Typed Refinement and Witnesses}
 \label{sec:refinement}
-
-\begin{definition}[Template yield type]
-\label{def:output-map}
-Let
-\(R:A\to\rho(B_1,\ldots,B_r)\)
-be a nondeleting rule with output template
-\(\rho=(\alpha_1,\ldots,\alpha_{d_0})\), and put \(d_0=\fan(A)\) and
-\(d_j:=\fan(B_j)\), and choose
-\(\mathbf t_j\in M^{d_j}\) for each \(1\le j\le r\).
-
-On the template alphabet
-\(
-  \Gamma_\rho
-  :=\Sigma\uplus\biguplus_{j=1}^r
-  \{\xi_j^1,\ldots,\xi_j^{d_j}\}
-\),
-define
-\(\evalmap_{\mathbf t_1,\ldots,\mathbf t_r}\colon\Gamma_\rho\to M\)
-by
-\(\evalmap_{\mathbf t_1,\ldots,\mathbf t_r}(a):=h(a)\)
-for \(a\in\Sigma\), and
-\(\evalmap_{\mathbf t_1,\ldots,\mathbf t_r}(\xi_j^{\kappa}):=(\mathbf t_j)_\kappa\).
-
-Let
-\(
-  \widehat{\evalmap}_{\mathbf t_1,\ldots,\mathbf t_r}
-  \colon\Gamma_\rho^*\to M
-\)
-be its unique extension to a monoid homomorphism.
-Define
-\[
-  \out_\rho(\mathbf t_1,\ldots,\mathbf t_r)
-  :=
-  \bigl(
-    \widehat{\evalmap}_{\mathbf t_1,\ldots,\mathbf t_r}(\alpha_1),
-    \ldots,
-    \widehat{\evalmap}_{\mathbf t_1,\ldots,\mathbf t_r}(\alpha_{d_0})
-  \bigr)
-\in M^{d_0}.
-\]
-For rank zero, \(\out_\rho\) is simply
-\((h(\alpha_1),\ldots,h(\alpha_{d_0}))\), the componentwise \(h\)-type of the
-constant template.
-\end{definition}
-
-The refinement below is ordinary finite nonterminal splitting: compositionality
-$h(uv)=h(u)h(v)$ makes each typed target nonterminal uniform in componentwise
-$h$-type, which is exactly the guard needed for substitutability.
-
 
 \begin{definition}[Yield-type refinement]
 \label{def:output-refinement}
-Given a finite nondeleting MCFG \(G=(V,\Sigma,P,S,\fan)\) and a finite
-typing \(h\), the \emph{full yield-type refinement} \(G^h\) has a fresh
-start symbol \(\widetilde S\) and typed nonterminals
-\(A_{\mathbf t}\) for every \(A\in V\) and
-\(\mathbf t\in M^{\fan(A)}\).
-Set
-\(\fan(\widetilde S):=1\) and
-\(\fan(A_{\mathbf t}):=\fan(A)\).
-
-For each \(\eta\in M\), add the start rule
-\(\widetilde S\to S_{(\eta)}\).
-For each rank-zero rule \(A\to\tuple c\), add
-\(A_{h^{(\fan(A))}(\tuple c)}\to\tuple c\).
-
-For every positive-rank rule
-\(R:A\to\rho(B_1,\ldots,B_r), \qquad \rho=(\alpha_1,\ldots,\alpha_{d_0}),\)
-and every choice $\mathbf t_j\in M^{\fan(B_j)}$ ($1\le j\le r$), add
-\[
-  A_{\out_\rho(\mathbf t_1,\ldots,\mathbf t_r)}
-  \to
-  \rho(B_{1,\mathbf t_1},\ldots,B_{r,\mathbf t_r}).
-\]
-Here \(B_{j,\mathbf t_j}\) denotes the typed copy of \(B_j\) indexed by
-\(\mathbf t_j\).
-
-Finally, the \emph{trimmed refinement} \(\widetilde G_0\) is obtained by
-keeping only the typed nonterminals and typed rules that actually occur in some
-successful derivation from \(\widetilde S\); the subscript $0$ denotes this
-productive/reachable core.  From this point on, a ``typed nonterminal'' or
-``typed rule'' means one of \(\widetilde G_0\) unless the full refinement
-\(G^h\) is mentioned explicitly.
+Let $G=(V,\Sigma,P,S,\fan)$ be a finite nondeleting MCFG and $h:\Sigma^*\to M$
+a finite-monoid morphism.  For a template $\rho$ and
+$\mathbf t_j\in M^{d_j}$, let $\out_\rho(\mathbf t_1,\ldots,\mathbf t_r)\in
+M^{d_0}$ have $i$th component the image of $\alpha_i$ under the monoid
+morphism $\Gamma_\rho^*\to M$ extending $a\mapsto h(a)$ and
+$\xi_j^\kappa\mapsto(\mathbf t_j)_\kappa$.  The \emph{full yield-type
+refinement} $G^h$ has a fresh start symbol $\widetilde S$, nonterminals
+$A_{\mathbf t}$ for $A\in V$ and $\mathbf t\in M^{\fan(A)}$, start rules
+$\widetilde S\to S_{(\eta)}$ for $\eta\in M$, and for every rule
+$A\to\rho(B_1,\ldots,B_r)$ (including $r=0$) and all
+$\mathbf t_j\in M^{\fan(B_j)}$ the rule
+$A_{\out_\rho(\mathbf t_1,\ldots,\mathbf t_r)}\to
+\rho(B_{1,\mathbf t_1},\ldots,B_{r,\mathbf t_r})$.  The \emph{trimmed
+refinement} $\widetilde G_0$ keeps exactly the typed nonterminals and rules
+occurring in some successful derivation from $\widetilde S$.  Unless $G^h$ is
+named, \emph{typed nonterminal} and \emph{typed rule} refer to the
+non-start nonterminals and rules of $\widetilde G_0$, and $L_X:=\{\tuple u:X\Rightarrow_{\widetilde
+G_0}^*\tuple u\}$.
 \end{definition}
+
+Typed rules have the templates of their sources, so $\widetilde G_0$ is good
+whenever $G$ is; each $L_X$ is nonempty, with nonempty components if $G$ is
+$\lambda$-free.
 
 \begin{proposition}[Yield-type invariants]
 \label{prop:output-invariants}
-For \(G^h\) and \(\widetilde G_0\):
 \begin{enumerate}[label=(\roman*),leftmargin=*]
-\item if \(A_{\mathbf t}\Rightarrow^*\tuple u\), then
-\(h^{(\fan(A))}(\tuple u)=\mathbf t\), and erasing the type indices gives a
-valid \(G\)-derivation of \(\tuple u\);
-\item every terminal derivation
-\(A\Rightarrow_G^*\tuple u\)
-lifts uniquely to a derivation
-\(A_{h^{(\fan(A))}(\tuple u)}\Rightarrow_{G^h}^*\tuple u.\)
-In particular, every successful derivation \(S\Rightarrow_G^* w\) lifts
-uniquely through the start rule
-\(
-  \widetilde S\to S_{(h(w))}
-\);
-\item \(L(\widetilde G_0)=L(G^h)=L(G)\).
+\item If $A_{\mathbf t}\Rightarrow^*\tuple u$ in $G^h$, then
+$h^{(\fan(A))}(\tuple u)=\mathbf t$, and erasing indices gives a
+$G$-derivation of $\tuple u$.
+\item Every terminal derivation $A\Rightarrow_G^*\tuple u$ lifts uniquely to
+$A_{h^{(\fan(A))}(\tuple u)}\Rightarrow_{G^h}^*\tuple u$; a successful
+derivation of $w$ lifts uniquely through $\widetilde S\to S_{(h(w))}$.
+\item $L(\widetilde G_0)=L(G^h)=L(G)$.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
-At a rule application, homomorphic evaluation of the rule template gives
-\[
-  h^{(\fan(A))}
-  \bigl(\rho(\tuple u_1,\ldots,\tuple u_r)\bigr)
-  =
-  \out_\rho
-  \bigl(h^{(\fan(B_1))}(\tuple u_1),\ldots,
-        h^{(\fan(B_r))}(\tuple u_r)\bigr).
-\]
-The rank-zero case is immediate.  Induction on derivation height proves~(i),
-and the same identity gives the unique terminal-derivation lifting in~(ii).  Erasing the
-type indices gives one language inclusion.  Conversely, every successful
-terminal derivation of \(G\) has the unique typed lifting described in~(ii),
-including the uniquely determined start link
-\(\widetilde S\to S_{(h(w))}\).  Finally, every successful typed derivation
-consists entirely of rules retained by the trimming, so trimming preserves the
-generated language.
+At every rule application
+$h^{(\fan(A))}(\rho(\tuple u_1,\ldots,\tuple u_r))=\out_\rho(h^{(d_1)}(\tuple
+u_1),\ldots,h^{(d_r)}(\tuple u_r))$, because $h$ is a monoid morphism.
+Induction on derivation height gives (i) and the unique lifting (ii).  Erasing
+indices gives $L(G^h)\subseteq L(G)$, (ii) the converse, and trimming keeps
+every rule of every successful derivation.
 \end{proof}
 
-Yield typing changes only nonterminal labels, so every typed rule has the
-same rule template as its untyped source.  Hence $\lambda$-freeness,
-nondeletion, nonpermutation, and nonmerging are all inherited by the trimmed
-refinement.
+\begin{lemma}[Monoid implementations]
+\label{lem:semigroup-transfer}
+Let $h_0:\Sigma^*\to M_0$ be a finite-monoid morphism,
+$S_0:=h_0(\Sigma^+)$ and $s_0:=h_0|_{\Sigma^+}$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item For $1\le d\le f$ and $\tuple x,\tuple y\in(\Sigma^+)^d$, the equalities
+$h_0^{(d)}(\tuple x)=h_0^{(d)}(\tuple y)$,
+$s_0^{(d)}(\tuple x)=s_0^{(d)}(\tuple y)$ and
+$\widehat{s_0}^{(d)}(\tuple x)=\widehat{s_0}^{(d)}(\tuple y)$ are equivalent.
+Hence $\Cmcf{f}{h_0}=\Cmcf{f}{s_0}$, and the reconstruction operators built
+with $h_0$ and with $\widehat{s_0}$ return the same grammar on every sample.
+\item For every good MCFG $G$, the trimmed refinements of $G$ under $h_0$ and
+under $\widehat{s_0}$ coincide (the untrimmed ones need not); hence the same
+canonical tuples, contexts and witness words may be chosen for both.
+\end{enumerate}
+\end{lemma}
 
-For a typed nonterminal $X=A_{\mathbf t}$, put
-$L_X:=\{\tuple u:X\Rightarrow_{\widetilde G_0}^*\tuple u\}$.  Trimming makes
-$L_X$ nonempty; if the target grammar is $\lambda$-free, every component
-of every $\tuple u\in L_X$ is nonempty.
+\begin{proof}
+(i) The three maps agree on $\Sigma^+$ as maps into $S_0$, and the class and
+the Link guard compare types of nonempty components only.  (ii) $S_0$ is a
+subsemigroup of $M_0$ and of $S_0^\sharp$ with the same multiplication.  By
+$\lambda$-freeness and Proposition~\ref{prop:output-invariants}(i), every
+typed nonterminal occurring in a successful derivation under either morphism
+is some $A_{\mathbf t}$ with $\mathbf t\in S_0^{\fan(A)}$, and the start links
+used are $\widetilde S\to S_{(\eta)}$ with $\eta\in S_0$.  For child indices in
+$S_0$, every component $\alpha_i$ of a good template is a nonempty word whose
+letters and variables are evaluated in $S_0$ identically under both morphisms,
+so both give the same $\out_\rho$.  Thus the two full refinements contain the
+same rules among $S_0$-indexed symbols, which carry all successful derivations.
+\end{proof}
 
 \begin{lemma}[Canonical contexts for typed nonterminals]
 \label{lem:identity-canonical-contexts}
-Assume the target grammar is good.  Every typed nonterminal $X$ of arity $d$ has a sentence context
-$\chi(X)\in\mathcal E_d$ such that
-$\chi(X)[\tuple u]\in L(G)$ for every $\tuple u\in L_X$.  If
-$\widetilde S\to X$ belongs to $\widetilde G_0$, one may take $\chi(X)=\blank_1$.
+Let $G$ be good.  Every typed nonterminal $X$ of arity $d$ has a context
+$\chi(X)\in\mathcal E_d$ with $\chi(X)[\tuple u]\in L(G)$ for all
+$\tuple u\in L_X$; if $\widetilde S\to X$ is in $\widetilde G_0$, one may take
+$\chi(X)=\blank_1$.
 \end{lemma}
 
 \begin{proof}
-Choose a successful typed derivation containing an occurrence of $X$.  At the
-root, the one-hole context $\blank_1$ is valid.  Follow the unique path from
-the root occurrence down to the chosen occurrence of $X$.  At each rule on
-this path, fix the productive sibling subderivations used in the successful
-derivation and apply Lemma~\ref{lem:filling-identity}.  Goodness of the rule
-and nonemptiness of the sibling components ensure that the induced child
-context again has nonempty internal separators.  Iterating down the path gives
-$\chi(X)\in\mathcal E_d$.  The surrounding typed rule applications depend only on the typed symbol
-$X$, so replacing its subtree by any other $X$-derivation remains a valid
-derivation in $\widetilde G_0$.  If $\widetilde S\to X$ is a rule of
-$\widetilde G_0$, the path has length zero and $\chi(X)=\blank_1$.
+Take a successful typed derivation containing $X$, and follow the path from
+the root to an occurrence of $X$, starting with $\blank_1$.  At each rule on
+the path apply Lemma~\ref{lem:filling-identity} with the (nonempty) yields of
+the sibling subderivations fixed; this gives $\chi(X)\in\mathcal E_d$.  The
+rules on the path depend only on the label $X$, so replacing the subtree of
+$X$ by any $X$-derivation yields a successful derivation of
+$\chi(X)[\tuple u]$.  If $\widetilde S\to X$ is a rule, use the path of length
+zero.
 \end{proof}
 
-When $L=L(G)\in\Cmcf{f}{h}$, the refinement is also distributionally homogeneous for the sentence-context
-family used here.  If $X=A_{\mathbf t}$ has arity $d$ and
-$\tuple u,\tuple v\in L_X$, Proposition~\ref{prop:output-invariants} gives
-$h^{(d)}(\tuple u)=h^{(d)}(\tuple v)=\mathbf t$, while
-Lemma~\ref{lem:identity-canonical-contexts} supplies one sentence context
-accepting both.  Hence $(f,h)$-tuple substitutability gives
-$\D_L^{(d)}(\tuple u)=\D_L^{(d)}(\tuple v)$.  Thus each typed nonterminal lies
-inside one distributional class for $\mathcal E_d$.  This parallels, but is weaker than, the full-multicontext homogeneity used
-for congruential MCFGs~\cite{ClarkYoshinaka2016}: our internal separators are
-required to be nonempty.  For genuine tuple arity $d\ge2$, the present
-sentence-context family still requires nonempty internal separators, so we do
-not assert an inclusion into the full multicontext congruential MCFG class;
-whether the empty-separator cases can be recovered uniformly remains open.
+\begin{lemma}[Typed nonterminals are distributionally homogeneous]
+\label{lem:typed-homogeneity}
+Let $G$ be good with $L:=L(G)\in\Cmcf{f}{s}$.  For every typed nonterminal $X$
+of arity $d$, $L_X$ lies in a single $\equiv_{L,h}^d$-class, denoted $[X]$.
+\end{lemma}
 
-\begin{definition}[Canonical tuples and contexts]
+\begin{proof}
+For $\tuple u,\tuple v\in L_X$,
+Proposition~\ref{prop:output-invariants}(i) gives equal types and
+$\chi(X)$ accepts both; substitutability gives
+$\D_L(\tuple u)=\D_L(\tuple v)$.
+\end{proof}
+
+This parallels, but is weaker than, the homogeneity of congruential MCFGs
+\cite{ClarkYoshinaka2016}, whose contexts may have empty separators.
+
+\begin{definition}[Canonical tuples, contexts and the witness set]
 \label{def:target-canonical}
-For every non-start typed nonterminal $X$, fix a \emph{canonical tuple}
-$\omega(X)\in L_X$ and a \emph{canonical context} $\chi(X)$ supplied by
-Lemma~\ref{lem:identity-canonical-contexts}.  Whenever
-$\widetilde S\to X$ belongs to $\widetilde G_0$, require
-$\chi(X)=\blank_1$; otherwise choose any canonical context from the lemma.  For
-a $\lambda$-free target grammar every component of $\omega(X)$ is nonempty,
-so $\|\omega(X)\|_1\ge\fan(X)\ge1$.  Qualitatively a canonical tuple may be the first
-tuple in an effective enumeration of finite terminal derivations; the
-quantitative sections choose short canonical tuples.  These canonical objects are target witnesses, not inputs to the reconstruction
-operator.
-\end{definition}
-
-\begin{definition}[Finite target witness set]
 \label{def:witness-set}
-Let $\Wit(\widetilde G_0)$ consist of the following positive words:
+Let $G$ be good.  For every typed nonterminal $X$ fix a \emph{canonical tuple}
+$\omega(X)\in L_X$ and a \emph{canonical context} $\chi(X)$ as in
+Lemma~\ref{lem:identity-canonical-contexts}, with $\chi(X)=\blank_1$ whenever
+$\widetilde S\to X$ is in $\widetilde G_0$.  Let $\Wit(\widetilde G_0)$
+consist of the words
 \[
-\begin{aligned}
-&\chi(X)[\omega(X)]
-&&\text{for every non-start typed nonterminal }X,\\
-&\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_r))]
-&&\text{for every non-start positive-rank typed rule }
-  X\to\rho(Y_1,\ldots,Y_r),\\
-&\chi(X)[\tuple c]
-&&\text{for every non-start rank-zero typed rule }X\to\tuple c.
-\end{aligned}
+ \chi(X)[\omega(X)]\ \ (X\text{ typed}),\qquad
+ \chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]\ \
+ (X\to\rho(Y_1,\ldots,Y_q)\text{ typed},\ q\ge0).
 \]
 \end{definition}
 
-Because $\widetilde G_0$ is finite and all of its symbols and rules occur in
-successful derivations, $\Wit(\widetilde G_0)$ is a finite subset of $L(G)$;
-when $L(G)\ne\emptyset$ it is nonempty.
+Since $\omega(X)$ and $\rho(\omega(Y_1),\ldots,\omega(Y_q))$ belong to $L_X$,
+$\Wit(\widetilde G_0)$ is a finite subset of $L(G)$, nonempty if
+$L(G)\ne\emptyset$.  Components of canonical tuples are nonempty, so
+$\|\omega(X)\|_1\ge\fan(X)$.  Canonical objects are target witnesses, not
+inputs of the operator; qualitatively any choice works, while
+Section~\ref{sec:char-data} chooses short ones.
 
-\begin{lemma}[Target rule words occur in the enumeration]
-\label{lem:exposed-rule-enumerated}
-Let $R:X\to\rho(Y_1,\ldots,Y_r)$ be a non-start positive-rank typed rule.
-Put $\tuple z_R:=\rho(\omega(Y_1),\ldots,\omega(Y_r))$.  If
-$\Wit(\widetilde G_0)\subseteq K$, the witness enumeration contains
-\([\tuple z_R]\to\rho([\omega(Y_1)],\ldots,[\omega(Y_r)]).\)
-\end{lemma}
-
-\begin{proof}
-The word $\chi(X)[\tuple z_R]\in K$ supplies the parent occurrence.
-The segmentation of this sample occurrence induced by the variables of
-$\rho$ places every canonical tuple of each child as a tuple occurrence in the same sample word.  $\lambda$-freeness makes all child components nonempty, nonpermutingness
-puts each child's components in index order, and nonmerging guarantees a
-nonempty separator between consecutive components of each child in the
-sample word.  Thus every child canonical tuple is an observed tuple occurrence and the
-segmentation is a composition witness; exhaustive enumeration emits the
-displayed rule.
-\end{proof}
-
-
-\begin{proposition}[Cardinality of the finite target witness set]
+\begin{proposition}[Cardinality of the witness set]
 \label{prop:witness-cardinality}
-Let $G=(V,\Sigma,P,S,\fan)$ be the normalized target presentation from which
-$\widetilde G_0$ is constructed, with fan-out at most
-$f$ and rule rank at most $r_{\max}$.  For a fixed finite typing
-$h:\Sigma^*\to M$, the target witness set constructed
-above may be chosen so that
-\(|\Wit(\widetilde G_0)| \le |V||M|^f+|P||M|^{f r_{\max}}.\)
-In particular, for fixed $f$, $r_{\max}$, and $h$, the number of selected positive
-words is linear in $|V|+|P|$.
+Let $G=(V,\Sigma,P,S,\fan)$ be good of fan-out $\le f$ and rule rank
+$\le r_{\max}$, and let $n_{\mathrm{typ}}$ and $n_{\mathrm{rule}}$ be the numbers
+of typed nonterminals and typed rules of $\widetilde G_0$.  Then
+\[
+ |\Wit(\widetilde G_0)|\le n_{\mathrm{typ}}+n_{\mathrm{rule}}
+ \le|V||M|^f+|P||M|^{fr_{\max}} .
+\]
 \end{proposition}
 
 \begin{proof}
-The yield-type refinement has at most $|V||M|^f$ non-start typed nonterminals.
-The source rules give at most $|P||M|^{f r_{\max}}$ non-start typed rule
-instances.  The construction selects at most one word for each such typed
-nonterminal and one for each such typed rule instance; fresh start links are
-handled separately and require no additional witness word.
+One word is selected per typed nonterminal and per typed rule.  A typed
+nonterminal is some $A_{\mathbf t}$ with $\mathbf t\in M^{\fan(A)}$, and a typed
+rule is determined by its source rule and the child indices
+$\mathbf t_j\in M^{\fan(B_j)}$.
 \end{proof}
-
-\paragraph{Relation to Yoshinaka's witnesses.}
-In Yoshinaka's Section~7 $\mathrm{SUBST}_{\mathrm P}$ uses
-substructure-indexed witnesses; choosing its non-start objects as
-$c_X=\chi(X)$ and $s_X=\omega(X)$ gives the witness pattern
-$\Wit(\widetilde G_0)$ (with $\eps$ observed directly).
-Lemma~\ref{lem:substp} establishes \emph{language} equality,
-not syntactic identity of the two grammars.
-Proposition~\ref{prop:witness-cardinality} bounds witness
-\emph{number}; the next section bounds their total length.
 
 \subsection{Completeness and Exact Reconstruction}
-
 \label{sec:completeness}
 
-\begin{proposition}[Completeness from a target presentation]
+The completeness argument \cite[Lemma~5]{Yoshinaka2011} needs only that the
+sample exposes, for every typed rule, one same-type link and one
+decomposition. We state it for arbitrary typed representatives, so that it
+also applies to the relaxed witnesses of Section~\ref{sec:char-data}.
+No assumption that $\iota(X)\in L_X$ is made: the two required witnessed
+sentence words are instead explicit hypotheses.
+
+\begin{proposition}[Completeness from a witness assignment]
 \label{prop:completeness}
-This is the finite-typed counterpart of Yoshinaka's rule-witness
-completeness argument~\cite[Lemma~5]{Yoshinaka2011}.  Let $G$ be a finite good MCFG of
-fan-out at most $f$, let
-$L_G:=L(G)$, and construct its trimmed yield-type refinement
-$\widetilde G_0$ and witness set above.  Let $r_G$ be the maximum rank of a
-non-start typed rule, with $r_G:=0$ if there is none.  For every
-finite sample $K$ with $\Wit(\widetilde G_0)\subseteq K$ and every
-$r_{\max}\ge\max\{1,r_G\}$,
-\(L_G\subseteq L\bigl(\mathcal B_{f,h}^{\le r_{\max}}(K)\bigr),\)
-and also $L_G\subseteq L\bigl(\mathcal B_{f,h}(K)\bigr)$.
+Let $G$ be a finite good MCFG of fan-out $\le f$, let $r_G$ be the maximum rank
+of a typed rule of $\widetilde G_0$ ($r_G:=0$ if none), and assign to every
+typed nonterminal $X=A_{\mathbf t}$ a tuple $\iota(X)\in(\Sigma^+)^{\fan(A)}$
+with $h^{(\fan(A))}(\iota(X))=\mathbf t$ and a context
+$\chi(X)\in\mathcal E_{\fan(A)}$, where $\chi(X)=\blank_1$ whenever
+$\widetilde S\to X$ is in $\widetilde G_0$.  If a finite sample $K$ contains
+$\chi(X)[\iota(X)]$ for every $X$ and
+$\chi(X)[\rho(\iota(Y_1),\ldots,\iota(Y_q))]$ for every typed rule
+$X\to\rho(Y_1,\ldots,Y_q)$, $q\ge0$, then
+\[
+ L(G)\subseteq L\bigl(\mathcal B_{f,h}^{\le r_{\max}}(K)\bigr)
+ \ \ (r_{\max}\ge\max\{1,r_G\}),
+ \qquad
+ L(G)\subseteq L\bigl(\mathcal B_{f,h}(K)\bigr).
+\]
+Substitutability is not assumed.  The canonical choice $\iota=\omega$ gives
+the hypothesis $\Wit(\widetilde G_0)\subseteq K$.
 \end{proposition}
 
 \begin{proof}
-Following Yoshinaka's rule-witness argument
-\cite[Lemma~3 and Section~7]{Yoshinaka2015General},
-map $X$ to $[\omega(X)]$. For each typed
-$X\to\rho(Y_1,\ldots,Y_q)$, the two witnesses
-$\chi(X)[\omega(X)]$ and
-$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$
-give a same-type Link. Const (if $q=0$), or
-Lemma~\ref{lem:exposed-rule-enumerated} (if $q>0$),
-realizes the right side. Induction simulates every
-typed derivation under a cap at least $r_G$;
-for the uncapped operator the witnessed compositions
-have rank at most $\|K\|_+$ by
-Lemma~\ref{lem:general-witness-enumeration}.
-The implication does not assume substitutability.
+We show that $X\Rightarrow_{\widetilde G_0}^*\tuple u$ implies
+$[\iota(X)]\Rightarrow^*\tuple u$ in both grammars, by induction on the
+derivation.  Each $\iota(X)$ is observed, since $\chi(X)[\iota(X)]\in K$.  Let
+the derivation start with $X\to\rho(Y_1,\ldots,Y_q)$, followed by
+$Y_j\Rightarrow^*\tuple u_j$, and put
+$\tuple z:=\rho(\iota(Y_1),\ldots,\iota(Y_q))$.  Then $\tuple z$ is observed,
+since $\chi(X)[\tuple z]\in K$, and
+$h(\tuple z)=\out_\rho(\text{indices of the }Y_j)$ is the index of $X$, which
+is $h(\iota(X))$; as $\chi(X)$ accepts both in $K$, the rule
+$[\iota(X)]\to[\tuple z]$ is a Link.  If $q=0$, Const gives
+$[\tuple z]\to\tuple z=\tuple u$.  If $q\ge1$,
+$(\tuple z,\rho,(\iota(Y_j))_j)$ is a composition witness of rank
+$q\le r_G\le r_{\max}$, and $q\le\|K\|_+$ by \eqref{eq:sample-rank}, so Comp
+gives $[\tuple z]\to\rho([\iota(Y_1)],\ldots,[\iota(Y_q)])$ in both
+operators; the induction hypothesis completes
+$[\iota(X)]\Rightarrow^*\rho(\tuple u_1,\ldots,\tuple u_q)$.  Finally a
+successful derivation begins with $\widetilde S\to X$, where
+$\chi(X)=\blank_1$, so $\iota(X)=(w_0)$ with $w_0\in K\cap\Sigma^+$ and
+$\widehat S\to[\iota(X)]$ is a Start rule; by
+Proposition~\ref{prop:output-invariants}(iii) this covers $L(G)$.
 \end{proof}
 
 \begin{theorem}[Exact reconstruction for a fixed typing]
 \label{thm:exact-reconstruction}
-Fix $f\ge1$ and a finite-semigroup morphism
-$s:\Sigma^+\twoheadrightarrow\mathsf S$, and put $h=\widehat s$.
-For every $L\in\Cmcf{f}{s}$ there is a finite characteristic sample
-$K_L^{\star}\subseteq L$ such that every finite
-$K_L^{\star}\subseteq K\subseteq L$ satisfies
-\(L(\mathcal B_{f,s}(K))=L.\)
+Fix $f\ge1$ and $s:\Sigma^+\twoheadrightarrow\mathsf S$, and put
+$h=\widehat s$.  Let $L\in\Cmcf{f}{s}$.  If $L\cap\Sigma^+=\emptyset$ put
+$K_L^\star:=L$ and $r_G:=0$.  Otherwise let $G$ be a good presentation of
+$L\cap\Sigma^+$ (Proposition~\ref{prop:good-normalization}), and put
+$K_L^\star:=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$.  Then
+$K_L^\star\subseteq L$ is finite, and every finite $K$ with
+$K_L^\star\subseteq K\subseteq L$ satisfies
+\[
+ L(\mathcal B_{f,s}(K))=L,\qquad
+ L(\mathcal B_{f,s}^{\le r_{\max}}(K))=L\quad
+ \text{for every }r_{\max}\ge\max\{1,r_G\}.
+\]
+If $L\in\mathsf{MCFL}(f,r)$, $G$ can be chosen of rank $\le r$, so
+$r_{\max}=\max\{1,r\}$ suffices (also when $r=0$).
 \end{theorem}
 
 \begin{proof}
-Put $L^+:=L\setminus\{\eps\}$.  If $L^+=\emptyset$, take $K_L^\star=L$.
-Otherwise choose a finite $f$-MCFG presentation of $L$ and apply
-Proposition~\ref{prop:good-normalization} to obtain a good presentation of
-$L^+$.  Let $\widetilde G_0$ be its trimmed yield-type refinement and set
-\(K_L^\star:=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L).\)
-The observation following Definition~\ref{def:witness-set} makes this a finite
-subset of $L$.  For $K_L^\star\subseteq K\subseteq L$,
-Proposition~\ref{prop:completeness} gives every nonempty target word in the
-hypothesis, while Proposition~\ref{prop:reconstruction-soundness} gives the
-reverse inclusion.  If $\eps\in L$, the direct start rule generates it; if
-$\eps\notin L$, soundness forbids it.  The cases $L=\emptyset$ and
-$L=\{\eps\}$ are immediate from the reconstruction definition.
+If $L\cap\Sigma^+=\emptyset$ then $K=L\in\{\emptyset,\{\eps\}\}$ and the claim
+is immediate from Definition~\ref{def:reconstruction}.  Otherwise
+$K_L^\star\subseteq L$ is finite by the remark after
+Definition~\ref{def:witness-set}.  Proposition~\ref{prop:completeness} with
+$\iota=\omega$ (admissible by Proposition~\ref{prop:output-invariants}(i))
+gives $L\cap\Sigma^+\subseteq L(\mathcal B(K))$, and
+Proposition~\ref{prop:reconstruction-soundness} gives
+$L(\mathcal B(K))\subseteq L$, for both operators.  The hypothesis contains
+$\eps$ iff $\eps\in K$, iff $\eps\in L$, because $K_L^\star\subseteq K\subseteq
+L$.  Rank-preserving normalization gives the last sentence.
 \end{proof}
 
-The set-driven map that sends a finite text prefix to
-$\mathcal B_{f,h}$ of its positive content is eventually semantically correct:
-once the content contains $K_L^\star$, every later reconstruction generates
-$L$ by Theorem~\ref{thm:exact-reconstruction}.  Its grammar presentation may
-still change as new positive examples enlarge the observed tuple inventory,
-which is why TxtEx stabilization is handled by the conservative wrapper below.
+\subsection{Effective Reconstruction and Conservative Learning}
+\label{sec:poly-time}
+\begin{theorem}[Polynomial construction under a rule-rank cap]
+\label{thm:poly}
+Fix $f,r_{\max}\ge1$ and $s$, and implement type tests by $h=\widehat s$.  The
+encoding of $\widehat G_{\le r_{\max}}(K)$ is computable in time
+$(1+\|K\|_+)^{O(fr_{\max})}$; its fan-out is at most $f$ and its rank at most
+$r_{\max}$.
+\end{theorem}
+
+\begin{proof}
+Put $n_K=\max\{1,\|K\|_+\}$.  An occurrence is a sample word with at most $2f$
+cut positions, so there are $n_K^{O(f)}$ occurrences, typed by fixed-monoid
+products; grouping occurrences by context and type lists the Link rules.  A
+composition witness of rank $r\le r_{\max}$ is determined by a parent
+occurrence and at most $2fr_{\max}$ further cut positions inside it, with a
+labelling whose number depends only on $f,r_{\max}$; goodness is checked
+directly.  This gives $n_K^{O(fr_{\max})}$ candidate Comp rules; the remaining
+rules have rank at most one, and deduplication leaves an encoding of the same
+size.
+\end{proof}
 
 \begin{definition}[Conservative sequential learner]
 \label{def:conservative-learner}
-We use the same conservative update policy as Yoshinaka's
-Algorithm~1~\cite[Section~4.1]{Yoshinaka2011}.  Let $H_0$ be the fixed
-empty-language hypothesis from the learning model.  The
-learner $\mathcal A_{f,h}$ starts from $H_0$.  On a pause symbol it keeps its
-current grammar.  On a positive datum $w$, it keeps the current grammar if that
-grammar already generates $w$; otherwise, with $K$ the positive content seen
-so far, it replaces the hypothesis by $\mathcal B_{f,h}(K)$.
+The learner $\mathcal A_{f,h}$ (respectively $\mathcal A_{f,h}^{\le r_{\max}}$)
+starts with $H_0$, keeps its hypothesis on $\pausesym$ and on every datum the
+hypothesis generates, and otherwise replaces it by $\mathcal B_{f,h}(K)$
+(respectively $\mathcal B_{f,h}^{\le r_{\max}}(K)$), where $K$ is the content
+read so far.  This is the policy of \cite[Algorithm~1]{Yoshinaka2011}.
 \end{definition}
 
-\begin{corollary}[Gold/TxtEx identification]
+\begin{corollary}[Gold identification]
 \label{cor:gold-explanatory}
-For every finite-semigroup typing $s:\Sigma^+\to\mathsf S$ and every
-$f\ge1$, the conservative learner $\mathcal A_{f,s}$
-TxtEx-identifies $\Cmcf{f}{s}$ from positive data.
-\end{corollary}
-
-\begin{proof}
-MCFG membership is decidable~\cite{SekiEtAl1991}.
-Direct Start--Const derivations make every rebuilt hypothesis
-sample-consistent; soundness follows from
-Proposition~\ref{prop:reconstruction-soundness}.
-Once the text contains the sample of
-Theorem~\ref{thm:exact-reconstruction}, an exact
-hypothesis never changes. Otherwise some $w\in L$
-is missing, and its eventual appearance forces a
-rebuild on a superset of the characteristic sample,
-which is exact thereafter. Thus the hypotheses
-stabilize syntactically; the update policy may depend
-on presentation order.
-\end{proof}
-
-\subsection{Polynomial-Time Updates at Bounded Rule Rank}
-\label{sec:poly-time}
-
-For fixed $f,r_{\max},h$, the construction is polynomial
-in the observed sample, as in Yoshinaka's
-bounded-rank learner~\cite[Proposition~4
-and Section~4.3]{Yoshinaka2011}.
-We encode observed tuples by cut positions and
-sample-word indices, and templates by ordered
-variables and terminal factors.
-
-\begin{theorem}[Polynomial construction under a rule-rank cap]
-\label{thm:poly}
-Fix $f,r_{\max}\ge1$ and a finite-semigroup typing
-$s:\Sigma^+\to\mathsf S$. Implement its type tests by $h=\widehat s$.
-From a finite sample $K$ the complete encoding of
-$\widehat G_{\le r_{\max}}(K)$ is computable in
-time $(1+\|K\|_+)^{O(fr_{\max})}$.
-Its fan-out is at most $f$ and rule rank at
-most $r_{\max}$.
-\end{theorem}
-
-\begin{proof}
-With $n_K=\max\{1,\|K\|_+\}$, cut positions
-enumerate all tuple occurrences in
-$n_K^{O(f)}$ time; fixed-monoid substring
-products give their types. Grouping by
-context and type enumerates Rule~(Link).
-Lemma~\ref{lem:general-witness-enumeration}
-enumerates Rule~(Comp) and its encodings
-in $n_K^{O(fr_{\max})}$ time.
-The remaining rules have rank at most one,
-and deduplication leaves a polynomial-size
-complete grammar encoding.
-\end{proof}
-
-\begin{corollary}[Polynomial-time conservative learning at bounded rank]
 \label{cor:capped-gold-poly}
-For fixed $f,r_{\max}$ and a finite-semigroup typing $s$, the
-policy in Definition~\ref{def:conservative-learner}
-using $\mathcal B^{\le r_{\max}}_{f,s}$
-TxtEx-identifies
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$
-in time polynomial in the accumulated
-positive-sample size per processed datum.
+Fix $f\ge1$ and $s$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\mathcal A_{f,s}$ TxtEx-identifies $\Cmcf{f}{s}$.
+\item For fixed $r_{\max}$, $\mathcal A_{f,s}^{\le r_{\max}}$ TxtEx-identifies
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$, in time per datum polynomial in the
+size of the content read so far.
+\end{enumerate}
 \end{corollary}
 
 \begin{proof}
-Propositions~\ref{prop:good-normalization},
-\ref{prop:reconstruction-soundness} and
-\ref{prop:completeness} give a characteristic sample
-within the rank cap. Theorem~\ref{thm:poly}
-bounds reconstruction time; bounded-fan-out,
-bounded-rank MCFG membership is polynomial jointly
-in grammar encoding and datum length
-\cite[Proposition~4]{Yoshinaka2011}, including finite
-unary-closure saturation. The conservative
-argument of Corollary~\ref{cor:gold-explanatory} applies.
+The learners are computable: hypotheses are computable and MCFG membership is
+decidable~\cite{SekiEtAl1991}.  Let $L$ be in the class and fix a text; let
+$K_L^\star$ be as in Theorem~\ref{thm:exact-reconstruction}, with
+$r_{\max}\ge r_G$ in case (ii), and let $n_0$ be a stage whose content
+contains $K_L^\star$.  Every hypothesis $H$ satisfies $L(H)\subseteq L$, by
+Proposition~\ref{prop:reconstruction-soundness} or because $H=H_0$.  A rebuild
+at a stage $\ge n_0$ yields an exact hypothesis, which is never changed
+afterwards since all later data lie in $L$.  If no rebuild occurs after $n_0$,
+let $H$ be the hypothesis current at $n_0$.  If $H=H_0$, no positive datum was
+ever read, so $L=\emptyset=L(H)$.  Otherwise $H$ was built from the content of
+some stage $m$; it generates that content by sample-consistency and every
+later datum by conservativeness, hence all of $L$, so $L(H)=L$.  In both cases
+the outputs stabilize on a correct grammar.  For (ii),
+Theorem~\ref{thm:poly} bounds rebuilding, and membership of a datum $w$ in a
+hypothesis $\widehat G$ of fan-out $f$ and rank $r_{\max}$ takes
+$O(\|\widehat G\|^2|w|^{f(r_{\max}+1)})$ time
+\cite[Proposition~4]{Yoshinaka2011}.
 \end{proof}
 
-At fan-out one every CFG admits a rank-two
-presentation, with $\eps$ handled separately.
-Thus $\mathcal A^{\le2}_{1,h}$ covers
-$\Cmcf{1}{h}$ without implying polynomial
-characteristic-data length at rank two.
+Every CFG has a rank-two presentation, so $\mathcal A_{1,h}^{\le2}$ covers
+$\Cmcf{1}{h}$; this does not imply polynomial characteristic-data length at
+rank two (Section~\ref{sec:char-data}).
 
+\subsection{Specialization of Yoshinaka's 2015 Signature}
+\label{sec:general-framework}
 
+We recall from \cite[Sections~4 and~6.1]{Yoshinaka2015General} the notions used.
+A \emph{signature} consists of pairwise disjoint sorts (sets of objects), a
+distinguished sort $O_*$, and typed function names; a grammar over it has
+rules $X_0\leftarrow g\langle X_1,\ldots,X_n\rangle$ respecting sorts and
+initial symbols of sort $O_*$.  $\mathcal S_O$ and $\mathcal C_O$ are the
+substructures and contexts (functions $O\to O_*$) of sort $O$ realized in some
+grammar over the signature, and a language is \emph{substitutable} if
+$c_1\odot s_1,c_1\odot s_2,c_2\odot s_1\in L$ imply $c_2\odot s_2\in L$ for all
+sorts $O$, $c_i\in\mathcal C_O$, $s_i\in\mathcal S_O$.
+
+Fix $f,r\ge1$ and $s:\Sigma^+\twoheadrightarrow\mathsf S$, with $h=\widehat s$.
+The signature $\mathfrak S_{f,r,s}$ has the sort $O_*$, a tagged copy
+$\{\overline w:w\in\Sigma^*\}$ of $\Sigma^*$, and the tagged sorts
+$T_{d,\boldsymbol\mu}=\{\tuple w\in(\Sigma^+)^d:s^{(d)}(\tuple w)=
+\boldsymbol\mu\}$ for $1\le d\le f$ and $\boldsymbol\mu\in\mathsf S^d$.  Its
+functions are: every good template $\rho$ of rank $q\le r$ with arities at most
+$f$, typed as
+$T_{d_1,\boldsymbol\mu_1}\times\cdots\times T_{d_q,\boldsymbol\mu_q}\to
+T_{d_0,\out_\rho(\boldsymbol\mu_1,\ldots,\boldsymbol\mu_q)}$ for all
+$\boldsymbol\mu_j$ (the index lies in $\mathsf S^{d_0}$ by
+$\lambda$-freeness); promotions $\pi_\mu:T_{1,\mu}\to O_*$, $(w)\mapsto
+\overline w$; and a constant $\overline\eps$ of sort $O_*$.  Forgetting types,
+this is a finite sort refinement in the sense of
+\cite[Section~8]{Yoshinaka2015General} of the signature of good MCFG
+operations on nonempty tuples, a nonempty-component variant of
+\cite[Example~3]{Yoshinaka2015General}; at fan-out one the prefix--suffix
+case corresponds to \cite[Example~4]{Yoshinaka2015General}.
+
+\begin{proposition}[Bounded-rank coverage by Yoshinaka's 2015 framework]
+\label{prop:yoshinaka2015-embedding}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $\mathcal S_{T_{d,\boldsymbol\mu}}=T_{d,\boldsymbol\mu}$,
+$\mathcal C_{T_{d,\boldsymbol\mu}}=\{\tuple x\mapsto\overline{E[\tuple x]}:
+E\in\mathcal E_d\}$ as sets of functions on $T_{d,\boldsymbol\mu}$, and
+$\mathcal C_{O_*}$ contains only the identity.
+\item $\mathsf{Subst}(\mathfrak S_{f,r,s})=\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$.
+\item For fixed $f,r,s$, $\mathfrak S_{f,r,s}$ satisfies Assumptions~1--3 of
+\cite{Yoshinaka2015General}.  Hence, by \cite[Theorem~1]{Yoshinaka2015General}
+(proved there for $\mathrm{SUBST}_{\mathrm D}$ via its Lemmas~2--3),
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$ is identifiable in the limit from positive
+data with polynomial-time updates, and for a target grammar without useless
+symbols, with $N$ nonterminals and $P$ rules, $\mathrm{SUBST}_{\mathrm D}$ has
+a characteristic set of cardinality at most $|N|+|P|$ (the bound stated after
+\cite[Lemma~3]{Yoshinaka2015General}).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Constants (good rank-zero templates, i.e.\ tuples of nonempty words) give
+$\mathcal S_T=T$.  No function takes an argument of sort $O_*$ and only
+promotions and $\overline\eps$ have codomain $O_*$; so $\mathcal C_{O_*}$ is
+the identity, and the context of a non-start nonterminal is obtained from the
+argument context $\blank_1$ of a promotion by descending through good
+templates whose sibling arguments are nonempty tuples.  By
+Lemma~\ref{lem:filling-identity} each step yields an admissible context, so
+$\mathcal C_T\subseteq\{E[\cdot]:E\in\mathcal E_d\}$.  Conversely
+$E=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$ is the context of $Z$ in the
+grammar $X_*\leftarrow\pi_\nu\langle Y\rangle$,
+$Y\leftarrow(v_0\xi_1^1v_1\cdots\xi_1^dv_d)\langle Z\rangle$,
+$Z\leftarrow\tuple x_0$ for any $\tuple x_0\in T_{d,\boldsymbol\mu}$; the
+unary template is good because $v_1,\ldots,v_{d-1}\ne\eps$ and its output is
+nonempty, and $\nu$ is its output type.
+
+(ii) By (i), Yoshinaka's condition for the sort $T_{d,\boldsymbol\mu}$ says:
+for $E_1,E_2\in\mathcal E_d$ and $\tuple x,\tuple y$ of type
+$\boldsymbol\mu$, $E_1[\tuple x],E_1[\tuple y],E_2[\tuple x]\in L$ imply
+$E_2[\tuple y]\in L$; for $O_*$ it is vacuous.  Over all $d\le f$ and
+$\boldsymbol\mu$ this is $(f,s)$-tuple substitutability.  It remains to see
+that $\mathfrak S_{f,r,s}$-grammars generate exactly $\mathsf{MCFL}(f,r)$.
+Erasing tags turns such a grammar into an MCFG of fan-out $\le f$ and rank
+$\le r$ (promotions become identity rules into a fresh start symbol,
+$\overline\eps$ a constant rule).  Conversely, for $L\in\mathsf{MCFL}(f,r)$
+with $L\cap\Sigma^+\ne\emptyset$, take a good presentation $G$ of
+$L\cap\Sigma^+$ of rank $\le r$ (Proposition~\ref{prop:good-normalization}).
+In $\widetilde G_0$ every non-start index lies in $\mathsf S^{\fan(A)}$ and
+every typed rule is an instance of a function of $\mathfrak S_{f,r,s}$; replace
+each start rule $\widetilde S\to S_{(\eta)}$ by a promotion $\pi_\eta$ and add
+$\overline\eps$ if $\eps\in L$.  The result generates $L$ by
+Proposition~\ref{prop:output-invariants}(iii).  The case $L\subseteq\{\eps\}$
+is trivial.
+
+(iii) Assumption~2 holds since arities are at most $r$.  For Assumption~1,
+sort membership, function evaluation, recognizing admissible contexts (by
+(i)), plugging, and membership in the language of a grammar over
+$\mathfrak S_{f,r,s}$ are polynomial; the last is bounded fan-out and rank MCFG
+membership after erasing tags \cite[Proposition~4]{Yoshinaka2011}.  For
+Assumption~3, let $d\in\Sigma^*$.  By (i) the substructures of non-start sorts
+occurring in $d$ are the tuples of occurrences of arity $\le f$ in $d$, typed
+by $s$, and their contexts are the corresponding admissible contexts; at
+$O_*$ they are $\overline d$ and the identity.  A typed template $\rho$ with
+$c\odot\rho(\tuple u_1,\ldots,\tuple u_q)=\overline d$ yields an occurrence
+of $\tuple z=\rho(\tuple u_1,\ldots,\tuple u_q)$ in $d$, i.e.\ a composition
+witness on it (a constant if $q=0$); promotions and $\overline\eps$ occur only
+for $d\ne\eps$ and $d=\eps$, respectively.  Crucially, a function
+\emph{name} includes its output sort and the ordered list of input sorts:
+for every candidate factorization the componentwise $s$-types of the
+observed child tuples determine these sorts, and the output sort is computed
+by $\out_\rho$. Thus the enumeration records each typed instance, not only
+the untyped template, including the well-typed unary identity instances.
+As in Theorem~\ref{thm:poly}, all these sets are computable in time
+$(|d|+1)^{O(f(r+1))}$.
+\end{proof}
+
+\begin{lemma}[Substructure-indexed and guarded reconstruction]
+\label{lem:substp}
+Let $\mathrm{SUBST}_{\mathrm P}$ be Yoshinaka's substructure-indexed
+construction \cite[Section~6.1]{Yoshinaka2015General} for
+$\mathfrak S_{f,r,s}$ with the sets of the preceding proof.  For every finite
+$K\subseteq\Sigma^*$,
+$L(\mathrm{SUBST}_{\mathrm P}(K))=L(\mathcal B^{\le r}_{f,s}(K))$.
+\end{lemma}
+
+\begin{proof}
+$\mathrm{SUBST}_{\mathrm P}(K)$ has a nonterminal $[\![x]\!]$ for each
+substructure $x$ occurring in $K$, initial symbols $[\![\overline w]\!]$ for
+$w\in K$, and a rule $[\![x_0]\!]\leftarrow g\langle[\![x_1]\!],\ldots,
+[\![x_n]\!]\rangle$ for each function $g$ occurring in $K$ and occurring
+substructures $x_i$ of matching sorts whenever some context $c$ occurring in
+$K$ has $c\odot x_0,c\odot g(x_1,\ldots,x_n)\in K$.  On non-start sorts
+identify $[\![\tuple x]\!]$ with $[\tuple x]$; these range over
+$\mathrm{Obs}(K)$.
+
+Such a rule with $g=\rho$ of rank $n$ is simulated in
+$\mathcal B^{\le r}_{f,s}(K)$: put $\tuple z:=\rho(\tuple x_1,\ldots,\tuple
+x_n)$; by (i), $c=E[\cdot]$ with $E\in\mathcal E_{d}$ and
+$E[\tuple x_0],E[\tuple z]\in K$, so $\tuple z$ is observed and has the sort,
+hence the type, of $\tuple x_0$; thus $[\tuple x_0]\to[\tuple z]$ is a Link,
+followed by Const $[\tuple z]\to\tuple z$ if $n=0$ or by the Comp rule of the
+composition witness $(\tuple z,\rho,(\tuple x_j)_j)$ if $n\ge1$.  Conversely,
+each non-start rule of $\mathcal B^{\le r}_{f,s}(K)$ is a rule of
+$\mathrm{SUBST}_{\mathrm P}(K)$: Const $[\tuple x]\to\tuple x$ and Comp
+$[\tuple z]\to\rho(\ldots)$ use $x_0=\tuple x$, resp.\ $x_0=\tuple z$, and the
+context of an occurrence of $x_0$; Link $[\tuple x]\to[\tuple y]$ uses the
+identity template of the common sort, which occurs in $K$, and the shared
+context.  For the Link case, the unary identity has a genuinely
+observed function instance: if $E[\tuple y]\in K$, then
+$E[\operatorname{id}(\tuple y)]\in K$; hence its typed function name
+belongs to $\mathrm{FUN}(K)$.  Likewise, each Comp uses its witnessed
+observed parent and child factorization, and each Const its rank-zero
+instance. By induction on derivations, $[\![\tuple x]\!]$ and
+$[\tuple x]$ derive the same tuples.  At $O_*$ the only context is the identity and only
+promotions and $\overline\eps$ have codomain $O_*$; so for $K\ne\emptyset$ the
+rules for initial symbols are $[\![\overline w]\!]\leftarrow\pi\langle
+[\![(w')]\!]\rangle$ ($w,w'\in K$, $w'\ne\eps$) and
+$[\![\overline w]\!]\leftarrow\overline\eps$ ($w\in K$, $\eps\in K$), and both
+grammars generate $\bigcup_{w'\in K\cap\Sigma^+}L([(w')])\cup(\{\eps\}\cap
+K)$; for $K=\emptyset$ both languages are empty.
+\end{proof}
+
+\begin{remark}[What is and is not inherited]
+\label{rem:yoshinaka-inheritance}
+(a) Yoshinaka proves \cite[Theorem~1]{Yoshinaka2015General} for
+$\mathrm{SUBST}_{\mathrm D}$ and states without separate proof that his
+Algorithm~1 also works with $\mathrm{SUBST}_{\mathrm P}$
+\cite[Sections~6.1 and~7]{Yoshinaka2015General}.  For
+$\mathfrak S_{f,r,s}$, Lemma~\ref{lem:substp} together with
+Proposition~\ref{prop:reconstruction-soundness} and
+Theorem~\ref{thm:exact-reconstruction} supplies that verification;
+Lemma~\ref{lem:substp} asserts equality of generated languages, not of
+grammars.  (b) Cardinality bounds, whether $|N|+|P|$ or
+Proposition~\ref{prop:witness-cardinality}, do not bound total length; this is
+the subject of Section~\ref{sec:char-data}.  (c) Assumption~2 bounds arity in
+each signature, so Proposition~\ref{prop:yoshinaka2015-embedding} covers
+$\mathsf{MCFL}(f,r)$ only for fixed $r$; unbounded rank is covered by
+Theorem~\ref{thm:exact-reconstruction}, extending
+\cite[Corollary~2]{Yoshinaka2011} to typed links.
+\end{remark}
 
 \section{Characteristic-Data Bounds}
 \label{sec:char-data}
