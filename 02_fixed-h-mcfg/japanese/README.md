@@ -6,10 +6,9 @@
 
 2026-10-24に統合した内部revision 16を `main` の正規ファイル名へ反映しています。
 
-## 実際に読み込む付録
+## 本文に統合した付録
 
-- `appendix_group_blocks_JP.tex`：可換群・非可換群の同時ブロック置換
-- `appendix_local_group_JP.tex`：有限局所群型付けと三次上界
+可換群・非可換群の同時ブロック置換と局所群型付け・三次上界の付録は、現在どちらも `main_JP.tex` 本文に直接埋め込んでいます。旧 `appendix_group_blocks_JP.tex` と `appendix_local_group_JP.tex` は作業ツリーから削除済みです（Git履歴では復元できます）。
 
 窓型および窓＋任意有限群型の特徴正例標本総長は `O(||G||^2 θ̄_G)`、一般の局所群型では `O(||G||^3 θ̄_G)` です。
 

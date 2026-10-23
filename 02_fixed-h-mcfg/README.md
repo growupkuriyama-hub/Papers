@@ -9,9 +9,9 @@
 | Language | Main LaTeX file | Appendix arrangement | PDF |
 | --- | --- | --- | --- |
 | English (submission master) | `main.tex` | Finite-group and local-group appendices inlined into `main.tex` | `main.pdf` |
-| Japanese (review translation) | `japanese/main_JP.tex` | `japanese/appendix_group_blocks_JP.tex`, `japanese/appendix_local_group_JP.tex` | `japanese/main_JP.pdf` |
+| Japanese (review translation) | `japanese/main_JP.tex` | Finite-group and local-group appendices inlined into `main_JP.tex` | `japanese/main_JP.pdf` |
 
-These paths contain the bilingual integrated manuscript reviewed and compiled on 2026-10-24 (internal revision 16). As requested, the two English appendices (finite-group block replacement and local-group typings) were embedded directly into `main.tex`; the standalone English files were deleted. The Japanese translation continues to load its two Japanese appendix files. Earlier separate window-abelian/window-group appendices are also obsolete.
+These paths contain the bilingual integrated manuscript reviewed and compiled on 2026-10-24 (internal revision 16). As requested, the two English appendices (finite-group block replacement and local-group typings) were embedded directly into `main.tex`; the standalone English files were deleted. The two Japanese appendices are likewise inlined into `japanese/main_JP.tex`, and the standalone appendix files have been removed from the current tree. Earlier separate window-abelian/window-group appendices are also obsolete.
 
 ### Quantitative results
 
