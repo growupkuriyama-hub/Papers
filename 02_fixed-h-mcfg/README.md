@@ -5,6 +5,31 @@
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
+## v88 後半の共通補題統合と定量的証明の圧縮（PR #70・未統合）
+
+英文v87の前半は保持し，Claudeのv86後半案を現行v87へ直接接続して
+第4節・第5節・結論・正規化付録および群／局所群付録を論理的に再構成した．
+**英文38ページ（v87: 44ページ）**．旧可換群・一般有限群付録の内容は，
+英文では本文の群値短縮定理と新 `appendix_group_blocks.tex` へ統合し，
+旧2ファイルは参照されない履歴資料として保持する．
+
+数学的修正：導出可能代表元の実効的標本へ分布的緩和代表元の上界を
+誤適用しないよう `prop:effective-char-data` の適用範囲を限定（R1）．
+v87で統合済みの完全性補題を用いて `prop:mcfg-relaxed-witnesses` を
+直接証明し，古い未定義ラベルの引用を削除．
+共通補題4件（窓スケルトン／重い節点の計数／群ブロック置換／
+局所群短縮）の数学的条件追跡・監査記録を追加．
+GitHub Actionsの新付録監視パスと stale-source guard も追加．
+
+日本語版は**53ページ**で，R1と局所群の非可換ブロック置換の証明を
+数学的に同期させた．英文v88と日本語版は主要定理・上界の内容は対応するが，
+日本語の付録統合・文章圧縮は未実施である．
+英日ビルドと相互参照のCIは成功．本PRは**draft**で，mainには未統合．
+完全な数学的独立最終査読と全頁目視はなお必要である．
+
+[独立4補題監査](revision/v88_quantitative_four_lemma_independent_audit.md) ／
+[PR #70](https://github.com/growupkuriyama-hub/Papers/pull/70)
+
 ## v87 前半1–3節の論理的圧縮（main執筆正本、I&C未投稿）
 
 Claude圧縮案をもとに前半の定性理論を再構成し、六項目の形式的・数学的監査
