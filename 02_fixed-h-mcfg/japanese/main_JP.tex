@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{ltjsarticle}
 
 % 日本語査読用：LuaLaTeX + LuaTeX-ja
-% 英語版 main.tex (v73) 対照。v72 翻訳の数学的内容を保ち、数式の組版のみ v73 に整合。
+% 英語版 main.tex (v88) と定理・補題・節構成を同期した日本語版（v89編集候補）。
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \numberwithin{equation}{section}
 \usepackage{enumitem}
@@ -1011,7 +1011,11 @@ $f$ と有限標本 $K$ を固定し，
 $n_K:=\max\{1,\|K\|_+\}$ とおく．
 ランク $r$ の合成証拠の親タプル
 $\tuple z$ が標本語 $w$ に出現するなら，
-\(r\le\|\tuple z\|_1\le |w|\le\|K\|_+\)
+\begin{equation}
+\label{eq:sample-rank}
+r\le\sum_j\|\tuple u_j\|_1\le
+\|\tuple z\|_1\le |w|\le\|K\|_+.
+\end{equation}
 が成り立つ．
 すべての合成証拠は実効的に列挙可能である．
 ランク上界 $r_{\max}$ を設けると，
@@ -1860,40 +1864,28 @@ Compの関数名も観測された親・子の分割から得られる．
 を生成し，空標本の場合も一致する．
 \end{proof}
 
-\begin{corollary}[Yoshinaka (2015) から従うランク有界な質的学習]
-\label{cor:yoshinaka2015-qualitative}
-$f,r\ge1$ および有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
-$h=\widehat s$ とおく．
-任意の $L\in\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$ に対して
-有限な特徴正例集合 $K_L\subseteq L$ が存在し，
-\[
- K_L\subseteq K\subseteq L
- \quad\Longrightarrow\quad
- L\bigl(\mathcal B^{\le r}_{f,h}(K)\bigr)=L
-\]
-が成り立つ．この演算子を用いる保守的・集合駆動型学習器は
-クラスを極限同定し，$f,r,s$ を固定すれば
-更新は蓄積標本長に関して多項式時間で行える．
-ここから特徴標本の\emph{総文字数}上界は導かれない．
-\end{corollary}
-\begin{proof}
-命題~\ref{prop:yoshinaka2015-embedding}によって
-有界ランクsignatureの適用条件が検証される．
-ただしYoshinaka~\cite[Theorem~1]{Yoshinaka2015General}の
-明示的証明は文脈添字付き$\mathrm{SUBST}_{\mathrm D}$に対するもので，
-$\mathrm{SUBST}_{\mathrm P}$の利用は同論文第7節で述べられる．
-本稿の具体的再構成器については，
-後の定理~\ref{thm:exact-reconstruction}の有界ランク版，
-健全性・完全性と系~\ref{cor:capped-gold-poly}から結論が従う．
-補題~\ref{lem:substp}は各有限標本で生成言語の一致を保証する．
-特徴語の総文字数上界はこの定性的結論からは従わない．
-\end{proof}
-
-
-
-
-
+\begin{remark}[既存理論から引き継ぐものと独自のもの]
+\label{rem:yoshinaka-inheritance}
+(a) Yoshinaka~\cite[Theorem~1]{Yoshinaka2015General}の明示的証明は
+$\mathrm{SUBST}_{\mathrm D}$に関するものであり，
+$\mathrm{SUBST}_{\mathrm P}$に対するAlgorithm~1の利用は
+~\cite[Sections~6.1 and~7]{Yoshinaka2015General}で別証明なしに述べられる．
+本稿の有限ソートsignatureでは，
+補題~\ref{lem:substp}，命題~\ref{prop:reconstruction-soundness}，
+定理~\ref{thm:exact-reconstruction}が
+本稿の具体的な再構成器についてこの対応を検証する．
+なお補題~\ref{lem:substp}は生成\emph{言語}の一致であり，
+文法自体の構文的一致ではない．
+(b) 既存の特徴標本の\emph{個数}上界から
+総文字数の上界は導けず，後者を第~\ref{sec:char-data}節で証明する．
+(c) Yoshinaka (2015)のAssumption~2はsignatureごとのアリティを制限する．
+したがって命題~\ref{prop:yoshinaka2015-embedding}の適用対象は
+固定規則ランク$r$の$\mathsf{MCFL}(f,r)$である．
+規則ランク無制限の定性的再構成は
+定理~\ref{thm:exact-reconstruction}が独立に証明しており，
+型付きリンクを導入した
+~\cite[Corollary~2]{Yoshinaka2011}の拡張である．
+\end{remark}
 
 \paragraph{再構成と標本整合性．}
 補題~\ref{lem:substp} は，型付き
@@ -1938,6 +1930,9 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 固定窓と任意の有限群
   & $O(\|G\|^3\bar\theta_G)$
   & 定理~\ref{thm:window-group-polydata} \\
+h(\Sigma^+)\in\mathbf{LG}
+  & $O(\|G\|^3\bar\theta_G)$
+  & 定理~\ref{thm:local-group-polydata} \\
 \hline
 \end{tabularx}
 \end{center}
@@ -1950,10 +1945,9 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 規則ランク1では厚みへの依存がなくなる．
 一方，接頭辞--接尾辞窓で決定される型付けでは，
 高ランクの場合も厚みの上界を転移できる．
-アーベル群の零和による直接証明は
-\ref{app:window-abelian} に置き，
-非可換群を含む一般の有限群への拡張は
-\ref{app:window-group} で独立に証明する．
+アーベル群の零和論法と一般有限群の非可換な順序均質化は，
+同じブロック置換補題の二つの場合として
+付録~\ref{app:group-blocks}で証明する．
 関連 CFG 論文~\cite{kuriyamaCFG} は，
 任意の有限型付けについて
 元文法の厚みだけでは一様な多項式上界を得られないことを，
