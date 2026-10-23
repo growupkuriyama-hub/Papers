@@ -1,4 +1,4 @@
-# #2 — Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
+# #2 — Characteristic-Data Bounds for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation (pre-submission)  
