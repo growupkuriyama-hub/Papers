@@ -1998,8 +1998,11 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 こうした特徴データ長の改善とは独立である
 （定理~\ref{thm:poly} と系~\ref{cor:capped-gold-poly}）．
 
-\subsection{厚みと再利用可能な正準文脈}
+
+\subsection{厚みと証拠語長の共通構成}
 \label{subsec:thickness-contexts}
+
+
 
 \paragraph{規則厚みと Yoshinaka の効率性基準．}
 定量的結果では，
@@ -2020,54 +2023,118 @@ $\tau_G$ と $t_G$ に対応し，
 $\tau_G\le\|G\|t_G$ が成り立つ
 ~\cite[Section~4.3]{Yoshinaka2011}．
 
-\begin{lemma}[二種類の厚みの多項式同値性]
+
+
+\begin{lemma}[厚みと共通導出文脈の基本補題]
 \label{lem:thickness-equivalence}
-任意の縮約済み良形表示 $G$ について
-\(t_G\le\theta_G,\qquad \theta_G\le2\|G\|\max\{1,t_G\}\)
-が成り立つ．
+\label{lem:thickness-local-bounds}
+\label{lem:untyped-contexts}
+$G=(V,\Sigma,P,S,\fan)$を縮約済み良形MCFGとする．
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 各規則が明示的に書き込む終端記号数は$\theta_G$以下である．
+\item $t_G\le\theta_G$であり，任意の$A\in V$には
+  $\|\tuple u\|_1\le\theta_G$を満たす$\tuple u\in L_A(G)$が存在する．
+\item $\theta_G\le2\|G\|\max\{1,t_G\}$である．
+\item 各$A\in V$のファンアウトを$d$とすると，
+$|E_A|_{\mathrm{fix}}\le\theta_G$を満たす$E_A\in\mathcal E_d$で，
+全ての$\tuple u\in L_A(G)$に対して$E_A[\tuple u]\in L(G)$となるものが
+存在する．$E_S=\blank_1$と選べる．さらに，任意の有限型付け$h$，
+刈り込んだ精密化$\widetilde G_0$の非開始記号$X=A_{\mathbf t}$について
+$\chi(X)=E_A$は定義~\ref{def:target-canonical}を満たし，
+$E_A$は$X$の部分木を一つ除去した成功型付き導出から得られる．
+\end{enumerate}
 \end{lemma}
-
 \begin{proof}
-$t_G\le\theta_G$ については，
-左辺が $A$ である任意の規則を
-成功導出に置く．
-非消去性により，その $A$ の出現で生成されたタプルは
-最終文に保存されるので，
-その総長は最終文長以下である．
-$A$ ごとに最小を取り，
-$A$ 全体について最大を取ればよい．
+(i),(ii)は，任意の規則$R$を用いた成功導出を
+その最短生成語長$\theta_G(R)$で選び，
+非消去性を使えば従う．
+その導出において$R$が書く終端記号と
+左辺非終端記号の全成分は，最終文にそれぞれ一度ずつ残るためである．
+(iii)は開始記号から$R$の左辺までの単純な依存経路を選び，
+兄弟と$R$の子を長さ高々$t_G$の終端タプルで埋める．
+この経路では規則を高々$\|G\|$回用い，
+明示終端数と子出現数もそれぞれ高々$\|G\|$なので
+$\theta_G(R)\le\|G\|+\|G\|t_G$を得る．
 
-逆向きについては，左辺が $A$ の規則 $R$ を固定し，
-開始記号から $A$ までの最短の依存経路をたどる．
-この経路で非終端記号は反復しない．
-経路上の子の位置を開いたまま，
-各兄弟を最短の終端タプルで完成させる．
-次に $R$ を適用して，
-その子も最短の終端タプルで完成させる．
-この構成に現れる異なる規則全体で，
-明示的終端記号数と子変数の出現数はともに $\|G\|$ 以下である．
-したがって成功文の長さは
-\(\|G\|+\|G\|t_G \le2\|G\|\max\{1,t_G\}\)
-以下となる．
+(iv)で$A\ne S$なら，上記成功導出の$A$-部分木を除去し，
+その成分に順序付き穴を設ける．
+補題~\ref{lem:filling-identity}を根まで反復すると
+許容文脈$E_A$が得られ，固定終端記号は成功文の部分なので
+$|E_A|_{\mathrm{fix}}\le\theta_G(R)\le\theta_G$である．
+$A$からの任意のタプルを埋めても成功導出となる．
+命題~\ref{prop:output-invariants}(i),(ii)から，
+型付き$X$でも同じ文脈が許容的であり，
+その穴に$X$の型付き部分木を持つ成功導出へ持ち上がる．
+開始リンクのある$X=S_{\mathbf t}$には$E_S=\blank_1$を用いる．
 \end{proof}
 
-よって縮約済み良形表示では，
-二つの厚みは多項式的に同値である．
-Yoshinaka の効率性基準では，
-仮説の多項式時間構成，
-特徴集合の個数上界，
-および標的サイズと規則厚みに関する
-正例総文字数の多項式上界を要求する
-~\cite[Definition~1]{Yoshinaka2011}．
-\cite{EyraudHeinzYoshinaka2016} も参照されたい．
-本稿の特徴データ上界はランク上界付きの集合駆動型再構成に関するものであり，
-TxtEx の安定化は保守的学習器が担う．
-命題~\ref{prop:structural-good-thickness} は，
-縮約済み $\lambda$-自由入力文法に対して
-サイズと厚みの尺度を転移する．
-一方，本当の空成分が存在すると，
-命題~\ref{prop:empty-component-blowup} のような
-指数的増加が起こり得る．
+良形文法では規則厚みと非終端記号厚みは多項式的に同値である．
+以下の証拠語長評価はこの共通導出文脈を利用する．
+
+\begin{lemma}[特徴証拠語長の共通テンプレート]
+\label{lem:witness-length-template}
+$G$をファンアウト高々$f$，規則ランク高々
+$r_{\max}\ge1$の縮約済み良形MCFGとし，
+$\widetilde G_0$を有限型付け$h:\Sigma^*\to M$による
+刈り込んだ生成語型精密化とする．
+全ての非開始型付き非終端記号$X$の正準タプルについて
+$\|\omega(X)\|_1\le b_{\mathrm{can}}$とし，
+$\chi(X)=E_A$を補題~\ref{lem:untyped-contexts}の
+導出的文脈から選ぶ．
+このとき特徴証拠集合$\Wit(\widetilde G_0)$の全ての語の長さは
+$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$以下であり，
+\[
+ |\Wit(\widetilde G_0)|\le
+ |V||M|^f+|P||M|^{fr_{\max}},
+\]
+\[
+ \|\Wit(\widetilde G_0)\|_+\le
+ (|V||M|^f+|P||M|^{fr_{\max}})
+ (1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}).
+\]
+さらに$L(G)=L\cap\Sigma^+$かつ$L\in\Cmcf{f}{h}$なら，
+$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は
+$\mathcal B_{f,h}^{\le r_{\max}}$の特徴標本となる．
+\end{lemma}
+\begin{proof}
+補題~\ref{lem:untyped-contexts}により文脈固定部は
+高々$\bar\theta_G$，各規則の明示終端文字数も
+補題~\ref{lem:thickness-local-bounds}(i)により
+高々$\bar\theta_G$である．
+各規則は高々$r_{\max}$個の子タプルを持つので，
+一証拠語の上界が従う．
+個数は命題~\ref{prop:witness-cardinality}，
+特徴性は命題~\ref{prop:completeness}と
+命題~\ref{prop:reconstruction-soundness}による．
+空語は開始規則の直接証拠で処理する．
+\end{proof}
+
+\begin{lemma}[型を保存する置換]
+\label{lem:type-preserving-replacement}
+$G$を縮約済み良形MCFGとし，
+$h:\Sigma^*\to M$，$\lambda:\Sigma^*\to N$を
+$h\preceq\lambda$を満たす有限型付けとする．
+$\widetilde G_0$を刈り込んだ$h$-精密化とし，
+$X=B_{\mathbf t}$をその非開始型付き非終端記号とする．
+$\tuple u\in L_X$，$\tuple u'\in L_B(G)$が
+$\lambda^{(\fan(B))}(\tuple u')=
+\lambda^{(\fan(B))}(\tuple u)$を満たすなら，
+$\tuple u'\in L_X$である．
+したがって$\tuple u'$は$X$の正準タプルの候補になる．
+\end{lemma}
+\begin{proof}
+良形性により両タプルの全成分は非空である．
+$h\preceq\lambda$からそれらの成分別$h$-型は
+$\mathbf t$に等しい．
+命題~\ref{prop:output-invariants}(ii)により
+$\tuple u'$の$G$-導出を根が$X$である型付き導出に持ち上げられる．
+$X$は刈り込んだ精密化に残るので，
+$X$を含む成功導出へこの導出を挿入でき，
+必要な型付き規則もすべて刈り込み後に残る．
+\end{proof}
+
+\paragraph{補足：精密化後の文脈長．}
+次の補助上界はランク1の直接計数でも用いる．
 
 \begin{lemma}[再利用可能な正準文脈の上界]
 \label{lem:reusable-context-bound}
@@ -2119,44 +2186,6 @@ $b_{\mathrm{rule}}+(r_0-1)b_{\mathrm{can}}$
 正準タプル一つ，
 または高々 $r_0$ 個の子タプルをもつ規則テンプレートを加えると，
 表示した証拠語の長さ上界が従う．
-\end{proof}
-
-\begin{lemma}[特徴証拠語長の共通テンプレート]
-\label{lem:witness-length-template}
-$G$をファンアウト高々$f$，規則ランク高々
-$r_{\max}\ge1$の縮約済み良形MCFGとし，
-$\widetilde G_0$を有限型付け$h:\Sigma^*\to M$による
-刈り込んだ生成語型精密化とする．
-全ての非開始型付き非終端記号$X$の正準タプルについて
-$\|\omega(X)\|_1\le b_{\mathrm{can}}$とし，
-$\chi(X)=E_A$を補題~\ref{lem:untyped-contexts}の
-導出的文脈から選ぶ．
-このとき特徴証拠集合$\Wit(\widetilde G_0)$の全ての語の長さは
-$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$以下であり，
-\[
- |\Wit(\widetilde G_0)|\le
- |V||M|^f+|P||M|^{fr_{\max}},
-\]
-\[
- \|\Wit(\widetilde G_0)\|_+\le
- (|V||M|^f+|P||M|^{fr_{\max}})
- (1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}).
-\]
-さらに$L(G)=L\cap\Sigma^+$かつ$L\in\Cmcf{f}{h}$なら，
-$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は
-$\mathcal B_{f,h}^{\le r_{\max}}$の特徴標本となる．
-\end{lemma}
-\begin{proof}
-補題~\ref{lem:untyped-contexts}により文脈固定部は
-高々$\bar\theta_G$，各規則の明示終端文字数も
-補題~\ref{lem:thickness-local-bounds}(i)により
-高々$\bar\theta_G$である．
-各規則は高々$r_{\max}$個の子タプルを持つので，
-一証拠語の上界が従う．
-個数は命題~\ref{prop:witness-cardinality}，
-特徴性は命題~\ref{prop:completeness}と
-命題~\ref{prop:reconstruction-soundness}による．
-空語は開始規則の直接証拠で処理する．
 \end{proof}
 
 \subsection{精密化後の厚みによる基準上界}
@@ -2295,7 +2324,7 @@ $\|G\|\max\{1,\theta_G\}$ の多項式による
 代入可能性はより多くのタプルアリティについて検査されるため，
 この結果がそのまま高ファンアウトへ拡張されるわけではない．
 
-\subsection{規則ランク1：文法サイズに関する多項式特徴データ}
+\paragraph{規則ランク1：文法サイズに関する多項式特徴データ}
 \label{subsec:rankone-polydata}
 
 一つの子しかもたない導出の鎖では，
@@ -2380,7 +2409,8 @@ $(f,h)$-タプル代入可能である．
 この単集合標的の任意の特徴標本には，
 長さ少なくとも $2^n$ の語が必要である．
 
-\subsection{接頭辞--接尾辞窓で決まる型付け：厚みに依存する特徴データ}
+
+\subsection{境界窓と補助不変量}
 \label{subsec:boundary-polydata}
 
 補題~\ref{lem:typed-thickness-baseline} は，任意の $h$ に対する特徴データ上界を，
@@ -2401,89 +2431,9 @@ $L\setminus\{\eps\}$ に議論を適用してから，
 開始記号に証拠 $\eps$ を一つ加えればよい．
 これは長さ0の例を一つ増やすだけで，どちらの多項式上界にも影響しない．
 
-\begin{lemma}[規則厚みによる局所的な終端記号数の上界]
-\label{lem:thickness-local-bounds}
-$G$ を縮約済み良形文法とする．このとき：
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item 任意の規則 $R$ のテンプレートに明示的に書かれた
-終端記号の総数は $\theta_G$ 以下である．
-\item 任意の非終端記号 $A$ に対し，
-$\|\tuple u\|_1\le\theta_G$ を満たす
-終端タプル $\tuple u\in L_A(G)$ が存在する．
-\end{enumerate}
-\end{lemma}
 
-\begin{proof}
-縮約性により，すべての規則は何らかの成功導出に出現する．
-良形文法は非消去なので，その規則が明示的に書く終端記号と，
-左辺で生成されるタプルの全成分は，最終的な文の中にそれぞれちょうど一度残る．
-したがって，その規則を用いる最短の成功導出の生成語長は，
-規則の明示的終端記号数と，その出現箇所の左辺タプルの総長の両方を上から抑える．
-規則全体について最大を取ると (i), (ii) が従う．
-\end{proof}
 
-\begin{lemma}[型なし規則厚みによる正準文脈の制御]
-\label{lem:untyped-contexts}
-$G=(V,\Sigma,P,S,\fan)$ を縮約済み良形 MCFG とし，
-$\widetilde G_0$ を任意の固定有限型付け $h$ による生成語型付き精密化の
-刈り込み結果とする．
-ファンアウト $d$ の各 $A\in V$ に対し，
-次を満たす許容文脈 $E_A\in\mathcal E_d$ が存在する：
-\[
- |E_A|_{\mathrm{fix}}\le\bar\theta_G,
- \qquad E_A[\tuple u]\in L(G)
- \quad\text{for all }\tuple u\in L_A(G).
-\]
-さらに $E_S=\blank_1$ と選んでよい．
-したがって，開始記号以外の型付き非終端記号 $X=A_{\mathbf t}$ に対し，
-$\chi(X):=E_A$ は定義~\ref{def:target-canonical} を満たす．
-各正準タプルについて
-$\|\omega(X)\|_1\le b_{\mathrm{can}}$ が成立し，
-最大規則ランクを $r_{\max}$ とすると，
-$\Wit(\widetilde G_0)$ に属するすべての語の長さは
-\(2\bar\theta_G+r_{\max}b_{\mathrm{can}}\)
-以下である．
-\end{lemma}
 
-\begin{proof}
-$E_S=\blank_1$ とする．
-$A\ne S$ に対しては，左辺が $A$ である元文法の規則 $R$ を一つ選ぶ．
-$G$ は縮約済みなので，$R$ を使用し，生成語長が
-$\theta_G(R)\le\theta_G$ である成功導出が存在する．
-その導出中の $A$ の出現を根とする部分木を取り除き，
-その $d$ 成分を順序付きの穴で置き換える．
-補題~\ref{lem:filling-identity} を根への経路に沿って繰り返し適用すると，
-良形性によって得られる文脈 $E_A$ は $\mathcal E_d$ に属する．
-その固定終端部分は選んだ文の一部なので，長さは
-$\theta_G(R)$ 以下である．
-$L_A(G)$ の任意のタプルをこの位置へ代入すると，
-元文法における別の成功導出が得られる．
-よって $E_A$ は $L_A(G)$ のすべてのタプルを受理する．
-
-命題~\ref{prop:output-invariants}(i) より
-$L_X\subseteq L_A(G)$ だから，
-$E_A$ は型付き記号 $X$ のすべてのタプルも受理する．
-この周囲の型なし導出は，
-命題~\ref{prop:output-invariants}(ii) によって
-完全な型付き精密化へ持ち上げることができる．
-固定された兄弟部分木の導出の下では $X$ の型から祖先の型が定まり，
-新しい開始記号はどの開始型でも許すからである．
-したがって $\chi(X)$ は必要な共通文脈の性質を満たす．
-開始記号からの直接リンクがある場合には，
-$X=S_{\mathbf t}$ であり，$\chi(X)=\blank_1$ とすればよい．
-
-証拠語は
-$\chi(X)[\omega(X)]$，
-$\chi(X)[\tuple c]$，または
-$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_r))]$
-のいずれかである．
-文脈の終端部分の寄与は高々 $\bar\theta_G$ であり，
-元の規則が明示的に書く終端記号数も
-補題~\ref{lem:thickness-local-bounds}(i) により
-高々 $\bar\theta_G$ である．
-さらに子のタプル数は高々 $r_{\max}$ なので，
-ランク0の場合も含めて表示した上界を得る．
-\end{proof}
 
 $k,\ell\ge0$ を固定し，
 $h\preceq h_\Sigma^{k,\ell}$ を満たす
@@ -2496,32 +2446,12 @@ $\widetilde G_0$ は $G$ の完全 $h$-型付き精密化の刈り込み結果�
 残存する開始記号以外の $h$-型付き非終端記号の数を
 $n_{\mathrm{typ}}$ とする．
 
-\begin{lemma}[型を保存する置換]
-\label{lem:type-preserving-replacement}
-$G$を縮約済み良形MCFGとし，
-$h:\Sigma^*\to M$，$\lambda:\Sigma^*\to N$を
-$h\preceq\lambda$を満たす有限型付けとする．
-$\widetilde G_0$を刈り込んだ$h$-精密化とし，
-$X=B_{\mathbf t}$をその非開始型付き非終端記号とする．
-$\tuple u\in L_X$，$\tuple u'\in L_B(G)$が
-$\lambda^{(\fan(B))}(\tuple u')=
-\lambda^{(\fan(B))}(\tuple u)$を満たすなら，
-$\tuple u'\in L_X$である．
-したがって$\tuple u'$は$X$の正準タプルの候補になる．
-\end{lemma}
-\begin{proof}
-良形性により両タプルの全成分は非空である．
-$h\preceq\lambda$からそれらの成分別$h$-型は
-$\mathbf t$に等しい．
-命題~\ref{prop:output-invariants}(ii)により
-$\tuple u'$の$G$-導出を根が$X$である型付き導出に持ち上げられる．
-$X$は刈り込んだ精密化に残るので，
-$X$を含む成功導出へこの導出を挿入でき，
-必要な型付き規則もすべて刈り込み後に残る．
-\end{proof}
+
 
 \begin{lemma}[補助不変量付きの窓スケルトン]
 \label{lem:boundary-short-canonical}
+\label{lem:window-abelian-short}
+\label{lem:window-group-short}
 $G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
 規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとする．
 $k,\ell\ge0$を固定し，有限モノイド$N$への準同型
@@ -2700,7 +2630,9 @@ $(1,1)$-境界型付けされた非文脈自由標的を与える．
 対応する定量的学習上界と両立している．
 
 
-\subsection*{重い節点の共通計数補題}
+
+\subsection{有限群不変量}
+\label{subsec:group-invariants}
 
 次の計数原理は，有限群の値を指定した短いタプルと
 局所群型付けにおける短縮証明に共通する．
@@ -2743,6 +2675,114 @@ $\lambda$-値と生成語長の非増加性を保ちながら
 根が軽ければ総長は高々$b$であり，
 以上から表示した上界が従う．
 \end{proof}
+
+
+
+有限アーベル群$H$について，非空の零和部分列を含まない
+$H$-上の列の最大長を$\mathsf d(H)$と書く．
+従ってDavenport定数は$\mathsf D(H)=\mathsf d(H)+1$である．
+任意の有限群$A$と$f\ge1$に対し
+\[
+ N_{A,f}=\max\{3,|A|^f\},\quad
+ U_f=f^{f+1}f!,\quad
+ M_{A,f}=U_fN_{A,f}^{2^{f^2}},\qquad
+ c_{A,f}=
+ \begin{cases}
+ \mathsf d(A^f),&A\text{が可換},\\
+ M_{A,f}-1,&\text{それ以外}.
+ \end{cases}
+\]
+とおく．
+
+\begin{theorem}[任意有限群の成分別値を指定した短いタプル]
+\label{thm:group-typed-shortest}
+\label{lem:group-typed-shortest}
+$G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
+規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとする．
+$g:\Sigma^*\to A$を任意の有限群への準同型とすると，
+各$B\in V$と実現可能な$\mathbf s\in A^{\fan(B)}$に対して
+$g^{(\fan(B))}(\tuple u)=\mathbf s$を満たし
+\[
+ \|\tuple u\|_1\le\beta_g:=
+ (r_{\max}+1)\bar\theta_G
+ \max\{1,c_{A,f}|V||A|^f\}
+\]
+となる$\tuple u\in L_B(G)$が存在する．
+特に$\beta_g=O_{A,f,r_{\max}}(\|G\|\bar\theta_G)$である．
+可換群なら反鎖定数は零和定数$\mathsf d(A^f)$でよい．
+\end{theorem}
+\begin{proof}
+$\lambda=g$，$b=\bar\theta_G$として
+補題~\ref{lem:heavy-node-count}の最小導出$T$を選ぶ．
+互いに比較不能な重い節点$v_1,\ldots,v_m$を任意にとり，
+各節点の非終端記号$C_i$から
+長さ高々$\bar\theta_G$の短い導出を
+補題~\ref{lem:thickness-equivalence}(ii)により固定する．
+これらの各部分木は真に短縮可能である．
+線形性と非消去性により，異なる節点の全成分は
+根の高々$f$個の出力成分へ重なりのない連続ブロックとして現れる．
+根の群値は，各列の固定定数と置換前後のブロック群値の
+\emph{順序付き}積となるから，
+定義~\ref{def:block-family}のブロック置換族である．
+$m>c_{A,f}$なら補題~\ref{lem:block-replacement}で
+非空の部分集合を同時置換しても
+根の成分別$g$-値を保存できる．
+しかし根の総長は真に短くなり最小性に矛盾する．
+従って重い反鎖は高々$c_{A,f}$個であり，
+補題~\ref{lem:heavy-node-count}を適用して上界を得る．
+\end{proof}
+
+\begin{theorem}[窓と一般有限群型付けの多項式特徴データ]
+\label{thm:window-group-polydata}
+$f,r_{\max},k,\ell,\Sigma$，任意の有限群$A$，
+準同型$g:\Sigma^*\to A$，
+$h\preceq(h_\Sigma^{k,\ell},g)$となる固定有限型付け$h$を固定する．
+$L\in\Cmcf{f}{h}$と，$L(G)=L\cap\Sigma^+$となる
+縮約済み良形のファンアウト高々$f$・ランク高々$r_{\max}$の
+文法$G$について，
+$\mathcal B_{f,h}^{\le r_{\max}}$の特徴標本で
+\[
+ |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ \|\Wit(\widetilde G_0)\|_+
+ =O_{f,r_{\max},k,\ell,h,g,\Sigma}
+   (\|G\|^3\bar\theta_G)
+\]
+を満たすものが存在する．
+\end{theorem}
+\begin{proof}
+定理~\ref{thm:group-typed-shortest}の$\beta_g$は
+補題~\ref{lem:boundary-short-canonical}の補助不変量
+$\kappa=g$に対する仮定を満たす．
+よって$b_{\mathrm{can}}\le
+f(k+\ell+1)n_{\mathrm{typ}}
+ (\bar\theta_G+r_{\max}\beta_g)
+=O(\|G\|^2\bar\theta_G)$であり，
+補題~\ref{lem:witness-length-template}が主張を与える．
+$\eps$は直接開始規則で処理する．
+\end{proof}
+
+\begin{theorem}[窓と有限アーベル群型付けの多項式特徴データ]
+\label{thm:window-abelian-polydata}
+上の定理において群$A$が可換であるとする．
+同じ特徴標本の個数・総文字数上界が成り立ち，その定数は
+\[
+ \beta_g=(r_{\max}+1)\bar\theta_G
+ \max\{1,\mathsf d(A^f)|V||A|^f\}
+\]
+を用いて与えられる．
+$\mathsf d(A^f)=O(\exp(A)\,f\log|A|)$である
+（注意~\ref{rem:davenport-size}）．
+\end{theorem}
+\begin{proof}
+定理~\ref{thm:window-group-polydata}を可換群に適用する．
+補題~\ref{lem:block-replacement}の可換な場合では
+零和部分列を用いるため，任意有限群の場合の
+$M_{A,f}-1$を$\mathsf d(A^f)$に置き換えられる．
+\end{proof}
+
+可換性を用いるのは零和部分列による短縮だけであり，
+非可換群の場合は付録~\ref{app:window-group}の
+順序均質化によりブロックの交錯を処理する．
 
 \subsection{多項式特徴データの代数的条件}
 \label{subsec:algebraic-typed-data}
@@ -2860,6 +2900,7 @@ $\mathbf{LI}\vee\mathbf{Grp}$ の場合，
 問題~\ref{op:fanout-two} の高ファンアウト下界は未解決である．
 空アルファベットでは語は $\eps$ のみであり自明である．
 \end{remark}
+
 
 \subsection{短い特徴データの計算}
 \label{subsec:effective-char-data}
@@ -3044,6 +3085,7 @@ $\mathsf B_{\mathrm{rule}}(G,h)$ となる．
 明示的な特徴語は $\|G\|$ より指数的に長くなりうる．
 その場合でも命題~\ref{prop:effective-char-data} の導出 DAG は多項式サイズのままであり，
 計算された標本は多項式サイズの圧縮表現をもつ．
+
 
 
 \subsection{分布同値代表元とアーベル型フィルタ標的}
