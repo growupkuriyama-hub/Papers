@@ -1245,6 +1245,12 @@ signatureの四例含意を定義~\ref{def:tuple-substitutable} と同一視す�
 内部区切り語で定まるタグ付きタプル・文脈を列挙する．
 各親出現について順序付きの子区間と残る終端部分から
 ランク高々$r$の良形テンプレートを，実際の関数名として列挙する．
+各関数名には，型なしテンプレートに加え，
+出力ソートと順序付きの入力ソートが含まれる．
+観測された子タプルの成分別$s$-型から入力ソートが決まり，
+$\out_\rho$から出力ソートが決まる．
+従って型付き関数名を各インスタンスごとに列挙しており，
+単項恒等テンプレート，昇格演算，定数演算も含む．
 切断位置は高々$2f(r+1)$個であり，
 補題~\ref{lem:composition-witness-materialization} が
 実現可能な関数インスタンスの網羅性を保証する．
@@ -1273,6 +1279,12 @@ LinkにComp（$t=0$ならConst）を続ける本稿の規則に対応する．
 補題~\ref{lem:composition-witness-materialization} が保証する．
 逆にLinkは証拠付きの単項恒等テンプレート，
 CompとConstは証拠付きのテンプレート演算である．
+特に観測タプル$\tuple y$について
+$E[\tuple y]\in K$なら
+$E[\operatorname{id}(\tuple y)]\in K$なので，
+対応する型付き単項恒等関数名は
+$\mathrm{FUN}(K)$に含まれる．
+Compの関数名も観測された親・子の分割から得られる．
 導出帰納法により開始以外の生成言語は一致する．
 開始ソートの文脈は恒等関数のみで，開始ソートを引数とする演算はないため，
 両者は
@@ -1298,17 +1310,16 @@ $h=\widehat s$ とおく．
 ここから特徴標本の\emph{総文字数}上界は導かれない．
 \end{corollary}
 \begin{proof}
-命題~\ref{prop:yoshinaka2015-embedding} により，
-~\cite{Yoshinaka2015General} の仮定1--3が成立する．
-これらは，刈り込み済み標的表示で必要な
-仮定7の列挙可能性と生成タプル・成功文脈の存在も与える．
-したがってYoshinakaの定理1と第7節を
-$\mathrm{SUBST}_{\mathrm P}$ に適用でき，
-補題~\ref{lem:substp} により生成言語が
-本稿のランク有界演算子と一致する．
-有限特徴標本は同定定理の規則証拠の構成から得られる．
-この段階で得られるのは存在と個数の評価であり，
-後の総文字数上界ではない．
+命題~\ref{prop:yoshinaka2015-embedding}によって
+有界ランクsignatureの適用条件が検証される．
+ただしYoshinaka~\cite[Theorem~1]{Yoshinaka2015General}の
+明示的証明は文脈添字付き$\mathrm{SUBST}_{\mathrm D}$に対するもので，
+$\mathrm{SUBST}_{\mathrm P}$の利用は同論文第7節で述べられる．
+本稿の具体的再構成器については，
+後の定理~\ref{thm:exact-reconstruction}の有界ランク版，
+健全性・完全性と系~\ref{cor:capped-gold-poly}から結論が従う．
+補題~\ref{lem:substp}は各有限標本で生成言語の一致を保証する．
+特徴語の総文字数上界はこの定性的結論からは従わない．
 \end{proof}
 
 
@@ -1606,28 +1617,23 @@ $\widetilde G_0$ の規則なら，
 $\chi(X)=\blank_1$ となる．
 \end{proof}
 
-$L=L(G)\in\Cmcf{f}{h}$ のとき，
-この精密化は本稿の文文脈族に対して
-分布的にも斉次である．
-$X=A_{\mathbf t}$ のアリティを $d$ とし，
-$\tuple u,\tuple v\in L_X$ を取る．
-命題~\ref{prop:output-invariants} より
-$h^{(d)}(\tuple u)
-=h^{(d)}(\tuple v)=\mathbf t$ であり，
-補題~\ref{lem:identity-canonical-contexts}
-は両タプルを受理する一つの文文脈を与える．
-したがって $(f,h)$-タプル代入可能性から
-$\D_L^{(d)}(\tuple u)=\D_L^{(d)}(\tuple v)$ が従う．
-よって各型付き非終端記号は，
-$\mathcal E_d$ に関する分布同値類の一つに含まれる．
-これは合同的 MCFG に関する
-全多重文脈による斉次性~\cite{ClarkYoshinaka2016}
-と平行するが，より弱い条件である．
-本稿では内部の区切り語が非空でなければならない．
-真のタプルアリティ $d\ge2$ では，
-この非空内部区切り語の条件を保っているため，
-全多重文脈に関する合同的 MCFG クラスへの包含は主張しない．
-空の区切り語を許す場合を一様に回収できるかどうかは未解決である．
+\begin{lemma}[型付き非終端記号の分布的斉次性]
+\label{lem:typed-homogeneity}
+良形MCFG $G$について$L=L(G)\in\Cmcf{f}{h}$とする．
+任意の型付き非終端記号$X$のタプル言語$L_X$は，
+$\equiv_{L,h}$の単一の同値類$[X]$に含まれる．
+\end{lemma}
+\begin{proof}
+$\tuple u,\tuple v\in L_X$とすると，
+命題~\ref{prop:output-invariants}(i)により成分別の型が一致する．
+補題~\ref{lem:identity-canonical-contexts}は両方を受理する
+共通の許容文文脈を与えるため，
+$(f,h)$-代入可能性によって分布も一致する．
+\end{proof}
+これは合同的MCFGの全多重文脈に関する斉次性
+~\cite{ClarkYoshinaka2016}より弱い．
+本稿では非空の内部区切り語のみを許し，
+全多重文脈の合同的MCFGクラスへの包含は主張しない．
 
 \begin{definition}[正準タプルと正準文脈]
 \label{def:target-canonical}
