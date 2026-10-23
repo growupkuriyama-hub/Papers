@@ -40,5 +40,16 @@ Date: 2026-10-23. Baseline: v87 on main. Proposal: Claude's v86 Sections 4–6 a
 ## Bilingual status and remaining gates
 
 - English: full Claude structural refactoring of Sections 4–6 plus appendix A, new group appendix B, revised local-group appendix C; mathematically uses the preserved v87 qualitative front.
-- Japanese: same mathematical claims/bounds as v87, with the **R1 false scope corrected** and the delicate local-group shortcut expanded with the explicit group-block reasoning. Japanese detailed structural/layout compression and reorganization **not done**; JP still uses the original separate abelian and general-group appendices. This is **mathematical-content synchronization**, not a paragraph-by-paragraph translation of the English v88 layout.
-- Verify bilingual latex builds and PDFs in PR CI; perform full visual review before any main merge. No main changes in this branch; do not auto-merge.
+- Japanese: **R1 corrected**; translated new English v88 lemmas for witness-length template, typed replacement, generic auxiliary-monoid window skeleton and uniform heavy-node count, including full proofs. The LG proof now invokes the heavy-node lemma and spells out group-block ordering rather than relying on a verbatim argument. Original separate abelian and arbitrary-group appendices are retained. This is mathematical-content synchronization, not identical layout.
+- English 38-page and Japanese 55-page PDF builds passed in GitHub Actions; complete source checks are required before the merge. This is a **light independent proof-path check**, not a complete mathematical audit. Full-page PDF visual review remains a pre-submission gate.
+
+## Lightweight independent recheck before author-authorized main merge
+
+The following four proof steps were inspected directly in v88 source.
+
+1. **Window skeleton:** typed-symbol repeats along a derivation path can be spliced; the empty-window case marks one terminal in each nonempty root component; disjoint omitted child intervals keep their ordered finite-monoid values. The Japanese generic lemma now explicitly cites typed replacement.
+2. **Heavy nodes:** lexicographic minimality (root length, then node count), componentwise typing preservation, ancestor-closed heavy subtrees, and the bound on the leaf antichain give the announced node and output-length estimates.
+3. **Finite-group blocks:** the identity involving prefix products P_a Q_a^{-1} = P_b Q_b^{-1} preserves an ordered (not commuted) group product. Empty-owner indices are handled. Davenport zero-sum shortening is confined to abelian groups.
+4. **Local groups:** short components are unchanged, longer components preserve windows, and all variable gamma contributions factor into ordered blocks with constants independent of selected owners. The group block lemma and heavy-node lemma then give the unchanged bound.
+
+No counterexample was found under the stated assumptions. This is not a full independent mathematical proof certification, and the Japanese appendices retain the older separate group proofs despite mathematical synchronization of the shared bounds.
