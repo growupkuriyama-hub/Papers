@@ -1,64 +1,23 @@
-# #2 MCFG v85 — main正本と同期する日本語査読稿
+# MCFG論文・日本語版（現行正本への翻訳・査読用）
 
-対象論文: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*（I&C 投稿準備中、未投稿）
+英語投稿版：[`../main.tex`](../main.tex)  
+日本語全文：[`main_JP.tex`](main_JP.tex)  
+対象誌：*Information and Computation*（投稿準備中）
 
-英語版 `../main.tex` と付録が**数学的な正本**です。日本語版は独立査読・定理の仮定の確認用であり、英語版と同じ数学的主張・同じ `\\label` の集合を保ちます。
+2026-10-24に統合した内部revision 16を `main` の正規ファイル名へ反映しています。
 
-## v85 Yoshinaka (2015)を基礎にした再構成（2026-10-23）
+## 実際に読み込む付録
 
-Yoshinaka (2015) の型付きsignatureへの埋め込みを第3節に移し，質的学習の系と特徴証拠語総長の独自評価を明確に分離。規則ランク無制限の直接論証および量的上界は維持。
+- `appendix_group_blocks_JP.tex`：可換群・非可換群の同時ブロック置換
+- `appendix_local_group_JP.tex`：有限局所群型付けと三次上界
 
-[改訂記録](../revision/v85_yoshinaka2015_qualitative_reorganization.md) を参照。日本語版も英語版と同じ構成で更新した。
-
-## v84 M6証明拡充（改訂履歴）
-
-縮約済み $\lambda$-自由入力MCFGから良形MCFGへの非消去化・置換・非融合化・刈り込みを，タプル言語の等式に沿って証明した。英語版と日本語版の数学的主張を同期し，引用・固定窓の入力文法に対する三次上界を明示した。
-
-[修正内容と残課題](../revision/v84_m6_thickness_transfer_proof_audit.md) 。数学的独立監査と全頁目視は引き続き必要。
-
-## v83査読対応（改訂履歴）
-
-英語版50ページ・日本語版54ページのv83短縮稿について、ClaudeのM1/M2/M3/M4/M5/M8/M9の指摘を英日で修正し、mainに統合した。
-[改訂記録](../revision/v83_claude_review_corrections.md) を参照。
-（v83時点の記録）M6の論証はv84で拡充したが，独立した最終監査および全頁目視は未完了。
-
-## v82半群化作業（2026-10-22）
-
-TCS #1 R1に合わせて $s:\Sigma^+\to S$ を基本型、$\widehat{s}:\Sigma^*\to S^\sharp$ を生成語計算用とする改稿を実施。非空成分に限った既存のMCFG代入可能性は変わらない。学習定理、二次・三次上界、希少型、Yoshinaka対応と結論節の配置を英日で対応させた。3本の独立付録（局所群を含む）にも読み替えを明記した。
-
-**v82作業時点の記録：数学的独立監査は未了だった。現在のmain正本はv83に移行した。** 詳細：[`../revision/v82_semigroup_migration_stage2.md`](../revision/v82_semigroup_migration_stage2.md)。
-
-## v75 の更新（2026-10-18）
-
-- 要旨の「同じ多項式次数」を修正し、窓のみ `O(||G||^2 θ̄_G)` と窓＋任意有限群 `O(||G||^3 θ̄_G)` を区別。
-- #1 CFG 関連原稿の指数下界を、公開 GitHub の**特定コミット** `834e99a1f35b4a5fb949acc55a080658388d4480` に固定して引用。arXiv v5 は未公開で、公開後に別途追記する。
-- 任意有限群の付録Dで、block-order の逆方向の場合分け、Ramsey 抽出の最終頂点を明示し、一般群用の独立した短い正準タプル補題 `lem:window-group-short` を追加。
-- 日本語版の `r_max>=1` 仮定漏れ、参照先の「付録 付録 X」重複を修正。
-- 先行研究として Duncan–Elder–Frenkel–Lyu (2026) の MCFL 非所属のための置換補題との目的の違いを追記。
-
-## ファイル
-
-- `main_JP.tex` — 日本語全文（要旨、本文、既存の通常の付録、Yoshinaka 比較、文献）
-- `appendix_window_abelian_JP.tex` — 可換有限群の零和証明
-- `appendix_window_group_JP.tex` — 非可換群を含む任意有限群の Ramsey 型短縮・総長上界の証明
-- `../revision/v74_to_v75_final_referee_hardening.md` — 変更履歴・査読ゲート
-
-## 対応する英語正本
-
-- `../main.tex`
-- `../appendix_window_abelian.tex`
-- `../appendix_window_group.tex`
+窓型および窓＋任意有限群型の特徴正例標本総長は `O(||G||^2 θ̄_G)`、一般の局所群型では `O(||G||^3 θ̄_G)` です。
 
 ## ビルド
 
-```bash
+```sh
 cd 02_fixed-h-mcfg/japanese
 latexmk -lualatex -interaction=nonstopmode -halt-on-error main_JP.tex
 ```
 
-両言語をコンパイルする pull request 検証ワークフローは
-`../../.github/workflows/verify-mcfg-bilingual-pr.yml`。
-main への反映後には `publish-mcfg-bilingual-pdf.yml` が英日PDFを
-`../main.pdf` と `main_JP.pdf` に公開します。
-
-機械的な文法検査・ビルド合格は、翻訳の完全一致や数学的正しさの形式的証明を意味しません。
+英日PDFはGitHub Actionsの `publish-mcfg-bilingual-pdf.yml` で固定パスに公開します。旧v番号付き改稿記録はGit履歴から復元可能です。保留中の研究メモ・検算用スクリプトは `../revision/` に残しています。
