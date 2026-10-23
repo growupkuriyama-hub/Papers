@@ -3022,8 +3022,639 @@ This is the obstruction of
 Proposition~\ref{prop:typed-thickness-exponential}: finite state refinement can
 force exponentially long shortest witnesses inside one refined state.
 
-\input{appendix_group_blocks.tex}
-\input{appendix_local_group.tex}
+% BEGIN INLINED APPENDIX: simultaneous finite-group block replacement
+\section{Simultaneous block replacement in finite groups}
+\label{app:group-blocks}
+
+\paragraph{Semigroup convention.}
+The finite group $A$ and the morphisms into it are auxiliary to the shortening
+proofs.  The semantic typing is always the positive-image restriction of the
+window--group (or local-group) product, with the fresh identity used only to
+evaluate empty template factors; by Lemma~\ref{lem:semigroup-transfer} this
+changes neither nonempty tuple comparisons nor the selected witnesses.
+
+This appendix proves the purely group-theoretic statement used in
+Theorem~\ref{thm:group-typed-shortest} and Lemma~\ref{lem:local-group-shortest}.
+The commutative case is a zero-sum argument; the general case needs an
+order-homogenization argument because, for $f\ge2$, blocks of different
+indices can interleave differently on different lines.
+
+\begin{definition}[Block-replacement family]
+\label{def:block-family}
+Let $A$ be a finite group and $f\ge1$.  A \emph{block-replacement family} of
+width $f$ over $A$ with index set $[m]$ consists of $d\le f$ \emph{lines}; on
+line $c$, a left-to-right sequence of blocks $\beta_{c,1},\ldots,\beta_{c,q_c}$
+and constants $a_{c,0},\ldots,a_{c,q_c}\in A$; for every block $\beta$ an
+\emph{owner} $o(\beta)\in[m]$ and two values $x_\beta,x'_\beta\in A$; every
+index owns at most $f$ blocks.  For $J\subseteq[m]$ put
+\[
+ \mathrm{val}_c(J):=a_{c,0}\,y_{c,1}\,a_{c,1}\cdots y_{c,q_c}\,a_{c,q_c},
+ \qquad
+ y_{c,j}:=
+ \begin{cases}
+ x'_{\beta_{c,j}},& o(\beta_{c,j})\in J,\\
+ x_{\beta_{c,j}},& o(\beta_{c,j})\notin J.
+ \end{cases}
+\]
+\end{definition}
+
+\begin{lemma}[Block replacement]
+\label{lem:block-replacement}
+In a block-replacement family of width $f$ over $A$ there is a nonempty
+$J\subseteq[m]$ with $\mathrm{val}_c(J)=\mathrm{val}_c(\emptyset)$ for every
+line $c$, provided that either
+\textup{(a)} $A$ is abelian and $m>\mathsf d(A^f)$, or
+\textup{(b)} $A$ is arbitrary and $m\ge M_{A,f}$, where $\mathsf d$ and
+$M_{A,f}$ are as in Section~\ref{subsec:group-invariants}.
+\end{lemma}
+
+Part (a) is proved in Appendix~\ref{app:window-abelian} and part (b) in
+Appendix~\ref{app:window-group}.
+
+\subsection{Commutative groups: zero sums}
+\label{app:window-abelian}
+
+\begin{proof}[Proof of Lemma~\ref{lem:block-replacement}(a)]
+Write $A$ additively.  By commutativity
+$\mathrm{val}_c(J)-\mathrm{val}_c(\emptyset)=\sum_{i\in J}\delta_{i,c}$, where
+$\delta_{i,c}$ is the sum of $x'_\beta-x_\beta$ over the blocks $\beta$ of
+line $c$ owned by $i$.  Put $\delta_i=(\delta_{i,c})_c\in A^d$.  A sequence
+over $A^d$ of length $m>\mathsf d(A^f)\ge\mathsf d(A^d)$ has a nonempty
+zero-sum subsequence $(\delta_i)_{i\in J}$; the inequality holds because $A^d$
+embeds in $A^f$ and a zero-sum-free sequence in a subgroup is zero-sum free in
+the group.
+\end{proof}
+
+\begin{remark}[Size of the zero-sum constant]
+\label{rem:davenport-size}
+The prefix-sum pigeonhole argument gives $\mathsf d(A^f)\le|A|^f-1$; the
+zero-sum bound is usually much stronger.  Write
+$A\cong C_{n_1}\oplus\cdots\oplus C_{n_s}$ and $n=\exp(A)\ge2$.  Then
+\[
+ f\sum_{i=1}^{s}(n_i-1)\ \le\ \mathsf d(A^f)\ \le\
+ (n-1)+n\log\frac{|A|^f}{n},
+\]
+where the lower bound is attained by a basis sequence and the upper bound is
+due to van Emde Boas and Kruyswijk
+\cite[Proposition~5.1.8 and Theorem~5.5.5]{GeroldingerHalterKoch2006}; for a
+$p$-group the lower bound is an equality
+\cite[Theorem~5.5.9]{GeroldingerHalterKoch2006} (Olson).  Hence
+$\mathsf d(A^f)=O(\exp(A)\,f\log|A|)$ is linear in $f$, whereas $|A|^f-1$ is
+exponential; for $A=C_2$ the antichain bound drops from $2^f-1$ to $f$.  The
+value $\mathsf d(A^d)$ is also the limit of the argument as stated, since a
+zero-sum-free sequence of that length exists; we do not claim that a grammar
+realizes such a configuration.
+\end{remark}
+
+\subsection{Arbitrary finite groups: order homogenization}
+\label{app:window-group}
+
+\begin{lemma}[A homogeneous block-order lemma]
+\label{lem:group-block-order}
+Fix positive integers $e,n$ with $n\ge3$.  For each
+$t\in[e]$ and $i\in[n]$, let $(t,i)$ be a distinct point
+on a line, with a total left-to-right order.  Suppose that
+(i) the order of $(t,i)$ and $(u,i)$ is independent of $i$;
+and (ii) for each ordered pair $(t,u)$, including $t=u$,
+the order of $(t,i)$ and $(u,j)$ for $i<j$ is independent
+of the choice of $i<j$.
+Then the types at the points have a partition into classes,
+each occupying a consecutive region of the line.  Every
+class has one direction (increasing or decreasing in $i$);
+inside its region the points occur in $n$ successive
+\emph{chunks}, one per rank in that direction.  Each
+chunk consists of exactly one point of each type in the
+class (in a fixed within-chunk order).
+\end{lemma}
+\begin{proof}
+By (ii) with $t=u$, each type's points are monotone.  For distinct types
+$t,u$ write $X$ for $(t,i)<(u,j)$ and $Y$ for $(u,i)<(t,j)$, $i<j$; both are
+uniform by (ii).  Suppose first that both types increase.  $X\wedge Y$ puts
+all points of rank $i$ before all points of rank $j>i$.  Under $X\wedge\neg Y$
+all off-diagonal comparisons put $t$ left of $u$, and so do equal ranks:
+$(u,i)<(t,i)$ would give $(t,1)<(t,2)<(u,1)<(t,1)$; thus the types are
+separated.  The case $\neg X\wedge Y$ is symmetric, and $\neg X\wedge\neg Y$
+gives $(t,1)<(t,2)<(u,1)<(u,2)<(t,1)$, a contradiction.  If $t$ increases and
+$u$ decreases, $X\wedge Y$ gives $(t,2)<(u,3)<(u,1)<(t,2)$ and
+$\neg X\wedge\neg Y$ gives $(t,3)<(u,2)<(t,1)<(t,3)$; under $X\wedge\neg Y$ all
+off-diagonal comparisons put $t$ left of $u$, and a contrary equal-rank
+comparison would give $(t,1)<(u,2)<(u,1)<(t,1)$, contrary to (i), so the types
+are separated; $\neg X\wedge Y$ is symmetric.  Reversing indices covers two
+decreasing types.  Thus any two types are either \emph{separated}, or have the
+same direction and are \emph{interleaved by rank}.
+
+Interleaving is transitive: if $t$ interleaves with $u$ and $u$ with $v$, all
+three have one direction, say increasing; if $t,v$ were separated with $t$ to
+the left we would have $(v,1)<(u,2)<(t,3)<(v,1)$, and with $v$ to the left
+$(t,1)<(u,2)<(v,3)<(t,1)$.  Hence interleaving, with equality, partitions the
+types into classes.  A type outside a class is separated from each type inside
+it and lies on the same side of all of them, since otherwise two interleaved
+types would be separated.  So class regions are consecutive, the rank
+comparisons give successive chunks, and the within-chunk order is independent
+of rank by (i).
+\end{proof}
+
+\begin{lemma}[Simultaneous finite-group interval shortening]
+\label{lem:group-interval}
+Let $A$ be any finite group, and consider a block-replacement family of width
+$f$ over $A$ with $n\ge\max\{3,|A|^f\}$ indices in which all indices have the
+same number of blocks, the same lines for them and the same within-index
+order, and in which every cross-index comparison between the $t$-th block of
+index $i$ and the $u$-th block of index $j$ on a common line has the same
+truth value for all $i<j$.  Then a nonempty interval $J$ of indices satisfies
+$\mathrm{val}_c(J)=\mathrm{val}_c(\emptyset)$ for every line $c$.
+\end{lemma}
+\begin{proof}
+Apply Lemma~\ref{lem:group-block-order} on each line to the block types going
+to that line.  Across all lines there are $q\le f$ class regions.  For such a
+region $K$, enumerate its chunks $1,\ldots,n$ from left to right, including
+the constants between the blocks of the region.  Let $P_p$ be the original
+value of its prefix ending after chunk $p$ and $Q_p$ the value of that prefix
+when chunks $1,\ldots,p$ are replaced; set $P_0=Q_0=1_A$ and
+$\kappa^K_p=P_pQ_p^{-1}$.  Replacing exactly chunks $p+1,\ldots,p'$ gives the
+ordered region value $P_pQ_p^{-1}Q_{p'}P_{p'}^{-1}P_n$, because
+$Q_p^{-1}Q_{p'}$ is the replaced value of the segment between the two prefix
+boundaries and $P_{p'}^{-1}P_n$ is the unchanged suffix.  Hence the region
+keeps its value $P_n$ whenever $\kappa^K_p=\kappa^K_{p'}$; inverses are used,
+but factors are never commuted.
+
+If $K$ increases with the index order, the chunks of indices $(a,b]$ occupy
+$(a,b]$; if it decreases, they occupy $(n-b,n-a]$.  For $j=0,\ldots,n$ define
+a state in $A^q$ by taking $\kappa^K_j$ from each increasing and
+$\kappa^K_{n-j}$ from each decreasing class.  There are $n+1>|A|^q$ states, so
+two coincide, at $a<b$.  Replacing the indices $a+1,\ldots,b$ then preserves
+every region value; everything else on every line is unchanged.
+\end{proof}
+
+\begin{proof}[Independent Ramsey proof of the qualitative assertion in Lemma~\ref{lem:block-replacement}(b)]
+We first establish existence of a simultaneous replacement set without
+using the quantitative order-homogenization bound below.  Let
+$N=\max\{3,|A|^f\}$, and let $R(N,c)$ denote a finite two-uniform
+Ramsey number for $c$ colors.  An owner with no blocks can be selected
+alone.  Otherwise, among sufficiently many owners, select
+$R(N,2^{f^2})$ of the same unary pattern (number of blocks, assigned
+lines, and within-owner order); there are at most $U_f$ patterns.
+Absorb all other owners into the unchanged constants.
+
+The common pattern has $e\le f$ block types.  Color a pair of selected
+owners $i<j$ by the truth values of
+$p_t(i)<p_u(j)$ for all ordered pairs of types $(t,u)$ on the same
+line.  There are at most $2^{e^2}\le2^{f^2}$ colors.  By finite Ramsey,
+there is an ordered set of $N$ owners on which every comparison has a
+fixed truth value, independently of $i<j$.  Within-owner comparisons
+are already fixed by the common pattern.  On each line, the argument
+of Lemma~\ref{lem:group-block-order} decomposes this homogeneous
+configuration into consecutive rank-ordered regions, all increasing
+or decreasing.  Lemma~\ref{lem:group-interval} now supplies a nonempty
+interval of owners whose simultaneous replacement leaves the ordered
+product on every line unchanged.
+
+This proves the \emph{existence} assertion for an arbitrary finite,
+possibly nonabelian group, without assuming any commutation of factors.
+Ramsey's bound does not supply the asserted polynomial dependence on
+$|A|$ for fixed $f$; that stronger, explicit assertion is established
+next by the monotone-comparison extraction.
+\end{proof}
+
+\begin{lemma}[Polynomial order homogenization]
+\label{lem:order-homogenize}
+Let $N\ge3$, and define $m_0=N$ and
+$m_{s+1}=(m_s-1)^2+1$, so that $m_k\le N^{2^k}$.
+Let $T$ be a finite set of point types, each assigned to
+one of several lines.  For every index $i\in[n]$ and
+$t\in T$ let $p_t(i)$ be a point on the line of $t$, the
+points on each line being distinct.  Let $\Pi$ be the set
+of ordered pairs $(t,u)$, including $t=u$, of types on a
+common line, and put $k=|\Pi|$.  If $n\ge m_k$, there is a
+set $I\subseteq[n]$ of $N$ indices such that, for every
+$(t,u)\in\Pi$, the truth value of $p_t(i)<p_u(j)$ is the
+same for all $i<j$ in $I$.
+\end{lemma}
+\begin{proof}
+Treat the pairs one at a time, the pairs $(t,t)$ first.  Each step passes
+from a current index set of size at least $(m-1)^2+1$ to a subset of size at
+least $m$; homogeneity already obtained, and monotonicity of each type,
+persist in subsets.  For $(t,t)$, homogeneity means that $p_t$ is monotone, and
+the Erd\H{o}s--Szekeres theorem gives a monotone subsequence of length $m$.
+
+For $t\ne u$, both $p_t$ and $p_u$ are already monotone.  Relabel the current
+indices $1,\ldots,m'$ in order, with $m'\ge(m-1)^2+1$, and put
+$X(i,j)=[p_t(i)<p_u(j)]$ for $i<j$.  Each row $X(i,\cdot)$ and each column
+$X(\cdot,j)$ is monotone; replacing $X$ by $1-X$ if necessary, the rows go
+from $0$ to $1$.
+
+If the columns go from $1$ to $0$, put $J(i)=\min\{j>i:X(i,j)=1\}$ (or
+$\infty$); $J$ is nondecreasing.  Set $i_1=1$ and $i_{s+1}=J(i_s)$ while this
+is at most $m'$.  For $a<b$, $i_b\ge J(i_a)$ and so $X(i_a,i_b)=1$; if the
+chain has $m$ terms we are done.  Otherwise its at most $m-1$ terms cut $[m']$
+into at most $m-1$ intervals $[i_s,i_{s+1})$ and $[i_L,m']$, one of which has
+more than $m'/(m-1)>m-1$ indices; inside it every $i<j$ satisfies
+$j<J(i_s)\le J(i)$, so $X(i,j)=0$ (and $J\equiv\infty$ in the last interval).
+
+If the columns go from $0$ to $1$, the set $\{X=1\}$ is closed upward in both
+coordinates.  Let $\kappa$ be the least index with $X(\kappa,\kappa+1)=1$, or
+$\kappa=m'$.  For $\kappa\le i<j$, $X(i,j)\ge X(\kappa,\kappa+1)=1$; for
+$i<j\le\kappa$, $X(i,j)\le X(j-1,j)=0$.  One of $[1,\kappa]$ and $[\kappa,m']$
+has at least $(m'+1)/2\ge m$ indices, because $(m-1)^2+1\ge2m-1$.
+
+After all $k$ pairs at least $m_0=N$ indices remain, and
+$m_{s+1}\le m_s^2$ gives $m_k\le N^{2^k}$.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:block-replacement}(b)]
+If an index owns no blocks, choosing that index alone preserves every
+line, so assume each index owns at least one block. The
+\emph{unary pattern} of an index records the number of its blocks, the
+line of each, and their order within any shared line; there are at most
+$f\cdot f^f\cdot f!=U_f$ patterns.  Hence at least $N_{A,f}^{\,2^{f^2}}$
+indices share one pattern; the blocks of all other indices are never
+replaced and are absorbed into the constants.  Number the blocks of the common
+pattern as types $1,\ldots,f'$ ($f'\le f$) and use their positions as points
+on their lines.  There are at most $f^2$ ordered pairs of types on a common
+line, including $t=u$, and $m_k\le N^{2^k}\le N^{2^{f^2}}$ for $k\le f^2$, so
+Lemma~\ref{lem:order-homogenize} with $N=N_{A,f}$ yields $N_{A,f}$ indices with
+constant cross-index comparisons for all $i<j$.  These satisfy the hypotheses of
+Lemma~\ref{lem:group-interval}, which supplies the required nonempty interval.
+\end{proof}
+
+For fixed $f$ the constant $M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$ is
+polynomial in $|A|$; it replaces the multicolor Ramsey bound
+$U_f\,c_f^{\,c_f(N_{A,f}-1)+1}$, $c_f=2^{f^2}$, of earlier versions, which is
+exponential in $|A|^f$.  The dependence on $f$ remains doubly exponential.
+% END INLINED APPENDIX: simultaneous finite-group block replacement
+% BEGIN INLINED APPENDIX: finite local-group types
+\section{Local-group typings and the semilattice boundary}
+\label{app:local-group}
+
+\paragraph{Semigroup convention.}
+Throughout this appendix $\mathbf{LG}$ is tested on the
+\emph{positive image} $S=\widehat{s}(\Sigma^+)$ of the typing,
+not on the canonical completion $S^\sharp$.
+Auxiliary group-valued maps and the displayed monoid morphisms
+are implementations whose restrictions to nonempty words define
+the semantic bias (Lemma~\ref{lem:semigroup-transfer}).
+
+$\mathbf{LG}$ is the pseudovariety of finite semigroups $S$ in which every
+local monoid $eSe$, with $e$ idempotent, is a group; classically
+$\mathbf{LG}=\mathbf G*\mathbf D$~\cite{Straubing1985,Tilson1987}.  It is
+exactly the class of finite semigroups containing no copy of the two-element
+semilattice $U_1=\{1,\zeta\}$ ($\zeta^2=\zeta$)
+\cite[Proposition~2.3]{AlmeidaEtAl2009}; that semilattice is the positive
+image of the typing behind the exponential lower bound of~\cite{kuriyamaCFG}.
+Theorem~\ref{thm:lg-characterization} adds to this \emph{known} algebra the
+sliding-factor group typing used for the MCFG quantitative bound.
+
+Throughout, $\Sigma$ is nonempty, $k\ge1$, and $A$ is a finite group.  For a
+word $w$ with $|w|\ge k+1$ let $\sigma_k(w)$ be the sequence of its factors of
+length $k+1$, ordered by their starting positions.
+
+\begin{definition}[Local-group typing]
+\label{def:local-group-typing}
+Let $g:\Sigma^{k+1}\to A$ be any map.  For $|w|\ge2k$ put
+\[
+ \gamma_{k,g}(w):=g(F_1)g(F_2)\cdots g(F_{|w|-k}),
+ \qquad \sigma_k(w)=(F_1,\ldots,F_{|w|-k}),
+\]
+the ordered product in $A$, and put $\gamma_{k,g}(w):=1_A$ for
+$|w|<2k$.  The \emph{local-group typing} is
+\[
+ \lambda_{k,g}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,g}(w)\bigr).
+\]
+A finite typing $\widehat{s}$ is \emph{local-group-determined} if
+$\widehat{s}\preceq\lambda_{k,g}$ for some $k$, $A$ and $g$.
+\end{definition}
+
+For $\ell=k$, words of length $<2k$ are \emph{short} and recorded exactly,
+while a \emph{long} $w$ is recorded by
+$\langle\operatorname{pref}_k(w),\operatorname{suf}_k(w)\rangle$
+(Definition~\ref{def:prefix-suffix-typing}).  For $s,p\in\Sigma^k$ write
+$J_g(s,p):=\prod_{i=1}^{k}g\bigl((sp)[i..i+k]\bigr)$, the ordered product over
+the $k$ factors of length $k+1$ of $sp$ that start in~$s$.
+
+\begin{lemma}[Local-group typings are morphisms]
+\label{lem:local-group-morphism}
+The kernel of $\lambda_{k,g}$ is a congruence of finite index on
+$\Sigma^*$.  Hence $\lambda_{k,g}$ is a homomorphism onto a finite
+monoid $M_{k,g}$.  For long $u,v$,
+\[
+ \lambda_{k,g}(uv)
+ =\bigl(\langle\operatorname{pref}_k u,\operatorname{suf}_k v\rangle,\;
+   \gamma_{k,g}(u)\,J_g(\operatorname{suf}_k u,\operatorname{pref}_k v)\,
+   \gamma_{k,g}(v)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+The window component is a morphism by
+Definition~\ref{def:prefix-suffix-typing}.  For long $u,v$, the factors of
+length $k+1$ of $uv$ are, in order, those of $u$, the $k$ factors starting in
+the last $k$ positions of $u$ (inside
+$\operatorname{suf}_k(u)\operatorname{pref}_k(v)$), and those of $v$.  If $u$
+is short and $v$ long, the factors starting in $u$ lie inside
+$u\operatorname{pref}_k(v)$ and the rest are those of $v$, so
+$\gamma_{k,g}(uv)$ is determined by $u$, $\operatorname{pref}_k(v)$ and
+$\gamma_{k,g}(v)$; the case of long $u$ and short $v$ is symmetric, and if
+both are short $uv$ is determined exactly.  Thus $\lambda_{k,g}(uv)$ is a
+function of $\lambda_{k,g}(u)$ and $\lambda_{k,g}(v)$, and the image has at
+most $|\Sigma|^{<2k}+|\Sigma|^{2k}|A|$ elements.
+\end{proof}
+
+\begin{lemma}[Block decomposition]
+\label{lem:local-group-blocks}
+Let $w=x_0\beta_1x_1\cdots\beta_qx_q$ be a factorization of a word into
+designated blocks $\beta_j$ and fixed words $x_j$.  Let
+$w'=x_0\beta'_1x_1\cdots\beta'_qx_q$, where
+$\widehat{s}_{k,k}(\beta'_j)=\widehat{s}_{k,k}(\beta_j)$ for every $j$.
+Then $\widehat{s}_{k,k}(w')=\widehat{s}_{k,k}(w)$.  If $w$ is long, there are
+$c_0,\ldots,c_q\in A$, depending only on the $x_j$ and the window types
+of the $\beta_j$, such that
+\[
+ \gamma_{k,g}(w)=c_0\,\gamma_{k,g}(\beta_1)\,c_1\cdots
+   \gamma_{k,g}(\beta_q)\,c_q,
+ \qquad
+ \gamma_{k,g}(w')=c_0\,\gamma_{k,g}(\beta'_1)\,c_1\cdots
+   \gamma_{k,g}(\beta'_q)\,c_q.
+\]
+\end{lemma}
+
+\begin{proof}
+A short block is recorded exactly, so $\beta'_j=\beta_j$, and we absorb it into
+the fixed words.  Every remaining block is long and its replacement is long
+with the same first and last $k$ letters; hence $w'$ is long exactly when $w$
+is, with the same first and last $k$ letters, which gives the window claim.  A
+factor $F$ of length $k+1$ of $w$ either lies inside a long block $\beta_j$ or
+meets each long block it touches only in a prefix or a suffix of length at
+most $k$ (meeting both ends would force $|\beta_j|\le k-1$).  Factors of the
+second kind are spelled by the fixed words and the windows of the blocks, and
+occur in the same order in $w'$.  Ordering all factors by starting position,
+those inside $\beta_j$ form one consecutive run contributing
+$\gamma_{k,g}(\beta_j)$; let $c_j$ be the ordered product of the remaining
+factors between consecutive runs.
+\end{proof}
+
+\begin{theorem}[Characterizations of local-group positive images]
+\label{thm:lg-characterization}
+For a finite typing $s:\Sigma^+\to\mathsf S$ put $S:=\widehat{s}(\Sigma^+)$.
+The following are equivalent.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $S\in\mathbf{LG}$; that is, $eSe$ is a group for every idempotent
+$e$ of $S$.
+\item $S$ has no subsemigroup isomorphic to $U_1$.
+\item Every idempotent of $S$ lies in the minimal ideal of $S$.
+\item $\widehat{s}$ is local-group-determined.  One may take $k=|S|$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+We include elementary arguments for the standard equivalence of (i)--(iii)
+(cf.~\cite[Proposition~2.3]{AlmeidaEtAl2009}), independently of the new
+sliding-factor statement (iv).  Let $K$ be the minimal ideal of $S$.
+
+(i)$\Rightarrow$(ii).  If $\{e,z\}\cong U_1$ with
+$ez=ze=z\ne e$, then $z$ is a nonidentity idempotent in the group
+$eSe$, which is impossible.
+
+(ii)$\Rightarrow$(iii).  For an idempotent $e\in S$ choose $a\in K$
+and put $z=(eae)^\omega$.  Then $z$ is an idempotent in
+$K\cap eSe$ with $ez=ze=z$.  If $z\ne e$, the pair
+$\{e,z\}$ is a copy of $U_1$, a contradiction.  Hence $e=z\in K$.
+
+There is also a direct proof of (i)$\Rightarrow$(iii) that does
+not invoke the two-element semilattice: for any idempotent $e$ and
+$a\in K$, the element $eae$ lies in $K\cap eSe$; since $eSe$
+is a group with identity $e$, it has an inverse $y\in eSe$.
+Consequently $e=(eae)y\in K$, because $K$ is an ideal.
+
+(iii)$\Rightarrow$(i).  The minimal ideal of a finite semigroup
+is completely simple~\cite{Howie1995}.  For an idempotent $e\in K$,
+the ideal property gives $eSe=eKe$; this is the maximal subgroup
+(the $\mathcal H$-class) containing $e$, so it is a group.
+
+(iii)$\Rightarrow$(iv).  By the Rees theorem~\cite{Howie1995} write
+$K=\mathcal M(H;I,\Lambda;P)$, with product
+$(i,a,\lambda)(j,b,\mu)=(i,ap_{\lambda j}b,\mu)$, and put $n:=|S|$.
+\emph{Long products lie in $K$.}  The Rees quotient $S/K$ has no idempotent
+other than $0$.  For $s_1,\ldots,s_m\in S$ with $m:=|S/K|\le n$, if no prefix
+product in $S/K$ were $0$, two would coincide, $p_i=p_j$ with $i<j$, and then
+$p_i=p_ix^\omega=0$ for $x=s_{i+1}\cdots s_j$.  Hence $\widehat{s}(w)\in K$ whenever
+$|w|\ge n$.
+\emph{Right action.}  Fix $i_0\in I$ and for $\lambda\in\Lambda$ let
+$e_\lambda:=(i_0,p_{\lambda i_0}^{-1},\lambda)$, an idempotent with
+$xe_\lambda=x$ for every $x=(i,a,\lambda)\in K$.  Writing
+$e_\lambda s=(j,c,\mu)\in K$ for $s\in S$ gives
+\[
+ (i,a,\lambda)\,s=(i,\;a\,\rho(\lambda,s),\;\mu(\lambda,s)),
+ \qquad \rho(\lambda,s):=p_{\lambda j}c,
+\]
+with $\rho(\lambda,s)\in H$ and $\mu(\lambda,s)\in\Lambda$ depending only on
+$(\lambda,s)$.  Right multiplication by $s$ preserves the $I$-coordinate, as is
+explicit in this formula.  Dually, for $z=(i,a,\lambda)\in K$
+choose an idempotent $f_i\in K$ with $f_i z=z$.
+Then $sz=(sf_i)z$ and $sf_i\in K$, so the Rees product shows that
+left multiplication preserves the $\Lambda$-coordinate.  In
+particular, for $|w|\ge n$ the $\Lambda$-coordinate of $\widehat{s}(w)$ is
+that of $\widehat{s}(\operatorname{suf}_nw)$, and the $I$-coordinate that of
+$\widehat{s}(\operatorname{pref}_nw)$.
+\emph{Window factorization.}  Let $w=a_1\cdots a_m$ with $m\ge2n$, and let
+$\lambda_j$ be the $\Lambda$-coordinate of $\widehat{s}(a_{j-n+1}\cdots a_j)$ for
+$j\ge n$.  Iterating the right action gives
+\[
+ \widehat{s}(w)=\Bigl(i,\;a\prod_{j=n}^{m-1}\rho(\lambda_j,\widehat{s}(a_{j+1})),\;
+ \lambda_m\Bigr),
+ \qquad \widehat{s}(a_1\cdots a_n)=(i,a,\lambda_n),
+\]
+and the $j$-th factor depends only on the factor $a_{j-n+1}\cdots a_{j+1}$ of
+length $n+1$.  With
+$g(F):=\rho\bigl(\lambda(\widehat{s}(F[1..n])),\widehat{s}(F[n+1])\bigr)$ for
+$F\in\Sigma^{n+1}$, the product is $\gamma_{n,g}(w)$.  So $\widehat{s}(w)$ is determined
+by $\operatorname{pref}_nw$, $\operatorname{suf}_nw$ and $\gamma_{n,g}(w)$;
+words of length $<2n$ are recorded exactly by $\widehat{s}_{n,n}$, and $\eps$ is
+alone in its $\lambda_{n,g}$-class.  Thus $\widehat{s}\preceq\lambda_{n,g}$ with $A=H$.
+
+(iv)$\Rightarrow$(i).  $\mathbf{LG}$ is closed under homomorphic images, so it
+suffices to show $T:=\lambda_{k,g}(\Sigma^+)\in\mathbf{LG}$.  A short element
+is never idempotent, since the square of a short word is longer.  Let
+$e=(\langle p,s\rangle,\gamma_e)$ be idempotent.  By
+Lemma~\ref{lem:local-group-morphism}, $\gamma_eJ_g(s,p)\gamma_e=\gamma_e$, and
+for every $x\in T$, $exe$ has window $\langle p,s\rangle$.  Hence $eTe$ lies in
+$H_e:=\{(\langle p,s\rangle,\alpha):\alpha\in A\}$, whose product
+$\alpha*\beta=\alpha J_g(s,p)\beta$ makes $\alpha\mapsto\alpha J_g(s,p)$ an
+isomorphism onto $A$.  Thus $eTe$ is a finite subsemigroup of a group, hence a
+group.
+\end{proof}
+
+\begin{proposition}[Window--group typings are local-group typings, strictly]
+\label{prop:li-g-strict}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item If $\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$ for a homomorphism $g$ into a
+finite group, then $\widehat{s}\preceq\lambda_{K,g'}$ with $K=\max\{k,\ell,1\}$
+and $g'(F):=g(\text{last letter of }F)$.  Hence
+$\mathbf{LI}\vee\mathbf G\subseteq\mathbf{LG}$.
+\item Let $\Sigma=\{\mathtt a,\mathtt b,\mathtt c\}$.  Let
+$h_{\mathtt{ab}}:=\lambda_{1,g}$ with $g(\mathtt{ab})=1\in\mathbb Z_2$
+and $g(F)=0$ otherwise; it records the parity of the number of
+occurrences of $\mathtt{ab}$, together with the window.  Then
+$h_{\mathtt{ab}}$ is not window--group-determined.  Hence
+$h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf G)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) For $|w|\ge2K$,
+$g(w)=g(\operatorname{pref}_Kw)\,\gamma_{K,g'}(w)$, and shorter words are
+recorded exactly.  For the inclusion, let $S\in\mathbf{LI}\vee\mathbf G$ and
+take $\Sigma=S$ with the evaluation typing $s:\Sigma^+\twoheadrightarrow S$.
+Lemma~\ref{lem:mcfg-li-group-window} makes $\widehat{s}$ window--group
+determined, hence local-group-determined by the first part, so
+$S\in\mathbf{LG}$ by Theorem~\ref{thm:lg-characterization}.
+
+(ii) Suppose $h_{\mathtt{ab}}\preceq(\widehat{s}_{k,\ell},g')$ with
+$g':\Sigma^*\to A'$.  Let $K=\max\{k,\ell,1\}$ and let $q$ be an even
+multiple of the exponent of $A'$.  Put
+$u=\mathtt a^K(\mathtt{abc})^q\mathtt a^K$ and
+$v=\mathtt a^K(\mathtt{bac})^q\mathtt a^K$.  Both are long, with prefix
+$\mathtt a^k$ and suffix $\mathtt a^\ell$, and
+$g'(u)=g'(\mathtt a)^{2K}=g'(v)$.  But $u$ contains $q$ occurrences of
+$\mathtt{ab}$, while $v$ contains exactly one, at
+$\mathtt a^K\mathtt b$, so $h_{\mathtt{ab}}(u)\ne h_{\mathtt{ab}}(v)$.
+Membership in $\mathbf{LG}$ follows from
+Theorem~\ref{thm:lg-characterization}; if the positive image were in
+$\mathbf{LI}\vee\mathbf G$, Lemma~\ref{lem:mcfg-li-group-window} would make
+$h_{\mathtt{ab}}$ window--group-determined.
+\end{proof}
+
+\begin{lemma}[Short tuples with prescribed local-group type]
+\label{lem:local-group-shortest}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most
+$f$ and rule rank at most $r_{\max}\ge1$, and let $\lambda=\lambda_{k,g}$.
+Let $b_{\mathrm w}:=f(2k+1)n_{\mathrm w}(r_{\max}+1)\bar\theta_G$, where
+$n_{\mathrm w}\le|V||M_{k,k}|^f$ is the number of non-start typed
+nonterminals of the trimmed $\widehat{s}_{k,k}$-refinement.  Put
+$n_\lambda:=|V||M_{k,g}|^f$, and let $M_{A,f}$ be the constant of
+Section~\ref{subsec:group-invariants}.  For every $B\in V$ and every
+realizable $\mathbf t\in M_{k,g}^{\fan(B)}$ there is $\tuple u\in L_B(G)$
+with $\lambda^{(\fan(B))}(\tuple u)=\mathbf t$ and
+\[
+ \|\tuple u\|_1\le\beta_\lambda:=(r_{\max}+1)\,b_{\mathrm w}
+ \max\{1,(M_{A,f}-1)\,n_\lambda\}.
+\]
+If $A$ is abelian, $M_{A,f}-1$ may be replaced by $\mathsf d(A^f)$.
+\end{lemma}
+
+\begin{proof}
+Let $T$ be minimal as in Lemma~\ref{lem:heavy-node-count} with root
+$\lambda$-vector $\mathbf t$ and threshold $b=b_{\mathrm w}\ge\bar\theta_G$.
+For a heavy node $v$ labelled $C$, with yield $\tuple x$ and window vector
+$\boldsymbol\omega=\widehat{s}_{k,k}(\tuple x)$, the typed nonterminal
+$C_{\boldsymbol\omega}$ is retained in the trimmed $\widehat{s}_{k,k}$-refinement,
+because $T$ can be inserted into a successful derivation ($G$ is reduced).
+Lemma~\ref{lem:boundary-short-canonical} (trivial $\kappa$) gives a
+replacement tuple of $C$ with the same window vector and length at most
+$b_{\mathrm w}$.  For pairwise incomparable heavy nodes $v_1,\ldots,v_m$ and
+$J\subseteq[m]$, let $T_J$ replace the subtrees at $v_i$, $i\in J$.  The
+components of the $v_i$ are disjoint contiguous blocks of the root components.
+By Lemma~\ref{lem:local-group-blocks}, every $T_J$ has the root window vector of
+$T$; a short root component is unchanged, and on each long root component
+$\gamma_{k,g}$ is an ordered product $c_0y_1c_1\cdots y_qc_q$ of block values
+between constants that do not depend on $J$.  The long root components thus
+form a block-replacement family over $A$
+(Definition~\ref{def:block-family}).  If $m\ge M_{A,f}$, or $m>\mathsf d(A^f)$
+for abelian $A$, Lemma~\ref{lem:block-replacement} gives a nonempty $J$ with
+the root $\lambda$-vector of $T$, while $T_J$ is strictly shorter.  This
+contradicts minimality, and Lemma~\ref{lem:heavy-node-count} with
+$N=M_{k,g}$ gives the bound.
+\end{proof}
+
+\paragraph{Detailed proof of Theorem~\ref{thm:local-group-polydata}.}
+The theorem is stated in Section~\ref{subsec:algebraic-typed-data};
+we verify here the bound using the sliding-factor characterization
+and simultaneous ordered group-block replacement.
+
+
+
+\begin{proof}[Proof of Theorem~\ref{thm:local-group-polydata}]
+By Theorem~\ref{thm:lg-characterization}, $\widehat{s}\preceq\lambda_{k,g}$ for some
+$k,A,g$ depending only on $\widehat{s}$.  For a non-start typed nonterminal
+$X=B_{\mathbf s}$ and $\tuple u\in L_X$,
+Lemma~\ref{lem:local-group-shortest} gives $\tuple u'\in L_B(G)$ with the same
+$\lambda$-vector and $\|\tuple u'\|_1\le\beta_\lambda$, and
+Lemma~\ref{lem:type-preserving-replacement} gives $\tuple u'\in L_X$.  The role of the two shortening stages is distinct: the window stage
+provides replacements of length $b_{\mathrm w}$ without prescribing their
+group values, while the block-replacement lemma selects a nonempty family
+of such replacements whose \emph{combined} ordered group products are
+unchanged.  No per-subtree group-value preservation is assumed.  Since
+$b_{\mathrm w}=O(\|G\|\bar\theta_G)$ and $n_\lambda=O(\|G\|)$,
+the heavy-node bound gives $\beta_\lambda=O(\|G\|^2\bar\theta_G)$
+for fixed $f,r_{\max},s,\Sigma$.
+There are $O(\|G\|)$ typed rules, and
+Lemma~\ref{lem:witness-length-template} then yields the displayed cubic
+bound on the \emph{total} encoded positive-data length.
+\end{proof}
+
+By Proposition~\ref{prop:li-g-strict}(i), this theorem also applies to
+window and window--group typings, but its general cubic bound is weaker
+than the quadratic bounds proved for those subclasses in
+Theorems~\ref{thm:boundary-polydata} and~\ref{thm:window-group-polydata}.
+
+\begin{corollary}[Pseudovariety dichotomy]
+\label{cor:pseudovariety-dichotomy}
+Let $\mathbf V$ be a pseudovariety of finite semigroups.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item If $\mathbf V\subseteq\mathbf{LG}$, then for every alphabet,
+every typing $\widehat{s}$ with $\widehat{s}(\Sigma^+)\in\mathbf V$, and all fixed
+$f,r_{\max}$, characteristic data of total length
+$O(\|G\|^3\bar\theta_G)$ exist as in
+Theorem~\ref{thm:local-group-polydata}.
+\item If $\mathbf V\not\subseteq\mathbf{LG}$, then
+$U_1\in\mathbf V$.  At fan-out one there is a typing $h_{\mathrm U}$ with
+$h_{\mathrm U}(\Sigma^+)=U_1$ and targets with $\|G\|,\theta_G=O(n)$,
+every characteristic sample of which for
+$\mathcal B^{\le2}_{1,h_{\mathrm U}}$ contains a word of length
+$3\cdot2^n-2$.  The same holds for every set-driven operator admitting
+characteristic samples throughout $\Cmcf{1}{h_{\mathrm U}}$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) is Theorem~\ref{thm:local-group-polydata}.  For (ii), choose
+$S\in\mathbf V\setminus\mathbf{LG}$; by
+Theorem~\ref{thm:lg-characterization} it has a subsemigroup isomorphic to
+$U_1$, and pseudovarieties are closed under subsemigroups.  Take the doubling
+family $L_n$, the typing $h_{\mathrm U}$ and the long type-$1$ word $w_n^*$
+of~\cite[Proposition~6.4]{kuriyamaCFG}, where $L_n$ is shown to be
+Clark--Eyraud substitutable, hence $(1,h_{\mathrm U})$-tuple-substitutable.
+The type filter $h_{\mathrm U}^{-1}(\zeta)$ is
+$(1,h_{\mathrm U})$-tuple-substitutable by the remark preceding
+Proposition~\ref{prop:abelian-coset-filter},
+so by Proposition~\ref{prop:abelian-coset-filter}(i) so is
+$L_n^-:=L_n\cap h_{\mathrm U}^{-1}(\zeta)=L_n\setminus\{w_n^*\}$.  If
+$K\subseteq L_n$ omits $w_n^*$, then $K\subseteq L_n^-$ and
+Proposition~\ref{prop:reconstruction-soundness} gives
+$L(\mathcal B^{\le2}_{1,h_{\mathrm U}}(K))\subseteq L_n^-$; thus every
+characteristic sample contains $w_n^*$.  The set-driven statement is the
+distinguishing-pair argument of~\cite[Proposition~6.4(iv)]{kuriyamaCFG} for
+the pair $L_n,L_n^-$.
+\end{proof}
+
+\begin{remark}[Scope of the dichotomy]
+\label{rem:dichotomy-scope}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item Part~(i) holds at every fixed fan-out; part~(ii) is established only at
+fan-out one.  The doubling family does not lift directly: $L_2$ is not
+$(2,h_{\mathrm U})$-tuple-substitutable, since the type-$1$ pairs
+$(\mathtt[,\mathtt a\mathtt])$ and $(\mathtt[\mathtt a,\mathtt])$ share the
+context $\mathtt{[[aa]}\,\blank_1\,\mathtt a\,\blank_2\,\mathtt]$ but have
+different distributions (checked exhaustively for $n\le3$; under the finer
+typing recording each component's set of letters, still with semilattice image,
+the failure appears at $n=3$).  Whether part~(ii) holds at fan-out $f\ge2$ is
+the pseudovariety form of Open Problem~\ref{op:fanout-two}.
+\item The dichotomy concerns pseudovarieties.  For an individual typing $\widehat{s}$
+with $\widehat{s}(\Sigma^+)\notin\mathbf{LG}$, the class $\Cmcf{1}{s}$ need not contain
+a coded copy of the doubling family, and whether every such typing forces
+superpolynomial characteristic data remains open.
+\end{enumerate}
+\end{remark}
+% END INLINED APPENDIX: finite local-group types
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During preparation of this work, the author used ChatGPT (OpenAI) and Claude
