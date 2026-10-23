@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{ltjsarticle}
 
 % 日本語査読用：LuaLaTeX + LuaTeX-ja
-% 英語版 main.tex (v73) 対照。v72 翻訳の数学的内容を保ち、数式の組版のみ v73 に整合。
+% 英語版 main.tex (v88) と定理・補題・節構成を同期した日本語版（v89編集候補）。
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \numberwithin{equation}{section}
 \usepackage{enumitem}
@@ -358,54 +358,7 @@ s(w),&w\in\Sigma^+
 非空の各タプル成分では \(h\) の値は \(s\) の値に等しい．
 \end{definition}
 
-\begin{lemma}[有限モノイド表示と半群型付けの移行]
-\label{lem:semigroup-transfer}
-$f\ge1$ と有限モノイド準同型 $h_0:\Sigma^*\to M_0$ を固定し，
-$S_0=h_0(\Sigma^+)$，
-$s_0=h_0|_{\Sigma^+}:\Sigma^+\twoheadrightarrow S_0$ とおく．
-\begin{enumerate}[label=\textup{(\roman*)}]
-\item 任意の $1\le d\le f$ と
-$\tuple x,\tuple y\in(\Sigma^+)^d$ について
-\[
-h_0^{(d)}(\tuple x)=h_0^{(d)}(\tuple y)
-\iff s_0^{(d)}(\tuple x)=s_0^{(d)}(\tuple y)
-\iff \widehat{s_0}^{(d)}(\tuple x)=\widehat{s_0}^{(d)}(\tuple y).
-\]
-したがって $\Cmcf{f}{h_0}=\Cmcf{f}{s_0}$ であり，
-任意の正例標本に対するランク制限の有無によらない
-再構成文法の規則も，正語の型添字の対応の下で一致する．
-\item 任意の良形MCFG $G$ について，$h_0$ と
-$\widehat{s_0}$ による\emph{刈り込み済み}生成語型精密化は同型である．
-刈り込み前の精密化は同型とは限らない．
-\item 対応する文法の生成言語は $L(G)$ であり，
-同じ正準タプル・文脈・特徴証拠語を選べる．
-\end{enumerate}
-\end{lemma}
-\begin{proof}
-(i) 非空成分上では三つの写像は
-共通の正語像半群 $S_0$ への写像として一致する．
-置換リンクはこれらの成分の等号と共通文脈のみを検査する．
-定数・合成・空語の直接開始規則では，
-空の成分を比較する追加条件はない．
 
-(ii) $S_0$ は $M_0$ と $S_0^\sharp$ の部分半群であり，
-乗法は一致する．良形文法の $\lambda$-自由性より，
-非終端記号が生成するすべてのタプル成分は非空である．
-良形規則テンプレートの各出力成分は，
-明示的な終端文字または非空の子成分を一つ以上含む連結である．
-その型を $h_0$ と $\widehat{s_0}$ で評価すると，
-空の終端因子はそれぞれの単位元を与えるだけなので，
-両者は $S_0$ の同じ元となる．
-成功した導出について帰納法を行うと，
-生産的な型付き規則と正語の開始昇格が対応する．
-到達可能性と生産性による刈り込みもこの対応を保つ．
-しかし $M_0=\{1\}$ の場合，新単位元の添加では
-未使用の余分な型が生じ得るため，全精密化の同型は主張できない．
-
-(iii) 命題~\ref{prop:output-invariants} の生成語不変量を
-適用すれば，同じ導出で同じ正準タプルと文脈を実現できるので，
-対応する証拠語を同一に選べる．
-\end{proof}
 
 モノイド表示 $h_0,h_1$ に対しても，
 $h_0\preceq h_1$ は正語への制限の核包含を意味し，
@@ -441,22 +394,7 @@ $s\preceq t$ と書く．同値に，$s$ は
 $t$ の正語像を経由して半群準同型に因子化する．
 \end{definition}
 
-\begin{lemma}[新単位元添加と精密化・積]
-\label{lem:fresh-refinement}
-有限半群型付け $s,t$ について
-\[
-\ker\widehat t\subseteq\ker\widehat s
-\iff\ker t\subseteq\ker s,\qquad
-\ker\widehat{(s,t)}=\ker\widehat s\cap\ker\widehat t
-\]
-が成り立つ．ここで積型付けの値域は正語像に制限し，
-その後で新単位元を添加する．
-\end{lemma}
-\begin{proof}
-空語は正語では得られない新しい型値を持つ．
-正語上の核は新単位元添加前と同じであり，
-積型付けの核は各因子の核の共通部分である．
-\end{proof}
+
 
 積型付け $(s,t)$ は両方を精密化し，
 $\ker(s,t)=\ker s\cap\ker t$ を $\Sigma^+$ 上で満たす．
@@ -699,7 +637,7 @@ MCFG の非終端記号依存グラフは，
 すべての非終端記号が到達可能かつ生産的なら，
 文法は\emph{縮約済み}である．
 
-\subsection{標準化}
+\paragraph{良形標準化．}
 
 \begin{proposition}[ランクを保存する良形標準化]
 \label{prop:good-normalization}
@@ -959,6 +897,35 @@ $\Cmcf{f}{h}$ に属する．
 標的言語族を得られる．
 これらの因子化は学習器には与えない．
 
+\begin{lemma}[子に誘導される文脈]
+\label{lem:filling-identity}
+$\rho$ を良形規則のテンプレートとし，
+$E\in\mathcal E_e$ をその出力タプルの文文脈とする．
+子 $j$ 以外のすべての子について，
+対応する非終端記号のアリティをもつ，
+全成分が非空のタプルを固定する．
+子 $j$ の各変数を対応する番号付き穴で置き換え，
+他の子の変数を固定された成分で置き換えると，
+\(E_j[\tuple u_j] =E[\rho(\tuple u_1,\ldots,\tuple u_r)]\)
+を満たす $E_j\in\mathcal E_{d_j}$ が得られる．
+兄弟タプルを変えた場合も同じ構成で
+その選択に対応する誘導文脈 $E_j$ が得られるが，
+文脈そのものが同一である必要はない．
+\end{lemma}
+
+\begin{proof}
+線形性・非消去性・非置換性により，子の変数は
+添字順に一度ずつ現れる．
+非融合性から，隣接する子変数の間には終端記号，
+兄弟変数または出力成分の境界がある．
+それぞれ非空の終端列，固定された非空の兄弟成分，
+または$E$の非空内部区切り語となる．
+その子変数を順序付きの穴へ置き換えると
+$E_j\in\mathcal E_{d_j}$ が得られ，
+主張する充填恒等式が成立する．
+\end{proof}
+
+
 \section{正例データからの厳密な再構成}
 \label{sec:learner}
 
@@ -972,7 +939,7 @@ Yoshinakaのsignature理論~\cite{Yoshinaka2015General}
 観測タプルは非空成分からなり，合成証拠のランクは
 その標本語長以下である．
 
-\subsection{集合駆動型再構成と標本サイズによるランク上界}
+\subsection{集合駆動型再構成}
 
 定義~\ref{def:tuple-occurrence} に従い，
 標本 $K$ に現れるアリティが高々 $f$ の
@@ -1044,7 +1011,11 @@ $f$ と有限標本 $K$ を固定し，
 $n_K:=\max\{1,\|K\|_+\}$ とおく．
 ランク $r$ の合成証拠の親タプル
 $\tuple z$ が標本語 $w$ に出現するなら，
-\(r\le\|\tuple z\|_1\le |w|\le\|K\|_+\)
+\begin{equation}
+\label{eq:sample-rank}
+r\le\sum_j\|\tuple u_j\|_1\le
+\|\tuple z\|_1\le |w|\le\|K\|_+.
+\end{equation}
 が成り立つ．
 すべての合成証拠は実効的に列挙可能である．
 ランク上界 $r_{\max}$ を設けると，
@@ -1123,254 +1094,10 @@ $\mathcal B_{f,h}(\emptyset)$ を
 後で与える特徴証拠語の具体的な構成は，
 第~\ref{sec:char-data}節の総文字数上界を証明するために必要となる．
 
-\subsection{Yoshinaka (2015) のsignatureへの特殊化}
-\label{sec:general-framework}
-
-規則ランク有界の学習器は，Yoshinaka の代入可能な
-signature に関する枠組み~\cite{Yoshinaka2015General} の
-型付きの特別な場合である．
-この対応を明示するのは，先行研究の質的な学習結果と，
-第~\ref{sec:char-data}節の総文字数上界とを区別するためである．
-
-有限アルファベット $\Sigma$，$f,r\ge1$ および有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
-$h=\widehat s$，$M=\mathsf S^\sharp$，$M^+=\mathsf S$ とおく．
-signature $\mathfrak S_{f,r,h}$ は，
-開始ソート $O_*=\{\overline w:w\in\Sigma^*\}$
-（$\Sigma^*$ のタグ付きコピー）と，タグ付きソート
-\[
- T_{d,\boldsymbol\mu}
- =\{\tuple w\in(\Sigma^+)^d:
- h^{(d)}(\tuple w)=\boldsymbol\mu\},
- \qquad
- 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d
-\]
-をもつ．
-各 $T_{d,\boldsymbol\mu}$ も固有のソートタグを付けたコピーとし，
-以下では読みやすさのため元のタプルで表す．
-したがってすべてのソートは互いに素である
-~\cite[Example~4]{Yoshinaka2015General}．
-その関数記号は，子の規則ランクが高々 $r$ である
-型の整合したすべての良形 MCFG テンプレート
-（ランク0を含む），
-$(w)$ を $\overline w$ に送る昇格演算 $T_{1,\mu}\to O_*$，
-および $O_*$ に属する零項の $\overline{\eps}$ 定数からなる．
-$O_*$ を入力として受け取る関数はない．
-型のタグを忘れると，これは
-~\cite[Section~8]{Yoshinaka2015General}
-の意味で，非空タプル上の良形
-$\lambda$-自由 MCFG 演算の signature を
-有限ソート精密化したものである．
-この型なし signature は
-~\cite[Example~3]{Yoshinaka2015General}
-の例と文字どおり同一ではなく，
-\emph{非空成分に制限した変種}である．
-ファンアウト1における接頭辞--接尾辞型付けの場合は，
-~\cite[Example~4]{Yoshinaka2015General}
-に対応する．
-この signature 上のある文法で実現可能な
-部分構造と文脈を，それぞれ
-$\mathcal S_O,\mathcal C_O$ と書く．
-
-\begin{lemma}[Signature の文脈は許容文文脈である]
-\label{lem:signature-contexts}
-開始ソート以外の各ソートについて
-\[
- \mathcal S_{T_{d,\boldsymbol\mu}}
- =T_{d,\boldsymbol\mu},
- \qquad
- \mathcal C_{T_{d,\boldsymbol\mu}}
- =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}
-\]
-が成り立つ．
-後者の等式は $T_{d,\boldsymbol\mu}$ 上の
-\emph{関数}の集合の等式である．
-また $\mathcal C_{O_*}$ に含まれるのは
-恒等関数だけである．
-\end{lemma}
-
-\begin{proof}
-開始以外のソートの全要素はランク0の定数で実現でき，
-$O_*$ を入力に取る演算は存在しない．
-穴から開始ソートへ至る経路では，
-良形テンプレートが変数の順序と一度限りの出現を保存する．
-非融合性と非空の兄弟成分により内部の区切り語も非空であるから，
-補題~\ref{lem:filling-identity} の反復により
-文脈は $\mathcal E_d$ に属する．逆に任意の
-$E=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$ は，
-単項良形テンプレート
-$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$，ランク0の子，
-開始ソートへの昇格によって実現する．
-内部区切り語は非空で，出力型は$h$により決まる．
-\end{proof}
-
-\begin{proposition}[Yoshinaka の2015年の枠組みによる規則ランク有界クラスの包含]
-\label{prop:yoshinaka2015-embedding}
-signature $\mathfrak S_{f,r,h}$ は
-~\cite{Yoshinaka2015General} の
-Assumptions~1--3 を満たし，
-\(\mathsf{Subst}(\mathfrak S_{f,r,h}) =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)\)
-となる．
-したがって，規則ランク有界のクラスには
-Yoshinaka の同定定理
-~\cite[Theorem~1]{Yoshinaka2015General}
-を適用できる．
-$f,r,h$ を固定すれば，
-蓄積標本に関する更新時間は多項式であり，
-刈り込まれた signature 文法表示について，
-特徴集合の要素数は
-$|N^\sharp|+|P^\sharp|$ 以下である
-~\cite[Lemma~3]{Yoshinaka2015General} の直後の本文で与えられる
-$\mathrm{SUBST}_{\mathrm D}$ に対する上界である．
-ただし，これは特徴語の\emph{総文字数}を
-抑えるものではない．
-\end{proposition}
-
-\begin{proof}
-型タグを消すとファンアウト高々$f$・ランク高々$r$のMCFGになる．
-逆に良形標準化（命題~\ref{prop:good-normalization}），
-生成語型精密化（定義~\ref{def:output-refinement}），
-開始への昇格と$\eps$定数によって
-$\mathsf{MCFL}(f,r)$の各標的を表現できる．
-開始ソートの文脈は恒等関数だけであり，
-他のソートでは補題~\ref{lem:signature-contexts} が
-signatureの四例含意を定義~\ref{def:tuple-substitutable} と同一視する．
-不要な記号は刈り込めるので，クラスの等式が従う．
-
-仮定1--3の検証では，演算のアリティは高々$r$，
-型・文脈の所属判定，評価およびランク有界MCFG所属判定は
-多項式時間である
-~\cite[Proposition~4]{Yoshinaka2011}．
-長さ$n$の文から，高々$f$個の非空で非交差な区間と非空の
-内部区切り語で定まるタグ付きタプル・文脈を列挙する．
-各親出現について順序付きの子区間と残る終端部分から
-ランク高々$r$の良形テンプレートを，実際の関数名として列挙する．
-各関数名には，型なしテンプレートに加え，
-出力ソートと順序付きの入力ソートが含まれる．
-観測された子タプルの成分別$s$-型から入力ソートが決まり，
-$\out_\rho$から出力ソートが決まる．
-従って型付き関数名を各インスタンスごとに列挙しており，
-単項恒等テンプレート，昇格演算，定数演算も含む．
-切断位置は高々$2f(r+1)$個であり，
-補題~\ref{lem:composition-witness-materialization} が
-実現可能な関数インスタンスの網羅性を保証する．
-$f,r,h$固定で列挙は多項式時間だから，
-YoshinakaのTheorem~1とLemma~3が適用できる．
-\end{proof}
-
-\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
-\label{lem:substp}
-上の signature と列挙を用いると，
-任意の有限正例標本 $K\subseteq\Sigma^*$ について，
-Yoshinaka の $\mathrm{SUBST}_{\mathrm P}(K)$ と
-$\mathcal B^{\le r}_{f,h}(K)$ は
-同じ言語を生成する．
-\end{lemma}
-
-\begin{proof}
-両構成の開始以外の非終端記号を観測タプルと型付きソートで対応させる．
-$\mathrm{SUBST}_{\mathrm P}$ の規則に現れる親$s_0$と
-$z=\rho(s_1,\ldots,s_t)$ は，共通文脈
-$c\in\mathrm{CON}_O(K)$ について
-$c\odot s_0,c\odot z\in K$ を満たす．
-補題~\ref{lem:signature-contexts} でこれを許容文脈とみなすと，
-LinkにComp（$t=0$ならConst）を続ける本稿の規則に対応する．
-合成証拠の存在は
-補題~\ref{lem:composition-witness-materialization} が保証する．
-逆にLinkは証拠付きの単項恒等テンプレート，
-CompとConstは証拠付きのテンプレート演算である．
-特に観測タプル$\tuple y$について
-$E[\tuple y]\in K$なら
-$E[\operatorname{id}(\tuple y)]\in K$なので，
-対応する型付き単項恒等関数名は
-$\mathrm{FUN}(K)$に含まれる．
-Compの関数名も観測された親・子の分割から得られる．
-導出帰納法により開始以外の生成言語は一致する．
-開始ソートの文脈は恒等関数のみで，開始ソートを引数とする演算はないため，
-両者は
-\(\bigcup_{w\in K\cap\Sigma^+}L([(w)])\cup(\{\eps\}\cap K)\)
-を生成し，空標本の場合も一致する．
-\end{proof}
-
-\begin{corollary}[Yoshinaka (2015) から従うランク有界な質的学習]
-\label{cor:yoshinaka2015-qualitative}
-$f,r\ge1$ および有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
-$h=\widehat s$ とおく．
-任意の $L\in\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$ に対して
-有限な特徴正例集合 $K_L\subseteq L$ が存在し，
-\[
- K_L\subseteq K\subseteq L
- \quad\Longrightarrow\quad
- L\bigl(\mathcal B^{\le r}_{f,h}(K)\bigr)=L
-\]
-が成り立つ．この演算子を用いる保守的・集合駆動型学習器は
-クラスを極限同定し，$f,r,s$ を固定すれば
-更新は蓄積標本長に関して多項式時間で行える．
-ここから特徴標本の\emph{総文字数}上界は導かれない．
-\end{corollary}
-\begin{proof}
-命題~\ref{prop:yoshinaka2015-embedding}によって
-有界ランクsignatureの適用条件が検証される．
-ただしYoshinaka~\cite[Theorem~1]{Yoshinaka2015General}の
-明示的証明は文脈添字付き$\mathrm{SUBST}_{\mathrm D}$に対するもので，
-$\mathrm{SUBST}_{\mathrm P}$の利用は同論文第7節で述べられる．
-本稿の具体的再構成器については，
-後の定理~\ref{thm:exact-reconstruction}の有界ランク版，
-健全性・完全性と系~\ref{cor:capped-gold-poly}から結論が従う．
-補題~\ref{lem:substp}は各有限標本で生成言語の一致を保証する．
-特徴語の総文字数上界はこの定性的結論からは従わない．
-\end{proof}
-
-
-
-
-
-
-\paragraph{再構成と標本整合性．}
-補題~\ref{lem:substp} は，型付き
-$\mathrm{SUBST}_{\mathrm P}$ と本稿の規則ランク有界構成が
-各標本で同じ言語を生成することを保証する．
-リンクに追加した条件は成分別有限半群型の一致である．
-両作用素は標本整合的で，
-\(K\subseteq L(\mathcal B_{f,h}^{\le r_{\max}}(K))\)
-および \(K\subseteq L(\mathcal B_{f,h}(K))\)
-がStart--Constの直接導出（または$\eps$の直接規則）から従う．
-合成規則と無制限版のランク上界は
-補題~\ref{lem:general-witness-enumeration} から得られる．
-集合駆動型の出力は構文的に安定するとは限らず，
-後述の保守的学習器が安定化を担う．
-
 \subsection{健全性}
 \label{sec:soundness}
 
-\begin{lemma}[子に誘導される文脈]
-\label{lem:filling-identity}
-$\rho$ を良形規則のテンプレートとし，
-$E\in\mathcal E_e$ をその出力タプルの文文脈とする．
-子 $j$ 以外のすべての子について，
-対応する非終端記号のアリティをもつ，
-全成分が非空のタプルを固定する．
-子 $j$ の各変数を対応する番号付き穴で置き換え，
-他の子の変数を固定された成分で置き換えると，
-\(E_j[\tuple u_j] =E[\rho(\tuple u_1,\ldots,\tuple u_r)]\)
-を満たす $E_j\in\mathcal E_{d_j}$ が得られる．
-兄弟タプルを変えた場合も同じ構成で
-その選択に対応する誘導文脈 $E_j$ が得られるが，
-文脈そのものが同一である必要はない．
-\end{lemma}
 
-\begin{proof}
-線形性・非消去性・非置換性により，子の変数は
-添字順に一度ずつ現れる．
-非融合性から，隣接する子変数の間には終端記号，
-兄弟変数または出力成分の境界がある．
-それぞれ非空の終端列，固定された非空の兄弟成分，
-または$E$の非空内部区切り語となる．
-その子変数を順序付きの穴へ置き換えると
-$E_j\in\mathcal E_{d_j}$ が得られ，
-主張する充填恒等式が成立する．
-\end{proof}
 
 \begin{lemma}[合成による同値関係の保存]
 \label{lem:witnessed-composition}
@@ -1570,6 +1297,56 @@ $\widetilde S\to S_{(h(w))}$
 刈り込みは生成言語を変えない．
 \end{proof}
 
+\begin{lemma}[有限モノイド表示と半群型付けの移行]
+\label{lem:semigroup-transfer}
+$f\ge1$ と有限モノイド準同型 $h_0:\Sigma^*\to M_0$ を固定し，
+$S_0=h_0(\Sigma^+)$，
+$s_0=h_0|_{\Sigma^+}:\Sigma^+\twoheadrightarrow S_0$ とおく．
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item 任意の $1\le d\le f$ と
+$\tuple x,\tuple y\in(\Sigma^+)^d$ について
+\[
+h_0^{(d)}(\tuple x)=h_0^{(d)}(\tuple y)
+\iff s_0^{(d)}(\tuple x)=s_0^{(d)}(\tuple y)
+\iff \widehat{s_0}^{(d)}(\tuple x)=\widehat{s_0}^{(d)}(\tuple y).
+\]
+したがって $\Cmcf{f}{h_0}=\Cmcf{f}{s_0}$ であり，
+任意の正例標本に対するランク制限の有無によらない
+再構成文法の規則も，正語の型添字の対応の下で一致する．
+\item 任意の良形MCFG $G$ について，$h_0$ と
+$\widehat{s_0}$ による\emph{刈り込み済み}生成語型精密化は同型である．
+刈り込み前の精密化は同型とは限らない．
+\item 対応する文法の生成言語は $L(G)$ であり，
+同じ正準タプル・文脈・特徴証拠語を選べる．
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(i) 非空成分上では三つの写像は
+共通の正語像半群 $S_0$ への写像として一致する．
+置換リンクはこれらの成分の等号と共通文脈のみを検査する．
+定数・合成・空語の直接開始規則では，
+空の成分を比較する追加条件はない．
+
+(ii) $S_0$ は $M_0$ と $S_0^\sharp$ の部分半群であり，
+乗法は一致する．良形文法の $\lambda$-自由性より，
+非終端記号が生成するすべてのタプル成分は非空である．
+良形規則テンプレートの各出力成分は，
+明示的な終端文字または非空の子成分を一つ以上含む連結である．
+その型を $h_0$ と $\widehat{s_0}$ で評価すると，
+空の終端因子はそれぞれの単位元を与えるだけなので，
+両者は $S_0$ の同じ元となる．
+成功した導出について帰納法を行うと，
+生産的な型付き規則と正語の開始昇格が対応する．
+到達可能性と生産性による刈り込みもこの対応を保つ．
+しかし $M_0=\{1\}$ の場合，新単位元の添加では
+未使用の余分な型が生じ得るため，全精密化の同型は主張できない．
+
+(iii) 命題~\ref{prop:output-invariants} の生成語不変量を
+適用すれば，同じ導出で同じ正準タプルと文脈を実現できるので，
+対応する証拠語を同一に選べる．
+\end{proof}
+
+
 生成語型付けは非終端記号の標識だけを変えるので，
 型付き規則は元の型なし規則と同じテンプレートをもつ．
 したがって，$\lambda$-自由性，非消去性，
@@ -1679,33 +1456,7 @@ $\Wit(\widetilde G_0)$ は
 $L(G)$ の有限部分集合である．
 $L(G)\ne\emptyset$ ならこの証拠集合は非空である．
 
-\begin{lemma}[標的規則の語が列挙に現れること]
-\label{lem:exposed-rule-enumerated}
-$R:X\to\rho(Y_1,\ldots,Y_r)$ を，
-開始記号以外の正ランク型付き規則とする．
-$\tuple z_R
-:=\rho(\omega(Y_1),\ldots,\omega(Y_r))$
-とおく．
-$\Wit(\widetilde G_0)\subseteq K$ なら，
-証拠列挙には
-\([\tuple z_R]\to \rho([\omega(Y_1)],\ldots,[\omega(Y_r)])\)
-が含まれる．
-\end{lemma}
 
-\begin{proof}
-語 $\chi(X)[\tuple z_R]\in K$ が親の出現を与える．
-テンプレート $\rho$ の変数によって誘導される
-この標本出現の区間分割では，
-各子の正準タプルが同じ標本語における
-タプル出現となる．
-$\lambda$-自由性によって子の全成分は非空であり，
-非置換性は同じ子の成分を添字順に並べ，
-非融合性は同じ子の隣接成分の間に
-標本語中の非空の区切り部分があることを保証する．
-よって各子の正準タプルは観測タプル出現であり，
-この区間分割は合成証拠である．
-網羅的列挙によって表示した規則が出力される．
-\end{proof}
 
 \begin{proposition}[有限標的証拠集合の要素数]
 \label{prop:witness-cardinality}
@@ -1832,6 +1583,42 @@ $L^+\ne\emptyset$なら
 ランク保存により最後の主張も従う．
 \end{proof}
 
+\subsection{実効的再構成と保守的学習}
+\label{sec:poly-time}
+
+$f,r_{\max},h$ を固定すると，
+Yoshinaka のランク有界学習器
+~\cite[Proposition~4 and Section~4.3]{Yoshinaka2011}
+と同様に，本構成は観測標本に関して多項式時間である．
+観測タプルは標本語の番号と切断位置によって，
+テンプレートは順序付き変数と終端因子によって符号化する．
+
+\begin{theorem}[規則ランク上界の下での多項式時間構成]
+\label{thm:poly}
+$f,r_{\max}\ge1$ と有限半群準同型 $s:\Sigma^+\to\mathsf S$ を固定し，
+型の計算には $h=\widehat s$ を用いる．
+有限標本 $K$ から，
+$\widehat G_{\le r_{\max}}(K)$ の完全な符号化を
+\((1+\|K\|_+)^{O(fr_{\max})}\)
+時間で計算できる．
+この文法のファンアウトは高々 $f$，
+規則ランクは高々 $r_{\max}$ である．
+\end{theorem}
+
+\begin{proof}
+$n_K=\max\{1,\|K\|_+\}$ とおく．
+切断位置を用いると，
+すべてのタプル出現を
+$n_K^{O(f)}$ 時間で列挙できる．
+固定有限モノイドで部分語の積を計算すれば型が得られる．
+文脈と型で分類することで Rule~(Link) を列挙できる．
+補題~\ref{lem:general-witness-enumeration} により
+Rule~(Comp) とその符号化を
+$n_K^{O(fr_{\max})}$ 時間で列挙できる．
+残る規則はランクが高々1であり，
+重複を取り除いても完全な文法の符号長は多項式のままである．
+\end{proof}
+
 有限テキスト接頭部分をその正例内容に対する
 $\mathcal B_{f,h}$ へ写す集合駆動型作用素は，
 やがて意味的に正しくなる．
@@ -1877,41 +1664,7 @@ Start--Constの直接導出から再構成は標本整合的で，
 以後は構文的に安定し，更新方針は提示順序に依存してよい．
 \end{proof}
 
-\subsection{規則ランク有界の場合の多項式時間更新}
-\label{sec:poly-time}
 
-$f,r_{\max},h$ を固定すると，
-Yoshinaka のランク有界学習器
-~\cite[Proposition~4 and Section~4.3]{Yoshinaka2011}
-と同様に，本構成は観測標本に関して多項式時間である．
-観測タプルは標本語の番号と切断位置によって，
-テンプレートは順序付き変数と終端因子によって符号化する．
-
-\begin{theorem}[規則ランク上界の下での多項式時間構成]
-\label{thm:poly}
-$f,r_{\max}\ge1$ と有限半群準同型 $s:\Sigma^+\to\mathsf S$ を固定し，
-型の計算には $h=\widehat s$ を用いる．
-有限標本 $K$ から，
-$\widehat G_{\le r_{\max}}(K)$ の完全な符号化を
-\((1+\|K\|_+)^{O(fr_{\max})}\)
-時間で計算できる．
-この文法のファンアウトは高々 $f$，
-規則ランクは高々 $r_{\max}$ である．
-\end{theorem}
-
-\begin{proof}
-$n_K=\max\{1,\|K\|_+\}$ とおく．
-切断位置を用いると，
-すべてのタプル出現を
-$n_K^{O(f)}$ 時間で列挙できる．
-固定有限モノイドで部分語の積を計算すれば型が得られる．
-文脈と型で分類することで Rule~(Link) を列挙できる．
-補題~\ref{lem:general-witness-enumeration} により
-Rule~(Comp) とその符号化を
-$n_K^{O(fr_{\max})}$ 時間で列挙できる．
-残る規則はランクが高々1であり，
-重複を取り除いても完全な文法の符号長は多項式のままである．
-\end{proof}
 
 \begin{corollary}[規則ランク有界の場合の保守的多項式時間学習]
 \label{cor:capped-gold-poly}
@@ -1942,6 +1695,211 @@ $\Cmcf{1}{h}$ を対象にできる．
 ただし，これはランク2における
 特徴データ長が多項式であることを意味しない．
 
+\subsection{Yoshinaka (2015) のsignatureへの特殊化}
+\label{sec:general-framework}
+
+規則ランク有界の学習器は，Yoshinaka の代入可能な
+signature に関する枠組み~\cite{Yoshinaka2015General} の
+型付きの特別な場合である．
+この対応を明示するのは，先行研究の質的な学習結果と，
+第~\ref{sec:char-data}節の総文字数上界とを区別するためである．
+
+有限アルファベット $\Sigma$，$f,r\ge1$ および有限半群型付け
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
+$h=\widehat s$，$M=\mathsf S^\sharp$，$M^+=\mathsf S$ とおく．
+signature $\mathfrak S_{f,r,h}$ は，
+開始ソート $O_*=\{\overline w:w\in\Sigma^*\}$
+（$\Sigma^*$ のタグ付きコピー）と，タグ付きソート
+\[
+ T_{d,\boldsymbol\mu}
+ =\{\tuple w\in(\Sigma^+)^d:
+ h^{(d)}(\tuple w)=\boldsymbol\mu\},
+ \qquad
+ 1\le d\le f,\quad\boldsymbol\mu\in(M^+)^d
+\]
+をもつ．
+各 $T_{d,\boldsymbol\mu}$ も固有のソートタグを付けたコピーとし，
+以下では読みやすさのため元のタプルで表す．
+したがってすべてのソートは互いに素である
+~\cite[Example~4]{Yoshinaka2015General}．
+その関数記号は，子の規則ランクが高々 $r$ である
+型の整合したすべての良形 MCFG テンプレート
+（ランク0を含む），
+$(w)$ を $\overline w$ に送る昇格演算 $T_{1,\mu}\to O_*$，
+および $O_*$ に属する零項の $\overline{\eps}$ 定数からなる．
+$O_*$ を入力として受け取る関数はない．
+型のタグを忘れると，これは
+~\cite[Section~8]{Yoshinaka2015General}
+の意味で，非空タプル上の良形
+$\lambda$-自由 MCFG 演算の signature を
+有限ソート精密化したものである．
+この型なし signature は
+~\cite[Example~3]{Yoshinaka2015General}
+の例と文字どおり同一ではなく，
+\emph{非空成分に制限した変種}である．
+ファンアウト1における接頭辞--接尾辞型付けの場合は，
+~\cite[Example~4]{Yoshinaka2015General}
+に対応する．
+この signature 上のある文法で実現可能な
+部分構造と文脈を，それぞれ
+$\mathcal S_O,\mathcal C_O$ と書く．
+
+\begin{lemma}[Signature の文脈は許容文文脈である]
+\label{lem:signature-contexts}
+開始ソート以外の各ソートについて
+\[
+ \mathcal S_{T_{d,\boldsymbol\mu}}
+ =T_{d,\boldsymbol\mu},
+ \qquad
+ \mathcal C_{T_{d,\boldsymbol\mu}}
+ =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}
+\]
+が成り立つ．
+後者の等式は $T_{d,\boldsymbol\mu}$ 上の
+\emph{関数}の集合の等式である．
+また $\mathcal C_{O_*}$ に含まれるのは
+恒等関数だけである．
+\end{lemma}
+
+\begin{proof}
+開始以外のソートの全要素はランク0の定数で実現でき，
+$O_*$ を入力に取る演算は存在しない．
+穴から開始ソートへ至る経路では，
+良形テンプレートが変数の順序と一度限りの出現を保存する．
+非融合性と非空の兄弟成分により内部の区切り語も非空であるから，
+補題~\ref{lem:filling-identity} の反復により
+文脈は $\mathcal E_d$ に属する．逆に任意の
+$E=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$ は，
+単項良形テンプレート
+$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$，ランク0の子，
+開始ソートへの昇格によって実現する．
+内部区切り語は非空で，出力型は$h$により決まる．
+\end{proof}
+
+\begin{proposition}[Yoshinaka の2015年の枠組みによる規則ランク有界クラスの包含]
+\label{prop:yoshinaka2015-embedding}
+signature $\mathfrak S_{f,r,h}$ は
+~\cite{Yoshinaka2015General} の
+Assumptions~1--3 を満たし，
+\(\mathsf{Subst}(\mathfrak S_{f,r,h}) =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)\)
+となる．
+したがって，規則ランク有界のクラスには
+Yoshinaka の同定定理
+~\cite[Theorem~1]{Yoshinaka2015General}
+を適用できる．
+$f,r,h$ を固定すれば，
+蓄積標本に関する更新時間は多項式であり，
+刈り込まれた signature 文法表示について，
+特徴集合の要素数は
+$|N^\sharp|+|P^\sharp|$ 以下である
+~\cite[Lemma~3]{Yoshinaka2015General} の直後の本文で与えられる
+$\mathrm{SUBST}_{\mathrm D}$ に対する上界である．
+ただし，これは特徴語の\emph{総文字数}を
+抑えるものではない．
+\end{proposition}
+
+\begin{proof}
+型タグを消すとファンアウト高々$f$・ランク高々$r$のMCFGになる．
+逆に良形標準化（命題~\ref{prop:good-normalization}），
+生成語型精密化（定義~\ref{def:output-refinement}），
+開始への昇格と$\eps$定数によって
+$\mathsf{MCFL}(f,r)$の各標的を表現できる．
+開始ソートの文脈は恒等関数だけであり，
+他のソートでは補題~\ref{lem:signature-contexts} が
+signatureの四例含意を定義~\ref{def:tuple-substitutable} と同一視する．
+不要な記号は刈り込めるので，クラスの等式が従う．
+
+仮定1--3の検証では，演算のアリティは高々$r$，
+型・文脈の所属判定，評価およびランク有界MCFG所属判定は
+多項式時間である
+~\cite[Proposition~4]{Yoshinaka2011}．
+長さ$n$の文から，高々$f$個の非空で非交差な区間と非空の
+内部区切り語で定まるタグ付きタプル・文脈を列挙する．
+各親出現について順序付きの子区間と残る終端部分から
+ランク高々$r$の良形テンプレートを，実際の関数名として列挙する．
+各関数名には，型なしテンプレートに加え，
+出力ソートと順序付きの入力ソートが含まれる．
+観測された子タプルの成分別$s$-型から入力ソートが決まり，
+$\out_\rho$から出力ソートが決まる．
+従って型付き関数名を各インスタンスごとに列挙しており，
+単項恒等テンプレート，昇格演算，定数演算も含む．
+切断位置は高々$2f(r+1)$個であり，
+補題~\ref{lem:composition-witness-materialization} が
+実現可能な関数インスタンスの網羅性を保証する．
+$f,r,h$固定で列挙は多項式時間だから，
+YoshinakaのTheorem~1とLemma~3が適用できる．
+\end{proof}
+
+\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
+\label{lem:substp}
+上の signature と列挙を用いると，
+任意の有限正例標本 $K\subseteq\Sigma^*$ について，
+Yoshinaka の $\mathrm{SUBST}_{\mathrm P}(K)$ と
+$\mathcal B^{\le r}_{f,h}(K)$ は
+同じ言語を生成する．
+\end{lemma}
+
+\begin{proof}
+両構成の開始以外の非終端記号を観測タプルと型付きソートで対応させる．
+$\mathrm{SUBST}_{\mathrm P}$ の規則に現れる親$s_0$と
+$z=\rho(s_1,\ldots,s_t)$ は，共通文脈
+$c\in\mathrm{CON}_O(K)$ について
+$c\odot s_0,c\odot z\in K$ を満たす．
+補題~\ref{lem:signature-contexts} でこれを許容文脈とみなすと，
+LinkにComp（$t=0$ならConst）を続ける本稿の規則に対応する．
+合成証拠の存在は
+補題~\ref{lem:composition-witness-materialization} が保証する．
+逆にLinkは証拠付きの単項恒等テンプレート，
+CompとConstは証拠付きのテンプレート演算である．
+特に観測タプル$\tuple y$について
+$E[\tuple y]\in K$なら
+$E[\operatorname{id}(\tuple y)]\in K$なので，
+対応する型付き単項恒等関数名は
+$\mathrm{FUN}(K)$に含まれる．
+Compの関数名も観測された親・子の分割から得られる．
+導出帰納法により開始以外の生成言語は一致する．
+開始ソートの文脈は恒等関数のみで，開始ソートを引数とする演算はないため，
+両者は
+\(\bigcup_{w\in K\cap\Sigma^+}L([(w)])\cup(\{\eps\}\cap K)\)
+を生成し，空標本の場合も一致する．
+\end{proof}
+
+\begin{remark}[既存理論から引き継ぐものと独自のもの]
+\label{rem:yoshinaka-inheritance}
+(a) Yoshinaka~\cite[Theorem~1]{Yoshinaka2015General}の明示的証明は
+$\mathrm{SUBST}_{\mathrm D}$に関するものであり，
+$\mathrm{SUBST}_{\mathrm P}$に対するAlgorithm~1の利用は
+~\cite[Sections~6.1 and~7]{Yoshinaka2015General}で別証明なしに述べられる．
+本稿の有限ソートsignatureでは，
+補題~\ref{lem:substp}，命題~\ref{prop:reconstruction-soundness}，
+定理~\ref{thm:exact-reconstruction}が
+本稿の具体的な再構成器についてこの対応を検証する．
+なお補題~\ref{lem:substp}は生成\emph{言語}の一致であり，
+文法自体の構文的一致ではない．
+(b) 既存の特徴標本の\emph{個数}上界から
+総文字数の上界は導けず，後者を第~\ref{sec:char-data}節で証明する．
+(c) Yoshinaka (2015)のAssumption~2はsignatureごとのアリティを制限する．
+したがって命題~\ref{prop:yoshinaka2015-embedding}の適用対象は
+固定規則ランク$r$の$\mathsf{MCFL}(f,r)$である．
+規則ランク無制限の定性的再構成は
+定理~\ref{thm:exact-reconstruction}が独立に証明しており，
+型付きリンクを導入した
+~\cite[Corollary~2]{Yoshinaka2011}の拡張である．
+\end{remark}
+
+\paragraph{再構成と標本整合性．}
+補題~\ref{lem:substp} は，型付き
+$\mathrm{SUBST}_{\mathrm P}$ と本稿の規則ランク有界構成が
+各標本で同じ言語を生成することを保証する．
+リンクに追加した条件は成分別有限半群型の一致である．
+両作用素は標本整合的で，
+\(K\subseteq L(\mathcal B_{f,h}^{\le r_{\max}}(K))\)
+および \(K\subseteq L(\mathcal B_{f,h}(K))\)
+がStart--Constの直接導出（または$\eps$の直接規則）から従う．
+合成規則と無制限版のランク上界は
+補題~\ref{lem:general-witness-enumeration} から得られる．
+集合駆動型の出力は構文的に安定するとは限らず，
+後述の保守的学習器が安定化を担う．
 
 
 \section{特徴データ長の上界}
@@ -1972,6 +1930,9 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 固定窓と任意の有限群
   & $O(\|G\|^3\bar\theta_G)$
   & 定理~\ref{thm:window-group-polydata} \\
+$h(\Sigma^+)\in\mathbf{LG}$
+  & $O(\|G\|^3\bar\theta_G)$
+  & 定理~\ref{thm:local-group-polydata} \\
 \hline
 \end{tabularx}
 \end{center}
@@ -1984,10 +1945,9 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 規則ランク1では厚みへの依存がなくなる．
 一方，接頭辞--接尾辞窓で決定される型付けでは，
 高ランクの場合も厚みの上界を転移できる．
-アーベル群の零和による直接証明は
-\ref{app:window-abelian} に置き，
-非可換群を含む一般の有限群への拡張は
-\ref{app:window-group} で独立に証明する．
+アーベル群の零和論法と一般有限群の非可換な順序均質化は，
+同じブロック置換補題の二つの場合として
+付録~\ref{app:group-blocks}で証明する．
 関連 CFG 論文~\cite{kuriyamaCFG} は，
 任意の有限型付けについて
 元文法の厚みだけでは一様な多項式上界を得られないことを，
@@ -1998,8 +1958,11 @@ $h\preceq h_\Sigma^{k,\ell}$，規則ランク有界
 こうした特徴データ長の改善とは独立である
 （定理~\ref{thm:poly} と系~\ref{cor:capped-gold-poly}）．
 
-\subsection{厚みと再利用可能な正準文脈}
+
+\subsection{厚みと証拠語長の共通構成}
 \label{subsec:thickness-contexts}
+
+
 
 \paragraph{規則厚みと Yoshinaka の効率性基準．}
 定量的結果では，
@@ -2020,54 +1983,118 @@ $\tau_G$ と $t_G$ に対応し，
 $\tau_G\le\|G\|t_G$ が成り立つ
 ~\cite[Section~4.3]{Yoshinaka2011}．
 
-\begin{lemma}[二種類の厚みの多項式同値性]
+
+
+\begin{lemma}[厚みと共通導出文脈の基本補題]
 \label{lem:thickness-equivalence}
-任意の縮約済み良形表示 $G$ について
-\(t_G\le\theta_G,\qquad \theta_G\le2\|G\|\max\{1,t_G\}\)
-が成り立つ．
+\label{lem:thickness-local-bounds}
+\label{lem:untyped-contexts}
+$G=(V,\Sigma,P,S,\fan)$を縮約済み良形MCFGとする．
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 各規則が明示的に書き込む終端記号数は$\theta_G$以下である．
+\item $t_G\le\theta_G$であり，任意の$A\in V$には
+  $\|\tuple u\|_1\le\theta_G$を満たす$\tuple u\in L_A(G)$が存在する．
+\item $\theta_G\le2\|G\|\max\{1,t_G\}$である．
+\item 各$A\in V$のファンアウトを$d$とすると，
+$|E_A|_{\mathrm{fix}}\le\theta_G$を満たす$E_A\in\mathcal E_d$で，
+全ての$\tuple u\in L_A(G)$に対して$E_A[\tuple u]\in L(G)$となるものが
+存在する．$E_S=\blank_1$と選べる．さらに，任意の有限型付け$h$，
+刈り込んだ精密化$\widetilde G_0$の非開始記号$X=A_{\mathbf t}$について
+$\chi(X)=E_A$は定義~\ref{def:target-canonical}を満たし，
+$E_A$は$X$の部分木を一つ除去した成功型付き導出から得られる．
+\end{enumerate}
 \end{lemma}
-
 \begin{proof}
-$t_G\le\theta_G$ については，
-左辺が $A$ である任意の規則を
-成功導出に置く．
-非消去性により，その $A$ の出現で生成されたタプルは
-最終文に保存されるので，
-その総長は最終文長以下である．
-$A$ ごとに最小を取り，
-$A$ 全体について最大を取ればよい．
+(i),(ii)は，任意の規則$R$を用いた成功導出を
+その最短生成語長$\theta_G(R)$で選び，
+非消去性を使えば従う．
+その導出において$R$が書く終端記号と
+左辺非終端記号の全成分は，最終文にそれぞれ一度ずつ残るためである．
+(iii)は開始記号から$R$の左辺までの単純な依存経路を選び，
+兄弟と$R$の子を長さ高々$t_G$の終端タプルで埋める．
+この経路では規則を高々$\|G\|$回用い，
+明示終端数と子出現数もそれぞれ高々$\|G\|$なので
+$\theta_G(R)\le\|G\|+\|G\|t_G$を得る．
 
-逆向きについては，左辺が $A$ の規則 $R$ を固定し，
-開始記号から $A$ までの最短の依存経路をたどる．
-この経路で非終端記号は反復しない．
-経路上の子の位置を開いたまま，
-各兄弟を最短の終端タプルで完成させる．
-次に $R$ を適用して，
-その子も最短の終端タプルで完成させる．
-この構成に現れる異なる規則全体で，
-明示的終端記号数と子変数の出現数はともに $\|G\|$ 以下である．
-したがって成功文の長さは
-\(\|G\|+\|G\|t_G \le2\|G\|\max\{1,t_G\}\)
-以下となる．
+(iv)で$A\ne S$なら，上記成功導出の$A$-部分木を除去し，
+その成分に順序付き穴を設ける．
+補題~\ref{lem:filling-identity}を根まで反復すると
+許容文脈$E_A$が得られ，固定終端記号は成功文の部分なので
+$|E_A|_{\mathrm{fix}}\le\theta_G(R)\le\theta_G$である．
+$A$からの任意のタプルを埋めても成功導出となる．
+命題~\ref{prop:output-invariants}(i),(ii)から，
+型付き$X$でも同じ文脈が許容的であり，
+その穴に$X$の型付き部分木を持つ成功導出へ持ち上がる．
+開始リンクのある$X=S_{\mathbf t}$には$E_S=\blank_1$を用いる．
 \end{proof}
 
-よって縮約済み良形表示では，
-二つの厚みは多項式的に同値である．
-Yoshinaka の効率性基準では，
-仮説の多項式時間構成，
-特徴集合の個数上界，
-および標的サイズと規則厚みに関する
-正例総文字数の多項式上界を要求する
-~\cite[Definition~1]{Yoshinaka2011}．
-\cite{EyraudHeinzYoshinaka2016} も参照されたい．
-本稿の特徴データ上界はランク上界付きの集合駆動型再構成に関するものであり，
-TxtEx の安定化は保守的学習器が担う．
-命題~\ref{prop:structural-good-thickness} は，
-縮約済み $\lambda$-自由入力文法に対して
-サイズと厚みの尺度を転移する．
-一方，本当の空成分が存在すると，
-命題~\ref{prop:empty-component-blowup} のような
-指数的増加が起こり得る．
+良形文法では規則厚みと非終端記号厚みは多項式的に同値である．
+以下の証拠語長評価はこの共通導出文脈を利用する．
+
+\begin{lemma}[特徴証拠語長の共通テンプレート]
+\label{lem:witness-length-template}
+$G$をファンアウト高々$f$，規則ランク高々
+$r_{\max}\ge1$の縮約済み良形MCFGとし，
+$\widetilde G_0$を有限型付け$h:\Sigma^*\to M$による
+刈り込んだ生成語型精密化とする．
+全ての非開始型付き非終端記号$X$の正準タプルについて
+$\|\omega(X)\|_1\le b_{\mathrm{can}}$とし，
+$\chi(X)=E_A$を補題~\ref{lem:untyped-contexts}の
+導出的文脈から選ぶ．
+このとき特徴証拠集合$\Wit(\widetilde G_0)$の全ての語の長さは
+$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$以下であり，
+\[
+ |\Wit(\widetilde G_0)|\le
+ |V||M|^f+|P||M|^{fr_{\max}},
+\]
+\[
+ \|\Wit(\widetilde G_0)\|_+\le
+ (|V||M|^f+|P||M|^{fr_{\max}})
+ (1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}).
+\]
+さらに$L(G)=L\cap\Sigma^+$かつ$L\in\Cmcf{f}{h}$なら，
+$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は
+$\mathcal B_{f,h}^{\le r_{\max}}$の特徴標本となる．
+\end{lemma}
+\begin{proof}
+補題~\ref{lem:untyped-contexts}により文脈固定部は
+高々$\bar\theta_G$，各規則の明示終端文字数も
+補題~\ref{lem:thickness-local-bounds}(i)により
+高々$\bar\theta_G$である．
+各規則は高々$r_{\max}$個の子タプルを持つので，
+一証拠語の上界が従う．
+個数は命題~\ref{prop:witness-cardinality}，
+特徴性は命題~\ref{prop:completeness}と
+命題~\ref{prop:reconstruction-soundness}による．
+空語は開始規則の直接証拠で処理する．
+\end{proof}
+
+\begin{lemma}[型を保存する置換]
+\label{lem:type-preserving-replacement}
+$G$を縮約済み良形MCFGとし，
+$h:\Sigma^*\to M$，$\lambda:\Sigma^*\to N$を
+$h\preceq\lambda$を満たす有限型付けとする．
+$\widetilde G_0$を刈り込んだ$h$-精密化とし，
+$X=B_{\mathbf t}$をその非開始型付き非終端記号とする．
+$\tuple u\in L_X$，$\tuple u'\in L_B(G)$が
+$\lambda^{(\fan(B))}(\tuple u')=
+\lambda^{(\fan(B))}(\tuple u)$を満たすなら，
+$\tuple u'\in L_X$である．
+したがって$\tuple u'$は$X$の正準タプルの候補になる．
+\end{lemma}
+\begin{proof}
+良形性により両タプルの全成分は非空である．
+$h\preceq\lambda$からそれらの成分別$h$-型は
+$\mathbf t$に等しい．
+命題~\ref{prop:output-invariants}(ii)により
+$\tuple u'$の$G$-導出を根が$X$である型付き導出に持ち上げられる．
+$X$は刈り込んだ精密化に残るので，
+$X$を含む成功導出へこの導出を挿入でき，
+必要な型付き規則もすべて刈り込み後に残る．
+\end{proof}
+
+\paragraph{補足：精密化後の文脈長．}
+次の補助上界はランク1の直接計数でも用いる．
 
 \begin{lemma}[再利用可能な正準文脈の上界]
 \label{lem:reusable-context-bound}
@@ -2121,45 +2148,7 @@ $b_{\mathrm{rule}}+(r_0-1)b_{\mathrm{can}}$
 表示した証拠語の長さ上界が従う．
 \end{proof}
 
-\begin{lemma}[特徴証拠語長の共通テンプレート]
-\label{lem:witness-length-template}
-$G$をファンアウト高々$f$，規則ランク高々
-$r_{\max}\ge1$の縮約済み良形MCFGとし，
-$\widetilde G_0$を有限型付け$h:\Sigma^*\to M$による
-刈り込んだ生成語型精密化とする．
-全ての非開始型付き非終端記号$X$の正準タプルについて
-$\|\omega(X)\|_1\le b_{\mathrm{can}}$とし，
-$\chi(X)=E_A$を補題~\ref{lem:untyped-contexts}の
-導出的文脈から選ぶ．
-このとき特徴証拠集合$\Wit(\widetilde G_0)$の全ての語の長さは
-$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$以下であり，
-\[
- |\Wit(\widetilde G_0)|\le
- |V||M|^f+|P||M|^{fr_{\max}},
-\]
-\[
- \|\Wit(\widetilde G_0)\|_+\le
- (|V||M|^f+|P||M|^{fr_{\max}})
- (1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}).
-\]
-さらに$L(G)=L\cap\Sigma^+$かつ$L\in\Cmcf{f}{h}$なら，
-$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は
-$\mathcal B_{f,h}^{\le r_{\max}}$の特徴標本となる．
-\end{lemma}
-\begin{proof}
-補題~\ref{lem:untyped-contexts}により文脈固定部は
-高々$\bar\theta_G$，各規則の明示終端文字数も
-補題~\ref{lem:thickness-local-bounds}(i)により
-高々$\bar\theta_G$である．
-各規則は高々$r_{\max}$個の子タプルを持つので，
-一証拠語の上界が従う．
-個数は命題~\ref{prop:witness-cardinality}，
-特徴性は命題~\ref{prop:completeness}と
-命題~\ref{prop:reconstruction-soundness}による．
-空語は開始規則の直接証拠で処理する．
-\end{proof}
-
-\subsection{精密化後の厚みによる基準上界}
+\subsection{基準上界と規則ランク1}
 \label{subsec:typed-thickness}
 
 $\eps$ を含まない標的の縮約済み良形表示 $G$ に対して，
@@ -2295,7 +2284,7 @@ $\|G\|\max\{1,\theta_G\}$ の多項式による
 代入可能性はより多くのタプルアリティについて検査されるため，
 この結果がそのまま高ファンアウトへ拡張されるわけではない．
 
-\subsection{規則ランク1：文法サイズに関する多項式特徴データ}
+\paragraph{規則ランク1：文法サイズに関する多項式特徴データ}
 \label{subsec:rankone-polydata}
 
 一つの子しかもたない導出の鎖では，
@@ -2380,7 +2369,8 @@ $(f,h)$-タプル代入可能である．
 この単集合標的の任意の特徴標本には，
 長さ少なくとも $2^n$ の語が必要である．
 
-\subsection{接頭辞--接尾辞窓で決まる型付け：厚みに依存する特徴データ}
+
+\subsection{境界窓と補助不変量}
 \label{subsec:boundary-polydata}
 
 補題~\ref{lem:typed-thickness-baseline} は，任意の $h$ に対する特徴データ上界を，
@@ -2401,89 +2391,9 @@ $L\setminus\{\eps\}$ に議論を適用してから，
 開始記号に証拠 $\eps$ を一つ加えればよい．
 これは長さ0の例を一つ増やすだけで，どちらの多項式上界にも影響しない．
 
-\begin{lemma}[規則厚みによる局所的な終端記号数の上界]
-\label{lem:thickness-local-bounds}
-$G$ を縮約済み良形文法とする．このとき：
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item 任意の規則 $R$ のテンプレートに明示的に書かれた
-終端記号の総数は $\theta_G$ 以下である．
-\item 任意の非終端記号 $A$ に対し，
-$\|\tuple u\|_1\le\theta_G$ を満たす
-終端タプル $\tuple u\in L_A(G)$ が存在する．
-\end{enumerate}
-\end{lemma}
 
-\begin{proof}
-縮約性により，すべての規則は何らかの成功導出に出現する．
-良形文法は非消去なので，その規則が明示的に書く終端記号と，
-左辺で生成されるタプルの全成分は，最終的な文の中にそれぞれちょうど一度残る．
-したがって，その規則を用いる最短の成功導出の生成語長は，
-規則の明示的終端記号数と，その出現箇所の左辺タプルの総長の両方を上から抑える．
-規則全体について最大を取ると (i), (ii) が従う．
-\end{proof}
 
-\begin{lemma}[型なし規則厚みによる正準文脈の制御]
-\label{lem:untyped-contexts}
-$G=(V,\Sigma,P,S,\fan)$ を縮約済み良形 MCFG とし，
-$\widetilde G_0$ を任意の固定有限型付け $h$ による生成語型付き精密化の
-刈り込み結果とする．
-ファンアウト $d$ の各 $A\in V$ に対し，
-次を満たす許容文脈 $E_A\in\mathcal E_d$ が存在する：
-\[
- |E_A|_{\mathrm{fix}}\le\bar\theta_G,
- \qquad E_A[\tuple u]\in L(G)
- \quad\text{for all }\tuple u\in L_A(G).
-\]
-さらに $E_S=\blank_1$ と選んでよい．
-したがって，開始記号以外の型付き非終端記号 $X=A_{\mathbf t}$ に対し，
-$\chi(X):=E_A$ は定義~\ref{def:target-canonical} を満たす．
-各正準タプルについて
-$\|\omega(X)\|_1\le b_{\mathrm{can}}$ が成立し，
-最大規則ランクを $r_{\max}$ とすると，
-$\Wit(\widetilde G_0)$ に属するすべての語の長さは
-\(2\bar\theta_G+r_{\max}b_{\mathrm{can}}\)
-以下である．
-\end{lemma}
 
-\begin{proof}
-$E_S=\blank_1$ とする．
-$A\ne S$ に対しては，左辺が $A$ である元文法の規則 $R$ を一つ選ぶ．
-$G$ は縮約済みなので，$R$ を使用し，生成語長が
-$\theta_G(R)\le\theta_G$ である成功導出が存在する．
-その導出中の $A$ の出現を根とする部分木を取り除き，
-その $d$ 成分を順序付きの穴で置き換える．
-補題~\ref{lem:filling-identity} を根への経路に沿って繰り返し適用すると，
-良形性によって得られる文脈 $E_A$ は $\mathcal E_d$ に属する．
-その固定終端部分は選んだ文の一部なので，長さは
-$\theta_G(R)$ 以下である．
-$L_A(G)$ の任意のタプルをこの位置へ代入すると，
-元文法における別の成功導出が得られる．
-よって $E_A$ は $L_A(G)$ のすべてのタプルを受理する．
-
-命題~\ref{prop:output-invariants}(i) より
-$L_X\subseteq L_A(G)$ だから，
-$E_A$ は型付き記号 $X$ のすべてのタプルも受理する．
-この周囲の型なし導出は，
-命題~\ref{prop:output-invariants}(ii) によって
-完全な型付き精密化へ持ち上げることができる．
-固定された兄弟部分木の導出の下では $X$ の型から祖先の型が定まり，
-新しい開始記号はどの開始型でも許すからである．
-したがって $\chi(X)$ は必要な共通文脈の性質を満たす．
-開始記号からの直接リンクがある場合には，
-$X=S_{\mathbf t}$ であり，$\chi(X)=\blank_1$ とすればよい．
-
-証拠語は
-$\chi(X)[\omega(X)]$，
-$\chi(X)[\tuple c]$，または
-$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_r))]$
-のいずれかである．
-文脈の終端部分の寄与は高々 $\bar\theta_G$ であり，
-元の規則が明示的に書く終端記号数も
-補題~\ref{lem:thickness-local-bounds}(i) により
-高々 $\bar\theta_G$ である．
-さらに子のタプル数は高々 $r_{\max}$ なので，
-ランク0の場合も含めて表示した上界を得る．
-\end{proof}
 
 $k,\ell\ge0$ を固定し，
 $h\preceq h_\Sigma^{k,\ell}$ を満たす
@@ -2496,32 +2406,12 @@ $\widetilde G_0$ は $G$ の完全 $h$-型付き精密化の刈り込み結果�
 残存する開始記号以外の $h$-型付き非終端記号の数を
 $n_{\mathrm{typ}}$ とする．
 
-\begin{lemma}[型を保存する置換]
-\label{lem:type-preserving-replacement}
-$G$を縮約済み良形MCFGとし，
-$h:\Sigma^*\to M$，$\lambda:\Sigma^*\to N$を
-$h\preceq\lambda$を満たす有限型付けとする．
-$\widetilde G_0$を刈り込んだ$h$-精密化とし，
-$X=B_{\mathbf t}$をその非開始型付き非終端記号とする．
-$\tuple u\in L_X$，$\tuple u'\in L_B(G)$が
-$\lambda^{(\fan(B))}(\tuple u')=
-\lambda^{(\fan(B))}(\tuple u)$を満たすなら，
-$\tuple u'\in L_X$である．
-したがって$\tuple u'$は$X$の正準タプルの候補になる．
-\end{lemma}
-\begin{proof}
-良形性により両タプルの全成分は非空である．
-$h\preceq\lambda$からそれらの成分別$h$-型は
-$\mathbf t$に等しい．
-命題~\ref{prop:output-invariants}(ii)により
-$\tuple u'$の$G$-導出を根が$X$である型付き導出に持ち上げられる．
-$X$は刈り込んだ精密化に残るので，
-$X$を含む成功導出へこの導出を挿入でき，
-必要な型付き規則もすべて刈り込み後に残る．
-\end{proof}
+
 
 \begin{lemma}[補助不変量付きの窓スケルトン]
 \label{lem:boundary-short-canonical}
+\label{lem:window-abelian-short}
+\label{lem:window-group-short}
 $G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
 規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとする．
 $k,\ell\ge0$を固定し，有限モノイド$N$への準同型
@@ -2700,7 +2590,9 @@ $(1,1)$-境界型付けされた非文脈自由標的を与える．
 対応する定量的学習上界と両立している．
 
 
-\subsection*{重い節点の共通計数補題}
+
+\subsection{有限群不変量}
+\label{subsec:group-invariants}
 
 次の計数原理は，有限群の値を指定した短いタプルと
 局所群型付けにおける短縮証明に共通する．
@@ -2743,6 +2635,127 @@ $\lambda$-値と生成語長の非増加性を保ちながら
 根が軽ければ総長は高々$b$であり，
 以上から表示した上界が従う．
 \end{proof}
+
+
+
+有限アーベル群$H$について，非空の零和部分列を含まない
+$H$-上の列の最大長を$\mathsf d(H)$と書く．
+従ってDavenport定数は$\mathsf D(H)=\mathsf d(H)+1$である．
+任意の有限群$A$と$f\ge1$に対し
+\[
+ N_{A,f}=\max\{3,|A|^f\},\quad
+ U_f=f^{f+1}f!,\quad
+ M_{A,f}=U_fN_{A,f}^{2^{f^2}},\qquad
+ c_{A,f}=
+ \begin{cases}
+ \mathsf d(A^f),&A\text{が可換},\\
+ M_{A,f}-1,&\text{それ以外}.
+ \end{cases}
+\]
+とおく．
+
+\begin{theorem}[任意有限群の成分別値を指定した短いタプル]
+\label{thm:group-typed-shortest}
+\label{lem:group-typed-shortest}
+$G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
+規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとする．
+$g:\Sigma^*\to A$を任意の有限群への準同型とすると，
+各$B\in V$と実現可能な$\mathbf s\in A^{\fan(B)}$に対して
+$g^{(\fan(B))}(\tuple u)=\mathbf s$を満たし
+\[
+ \|\tuple u\|_1\le\beta_g:=
+ (r_{\max}+1)\bar\theta_G
+ \max\{1,c_{A,f}|V||A|^f\}
+\]
+となる$\tuple u\in L_B(G)$が存在する．
+特に$\beta_g=O_{A,f,r_{\max}}(\|G\|\bar\theta_G)$である．
+可換群なら反鎖定数は零和定数$\mathsf d(A^f)$でよい．
+\end{theorem}
+\begin{proof}
+$\lambda=g$，$b=\bar\theta_G$として
+補題~\ref{lem:heavy-node-count}の最小導出$T$を選ぶ．
+互いに比較不能な重い節点$v_1,\ldots,v_m$を任意にとり，
+各節点の非終端記号$C_i$から
+長さ高々$\bar\theta_G$の短い導出を
+補題~\ref{lem:thickness-equivalence}(ii)により固定する．
+これらの各部分木は真に短縮可能である．
+線形性と非消去性により，異なる節点の全成分は
+根の高々$f$個の出力成分へ重なりのない連続ブロックとして現れる．
+根の群値は，各列の固定定数と置換前後のブロック群値の
+\emph{順序付き}積となるから，
+定義~\ref{def:block-family}のブロック置換族である．
+$m>c_{A,f}$なら補題~\ref{lem:block-replacement}で
+非空の部分集合を同時置換しても
+根の成分別$g$-値を保存できる．
+しかし根の総長は真に短くなり最小性に矛盾する．
+従って重い反鎖は高々$c_{A,f}$個であり，
+補題~\ref{lem:heavy-node-count}を適用して上界を得る．
+\end{proof}
+
+\begin{theorem}[窓と一般有限群型付けの多項式特徴データ]
+\label{thm:window-group-polydata}
+$f,r_{\max},k,\ell,\Sigma$，任意の有限群$A$，
+準同型$g:\Sigma^*\to A$，
+$h\preceq(h_\Sigma^{k,\ell},g)$となる固定有限型付け$h$を固定する．
+$L\in\Cmcf{f}{h}$と，$L(G)=L\cap\Sigma^+$となる
+縮約済み良形のファンアウト高々$f$・ランク高々$r_{\max}$の
+文法$G$について，
+$\mathcal B_{f,h}^{\le r_{\max}}$の特徴標本で
+\[
+ |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ \|\Wit(\widetilde G_0)\|_+
+ =O_{f,r_{\max},k,\ell,h,g,\Sigma}
+   (\|G\|^3\bar\theta_G)
+\]
+を満たすものが存在する．
+\end{theorem}
+\begin{proof}
+定理~\ref{thm:group-typed-shortest}の$\beta_g$は
+補題~\ref{lem:boundary-short-canonical}の補助不変量
+$\kappa=g$に対する仮定を満たす．
+よって$b_{\mathrm{can}}\le
+f(k+\ell+1)n_{\mathrm{typ}}
+ (\bar\theta_G+r_{\max}\beta_g)
+=O(\|G\|^2\bar\theta_G)$であり，
+補題~\ref{lem:witness-length-template}が主張を与える．
+$\eps$は直接開始規則で処理する．
+\end{proof}
+
+\begin{theorem}[窓と有限アーベル群型付けの多項式特徴データ]
+\label{thm:window-abelian-polydata}
+$f,r_{\max},k,\ell,\Sigma$，有限アーベル群$A$，
+準同型$g:\Sigma^*\to A$，および
+$h\preceq(h_\Sigma^{k,\ell},g)$となる有限型付け$h$を固定する．
+任意の$L\in\Cmcf{f}{h}$と，
+$L(G)=L\cap\Sigma^+$を満たす縮約済み良形の
+ファンアウト高々$f$，ランク高々$r_{\max}$の文法$G$について，
+上限付き作用素$\mathcal B_{f,h}^{\le r_{\max}}$には，
+\[
+ |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ \|\Wit(\widetilde G_0)\|_+
+ =O_{f,r_{\max},k,\ell,h,g,\Sigma}
+   (\|G\|^3\bar\theta_G)
+\]
+を満たす特徴標本が存在する．
+その定数は$\mathsf d(A^f)$を用いた
+\[
+ \beta_g=(r_{\max}+1)\bar\theta_G
+ \max\{1,\mathsf d(A^f)|V||A|^f\}
+\]
+によって評価でき，$\mathsf d(A^f)
+=O(\exp(A)\,f\log|A|)$である
+（注意~\ref{rem:davenport-size}）．
+\end{theorem}
+\begin{proof}
+定理~\ref{thm:window-group-polydata}を可換群に適用する．
+補題~\ref{lem:block-replacement}の可換な場合では
+零和部分列を用いるため，任意有限群の場合の
+$M_{A,f}-1$を$\mathsf d(A^f)$に置き換えられる．
+\end{proof}
+
+可換性を用いるのは零和部分列による短縮だけであり，
+非可換群の場合は付録~\ref{app:window-group}の
+順序均質化によりブロックの交錯を処理する．
 
 \subsection{多項式特徴データの代数的条件}
 \label{subsec:algebraic-typed-data}
@@ -2861,6 +2874,7 @@ $\mathbf{LI}\vee\mathbf{Grp}$ の場合，
 空アルファベットでは語は $\eps$ のみであり自明である．
 \end{remark}
 
+
 \subsection{短い特徴データの計算}
 \label{subsec:effective-char-data}
 
@@ -2936,11 +2950,14 @@ $\theta_G(R)=\mu(A)+c_\rho+\sum_j\lambda(B_j)$ が得られる．
 DAG の展開は，表す語の長さについて線形時間である．
 \end{proof}
 
-\begin{proposition}[規則証拠だけによる特徴標本]
+\begin{proposition}[規則証拠のみからなる特徴標本と計算可能なデータ長予算]
+\label{prop:computed-witness-budget}
 \label{prop:rule-only-witnesses}
-命題~\ref{prop:effective-char-data} の設定で，
-全ての正準タプルを同命題の非循環な最小重み導出から
-整合的に選ぶ．開始記号以外の型付き非終端記号 $X$ に対し，
+命題~\ref{prop:effective-char-data}の設定で，
+全ての正準タプルを整合的な非循環最小重み導出から選び，
+$\mathcal R$を非開始型付き規則の集合（ランク0を含む）とする．
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 開始記号以外の型付き非終端記号 $X$ に対し，
 その最小導出の根の規則を
 $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
 （$q=0$ の場合も含む）．このとき
@@ -2966,31 +2983,7 @@ $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ とする
 である．標的が $\Cmcf{f}{h}$ に属するとき，
 この集合は $\mathcal B^{\le r_{\max}}_{f,h}$
 に対する特徴標本として引き続き機能する．
-\end{proposition}
-\begin{proof}
-各 $X$ の最適導出は，ある規則 $R_X$ から始まる．
-その子の導出が最適でなければ，最短の子導出に
-置換することで全体の辞書式重みを小さくでき，
-矛盾する．導出節点数による副次的な最小化によって，
-この根規則の選択を同時に非循環にできる．
-したがってランク0も含めて，表示した
-$\omega(X)$ の恒等式が成立する．
-
-ゆえに $\chi(X)[\omega(X)]$ は
-選択規則 $R_X$ の証拠語と\emph{同一}である．
-定義~\ref{def:witness-set} の他の語は，
-初めから規則証拠として収録されている．
-従って二つの集合は終端語の集合として等しく，
-証拠集合に基づく完全性や特徴標本の証明は変わらない．
-各型付き規則に高々1語が対応し，
-型付き規則数の評価から個数上界が得られる．
-\end{proof}
-
-\begin{proposition}[文法表示ごとに計算可能な特徴データ長予算]
-\label{prop:computed-witness-budget}
-命題~\ref{prop:effective-char-data} の仮定の下で，
-$\widetilde G_0$ の開始記号以外の型付き規則集合を
-$\mathcal R$ とする．
+\item 
 $\lambda(X)$ は $X$ から導出できるタプルの最小総長，
 $\mu(X)$ は $X$ の導出的文文脈の最小固定長とする
 （開始記号から直接リンクされる場合は $\mu(X)=0$）．
@@ -3011,11 +3004,29 @@ $\Wit(\widetilde G_0)$ を
 $\mathsf B_{\mathrm{rule}}(G,h)$ は二進表記で $\|G\|$ の多項式時間で
 計算できる．標的が空語を含み，非空部分を別に扱う場合は，
 追加する $\eps$ の符号化コストは高々1である．
+\end{enumerate}
 \end{proposition}
 \begin{proof}
-命題~\ref{prop:effective-char-data} の最短正準タプルと
+(i) 各 $X$ の最適導出は，ある規則 $R_X$ から始まる．
+その子の導出が最適でなければ，最短の子導出に
+置換することで全体の辞書式重みを小さくでき，
+矛盾する．導出節点数による副次的な最小化によって，
+この根規則の選択を同時に非循環にできる．
+したがってランク0も含めて，表示した
+$\omega(X)$ の恒等式が成立する．
+
+ゆえに $\chi(X)[\omega(X)]$ は
+選択規則 $R_X$ の証拠語と\emph{同一}である．
+定義~\ref{def:witness-set} の他の語は，
+初めから規則証拠として収録されている．
+従って二つの集合は終端語の集合として等しく，
+証拠集合に基づく完全性や特徴標本の証明は変わらない．
+各型付き規則に高々1語が対応し，
+型付き規則数の評価から個数上界が得られる．
+
+(ii) 命題~\ref{prop:effective-char-data} の最短正準タプルと
 最短導出的文脈を用いる．
-命題~\ref{prop:rule-only-witnesses} により，
+(i)により，
 各非終端記号の正準証拠語は既に規則証拠に含まれる．
 正ランクおよびランク0の各規則
 $R:X\to\rho(Y_1,\ldots,Y_q)$ に対して，
@@ -3044,6 +3055,7 @@ $\mathsf B_{\mathrm{rule}}(G,h)$ となる．
 明示的な特徴語は $\|G\|$ より指数的に長くなりうる．
 その場合でも命題~\ref{prop:effective-char-data} の導出 DAG は多項式サイズのままであり，
 計算された標本は多項式サイズの圧縮表現をもつ．
+
 
 
 \subsection{分布同値代表元とアーベル型フィルタ標的}
@@ -3829,88 +3841,119 @@ AI が生成した提案や査読を，
 \section{良形標準化の詳細}
 \label{app:normalization-details}
 
-以下では，命題~\ref{prop:good-normalization} で用いた
-固定パラメータに関する上界を記録する．
-非消去化と非融合化の意味論的正しさは標準的な結果である
+命題~\ref{prop:good-normalization}で用いた四つの変換について，
+非終端記号のタプル言語を段階ごとに明示する．
+同命題の固定パラメータに関するサイズ上界と
+命題~\ref{prop:structural-good-thickness}の厚み移送は，
+この同一性に基づいて導く．
+非消去化と非融合化の意味論的正しさは既知である
 ~\cite{SekiEtAl1991,Kanazawa2019Ogden,Yoshinaka2011}．
+Kanazawa~\cite[Section~2.1]{Kanazawa2019Ogden}の存在結果だけでは
+サイズ・厚みの量的上界は出ないため，ここで別途導出する．
 
-\paragraph{非消去化と成分の置換．}
-刈り込みの後，Seki らの補題2.2の証明の
-非消去化段階 (f3) を用いる
-~\cite[proof of Lemma~2.2, item~(f3)]{SekiEtAl1991}．
-各非終端記号 $A$ の出力成分の非空添字集合 $I$ をとり，
-規則 $R:A\to\rho(B_1,\ldots,B_q)$ の
-$I$ 番目の出力成分に現れる $B_j$ の成分添字集合を $J_j$ とする．
-それらの出力成分だけを残し，変数を付け替え，
-$J_j\ne\emptyset$ の子だけを $B_j^{J_j}$ として保持する．
-得られる規則は非消去であり，省略された子によりランクは増えない．
-縮約済み入力なら，省略した子は生産的なので
-射影後の導出を元の導出に持ち上げることができ，
-$L_{A^I}=\pi_I(L_A)$ が成り立つ．
-事前に刈り込まなければ自動的なのは
-$\pi_I(L_A)\subseteq L_{A^I}$ の包含だけである．
-装飾の個数は各非終端記号について $O_f(1)$，
-各規則について $O_{f,r_{\max}}(1)$ である．
-Kanazawa~\cite[Section~2.1]{Kanazawa2019Ogden} の
-存在主張だけから，このサイズ・厚み上界は従わない．
-非置換化については，
-ファンアウト $d$ の非終端記号を
-$\sigma\in\mathfrak S_d$ で装飾する．
-親の置換によって子の置換が決まるため，
-コピー数は高々 $f!$ 倍であり，
-子は重複されずランクも保存される．
-得られた文法を $G_{\mathrm{nd}}$ と書く．
-
-\paragraph{空のタプル成分の除去．}
-ファンアウト $d$ の非終端記号 $A$ について，
+タプル$\tuple w=(w_1,\ldots,w_d)$と
+$\emptyset\ne I\subseteq[d]$に対し，
+$\pi_I(\tuple w)$は$I$番目の成分を昇順に残す射影，
+$\sigma\tuple w$は成分置換，
+$\mu(\tuple w)$は隣接成分の連結を表す．
+従って
 \[
- \mathsf{Pat}(A):=
- \{I\subseteq\{1,\ldots,d\}:
- \text{$I$ はある $\tuple w\in L_A(G_{\mathrm{nd}})$
- の非空成分パターン}\}
+ \|\pi_I(\tuple w)\|_1\le\|\tuple w\|_1,\quad
+ \|\sigma\tuple w\|_1=\|\mu(\tuple w)\|_1=\|\tuple w\|_1 .
 \]
-とおく．
-これらの集合は有限な飽和計算で求められる．
-実現可能な子のパターンについて，
-存在しない成分から来る変数を $\eps$ で置き換え，
-空の親成分を削除し，
-全成分が空の子を省略する．
-非終端記号ごとのパターンは高々 $2^f$ 個，
-規則ごとの選択は高々 $2^{fr_{\max}}$ 通りである．
-非空パターン $I$ ごとに $A^I$ を導入する．
-保持された変数は依然としてちょうど一度，
-元の順序で現れるため，
-非消去性・非置換性・ファンアウト・規則ランクは保存され，
-出力は $\lambda$-自由となる．
 
-導出に関する帰納法によって，
-$L_{A^I}$ は，
-成分パターン $I$ をもつ元のタプルを
-その成分へ射影した集合と正確に一致する．
-全成分が空であるため省略された子は，
-そのパターンを実現する終端導出によって復元できる．
-開始記号のファンアウトは1なので，
-$S^{\{1\}}$ は元言語の非空部分を正確に生成する．
-射影はテンプレートを短くするため，
-サイズは $O_{f,r_{\max}}(\|G_{\mathrm{nd}}\|)$ である．
+\begin{lemma}[標準化各段階のタプル言語]
+\label{lem:normalization-stages}
+$f,r_{\max}$を固定し，$G_0$を
+規則ランク高々$r_{\max}$の縮約済み$f$-MCFGとする．
+次の各変換は線形性を保持し，
+ファンアウトと規則ランクを増加させず，
+テンプレートを拡大しない．
+非終端記号および規則のコピー数の増加倍率は
+$f,r_{\max}$のみに依存する．
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item \emph{非消去化}（Sekiら~\cite[Lemma~2.2, proof (f3)]{SekiEtAl1991}）．
+$\emptyset\ne I\subseteq[\fan(A)]$に対して$A^I$を導入する．
+$R:A\to\rho(B_1,\ldots,B_q)$の$I$番目の出力成分に使われる
+$B_j$の成分集合を$J_j$とし，出力の選択・変数の付替えを行う．
+$J_j\ne\emptyset$の子だけを$B_j^{J_j}$として保持し，
+残りの子を除去すると非消去となり，
+\[
+ L_{A^I}=\pi_I(L_A(G_0))
+\]
+が成り立つ．
+\item \emph{非置換化}．ファンアウト$d$の非終端記号を
+$\sigma\in\mathfrak S_d$で装飾する．
+置換済み親テンプレートにおける子変数の使用順から
+子の置換が一意に定まり，装飾付き記号の言語は$\sigma L_A$である．
+\item \emph{空成分除去}．各$A$について実現可能な非空成分位置集合
+$\mathsf{Pat}(A)$を有限飽和計算で求める．
+実現可能な子パターンの空成分変数を$\eps$に替え，
+親の空成分を消し，全成分が空の子は除去する．
+非空パターン$I$に対応する$A^I$の言語は，
+$L_A$のうちパターン$I$を持つタプルの$\pi_I$像に正確に一致する．
+得られる文法は$\lambda$-自由で，
+$S^{\{1\}}$は元言語の正語部分を生成する．
+初めから全生成タプルの各成分が非空ならば，この段階は恒等である．
+\item \emph{非融合化}（Yoshinaka~\cite[Section~2.3, Lemma~1, proof]{Yoshinaka2011}）．
+非終端記号をそのファンアウトの成分連結$\mu$で装飾し，
+親が隣接して使う子成分の極大連続列から子の連結を決める．
+融合装飾付き記号は\emph{像}
+$L_{A^\mu}=\mu(L_A)$を生成する．
+\end{enumerate}
+(b)--(d)は先行段階で確立した条件を保存する．
+\end{lemma}
 
-\paragraph{非融合化．}
-Yoshinaka の非融合化を適用する
-~\cite[Section~2.3, Lemma~1]{Yoshinaka2011}．
-引用した補題の証明中の構成では，連結で装飾した
-非終端記号の言語は，直前のタプル言語の
-隣接成分連結による\emph{像}と正確に一致する．
-連結写像は単射とは限らず，逆像の一意性は主張しない．
-この像の等式を命題~\ref{prop:structural-good-thickness}
-で利用する．隣接成分連結は
-$\lambda$-自由性，非置換性，ファンアウト，
-規則ランクを保存する．
-ファンアウトとランクを固定した場合，
-Yoshinaka の良形化全体のサイズは
-$O(\|G\|)$ である
+\begin{proof}
+(a) 任意の子タプルに対し
+\[
+ \pi_I(\rho(\tuple v_1,\ldots,\tuple v_q))
+ =\rho^I((\pi_{J_j}\tuple v_j)_{J_j\ne\emptyset})
+\]
+が成り立つ．導出木に関する帰納法で一方向の包含を得る．
+逆包含については帰納法の仮定で保持した子タプルを持ち上げ，
+省略した子には終端導出を補う．
+$G_0$は縮約済みなので省略した子はすべて生成可能である．
+事前に刈り込んでいなければ自動的なのは
+$\pi_I(L_A)\subseteq L_{A^I}$だけである．
+記号のコピー数は高々$2^f$，規則も$I$が各$J_j$を定めるので
+コピー数は高々$2^f$であり，子の省略はランクを増やさない．
+
+(b) 線形性・非消去性によって子の置換が定まり，
+両方向の導出帰納法で言語$\sigma L_A$を得る．
+記号コピー数は高々$f!$で，
+子の重複はなく，総長・$\lambda$-自由性・fan-out・ランクは保存される．
+
+(c) 残る変数は順序を保って一度ずつ現れるので，
+非消去・非置換・fan-out・ランクは保存される．
+導出帰納法でパターン別の射影恒等式を得る．
+省略した全空子はそのパターンを実現する終端導出で復元できる．
+各非終端記号のパターン数は高々$2^f$，
+規則の子パターン選択数は高々$2^{fr_{\max}}$であり，
+テンプレートは射影によって短くなるだけである．
+
+(d) 非置換性によって子成分の極大連続列は適合的に定まり，
+非消去性により全成分を被覆する．
+\[
+ \rho^\mu(\mu_1(\tuple v_1),\ldots,\mu_q(\tuple v_q))
+ =\mu(\rho(\tuple v_1,\ldots,\tuple v_q))
+\]
+だから，導出帰納法で像言語の等式を得る．
+融合写像は単射とは限らないので逆像の同一性は主張しない．
+連結は総長・$\lambda$-自由性・非置換性・fan-out・ランクを保つ．
+固定fan-out・固定ランクでは変換後のサイズは線形である
 ~\cite[Section~2.3, after Example~2]{Yoshinaka2011}．
-最後の刈り込みはどの上界も増やさない．
-これで命題~\ref{prop:good-normalization} が証明された．
+\end{proof}
+
+\emph{命題~\ref{prop:good-normalization}のサイズ上界．}
+刈り込んだ入力に(a)--(d)を適用し，最後に再び刈り込む．
+各段階の符号長の増加倍率は$f,r_{\max}$だけに依存し，
+刈り込みは符号長を増やさないので
+\[
+ \|G_{\mathrm{good}}\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|),\qquad
+ L(G_{\mathrm{good}})=L(G_{\mathrm{in}})\setminus\{\eps\}
+\]
+が成り立つ．
 
 \subsection*{$\lambda$-自由表示に対する厚みの転移}
 
@@ -4094,8 +4137,7 @@ $(\mathtt a^{2^i},\eps)$ である．
 一つの精密化状態の内部で必要な最短証拠が
 指数的に長くなり得る．
 
-\input{appendix_window_abelian_JP.tex}
-\input{appendix_window_group_JP.tex}
+\input{appendix_group_blocks_JP.tex}
 \input{appendix_local_group_JP.tex}
 
 \small

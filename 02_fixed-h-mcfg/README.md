@@ -1,11 +1,32 @@
 # #2 — finite-semigroup-typed MCFG
 
-**Title (v88 quantitative logical compression working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v89 bilingual structural synchronization working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
-## v88 後半の共通補題統合と定量的証明の圧縮（main執筆正本・未投稿）
+## v89 日本語・英語の論理構成と群論付録の全面同期（main執筆正本・未投稿）
+
+英文v88（**38ページ**）を数学的正本として一切変更せず，日本語版を**52ページ**へ再構成した
+（日本語v88: 55ページ）．第2節・第3節の定性的学習部分，第4節の7小節，
+第5節の比較，第6節の結論および正規化・有限群・局所群付録の対応関係を統一した．
+英文の三つの厚み補題の統合，成分別型保存置換，有限モノイド値を保存する窓スケルトン，
+一般有限群での非可換短縮，LG厚み上界，規則証拠のみの計算可能予算を
+日本語で明示的に再編した．
+
+新しい日本語付録 `appendix_group_blocks_JP.tex` は，
+英文 `appendix_group_blocks.tex` と同じ可換・非可換の二段構成である．
+旧日本語の可換群・一般有限群個別付録は履歴資料として保持し，
+最新版のコンパイル対象から除外した．
+**英文の全105ラベルに日本語で対応があり，未定義参照・重複ラベルはゼロ**．
+日本語に追加された7つの補助定義・証明ラベルは，詳細な厳密性のため意図的に残した．
+英日TeXとPDFのCI検査を通過し，主要ページの目視も実施した．
+全頁の独立した数学査読と最終校閲はI&C投稿前に別途必要である．
+
+[構成同期監査](revision/v89_japanese_english_structural_alignment.md) ／
+[PR #71](https://github.com/growupkuriyama-hub/Papers/pull/71)
+
+## v88 後半の共通補題統合と定量的証明の圧縮（改訂履歴）
 
 英文v87の前半は保持し，Claudeのv86後半案を現行v87へ直接接続して
 第4節・第5節・結論・正規化付録および群／局所群付録を論理的に再構成した．
