@@ -1,11 +1,11 @@
 # #2 — finite-semigroup-typed MCFG
 
-**Title (v87 logically condensed Yoshinaka (2015)-based draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
+**Title (v88 quantitative logical compression working draft):** Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing  
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation  
 **Public preprint:** arXiv:2605.11644
 
-## v88 後半の共通補題統合と定量的証明の圧縮（PR #70・未統合）
+## v88 後半の共通補題統合と定量的証明の圧縮（main執筆正本・未投稿）
 
 英文v87の前半は保持し，Claudeのv86後半案を現行v87へ直接接続して
 第4節・第5節・結論・正規化付録および群／局所群付録を論理的に再構成した．
@@ -21,16 +21,18 @@ v87で統合済みの完全性補題を用いて `prop:mcfg-relaxed-witnesses` �
 局所群短縮）の数学的条件追跡・監査記録を追加．
 GitHub Actionsの新付録監視パスと stale-source guard も追加．
 
-日本語版は**54ページ**で，R1と局所群の非可換ブロック置換の証明を
-数学的に同期させた．英文v88と日本語版は主要定理・上界の内容は対応するが，
-日本語の付録統合・文章圧縮は未実施である．
-英日ビルドと相互参照のCIは成功．本PRは**draft**で，mainには未統合．
-完全な数学的独立最終査読と全頁目視はなお必要である．
+日本語版にはR1の訂正に加え，型保存置換，証拠語長の共通テンプレート，
+補助不変量付き窓スケルトン，重い節点の計数という英文v88の共通補題と，
+局所群の非可換ブロック置換の形式的な適用を反映した．
+**日本語版は55ページ（最終CIの実測）**．主要な定理の仮定・上界は対応するが，
+日本語の旧群論2付録の独立証明は維持し，付録統合・文章圧縮は未実施である．
+英日ビルドと相互参照のCIを検証済み．独立した完全数学査読と全頁目視は
+未了であり，main統合後もI&C投稿確定稿とは扱わない．
 
 [独立4補題監査](revision/v88_quantitative_four_lemma_independent_audit.md) ／
 [PR #70](https://github.com/growupkuriyama-hub/Papers/pull/70)
 
-## v87 前半1–3節の論理的圧縮（main執筆正本、I&C未投稿）
+## v87 前半1–3節の論理的圧縮（改訂履歴、I&C未投稿）
 
 Claude圧縮案をもとに前半の定性理論を再構成し、六項目の形式的・数学的監査
 （空の非空核、ランク0、節ラベル、Yoshinaka (2015) の型付き関数列挙、
@@ -125,7 +127,7 @@ v86からの日本語版にv87の主要な定理・証明変更を反映した�
 
 ## Historical v81 reference (not current main source)
 
-- `main.tex` — **v87が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
+- `main.tex` — **v88が現行正本**。v81は過去のI&C投稿準備版として比較できる： Davenport constants, order homogenization, effective characteristic data, rule-only witnesses, LG appendix, and LI∨Grp corollary. External mathematical review and author signoff remain open.
 - `revision/v81_submission_preflight_review.md` — bilingual pre-submission editorial/mathematical source audit, repaired abstract/conclusion, journal disclosure and visual-PDF gates.
 - `revision/v80_mobility_distributional_review.md` — type-deletion lower-bound criterion, two-component mobility, universal finite-typing nonmembership, relaxed distribution classes and abelian-filtered polynomial data; algebraic/effective scope checked.
 - `revision/v79_rule_only_witness_budget.md` — proves redundant nonterminal samples can be dropped when minimizing canonical tuples, improving cardinality and computable encoded budget.
