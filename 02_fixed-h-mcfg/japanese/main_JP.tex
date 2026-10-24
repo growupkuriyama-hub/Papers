@@ -81,6 +81,9 @@ $\|K\|_+=\sum_{w\in K}(|w|+1)$ を評価する．
 印付き重い節点の短縮法を用いる．
 正語像半群が局所群に属する任意の固定型付けには
 $O(\|G\|^3\bar\theta_G)$ の上界が成立する．
+空成分や消去規則を許す任意の標準MCFG入力についても，
+元のサイズ$n$と成分パターン厚み$t$を用いて
+$O(n^3t)$または$O(n^4t)$の上界を得る．
 規則ランク1の文法とアーベル型フィルタ標的には，
 それぞれ別の十分条件の下で多項式上界を与える．
 
@@ -235,6 +238,9 @@ $\bar\theta_G=\max\{1,\theta_G\}$ とおく．
 これらの $O$ 記号の定数は固定した型付け・アルファベット・
 ファンアウト・規則ランク上界（必要に応じて窓と群）に依存するが，
 標的文法 $G$ には依存しない．
+系~\ref{cor:unrestricted-standard-mcfg-data}では，
+入力の良形性などの制約を外し，文法サイズ$n$と成分パターン厚み$t$に
+対して$O(n^3t)$または$O(n^4t)$の上界を与える．
 群の上界は非可換群も含み，可換群ではより小さい定数が得られる
 （定理~\ref{thm:window-abelian-polydata}）．
 $\mathbf{LG}$ は新単位元添加ではなく正語像半群に対する条件である．
@@ -3028,6 +3034,93 @@ $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$ は真の包含である
 空アルファベットの場合は自明である．
 
 
+\subsection{一般の標準MCFG入力への拡張}
+\label{subsec:unrestricted-source}
+従来の定量評価では良形の縮約済み文法を用いたが，
+\emph{入力文法}には良形性，非消去性，非置換性，
+非融合性，$\lambda$-自由性を要求しなくてよい．
+空成分がある場合には，その非空成分パターンを実現する最短長を測る．
+
+\begin{definition}[成分パターン厚み]
+\label{def:component-pattern-thickness}
+標準MCFG $H$の生産的な非終端記号$A$について
+$\operatorname{supp}(\tuple u):=\{i:u_i\ne\eps\}$，
+$\mathsf{Pat}_H(A):=\{\operatorname{supp}(\tuple u):
+\tuple u\in L_A(H)\}$とおく．
+\[
+ t_{\mathrm{pat}}(H):=
+ \max_{\substack{A\text{ は生産的}\\I\in\mathsf{Pat}_H(A)}}
+ \min_{\substack{\tuple u\in L_A(H)\\
+ \operatorname{supp}(\tuple u)=I}}
+ \|\tuple u\|_1,\qquad
+ \bar t_{\mathrm{pat}}(H):=\max\{1,t_{\mathrm{pat}}(H)\}
+\]
+を成分パターン厚みと呼ぶ．空集合の最大値は0とする．
+全成分が空のパターンの最短長も0である．
+\end{definition}
+
+\begin{proposition}[成分パターン厚みによる良形正規化]
+\label{prop:pattern-thickness-transfer}
+$f,r\ge1$を固定し，$H$をファンアウト高々$f$，
+ランク高々$r$の任意の標準MCFGとする．
+$L(H)\cap\Sigma^+\ne\emptyset$なら，
+その刈り込み済み文法を$H_{\mathrm{red}}$として，
+同じファンアウトとランクの上界をもち，
+$L(H)\cap\Sigma^+$を生成する縮約済み良形MCFG $G$が存在して
+\[
+ \|G\|=O_{f,r}(\|H\|),\quad
+ t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}}),\quad
+ \bar\theta_G=O_{f,r}(
+ \|H\|\bar t_{\mathrm{pat}}(H_{\mathrm{red}}))
+\]
+を満たす．
+\end{proposition}
+\begin{proof}
+命題~\ref{prop:good-normalization}で正規化し，
+補題~\ref{lem:normalization-stages}の
+タプル言語の等式を用いる．
+保持記号の生成言語は，元の文法の成分パターン別の
+言語の和集合を，成分射影・置換・連結した像となる．
+これらは総長を増加させず，元の各非空ファイバーには
+長さ$t_{\mathrm{pat}}(H_{\mathrm{red}})$以下の代表がある．
+よって$t_G$を抑え，補題~\ref{lem:thickness-equivalence}(iii)で
+$\theta_G$を抑えられる．
+詳細は付録~\ref{app:pattern-thickness}に示す．
+\end{proof}
+
+\begin{corollary}[任意の標準MCFG入力に対する定量保証]
+\label{cor:unrestricted-standard-mcfg-data}
+$f,r\ge1$，有限アルファベット$\Sigma$，
+有限半群型付け$s$を固定する．
+$L\in\Cmcf{f}{s}$を生成する任意の有限な標準MCFG $H$が
+ファンアウト高々$f$，規則ランク高々$r$なら，
+$n:=\max\{1,\|H\|\}$と
+$t:=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$に対し，
+再構成器$\mathcal B_{f,s}^{\le r}$には
+$O_{f,r,s}(n)$語からなる特徴標本$K\subseteq L$が存在し，
+\[
+ \|K\|_+=\begin{cases}
+ O(n^3t),&
+ s\preceq s_{k,\ell}\text{，または }
+ \widehat{s}\preceq(\widehat{s}_{k,\ell},g)
+ \text{（固定有限群準同型$g$）},\\
+ O(n^4t),&\mathsf S\in\mathbf{LG}
+ \end{cases}
+\]
+となる．定数は固定したアルファベット・型付け・
+ファンアウト・ランク・窓・群にのみ依存する．
+入力の消去，置換，融合，空成分はすべて許される．
+$\eps\in L$の場合は長さ1の追加証拠を加える．
+\end{corollary}
+\begin{proof}
+正語部分が非空なら命題~\ref{prop:pattern-thickness-transfer}と
+定理~\ref{thm:boundary-polydata}，
+\ref{thm:window-group-polydata}，
+\ref{thm:local-group-polydata}を順に用いる．
+$\|G\|=O(n)$，$\bar\theta_G=O(nt)$である．
+$L\subseteq\{\eps\}$は$K=L$で足りる．
+\end{proof}
+
 \subsection{短い特徴データの計算}
 \label{subsec:effective-char-data}
 
@@ -4641,6 +4734,46 @@ AIによる生成文・評価そのものを数学的正当化の根拠とはし
 構成の整合性を確認する補助検査として位置づける．
 
 \appendix
+\section{一般MCFGの成分パターン厚みの移行}
+\label{app:pattern-thickness}
+命題~\ref{prop:pattern-thickness-transfer}の詳細を記す．
+元の刈り込み済み文法$H_{\mathrm{red}}$の
+各非終端記号$A$と実現可能なパターン$I$について
+$F_{A,I}:=\{\tuple u\in L_A(H_{\mathrm{red}}):
+\operatorname{supp}(\tuple u)=I\}$とする．
+この各集合には長さ
+$t_{\mathrm{pat}}(H_{\mathrm{red}})$以下の代表が存在する．
+
+補題~\ref{lem:normalization-stages}の段階(a)では，
+新しいタプル言語は$\pi_J(L_A(H_{\mathrm{red}}))$となり，
+元のパターンごとのファイバーの射影像の和集合である．
+段階(b)は成分の順序のみを変更し，
+パターンを置換して総長を変えない．
+段階(c)では射影・置換の後で，
+指定した非空成分パターンに属する像だけを保持する．
+寄与する元のファイバーから最短タプルを選べば，
+同じパターンの保持タプルであって総長は増えない．
+段階(d)の連続成分の融合も総長を増やさず，
+出力パターンは入力パターンから一意に定まる．
+従って，どの保持記号にも
+$t_{\mathrm{pat}}(H_{\mathrm{red}})$以下の長さの
+実際の終端導出が存在する．
+この結論は各段階のタプル言語の\emph{等式}を使い，
+単なる包含だけから主張するものではない．
+最後の刈り込みは保持記号の言語を変えない．
+よって$t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}})$．
+
+命題~\ref{prop:good-normalization}は
+$\|G\|=O_{f,r}(\|H\|)$を与え，
+補題~\ref{lem:thickness-equivalence}(iii)は
+$\bar\theta_G\le
+2\max\{1,\|G\|\}\max\{1,t_G\}$
+を与える．
+一方，元の通常の規則厚みのみで同様の
+上界を得たわけではない．
+空成分除去による増大は
+命題~\ref{prop:empty-component-blowup}が示す．
+
 \section{型付き有限証拠に関する補助証明}
 \label{app:typed-witness-aux-proofs}
 
