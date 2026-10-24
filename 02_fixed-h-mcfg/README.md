@@ -11,6 +11,8 @@
 | English, submission master | [main.tex](main.tex) | [main.pdf](main.pdf) |
 | Japanese, research translation | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) |
 
+**2026-10-24 LG dichotomy and bilingual revision:** The English and Japanese masters now include a pseudovariety-level characterization at fan-out one, with an operator-independent distinguishing-pair proof; non-context-free examples separating local groups from window–group typings and nonabelian from window–abelian typings; corrected higher-fan-out open questions; related-publication disclosure; and an explicit separation of the TCS submitted R1 from the public arXiv v4. The Japanese additions are source-level translations in `japanese/additions/`. Both texts retain their existing core MCFG shortening proofs.
+
 **2026-10-24 editorial integration (M1–M9):** The English source is the 45-page upper-bound-centered I&C manuscript. The Japanese source has been updated to reflect the same principal claims, the finite-feature crossing example, local-group Rees/sliding-factor proof, streamlined qualitative attribution, and the single higher-arity open problem. Detailed historical versions remain in Git history.
 
 ## Proven upper bounds (fixed alphabet, fan-out, rank and typing)
