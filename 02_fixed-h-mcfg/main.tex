@@ -776,46 +776,12 @@ also does not cover unbounded rule rank; the concrete finite-witness
 argument below extends \cite[Corollary~2]{Yoshinaka2011} to typed links.
 \end{remark}
 
-\subsection{Soundness}
+\subsection{Soundness interface}
 \label{sec:soundness}
-
-\begin{lemma}[Composition preserves equivalence]
-\label{lem:witnessed-composition}
-Let $L\subseteq\Sigma^*$, let $\rho$ be a good template of rank $r$, and let
-$\tuple x_j,\tuple u_j\in(\Sigma^+)^{d_j}$ satisfy
-$\tuple u_j\equiv_{L,s}\tuple x_j$ for every $j$.  Then
-$\rho(\tuple u_1,\ldots,\tuple u_r)\equiv_{L,s}\rho(\tuple x_1,\ldots,\tuple x_r)$.
-\end{lemma}
-
-\begin{proof}
-Apply the congruence property for substitution under signature
-operations~\cite[Lemma~1]{Yoshinaka2015General} to the
-type-compatible good template.  The morphism preserves types,
-and applying the property in both directions yields distributional
-equivalence.
-\end{proof}
-
-\begin{proposition}[Soundness of every hypothesis]
-\label{prop:reconstruction-soundness}
-Let $L$ be $(f,s)$-tuple-substitutable and $K\subseteq L$ finite.  For every
-$r_{\max}\ge1$, if $[\tuple x]\Rightarrow^*\tuple u$ in
-$\widehat G_{\le r_{\max}}(K)$, then $\tuple u\equiv_{L,s}\tuple x$.
-Consequently $L(\mathcal B_{f,s}^{\le r_{\max}}(K))\subseteq L$ and
-$L(\mathcal B_{f,s}(K))\subseteq L$.
-\end{proposition}
-
-\begin{proof}
-This is the substitution invariant of
-\cite[Sections~6.1--7]{Yoshinaka2015General}
-for the substructure-indexed construction, identified with our
-capped grammar by Lemma~\ref{lem:substp}.
-Equivalently, Const preserves the observed tuple; a Link equates
-same-type tuples with a common context in $L$, and Comp preserves
-this equivalence by Lemma~\ref{lem:witnessed-composition}.
-The invariant therefore propagates through derivations; Start
-generates only words of $L$.  For nonempty $K$, the uncapped grammar
-has rank cap $\|K\|_+$, while the empty case is trivial.
-\end{proof}
+The standard substitution invariant for the witnessed reconstruction
+is Proposition~\ref{prop:reconstruction-soundness};
+its typed Link/Comp verification is in
+Appendix~\ref{app:qualitative-construction-details}.
 
 \subsection{Yield-Typed Refinement and Witnesses}
 \label{sec:refinement}
@@ -1024,80 +990,16 @@ $\eps$ iff $\eps\in K$, iff $\eps\in L$, because $\mathcal F_L\subseteq K\subset
 L$.  Rank-preserving normalization gives the last sentence.
 \end{proof}
 
-\subsection{Effective Reconstruction and Conservative Learning}
+\subsection{Qualitative learning and effectivity}
 \label{sec:poly-time}
-\begin{theorem}[Polynomial construction under a rule-rank cap]
-\label{thm:poly}
-Fix $f,r_{\max}\ge1$ and $s$, and implement type tests by the completion $\widehat{s}$.  The
-encoding of $\widehat G_{\le r_{\max}}(K)$ is computable in time
-$(1+\|K\|_+)^{O(fr_{\max})}$; its fan-out is at most $f$ and its rank at most
-$r_{\max}$.
-\end{theorem}
-
-\begin{proof}
-Put $n_K=\max\{1,\|K\|_+\}$.  An occurrence is a sample word with at most $2f$
-cut positions, so there are $n_K^{O(f)}$ occurrences, typed by fixed-monoid
-products; grouping occurrences by context and type lists the Link rules.  A
-composition witness of rank $r\le r_{\max}$ is determined by a parent
-occurrence and at most $2fr_{\max}$ further cut positions inside it, with a
-labelling whose number depends only on $f,r_{\max}$; goodness is checked
-directly.  This gives $n_K^{O(fr_{\max})}$ candidate Comp rules; the remaining
-rules have rank at most one, and deduplication leaves an encoding of the same
-size.
-\end{proof}
-
-\begin{definition}[Conservative sequential learner]
-\label{def:conservative-learner}
-The learner $\mathcal A_{f,s}$ (respectively $\mathcal A_{f,s}^{\le r_{\max}}$)
-starts with $H_0$, keeps its hypothesis on $\pausesym$ and on every datum the
-hypothesis generates, and otherwise replaces it by $\mathcal B_{f,s}(K)$
-(respectively $\mathcal B_{f,s}^{\le r_{\max}}(K)$), where $K$ is the content
-read so far.  This is the policy of \cite[Algorithm~1]{Yoshinaka2011}.
-\end{definition}
-
-\begin{corollary}[Gold identification]
-\label{cor:gold-explanatory}
-\label{cor:capped-gold-poly}
-Fix $f\ge1$ and $s$.
-\begin{enumerate}[label=\textup{(\roman*)}]
-\item $\mathcal A_{f,s}$ TxtEx-identifies $\Cmcf{f}{s}$.
-\item For fixed $r_{\max}$, $\mathcal A_{f,s}^{\le r_{\max}}$ TxtEx-identifies
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$, in time per datum polynomial in the
-size of the content read so far.
-\end{enumerate}
-\end{corollary}
-
-\begin{proof}
-For fixed rule rank, the statement follows from
-Corollary~\ref{cor:yoshinaka2015-qualitative}, the concrete
-correspondence in Lemma~\ref{lem:substp}, and the conservative
-policy of \cite[Algorithm~1]{Yoshinaka2011}.
-For unbounded rank, Theorem~\ref{thm:exact-reconstruction}
-provides a finite characteristic sample, while
-Proposition~\ref{prop:reconstruction-soundness} gives soundness.
-Membership is decidable~\cite{SekiEtAl1991}.  After a text
-has presented the characteristic sample, the next rebuild (if any)
-is correct and permanent; if no rebuild follows, sample consistency
-and conservativeness imply that the current hypothesis already
-generates every text word and hence $L$.
-For fixed rank, the per-datum bound follows from
-Theorem~\ref{thm:poly} and
-\cite[Proposition~4]{Yoshinaka2011}.
-\end{proof}
-
-\paragraph{Update complexity versus convergence stage.}
-The polynomial-time guarantee of Theorem~\ref{thm:poly} and
-Corollary~\ref{cor:capped-gold-poly} concerns hypothesis reconstruction
-and membership testing at each finite stage, measured against the data
-seen so far.  TxtEx convergence in Corollary~\ref{cor:gold-explanatory}
-does not bound the first stage of stabilization or the number of mind
-changes polynomially: a text may postpone the first presentation of a
-particular positive example arbitrarily long.  Short characteristic
-data by itself gives no presentation-independent convergence-stage bound.
-
-Every CFG has a rank-two presentation, so $\mathcal A_{1,s}^{\le2}$ covers
-$\Cmcf{1}{s}$; this does not imply polynomial characteristic-data length at
-rank two (Section~\ref{sec:char-data}).
+Fixed-rank polynomial hypothesis construction
+(Theorem~\ref{thm:poly}) and Gold/TxtEx convergence
+(Corollary~\ref{cor:gold-explanatory}) use Yoshinaka's
+conservative update policy.  The proofs, the exact update-time
+interpretation and the unbounded-rank supplement are collected
+in Appendix~\ref{app:qualitative-construction-details}.
+These statements do not imply short characteristic data;
+that is the subject of Section~\ref{sec:char-data}.
 
 \section{Characteristic-Data Bounds}
 \label{sec:char-data}
@@ -3331,6 +3233,127 @@ This argument does not assert polynomial control by the
 \emph{ordinary} untyped rule thickness of $H$:
 Proposition~\ref{prop:empty-component-blowup} shows why
 elimination of empty components can be expensive.
+
+\section{Auxiliary Verification of Qualitative Reconstruction}
+\label{app:qualitative-construction-details}
+\subsection{Soundness}
+
+
+\begin{lemma}[Composition preserves equivalence]
+\label{lem:witnessed-composition}
+Let $L\subseteq\Sigma^*$, let $\rho$ be a good template of rank $r$, and let
+$\tuple x_j,\tuple u_j\in(\Sigma^+)^{d_j}$ satisfy
+$\tuple u_j\equiv_{L,s}\tuple x_j$ for every $j$.  Then
+$\rho(\tuple u_1,\ldots,\tuple u_r)\equiv_{L,s}\rho(\tuple x_1,\ldots,\tuple x_r)$.
+\end{lemma}
+
+\begin{proof}
+Apply the congruence property for substitution under signature
+operations~\cite[Lemma~1]{Yoshinaka2015General} to the
+type-compatible good template.  The morphism preserves types,
+and applying the property in both directions yields distributional
+equivalence.
+\end{proof}
+
+\begin{proposition}[Soundness of every hypothesis]
+\label{prop:reconstruction-soundness}
+Let $L$ be $(f,s)$-tuple-substitutable and $K\subseteq L$ finite.  For every
+$r_{\max}\ge1$, if $[\tuple x]\Rightarrow^*\tuple u$ in
+$\widehat G_{\le r_{\max}}(K)$, then $\tuple u\equiv_{L,s}\tuple x$.
+Consequently $L(\mathcal B_{f,s}^{\le r_{\max}}(K))\subseteq L$ and
+$L(\mathcal B_{f,s}(K))\subseteq L$.
+\end{proposition}
+
+\begin{proof}
+This is the substitution invariant of
+\cite[Sections~6.1--7]{Yoshinaka2015General}
+for the substructure-indexed construction, identified with our
+capped grammar by Lemma~\ref{lem:substp}.
+Equivalently, Const preserves the observed tuple; a Link equates
+same-type tuples with a common context in $L$, and Comp preserves
+this equivalence by Lemma~\ref{lem:witnessed-composition}.
+The invariant therefore propagates through derivations; Start
+generates only words of $L$.  For nonempty $K$, the uncapped grammar
+has rank cap $\|K\|_+$, while the empty case is trivial.
+\end{proof}
+
+
+\subsection{Effective Reconstruction and Conservative Learning}
+
+\begin{theorem}[Polynomial construction under a rule-rank cap]
+\label{thm:poly}
+Fix $f,r_{\max}\ge1$ and $s$, and implement type tests by the completion $\widehat{s}$.  The
+encoding of $\widehat G_{\le r_{\max}}(K)$ is computable in time
+$(1+\|K\|_+)^{O(fr_{\max})}$; its fan-out is at most $f$ and its rank at most
+$r_{\max}$.
+\end{theorem}
+
+\begin{proof}
+Put $n_K=\max\{1,\|K\|_+\}$.  An occurrence is a sample word with at most $2f$
+cut positions, so there are $n_K^{O(f)}$ occurrences, typed by fixed-monoid
+products; grouping occurrences by context and type lists the Link rules.  A
+composition witness of rank $r\le r_{\max}$ is determined by a parent
+occurrence and at most $2fr_{\max}$ further cut positions inside it, with a
+labelling whose number depends only on $f,r_{\max}$; goodness is checked
+directly.  This gives $n_K^{O(fr_{\max})}$ candidate Comp rules; the remaining
+rules have rank at most one, and deduplication leaves an encoding of the same
+size.
+\end{proof}
+
+\begin{definition}[Conservative sequential learner]
+\label{def:conservative-learner}
+The learner $\mathcal A_{f,s}$ (respectively $\mathcal A_{f,s}^{\le r_{\max}}$)
+starts with $H_0$, keeps its hypothesis on $\pausesym$ and on every datum the
+hypothesis generates, and otherwise replaces it by $\mathcal B_{f,s}(K)$
+(respectively $\mathcal B_{f,s}^{\le r_{\max}}(K)$), where $K$ is the content
+read so far.  This is the policy of \cite[Algorithm~1]{Yoshinaka2011}.
+\end{definition}
+
+\begin{corollary}[Gold identification]
+\label{cor:gold-explanatory}
+\label{cor:capped-gold-poly}
+Fix $f\ge1$ and $s$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\mathcal A_{f,s}$ TxtEx-identifies $\Cmcf{f}{s}$.
+\item For fixed $r_{\max}$, $\mathcal A_{f,s}^{\le r_{\max}}$ TxtEx-identifies
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$, in time per datum polynomial in the
+size of the content read so far.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+For fixed rule rank, the statement follows from
+Corollary~\ref{cor:yoshinaka2015-qualitative}, the concrete
+correspondence in Lemma~\ref{lem:substp}, and the conservative
+policy of \cite[Algorithm~1]{Yoshinaka2011}.
+For unbounded rank, Theorem~\ref{thm:exact-reconstruction}
+provides a finite characteristic sample, while
+Proposition~\ref{prop:reconstruction-soundness} gives soundness.
+Membership is decidable~\cite{SekiEtAl1991}.  After a text
+has presented the characteristic sample, the next rebuild (if any)
+is correct and permanent; if no rebuild follows, sample consistency
+and conservativeness imply that the current hypothesis already
+generates every text word and hence $L$.
+For fixed rank, the per-datum bound follows from
+Theorem~\ref{thm:poly} and
+\cite[Proposition~4]{Yoshinaka2011}.
+\end{proof}
+
+\paragraph{Update complexity versus convergence stage.}
+The polynomial-time guarantee of Theorem~\ref{thm:poly} and
+Corollary~\ref{cor:capped-gold-poly} concerns hypothesis reconstruction
+and membership testing at each finite stage, measured against the data
+seen so far.  TxtEx convergence in Corollary~\ref{cor:gold-explanatory}
+does not bound the first stage of stabilization or the number of mind
+changes polynomially: a text may postpone the first presentation of a
+particular positive example arbitrarily long.  Short characteristic
+data by itself gives no presentation-independent convergence-stage bound.
+
+Every CFG has a rank-two presentation, so $\mathcal A_{1,s}^{\le2}$ covers
+$\Cmcf{1}{s}$; this does not imply polynomial characteristic-data length at
+rank two (Section~\ref{sec:char-data}).
+
+
 
 \section{Auxiliary Proofs for Typed Witness Construction}
 \label{app:typed-witness-aux-proofs}
