@@ -925,15 +925,14 @@ $E_j\in\mathcal E_{d_j}$ が得られ，
 \end{proof}
 
 
-\section{正例データからの厳密な再構成}
+\section{Yoshinaka (2015) への帰着と定量的証拠}
 \label{sec:learner}
 
-固定有限半群型付けの下での具体的な集合駆動再構成を定め，
-完全性のための有限証拠を構成する．
-規則ランク有界の場合のYoshinaka~\cite{Yoshinaka2015General}
-のsignatureとの対応は第~\ref{sec:general-framework}節で証明する．
-ランク無制限の場合は単一の有界アリティsignatureに依存せず，
-非空タプルと標本語長で制限された合成証拠を直接扱う．
+規則ランク有界の質的学習原理は
+Yoshinaka~\cite{Yoshinaka2015General}から継承する．
+本節では具体的再構成器との対応を確かめ，
+第~\ref{sec:char-data}節の\emph{特徴データ総長}を評価するための
+有限証拠と，ランク無制限の場合に必要な補足だけを残す．
 
 \subsection{集合駆動型再構成}
 
@@ -1085,6 +1084,133 @@ $\mathcal B_{f,s}(\emptyset)$ を
 符号化順序を固定すれば，両作用素は決定的かつ集合駆動型となる．
 \end{definition}
 
+\subsection{Yoshinaka (2015) の学習理論への帰着}
+\label{sec:general-framework}
+
+規則ランク有界の場合の質的学習可能性は
+Yoshinaka~\cite[Theorem~1]{Yoshinaka2015General}
+から得られる既知の結果である．
+ここでは同論文の一般的な学習証明を繰り返さず，
+有限半群型付けへの特殊化と本稿の具体的再構成器への対応だけを示す．
+$f,r\ge1$ と $s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定する．
+signature $\mathfrak S_{f,r,s}$ は開始ソート
+$O_*=\{\overline w:w\in\Sigma^*\}$ と，
+互いに素なタグ付きソート
+\[
+ T_{d,\boldsymbol\mu}
+ =\{\tuple w\in(\Sigma^+)^d:s^{(d)}(\tuple w)=\boldsymbol\mu\},
+ \quad 1\le d\le f,\quad\boldsymbol\mu\in\mathsf S^d
+\]
+をもつ．関数記号はランク高々$r$の型整合的な良形MCFGテンプレート
+（定数規則も含む），昇格演算
+$\pi_\mu:(w)\mapsto\overline w$，および開始ソートの
+定数$\overline\eps$である．開始ソートを入力とする演算はない．
+これは~\cite[Example~3 and Section~8]{Yoshinaka2015General}
+の非空成分版MCFG signatureの有限ソート精密化である．
+
+\begin{lemma}[signatureの文脈と許容文文脈]
+\label{lem:signature-contexts}
+開始以外のソートについて
+\[
+ \mathcal S_{T_{d,\boldsymbol\mu}}=T_{d,\boldsymbol\mu},
+ \qquad
+ \mathcal C_{T_{d,\boldsymbol\mu}}
+ =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}
+\]
+である．後者はソート上の関数集合としての等式である．
+開始ソート$O_*$の文脈は恒等関数だけである．
+\end{lemma}
+\begin{proof}
+ランク0の定数が各非開始ソートの全要素を実現する．
+良形テンプレートの合成で許容文脈が保たれることは
+補題~\ref{lem:filling-identity}から従う．
+逆に任意の$E=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$
+は良形単項テンプレート
+$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$と昇格演算で実現できる．
+$O_*$を引数とする演算はない．
+\end{proof}
+
+\begin{proposition}[Yoshinaka (2015) への規則ランク有界の帰着]
+\label{prop:yoshinaka2015-embedding}
+\[
+ \mathsf{Subst}(\mathfrak S_{f,r,s})
+ =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)
+\]
+であり，$\mathfrak S_{f,r,s}$は
+~\cite{Yoshinaka2015General}のAssumptions~1--3を満たす．
+\end{proposition}
+\begin{proof}
+補題~\ref{lem:signature-contexts}より，
+各型付きソートの代入条件は
+定義~\ref{def:tuple-substitutable}と一致する．
+型タグを忘れればランク高々$r$のMCFGになり，
+逆方向は良形標準化と生成語型精密化
+（命題~\ref{prop:good-normalization}，
+\ref{prop:output-invariants}）から従う．
+$\eps$は開始ソートの定数で扱う．
+演算のアリティは高々$r$であり，固定$f,r,s$の下で
+型計算・文脈評価・MCFG所属判定は多項式時間である
+~\cite[Proposition~4]{Yoshinaka2011}．
+標本語の高々$2f(r+1)$個の切断位置から，
+型タグと入出力ソートを含む観測済み関数名を列挙できる．
+以上がAssumptions~1--3を満たすことを示す．
+\end{proof}
+
+\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
+\label{lem:substp}
+任意の有限正例標本$K\subseteq\Sigma^*$について，
+Yoshinaka~\cite[Section~6.1]{Yoshinaka2015General}の
+$\mathrm{SUBST}_{\mathrm P}(K)$と本稿の
+$\mathcal B^{\le r}_{f,s}(K)$は同じ言語を生成する．
+\end{lemma}
+\begin{proof}
+両文法の非開始非終端記号を観測されたタプルで対応させる．
+$\mathrm{SUBST}_{\mathrm P}$の規則は，
+親タプル$\tuple x$と
+$\tuple z=\rho(\tuple u_1,\ldots,\tuple u_q)$に共通の
+観測文脈$E$があるため，
+本稿のLinkの後にComp（$q=0$ならConst）を置いて模倣できる．
+逆にCompとConstは型付き演算の観測済みインスタンスであり，
+Linkは観測済みの単項恒等テンプレートに対応する．
+実際，$E[\tuple y]\in K$なら
+$E[\operatorname{id}(\tuple y)]\in K$なので，
+その型付き関数名も$\mathrm{FUN}(K)$に属する．
+したがって開始以外の導出は対応する．
+開始ソートでは双方とも
+\(\bigcup_{w\in K\cap\Sigma^+}L([(w)])\cup(\{\eps\}\cap K)\)
+を生成し，$K=\emptyset$なら双方とも空言語を生成する．
+\end{proof}
+
+\begin{corollary}[Yoshinaka (2015) から従う質的学習可能性]
+\label{cor:yoshinaka2015-qualitative}
+固定$f,r,s$について
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$は
+正例から多項式時間更新で極限同定可能である．
+刈り込まれたsignature文法の非終端記号数を$N$，
+規則数を$P$とすると，
+Yoshinakaの$\mathrm{SUBST}_{\mathrm D}$には
+要素数高々$|N|+|P|$の特徴集合がある．
+\end{corollary}
+\begin{proof}
+命題~\ref{prop:yoshinaka2015-embedding}に
+~\cite[Theorem~1 and the paragraph following Lemma~3]
+{Yoshinaka2015General}を適用する．
+\end{proof}
+
+\begin{remark}[既知の結果と本稿の定量的課題]
+\label{rem:yoshinaka-inheritance}
+Yoshinaka (2015)の明示的な証明は
+$\mathrm{SUBST}_{\mathrm D}$に対するものであり，
+$\mathrm{SUBST}_{\mathrm P}$は同論文のSections~6.1，7で扱われる．
+補題~\ref{lem:substp}が本稿の具体的作用素との接続を与える．
+ただし既知の特徴集合の\emph{要素数}上界だけでは
+\emph{総文字数}は抑えられない．
+また単一のランク有界signatureの定理は
+ランク無制限の作用素には直接適用できない．
+その場合は以下の有限証拠を使い，
+~\cite[Corollary~2]{Yoshinaka2011}を型付きリンクに拡張する．
+\end{remark}
+
 \subsection{健全性}
 \label{sec:soundness}
 
@@ -1114,39 +1240,26 @@ $\equiv_{L,s}$ によって受理が保存される．
 
 \begin{proposition}[ランク上界付きの各仮説の健全性]
 \label{prop:reconstruction-soundness}
-$L$ を $(f,s)$-タプル代入可能とし，
-$K\subseteq L$ とする．
-任意の $r_{\max}\ge1$ について，
-$\widehat G_{\le r_{\max}}(K)$ で
-$[\tuple x]\Rightarrow^*\tuple u$ ならば，
-$\tuple u$ のすべての成分は非空で，
-$\tuple u\equiv_{L,s}\tuple x$ が成り立つ．
-したがって
+$L$を$(f,s)$-タプル代入可能とし，$K\subseteq L$を有限とする．
+任意の$r_{\max}\ge1$について，
+$\widehat G_{\le r_{\max}}(K)$で
+$[\tuple x]\Rightarrow^*\tuple u$ならば
+$\tuple u\equiv_{L,s}\tuple x$である．したがって
 \[
- L\bigl(\mathcal B_{f,s}^{\le r_{\max}}(K)\bigr)\subseteq L,
- \qquad
- L\bigl(\mathcal B_{f,s}(K)\bigr)\subseteq L
+ L(\mathcal B_{f,s}^{\le r_{\max}}(K))\subseteq L,\qquad
+ L(\mathcal B_{f,s}(K))\subseteq L.
 \]
-である．
 \end{proposition}
-
 \begin{proof}
-これはYoshinakaの代入可能signature学習器における
-タプル値添字の健全性不変量である
-~\cite[Section~6.1 and Section~7]{Yoshinaka2015General}．
-開始記号以外の導出に関して帰納法を行う．
-Const は観測済みタプルを与える．
-Link は型付きソートが同じで，正例中の共通文脈をもつ
-タプルを結ぶので，$L$ において分布同値である．
-Comp では子への帰納法の仮定と，
-良形テンプレートに対する合同性
-（補題~\ref{lem:witnessed-composition}）を用いる．
-導出される成分はすべて非空のままである．
-Start では非空の観測文は空文脈によって $L$ に属し，
-$\eps$ の直接規則は $\eps\in K\subseteq L$ のときだけ存在する．
-$K\ne\emptyset$ の場合ランク無制限演算子は
-$r_{\max}=\|K\|_+$ の有界演算子であり，
-空標本の場合は自明である．
+これはYoshinaka~\cite[Sections~6.1--7]{Yoshinaka2015General}
+の部分構造添字付き学習における代入不変量であり，
+補題~\ref{lem:substp}によって本稿の再構成器に対応する．
+具体的にはConstでタプル値が保たれ，Linkでは
+同じ型と共通の正例文脈から分布同値性が得られ，
+Compでは補題~\ref{lem:witnessed-composition}がそれを保存する．
+したがって導出帰納法で不変量が保たれ，Startは$L$内の語だけを生成する．
+$K\ne\emptyset$のランク無制限版は上界$\|K\|_+$の有界版であり，
+$K=\emptyset$は自明である．
 \end{proof}
 
 \subsection{生成語型付き標的精密化と有限証拠}
@@ -1492,49 +1605,37 @@ $\eps$ は直接観測する．
 
 \begin{proposition}[任意の型一致代表を用いる完全性]
 \label{prop:completeness}
-$G$をファンアウト高々$f$の有限良形MCFGとし，
-$\widetilde G_0$をその刈り込んだ生成語型精密化とする．
-非開始型付き規則の最大ランクを$r_G$とし，
-該当規則がなければ$r_G:=0$とする．
-各非開始型付き非終端記号$X=A_{\mathbf t}$に対し，
-各成分が非空で$\widehat{s}^{(\fan(A))}(\iota(X))=\mathbf t$となる
-タプル$\iota(X)$と許容文文脈$\chi(X)$を選ぶ．
-$\widetilde S\to X$がある場合は$\chi(X)=\blank_1$とする．
-有限標本$K$がすべての$X$について
-$\chi(X)[\iota(X)]$を含み，
-各型付き規則$X\to\rho(Y_1,\ldots,Y_q)$（$q\ge0$）について
+$G$をファンアウト高々$f$の有限良形MCFG，
+$\widetilde G_0$をその刈り込んだ生成語型精密化，
+$r_G$を非開始型付き規則の最大ランク（なければ0）とする．
+各非開始型付き非終端記号$X=A_{\mathbf t}$について
+型が$\mathbf t$で各成分が非空のタプル$\iota(X)$と
+$\chi(X)\in\mathcal E_{\fan(A)}$を選び，
+$\widetilde S\to X$なら$\chi(X)=\blank_1$とする．
+有限標本$K$が各$X$について$\chi(X)[\iota(X)]$，
+各型付き規則$X\to\rho(Y_1,\ldots,Y_q)$について
 $\chi(X)[\rho(\iota(Y_1),\ldots,\iota(Y_q))]$を含むなら，
 $r_{\max}\ge\max\{1,r_G\}$に対して
 \[
-L(G)\subseteq L(\mathcal B_{f,s}^{\le r_{\max}}(K)),
-\qquad L(G)\subseteq L(\mathcal B_{f,s}(K)).
+ L(G)\subseteq L(\mathcal B_{f,s}^{\le r_{\max}}(K)),
+ \qquad L(G)\subseteq L(\mathcal B_{f,s}(K)).
 \]
 代入可能性も$\iota(X)\in L_X$も仮定しない．
-正準選択$\iota=\omega$は
-$\Wit(\widetilde G_0)\subseteq K$の場合を与える．
+正準選択$\iota=\omega$は$\Wit(\widetilde G_0)\subseteq K$の場合を与える．
 \end{proposition}
 \begin{proof}
-各型付き導出$X\Rightarrow_{\widetilde G_0}^*\tuple u$を
-$[\iota(X)]\Rightarrow^*\tuple u$で模倣することを
-導出木の高さに関する帰納法で示す．
-$\chi(X)[\iota(X)]\in K$から$\iota(X)$は観測タプルである．
-最初の規則を$X\to\rho(Y_1,\ldots,Y_q)$とし，
-$\tuple z:=\rho(\iota(Y_1),\ldots,\iota(Y_q))$とおく．
-第二の証拠語により$\tuple z$も観測される．
-型付き規則の構成から
-$\widehat{s}^{(\fan(X))}(\tuple z)=\widehat{s}^{(\fan(X))}(\iota(X))$である．
-両者は共通文脈$\chi(X)$により$K$中に現れるため，
-Link $[\iota(X)]\to[\tuple z]$が存在する．
-$q=0$ならConstが$\tuple z$を生成する．
-$q>0$なら良形テンプレートの非削除性と子成分の非空性から
-\(q\le\sum_j\|\iota(Y_j)\|_1\le\|\tuple z\|_1\le\|K\|_+\)
-であり，第二証拠語の区間分割からCompが得られる．
-従ってランク上界が$r_G$以上の有界版と無制限版の両方に
-Compがあり，子の導出に帰納法を適用できる．
-成功導出の開始リンク$\widetilde S\to X$では
-$\chi(X)=\blank_1$なので$\iota(X)$自身が非空の正例語となり，
-Startを適用できる．
-命題~\ref{prop:output-invariants}(iii)により全ての標的語が得られる．
+Yoshinaka~\cite[Lemma~3]{Yoshinaka2015General}の
+規則証拠論法を本稿のLink・Const・Compに適用する．
+各規則について
+$\tuple z=\rho(\iota(Y_1),\ldots,\iota(Y_q))$とおく．
+二つの証拠語がLink
+$[\iota(X)]\to[\tuple z]$を与え，
+その後に$q=0$ならConst，$q>0$ならランク$q\le r_G$のCompが続く．
+後者は$q\le\|\tuple z\|_1\le\|K\|_+$により
+ランク無制限版にも現れる．
+よって導出木の帰納法で元文法の各型付き導出を模倣でき，
+開始リンクでは$\chi(X)=\blank_1$なのでStartを適用できる．
+命題~\ref{prop:output-invariants}(iii)で結論を得る．
 \end{proof}
 
 \begin{theorem}[固定型付けに関する厳密な再構成]
@@ -1634,24 +1735,20 @@ $H_0$ を学習モデルで固定した空言語仮説とする．
 
 \begin{corollary}[Gold/TxtEx 同定]
 \label{cor:gold-explanatory}
-任意の有限半群型付け $s:\Sigma^+\to\mathsf S$ と
-$f\ge1$ に対し，
-保守的学習器 $\mathcal A_{f,s}$ は
-$\Cmcf{f}{s}$ を正例データから TxtEx 同定する．
+任意の有限半群型付け$s:\Sigma^+\to\mathsf S$と$f\ge1$に対し，
+保守的学習器$\mathcal A_{f,s}$は
+$\Cmcf{f}{s}$を正例データからTxtEx同定する．
 \end{corollary}
-
 \begin{proof}
-MCFG所属問題は決定可能である~\cite{SekiEtAl1991}．
-Start--Constの直接導出から再構成は標本整合的で，
-命題~\ref{prop:reconstruction-soundness} により健全である．
-定理~\ref{thm:exact-reconstruction} の特徴標本が現れた後，
-仮説が既に正しければ更新は起こらない．
-不正確なら欠けている$w\in L$が後に現れて再構成を強制し，
-その時点の標本は特徴集合を含むから新仮説は正確である．
-以後は構文的に安定し，更新方針は提示順序に依存してよい．
+規則ランク有界の質的同定は
+系~\ref{cor:yoshinaka2015-qualitative}から従う．
+ランク無制限では
+定理~\ref{thm:exact-reconstruction}の有限特徴標本と
+命題~\ref{prop:reconstruction-soundness}の健全性を使う．
+MCFG所属判定は決定可能である~\cite{SekiEtAl1991}．
+特徴標本出現後の次の仮説更新があれば正確な文法となり，以後変わらない．
+更新がなければ標本整合性と保守性から現仮説が既に$L$を生成する．
 \end{proof}
-
-
 
 \begin{corollary}[規則ランク有界の場合の保守的多項式時間学習]
 \label{cor:capped-gold-poly}
@@ -1693,196 +1790,6 @@ $\mathcal B^{\le r_{\max}}_{f,s}$ を用いる学習器は，
 $\Cmcf{1}{s}$ を対象にできる．
 ただし，これはランク2における
 特徴データ長が多項式であることを意味しない．
-
-\subsection{Yoshinaka (2015) のsignatureへの特殊化}
-\label{sec:general-framework}
-
-以下，Yoshinaka~\cite{Yoshinaka2015General} の
-signatureを有限半群型付けに特殊化し，
-対象クラスおよび再構成作用素との対応を証明する．
-
-有限アルファベット $\Sigma$，$f,r\ge1$ および有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
-$\widehat{s}$，$\mathsf S^\sharp$，$\mathsf S$ とおく．
-signature $\mathfrak S_{f,r,s}$ は，
-開始ソート $O_*=\{\overline w:w\in\Sigma^*\}$
-（$\Sigma^*$ のタグ付きコピー）と，タグ付きソート
-\[
- T_{d,\boldsymbol\mu}
- =\{\tuple w\in(\Sigma^+)^d:
- \widehat{s}^{(d)}(\tuple w)=\boldsymbol\mu\},
- \qquad
- 1\le d\le f,\quad\boldsymbol\mu\in(\mathsf S)^d
-\]
-をもつ．
-各 $T_{d,\boldsymbol\mu}$ も固有のソートタグを付けたコピーとし，
-以下では読みやすさのため元のタプルで表す．
-したがってすべてのソートは互いに素である
-~\cite[Example~4]{Yoshinaka2015General}．
-その関数記号は，子の規則ランクが高々 $r$ である
-型の整合したすべての良形 MCFG テンプレート
-（ランク0を含む），
-$(w)$ を $\overline w$ に送る昇格演算 $T_{1,\mu}\to O_*$，
-および $O_*$ に属する零項の $\overline{\eps}$ 定数からなる．
-$O_*$ を入力として受け取る関数はない．
-型のタグを忘れると，これは
-~\cite[Section~8]{Yoshinaka2015General}
-の意味で，非空タプル上の良形
-$\lambda$-自由 MCFG 演算の signature を
-有限ソート精密化したものである．
-この型なし signature は
-~\cite[Example~3]{Yoshinaka2015General}
-の例と文字どおり同一ではなく，
-\emph{非空成分に制限した変種}である．
-ファンアウト1における接頭辞--接尾辞型付けの場合は，
-~\cite[Example~4]{Yoshinaka2015General}
-に対応する．
-この signature 上のある文法で実現可能な
-部分構造と文脈を，それぞれ
-$\mathcal S_O,\mathcal C_O$ と書く．
-
-\begin{lemma}[Signature の文脈は許容文文脈である]
-\label{lem:signature-contexts}
-開始ソート以外の各ソートについて
-\[
- \mathcal S_{T_{d,\boldsymbol\mu}}
- =T_{d,\boldsymbol\mu},
- \qquad
- \mathcal C_{T_{d,\boldsymbol\mu}}
- =\{\tuple x\mapsto\overline{E[\tuple x]}:E\in\mathcal E_d\}
-\]
-が成り立つ．
-後者の等式は $T_{d,\boldsymbol\mu}$ 上の
-\emph{関数}の集合の等式である．
-また $\mathcal C_{O_*}$ に含まれるのは
-恒等関数だけである．
-\end{lemma}
-
-\begin{proof}
-開始以外のソートの全要素はランク0の定数で実現でき，
-$O_*$ を入力に取る演算は存在しない．
-穴から開始ソートへ至る経路では，
-良形テンプレートが変数の順序と一度限りの出現を保存する．
-非融合性と非空の兄弟成分により内部の区切り語も非空であるから，
-補題~\ref{lem:filling-identity} の反復により
-文脈は $\mathcal E_d$ に属する．逆に任意の
-$E=v_0\blank_1v_1\cdots\blank_dv_d\in\mathcal E_d$ は，
-単項良形テンプレート
-$(v_0\xi_1^1v_1\cdots\xi_1^dv_d)$，ランク0の子，
-開始ソートへの昇格によって実現する．
-内部区切り語は非空で，出力型は$\widehat{s}$により決まる．
-\end{proof}
-
-\begin{proposition}[Yoshinaka の2015年の枠組みによる規則ランク有界クラスの包含]
-\label{prop:yoshinaka2015-embedding}
-signature $\mathfrak S_{f,r,s}$ は
-~\cite{Yoshinaka2015General} の
-Assumptions~1--3 を満たし，
-\(\mathsf{Subst}(\mathfrak S_{f,r,s}) =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)\)
-となる．
-したがって，規則ランク有界のクラスには
-Yoshinaka の同定定理
-~\cite[Theorem~1]{Yoshinaka2015General}
-を適用できる．
-$f,r,\widehat{s}$ を固定すれば，
-蓄積標本に関する更新時間は多項式であり，
-刈り込まれた signature 文法表示について，
-特徴集合の要素数は
-$|N^\sharp|+|P^\sharp|$ 以下である
-~\cite[Lemma~3]{Yoshinaka2015General} の直後の本文で与えられる
-$\mathrm{SUBST}_{\mathrm D}$ に対する上界である．
-ただし，これは特徴語の\emph{総文字数}を
-抑えるものではない．
-\end{proposition}
-
-\begin{proof}
-型タグを消すとファンアウト高々$f$・ランク高々$r$のMCFGになる．
-逆に良形標準化（命題~\ref{prop:good-normalization}），
-生成語型精密化（定義~\ref{def:output-refinement}），
-開始への昇格と$\eps$定数によって
-$\mathsf{MCFL}(f,r)$の各標的を表現できる．
-開始ソートの文脈は恒等関数だけであり，
-他のソートでは補題~\ref{lem:signature-contexts} が
-signatureの四例含意を定義~\ref{def:tuple-substitutable} と同一視する．
-不要な記号は刈り込めるので，クラスの等式が従う．
-
-仮定1--3の検証では，演算のアリティは高々$r$，
-型・文脈の所属判定，評価およびランク有界MCFG所属判定は
-多項式時間である
-~\cite[Proposition~4]{Yoshinaka2011}．
-長さ$n$の文から，高々$f$個の非空で非交差な区間と非空の
-内部区切り語で定まるタグ付きタプル・文脈を列挙する．
-各親出現について順序付きの子区間と残る終端部分から
-ランク高々$r$の良形テンプレートを，実際の関数名として列挙する．
-各関数名には，型なしテンプレートに加え，
-出力ソートと順序付きの入力ソートが含まれる．
-観測された子タプルの成分別$s$-型から入力ソートが決まり，
-$\out_\rho$から出力ソートが決まる．
-従って型付き関数名を各インスタンスごとに列挙しており，
-単項恒等テンプレート，昇格演算，定数演算も含む．
-切断位置は高々$2f(r+1)$個であり，
-補題~\ref{lem:composition-witness-materialization} が
-実現可能な関数インスタンスの網羅性を保証する．
-$f,r,\widehat{s}$固定で列挙は多項式時間だから，
-YoshinakaのTheorem~1とLemma~3が適用できる．
-\end{proof}
-
-\begin{lemma}[部分構造添字付き再構成と型制約付き再構成]
-\label{lem:substp}
-上の signature と列挙を用いると，
-任意の有限正例標本 $K\subseteq\Sigma^*$ について，
-Yoshinaka の $\mathrm{SUBST}_{\mathrm P}(K)$ と
-$\mathcal B^{\le r}_{f,s}(K)$ は
-同じ言語を生成する．
-\end{lemma}
-
-\begin{proof}
-両構成の開始以外の非終端記号を観測タプルと型付きソートで対応させる．
-$\mathrm{SUBST}_{\mathrm P}$ の規則に現れる親$s_0$と
-$z=\rho(s_1,\ldots,s_t)$ は，共通文脈
-$c\in\mathrm{CON}_O(K)$ について
-$c\odot s_0,c\odot z\in K$ を満たす．
-補題~\ref{lem:signature-contexts} でこれを許容文脈とみなすと，
-LinkにComp（$t=0$ならConst）を続ける本稿の規則に対応する．
-合成証拠の存在は
-補題~\ref{lem:composition-witness-materialization} が保証する．
-逆にLinkは証拠付きの単項恒等テンプレート，
-CompとConstは証拠付きのテンプレート演算である．
-特に観測タプル$\tuple y$について
-$E[\tuple y]\in K$なら
-$E[\operatorname{id}(\tuple y)]\in K$なので，
-対応する型付き単項恒等関数名は
-$\mathrm{FUN}(K)$に含まれる．
-Compの関数名も観測された親・子の分割から得られる．
-導出帰納法により開始以外の生成言語は一致する．
-開始ソートの文脈は恒等関数のみで，開始ソートを引数とする演算はないため，
-両者は
-\(\bigcup_{w\in K\cap\Sigma^+}L([(w)])\cup(\{\eps\}\cap K)\)
-を生成し，空標本の場合も一致する．
-\end{proof}
-
-\begin{remark}[既存理論から引き継ぐものと独自のもの]
-\label{rem:yoshinaka-inheritance}
-(a) Yoshinaka~\cite[Theorem~1]{Yoshinaka2015General}の明示的証明は
-$\mathrm{SUBST}_{\mathrm D}$に関するものであり，
-$\mathrm{SUBST}_{\mathrm P}$に対するAlgorithm~1の利用は
-~\cite[Sections~6.1 and~7]{Yoshinaka2015General}で別証明なしに述べられる．
-本稿の有限ソートsignatureでは，
-補題~\ref{lem:substp}，命題~\ref{prop:reconstruction-soundness}，
-定理~\ref{thm:exact-reconstruction}が
-本稿の具体的な再構成器についてこの対応を検証する．
-なお補題~\ref{lem:substp}は生成\emph{言語}の一致であり，
-文法自体の構文的一致ではない．
-(b) 既存の特徴標本の\emph{個数}上界から
-総文字数の上界は導けず，後者を第~\ref{sec:char-data}節で証明する．
-(c) Yoshinaka (2015)のAssumption~2はsignatureごとのアリティを制限する．
-したがって命題~\ref{prop:yoshinaka2015-embedding}の適用対象は
-固定規則ランク$r$の$\mathsf{MCFL}(f,r)$である．
-規則ランク無制限の定性的再構成は
-定理~\ref{thm:exact-reconstruction}が独立に証明しており，
-型付きリンクを導入した
-~\cite[Corollary~2]{Yoshinaka2011}の拡張である．
-\end{remark}
 
 \paragraph{標本整合性．}
 Start--Constの直接導出（または$\eps$の直接規則）により
