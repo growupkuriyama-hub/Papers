@@ -84,8 +84,10 @@ $O(\|G\|^3\bar\theta_G)$を示す．
 規則ランク1では任意の固定型付けに対し$O(n^3)$が得られる．
 また，有限素性の適合制約と二つの交差依存を組み合わせた，
 未型付け代入可能性を満たさないファンアウト2の非CFL例を示す．
-高ファンアウト・任意有限型付けに対する普遍的多項式上界の有無は
-一つの未解決問題として残す．
+ファンアウト1では局所群条件が擬多様体の水準で必要十分である．
+局所群型付けが窓・群型付けより，非可換群型付けが窓・可換群型付けより，
+それぞれ厳密に広い標的を扱えることをファンアウト2の非CFL例で示す．
+高ファンアウトでの必要条件は未解決である．
 \end{abstract}
 
 \medskip
@@ -237,6 +239,17 @@ $M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$
 $\mathbf{LG}$は十分条件であり，指数の最適性は未解決である．
 以下で前提・再構成・上界・例を示した後，
 結論で高ファンアウトに残る一つの未解決問題を提示する．
+
+\paragraph{著者の関連原稿との差分．}
+著者の旧MCFGプレプリント~\cite{kuriyamaMCFGPreprint}は，
+有限観測の下でのタプル再構成，質的同定，観測情報量の階層を扱う．
+本稿はその質的再構成機構そのものを独立の新規性とはしない．
+TCSに提出した関連CFG改訂稿~\cite{kuriyamaCFG}は，
+ファンアウト1の型付けと区別対下界を扱う．
+本稿の新しい部分は非可換群値を保つ交錯成分の同時短縮，
+局所群への拡張，一般MCFGの成分パターン厚み転送，
+および擬多様体水準のファンアウト1二分法である．
+公開arXiv版とTCS提出改訂稿は命題番号が異なり得るので区別する．
 
 \section{準備}
 \label{sec:prelim}
@@ -1223,6 +1236,31 @@ $r_{\max}=\max\{1,r\}$で十分である．
 その計算量とランク無制限の場合の補足証明を
 付録~\ref{app:qualitative-construction-details}にまとめる．
 これは特徴データ\emph{総長}の評価とは区別する．
+
+\begin{definition}[保守的な逐次学習器]
+\label{def:conservative-learner}
+Yoshinaka の Algorithm~1
+~\cite[Section~4.1]{Yoshinaka2011}
+と同じ保守的更新方針を用いる．
+$H_0$ を学習モデルで固定した空言語仮説とする．
+学習器 $\mathcal A_{f,s}$ は $H_0$ から始まる．
+停止記号を受け取ったときは現在の文法を維持する．
+正例 $w$ を受け取ったとき，
+現在の文法が既に $w$ を生成するなら維持する．
+生成しない場合に限り，
+それまでに見た正例内容を $K$ として，
+仮説を $\mathcal B_{f,s}(K)$ に置き換える．
+\end{definition}
+
+\begin{corollary}[Gold/TxtEx 同定]
+\label{cor:gold-explanatory}
+任意の有限半群型付け$s:\Sigma^+\to\mathsf S$と$f\ge1$に対し，
+保守的学習器$\mathcal A_{f,s}$は
+$\Cmcf{f}{s}$を正例データからTxtEx同定する．
+\end{corollary}
+
+証明と規則ランク有界の場合の追加計算量評価は
+付録~\ref{app:qualitative-construction-details}に記す．
 
 \section{特徴データ長の上界}
 \label{sec:char-data}
@@ -2800,7 +2838,7 @@ $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$ は真の包含である
 （命題~\ref{prop:li-g-strict}）．
 擬多様体水準の下界側はファンアウト1における
 関連CFG論文~\cite{kuriyamaCFG}の結果に依存する
-（備考~\ref{rem:fanout-one-boundary}）．
+（定理~\ref{thm:fanout-one-dichotomy}）．
 ここでの上界条件は\emph{十分条件}であり，
 高ファンアウト下界は問題~\ref{op:fanout-two}として残る．
 空アルファベットの場合は自明である．
@@ -2835,7 +2873,7 @@ MCFG の定量的評価に必要な窓と局所因子に沿った群積による
 この半束は，\cite{kuriyamaCFG} の指数下界を与える型付けの正像である．
 この半束に由来する下界例はファンアウト1の文脈でのみ述べる．
 本稿の高ファンアウト上界に対する逆向きの特徴づけではない
-（備考~\ref{rem:fanout-one-boundary}）．
+（定理~\ref{thm:fanout-one-dichotomy}）．
 
 この節を通じて，$\Sigma$ は空でなく，$k\ge1$，$A$ は有限群とする．
 $|w|\ge k+1$ の語 $w$ について，長さ $k+1$ の因子を開始位置の順に並べた列を $\sigma_k(w)$ と書く．
@@ -3235,19 +3273,7 @@ $E'[\tuple x]\in L'$ なら $E'[\tuple y]\in L$ であり，
 $\widehat{s}(E'[\tuple y])=\widehat{s}(E'[\tuple x])\in F$ なので $E'[\tuple y]\in L'$ である．
 \end{proof}
 
-\begin{remark}[ファンアウト1での代数的境界]
-\label{rem:fanout-one-boundary}
-擬多様体に関する上界の十分条件は
-$\mathbf{LI}\vee\mathbf{Grp}$から$\mathbf{LG}$へ真に広がる
-（命題~\ref{prop:li-g-strict}）．
-関連CFG論文~\cite[Proposition~6.4]{kuriyamaCFG}の
-指数的な特徴標本長の例は\emph{ファンアウト1}での成果であり，
-本稿の高ファンアウト上界定理の証明には用いない．
-また，関連CFG論文の部分文字列文法作用素
-$\mathrm{Rec}_s$と本稿のConst/Link/Comp作用素
-$\mathcal B^{\le2}_{1,s}$は異なるため，
-それらの個々の標本長を比較しているわけではない．
-\end{remark}
+\input{additions/fanout_one_dichotomy_JP.tex}
 
 \subsection{一般の標準MCFG入力への拡張}
 \label{subsec:unrestricted-source}
@@ -3973,6 +3999,8 @@ $g(x)=(0,0)\ne(1,0)=g(y)$である．
 型付け自体の推定方法を与えたものではない．
 \end{remark}
 
+\input{additions/algebraic_separations_JP.tex}
+
 \subsection{内在的に規則ランク2を必要とする境界型付き標的}
 \label{subsec:intrinsic-ranktwo}
 
@@ -4294,31 +4322,29 @@ $O(\|G\|^3\bar\theta_G)$を得た．
 任意の標準MCFG入力については，
 成分パターン厚みを用いて正規化後の上界を移送した．
 規則ランク1の表示にはどの固定型付けでも多項式上界がある．
-以上は関連CFG論文の下界構成に依存しない．
+これらの上界の証明は関連CFG論文の下界構成には依存しない．
+ファンアウト1では同論文の区別対を使い，局所群の擬多様体水準の
+完全な特徴づけを得る（定理~\ref{thm:fanout-one-dichotomy}）．
 命題~\ref{prop:feature-cross-typed}の交差依存例は，
 窓型だけでも型なし置換可能性が破れる場合に，
 有限素性を固定して与える意味を示す．
+命題~\ref{prop:lg-needed-target}と
+\ref{prop:nonabelian-needed-target}は，局所群と非可換群の型付けが
+実際の標的言語に必要となることを示す．
 
 残る中心問題は，ファンアウト2以上では
 任意の固定型付けに対して同様の短縮が可能かという点である．
 
-\begin{openproblem}[高ファンアウトにおける任意の固定有限型付け]
+\begin{openproblem}[高ファンアウトの代数的境界]
 \label{op:fanout-two}
-有限アルファベット$\Sigma$，$f\ge2$，$r\ge2$，
-固定有限半群型付け$s:\Sigma^+\to\mathsf S$を考える．
-縮約済み良形のファンアウト高々$f$・ランク高々$r$のMCFG $G$が
-生成する$(f,s)$-タプル代入可能標的について，
-集合駆動再構成器$\mathcal B^{\le r}_{f,s}$は
-ある多項式$p_{f,r,s,\Sigma}$を用いて
-\[
-\|K\|_+\le
-p_{f,r,s,\Sigma}(\|G\|,\bar\theta_G)
-\]
-を満たす特徴標本$K$を常にもつか．
-ある\emph{固定}型付けではこの元文法厚み相対の
-多項式上界が破れるか．
-表示した作用素に対する反例だけでも興味深いが，
-作用素非依存の超多項式下界はさらに強い問題である．
+$f\ge2$を固定する．任意の固定有限半群型付け$s$について，
+$\Sigma,f,r,s$を固定したとき，縮約済み良形文法のサイズと
+元の規則厚みに関する多項式特徴データ上界が常に存在するか．
+存在しない場合，2元半束$U_1$への型付けですでに反例を
+実現できるか．より一般に，各有限型付けについて上界を許す
+擬多様体は，ファンアウト1と同様$\mathbf{LG}$に
+含まれねばならないか．$U_1$による反例は最後の必要条件を
+証明するが，これらの問いが同値であるとは主張しない．
 \end{openproblem}
 
 \begin{remark}[区切り語のスライドによる高アリティの制約]
@@ -4550,27 +4576,9 @@ $\mathcal B_{f,s}$ へ写す集合駆動型作用素は，
 このため TxtEx に必要な構文的安定化は，
 以下の保守的な逐次学習器が担う．
 
-\begin{definition}[保守的な逐次学習器]
-\label{def:conservative-learner}
-Yoshinaka の Algorithm~1
-~\cite[Section~4.1]{Yoshinaka2011}
-と同じ保守的更新方針を用いる．
-$H_0$ を学習モデルで固定した空言語仮説とする．
-学習器 $\mathcal A_{f,s}$ は $H_0$ から始まる．
-停止記号を受け取ったときは現在の文法を維持する．
-正例 $w$ を受け取ったとき，
-現在の文法が既に $w$ を生成するなら維持する．
-生成しない場合に限り，
-それまでに見た正例内容を $K$ として，
-仮説を $\mathcal B_{f,s}(K)$ に置き換える．
-\end{definition}
 
-\begin{corollary}[Gold/TxtEx 同定]
-\label{cor:gold-explanatory}
-任意の有限半群型付け$s:\Sigma^+\to\mathsf S$と$f\ge1$に対し，
-保守的学習器$\mathcal A_{f,s}$は
-$\Cmcf{f}{s}$を正例データからTxtEx同定する．
-\end{corollary}
+
+
 \begin{proof}
 規則ランク有界の場合も以下の直接的な再構成の議論と
 Yoshinakaの質的学習理論を区別して用いる．
@@ -5042,6 +5050,8 @@ $(\mathtt a^{2^i},\eps)$ である．
 指数的に長くなり得る．
 
 % BEGIN INLINED APPENDIX: appendix_group_blocks_JP.tex
+\input{additions/fanout_one_lower_JP.tex}
+
 \section*{原稿作成過程における生成AI・AI支援技術の利用申告}
 著者は原稿の構成の整理，文章表現・翻訳の補助，
 文献・記法の照合，および \LaTeX{} ソースの編集に，
@@ -5213,9 +5223,16 @@ O.~Rambow and G.~Satta.
 T.~Kuriyama.
 \newblock Distributional learning of context-free languages under fixed
 finite-semigroup typing.
-\newblock arXiv:1409.6247v5 [cs.FL], 2026.
-\newblock \url{https://arxiv.org/abs/1409.6247v5}.
-\newblock 本公開版は \emph{Theoretical Computer Science} 提出の改訂稿と同一である．
+\newblock \emph{Theoretical Computer Science} 提出改訂稿，
+TCS-D-26-00494R1（2026年10月）．公開版はarXiv:1409.6247v4．
+\newblock \url{https://arxiv.org/abs/1409.6247}.
+\newblock 本稿のProposition~6.4は提出改訂稿の番号である．
+
+\bibitem{kuriyamaMCFGPreprint}
+T.~Kuriyama.
+\newblock The value of finite observation in positive-data learning of multiple context-free languages.
+\newblock arXiv:2605.11644, 2026.
+\newblock \url{https://arxiv.org/abs/2605.11644}.
 
 \bibitem{Pin1986}
 J.-E. Pin.
