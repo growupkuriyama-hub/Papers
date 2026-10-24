@@ -1,0 +1,572 @@
+% v80 research draft (NOT part of main.tex).  Standalone:
+%   pdflatex v80_short_representatives.tex
+% Status: proofs written for independent audit; nothing adopted into the
+% canonical manuscript.  main.tex / main_JP.tex / PAPER.yaml untouched.
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,enumitem}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Cmcf}[2]{\mathcal{C}^{\mathrm{mcf}}_{#1,#2}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\tuple}[1]{\vec{#1}}
+\newcommand{\blank}{\square}
+\newcommand{\B}{\mathcal B}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\mk}{\mathsf c}
+\newcommand{\fan}{\operatorname{fan}}
+
+\title{Short distribution representatives at fan-out two:\\
+audit of the relaxed-witness lemma and the abelian-filter theorem,\\
+Parikh rigidity of intra-word exchanges, and polynomial data for\\
+semilattice-split abelian unions\\[4pt]
+\large v80 research draft for \#2 (fixed-$h$ MCFG), Conjecture E}
+\author{Research memo (internal)}
+\date{2026-10-18}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We re-audit the two results of the v79 research draft (PR~\#46) on which
+Conjecture~E rests: the relaxed-witness lemma (R) and the polynomial-data
+theorem for abelian-filtered targets (D).  Both hold as stated; we record
+the exact dependencies, the uniformity of D in the auxiliary abelian group,
+and one interaction with the canonical v79 rule-only witness proposition.
+We then prove: (P) every arity-$d$ exchange pair witnessed inside a single
+word is Parikh-equal, so the local mobility lemmas (B, B$'$) can never
+shorten a tuple; and (F1-sl) for every finite typing $h$ refining the
+two-element semilattice typing $h_{\mathrm U}$, every fan-out $f$ and rank
+$r$, targets of the form
+$\{w\text{ marker-free}:\varphi(w)\in\gamma_1+\mathcal H\}\cup
+ \{w\text{ with a marker}:\varphi(w)\in\gamma_2+\mathcal H\}$
+have characteristic samples of size polynomial in
+$\|G\|\max\{1,\theta_G\}$, uniformly in the abelian data.  These targets are
+outside the abelian-filter class whenever $\gamma_2-\gamma_1\notin\mathcal H$,
+and $h_{\mathrm U}$ is outside $\mathbf{LG}$; hence F1-sl is a genuinely
+new instance of Conjecture~E.  The key new ingredient is an
+\emph{offset-rigidity} lemma: under a marker-free context a good rule can
+have at most one child whose yields contain both marker-free and marked
+tuples.  Conjecture~E itself remains open.
+\end{abstract}
+
+\section{Conventions}
+We use the v79 manuscript (\texttt{PAPER.yaml} internal version v79, HEAD
+\texttt{7ef2cb1}) verbatim: sentence contexts have nonempty internal
+separators; tuple components are nonempty; $\D_L(\tuple x)$ is the set of
+accepting sentence contexts of the arity of $\tuple x$;
+$\tuple x\equiv_{L,h}\tuple y$ means equal componentwise $h$-types and equal
+distributions; $\Cmcf{f}{h}$ is the class of $(f,h)$-tuple-substitutable
+$f$-MCFLs; $\B^{\le r}_{f,h}$ is the capped reconstruction operator.  For a
+reduced good presentation $G=(V,\Sigma,P,S)$ let $\widetilde G_0$ be its
+trimmed yield-type refinement, $L_X$ the tuple language of a typed symbol
+$X$, $t_G$ the nonterminal thickness and $\theta_G$ the rule thickness
+($t_G\le\theta_G$).  $\psi$ is the Parikh map and
+$\Psi(\tuple u)=\sum_i\psi(u_i)$.  For a typed non-start symbol $X$ let
+$[X]$ be the $\equiv_{L,h}$-class containing $L_X$ and
+\[
+\kappa_G(X)=\min\{\|\tuple v\|_1:\tuple v\in[X]\},\qquad
+\kappa_G=\max_X\kappa_G(X).
+\]
+\textbf{The representative $\tuple v$ need not belong to $L_X$, nor to any
+tuple language of $G$}; it only has to have the type of $X$ and the same
+distribution in $L$ over \emph{all} sentence contexts.
+
+\begin{conjecture}[E]\label{conj:E}
+For fixed $\Sigma,h,r$ there is a polynomial $p$ such that every reduced
+good $G$ of fan-out $\le2$ and rank $\le r$ with $L(G)\in\Cmcf{2}{h}$
+satisfies $\kappa_G\le p(\|G\|\max\{1,\theta_G\})$.
+\end{conjecture}
+
+\section{Adversarial audit of R and D}
+
+\subsection{Lemma R (relaxed witnesses)}
+\emph{Statement audited.}  For every non-start typed $X=A_{\mathbf t}$ pick
+$\omega'(X)\in[X]$; let $\chi'(X)=\blank_1$ if $\widetilde S\to X$ is a rule
+of $\widetilde G_0$, and otherwise any derivational sentence context of the
+untyped $A$ in $G$.  The set $K^\star$ of the words
+$\chi'(X)[\omega'(X)]$,
+$\chi'(X)[\rho(\omega'(Y_1),\ldots,\omega'(Y_q))]$ (typed rules
+$X\to\rho(Y_1,\ldots,Y_q)$, $q\ge1$) and $\chi'(X)[\tuple c]$ (typed
+constant rules) is characteristic for $\B^{\le r}_{f,h}$ and $\B_{f,h}$.
+
+\emph{Checks performed.}
+\begin{enumerate}[label=(R\arabic*)]
+\item \emph{$[X]$ is one class.}  Tuples of $L_X$ have type $\mathbf t$ and
+share a derivational typed context, so $(f,h)$-substitutability (arity
+$\fan(A)\le f$) puts them in one $\equiv_{L,h}$-class.
+\item \emph{Membership.}  A derivational context of $A$ accepts every tuple
+of $L_A(G)\supseteq L_X$, hence every tuple of $[X]$; it lies in
+$\mathcal E_{\fan(A)}$ because $G$ is good (v79, Lemma \emph{Induced child
+context} iterated along the path).  For a start-linked $X$ the context
+$\blank_1$ accepts $L_X\subseteq L$, hence all of $[X]$.  Rule words:
+$\omega'(Y_j)\equiv_{L,h}\tuple u_j\in L_{Y_j}$, so v79, Lemma
+\emph{Composition preserves equivalence}, gives
+$\rho(\omega'(Y_1),\ldots)\equiv_{L,h}\rho(\tuple u_1,\ldots)\in L_X$; the
+latter is accepted by $\chi'(X)$.  Constant rules produce members of $L_X$.
+\item \emph{Link rules.}  $\omega'(X)$ and the rule tuple
+$\tuple z_R=\rho(\omega'(Y_1),\ldots)$ both have type $\mathbf t$
+($\mathrm{out}_\rho$ of the child types) and share the observed context
+$\chi'(X)$, so Rule~(Link) $[\omega'(X)]\to[\tuple z_R]$ is generated.
+\item \emph{Composition witnesses.}  $\chi'(X)\in\mathcal E_d$, child
+components are nonempty, and goodness (nonpermuting, nonmerging) separates
+consecutive components of one child either by terminal material, by a
+nonempty sibling component, or by an internal separator of $\chi'(X)$;
+hence each $\omega'(Y_j)$ is an observed tuple occurrence and the
+segmentation is a composition witness of rank $q\le r$.
+\item \emph{Start, rank zero, $\varepsilon$, productivity.}  Start-linked
+symbols use $\widetilde S\to[\omega'(X)]$ with $\omega'(X)\in K^\star$.
+Rank zero is covered by the third family of words.  $\varepsilon$ is outside
+good languages and is handled separately by the operator.  $\widetilde G_0$
+is trimmed, so every $X$ is productive and reachable.  Repeated words are
+harmless (sets).
+\item \emph{Interaction with v79 rule-only witnesses.}  The canonical v79
+Proposition \emph{Rule-only characteristic witnesses} uses the identity
+$\omega(X)=\rho_X(\omega(Y_1),\ldots)$ for minimum-weight derivations.  This
+identity is \emph{false} for relaxed representatives, so the nonterminal
+words $\chi'(X)[\omega'(X)]$ must be kept; the cardinality bound of R is
+$|V||M|^f+|P||M|^{fr}$, not $|\mathcal R|$.  The two optimisations must
+not be combined.
+\end{enumerate}
+\emph{Verdict.}  R holds as stated; the completeness proof of v79 is used
+verbatim with $\iota(X):=[\omega'(X)]$, and soundness needs only
+$K^\star\subseteq L$.
+
+\subsection{Theorem D (abelian-filtered targets)}
+\emph{Statement audited.}  For
+$L=h^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathcal H)$ (any abelian
+group $\mathbb A$, homomorphism $\varphi$, subgroup $\mathcal H$) with a
+reduced good presentation $G$ of fan-out $\le f$ and rank $\le r$,
+$\kappa_G\le\mathrm{poly}(T)$ with $T=(r+1)t_G+\|G\|$, and hence a
+characteristic sample of total length $C(\|G\|\max\{1,\theta_G\})^e$, with
+$C,e$ depending only on $\Sigma,h,f,r$.
+
+\emph{Checks performed.}
+\begin{enumerate}[label=(D\arabic*)]
+\item \emph{Invariance (Step 1)} needs only a derivational context of each
+untyped $A$; reducedness supplies one.  Uses nondeletion and linearity.
+\item \emph{Short defects (Steps 2--3)}: $\delta_R\in\Lambda$ because
+$\omega_A$ and $\rho(\omega_{B_1},\ldots)$ are two yields of $A$;
+$\|\delta_R\|_1\le T$.  The decomposition
+$\Psi(\tuple u)-\Psi(\omega_A)=-\sum_\nu\delta_{R_\nu}$ over the nodes of
+any derivation is exact (rank-zero nodes included).
+\item \emph{Integer program (Step 4).}  Unknowns: the coefficients of the
+periods of fixed semilinear representations of
+$\psi(h^{-1}(m)\cap\Sigma^+)$ (at most $fC_h$) and
+$\mu^\pm_\lambda$ for $\lambda\in\Gamma_T$ (at most $2(2T+1)^{|\Sigma|}$).
+Equations: $|\Sigma|$.  Entries of the matrix and of the right-hand side
+$\Psi(\omega_A)-\sum_ic_i$ are bounded by $T+fC_h$.  The system is solvable
+(by any $\tuple u\in L_X$), so the small-solution theorem yields a solution
+with entries $\le n(ma)^{2m+1}$, $m=|\Sigma|$, which is $\mathrm{poly}(T)$
+with exponent $O(|\Sigma|)$.
+\item \emph{Uniformity.}  $\Gamma_T$ depends on $\Lambda$, but only its
+cardinality enters the bound, and $|\Gamma_T|\le(2T+1)^{|\Sigma|}$ for
+\emph{every} $\Lambda$.  The constants therefore do not depend on
+$\mathbb A$, $\varphi$, $\mathcal H$, $\gamma$ or $\mathsf{Acc}$ (in
+particular not on the index of $\mathcal H$).
+\item \emph{Equivalence (Step 5)} uses commutativity of $\mathbb A$ only
+through $\varphi=\bar\varphi\circ\psi$.
+\item \emph{$\varepsilon$.}  If $\varepsilon\in h^{-1}(\mathsf{Acc})\cap
+\varphi^{-1}(\gamma+\mathcal H)$ the good presentation generates
+$L\setminus\{\varepsilon\}$; Step 5 only evaluates nonempty words
+$E[\tuple v]$, so nothing changes.
+\item \emph{External sources.}  The small-solution theorem is
+Papadimitriou, \emph{On the complexity of integer programming},
+J.~ACM 28 (1981) 765--768, and MIT/LCS/TM-152 (1980).  The primary PDF
+could not be downloaded from this environment (repository returned an
+access error); the bound $n(ma)^{2m+1}$ was checked against its restatement
+in Fomin, Panolan, Ramanujan, Saurabh, arXiv:1607.05342, Sec.~1.  Parikh's
+theorem is applied to the regular sets $h^{-1}(m)$, where it is elementary.
+\end{enumerate}
+\emph{Verdict.}  D holds as stated, uniformly in the abelian data.  The
+only external dependency not checked in a primary source is the
+small-solution bound, which is standard and is restated in the cited
+arXiv paper.
+
+\section{Parikh rigidity of intra-word exchanges}
+
+\begin{lemma}[P]\label{lem:P}
+Let $E\in\mathcal E_d$ and $\tuple x,\tuple y\in(\Sigma^+)^d$ with
+$E[\tuple x]=E[\tuple y]$.  Then $\Psi(\tuple x)=\Psi(\tuple y)$; in
+particular $\|\tuple x\|_1=\|\tuple y\|_1$.
+\end{lemma}
+\begin{proof}
+$\psi(E[\tuple x])=\psi(E)+\Psi(\tuple x)$ where $\psi(E)$ counts the fixed
+material, and likewise for $\tuple y$.
+\end{proof}
+
+\begin{corollary}\label{cor:P}
+Every exchange pair produced by the power-transfer lemma (B) or the local
+shift-pair lemma (B$'$) of v79 is Parikh-equal.  Consequently no sequence of
+such exchanges, applied in any contexts, changes the Parikh vector of a
+word or of a tuple; local mobility can never by itself produce a shorter
+member of a distribution class.  A shorter representative
+$\tuple y\equiv_{L,h}\tuple x$ with $\|\tuple y\|_1<\|\tuple x\|_1$ requires
+a shared accepting context $E$ with $E[\tuple x]\neq E[\tuple y]$, i.e.\
+\emph{two different words} of $L$.
+\end{corollary}
+
+This answers the methodological question of v79: Ramsey-type shift pairs are
+a source of \emph{closure} constraints (they force languages to be closed
+under block moves), not of \emph{shortening}.  Every shortening argument
+proved so far (D and F1-sl below) instead combines a closure constraint with
+the grammar: the grammar supplies short yields of untyped nonterminals, and
+the closure constraint lets them be converted into short representatives of
+the correct type.
+
+\section{Semilattice-split abelian unions (F1-sl)}
+
+Fix a nonempty set $\Sigma_{\mk}\subseteq\Sigma$ of \emph{marker} letters.
+For a word $w$ let $\mk(w)=1$ if $w$ contains a marker and $\mk(w)=0$
+otherwise; for a tuple $\mk(\tuple u)=\max_i\mk(u_i)$ and for a context
+$\mk(E)$ is $1$ iff its fixed material contains a marker.  The typing
+$h_{\mathrm U}:\Sigma^*\to(\{0,1\},\max)$, $w\mapsto\mk(w)$, is the
+two-element semilattice typing; it is not in $\mathbf{LG}$.
+
+\begin{definition}\label{def:split}
+Let $\mathbb A$ be an abelian group, $\varphi:\Sigma^*\to\mathbb A$ a
+homomorphism, $\mathcal H\le\mathbb A$, and $\gamma_0,\gamma_1\in\mathbb A$.
+Put
+\[
+L=\{w\in\Sigma^+:\varphi(w)\in\gamma_{\mk(w)}+\mathcal H\}.
+\]
+We call $L$ a \emph{semilattice-split abelian union} and write
+$g:=\gamma_1-\gamma_0$, $\Lambda:=\{v\in\Z^\Sigma:\bar\varphi(v)\in\mathcal
+H\}$ where $\varphi=\bar\varphi\circ\psi$.
+\end{definition}
+
+If $g\in\mathcal H$ then $L=\Sigma^+\cap\varphi^{-1}(\gamma_0+\mathcal H)$
+is an abelian filter and Theorem~D applies.  If $g\notin\mathcal H$, $L$ is
+in general \emph{not} of the form
+$h^{-1}(\mathsf{Acc})\cap\varphi'^{-1}(\gamma+\mathcal H')$: for instance
+$\Sigma=\{\mathtt a,\mathtt c\}$, $\Sigma_{\mk}=\{\mathtt c\}$,
+$\varphi(w)=|w|_{\mathtt a}\in\Z/N\Z$, $\gamma_0=0$, $\gamma_1=1$ gives the
+offset that would have to be a monoid map
+$\{0,1\}\to\Z/N\Z$ with $1\mapsto1$, which is impossible since $1+1\ne1$.
+
+\begin{lemma}[Membership]\label{lem:split-member}
+Let $h$ be a finite typing with $h_{\mathrm U}\preceq h$ and $f\ge1$.  A
+semilattice-split abelian union is $(f,h)$-tuple-substitutable.  Hence it
+belongs to $\Cmcf{f}{h}$ whenever it is an $f$-MCFL.
+\end{lemma}
+\begin{proof}
+Let $\tuple x,\tuple y$ have equal $h$-types and share an accepting context
+$E_0$.  Equal $h$-types give equal $h_{\mathrm U}$-types componentwise, so
+$\mk(E[\tuple x])=\mk(E[\tuple y])$ for every context $E$.  From $E_0$:
+$\varphi(\tuple x)-\varphi(\tuple y)\in\mathcal H$ (both fillings lie in the
+same branch $\gamma_\beta+\mathcal H$).  For any $E$ the two fillings are in
+the same branch and their $\varphi$-values differ by an element of
+$\mathcal H$, so they are accepted simultaneously.
+\end{proof}
+
+From now on $g\notin\mathcal H$, and $G=(V,\Sigma,P,S)$ is a reduced good
+presentation of $L$ of fan-out $\le f$ and rank $\le r$.  A
+\emph{derivational context} of $A\in V$ is a sentence context obtained from
+a successful derivation by deleting one $A$-subtree; it accepts every tuple
+of $L_A:=L_A(G)$.  Call $A$ \emph{bi-typed} if $L_A$ contains tuples
+$\tuple u$ with $\mk(\tuple u)=0$ and with $\mk(\tuple u)=1$,
+\emph{marker-only} if $\mk\equiv1$ on $L_A$, \emph{marker-free} if
+$\mk\equiv0$ on $L_A$, and \emph{open} if it has a derivational context $E$
+with $\mk(E)=0$.
+
+\begin{lemma}[Offsets]\label{lem:offsets}
+Let $E$ be a derivational context of $A$ and $\tuple u,\tuple u'\in L_A$.
+\begin{enumerate}[label=(\alph*)]
+\item If $\mk(E)=1$ then $\varphi(\tuple u)-\varphi(\tuple u')\in\mathcal H$.
+\item If $\mk(E)=0$ then
+$\varphi(\tuple u)-\varphi(\tuple u')\in(\mk(\tuple u)-\mk(\tuple u'))g+\mathcal H$.
+\item A bi-typed open nonterminal has no derivational context with
+$\mk(E)=1$.
+\item If $A$ is not both bi-typed and open, then
+$\Psi(\tuple u)-\Psi(\tuple u')\in\Lambda$ for all $\tuple u,\tuple u'\in L_A$.
+If $A$ is bi-typed and open, this holds whenever
+$\mk(\tuple u)=\mk(\tuple u')$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+$E[\tuple u]\in L$ lies in branch $\mk(E)\vee\mk(\tuple u)$, so
+$\varphi(E)+\varphi(\tuple u)\in\gamma_{\mk(E)\vee\mk(\tuple u)}+\mathcal H$.
+Subtracting the same relation for $\tuple u'$ gives (a) and (b).  For (c),
+take $\tuple u_0,\tuple u_1$ with $\mk=0,1$: (a) and (b) would give
+$\varphi(\tuple u_1)-\varphi(\tuple u_0)\in\mathcal H\cap(g+\mathcal H)$,
+forcing $g\in\mathcal H$.  For (d): every $A$ has a derivational context
+(reducedness).  If $A$ is not bi-typed, $\mk$ is constant on $L_A$ and (a)
+or (b) gives the claim.  If $A$ is bi-typed and not open, all its
+derivational contexts have $\mk(E)=1$ and (a) applies.  If $A$ is bi-typed
+and open, (b) with $\mk(\tuple u)=\mk(\tuple u')$ applies.
+\end{proof}
+
+Let $V_1$ be the set of bi-typed open nonterminals.
+
+\begin{lemma}[Offset rigidity]\label{lem:rigidity}
+Let $A\in V_1$ and $R:A\to\rho(B_1,\ldots,B_q)$ a rule whose template
+writes no marker and none of whose children is marker-only.  Then at most
+one $B_k$ is bi-typed, and every bi-typed $B_k$ belongs to $V_1$.
+\end{lemma}
+\begin{proof}
+Let $E_A$ be an open derivational context of $A$.  Suppose $B_{k_1}$ and
+$B_{k_2}$ ($k_1\ne k_2$) are bi-typed.  Choose $\tuple x_0,\tuple x_1\in
+L_{B_{k_1}}$ and $\tuple y_0,\tuple y_1\in L_{B_{k_2}}$ with $\mk$-values
+$0,1$, and for every other $k$ a tuple of $L_{B_k}$ with $\mk=0$ (it exists
+because $B_k$ is not marker-only).  Let $\tuple z_{ab}$ be the yield of $A$
+obtained by applying $\rho$ to these choices with $\tuple x_a,\tuple y_b$.
+Since $\rho$ writes no marker, $\mk(\tuple z_{ab})=a\vee b$.  By
+Lemma~\ref{lem:offsets}(b) for $E_A$,
+\[
+\varphi(\tuple x_1)-\varphi(\tuple x_0)
+=\varphi(\tuple z_{10})-\varphi(\tuple z_{00})\in g+\mathcal H,
+\qquad
+\varphi(\tuple x_1)-\varphi(\tuple x_0)
+=\varphi(\tuple z_{11})-\varphi(\tuple z_{01})\in\mathcal H,
+\]
+so $g\in\mathcal H$, a contradiction.  For the second claim, filling the
+siblings of a bi-typed $B_k$ with marker-free tuples inside $E_A$ and $\rho$
+yields a derivational context of $B_k$ (it comes from a successful
+derivation) without markers; it lies in $\mathcal E_{\fan(B_k)}$ by
+goodness.  Hence $B_k$ is open.
+\end{proof}
+
+\begin{lemma}[Short canonical yields]\label{lem:short-canon}
+Put $T_0:=|V|\,(\|G\|+r\,t_G)$.  Every $A\in V$ has a yield $\omega_A$ with
+$\|\omega_A\|_1\le t_G$.  Every $A\in V_1$ has yields $\omega^0_A,\omega^1_A$
+with $\mk(\omega^b_A)=b$ and $\|\omega^b_A\|_1\le T_0$.
+\end{lemma}
+\begin{proof}
+The first claim is the definition of $t_G$.  For $b\in\{0,1\}$ and
+$A\in V_1$ let $\lambda_b(A)$ be the minimum of $\|\tuple u\|_1$ over
+$\tuple u\in L_A$ with $\mk(\tuple u)=b$, and choose a derivation realising
+it that is lexicographically minimal in (yield length, number of nodes).
+Let $R:A\to\rho(B_1,\ldots,B_q)$ be its root rule.  By optimal
+substructure, a child subderivation whose $\mk$-value can be changed without
+changing $\mk$ of the root is a shortest yield of that child.
+
+\emph{$b=0$.}  The template writes no marker and all child yields have
+$\mk=0$, so no child is marker-only.  By Lemma~\ref{lem:offsets} and
+Lemma~\ref{lem:rigidity} at most one child $B$ is bi-typed, and it lies in
+$V_1$.  Every other child is marker-free, its subyield is a shortest yield
+($\le t_G$), and $B$'s subyield realises $\lambda_0(B)$.  Hence
+$\lambda_0(A)\le\|G\|+(r-1)t_G+\lambda_0(B)$, or $\le\|G\|+rt_G$ if no child
+is bi-typed.
+
+\emph{$b=1$.}  If the template writes a marker or some child is
+marker-only, every child subyield may be replaced by a shortest yield
+without losing the marker, so $\lambda_1(A)\le\|G\|+rt_G$.  Otherwise
+Lemma~\ref{lem:rigidity} applies: at most one child is bi-typed, the others
+are marker-free, so the marker comes from the unique bi-typed child
+$B\in V_1$, whose subyield realises $\lambda_1(B)$; thus
+$\lambda_1(A)\le\|G\|+(r-1)t_G+\lambda_1(B)$.
+
+In both cases the passage $A\mapsto B$ strictly decreases the pair
+(length, node count) of the chosen minimal derivation, so a chain visits
+each nonterminal at most once and $\lambda_b(A)\le|V|(\|G\|+rt_G)$.
+\end{proof}
+
+For $A\in V$ and $b\in\{0,1\}$ put $\omega^{(b)}_A:=\omega^b_A$ if
+$A\in V_1$ and $\omega^{(b)}_A:=\omega_A$ otherwise.
+
+\begin{lemma}[Short $\Lambda$-defects]\label{lem:split-defects}
+Let $T_1:=(r+1)T_0+\|G\|$, $\Gamma:=\{\lambda\in\Lambda:\|\lambda\|_1\le
+T_1\}$ and let $\Lambda_1$ be the subgroup generated by $\Gamma$.  For every
+$A\in V$ and $\tuple u\in L_A$,
+\[
+\Psi(\tuple u)-\Psi(\omega^{(\mk(\tuple u))}_A)\in\Lambda_1 .
+\]
+\end{lemma}
+\begin{proof}
+For a rule $R:A\to\rho(B_1,\ldots,B_q)$ and $\tuple b\in\{0,1\}^q$ with each
+$b_k$ realised by $L_{B_k}$, let
+$\tuple z=\rho(\omega^{(b_1)}_{B_1},\ldots,\omega^{(b_q)}_{B_q})\in L_A$ and
+let $\tuple u'$ be any yield of $A$ obtained by applying $R$ to children
+$\tuple u_k$ with $\mk(\tuple u_k)=b_k$.
+\emph{Claim:} if $A\in V_1$ then $\mk(\tuple z)=\mk(\tuple u')$.  If $\rho$
+writes a marker or some child is marker-only, both values are $1$.
+Otherwise Lemma~\ref{lem:rigidity} shows that every bi-typed child lies in
+$V_1$, so for every child $\mk(\omega^{(b_k)}_{B_k})=b_k$ (children not in
+$V_1$ are then marker-free and $b_k=0$), and both values equal
+$\max_kb_k$.
+
+Put $\beta:=\mk(\tuple u')$ and
+$\delta_{R,\tuple b}:=\Psi(\omega^{(\beta)}_A)-\Psi(\tuple z)$.  If
+$A\in V_1$, $\omega^{(\beta)}_A$ and $\tuple z$ are yields of $A$ with the
+same $\mk$-value by the claim; if $A\notin V_1$, the first part of
+Lemma~\ref{lem:offsets}(d) applies.  In both cases
+$\delta_{R,\tuple b}\in\Lambda$, and
+$\|\delta_{R,\tuple b}\|_1\le T_0+\|G\|+rT_0=T_1$.
+
+Now induct on a derivation of $\tuple u\in L_A$ with root rule $R$ and
+child yields $\tuple u_k$; put $b_k=\mk(\tuple u_k)$, so $\tuple u'=\tuple u$
+and $\beta=\mk(\tuple u)$.  Then
+\[
+\Psi(\tuple u)-\Psi(\omega^{(\mk(\tuple u))}_A)
+=\sum_k\bigl(\Psi(\tuple u_k)-\Psi(\omega^{(b_k)}_{B_k})\bigr)
+ -\delta_{R,\tuple b}\in\Lambda_1 ,
+\]
+using the induction hypothesis for the children (rank-zero rules are the
+base case, with empty sum).
+\end{proof}
+
+\begin{theorem}[F1-sl]\label{thm:split}
+Fix $\Sigma$, $\Sigma_{\mk}$, a finite typing $h:\Sigma^*\to M$ with
+$h_{\mathrm U}\preceq h$, $f\ge1$ and $r\ge1$.  There are $C,e$ depending
+only on $(\Sigma,h,f,r)$ such that for every semilattice-split abelian union
+$L$ (arbitrary $\mathbb A,\varphi,\mathcal H,\gamma_0,\gamma_1$) and every
+reduced good presentation $G$ of $L$ of fan-out $\le f$ and rank $\le r$:
+\[
+\kappa_G\le C\bigl(\|G\|\max\{1,\theta_G\}\bigr)^e,
+\]
+and $\B^{\le r}_{f,h}$ has a characteristic sample $K^\star\subseteq L$ with
+$|K^\star|\le|V||M|^f+|P||M|^{fr}$ and
+$\|K^\star\|_+\le C'(\|G\|\max\{1,\theta_G\})^{e'}$.  In particular
+$\mu_m(L)$ is polynomially bounded for every $m\in h(L)$.
+\end{theorem}
+\begin{proof}
+If $g\in\mathcal H$ apply Theorem~D.  Otherwise let $X=A_{\mathbf t}$ be a
+non-start typed symbol of arity $d$, fix $\tuple u\in L_X$, and put
+$\beta:=\mk(\tuple u)$, which is determined by $\mathbf t$ because
+$h_{\mathrm U}\preceq h$.  Fix semilinear representations of
+$\psi(h^{-1}(m)\cap\Sigma^+)$, $m\in M$, with at most $C_h$ linear sets and
+periods and constants of norm $\le C_h$.  The integer program asking for
+$\tuple v$ with $h(v_i)=t_i$ and
+$\Psi(\tuple v)-\Psi(\omega^{(\beta)}_A)\in\Lambda_1$, written with the
+period coefficients of the chosen linear sets and coefficients
+$\mu^\pm_\lambda$ ($\lambda\in\Gamma$), has $|\Sigma|$ equations, at most
+$fC_h+2(2T_1+1)^{|\Sigma|}$ unknowns and entries bounded by $T_1+fC_h$.  It
+is solvable by Lemma~\ref{lem:split-defects} (witness $\tuple u$), hence has
+a solution with entries $\mathrm{poly}(T_1)$, giving $\tuple v$ with
+$h^{(d)}(\tuple v)=\mathbf t$ and $\|\tuple v\|_1\le\mathrm{poly}(T_1)$.
+
+$\tuple v\equiv_{L,h}\tuple u$: both have type $\mathbf t$, so for every
+context $E$ the fillings lie in the same branch $\mk(E)\vee\beta$; and
+$\Psi(\tuple v)-\Psi(\tuple u)\in\Lambda_1\subseteq\Lambda$, so their
+$\varphi$-values differ by an element of $\mathcal H$.  This is the step
+that uses the \emph{common} subgroup $\mathcal H$ of both branches.  Hence
+$\kappa_G(X)\le\mathrm{poly}(T_1)$; since $t_G\le\theta_G$,
+$T_1\le(r+1)|V|(\|G\|+r\theta_G)+\|G\|$.  The sample bounds follow from the
+relaxed-witness lemma R and its corollary; the $\mu_m$ bound from the
+type-deletion proposition of v79.
+\end{proof}
+
+\begin{remark}[What is new, and what is not]
+(i) $h_{\mathrm U}\notin\mathbf{LG}$, so the local-group theorem of v79 does
+not apply, and for $g\notin\mathcal H$ the target is not an abelian filter,
+so Theorem~D does not apply directly.  (ii) The proof does not use any
+substitutability property of $L$ beyond Lemma~\ref{lem:split-member}; the
+decisive input is \emph{offset rigidity} (Lemma~\ref{lem:rigidity}), which is
+a property of every presentation of $L$.  (iii) The doubling grammar
+$A_i\to A_{i-1}A_{i-1}$ cannot occur on a marker-free path below an open
+bi-typed nonterminal; this is exactly what prevents exponentially rare
+marker-free words with small ordinary thickness.  (iv) The theorem is stated with one subgroup $\mathcal H$ for both
+branches.  The exact scan \texttt{v80\_branch\_union\_scan.py} (cyclic
+$\mathbb A=\Z/k\Z$, $k\le6$, alphabet $\{\mathtt a,\mathtt c\}$, marker
+$\mathtt c$, all pairs of value sets) found $1\,364$ distinct two-branch unions in
+$\Cmcf{2}{h_{\mathrm U}}$ that are not single abelian filters; \emph{all}
+$1\,364$ become common-subgroup unions after intersecting with the values
+realisable in each branch.  This supports Conjecture~\ref{conj:F1gen}
+below but proves nothing beyond $k\le6$.
+\end{remark}
+
+\section{Further evidence and open lemmas}
+
+\subsection{Boolean combinations under a content typing (finite scan)}
+\texttt{v80\_content\_union\_scan.py} takes $\Sigma=\{\mathtt a,\mathtt c,
+\mathtt d\}$, the content typing $h(w)=\{\text{markers in }w\}\subseteq
+\{\mathtt c,\mathtt d\}$ (a semilattice, not in $\mathbf{LG}$),
+$\varphi:\Sigma^*\to\Z/k\Z$ arbitrary, and \emph{every} relation
+$R\subseteq\mathcal P(\{\mathtt c,\mathtt d\})\times\Z/k\Z$, with
+$L=\{w\in\Sigma^+:(h(w),\varphi(w))\in R\}$.  For $k\le3$ it decides
+$(2,h)$-tuple-substitutability exactly (the monoid is commutative, so
+tuples and contexts reduce to sums).  Of $81\,456$ relations, $6\,958$ give
+class members.  Of these, $6\,894$ are \emph{twisted common-subgroup
+filters} ($R_S=(g_S+\mathcal H)\cap W_S$ for one $\mathcal H$ and offsets
+$g_S$), and the remaining $64$ are \emph{branchwise filters} with
+branch-dependent subgroups $\mathcal H_S$.  No other shape occurs.
+
+\begin{conjecture}[F1-gen: shape]\label{conj:F1gen}
+If $h$ is a content typing, $\varphi$ maps to an abelian group and
+$L=\{w\in\Sigma^+:(h(w),\varphi(w))\in R\}$ lies in $\Cmcf{2}{h}$, then for
+every realised content $S$ the branch $R_S$ is a coset of a subgroup
+$\mathcal H_S$ intersected with the realised values, and $\mathcal H_S$ and
+$\mathcal H_{S'}$ agree on the differences of tuples whose type pattern can
+reach both $S$ and $S'$.
+\end{conjecture}
+
+\begin{conjecture}[F1-tw: data]\label{conj:F1tw}
+For fixed $(\Sigma,h,f,r)$ with $h$ a content typing, every target of the
+shape in Conjecture~\ref{conj:F1gen} with a reduced good presentation $G$
+satisfies $\kappa_G\le\mathrm{poly}(\|G\|\max\{1,\theta_G\})$.
+\end{conjecture}
+
+\emph{Evidence.}  Theorem~\ref{thm:split} is the case of one marker and a
+common subgroup.  The proof idea extends as follows (not yet a proof).
+Offsets are now $o(T)=g_{S_E\cup T}$ for a context of content $S_E$.  The
+rectangle identity from Lemma~\ref{lem:rigidity} forbids two children
+of an open node whose content variations overlap in a marker with nonzero
+offset increment, because $\cup$ is idempotent.  Children whose variations
+are disjoint are allowed (offsets additive across distinct markers), so
+the ``variation tree'' of a minimal derivation has at most
+$|\Sigma_{\mk}|$ leaves, which would bound the canonical yields by
+$|\Sigma_{\mk}|\,|V|(\|G\|+rt_G)$.  Making ``variation'' precise and
+handling branch-dependent subgroups are the missing steps.
+
+\subsection{Principles that fail}
+\begin{enumerate}[label=(F\arabic*)]
+\item \emph{``Local mobility implies shortening.''}  False as a method:
+by Lemma~\ref{lem:P} every exchange witnessed inside one word is
+Parikh-equal (Corollary~\ref{cor:P}).
+\item \emph{``A branch-coherent union reduces to one filter.''}  False:
+for $g\notin\mathcal H$ a semilattice-split union is not an abelian filter
+(Section~4).  The data bound survives for a different reason (offset
+rigidity).
+\item \emph{``Two-branch unions with different subgroups are covered by
+the same proof.''}  The proof of Theorem~\ref{thm:split} uses the common
+subgroup in Step~5.  In the scan every two-branch $h_{\mathrm U}$-union
+turned out to admit a common subgroup after restriction to realised
+values, but under the two-marker content typing $64$ members genuinely
+need branch-dependent subgroups; they are not covered.
+\end{enumerate}
+
+\subsection{Status of Conjecture E}
+Proved cases: $h(\Sigma^+)\in\mathbf{LG}$ (v79 local-group theorem, since
+$L_X\subseteq[X]$); abelian filters for every $h$ (Theorem~D); semilattice-
+split common-subgroup unions for every $h\succeq h_{\mathrm U}$
+(Theorem~\ref{thm:split}).  Disproved at fan-out one (companion CFG
+paper).  Open in general.  No counterexample candidate survived: every
+counterexample design reduces either to a rigid word (destroyed by the
+power-transfer and shift-pair lemmas), or to a type-commutative target
+(the abelian, split and conjectured F1-tw cases).
+
+\subsection{Next lemmas (precise)}
+\begin{enumerate}[label=(N\arabic*)]
+\item \emph{Branchwise subgroups.}  Extend Theorem~\ref{thm:split} to
+$L=\{w:\varphi(w)\in\gamma_{\mk(w)}+\mathcal H_{\mk(w)}\}$ with
+$\mathcal H_0\cap\Z^{\Sigma\setminus\Sigma_{\mk}}$ and
+$\mathcal H_1\cap\Z^{\Sigma\setminus\Sigma_{\mk}}$ (pulled back to
+$\Lambda_0,\Lambda_1$) equal.
+\item \emph{Variation tree.}  For a content typing and an open
+nonterminal $A$, define $\mathrm{Var}(A)\subseteq\Sigma_{\mk}$ as the set of
+markers $\mathtt c$ with $g_{S\cup\{\mathtt c\}}\neq g_S$ for some
+realisable content difference.  Prove that in every rule the children with
+$\mathrm{Var}\neq\emptyset$ have pairwise disjoint $\mathrm{Var}$.
+\item \emph{Type-commutative normal form.}  If $L\in\Cmcf{2}{h}$ and the
+marked part of $L$ is a rich abelian filter (every coset met by marked
+contexts), then the marker-free part of $L$ is determined by
+$(h(w),\varphi(w)+\mathcal H)$; prove this and reduce to N1--N2.
+\item \emph{Beyond commutative.}  Find a target in $\Cmcf{2}{h}$ whose
+classes are not determined by type and an abelian invariant at large
+scale, or prove that none exists (which together with N1--N2 would give
+Conjecture~E).
+\end{enumerate}
+
+\end{document}
