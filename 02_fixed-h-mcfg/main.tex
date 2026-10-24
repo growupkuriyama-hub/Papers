@@ -2765,6 +2765,250 @@ length?  The condition $\Delta_s(L(G_n))=n^{\omega(1)}$ would suffice;
 it is not known to be necessary.
 \end{openproblem}
 
+\subsection{Short coset certificates and obstructions for finite targets}
+\label{subsec:finite-higher-arity-obstructions}
+
+We record two limitations on lower-bound constructions.  The first restricts
+\emph{which competitors} can force large positive samples; the second
+restricts \emph{which finite grammars} can hide very long examples behind
+short rule witnesses.  Neither settles Open Problems~\ref{op:fanout-two}
+and~\ref{op:fanout-two-strong}.
+
+For a tuple $\tuple u$ let $\Psi(\tuple u)$ denote the sum of the Parikh
+vectors of its components, and write $\psi(w)$ for the Parikh vector of a
+word.  The following identity makes explicit the rule-difference mechanism
+used in Theorem~\ref{thm:mcfg-abelian-filter-data}.
+
+\begin{proposition}[Short Parikh-difference certificates]
+\label{prop:short-parikh-certificates}
+Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of rule rank at most $r$,
+with $\emptyset\ne L(G)\subseteq\Sigma^+$, and put $\theta=\theta_G$.
+For each $A\in V$ choose a minimum-length tuple
+$\omega_A\in L_A(G)$.  For a rule
+$R:A\to\rho(B_1,\ldots,B_q)$ let $c_R$ count the explicit terminals
+in $\rho$ and put
+\(\delta_R=c_R+\sum_{j=1}^q\Psi(\omega_{B_j})-\Psi(\omega_A)\in\mathbb Z^\Sigma\).
+Then
+\[
+ \big\langle\psi(u)-\psi(v):u,v\in L(G)\big\rangle_{\mathbb Z}
+ =\big\langle\delta_R:R\in P\big\rangle_{\mathbb Z}.
+\]
+Each $\delta_R$ is the difference of the Parikh vectors of two positive
+words of length at most $(r+2)\theta$.  Moreover,
+$\|\delta_R\|_1\le(r+2)\theta$.
+\end{proposition}
+\begin{proof}
+For a derivation tree $T$ rooted at $A$ and yielding $\tuple u$, expand
+$\sum_{v\in T}\delta_{R(v)}$.  Each non-root reference vector
+$\Psi(\omega_B)$ cancels between its own node and its parent's rule;
+linearity and nondeletion give
+\(\Psi(\tuple u)-\Psi(\omega_A)=\sum_{v\in T}\delta_{R(v)}\).
+For the start symbol this proves one inclusion.
+
+Conversely, Lemma~\ref{lem:thickness-equivalence}(iv) supplies for each
+$A$ an admissible context $E_A$ with at most $\theta$ fixed terminals
+that accepts every tuple in $L_A(G)$.  Both
+\(u_R=E_A[\omega_A]\) and
+\(v_R=E_A[\rho(\omega_{B_1},\ldots,\omega_{B_q})]\)
+are in $L(G)$, and $\psi(v_R)-\psi(u_R)=\delta_R$.
+Lemma~\ref{lem:thickness-equivalence}(i)--(ii) bounds each reference
+tuple and each rule's explicit terminal material by $\theta$.
+Thus $|u_R|\le2\theta$, $|v_R|\le(q+2)\theta$, and the
+triangle inequality applied directly to the definition of $\delta_R$
+gives $\|\delta_R\|_1\le(q+2)\theta$.
+\end{proof}
+
+\begin{corollary}[Uniform certificates for abelian-coset competitors]
+\label{cor:uniform-abelian-competitors}
+Under the assumptions of Proposition~\ref{prop:short-parikh-certificates},
+there is a single set $T_G\subseteq L(G)$ of at most $|V|+|P|$ words with
+\(\|T_G\|_+\le(|V|+|P|)(1+(r+2)\theta_G)\), such that for
+\emph{every} morphism $\varphi:\Sigma^*\to\mathbb A$ into an abelian group,
+subgroup $H\le\mathbb A$ and coset $\gamma+H$,
+\[
+ T_G\subseteq\varphi^{-1}(\gamma+H)
+ \quad\Longrightarrow\quad
+ L(G)\subseteq\varphi^{-1}(\gamma+H).
+\]
+For a fixed finite typing $s$ put
+\(M_s(L)=\max_{t\in\widehat{s}(L)}\min\{|w|+1:w\in L,\widehat{s}(w)=t\}\).
+For the filter family $\mathcal F_s$ defined above, when
+$L=L(G)\subseteq\Sigma^+$ belongs to the corresponding typed class,
+\[
+ M_s(L)\le\Delta_s(L)
+ \le\max\{M_s(L),(r+2)\theta_G+1\}.
+\]
+All proper competitors $L\cap R$ with $R\in\mathcal F_s$ have their
+difference sets simultaneously met by some positive set of weight at most
+\((|V|+|P|)(1+(r+2)\theta_G)+|\mathsf S|M_s(L)\).
+\end{corollary}
+\begin{proof}
+Take $T_G$ to contain $E_A[\omega_A]$ for each $A$, and
+$E_A[\rho(\omega_{B_1},\ldots,\omega_{B_q})]$ for each rule $R$.
+If all these words lie in a coset, every $\delta_R$ maps into $H$;
+the preceding lattice identity then puts every word of $L(G)$ into
+that coset.  Hence each coset filter which excludes a target word is
+violated by a member of $T_G$, of length at most $(r+2)\theta_G$.
+For a type filter which excludes a realized type, a shortest word of
+that type has encoded length at most $M_s(L)$; conversely, excluding a
+type achieving $M_s(L)$ gives the lower bound.  Adjoining one shortest
+word for each realized type to $T_G$ proves the simultaneous bound.
+\end{proof}
+
+The uniform set above need not be a characteristic sample of any learner.
+Thus the corollary excludes superpolynomial \emph{hitting-set} arguments
+based only on these abelian-coset competitors when the original grammar
+thickness is polynomial; it does not exclude other competitors or general
+operator-independent lower bounds.
+
+We turn to finite languages.  A \emph{componentwise factor embedding}
+$\tuple x\preceq_{\rm fac}\tuple y$ means that each $x_i$ is a
+contiguous factor of $y_i$.
+
+\begin{lemma}[Finite-target tuple-nesting obstruction]
+\label{lem:finite-tuple-nesting}
+Let $L$ be finite and $(f,s)$-tuple-substitutable.
+If nonempty $d$-tuples $\tuple x,\tuple y$, $d\le f$, have equal
+componentwise types and a common accepting admissible context, then
+$\tuple x\preceq_{\rm fac}\tuple y$ implies
+$\|\tuple x\|_1=\|\tuple y\|_1$.
+In particular, if $G$ is a reduced good grammar for $L$, each
+componentwise-type fibre of $L_A(G)$ is an antichain under proper
+componentwise factor embedding.
+\end{lemma}
+\begin{proof}
+Suppose $y_i=p_ix_iq_i$ and
+$h=\sum_i(|p_i|+|q_i|)>0$.  Equality of the full tuple distributions
+follows from substitutability.  Write
+$T(\tuple z)=(p_iz_iq_i)_i$ and let $E$ be a common accepting context.
+Every $E[T^k(\,\cdot\,)]$ is still an admissible $d$-hole context:
+the original nonempty separators remain in place.
+Inductively, the equality of distributions forces
+$E[T^k(\tuple x)]\in L$ for all $k\ge0$, producing words of
+strictly increasing lengths, a contradiction.
+For grammar yields use the common successful context $E_A$ from
+Lemma~\ref{lem:thickness-equivalence}(iv).
+\end{proof}
+
+For the next result fix $\Sigma=\{\mathtt a,\mathtt\#\}$ and the
+non-local-group two-element semilattice typing
+$s(\mathtt a)=0$, $s(\mathtt\#)=1$, with multiplication $\max$.
+The positive type-zero fibre is $L\cap\mathtt a^+$.
+
+\begin{lemma}[Transport of short unary mass]
+\label{lem:short-unary-transport}
+Suppose $L$ is $(2,s)$-tuple-substitutable and
+$N=\min\{k\ge1:\mathtt a^k\in L\}$ exists.
+For $2\le m<N$, the tuples
+$(\mathtt a^i,\mathtt a^{m-i})$, $1\le i<m$, have the same
+complete two-hole distribution.  Consequently, if
+$\mathtt a^p z\mathtt a^{m-p}\in L$ for any nonempty $z$
+and $1\le p<m$, then
+$\mathtt a^i z\mathtt a^{m-i}\in L$ for all $1\le i<m$.
+\end{lemma}
+\begin{proof}
+All the displayed tuples have type $(0,0)$, and the admissible context
+$\blank_1\mathtt a\blank_2\mathtt a^{N-m-1}$ accepts every one,
+producing $\mathtt a^N$.  Apply two-dimensional substitutability, then
+use $\blank_1z\blank_2$.
+\end{proof}
+
+\begin{theorem}[Linear short-fibre bound with an interior marker]
+\label{thm:finite-interior-short-fibre}
+Let $G$ be a reduced good MCFG of rule rank at most $r$ with
+finite nonempty $L=L(G)\subseteq\mathtt a^+\cup
+\mathtt a^+\mathtt\#\mathtt a^+$.
+If $L$ is $(2,s)$-tuple-substitutable, then
+\[
+ M_s(L)\le(r+2)\theta_G+2.
+\]
+This holds for arbitrary fan-out, provided the relevant two-hole
+substitutability condition is imposed.
+\end{theorem}
+\begin{proof}
+For a finite $(1,s)$-substitutable language, two accepted words of
+the same type cannot properly contain one another as contiguous factors:
+apply Lemma~\ref{lem:finite-tuple-nesting} to the identity context.
+In particular, $L\cap\mathtt a^+$ has at most one word.
+If only one type is realized, its shortest word has length at most
+$\theta_G$; suppose henceforth that both are realized, with type-zero
+word $\mathtt a^N$.  Some rule writes $\mathtt\#$, and its shortest
+successful use gives a type-one word of length at most $\theta_G$.
+If $N\le\theta_G$ the conclusion follows.  Otherwise write this short
+word as $\mathtt a^p\mathtt\#\mathtt a^q$, $p,q\ge1$, and put
+$m=p+q<N$.
+If $m\ge3$, Lemma~\ref{lem:short-unary-transport} produces every
+interior split of total unary mass $m$.  Comparing
+$\mathtt\#\mathtt a^{m-1}$ and
+$\mathtt a\mathtt\#\mathtt a^{m-2}$ under the common context
+$\mathtt a\blank_1$, and then using $\blank_1\mathtt a$, forces
+$\mathtt\#\mathtt a^m\in L$, contrary to the interior-marker
+hypothesis.  Thus $m=2$ and the short word is
+$\mathtt a\mathtt\#\mathtt a$.
+Every other word of type one properly contains this word as a factor,
+which contradicts Lemma~\ref{lem:finite-tuple-nesting}.
+Hence $L=\{\mathtt a^N,\mathtt a\mathtt\#\mathtt a\}$.
+
+The Parikh-difference group is generated by
+$(N-2,-1)$ and is nontrivial.  Proposition~\ref{prop:short-parikh-certificates}
+therefore supplies a nonzero rule defect.  As its defining positive
+words belong to the two-word language, the defect is
+$\pm(N-2,-1)$, of norm $N-1$.  Consequently
+$N-1\le(r+2)\theta_G$, giving the claimed bound including
+encoded word cost.
+\end{proof}
+
+The finite-language hypothesis above is essential to the factor argument;
+the interior-marker hypothesis excludes boundary markers.  Neither
+assumption follows from general two-dimensional substitutability.
+
+\begin{theorem}[Length spectrum of a finite good MCFG]
+\label{thm:finite-mcfg-length-spectrum}
+Let $G$ be a reduced good MCFG of rule rank at most $r$ with
+nonempty finite language $L(G)$.  Put
+$\theta=\theta_G$ and
+$t=|\{|w|:w\in L(G)\}|$.
+Then
+\[
+ \max_{w\in L(G)}|w|
+ \le(r+1)|V|\,\theta\,\max\{1,t-1\}.
+\]
+This bound does not assume any semigroup typing or substitutability.
+\end{theorem}
+\begin{proof}
+Choose, for each accepted word, a successful derivation with the
+fewest nodes.  No root-to-leaf path of such a derivation repeats a
+nonterminal.  Indeed, a return path from $A$ to $A$ either introduces
+some terminal or a productive side-child, in which case repeating it
+makes $L(G)$ infinite by linearity and nondeletion; or it introduces
+nothing, in which case every step is a unary, terminal-free variable
+redistribution.  Since each component remains nonempty, and the endpoints
+have the same fan-out, the composite redistributes the components
+bijectively.  The nonpermuting condition makes that bijection the identity,
+so the zero-growth return can be removed, contradicting minimality.
+Thus every such derivation has depth at most $|V|$.
+
+Call a node heavy if the total length of its tuple yield exceeds
+$\theta$.  Every nonterminal has a yield of total length at most
+$\theta$ by Lemma~\ref{lem:thickness-equivalence}(ii).
+If there are $k$ pairwise incomparable heavy nodes, replace these
+subtrees, one at a time, by short yields.  Each replacement strictly
+decreases the final length, so the resulting $k+1$ accepted lengths
+are distinct.  Hence $k\le t-1$.  The heavy nodes form an
+ancestor-closed subtree of depth at most $|V|$, and therefore number
+at most $|V|(t-1)$.
+If the root is light, $|w|\le\theta$.  Otherwise every terminal is
+written either by a heavy node itself (at most $\theta$ terminals per
+node) or by one of its at most $r$ light children (at most $\theta$
+terminals in each).  It follows that
+$|w|\le(r+1)\theta|V|(t-1)$, as required.
+\end{proof}
+
+Thus, if a family of finite good grammars has polynomial original size
+and thickness but accepts a superpolynomial-length word, it must have
+superpolynomially many distinct accepted lengths.  This necessary
+condition alone does not settle either higher-fan-out open problem.
+
 \section{Conclusion}
 \label{sec:conclusion}
 
@@ -2786,8 +3030,13 @@ degrees have not been shown optimal. The companion CFG lower-bound
 obstruction is established at fan-out one; its exponential example family
 cannot be transferred to the two-dimensional substitutability setting.
 Distinguishing-pair arguments give an operator-independent forcing-depth
-criterion. Whether higher fan-out forces superpolynomial characteristic-data
-length, or superpolynomial forcing depth, remains open.
+criterion. Short Parikh-difference certificates show that abelian-coset
+competitors alone cannot yield a superpolynomial hitting-set obstruction
+under polynomial original rule thickness. For finite targets we give a
+tuple-nesting obstruction, a linear short-fibre bound in an interior-marker
+case, and a general finite-MCFG length-spectrum bound. These partial results
+do not settle whether higher fan-out can require superpolynomial
+characteristic-data length or forcing depth.
 \section*{Acknowledgments}
 The author thanks Makoto Kanazawa and Ryo Yoshinaka for valuable discussions
 and encouragement.
