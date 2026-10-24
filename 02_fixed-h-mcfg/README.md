@@ -1,64 +1,38 @@
-# #2 — Characteristic-Data Bounds for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
+# #2 — Polynomial Upper Bounds on Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** Information and Computation (pre-submission)  
-**Preprint:** [arXiv:2605.11644](https://arxiv.org/abs/2605.11644)
+**Preprint:** [arXiv:2605.11644](https://arxiv.org/abs/2605.11644) (the public version may be older)
 
-## Canonical manuscripts on `main`
+## Canonical bilingual sources
 
-| Language | Main LaTeX file | Appendix arrangement | PDF |
-| --- | --- | --- | --- |
-| English (submission master) | `main.tex` | Finite-group and local-group appendices inlined into `main.tex` | `main.pdf` |
-| Japanese (review translation) | `japanese/main_JP.tex` | Finite-group and local-group appendices inlined into `main_JP.tex` | `japanese/main_JP.pdf` |
+| Language | Source of truth | Stable PDF |
+| --- | --- | --- |
+| English, submission master | [main.tex](main.tex) | [main.pdf](main.pdf) |
+| Japanese, research translation | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) |
 
-These paths contain the bilingual integrated manuscript compiled on 2026-10-24 (latest research integration: internal revision 18). As requested, the two English appendices (finite-group block replacement and local-group typings) were embedded directly into `main.tex`; the standalone English files were deleted. The two Japanese appendices are likewise inlined into `japanese/main_JP.tex`, and the standalone appendix files have been removed from the current tree. Earlier separate window-abelian/window-group appendices are also obsolete.
+**2026-10-24 editorial integration (M1–M9):** The English source is the 45-page upper-bound-centered I&C manuscript. The Japanese source has been updated to reflect the same principal claims, the finite-feature crossing example, local-group Rees/sliding-factor proof, streamlined qualitative attribution, and the single higher-arity open problem. Detailed historical versions remain in Git history.
 
-### Editorial focus (revision 19; 2026-10-24)
+## Proven upper bounds (fixed alphabet, fan-out, rank and typing)
 
-The paper's **novelty is the total encoded length of characteristic data**, not the general qualitative learnability of substitutable grammars. Section 3 has been reorganized to apply Yoshinaka (2015) early; fixed-rank qualitative learning now appears as an explicitly inherited corollary, and the routine soundness/completeness and Gold arguments have been shortened. The essential finite-signature and concrete \`SUBST_P\` bridge remains, as does the finite-witness argument for unbounded rule rank.
+For a reduced good MCFG $G$ with rule thickness $\bar\theta_G$:
 
-To make the quantitative section accessible sooner, four supporting typed-witness proofs have been relocated to a technical appendix; their theorem/lemma statements remain in Section 3. English and Japanese sources were updated together. **Do not restore the old duplicated qualitative proofs in future source integration.** See [the detailed revision note](revision/2026-10-24_yoshinaka2015_quantitative_first.md) for dependencies and guardrails.
+- Fixed prefix–suffix windows, with or without finite-group values (including noncommutative groups): $O(\|G\|^2\bar\theta_G)$ total encoded characteristic-data length.
+- Positive-image local-group typings: $O(\|G\|^3\bar\theta_G)$.
+- For any standard input grammar $H$ with $n=\max\{1,\|H\|\}$ and component-pattern thickness $t$, the corresponding bounds are $O(n^3t)$ and $O(n^4t)$.
+- Rank-one input MCFGs: $O(n^3)$ under any fixed typing.
 
-### Editorial revision 20 — quantitative-first / unrestricted standard inputs (2026-10-24)
+Qualitative learning and characteristic-set cardinality are attributed to Yoshinaka's prior work; the quantitative owner-wise shortening and presentation-sensitive encoded-length results are the paper's focus. This manuscript does not claim a fan-out-two characteristic-data lower bound. The companion CFG paper and the present MCFG paper employ different reconstruction operators.
 
-The English master and Japanese review source now move the standard qualitative reconstruction and Gold/effectivity verification into an appendix; only the reconstruction, its Yoshinaka 2015 interface, typed witnesses, and exactness interface precede the quantitative section. The introduction and its two-word / characteristic-data-length motivation are retained.
-
-A new proposition \`prop:pattern-thickness-transfer\` and corollary \`cor:unrestricted-standard-mcfg-data\` remove **good, nondeleting, nonpermuting, nonmerging, and lambda-free assumptions from the supplied target grammar**. For a standard fixed-fan-out, fixed-rank input grammar \`H\`, let \`n=max(1,||H||)\` and \`t=max(1,t_pat(trim(H)))\`, where \`t_pat\` is the maximum shortest yield length over nonempty-component-support fibres. The derived characteristic-sample bounds are \`O(n^3 t)\` for fixed windows or window–finite-group typings, and \`O(n^4 t)\` for positive-image local groups. Proof details are in appendix \`app:pattern-thickness\`.
-
-**Qualification:** This does *not* establish corresponding bounds in the ordinary untyped rule thickness of an arbitrary MCFG. Empty-component elimination can make that thickness exponentially larger, as the manuscript's earlier counterexample shows. The sharp earlier reduced-good bounds and the rare-fibre/marker quantitative results remain untouched. The new pattern-thickness transfer proof is author-review material, not independently peer-verified. Do not silently weaken or erase this distinction in later integrations.
-
-## Quantitative results
-
-For reduced good MCFG presentations, with fixed fan-out, rule-rank bound and typing:
-
-- Prefix–suffix window typing and window + any finite group (including noncommutative groups): total positive-data length `O(||G||^2 · θ̄_G)`.
-- Positive-image local-group typings: `O(||G||^3 · θ̄_G)`.
-
-The 2026-10-24 research integration additionally proves short Parikh-difference certificates
-and a uniform hitting set for abelian-coset competitors. For finite targets it
-establishes a tuple-nesting obstruction, a linear shortest-type-fibre bound
-when every marker is unique and strictly internal, and a finite-MCFG
-length-spectrum upper bound. These are **partial obstructions**, not a proof
-of the general fan-out-two characteristic-data lower bound. Proofs and
-EN/JP references were independently checked; literature priority and formal
-verification remain outstanding. Local builds: English 46 pages; Japanese 59 pages.
-
-The general local-group bound does not supersede the sharper quadratic bounds for its window/group subclasses. These are mathematical claims of the manuscript, not guarantees of acceptance or independent formal verification.
-
-## Local builds
-
-From `02_fixed-h-mcfg/`:
+## Build and publication
 
 ```sh
+cd 02_fixed-h-mcfg
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 cd japanese
 latexmk -lualatex -interaction=nonstopmode -halt-on-error main_JP.tex
 ```
 
-On pushes to `main`, `.github/workflows/publish-mcfg-bilingual-pdf.yml` rebuilds the English and Japanese PDFs at the stable paths above; verify the corresponding GitHub Actions run before relying on the updated published PDFs.
+Pull requests modifying either source trigger `.github/workflows/verify-mcfg-bilingual-pr.yml` to compile both manuscripts and check citations/references. After merging to `main`, `.github/workflows/publish-mcfg-bilingual-pdf.yml` rebuilds and commits the two stable PDFs. Verify Actions success before treating the published PDFs as current.
 
-## Version cleanup
-
-Only canonical working manuscripts are kept in the current tree. Earlier version-numbered revision notes and unused standalone appendices were removed from the **working tree**, not from Git history; use `git log -- 02_fixed-h-mcfg/` or an older commit to recover them. The `revision/` directory retains reproducibility scripts and parked research results rather than superseded draft versions.
-
-Before submission, verify bibliographic/preprint versions, the author-facing AI disclosure, and the rendered journal package.
+The Japanese version is for internal reading and review; English is the submission master. Both mathematical proof streams still require author sign-off and independent scholarly review.
