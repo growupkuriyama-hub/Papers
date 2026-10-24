@@ -657,89 +657,20 @@ Comp/Const, Link and Start are exactly the rules of Types~I, II and III of
 Yoshinaka's unbounded-rank learner $\mathcal A(p,*)$
 \cite[Corollary~2]{Yoshinaka2011}.
 
-\subsection{Qualitative Learning via Yoshinaka (2015)}
+\subsection{Qualitative learning as an inherited principle}
 \label{sec:general-framework}
-
-Qualitative learning for fixed rule rank is inherited from
-Yoshinaka's signature theorem~\cite[Theorem~1]{Yoshinaka2015General}.
-We record the specialization to our typed grammar and its actual
-implementation, rather than repeat the general learning proof.
-Fix $f,r\ge1$ and $s:\Sigma^+\twoheadrightarrow\mathsf S$.
-Let $\mathfrak S_{f,r,s}$ have the initial sort
-$O_*=\{\overline w:w\in\Sigma^*\}$ and tagged, pairwise disjoint sorts
-\[
- T_{d,\boldsymbol\mu}
- =\{\tuple w\in(\Sigma^+)^d:s^{(d)}(\tuple w)=\boldsymbol\mu\},
- \quad 1\le d\le f,\quad \boldsymbol\mu\in\mathsf S^d.
-\]
-Its functions are all type-compatible good MCFG templates of rank
-at most $r$ (including constants), the promotions
-$\pi_\mu:(w)\mapsto\overline w$ to $O_*$, and the initial constant
-$\overline\eps$.  No operation takes an $O_*$ input.  This is the
-nonempty-component variant of the MCFG signature of
-\cite[Example~3 and Section~8]{Yoshinaka2015General}
-with a finite refinement of sorts.
-
-\begin{proposition}[Fixed-rank specialization]
-\label{prop:yoshinaka2015-embedding}
-For each noninitial sort $T_{d,\boldsymbol\mu}$, the realizable
-substructures are exactly $T_{d,\boldsymbol\mu}$ and the realizable
-contexts are the functions
-$\tuple x\mapsto\overline{E[\tuple x]}$ for $E\in\mathcal E_d$;
-the only context of $O_*$ is the identity.  Moreover,
-\[
- \mathsf{Subst}(\mathfrak S_{f,r,s})
- =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r).
-\]
-For fixed $f,r,s$, the signature meets Assumptions~1--3 of
-\cite{Yoshinaka2015General}.
-\end{proposition}
-The verification is given in Appendix~\ref{app:qualitative-construction-details}.
-
-\begin{lemma}[Correspondence with substructure-indexed reconstruction]
-\label{lem:substp}
-For every finite $K\subseteq\Sigma^*$,
-\[
- L(\mathrm{SUBST}_{\mathrm P}(K))
- =L(\mathcal B^{\le r}_{f,s}(K)).
-\]
-Here $\mathrm{SUBST}_{\mathrm P}$ is that of
-\cite[Section~6.1]{Yoshinaka2015General}; equality concerns
-languages, not the syntax of grammar codes.
-\end{lemma}
-The verification is given in Appendix~\ref{app:qualitative-construction-details}.
-
-\begin{corollary}[Inherited qualitative learning at fixed rank]
-\label{cor:yoshinaka2015-qualitative}
-For fixed $f,r,s$, the class
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$ is identifiable in the
-limit from positive data with polynomial-time hypothesis updates.
-For a reduced target signature grammar with $N$ nonterminals and
-$P$ rules, Yoshinaka's $\mathrm{SUBST}_{\mathrm D}$ has
-a characteristic set of at most $|N|+|P|$ words.
-\end{corollary}
-\begin{proof}
-Apply~\cite[Theorem~1 and the paragraph following Lemma~3]
-{Yoshinaka2015General} to
-Proposition~\ref{prop:yoshinaka2015-embedding}.
-\end{proof}
-
-\begin{remark}[Boundary between inherited and new results]
-\label{rem:yoshinaka-inheritance}
-The explicit proof of \cite[Theorem~1]{Yoshinaka2015General}
-concerns $\mathrm{SUBST}_{\mathrm D}$.  Its Section~7
-also permits $\mathrm{SUBST}_{\mathrm P}$ under Assumptions~1, 2
-and~7: after trimming, every productive signature nonterminal
-has a realized substructure and a successful context, and the
-enumeration supplied by Assumption~3 meets the remaining
-requirements of Assumption~7.  Lemma~\ref{lem:substp} then
-identifies the language of our actual implementation.
-Characteristic-set \emph{cardinality} does not bound its
-\emph{total encoded length}, the object of
-Section~\ref{sec:char-data}.  A single fixed-rank signature
-also does not cover unbounded rule rank; the concrete finite-witness
-argument below extends \cite[Corollary~2]{Yoshinaka2011} to typed links.
-\end{remark}
+For fixed $f,r,s$, finite-sort specialization of
+Yoshinaka's signature theorem~\cite[Theorem~1]{Yoshinaka2015General}
+gives qualitative positive-data identification and polynomial
+hypothesis updates (Corollary~\ref{cor:yoshinaka2015-qualitative}).
+The compatibility of its substructure-indexed operator
+$\mathrm{SUBST}_{\mathrm P}$ with our concrete reconstruction is
+recorded in Lemma~\ref{lem:substp}; the verification of the
+signature and the scope of Yoshinaka's $\mathrm{SUBST}_{\mathrm D}$
+and $\mathrm{SUBST}_{\mathrm P}$ results are in
+Appendix~\ref{app:qualitative-construction-details}.
+No total-length bound is inherited from characteristic-set
+\emph{cardinality}: this is the new quantitative question.
 
 \subsection{Soundness interface}
 \label{sec:soundness}
@@ -3138,6 +3069,90 @@ elimination of empty components can be expensive.
 
 \section{Auxiliary Verification of Qualitative Reconstruction}
 \label{app:qualitative-construction-details}
+\subsection{Qualitative Learning via Yoshinaka (2015)}
+
+
+Qualitative learning for fixed rule rank is inherited from
+Yoshinaka's signature theorem~\cite[Theorem~1]{Yoshinaka2015General}.
+We record the specialization to our typed grammar and its actual
+implementation, rather than repeat the general learning proof.
+Fix $f,r\ge1$ and $s:\Sigma^+\twoheadrightarrow\mathsf S$.
+Let $\mathfrak S_{f,r,s}$ have the initial sort
+$O_*=\{\overline w:w\in\Sigma^*\}$ and tagged, pairwise disjoint sorts
+\[
+ T_{d,\boldsymbol\mu}
+ =\{\tuple w\in(\Sigma^+)^d:s^{(d)}(\tuple w)=\boldsymbol\mu\},
+ \quad 1\le d\le f,\quad \boldsymbol\mu\in\mathsf S^d.
+\]
+Its functions are all type-compatible good MCFG templates of rank
+at most $r$ (including constants), the promotions
+$\pi_\mu:(w)\mapsto\overline w$ to $O_*$, and the initial constant
+$\overline\eps$.  No operation takes an $O_*$ input.  This is the
+nonempty-component variant of the MCFG signature of
+\cite[Example~3 and Section~8]{Yoshinaka2015General}
+with a finite refinement of sorts.
+
+\begin{proposition}[Fixed-rank specialization]
+\label{prop:yoshinaka2015-embedding}
+For each noninitial sort $T_{d,\boldsymbol\mu}$, the realizable
+substructures are exactly $T_{d,\boldsymbol\mu}$ and the realizable
+contexts are the functions
+$\tuple x\mapsto\overline{E[\tuple x]}$ for $E\in\mathcal E_d$;
+the only context of $O_*$ is the identity.  Moreover,
+\[
+ \mathsf{Subst}(\mathfrak S_{f,r,s})
+ =\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r).
+\]
+For fixed $f,r,s$, the signature meets Assumptions~1--3 of
+\cite{Yoshinaka2015General}.
+\end{proposition}
+The verification is given in Appendix~\ref{app:qualitative-construction-details}.
+
+\begin{lemma}[Correspondence with substructure-indexed reconstruction]
+\label{lem:substp}
+For every finite $K\subseteq\Sigma^*$,
+\[
+ L(\mathrm{SUBST}_{\mathrm P}(K))
+ =L(\mathcal B^{\le r}_{f,s}(K)).
+\]
+Here $\mathrm{SUBST}_{\mathrm P}$ is that of
+\cite[Section~6.1]{Yoshinaka2015General}; equality concerns
+languages, not the syntax of grammar codes.
+\end{lemma}
+The verification is given in Appendix~\ref{app:qualitative-construction-details}.
+
+\begin{corollary}[Inherited qualitative learning at fixed rank]
+\label{cor:yoshinaka2015-qualitative}
+For fixed $f,r,s$, the class
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r)$ is identifiable in the
+limit from positive data with polynomial-time hypothesis updates.
+For a reduced target signature grammar with $N$ nonterminals and
+$P$ rules, Yoshinaka's $\mathrm{SUBST}_{\mathrm D}$ has
+a characteristic set of at most $|N|+|P|$ words.
+\end{corollary}
+\begin{proof}
+Apply~\cite[Theorem~1 and the paragraph following Lemma~3]
+{Yoshinaka2015General} to
+Proposition~\ref{prop:yoshinaka2015-embedding}.
+\end{proof}
+
+\begin{remark}[Boundary between inherited and new results]
+\label{rem:yoshinaka-inheritance}
+The explicit proof of \cite[Theorem~1]{Yoshinaka2015General}
+concerns $\mathrm{SUBST}_{\mathrm D}$.  Its Section~7
+also permits $\mathrm{SUBST}_{\mathrm P}$ under Assumptions~1, 2
+and~7: after trimming, every productive signature nonterminal
+has a realized substructure and a successful context, and the
+enumeration supplied by Assumption~3 meets the remaining
+requirements of Assumption~7.  Lemma~\ref{lem:substp} then
+identifies the language of our actual implementation.
+Characteristic-set \emph{cardinality} does not bound its
+\emph{total encoded length}, the object of
+Section~\ref{sec:char-data}.  A single fixed-rank signature
+also does not cover unbounded rule rank; the concrete finite-witness
+argument below extends \cite[Corollary~2]{Yoshinaka2011} to typed links.
+\end{remark}
+
 \subsection{Soundness}
 
 
