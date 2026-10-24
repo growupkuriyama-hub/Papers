@@ -1278,53 +1278,12 @@ Assumption~7の残りの要求を満たす．
 ~\cite[Corollary~2]{Yoshinaka2011}を型付きリンクに拡張する．
 \end{remark}
 
-\subsection{健全性}
+\subsection{健全性の利用}
 \label{sec:soundness}
-
-
-
-\begin{lemma}[合成による同値関係の保存]
-\label{lem:witnessed-composition}
-$L\subseteq\Sigma^*$，
-$\rho$ をランク $r$ の良形規則のテンプレートとし，
-$\tuple x_j,\tuple u_j$ は子の要求アリティをもち，
-各成分は非空とする．
-すべての $j$ について
-$\tuple u_j\equiv_{L,s}\tuple x_j$ ならば，
-\(\rho(\tuple u_1,\ldots,\tuple u_r) \equiv_{L,s} \rho(\tuple x_1,\ldots,\tuple x_r)\)
-が成り立つ．
-\end{lemma}
-
-\begin{proof}
-Yoshinaka~\cite[Lemma~1]{Yoshinaka2015General}の
-代入関係の演算に関する保存性を，
-有限半群型付きソートの良形テンプレートに適用する．
-型は準同型性で一致し，両方向の保存性から分布同値性が従う．
-\end{proof}
-
-\begin{proposition}[ランク上界付きの各仮説の健全性]
-\label{prop:reconstruction-soundness}
-$L$を$(f,s)$-タプル代入可能とし，$K\subseteq L$を有限とする．
-任意の$r_{\max}\ge1$について，
-$\widehat G_{\le r_{\max}}(K)$で
-$[\tuple x]\Rightarrow^*\tuple u$ならば
-$\tuple u\equiv_{L,s}\tuple x$である．したがって
-\[
- L(\mathcal B_{f,s}^{\le r_{\max}}(K))\subseteq L,\qquad
- L(\mathcal B_{f,s}(K))\subseteq L.
-\]
-\end{proposition}
-\begin{proof}
-これはYoshinaka~\cite[Sections~6.1--7]{Yoshinaka2015General}
-の部分構造添字付き学習における代入不変量であり，
-補題~\ref{lem:substp}によって本稿の再構成器に対応する．
-具体的にはConstでタプル値が保たれ，Linkでは
-同じ型と共通の正例文脈から分布同値性が得られ，
-Compでは補題~\ref{lem:witnessed-composition}がそれを保存する．
-したがって導出帰納法で不変量が保たれ，Startは$L$内の語だけを生成する．
-$K\ne\emptyset$のランク無制限版は上界$\|K\|_+$の有界版であり，
-$K=\emptyset$は自明である．
-\end{proof}
+本稿で用いる代入不変量は
+命題~\ref{prop:reconstruction-soundness}として定式化される．
+Link・Compに関する検証は
+付録~\ref{app:qualitative-construction-details}に収めた．
 
 \subsection{生成語型付き標的精密化と有限証拠}
 \label{sec:refinement}
@@ -1666,126 +1625,15 @@ $L^+\ne\emptyset$なら
 ランク保存により最後の主張も従う．
 \end{proof}
 
-\subsection{実効的再構成と保守的学習}
+\subsection{質的同定と計算可能性}
 \label{sec:poly-time}
-
-$f,r_{\max},s$ を固定すると，
-Yoshinaka のランク有界学習器
-~\cite[Proposition~4 and Section~4.3]{Yoshinaka2011}
-と同様に，本構成は観測標本に関して多項式時間である．
-観測タプルは標本語の番号と切断位置によって，
-テンプレートは順序付き変数と終端因子によって符号化する．
-
-\begin{theorem}[規則ランク上界の下での多項式時間構成]
-\label{thm:poly}
-$f,r_{\max}\ge1$ と有限半群準同型 $s:\Sigma^+\to\mathsf S$ を固定し，
-型の計算には $\widehat{s}$ を用いる．
-有限標本 $K$ から，
-$\widehat G_{\le r_{\max}}(K)$ の完全な符号化を
-\((1+\|K\|_+)^{O(fr_{\max})}\)
-時間で計算できる．
-この文法のファンアウトは高々 $f$，
-規則ランクは高々 $r_{\max}$ である．
-\end{theorem}
-
-\begin{proof}
-$n_K=\max\{1,\|K\|_+\}$ とおく．
-切断位置を用いると，
-すべてのタプル出現を
-$n_K^{O(f)}$ 時間で列挙できる．
-固定有限モノイドで部分語の積を計算すれば型が得られる．
-文脈と型で分類することで Rule~(Link) を列挙できる．
-補題~\ref{lem:general-witness-enumeration} により
-Rule~(Comp) とその符号化を
-$n_K^{O(fr_{\max})}$ 時間で列挙できる．
-残る規則はランクが高々1であり，
-重複を取り除いても完全な文法の符号長は多項式のままである．
-\end{proof}
-
-有限テキスト接頭部分をその正例内容に対する
-$\mathcal B_{f,s}$ へ写す集合駆動型作用素は，
-やがて意味的に正しくなる．
-実際，内容が $\mathcal F_L$ を含むようになれば，
-定理~\ref{thm:exact-reconstruction} により，
-以後の再構成は常に $L$ を生成する．
-ただし新しい正例によって観測タプルの種類が増えると，
-文法表示そのものは変化し続けることがある．
-このため TxtEx に必要な構文的安定化は，
-以下の保守的な逐次学習器が担う．
-
-\begin{definition}[保守的な逐次学習器]
-\label{def:conservative-learner}
-Yoshinaka の Algorithm~1
-~\cite[Section~4.1]{Yoshinaka2011}
-と同じ保守的更新方針を用いる．
-$H_0$ を学習モデルで固定した空言語仮説とする．
-学習器 $\mathcal A_{f,s}$ は $H_0$ から始まる．
-停止記号を受け取ったときは現在の文法を維持する．
-正例 $w$ を受け取ったとき，
-現在の文法が既に $w$ を生成するなら維持する．
-生成しない場合に限り，
-それまでに見た正例内容を $K$ として，
-仮説を $\mathcal B_{f,s}(K)$ に置き換える．
-\end{definition}
-
-\begin{corollary}[Gold/TxtEx 同定]
-\label{cor:gold-explanatory}
-任意の有限半群型付け$s:\Sigma^+\to\mathsf S$と$f\ge1$に対し，
-保守的学習器$\mathcal A_{f,s}$は
-$\Cmcf{f}{s}$を正例データからTxtEx同定する．
-\end{corollary}
-\begin{proof}
-規則ランク有界の質的同定は
-系~\ref{cor:yoshinaka2015-qualitative}から従う．
-ランク無制限では
-定理~\ref{thm:exact-reconstruction}の有限特徴標本と
-命題~\ref{prop:reconstruction-soundness}の健全性を使う．
-MCFG所属判定は決定可能である~\cite{SekiEtAl1991}．
-特徴標本出現後の次の仮説更新があれば正確な文法となり，以後変わらない．
-更新がなければ標本整合性と保守性から現仮説が既に$L$を生成する．
-\end{proof}
-
-\begin{corollary}[規則ランク有界の場合の保守的多項式時間学習]
-\label{cor:capped-gold-poly}
-$f,r_{\max}$ と有限半群型付け $s$ を固定する．
-定義~\ref{def:conservative-learner} の方針で，
-$\mathcal B^{\le r_{\max}}_{f,s}$ を用いる学習器は，
-\(\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})\)
-を TxtEx 同定する．
-各データ処理に要する時間は，
-その時点までの正例標本の総サイズに関して多項式である．
-\end{corollary}
-
-\begin{proof}
-命題~\ref{prop:good-normalization},
-\ref{prop:reconstruction-soundness},
-\ref{prop:completeness} がランク上界内で特徴標本を与える．
-定理~\ref{thm:poly} が再構成時間を抑え，
-ランクとファンアウトが有界なMCFGの所属判定も
-文法符号長・入力語長に関して多項式時間である
-~\cite[Proposition~4]{Yoshinaka2011}（有限な単項閉包を含む）．
-系~\ref{cor:gold-explanatory} の保守的学習の議論を適用する．
-\end{proof}
-
-\paragraph{計算時間と収束段階の区別．}
-定理~\ref{thm:poly} と系~\ref{cor:capped-gold-poly} の
-「多項式時間」は，各有限段階で蓄積された正例の符号長
-（新しい正例を含む）に関する\emph{再構成・所属判定の計算時間}である．
-系~\ref{cor:gold-explanatory} の TxtEx 同定は，
-任意の正例テキスト上で最終的に同じ文法コードへ安定することをいうが，
-その\emph{収束段階}や\emph{仮説変更回数}の多項式上界を含まない．
-実際，テキストでは特定の正例の初出を任意に遅らせられ，
-停止記号や正例の重複を任意の回数挿入できる．
-したがって，有限特徴標本の総長が小さくても，
-それだけから任意のテキストに対する収束時刻の上界は従わない．
-
-ファンアウト1では，空語を別に扱うことで，
-すべての CFG はランク2の表示をもつ．
-したがって $\mathcal A^{\le2}_{1,s}$ は
-$\Cmcf{1}{s}$ を対象にできる．
-ただし，これはランク2における
-特徴データ長が多項式であることを意味しない．
-
+規則ランク有界の多項式時間仮説構成は
+定理~\ref{thm:poly}，Gold/TxtEx同定は
+系~\ref{cor:gold-explanatory}による．
+いずれもYoshinakaの保守的更新原理に基づく．
+その計算量とランク無制限の場合の補足証明を
+付録~\ref{app:qualitative-construction-details}にまとめる．
+これは特徴データ\emph{総長}の評価とは区別する．
 
 \section{特徴データ長の上界}
 \label{sec:char-data}
@@ -4773,6 +4621,180 @@ $\bar\theta_G\le
 上界を得たわけではない．
 空成分除去による増大は
 命題~\ref{prop:empty-component-blowup}が示す．
+
+\section{質的学習器と再構成の補助検証}
+\label{app:qualitative-construction-details}
+\subsection{健全性}
+
+
+
+
+\begin{lemma}[合成による同値関係の保存]
+\label{lem:witnessed-composition}
+$L\subseteq\Sigma^*$，
+$\rho$ をランク $r$ の良形規則のテンプレートとし，
+$\tuple x_j,\tuple u_j$ は子の要求アリティをもち，
+各成分は非空とする．
+すべての $j$ について
+$\tuple u_j\equiv_{L,s}\tuple x_j$ ならば，
+\(\rho(\tuple u_1,\ldots,\tuple u_r) \equiv_{L,s} \rho(\tuple x_1,\ldots,\tuple x_r)\)
+が成り立つ．
+\end{lemma}
+
+\begin{proof}
+Yoshinaka~\cite[Lemma~1]{Yoshinaka2015General}の
+代入関係の演算に関する保存性を，
+有限半群型付きソートの良形テンプレートに適用する．
+型は準同型性で一致し，両方向の保存性から分布同値性が従う．
+\end{proof}
+
+\begin{proposition}[ランク上界付きの各仮説の健全性]
+\label{prop:reconstruction-soundness}
+$L$を$(f,s)$-タプル代入可能とし，$K\subseteq L$を有限とする．
+任意の$r_{\max}\ge1$について，
+$\widehat G_{\le r_{\max}}(K)$で
+$[\tuple x]\Rightarrow^*\tuple u$ならば
+$\tuple u\equiv_{L,s}\tuple x$である．したがって
+\[
+ L(\mathcal B_{f,s}^{\le r_{\max}}(K))\subseteq L,\qquad
+ L(\mathcal B_{f,s}(K))\subseteq L.
+\]
+\end{proposition}
+\begin{proof}
+これはYoshinaka~\cite[Sections~6.1--7]{Yoshinaka2015General}
+の部分構造添字付き学習における代入不変量であり，
+補題~\ref{lem:substp}によって本稿の再構成器に対応する．
+具体的にはConstでタプル値が保たれ，Linkでは
+同じ型と共通の正例文脈から分布同値性が得られ，
+Compでは補題~\ref{lem:witnessed-composition}がそれを保存する．
+したがって導出帰納法で不変量が保たれ，Startは$L$内の語だけを生成する．
+$K\ne\emptyset$のランク無制限版は上界$\|K\|_+$の有界版であり，
+$K=\emptyset$は自明である．
+\end{proof}
+
+
+\subsection{実効的再構成と保守的学習}
+
+
+$f,r_{\max},s$ を固定すると，
+Yoshinaka のランク有界学習器
+~\cite[Proposition~4 and Section~4.3]{Yoshinaka2011}
+と同様に，本構成は観測標本に関して多項式時間である．
+観測タプルは標本語の番号と切断位置によって，
+テンプレートは順序付き変数と終端因子によって符号化する．
+
+\begin{theorem}[規則ランク上界の下での多項式時間構成]
+\label{thm:poly}
+$f,r_{\max}\ge1$ と有限半群準同型 $s:\Sigma^+\to\mathsf S$ を固定し，
+型の計算には $\widehat{s}$ を用いる．
+有限標本 $K$ から，
+$\widehat G_{\le r_{\max}}(K)$ の完全な符号化を
+\((1+\|K\|_+)^{O(fr_{\max})}\)
+時間で計算できる．
+この文法のファンアウトは高々 $f$，
+規則ランクは高々 $r_{\max}$ である．
+\end{theorem}
+
+\begin{proof}
+$n_K=\max\{1,\|K\|_+\}$ とおく．
+切断位置を用いると，
+すべてのタプル出現を
+$n_K^{O(f)}$ 時間で列挙できる．
+固定有限モノイドで部分語の積を計算すれば型が得られる．
+文脈と型で分類することで Rule~(Link) を列挙できる．
+補題~\ref{lem:general-witness-enumeration} により
+Rule~(Comp) とその符号化を
+$n_K^{O(fr_{\max})}$ 時間で列挙できる．
+残る規則はランクが高々1であり，
+重複を取り除いても完全な文法の符号長は多項式のままである．
+\end{proof}
+
+有限テキスト接頭部分をその正例内容に対する
+$\mathcal B_{f,s}$ へ写す集合駆動型作用素は，
+やがて意味的に正しくなる．
+実際，内容が $\mathcal F_L$ を含むようになれば，
+定理~\ref{thm:exact-reconstruction} により，
+以後の再構成は常に $L$ を生成する．
+ただし新しい正例によって観測タプルの種類が増えると，
+文法表示そのものは変化し続けることがある．
+このため TxtEx に必要な構文的安定化は，
+以下の保守的な逐次学習器が担う．
+
+\begin{definition}[保守的な逐次学習器]
+\label{def:conservative-learner}
+Yoshinaka の Algorithm~1
+~\cite[Section~4.1]{Yoshinaka2011}
+と同じ保守的更新方針を用いる．
+$H_0$ を学習モデルで固定した空言語仮説とする．
+学習器 $\mathcal A_{f,s}$ は $H_0$ から始まる．
+停止記号を受け取ったときは現在の文法を維持する．
+正例 $w$ を受け取ったとき，
+現在の文法が既に $w$ を生成するなら維持する．
+生成しない場合に限り，
+それまでに見た正例内容を $K$ として，
+仮説を $\mathcal B_{f,s}(K)$ に置き換える．
+\end{definition}
+
+\begin{corollary}[Gold/TxtEx 同定]
+\label{cor:gold-explanatory}
+任意の有限半群型付け$s:\Sigma^+\to\mathsf S$と$f\ge1$に対し，
+保守的学習器$\mathcal A_{f,s}$は
+$\Cmcf{f}{s}$を正例データからTxtEx同定する．
+\end{corollary}
+\begin{proof}
+規則ランク有界の質的同定は
+系~\ref{cor:yoshinaka2015-qualitative}から従う．
+ランク無制限では
+定理~\ref{thm:exact-reconstruction}の有限特徴標本と
+命題~\ref{prop:reconstruction-soundness}の健全性を使う．
+MCFG所属判定は決定可能である~\cite{SekiEtAl1991}．
+特徴標本出現後の次の仮説更新があれば正確な文法となり，以後変わらない．
+更新がなければ標本整合性と保守性から現仮説が既に$L$を生成する．
+\end{proof}
+
+\begin{corollary}[規則ランク有界の場合の保守的多項式時間学習]
+\label{cor:capped-gold-poly}
+$f,r_{\max}$ と有限半群型付け $s$ を固定する．
+定義~\ref{def:conservative-learner} の方針で，
+$\mathcal B^{\le r_{\max}}_{f,s}$ を用いる学習器は，
+\(\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})\)
+を TxtEx 同定する．
+各データ処理に要する時間は，
+その時点までの正例標本の総サイズに関して多項式である．
+\end{corollary}
+
+\begin{proof}
+命題~\ref{prop:good-normalization},
+\ref{prop:reconstruction-soundness},
+\ref{prop:completeness} がランク上界内で特徴標本を与える．
+定理~\ref{thm:poly} が再構成時間を抑え，
+ランクとファンアウトが有界なMCFGの所属判定も
+文法符号長・入力語長に関して多項式時間である
+~\cite[Proposition~4]{Yoshinaka2011}（有限な単項閉包を含む）．
+系~\ref{cor:gold-explanatory} の保守的学習の議論を適用する．
+\end{proof}
+
+\paragraph{計算時間と収束段階の区別．}
+定理~\ref{thm:poly} と系~\ref{cor:capped-gold-poly} の
+「多項式時間」は，各有限段階で蓄積された正例の符号長
+（新しい正例を含む）に関する\emph{再構成・所属判定の計算時間}である．
+系~\ref{cor:gold-explanatory} の TxtEx 同定は，
+任意の正例テキスト上で最終的に同じ文法コードへ安定することをいうが，
+その\emph{収束段階}や\emph{仮説変更回数}の多項式上界を含まない．
+実際，テキストでは特定の正例の初出を任意に遅らせられ，
+停止記号や正例の重複を任意の回数挿入できる．
+したがって，有限特徴標本の総長が小さくても，
+それだけから任意のテキストに対する収束時刻の上界は従わない．
+
+ファンアウト1では，空語を別に扱うことで，
+すべての CFG はランク2の表示をもつ．
+したがって $\mathcal A^{\le2}_{1,s}$ は
+$\Cmcf{1}{s}$ を対象にできる．
+ただし，これはランク2における
+特徴データ長が多項式であることを意味しない．
+
+
+
 
 \section{型付き有限証拠に関する補助証明}
 \label{app:typed-witness-aux-proofs}
