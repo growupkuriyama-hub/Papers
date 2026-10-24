@@ -19,6 +19,14 @@ The paper's **novelty is the total encoded length of characteristic data**, not 
 
 To make the quantitative section accessible sooner, four supporting typed-witness proofs have been relocated to a technical appendix; their theorem/lemma statements remain in Section 3. English and Japanese sources were updated together. **Do not restore the old duplicated qualitative proofs in future source integration.** See [the detailed revision note](revision/2026-10-24_yoshinaka2015_quantitative_first.md) for dependencies and guardrails.
 
+### Editorial revision 20 — quantitative-first / unrestricted standard inputs (2026-10-24)
+
+The English master and Japanese review source now move the standard qualitative reconstruction and Gold/effectivity verification into an appendix; only the reconstruction, its Yoshinaka 2015 interface, typed witnesses, and exactness interface precede the quantitative section. The introduction and its two-word / characteristic-data-length motivation are retained.
+
+A new proposition \`prop:pattern-thickness-transfer\` and corollary \`cor:unrestricted-standard-mcfg-data\` remove **good, nondeleting, nonpermuting, nonmerging, and lambda-free assumptions from the supplied target grammar**. For a standard fixed-fan-out, fixed-rank input grammar \`H\`, let \`n=max(1,||H||)\` and \`t=max(1,t_pat(trim(H)))\`, where \`t_pat\` is the maximum shortest yield length over nonempty-component-support fibres. The derived characteristic-sample bounds are \`O(n^3 t)\` for fixed windows or window–finite-group typings, and \`O(n^4 t)\` for positive-image local groups. Proof details are in appendix \`app:pattern-thickness\`.
+
+**Qualification:** This does *not* establish corresponding bounds in the ordinary untyped rule thickness of an arbitrary MCFG. Empty-component elimination can make that thickness exponentially larger, as the manuscript's earlier counterexample shows. The sharp earlier reduced-good bounds and the rare-fibre/marker quantitative results remain untouched. The new pattern-thickness transfer proof is author-review material, not independently peer-verified. Do not silently weaken or erase this distinction in later integrations.
+
 ## Quantitative results
 
 For reduced good MCFG presentations, with fixed fan-out, rule-rank bound and typing:
