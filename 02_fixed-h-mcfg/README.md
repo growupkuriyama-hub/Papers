@@ -13,7 +13,13 @@
 
 These paths contain the bilingual integrated manuscript compiled on 2026-10-24 (latest research integration: internal revision 18). As requested, the two English appendices (finite-group block replacement and local-group typings) were embedded directly into `main.tex`; the standalone English files were deleted. The two Japanese appendices are likewise inlined into `japanese/main_JP.tex`, and the standalone appendix files have been removed from the current tree. Earlier separate window-abelian/window-group appendices are also obsolete.
 
-### Quantitative results
+### Editorial focus (revision 19; 2026-10-24)
+
+The paper's **novelty is the total encoded length of characteristic data**, not the general qualitative learnability of substitutable grammars. Section 3 has been reorganized to apply Yoshinaka (2015) early; fixed-rank qualitative learning now appears as an explicitly inherited corollary, and the routine soundness/completeness and Gold arguments have been shortened. The essential finite-signature and concrete \`SUBST_P\` bridge remains, as does the finite-witness argument for unbounded rule rank.
+
+To make the quantitative section accessible sooner, four supporting typed-witness proofs have been relocated to a technical appendix; their theorem/lemma statements remain in Section 3. English and Japanese sources were updated together. **Do not restore the old duplicated qualitative proofs in future source integration.** See [the detailed revision note](revision/2026-10-24_yoshinaka2015_quantitative_first.md) for dependencies and guardrails.
+
+## Quantitative results
 
 For reduced good MCFG presentations, with fixed fan-out, rule-rank bound and typing:
 
