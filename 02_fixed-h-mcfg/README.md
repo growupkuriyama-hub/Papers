@@ -38,3 +38,5 @@ latexmk -lualatex -interaction=nonstopmode -halt-on-error main_JP.tex
 Pull requests modifying either source trigger `.github/workflows/verify-mcfg-bilingual-pr.yml` to compile both manuscripts and check citations/references. After merging to `main`, `.github/workflows/publish-mcfg-bilingual-pdf.yml` rebuilds and commits the two stable PDFs. Verify Actions success before treating the published PDFs as current.
 
 The Japanese version is for internal reading and review; English is the submission master. Both mathematical proof streams still require author sign-off and independent scholarly review.
+
+**2026-10-25 Round 4 source merge:** English and Japanese sources now include the standalone rank-one/EDT0L lemma, a full higher-arity obstruction proof, the self-contained bracketed-doubling substitutability proof, consistent shortest-length notation and the fixed-feature-family corollary. Stable PDFs are rebuilt by the main-branch publication workflow.

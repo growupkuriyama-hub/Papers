@@ -25,3 +25,7 @@ latexmk -lualatex -interaction=nonstopmode -halt-on-error main_JP.tex
 PRでは `.github/workflows/verify-mcfg-bilingual-pr.yml` が英日双方を検査し、mainへのマージ後は `.github/workflows/publish-mcfg-bilingual-pdf.yml` が固定URLのPDFを再生成します。
 
 英語版が投稿上の正本です。日本語版は数学的議論を照合するための研究翻訳であり、個々の証明の最終確認は引き続き必要です。
+
+## 2026-10-25 Round 4 更新
+
+英語版の確定修正と同期し，短い証拠語予算の記号の修正，規則ランク1 MCFGから有限指数EDT0Lへの直接包含，括弧付き倍増族の高アリティ非移行命題（証明付き），有限素性関係族の一様な型付けを追加した．付録の代入可能性の証明も関連TCS改訂稿への依存を外し，決定的可逆パーサーを用いた独立証明に置き換えた．

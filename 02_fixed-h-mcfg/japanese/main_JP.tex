@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{ltjsarticle}
 
 % 日本語査読用：LuaLaTeX + LuaTeX-ja
-% English M4--M9 upper-bound edition に対応する日本語査読版（2026-10-24）。
+% 英語Round 4版に対応する日本語研究翻訳（2026-10-25）。
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \numberwithin{equation}{section}
 \usepackage{enumitem}
@@ -3476,7 +3476,7 @@ $\mu(X)$ は $X$ の導出的文文脈の最小固定長とする
 （開始記号から直接リンクされる場合は $\mu(X)=0$）．
 規則 $R:X\to\rho(Y_1,\ldots,Y_q)$ に対して
 \[
- b(R):=c_\rho+\sum_{j=1}^q\lambda(Y_j),
+ b(R):=c_\rho+\sum_{j=1}^q\ell_{\mathrm{in}}(Y_j),
  \qquad
  \mathsf B_{\mathrm{rule}}(G,\widehat{s}):=
  \sum_{R\in\mathcal R}
@@ -4005,6 +4005,30 @@ $g(x)=(0,0)\ne(1,0)=g(y)$である．
 型付け自体の推定方法を与えたものではない．
 \end{remark}
 
+\begin{corollary}[固定型付けによる有限素性関係族の一様な扱い]
+\label{cor:feature-relation-family}
+命題~\ref{prop:feature-cross-typed}の\emph{同じ}固定型付け
+$s=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$は，
+すべての関係$R\subseteq\{0,1\}^2$に共通して使える．
+すなわち
+\[
+ L_R=\{\mathtt a^m\mathtt p_i\mathtt b^n
+ \mathtt c^m\mathtt q_j\mathtt d^n:
+ m,n\ge1,\ (i,j)\in R\}
+\]
+はすべての$f\ge2$について$\Cmcf{f}{s}$に属する．
+型付けは各$R$に合わせて選び直すものではない．
+\end{corollary}
+\begin{proof}
+命題~\ref{prop:feature-cross-typed}の文法の開始規則を
+$R$で指定した組だけに制限する
+（$R=\varnothing$なら生産的な開始規則を持たない）．
+同命題の証明における有限素性フィルタを
+$g^{-1}(R)$へ置き換えても，同じ型付けの型繊維の和集合である．
+厳密2局所条件と$\mathbb Z^2$の零和条件は変わらないので，
+同じ交差の証明が成立する．
+\end{proof}
+
 \input{additions/algebraic_separations_JP.tex}
 
 \subsection{内在的に規則ランク2を必要とする境界型付き標的}
@@ -4069,6 +4093,32 @@ $L_{\mathrm{intr}}$ の役割は，この既知のランク障害を，
 非文脈自由性，最小ファンアウト2，
 および $\YSub{f}$ からの分離と，
 単一の有限型付き標的の中で組み合わせることである．
+
+\begin{lemma}[規則ランク1のMCFGから有限指数EDT0Lへの包含]
+\label{lem:rank-one-edt0l}
+任意の有限ファンアウト上限$f'$について，
+$\mathsf{MCFL}(f',1)$に属する言語は，
+指数が高々$f'$の有限指数EDT0Lで生成できる．
+\end{lemma}
+\begin{proof}
+規則ランク1の文法$H$から到達不能・非生産的記号を除く．
+非終端記号$B$の第$j$成分を表す記号$[B,j]$を導入し，
+開始語を$[S,1]$とする．
+規則$A\to\rho(B)$ごとに決定的tableを一つ設け，
+すべての$[A,j]$を$\rho$の第$j$成分で同時に置き換える．
+子変数$\xi_1^k$は$[B,k]$に写し，
+その他の記号と終端文字は固定する．
+規則ランク0の場合は終端文字のみからなる右辺を用いる．
+規則ランクが高々1かつ線形なので，
+各段階の活動中の非終端成分は単一の非終端記号に属し，
+各成分の記号は高々一回しか現れない．
+従って活動中の記号数は常に$f'$以下である．
+元の導出の各規則選択はtableの選択列に対応する．
+逆に成功するtable列は一つの活動非終端に作用するので，
+消去された成分に必要なら生産的導出を補えば
+元のMCFGの正当な導出を復元でき，終端語は一致する．
+ゆえに生成言語が等しい有限指数EDT0L表示を得る．
+\end{proof}
 
 \begin{theorem}[非文脈自由で内在的ランク2をもつ型付き証拠言語]
 \label{thm:intrinsic-ranktwo-witness}
@@ -4225,47 +4275,15 @@ $L_{\mathrm{intr}}\notin\YSub{f}$ となる．
 残るのは内在的な規則ランクの証明である．
 \(\mathrm{MIX}_2 :=\{x\in\{\mathtt a,\mathtt b\}^*: |x|_{\mathtt a}=|x|_{\mathtt b}\}\)
 とおく．
-Gallot は，正ランクの各規則の子が
-高々一つの非終端記号である MCFG を
-\emph{非分岐（non-branching）}と呼ぶ．
-本稿の言葉では，これは規則ランクが高々1であることに正確に対応し，
-ファンアウトについて全体で固定した上界を要求しない
-~\cite[Definition~38]{Gallot2021}．
-有限文法の非終端記号の最大アリティは必ず有限なので，
-Gallot の非分岐 MCFL クラスは
-\(\bigcup_{f'<\infty}\mathsf{MCFL}(f',1)\)
-である．
-Gallot の Theorem~29 はこのクラスを
-有限指数 EDT0L 言語と同定し，
-Theorem~31 は $\mathrm{MIX}_2$ が
-有限指数 EDT0L でないことを示す．
-Definition~38 は子変数が高々一度現れることを明示的に許し，
-Theorem~28 は非置換・非消去表示が
-同じ非分岐クラスを生成することを確認する．
-したがって後で終端記号を消去する準同型を用いても，
-引用した下界の形式体系の範囲に留まる．
-同値に，$\mathrm{MIX}_2$ は
-いかなる非分岐 MCFG でも生成されない．
-Gallot の Propositions~5--6 は，
-その背後にある $k$-導出の有界性による矛盾を与える
-~\cite[Theorem~29, Theorem~31,
-Propositions~5--6]{Gallot2021}．
-
-Bishop らはその後，密接に対応する R-MCFG 形式体系において，
-同じ障害を査読済み論文として詳細に展開した．
-彼らの Definition~6.1 は非終端記号のアリティ
-（本稿のファンアウト）を \emph{rank} と呼ぶが，
-\emph{non-branching} は引き続き伝播規則の子が一つであることを意味する．
-Lemma~6.8 は標準形を与え，
-Definition~7.1 は同じ平衡言語を同定し，
-Section~7 は障害を証明する．
-これは Theorem~C の，
-さらに強い非 EDT0L の主張に至る
-~\cite[Definition~6.1, Lemma~6.8,
-Definition~7.1, Section~7, Theorem~C]{BishopEtAl2026EDT0L}．
-これは結果を裏づける先行研究であり，
-本稿が直接使う含意はあくまで
-Gallot の Theorems~29 と~31 である．
+補題~\ref{lem:rank-one-edt0l}により，
+任意の有限ファンアウトの規則ランク1のMCFG言語は
+有限指数EDT0L，したがってEDT0Lである．
+これはGallotの非分岐文法に関する特徴づけ
+~\cite[Definition~38, Theorems~28--29]{Gallot2021}
+の必要な方向を直接構成したものである．
+一方，Bishopらは無限巡回群$\mathbb Z$の語問題
+$\mathrm{MIX}_2$がEDT0Lでないことを示した
+~\cite[Theorem~C]{BishopEtAl2026EDT0L}．
 
 ここで $\pi$ を
 $\mathtt a,\mathtt b$ を固定し，
@@ -4286,7 +4304,8 @@ $\mathrm{MIX}_2^+$ の表示を得る．
 $\eps$ を生成するランク0規則を設ければ，
 ファンアウト $f'$・規則ランク1の
 $\mathrm{MIX}_2$ の表示が得られる．
-これは Gallot の非分岐下界に矛盾する．
+これは補題~\ref{lem:rank-one-edt0l}と
+Bishopらの非EDT0L定理に矛盾する．
 したがって任意の有限 $f'\ge1$ について
 \(L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)\)
 である．
@@ -4312,6 +4331,101 @@ Yoshinaka の自明型付けクラスから分離することである．
 外側の形式は既知の非分岐障害を保存するので，
 同じ標的はあらゆる有限ファンアウトにわたって
 内在的に規則ランク2を必要とする．
+
+\section{ファンアウト1の下界族が高アリティに移行しない理由}
+\label{sec:higher-arity-obstruction}
+関連CFG論文の指数的下界族は，
+同じ言語を高ファンアウトの下界へ直接転用できない．
+これは高アリティ特徴標本長の上界を証明するものではなく，
+二穴文脈での型付き代入可能性が壊れることを示す．
+
+\begin{lemma}[区切り語のスライド]
+\label{lem:sliding}
+$s:\Sigma^+\to\mathsf S$を有限半群型付けとし，
+$L$を$(2,s)$-タプル代入可能とする．
+$v_0mv_2\in L$であり，固定した非空語$z$が$m$内の
+$|\mathsf S|^2$個より多くの異なる位置$p$に出現し，
+各位置で$0<p$かつ$p+|z|<|m|$とする．
+このとき，ある$p<q$について
+\[
+ \tuple x=(m[0:p],m[p+|z|:|m|]),\quad
+ \tuple y=(m[0:q],m[q+|z|:|m|])
+\]
+は成分ごとの$s$型が等しく，
+$D_L^{(2)}(\tuple x)=D_L^{(2)}(\tuple y)$となる．
+$m[a:b]$は半開区間に対応する部分語を表し，
+表示した成分はすべて非空である．
+\end{lemma}
+\begin{proof}
+成分型の順序対は高々$|\mathsf S|^2$通りだから，
+鳩の巣原理で同じ型対をもつ異なる位置$p<q$が存在する．
+二つのタプルは
+$v_0\blank_1z\blank_2v_2$を共通の受理文脈とし，
+いずれも語$v_0mv_2$を生成する．
+従って$(2,s)$-代入可能性から文分布が一致する．
+\end{proof}
+
+付録~\ref{app:fanout-one-lower}の倍増族
+$L_n,L_n^-$と，特別な語$w_n^*$を用いる．
+次の結果では2元半束への型付け$s_{\mathrm U}$は使わない．
+
+\begin{proposition}[倍増族は任意の固定有限型で高アリティに移行しない]
+\label{prop:no-higher-arity-doubling}
+任意の有限半群型付け
+$s:\Gamma_{\rm br}^+\to\mathsf S$と
+$n\ge2|\mathsf S|+3$について，
+$L_n,L_n^-$はいずれも$(2,s)$-タプル代入可能でない．
+従って任意の$f\ge2$について
+$L_n,L_n^-\notin\Cmcf{f}{s}$である．
+\end{proposition}
+\begin{proof}
+$q=|\mathsf S|$，$a=s(\lfloor)$とおく．
+$a,a^2,\ldots,a^{q+1}$から等しい二つの冪
+$a^i=a^j$（$1\le i<j\le q+1$）を選び，
+$\pi=j-i$とおく．半群の結合律から
+$t\ge i$なら$a^{t+\pi}=a^t$であり，
+仮定から$n-j-1\ge i$，$j\le n-2$である．
+よって
+\[
+ \tuple x=(\lfloor^i,\lfloor^{n-i-1}),\qquad
+ \tuple y=(\lfloor^j,\lfloor^{n-j-1})
+\]
+は非空成分を持ち，成分ごとの型が等しい．
+
+$L_n$については$w=w_n^*$とする．
+$L_n^-$については$w_n^*$の右端の最下段の
+二分規則$E_1\to\lfloor E_0E_0\rfloor$を
+単項規則$E_1\to\lceil E_0\rceil$に変更した語を$w$とする．
+いずれもそれぞれの言語に属し，
+$w=\lfloor^n v$と書ける．
+文脈$E=\blank_1\lfloor\blank_2v$は
+$\tuple x,\tuple y$の両方を同じ受理語$w$に写す．
+
+次に同じ導出の最左スパイン上で深さ$i$の二分規則を
+単項規則へ変更し，左の子導出のみを残す．
+得られる語は
+$w'=\lfloor^i\lceil\lfloor^{n-i-1}v'$
+という形の$L_n^-$の語である．
+従って$F=\blank_1\lceil\blank_2v'$は
+$\tuple x$を両方の言語で受理する．
+一方，
+$F[\tuple y]=\lfloor^j\lceil\lfloor^{n-j-1}v'$
+では，$j-i>0$個の開き括弧$\lfloor$を
+$\lceil$の前へ移したのに，$v'$内の閉じ括弧は
+そのままである．左の子スパインの閉じ括弧で
+$\lceil$を閉じる位置に型の不一致が生じる．
+ゆえに$F[\tuple y]\notin L_n$，
+従って$F[\tuple y]\notin L_n^-$である．
+同型・共通受理文脈と異なる分布が共存し，
+$(2,s)$-代入可能性に反する．
+\end{proof}
+
+この非所属は高アリティの\emph{型付き代入可能クラス}に
+関するもので，MCFG生成可能性を否定しない．
+$L_n,L_n^-$はいずれも有限言語だから
+各ファンアウト上限で有限文法により生成できる．
+この族が移行しないことから，高ファンアウトでの
+指数的な特徴標本長下界の不存在は従わない．
 
 \section{結論}
 \label{sec:conclusion}
@@ -4353,19 +4467,11 @@ $\Sigma,f,r,s$を固定したとき，縮約済み良形文法のサイズと
 証明するが，これらの問いが同値であるとは主張しない．
 \end{openproblem}
 
-\begin{remark}[区切り語のスライドによる高アリティの制約]
-$L$を$(2,s)$-タプル代入可能とし，$v_0mv_2\in L$とする．
-非空の固定区切り語$z$が$m$の内部に
-$|\mathsf S|^2$回より多く現れ，
-その各出現の前後が非空であるとする．
-二つの位置$p<q$では，$z$を除いた前後成分の$s$型が一致する．
-この2組のタプルは
-$v_0\blank_1z\blank_2v_2$という受理文脈を共有するため，
-完全な文分布が一致しなければならない．
-これは鳩の巣原理による制約であり，
-$\mathbf{LG}$を超える多項式短縮を動機付けるが，
-それ自体で証明するものではない．
-\end{remark}
+第~\ref{sec:higher-arity-obstruction}節の
+スライド補題と倍増族の非移行命題は，
+この高アリティ問題を既知のCFG下界から
+直ちに解けないことを説明する．
+
 
 この高アリティの分布的剛性が，
 任意の有限半群に対する短い型付き代表元へ結び付くか，
