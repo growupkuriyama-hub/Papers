@@ -15,6 +15,10 @@
 
 **2026-10-24 editorial integration (M1–M9):** The English source is the 45-page upper-bound-centered I&C manuscript. The Japanese source has been updated to reflect the same principal claims, the finite-feature crossing example, local-group Rees/sliding-factor proof, streamlined qualitative attribution, and the single higher-arity open problem. Detailed historical versions remain in Git history.
 
+## Separate private higher-arity lower-bound research track (2026-10-25)
+
+The manuscript does **not** prove a fan-out-two characteristic-data encoded-length lower bound. A private **exploratory working dossier** of Astra I–VI rigidity/finite-difference/recursive-spine investigations is available to the project owner and authorized assistants in [Research-Library: notes/MCFG_FANOUT2_CHARACTERISTIC_DATA_EXPLORATION_2026-10-25.md](https://github.com/growupkuriyama-hub/Research-Library/blob/main/notes/MCFG_FANOUT2_CHARACTERISTIC_DATA_EXPLORATION_2026-10-25.md). It contains proof-status and cross-thread handoff instructions; it is *not manuscript text*, and mathematical priority and full proofs require independent validation. **The research problem remains open.** This differs from the intrinsic rule-rank lower bound already in this manuscript.
+
 ## Proven upper bounds (fixed alphabet, fan-out, rank and typing)
 
 For a reduced good MCFG $G$ with rule thickness $\bar\theta_G$:
