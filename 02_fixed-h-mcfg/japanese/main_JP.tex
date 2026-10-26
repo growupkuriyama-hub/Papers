@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{ltjsarticle}
 
 % 日本語査読用：LuaLaTeX + LuaTeX-ja
-% 英語Round 4版に対応する日本語研究翻訳（2026-10-25）。
+% 英語I&C統合改訂版（2026-10-27）に対応する日本語研究翻訳。
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \numberwithin{equation}{section}
 \usepackage{enumitem}
@@ -81,15 +81,21 @@ $O(\|G\|^3\bar\theta_G)$を示す．
 空成分・消去規則を含む任意の標準MCFG入力では，
 元の文法サイズ$n$と成分パターン厚み$t$により，
 それぞれ$O(n^3t)$および$O(n^4t)$となる．
+ただし$t$は$n$に対し指数的に増大し得るので，
+これらは文法サイズのみの多項式保証ではなく，パラメータ付き上界である．
 規則ランク1では任意の固定型付けに対し$O(n^3)$が得られる．
 別個の保守的学習器によりGoldの極限同定も得られる．
 また，有限素性の適合制約と二つの交差依存を組み合わせた，
 未型付け多次元代入可能性を満たさないファンアウト2の非CFL例と，
 最小ファンアウト・規則ランクがともに2である別の例を示す．
-ファンアウト1では局所群条件が擬多様体の水準で必要十分である．
-局所群型付けが窓・群型付けより，非可換群型付けが窓・可換群型付けより，
-それぞれ厳密に広い標的を扱えることをファンアウト2の非CFL例で示す．
-高ファンアウトでの必要条件は未解決である．
+ファンアウト2の二つの非CFL例により，
+局所群型付けと窓・群決定的型付けの標的クラス，
+および非可換群型付けと窓・アーベル群決定的型付けの標的クラスを分離する．
+ファンアウト1では本稿の局所群上界が関連CFG論文の
+局所自明・群型付けの十分条件を真に拡張し，
+同論文の半束下界と合わせて，文法サイズと規則厚みに対して
+$\mathbf{LG}$が擬多様体水準の正確な境界となる．
+ファンアウト2以上での必要性は未解決である．
 \end{abstract}
 
 \medskip
@@ -197,8 +203,7 @@ Yoshinaka (2008)の$(k,\ell)$-Greibach正規形と本稿のgood MCFGは
 
 \paragraph{寄与と上界の一覧．}
 固定$f,r_{\max},|\Sigma|,s$のもと，
-縮約済み良形MCFGを$G$，$N=\|G\|$，
-$\bar\theta=\bar\theta_G$とおく．
+縮約済み良形MCFGを$G$，$\bar\theta=\bar\theta_G$とおく．
 任意の標準入力文法を$H$，$n=\max\{1,\|H\|\}$，
 $t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$とおく．
 
@@ -208,16 +213,16 @@ $t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$とおく．
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\linewidth}{@{}p{0.27\linewidth}p{0.22\linewidth}p{0.25\linewidth}X@{}}
 \hline
-型付け・ランク & good表示 $(N,\bar\theta)$ & 任意入力 $(n,t)$ & 出典\\
+型付け・ランク & good表示 $(\|G\|,\bar\theta)$ & 任意入力 $(n,t)$ & 出典\\
 \hline
 規則ランク$\le1$；任意型
  & --- & $O(n^3)$ & 定理~\ref{thm:rankone-polydata}\\
 接頭辞--接尾辞窓
- & $O(N^2\bar\theta)$ & $O(n^3t)$ & 定理~\ref{thm:boundary-polydata}\\
+ & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & 定理~\ref{thm:boundary-polydata}\\
 窓と任意の有限群
- & $O(N^2\bar\theta)$ & $O(n^3t)$ & 定理~\ref{thm:window-group-polydata}\\
+ & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & 定理~\ref{thm:window-group-polydata}\\
 正語像が$\mathbf{LG}$に属する
- & $O(N^3\bar\theta)$ & $O(n^4t)$ & 定理~\ref{thm:local-group-polydata}\\
+ & $O(\|G\|^3\bar\theta)$ & $O(n^4t)$ & 定理~\ref{thm:local-group-polydata}\\
 \hline
 \end{tabularx}
 \end{center}
@@ -242,9 +247,11 @@ $M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$
 
 \paragraph{適用範囲．}
 総長上界は固定型付けと指定したConst/Link/Comp作用素・
-文法表示に対するものであり，Gold同定の多項式収束段階や
-任意の学習作用素に対する下界を与えるものではない．
-$\mathbf{LG}$は十分条件であり，指数の最適性は未解決である．
+文法表示に対するものであり，Gold同定の多項式収束段階を主張しない．
+ファンアウト1の作用素非依存下界は関連CFG論文に帰属し，
+本稿の付録にも証明を収録する．
+$\mathbf{LG}$は任意のファンアウトで十分条件だが，
+ファンアウト2以上での必要性と多項式の指数の最適性は未解決である．
 以下で前提・再構成・上界・例を示した後，
 結論で高ファンアウトに残る一つの未解決問題を提示する．
 
@@ -254,13 +261,45 @@ $\mathbf{LG}$は十分条件であり，指数の最適性は未解決である�
 本稿はその質的再構成機構そのものを独立の新規性とはしない．
 TCSに提出した関連CFG改訂稿~\cite{kuriyamaCFG}は，
 ファンアウト1の型付けと区別対下界を扱う．
-本稿の新しい部分は非可換群値を保つ交錯成分の同時短縮，
-局所群への拡張，一般MCFGの成分パターン厚み転送，
-および擬多様体水準のファンアウト1二分法である．
+本稿の独自の成果は，非可換群値を保つ交錯成分の同時短縮，
+既知の$\mathbf{LI}\vee\mathbf{Grp}$条件を真に拡張する局所群上界，
+および一般MCFGの成分パターン厚み転送である．
+ファンアウト1の必要性は関連CFG論文の半束下界に基づき，
+その証明を付録~\ref{app:fanout-one-lower}に再掲する．
+境界系~\ref{cor:fanout-one-boundary}は新たな十分性と既知の下界の結合である．
 公開arXiv版とTCS提出改訂稿は命題番号が異なり得るので区別する．
 
 \section{準備}
 \label{sec:prelim}
+
+\paragraph{主な記号．}
+次の表は頻用記号の標準的な意味を示す．局所的な再定義はその場で指定する．
+\begin{center}
+\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\hline
+記号 & 意味\\
+\hline
+$K$ & 有限正例標本，$\|K\|_+=\sum_{w\in K}(|w|+1)$\\
+$G,H$ & 縮約済み良形MCFG，一般の標準入力MCFG\\
+$B,C,X,Y$ & 非終端記号（適宜，型付き非終端記号）\\
+$\|G\|,\theta_G,t_G$ & 符号化サイズ，規則厚み，非終端記号厚み\\
+$s,\widehat s,\mathsf S$ & 正語型付け，新単位元添加，正語像半群\\
+$\preceq$ & 核の精密化関係（定義~\ref{def:semigroup-typing}）\\
+$A,\mathsf A$ & 有限群，アーベル群\\
+$g,\nu$ & 群準同型，sliding-factorラベル（群への写像）\\
+$\lambda,N$ & 補助的な型付き準同型と有限モノイド値域\\
+$\mathsf K$ & 有限半群の最小イデアル\\
+$\hat k$ & $\max\{k,\ell,1\}$以上の補助padding長（必要なら偶数）\\
+$T$ & 導出木\\
+$\ell_{\mathrm{in}},\ell_{\mathrm{out}}$ & 最短内部生成語長と外部文脈長\\
+\hline
+\end{tabularx}
+\end{center}
+Yoshinaka~\cite{Yoshinaka2011}の$\lambda$-自由という用語は
+テンプレートの各出力成分が空でないことを表し，
+生成文言語から空語を除外することとは区別する．
 
 以下，$\Sigma$ は有限の終端アルファベット，
 $\eps$ は空語，$\Sigma^*$ は $\Sigma$ 上の有限語全体，
@@ -2788,8 +2827,8 @@ $L(G)=L\cap\Sigma^+$ を満たす
 \end{theorem}
 \begin{proof}
 定理~\ref{thm:lg-characterization} により，固定した $s$ だけに
-依存する整数 $k$，有限群 $A$，局所因子写像 $g$ を選び，
-正語の型を $\lambda_{k,g}$ で精密化できる．
+依存する整数 $k$，有限群 $A$，sliding-factorラベル $\nu$ を選び，
+正語の型を $\lambda_{k,\nu}$ で精密化できる．
 局所群の条件は $s(\Sigma^+)$ に課しており，
 空語を区別するための新単位元添加には課さない．
 
@@ -2841,7 +2880,7 @@ $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$ は真の包含である
 （命題~\ref{prop:li-g-strict}）．
 擬多様体水準の下界側はファンアウト1における
 関連CFG論文~\cite{kuriyamaCFG}の結果に依存する
-（定理~\ref{thm:fanout-one-dichotomy}）．
+（系~\ref{cor:fanout-one-boundary}）．
 ここでの上界条件は\emph{十分条件}であり，
 高ファンアウト下界は問題~\ref{op:fanout-two}として残る．
 空アルファベットの場合は自明である．
@@ -2876,22 +2915,22 @@ MCFG の定量的評価に必要な窓と局所因子に沿った群積による
 この半束は，\cite{kuriyamaCFG} の指数下界を与える型付けの正像である．
 この半束に由来する下界例はファンアウト1の文脈でのみ述べる．
 本稿の高ファンアウト上界に対する逆向きの特徴づけではない
-（定理~\ref{thm:fanout-one-dichotomy}）．
+（系~\ref{cor:fanout-one-boundary}）．
 
 この節を通じて，$\Sigma$ は空でなく，$k\ge1$，$A$ は有限群とする．
 $|w|\ge k+1$ の語 $w$ について，長さ $k+1$ の因子を開始位置の順に並べた列を $\sigma_k(w)$ と書く．
 
 \begin{definition}[局所群型付け]
 \label{def:local-group-typing}
-$g:\Sigma^{k+1}\to A$ を任意の写像とする．$|w|\ge2k$ に対し，
+$\nu:\Sigma^{k+1}\to A$ を任意の写像とする．$|w|\ge2k$ に対し，
 \[
- \gamma_{k,g}(w):=g(F_1)g(F_2)\cdots g(F_{|w|-k}),
+ \gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k}),
  \qquad \sigma_k(w)=(F_1,\ldots,F_{|w|-k})
 \]
-を $A$ における順序つき積とし，$|w|<2k$ に対しては $\gamma_{k,g}(w):=1_A$ とする．
+を $A$ における順序つき積とし，$|w|<2k$ に対しては $\gamma_{k,\nu}(w):=1_A$ とする．
 \emph{局所群型付け}を
-\(\lambda_{k,g}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,g}(w)\bigr)\)
-で定める．ある $k,A,g$ について $\widehat{s}\preceq\lambda_{k,g}$ となる有限型付け $\widehat{s}$ を
+\(\lambda_{k,\nu}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,\nu}(w)\bigr)\)
+で定める．ある $k,A,\nu$ について $\widehat{s}\preceq\lambda_{k,\nu}$ となる有限型付け $\widehat{s}$ を
 \emph{局所群決定的}という．
 \end{definition}
 
@@ -2899,19 +2938,19 @@ $g:\Sigma^{k+1}\to A$ を任意の写像とする．$|w|\ge2k$ に対し，
 長さ $2k$ 未満の語は\emph{短い}語としてそのまま記録され，
 \emph{長い}語 $w$ は $\langle\operatorname{pref}_k(w),\operatorname{suf}_k(w)\rangle$ として記録される．
 $s,p\in\Sigma^k$ に対し
-$J_g(s,p):=\prod_{i=1}^{k}g\bigl((sp)[i..i+k]\bigr)$ と書く．
+$J_\nu(s,p):=\prod_{i=1}^{k}g\bigl((sp)[i..i+k]\bigr)$ と書く．
 これは，$sp$ の長さ $k+1$ の因子のうち $s$ の中で始まる $k$ 個についての順序つき積である．
 
 \begin{lemma}[局所群型付けは準同型である]
 \label{lem:local-group-morphism}
-$\lambda_{k,g}$ の核は $\Sigma^*$ 上の有限指数の合同である．
-したがって $\lambda_{k,g}$ は有限モノイド $M_{k,g}$ への全射準同型である．
+$\lambda_{k,\nu}$ の核は $\Sigma^*$ 上の有限指数の合同である．
+したがって $\lambda_{k,\nu}$ は有限モノイド $M_{k,\nu}$ への全射準同型である．
 長い $u,v$ に対して
 \[
- \lambda_{k,g}(uv)
+ \lambda_{k,\nu}(uv)
  =\bigl(\langle\operatorname{pref}_k u,\operatorname{suf}_k v\rangle,\;
-   \gamma_{k,g}(u)\,J_g(\operatorname{suf}_k u,\operatorname{pref}_k v)\,
-   \gamma_{k,g}(v)\bigr)
+   \gamma_{k,\nu}(u)\,J_\nu(\operatorname{suf}_k u,\operatorname{pref}_k v)\,
+   \gamma_{k,\nu}(v)\bigr)
 \]
 が成り立つ．
 \end{lemma}
@@ -2924,11 +2963,11 @@ $u$ の因子，$u$ の最後の $k$ 位置で始まる $k$ 個の因子，$v$ �
 
 $u$ が短く $v$ が長いとき，$uv$ の因子のうち $u$ で始まるものは
 $u\operatorname{pref}_k(v)$ に含まれ，残りは $v$ の因子である．
-したがって $\gamma_{k,g}(uv)$ は $u$，$\operatorname{pref}_k(v)$，$\gamma_{k,g}(v)$ で決まる．
+したがって $\gamma_{k,\nu}(uv)$ は $u$，$\operatorname{pref}_k(v)$，$\gamma_{k,\nu}(v)$ で決まる．
 $u$ が長く $v$ が短い場合も対称である．
 両方が短ければ $uv$ そのものが決まる．
 
-いずれの場合も $\lambda_{k,g}(uv)$ は $\lambda_{k,g}(u)$ と $\lambda_{k,g}(v)$ の関数である．
+いずれの場合も $\lambda_{k,\nu}(uv)$ は $\lambda_{k,\nu}(u)$ と $\lambda_{k,\nu}(v)$ の関数である．
 像の大きさは高々 $|\Sigma|^{<2k}+|\Sigma|^{2k}|A|$ である．
 \end{proof}
 
@@ -2942,11 +2981,11 @@ $w'=x_0\beta'_1x_1\cdots\beta'_qx_q$ と置く．
 さらに $w$ が長ければ，$x_j$ と $\beta_j$ の窓型だけに依存する
 $c_0,\ldots,c_q\in A$ が存在して
 \[
- \gamma_{k,g}(w)=c_0\,\gamma_{k,g}(\beta_1)\,c_1\cdots
-   \gamma_{k,g}(\beta_q)\,c_q,
+ \gamma_{k,\nu}(w)=c_0\,\gamma_{k,\nu}(\beta_1)\,c_1\cdots
+   \gamma_{k,\nu}(\beta_q)\,c_q,
  \qquad
- \gamma_{k,g}(w')=c_0\,\gamma_{k,g}(\beta'_1)\,c_1\cdots
-   \gamma_{k,g}(\beta'_q)\,c_q
+ \gamma_{k,\nu}(w')=c_0\,\gamma_{k,\nu}(\beta'_1)\,c_1\cdots
+   \gamma_{k,\nu}(\beta'_q)\,c_q
 \]
 が成り立つ．
 \end{lemma}
@@ -2965,43 +3004,43 @@ $F$ が $\beta_j$ の両端に接するなら $|\beta_j|\le k-1$ となり，$\b
 $\operatorname{pref}_k(\beta_j)$，$\operatorname{suf}_k(\beta_j)$ だけで綴られ，
 同じ因子が同じ順序で $w'$ にも現れる．
 因子を開始位置の順に並べると，$\beta_j$ 内部の因子は連続する一続きをなし，
-$\gamma_{k,g}(\beta_j)$ を与える．
+$\gamma_{k,\nu}(\beta_j)$ を与える．
 $\beta_j$ と $\beta_{j+1}$ の一続きの間にある残りの因子の順序つき積を $c_j$ とする．
 \end{proof}
 
 \begin{lemma}[ブロック短縮に使うsliding-factor座標]
 \label{lem:lg-rees-window-coordinate}
-$S$を最小イデアル$K$を持つ有限半群とし，
-全ての冪等元が$K$に属するとする．$n=|S|$とし，
+$S$を最小イデアル$\mathsf K$を持つ有限半群とし，
+全ての冪等元が$\mathsf K$に属するとする．$n=|S|$とし，
 任意の準同型$h:\Sigma^+\to S$を固定する．
-$K=\mathcal M(H;I,\Lambda;P)$というRees表示に対し，
-ある写像$g:\Sigma^{n+1}\to H$が存在し，
+$\mathsf K=\mathcal M(H;I,\Lambda;P)$というRees表示に対し，
+ある写像$\nu:\Sigma^{n+1}\to H$が存在し，
 $|w|\ge2n$の全ての語について
 \[
  h(w)=\Bigl(
- i(h(\operatorname{pref}_n w)),\;
- a(h(\operatorname{pref}_n w))\,\gamma_{n,g}(w),\;
- \lambda(h(\operatorname{suf}_n w))
+ \operatorname{row}(h(\operatorname{pref}_n w)),\;
+ \operatorname{grp}(h(\operatorname{pref}_n w))\,\gamma_{n,\nu}(w),\;
+ \operatorname{col}(h(\operatorname{suf}_n w))
  \Bigr).
  \tag{\ensuremath{\star}}
 \]
-ここで$i,a,\lambda$は$K$のRees座標，
-$\gamma_{n,g}(w)$は長さ$n+1$の連続因子に付けたラベルを
+ここで$i,a,\lambda$は$\mathsf K$のRees座標，
+$\gamma_{n,\nu}(w)$は長さ$n+1$の連続因子に付けたラベルを
 左から右へ\emph{順序付きで}掛けた群積である．
 従って非可換群$H$についても，$h(w)$は
 最初と最後の$n$文字，およびこの順序付き積で決定される．
 \end{lemma}
 \begin{proof}
 \emph{(1) 最小イデアルへの一様到達．}
-Rees商$S/K$で0以外の冪等元は存在しないため，
+Rees商$S/\mathsf K$で0以外の冪等元は存在しないため，
 各元のある冪は0となる．
-$m=|S/K|$個の因子の積が非零だとすると，
+$m=|S/\mathsf K|$個の因子の積が非零だとすると，
 $m$個の非空接頭積はすべて非零であり，
 二つの接頭積$p_i=p_j$（$i<j$）が一致する．
 $x=s_{i+1}\cdots s_j$と置くと
 $p_i=p_i x^q$がすべての$q$について成り立つが，
 $x^q=0$となる$q$を取れば矛盾する．
-したがって$n\ge|S/K|$個の因子の積はすべて$K$に入る．
+したがって$n\ge|S/\mathsf K|$個の因子の積はすべて$\mathsf K$に入る．
 
 \emph{(2) 外側座標と右作用．}
 Rees積を
@@ -3020,7 +3059,7 @@ $\rho(\lambda,s)=p_{\lambda j}c$と定める．
 \]
 が厳密に成立する．
 右乗法は，たとえ$s\notin K$でも$I$座標を変えない．
-同様に，$K$に入った積への左乗法は$\Lambda$座標を変えない．
+同様に，$\mathsf K$に入った積への左乗法は$\Lambda$座標を変えない．
 実際$(i,a,\lambda)$に左単位的に作用する冪等元
 $f_i\in K$を取り，
 $s(i,a,\lambda)=(sf_i)(i,a,\lambda)$に
@@ -3038,17 +3077,17 @@ $h(a_1\cdots a_j)$の$\Lambda$座標とする．
 $h(a_{j-n+1}\cdots a_j)$の$\Lambda$座標に等しい．
 $F\in\Sigma^{n+1}$に対し
 \[
-g(F)=\rho\bigl(\lambda(h(F[1..n])),h(F[n+1])\bigr)
+\nu(F)=\rho\bigl(\lambda(h(F[1..n])),h(F[n+1])\bigr)
 \]
 と定める．右作用を左から右の元の順序で適用すると
 \[
 h(w)=\Bigl(
 i,\;
-a\prod_{j=n}^{m-1}g(a_{j-n+1}\cdots a_{j+1}),\;
+a\prod_{j=n}^{m-1}\nu(a_{j-n+1}\cdots a_{j+1}),\;
 \lambda_m
 \Bigr)
 \]
-を得る．積は定義どおり$\gamma_{n,g}(w)$であり，
+を得る．積は定義どおり$\gamma_{n,\nu}(w)$であり，
 $\lambda_m=\lambda(h(\operatorname{suf}_n w))$である．
 $m=2n$の場合も因子が正確に$n$個あり成立する．
 \end{proof}
@@ -3087,21 +3126,21 @@ $\widehat s\preceq\lambda_{n,g}$である．
 
 (iv)$\Rightarrow$(i)では，
 $\mathbf{LG}$が準同型像で閉じているので，
-$T=\lambda_{k,g}(\Sigma^+)$が$\mathbf{LG}$に属することを示せばよい．
+$T=\lambda_{k,\nu}(\Sigma^+)$が$\mathbf{LG}$に属することを示せばよい．
 短い語を表す元は冪等でない
 （平方すると長さが増え，窓型で区別される）．
 冪等元$e=(\langle p,s\rangle,\gamma_e)$を取ると
 補題~\ref{lem:local-group-morphism}から
-$\gamma_eJ_g(s,p)\gamma_e=\gamma_e$となり，
+$\gamma_eJ_\nu(s,p)\gamma_e=\gamma_e$となり，
 $eTe$の各元の窓型は$\langle p,s\rangle$である．
 よって$eTe$は
 \[
 H_e=\{(\langle p,s\rangle,\alpha):\alpha\in A\},
 \quad
-\alpha*\beta=\alpha J_g(s,p)\beta
+\alpha*\beta=\alpha J_\nu(s,p)\beta
 \]
 に含まれる．これは
-$\alpha\mapsto\alpha J_g(s,p)$により有限群$A$と同型であり，
+$\alpha\mapsto\alpha J_\nu(s,p)$により有限群$A$と同型であり，
 その有限部分半群$eTe$も群である．
 \end{proof}
 
@@ -3112,13 +3151,13 @@ $\alpha\mapsto\alpha J_g(s,p)$により有限群$A$と同型であり，
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
 \item 有限群への準同型 $g$ について $\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$ なら，
 $K=\max\{k,\ell,1\}$，$g'(F):=g(F\text{ の最後の文字})$ として $\widehat{s}\preceq\lambda_{K,g'}$ である．
-したがって $\mathbf{LI}\vee\mathbf G\subseteq\mathbf{LG}$ である．
+したがって $\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$ である．
 \item $\Sigma=\{\mathtt a,\mathtt b,\mathtt c\}$ とし，
-$g(\mathtt{ab})=1\in\mathbb Z_2$，それ以外の $F$ について $g(F)=0$ として
-$h_{\mathtt{ab}}:=\lambda_{1,g}$ と置く．
+$\nu(\mathtt{ab})=1\in\mathbb Z_2$，それ以外の $F$ について $\nu(F)=0$ として
+$h_{\mathtt{ab}}:=\lambda_{1,\nu}$ と置く．
 これは窓とともに $\mathtt{ab}$ の出現回数の偶奇を記録する．
 $h_{\mathtt{ab}}$ は窓・群決定的でない．
-よって $h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf G)$ である．
+よって $h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$ である．
 \end{enumerate}
 \end{proposition}
 
@@ -3126,7 +3165,7 @@ $h_{\mathtt{ab}}$ は窓・群決定的でない．
 (i) $|w|\ge2K$ なら $g(w)=g(\operatorname{pref}_Kw)\,\gamma_{K,g'}(w)$ である．
 それより短い語はそのまま記録される．
 pseudovariety の包含は，定理~\ref{thm:lg-characterization} と，
-$\mathbf{LI}\vee\mathbf G$ を窓・群型付けで特徴づける姉妹論文の結果~\cite[Lemma~7.4]{kuriyamaCFG} から従う．
+$\mathbf{LI}\vee\mathbf{Grp}$ を窓・群型付けで特徴づける姉妹論文の結果~\cite[Lemma~7.4]{kuriyamaCFG} から従う．
 
 (ii) $g':\Sigma^*\to A'$ について $h_{\mathtt{ab}}\preceq(\widehat{s}_{k,\ell},g')$ と仮定する．
 $K=\max\{k,\ell,1\}$ とし，$q$ を $A'$ の冪数の偶数倍とする．
@@ -3138,18 +3177,18 @@ $g'(u)=g'(\mathtt a)^{2K}=g'(v)$ である．
 $v$ はちょうど1回（$\mathtt a^K\mathtt b$ の位置）しか含まない．
 よって $h_{\mathtt{ab}}(u)\ne h_{\mathtt{ab}}(v)$ となり，矛盾する．
 $\mathbf{LG}$ への所属は定理~\ref{thm:lg-characterization} から，
-$\mathbf{LI}\vee\mathbf G$ への非所属は姉妹論文の特徴づけから従う．
+$\mathbf{LI}\vee\mathbf{Grp}$ への非所属は姉妹論文の特徴づけから従う．
 \end{proof}
 
 \begin{lemma}[局所群型を指定した短いタプル]
 \label{lem:local-group-shortest}
 $G=(V,\Sigma,P,S,\fan)$ を，ファンアウト高々 $f$，規則ランク高々 $r_{\max}\ge1$ の
-縮約済み良形 MCFG とし，$\lambda=\lambda_{k,g}$ とする．
+縮約済み良形 MCFG とし，$\lambda=\lambda_{k,\nu}$ とする．
 縮約された $\widehat{s}_{k,k}$-精密化の開始記号以外の型付き非終端記号の個数を
 $n_{\mathrm w}\le|V||M_{k,k}|^f$ とし，
 $b_{\mathrm w}:=f(2k+1)n_{\mathrm w}(r_{\max}+1)\bar\theta_G$ と置く．
-$n_\lambda:=|V||M_{k,g}|^f$ とし，$M_{A,f}$ を\ref{subsec:group-invariants}節で定義した定数とする．
-各 $B\in V$ と実現可能な各 $\mathbf t\in M_{k,g}^{\fan(B)}$ について，
+$n_\lambda:=|V||M_{k,\nu}|^f$ とし，$M_{A,f}$ を\ref{subsec:group-invariants}節で定義した定数とする．
+各 $B\in V$ と実現可能な各 $\mathbf t\in M_{k,\nu}^{\fan(B)}$ について，
 $\lambda^{(\fan(B))}(\tuple u)=\mathbf t$ かつ
 \[
  \|\tuple u\|_1\le\beta_\lambda:=(r_{\max}+1)\,b_{\mathrm w}
@@ -3218,7 +3257,7 @@ $\gamma(\beta')-\gamma(\beta)$ に適用して，上界 $\mathsf d(A^f)$ を得�
 
 以上により，任意の重い節点反鎖の濃度は
 高々$M_{A,f}-1$である．
-この条件を，$\lambda=\lambda_{k,g}$，
+この条件を，$\lambda=\lambda_{k,\nu}$，
 $b=b_{\mathrm w}$，$c=M_{A,f}-1$として
 補題~\ref{lem:heavy-node-count}に適用すれば，
 根タプルの総長は表示した$\beta_\lambda$以下となる．
@@ -3235,7 +3274,7 @@ $c=\mathsf d(A^f)$と置ける．
 
 \begin{proof}[定理~\ref{thm:local-group-polydata}の証明]
 定理~\ref{thm:lg-characterization} により，$\widehat{s}$ だけに依存するある $k,A,g$ について
-$\widehat{s}\preceq\lambda_{k,g}$ である．
+$\widehat{s}\preceq\lambda_{k,\nu}$ である．
 $X=B_{\mathbf s}$ を縮約された $\widehat{s}$-精密化の開始記号以外の型付き非終端記号とし，
 $\tuple u\in L_X$ とする．
 $\tuple u$ の $\lambda$-ベクトルに補題~\ref{lem:local-group-shortest} を適用すると，
@@ -4367,6 +4406,8 @@ $v_0\blank_1z\blank_2v_2$を共通の受理文脈とし，
 
 付録~\ref{app:fanout-one-lower}の倍増族
 $L_n,L_n^-$と，特別な語$w_n^*$を用いる．
+そのアルファベットは
+$\Gamma_{\rm br}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$である．
 次の結果では2元半束への型付け$s_{\mathrm U}$は使わない．
 
 \begin{proposition}[倍増族は任意の固定有限型で高アリティに移行しない]
@@ -4410,11 +4451,14 @@ $w'=\lfloor^i\lceil\lfloor^{n-i-1}v'$
 $\tuple x$を両方の言語で受理する．
 一方，
 $F[\tuple y]=\lfloor^j\lceil\lfloor^{n-j-1}v'$
-では，$j-i>0$個の開き括弧$\lfloor$を
-$\lceil$の前へ移したのに，$v'$内の閉じ括弧は
-そのままである．左の子スパインの閉じ括弧で
-$\lceil$を閉じる位置に型の不一致が生じる．
-ゆえに$F[\tuple y]\notin L_n$，
+は括弧が正しく対応しない．実際，$w'$の$\lceil$に
+対応する$\rceil$の位置で$v'=v_1\rceil v_2$と書くと，
+$\lfloor^{n-i-1}v_1$は正しく対応するため，
+$v_1$だけを簡約すると$\rfloor^{n-i-1}$が残る．
+ところが$F[\tuple y]$では$\lceil$の上に
+$n-j-1<n-i-1$個の開き床括弧しかなく，
+$v_1$内の$(n-j)$個目の閉じ床括弧が$\lceil$に突き当たる．
+この型不一致により$F[\tuple y]\notin L_n$，
 従って$F[\tuple y]\notin L_n^-$である．
 同型・共通受理文脈と異なる分布が共存し，
 $(2,s)$-代入可能性に反する．
@@ -4444,13 +4488,15 @@ $O(\|G\|^3\bar\theta_G)$を得た．
 規則ランク1の表示にはどの固定型付けでも多項式上界がある．
 これらの上界の証明は関連CFG論文の下界構成には依存しない．
 ファンアウト1では同論文の区別対を使い，局所群の擬多様体水準の
-完全な特徴づけを得る（定理~\ref{thm:fanout-one-dichotomy}）．
+完全な特徴づけを得る（定理~\ref{cor:fanout-one-boundary}）．
 命題~\ref{prop:feature-cross-typed}の交差依存例は，
 窓型だけでも型なし置換可能性が破れる場合に，
 有限素性を固定して与える意味を示す．
 命題~\ref{prop:lg-needed-target}と
-\ref{prop:nonabelian-needed-target}は，局所群と非可換群の型付けが
-実際の標的言語に必要となることを示す．
+\ref{prop:nonabelian-needed-target}は，
+局所群と窓・群決定的型付け，および非可換群と
+窓・アーベル群決定的型付けの標的クラスを分離する．
+これは特徴標本長の下界ではない．
 
 残る中心問題は，ファンアウト2以上では
 任意の固定型付けに対して同様の短縮が可能かという点である．
@@ -4468,7 +4514,7 @@ $\Sigma,f,r,s$を固定したとき，縮約済み良形文法のサイズと
 \end{openproblem}
 
 第~\ref{sec:higher-arity-obstruction}節の
-スライド補題と倍増族の非移行命題は，
+区切り語スライドの観察と倍増族の非移行命題は，
 この高アリティ問題を既知のCFG下界から
 直ちに解けないことを説明する．
 

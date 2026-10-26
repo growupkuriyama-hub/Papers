@@ -4,6 +4,8 @@
 **Target journal:** Information and Computation (pre-submission)  
 **Preprint:** [arXiv:2605.11644](https://arxiv.org/abs/2605.11644) (the public version may be older)
 
+**2026-10-27 integrated review:** English `main.tex` is the 52-page integrated I&C working draft. The Japanese translation and its additional fan-out-one and algebraic-separation source files are synchronized to the revised theorem scope and higher-arity proof. The standalone lower-bound Appendix remains in both languages. Mathematical verification and author sign-off remain distinct from compiling.
+
 ## Canonical bilingual sources
 
 | Language | Source of truth | Stable PDF |
