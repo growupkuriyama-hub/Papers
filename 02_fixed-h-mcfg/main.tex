@@ -958,41 +958,53 @@ stage of convergence.
 \section{Characteristic-Data Bounds}
 \label{sec:char-data}
 
-Under a fixed rule-rank cap the typed witness construction already
-gives polynomially many characteristic words; the problem is to bound
-their total encoded length. Full yield-type refinement can have
-exponentially greater rule thickness than the original presentation
-(Proposition~\ref{prop:typed-thickness-exponential}). The proofs instead
-work on the original grammar. Window types are preserved using a
-bounded derivation skeleton (Lemma~\ref{lem:boundary-short-canonical});
-possibly noncommutative group products are preserved by simultaneous
-heavy-subtree replacement (Proposition~\ref{prop:block-replacement-interface}
-and Lemmas~\ref{lem:group-block-order}--\ref{lem:group-interval}).
-Sliding-factor coordinates extend these arguments to local-group
-typings (Subsection~\ref{subsec:algebraic-typed-data}), while
-component-pattern thickness controls normalizations of general input
-grammars (Subsection~\ref{subsec:unrestricted-source}).
+Throughout this section $f$, $r_{\max}\ge1$, $\Sigma$ and the typing
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ are fixed;
+$G=(V,\Sigma,P,S,\fan)$ is a reduced good MCFG of fan-out $\le f$ and rule
+rank $\le r_{\max}$, and $\widetilde G_0$ is its trimmed $\widehat s$-refinement.
+Under a rank cap, Theorem~\ref{thm:exact-reconstruction} already supplies
+$O(\|G\|)$ characteristic words; the task is to bound their total length
+\emph{in terms of $G$}.  All bounds follow one scheme.
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=*]
+\item \emph{Witness length} (Lemma~\ref{lem:witness-length-template}).  If, for
+an auxiliary finite-monoid morphism $\lambda$ refining $s$, every tuple of every
+nonterminal can be exchanged for a tuple of the same nonterminal and the same
+$\lambda$-vector of total length at most $\beta$, then $\Wit(\widetilde G_0)$ is
+characteristic and has total length $O(\|G\|(\bar\theta_G+\beta))$.
+\item \emph{Minimal counterexamples} (Section~\ref{subsec:group-invariants}).  In
+a shortest derivation with a prescribed root $\lambda$-vector, a large antichain
+of heavy subtrees would admit a simultaneous replacement preserving that vector;
+so antichains are small, and Lemma~\ref{lem:heavy-node-count} turns this into
+$\beta=O(\|G\|\bar\theta_G)$ or $O(\|G\|^2\bar\theta_G)$.
+\item \emph{Regimes.}  Only $\lambda$ and the replacement step change: window
+typings keep marked boundary letters; window--group typings in addition
+preserve ordered group products
+(Proposition~\ref{prop:block-replacement-interface}); local-group typings
+reduce to these through sliding-factor coordinates
+(Section~\ref{subsec:algebraic-typed-data}).
+\end{enumerate}
+The full yield-type refinement is not used to measure thickness, since its
+thickness can be exponential in that of $G$
+(Proposition~\ref{prop:typed-thickness-exponential}); exactly when this happens is
+characterized in Corollary~\ref{cor:refinement-dichotomy}.
+Section~\ref{subsec:unrestricted-source} transfers all bounds to arbitrary
+standard input grammars.
 
-\subsection{Primary thickness scales and the witness-length template}
+\subsection{Thickness Scales and Witness Length}
 \label{subsec:thickness-contexts}
 
-For the quantitative results, presentations are reduced and \emph{good}, as in
-Yoshinaka's fixed-dimension, fixed-rank good form
-\cite[Section~2.3, after Example~2]{Yoshinaka2011}.  For a rule $R$ of $G$, define its \emph{rule thickness} by
+For a rule $R$ of $G$ let
 \[
-\theta_G(R):=\min\{\,|w|:w\in L(G)\text{ has a successful derivation using }R\,\}.
+ \theta_G(R):=\min\{\,|w|:w\in L(G)\text{ has a successful derivation using }R\,\},
 \]
-Thus length means the number of terminal letters in the \emph{derived sentence},
-not the number of steps of its derivation.  Put
-$\theta_G:=\max_{R\in P}\theta_G(R)$,
-$\bar\theta_G:=\max\{1,\theta_G\}$, and
-\(t_G:=\max_A\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}.\)
-Thus $\theta_G$ is rule thickness and $t_G$ nonterminal thickness; Yoshinaka
-uses the notation $\tau_G$ for our $\theta_G$
-\cite[Section~4.3]{Yoshinaka2011}.  We keep $\theta_G$ throughout this paper.
-The two primary parameters and three auxiliary measures are organized below;
-all comparisons involving $\widetilde G_0$ refer to its trimmed, nonempty
-yield-type refinement of a reduced good grammar.
+the length of the derived \emph{sentence}, not of the derivation.  Put
+$\theta_G:=\max_{R\in P}\theta_G(R)$, $\bar\theta_G:=\max\{1,\theta_G\}$ and
+$t_G:=\max_{A\in V}\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}$ (rule and
+nonterminal thickness; Yoshinaka writes $\tau_G$ for $\theta_G$
+\cite[Section~4.3]{Yoshinaka2011}).  Table~\ref{tab:thickness-scales} lists these
+scales together with the pattern scale of Section~\ref{subsec:unrestricted-source}
+and two auxiliary quantities; $\theta_{\mathrm{typ}}$ and $\kappa_G$ compare $G$
+with its own trimmed refinement and are not parameters of the main theorems.
 
 \begin{table}[htbp]
 \caption{Thickness scales: two theorem parameters and three auxiliary quantities.}
@@ -1007,406 +1019,258 @@ Scale & What it measures / role & Comparison or obstruction\\
 \hline
 $\theta_G$ & Shortest accepted sentence using each rule, maximized over rules; \emph{primary for reduced good $G$}. & $t_G\le\theta_G\le 2\|G\|\max\{1,t_G\}$ (Lemma~\ref{lem:thickness-equivalence}).\\
 $t_G$ & Largest minimum total yield length of a nonterminal; proof-scale for good forms. & Polynomially equivalent to $\theta_G$ on reduced good presentations.\\
-$t_{\mathrm{pat}}(H)$ & Largest minimum yield length over \emph{realized nonempty-component support patterns}; \emph{primary for arbitrary $H$}. & $t_H\le t_{\mathrm{pat}}(H)$; the family $E_n$ has $\theta_{E_n}=O(n)$ but $t_{\mathrm{pat}}(E_n)\ge2^n$ (Prop.~\ref{prop:empty-component-blowup}).\\
+$t_{\mathrm{pat}}(H)$ & Largest minimum yield length over \emph{realized nonempty-component support patterns}; \emph{primary for arbitrary $H$}. & $t_H\le t_{\mathrm{pat}}(H)$, with equality for reduced $\lambda$-free $H$; the family $E_n$ has $\theta_{E_n}=O(n)$ but $t_{\mathrm{pat}}(E_n)\ge2^n$ (Prop.~\ref{prop:empty-component-blowup}).\\
 $\theta_{\mathrm{typ}}$ & Rule thickness of the trimmed full yield-type refinement $\widetilde G_0$; baseline only. & $\theta_{\mathrm{typ}}\ge\theta_G$; it can be $\ge2^n$ with $\theta_G\le2$ (Prop.~\ref{prop:typed-thickness-exponential}).\\
 $\kappa_G$ & Shortest representative of each typed distribution class, maximized over classes; auxiliary for abelian-filtered targets. & $\kappa_G\le\theta_{\mathrm{typ}}$; representatives need not be derivable from the typed nonterminal (Prop.~\ref{prop:mcfg-relaxed-witnesses}).\\
 \hline
 \end{tabularx}
 \end{table}
-\noindent
-Here $t_H$ uses the same nonterminal-minimum formula as $t_G$, without
-a goodness assumption; the formal definition of $t_{\mathrm{pat}}$
-appears in Section~\ref{subsec:unrestricted-source}.  In a reduced good
-(nonempty-component) grammar there is only the full support pattern for
-each productive nonterminal, so $t_{\mathrm{pat}}(G)=t_G$.
-The refined-thickness and distributional inequalities compare the
-same reduced good grammar with its own trimmed refinement, not two
-unrelated presentations.  In particular, neither $\theta_{\mathrm{typ}}$
-nor $\kappa_G$ is an alternative input parameter in the main theorems.
-If a target contains $\eps$, every statement below is applied to its
-$\lambda$-free core and the single datum $\eps$ is added, exactly as in
-Theorem~\ref{thm:exact-reconstruction}; this adds one to the encoded length.
 
-\paragraph{Derivational sentence contexts.}
-A sentence context for a typed nonterminal $X$ is \emph{derivational}
-if it results from a successful typed derivation by deleting one
-occurrence of an $X$-subtree. Lemma~\ref{lem:filling-identity} ensures
-that these contexts are admissible.
+If a target $L$ contains $\eps$, every statement below is applied to
+$L\cap\Sigma^+$ and the datum $\eps$ is added, as in
+Theorem~\ref{thm:exact-reconstruction}; this adds one to the encoded length.
 
 \begin{lemma}[Thickness lemma]
 \label{lem:thickness-equivalence}
 \label{lem:thickness-local-bounds}
 \label{lem:untyped-contexts}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG.
+Let $G$ be reduced and good.
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
 \item Every rule writes at most $\theta_G$ terminal symbols explicitly.
-\item $t_G\le\theta_G$; that is, every $A\in V$ has a tuple
-$\tuple u\in L_A(G)$ with $\|\tuple u\|_1\le\theta_G$.
+\item $t_G\le\theta_G$: every $A\in V$ has some $\tuple u\in L_A(G)$ with
+$\|\tuple u\|_1\le\theta_G$.
 \item $\theta_G\le 2\|G\|\max\{1,t_G\}$.
-\item Every $A\in V$ of fan-out $d$ has a context $E_A\in\mathcal E_d$
-with $|E_A|_{\mathrm{fix}}\le\theta_G$ and $E_A[\tuple u]\in L(G)$
-for every $\tuple u\in L_A(G)$, and $E_S=\blank_1$.  For every finite
-typing $\widehat{s}$ and every non-start typed nonterminal $X=A_{\mathbf t}$ of
-$\widetilde G_0$, the choice $\chi(X):=E_A$ meets
-Definition~\ref{def:target-canonical}, and $E_A$ arises from a
-successful typed derivation by deleting an occurrence of an
-$X$-subtree.
+\item Every $A\in V$ of fan-out $d$ has a context $E_A\in\mathcal E_d$ with
+$|E_A|_{\mathrm{fix}}\le\theta_G$ that results from a successful derivation by
+deleting one occurrence of an $A$-subtree; $E_S=\blank_1$, and
+$E_A[\tuple u]\in L(G)$ for all $\tuple u\in L_A(G)$.  For every typed nonterminal
+$X=A_{\mathbf t}$, the choice $\chi(X):=E_A$ meets
+Definition~\ref{def:target-canonical} and is \emph{derivational} for $X$: it
+results from a successful derivation of $\widetilde G_0$ by deleting an
+occurrence of an $X$-subtree.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-Fix a rule $R$ with left-hand side $A$ and a successful derivation $D_R$
-using $R$ of length $\theta_G(R)$; it exists because $G$ is reduced.  By
-nondeletion, every terminal written by $R$ and every component of the tuple
-produced at that occurrence of $A$ survives exactly once in the final
-sentence.  This gives (i), and also (ii) because every productive $A$ has a
-rule.  For (iv) with $A\ne S$, delete the subtree rooted at that occurrence
-of $A$ and put ordered holes in place of its components; iterating
-Lemma~\ref{lem:filling-identity} along the path to the root shows that the
-result $E_A$ lies in $\mathcal E_d$, and its fixed material is part of the
-selected sentence.  Substituting any $\tuple u\in L_A(G)$ yields another
-successful derivation.  Since $L_X\subseteq L_A(G)$ by
-Proposition~\ref{prop:output-invariants}(i), $E_A$ accepts $L_X$; a typed
-nonterminal with a start link has the form $S_{\mathbf t}$, for which
-$E_S=\blank_1$.  Filling $E_A$'s derivation with an $X$-derivation and
-lifting by Proposition~\ref{prop:output-invariants}(ii) places $X$ at the
-hole, so $E_A$ is derivational for $X$.
+For a rule $R$ with left-hand side $A$ fix a successful derivation $D_R$ of
+length $\theta_G(R)$ that uses $R$; it exists because $G$ is reduced.  By
+nondeletion every terminal written by $R$, and every component of the tuple
+produced at that occurrence of $A$, survives exactly once in the sentence.  This
+gives (i), and (ii) because every productive $A$ has a rule.
 
-For (iii), follow a shortest dependency path from $S$ to $A$; it repeats no
-nonterminal, so its rules are distinct and differ from $R$.  Keep the path
-child open, complete every sibling and every child of $R$ by a shortest
-terminal tuple (of length at most $t_G$), and apply $R$.  The distinct rules
-used write at most $\|G\|$ terminals and have at most $\|G\|$ child
-occurrences, so the resulting sentence has length at most
-$\|G\|+\|G\|t_G\le2\|G\|\max\{1,t_G\}$.
+(iv) For $A=S$ take $\blank_1$.  Otherwise delete the $A$-subtree of $D_R$ and
+put ordered holes in place of its components; iterating
+Lemma~\ref{lem:filling-identity} along the path to the root (siblings have
+nonempty yields) shows $E_A\in\mathcal E_d$, and its fixed letters belong to the
+sentence of $D_R$.  Inserting any $A$-derivation gives a successful derivation,
+so $E_A$ accepts $L_A(G)\supseteq L_X$
+(Proposition~\ref{prop:output-invariants}(i)).  A typed nonterminal with a start
+link has the form $S_{\mathbf t}$, and $E_S=\blank_1$.  For derivationality,
+insert the erasure of any $\widetilde G_0$-derivation $D_X$ from $X$ into the
+hole; the unique lift of the resulting successful derivation
+(Proposition~\ref{prop:output-invariants}(ii)) labels every node by its
+nonterminal and the $\widehat s$-vector of its yield, as $D_X$ does, so it contains
+$D_X$ at the hole, and deleting that $X$-subtree leaves $E_A$.
+
+(iii) Follow a shortest dependency path from $S$ to $A$; it repeats no
+nonterminal, so its rules are distinct and differ from $R$.  Complete every
+sibling on the path and every child of $R$ by a shortest terminal tuple (length
+$\le t_G$) and apply $R$.  The distinct rules used write at most $\|G\|$
+terminals and have at most $\|G\|$ child occurrences, so the sentence has length
+at most $\|G\|+\|G\|t_G\le2\|G\|\max\{1,t_G\}$.
 \end{proof}
 
-Hence the two thickness parameters are polynomially equivalent on reduced good
-presentations.  Yoshinaka's efficiency criterion asks for polynomial
-hypothesis construction, characteristic-set cardinality, and total positive
-data in target size and rule thickness
-\cite[Definition~1]{Yoshinaka2011}; see also
-\cite{EyraudHeinzYoshinaka2016}.  Proposition~\ref{prop:structural-good-thickness}
-transfers the size--thickness scale to reduced $\lambda$-free inputs; genuine
-empty components may instead cause the exponential growth of
-Proposition~\ref{prop:empty-component-blowup}.
+Thus $\theta_G$ and $t_G$ are polynomially equivalent on reduced good
+presentations; Yoshinaka's efficiency criterion measures data in target size and
+rule thickness \cite[Definition~1]{Yoshinaka2011}; see also
+\cite{EyraudHeinzYoshinaka2016}.
 
-All higher-rank bounds below are assembled by the following two lemmas.
-
-\begin{lemma}[Witness-length template]
-\label{lem:witness-length-template}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$ and
-rule rank at most $r_{\max}\ge1$, let $\widehat{s}:\Sigma^*\to \mathsf S^\sharp$ be a finite typing,
-and let $\widetilde G_0$ be the trimmed $\widehat{s}$-refinement.  If every non-start
-typed nonterminal has a canonical tuple with $\|\omega(X)\|_1\le b_{\mathrm{can}}$
-and $\chi(X):=E_A$ is taken from Lemma~\ref{lem:thickness-equivalence}(iv),
-then every word of $\Wit(\widetilde G_0)$ has length at most
-$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$, and
+For a finite-monoid morphism $\lambda:\Sigma^*\to N$ we write $s\preceq\lambda$
+if $\ker(\lambda|_{\Sigma^+})\subseteq\ker s$; since $\widehat s$ separates $\eps$,
+this is the relation of Definition~\ref{def:semigroup-typing} whenever $\lambda$
+also separates $\eps$ from $\Sigma^+$.  For $\beta\ge0$ consider
+\begin{itemize}[leftmargin=4em]
+\item[$(\mathrm R_\beta^\lambda)$] for every $B\in V$ and $\tuple u\in L_B(G)$
+there is $\tuple u'\in L_B(G)$ with
+$\lambda^{(\fan(B))}(\tuple u')=\lambda^{(\fan(B))}(\tuple u)$ and
+$\|\tuple u'\|_1\le\beta$.
+\end{itemize}
+Put
 \[
- |\Wit(\widetilde G_0)|\le|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}},
- \qquad
- \|\Wit(\widetilde G_0)\|_+\le
- \bigl(|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}}\bigr)
- \bigl(1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}\bigr).
+ C_s(G):=|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}}
+ \;\le\;|\mathsf S^\sharp|^{fr_{\max}}\,\|G\|,
 \]
-If moreover $L(G)=L\cap\Sigma^+$ for some $L\in\Cmcf{f}{s}$, then
-$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for
-$\mathcal B^{\le r_{\max}}_{f,s}$.
-\end{lemma}
+using $|V|+|P|\le\|G\|$; it bounds the numbers of typed nonterminals and typed
+rules together, since a typed rule is determined by its source rule and the type
+vectors of its at most $r_{\max}$ children.
 
-\begin{proof}
-A witness is $\chi(X)[\omega(X)]$, $\chi(X)[\tuple c]$ or
-$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$.  The context contributes at
-most $\bar\theta_G$ terminals, the source template at most $\bar\theta_G$ by
-Lemma~\ref{lem:thickness-equivalence}(i), and there are at most $r_{\max}$
-child tuples.  The count follows because there is one witness per typed nonterminal
-and per typed rule, and each rule is determined by its source and the
-type vectors of its at most $r_{\max}$ children; multiply.  The characteristic
-property is Proposition~\ref{prop:completeness} (the cap $r_{\max}$ bounds
-every typed rank) together with Proposition~\ref{prop:reconstruction-soundness}
-and the Start rule for $\eps$.
-\end{proof}
-
-\begin{lemma}[Type-preserving replacement]
+\begin{lemma}[Witness length]
+\label{lem:witness-length-template}
 \label{lem:type-preserving-replacement}
-Let $G$ be reduced and good, let $s:\Sigma^+\to\mathsf S$
-be a finite-semigroup typing and $\lambda:\Sigma^*\to N$ an
-auxiliary morphism with $s\preceq\lambda|_{\Sigma^+}$, and let $X=B_{\mathbf t}$ be a non-start
-typed nonterminal of the trimmed $\widehat{s}$-refinement $\widetilde G_0$.  If
-$\tuple u\in L_X$, $\tuple u'\in L_B(G)$ and
-$\lambda^{(d)}(\tuple u')=\lambda^{(d)}(\tuple u)$, then
-$\tuple u'\in L_X$; in particular $\tuple u'$ may be chosen as $\omega(X)$.
+Let $\lambda:\Sigma^*\to N$ be a finite-monoid morphism with $s\preceq\lambda$.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item \emph{(Type-preserving exchange.)}  If $X=B_{\mathbf t}$ is a typed
+nonterminal, $\tuple u\in L_X$, $\tuple u'\in L_B(G)$ and
+$\lambda^{(\fan(B))}(\tuple u')=\lambda^{(\fan(B))}(\tuple u)$, then
+$\tuple u'\in L_X$.  Hence under $(\mathrm R_\beta^\lambda)$ there are canonical
+tuples with $\|\omega(X)\|_1\le\beta$ for every $X$.
+\item \emph{(Length.)}  If $\|\omega(X)\|_1\le b$ for every $X$ and
+$\chi(X):=E_B$ as in Lemma~\ref{lem:thickness-equivalence}(iv), every word of
+$\Wit(\widetilde G_0)$ has length at most $2\bar\theta_G+r_{\max}b$, and
+\[
+ |\Wit(\widetilde G_0)|\le C_s(G),\qquad
+ \|\Wit(\widetilde G_0)\|_+\le C_s(G)\,\bigl(1+2\bar\theta_G+r_{\max}b\bigr).
+\]
+\item \emph{(Refined thickness.)}  In (ii), each rule word
+$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$ is the yield of a successful
+derivation of $\widetilde G_0$ using the typed rule
+$X\to\rho(Y_1,\ldots,Y_q)$; hence $\theta_{\widetilde G_0}\le2\bar\theta_G+r_{\max}b$.
+\item \emph{(Characteristic sample.)}  If $L(G)=L\cap\Sigma^+$ for some
+$L\in\Cmcf{f}{s}$, then $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a
+characteristic sample for $\mathcal B^{\le r_{\max}}_{f,s}$ and for
+$\mathcal B_{f,s}$.
+\end{enumerate}
+Items (i)--(iii) do not use substitutability.
 \end{lemma}
 
 \begin{proof}
-Goodness makes all components nonempty, so $\widehat{s}\preceq\lambda$ gives
-$\widehat{s}^{(d)}(\tuple u')=\mathbf t$.  Proposition~\ref{prop:output-invariants}(ii)
-lifts a $G$-derivation of $\tuple u'$ to a $G^{\widehat{s}}$-derivation rooted at $X$.
-Inserting it at an occurrence of $X$ in a successful derivation of
-$\widetilde G_0$ gives a successful derivation, because typed rules depend
-only on typed symbols; hence all its rules survive trimming.
+(i) All components are nonempty because $G$ is $\lambda$-free, so $s\preceq\lambda$
+and Proposition~\ref{prop:output-invariants}(i) give
+$\widehat s^{(\fan(B))}(\tuple u')=\widehat s^{(\fan(B))}(\tuple u)=\mathbf t$.  By
+Proposition~\ref{prop:output-invariants}(ii) a $G$-derivation of $\tuple u'$ lifts
+to a $G^{\widehat s}$-derivation from $X$.  Inserted at an occurrence of $X$ in a
+successful derivation of $\widetilde G_0$ it gives a successful derivation,
+because typed rules depend only on typed symbols; so all its rules are
+retained and $\tuple u'\in L_X$.  For the second claim apply
+$(\mathrm R_\beta^\lambda)$ to some $\tuple u\in L_X\ne\emptyset$.
+
+(ii) A witness word is $\chi(X)[\omega(X)]$ or a rule word.  The context has at
+most $\bar\theta_G$ fixed letters, a typed rule has the template of its source
+and so writes at most $\bar\theta_G$ letters
+(Lemma~\ref{lem:thickness-equivalence}(i)), and there are at most $r_{\max}$
+child tuples.  There is one word per typed nonterminal and per typed rule.
+
+(iii) Apply the typed rule to $\widetilde G_0$-derivations of the
+$\omega(Y_j)\in L_{Y_j}$, erase the labels, and insert the result into the
+successful $G$-derivation from which $E_B$ was obtained.  As in the proof of
+Lemma~\ref{lem:thickness-equivalence}(iv), the unique lift contains the typed
+derivation at the hole, and every rule of a successful derivation of
+$G^{\widehat s}$ is retained.  A start link $\widetilde S\to S_{\mathbf t}$ is used by
+the successful derivation of $\omega(S_{\mathbf t})$, of length at most $b$.
+
+(iv) Proposition~\ref{prop:completeness} with $\iota=\omega$ ($r_G\le r_{\max}$,
+and $\chi(S_{\mathbf t})=E_S=\blank_1$) and
+Proposition~\ref{prop:reconstruction-soundness} give
+$L(\mathcal B(K))\cap\Sigma^+=L\cap\Sigma^+$ for every finite $K$ with
+$\Wit(\widetilde G_0)\subseteq K\subseteq L$; the Start rule handles $\eps$.
 \end{proof}
 
 \subsection{Refined-Thickness Baseline}
 \label{subsec:typed-thickness}
 
-For a reduced good presentation $G$ of a $\lambda$-free target, let
-$\widetilde G_0$ be its trimmed full yield-type refinement and put
-\(\bar\theta_{\mathrm{typ}} :=\max\{1,\theta_{\widetilde G_0}\},\)
-where $\theta_{\widetilde G_0}$ is rule thickness computed in the refined
-grammar.  No comparison with the original untyped thickness is assumed.
+Put $\bar\theta_{\mathrm{typ}}:=\max\{1,\theta_{\widetilde G_0}\}$, the rule
+thickness of the trimmed refinement itself.  Every rule $R$ of $G$ has a retained
+typed copy (lift a successful derivation using $R$), and every successful
+derivation using a copy erases to one using $R$; hence
+$\theta_G\le\theta_{\widetilde G_0}$.
 
 \begin{lemma}[Refined-thickness baseline]
 \label{lem:typed-thickness-baseline}
-Fix $f\ge1$, $r_{\max}\ge1$, a finite alphabet $\Sigma$, and a finite
-typing $\widehat{s}:\Sigma^*\to \mathsf S^\sharp$.  Let $G$ be a reduced good fan-out-$\le f$,
-rank-$\le r_{\max}$ presentation of a $\lambda$-free language in
-$\Cmcf{f}{s}$, and let $\widetilde G_0$ be its trimmed yield-type refinement.
-Then the target witness set has cardinality polynomial in $\|G\|$ and total
-positive length polynomial in $\|G\|$ and
-$\bar\theta_{\mathrm{typ}}:=\max\{1,\theta_{\widetilde G_0}\}$.
+Canonical tuples can be chosen so that
+$\|\Wit(\widetilde G_0)\|_+\le C_s(G)\,\bigl(1+(r_{\max}+2)\bar\theta_{\mathrm{typ}}\bigr)$.
 \end{lemma}
 
 \begin{proof}
 $\widetilde G_0$ is reduced and good, so
-Lemma~\ref{lem:thickness-equivalence}(i),(ii),(iv) applies to it with
-$\bar\theta_{\mathrm{typ}}$ in place of $\bar\theta_G$: canonical tuples
-and (derivational) canonical contexts of length at most
-$\bar\theta_{\mathrm{typ}}$ exist, with $\chi(X)=\blank_1$ for start links.
-Each typed rule writes at most $\bar\theta_{\mathrm{typ}}$ terminals and has at
-most $r_{\max}$ children, so every witness has length at most
-$(r_{\max}+2)\bar\theta_{\mathrm{typ}}$, and
-\[
- \|\Wit(\widetilde G_0)\|_+
- \le
- (|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}})
- (1+(r_{\max}+2)\bar\theta_{\mathrm{typ}})
-\]
-by counting the typed nonterminals and rules.
+Lemma~\ref{lem:thickness-equivalence}(ii) applied to it gives
+$\omega(X)\in L_X$ with $\|\omega(X)\|_1\le\theta_{\widetilde G_0}$.  Apply
+Lemma~\ref{lem:witness-length-template}(ii) with
+$b=\theta_{\widetilde G_0}$ and use $\bar\theta_G\le\bar\theta_{\mathrm{typ}}$.
 \end{proof}
 
-For trivial typing no productive nonterminal has more than one yield type,
-so the original thickness scale is retained; in our notation this
-recovers Yoshinaka's untyped estimates $|K_G|\le|P|$ and
-$\|K_G\|\le|P|\theta_G$
-\cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.  The quantitative claims below
-therefore concern typed, multi-component settings.  Without uniqueness the
-refinement may be much thicker:
+For trivial typing a nonterminal of a $\lambda$-free grammar has a single type, so
+$\widetilde G_0$ is $G$ with a start link, and the lemma recovers Yoshinaka's
+untyped estimates $|K_G|\le|P|$ and $\|K_G\|\le|P|\theta_G$
+\cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.  Under a nontrivial typing the
+refinement can be much thicker:
 
 \begin{proposition}[Exponential blow-up of full yield-type refinement]
 \label{prop:typed-thickness-exponential}
-There are a fixed two-element typing $s_{\mathtt c}$, reduced good fan-out-one rank-two
-grammars $G_n$ of size $O(n)$, and a constant bound
-$\theta_{G_n}\le2$, such that $L(G_n)=\{\mathtt a,\mathtt c\}^+$ and the
-trimmed full yield-type refinement $\widetilde G_{n,0}$ satisfies
-\(\theta_{\widetilde G_{n,0}}\ge 2^n.\)
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item Let $e\ne z$ be idempotents of $\mathsf S$ with $ez=ze=z$, and let
+$u,v\in\Sigma^+$ with $s(u)=e$ and $s(v)=z$.  For $n\ge1$ let $G_n$ be the
+fan-out-one, rank-two grammar
+\[
+ S\to SS\mid a\ (a\in\Sigma)\mid A_0\mid\cdots\mid A_n,\qquad
+ A_0\to u,\qquad
+ A_i\to A_{i-1}A_{i-1}\mid v\quad(1\le i\le n),
+\]
+where $u,v$ are constant templates.  Then $G_n$ is reduced and good,
+$L(G_n)=\Sigma^+$, $\|G_n\|=O_{\Sigma,u,v}(n)$,
+$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$, and $\theta_{\widetilde G_{n,0}}\ge|u|2^n$.
+\item In particular, for $\Sigma=\{\mathtt a,\mathtt c\}$ and the two-element
+typing $s_{\mathtt c}$ onto $\{1,\zeta\}$ ($\zeta^2=\zeta$) with
+$s_{\mathtt c}(\mathtt a)=1$, $s_{\mathtt c}(\mathtt c)=\zeta$, taking $u=\mathtt a$,
+$v=\mathtt c$ gives $\|G_n\|=O(n)$, $\theta_{G_n}\le2$ and
+$\theta_{\widetilde G_{n,0}}\ge2^n$.
+\end{enumerate}
 \end{proposition}
 
 \begin{proof}
-Let $M_{\mathtt c}=\{1,\zeta\}$ with $\zeta^2=\zeta$,
-$s_{\mathtt c}(\mathtt a)=1$, and
-$s_{\mathtt c}(\mathtt c)=\zeta$.  For $n\ge1$, view
-\[
- S\to SS\mid\mathtt a\mid\mathtt c\mid A_0\mid\cdots\mid A_n,\qquad
- A_0\to\mathtt a,\qquad
- A_i\to A_{i-1}A_{i-1}\mid\mathtt c\quad(1\le i\le n)
-\]
-as a fan-out-one MCFG.  It is reduced and good, has size $O(n)$ and rule rank
-two, generates $\{\mathtt a,\mathtt c\}^+$, and every rule has a successful
-use of length at most two, so $\theta_{G_n}\le2$.
-In the full refinement, the retained copy $(A_n)_1$ can derive only words
-without $\mathtt c$; recursively the unique such yield is
-$\mathtt a^{2^n}$.  Hence the typed rule
-$S_{(1)}\to(A_n)_1$ has successful thickness at least $2^n$.
+All templates are nonempty and use each variable once in order, so $G_n$ is
+good; it is reduced and generates $\Sigma^+$ via $S\to SS\mid a$.  Each rule has a
+successful use of length at most $\max\{2,2|u|,2|v|\}$: complete every $A_i$ by
+$v$ ($i\ge1$) or $u$ ($i=0$).  A yield of $A_n$ is a product of leaf values
+$s(u)=e$ and $s(v)=z$; since $e^2=e$ and $z$ is absorbing in $\{e,z\}$, its type is
+$e$ iff no leaf uses $v$.  Hence the unique yield of $(A_n)_{(e)}$ is
+$u^{2^n}$; the typed rule $S_{(e)}\to(A_n)_{(e)}$ is retained (via
+$S\to A_n$), and every successful derivation using it has length at least
+$|u|2^n$.  In (b), $e=1$ and $z=\zeta$.
 \end{proof}
 
-This is the refined-presentation obstruction summarized in
-Table~\ref{tab:thickness-scales}, not a lower bound on characteristic-data
-length for $\{\mathtt a,\mathtt c\}^+$ or for arbitrary reconstruction
-operators.  The later proofs therefore work directly with the original
-presentation.
+This obstruction concerns the refinement, not characteristic-data length for
+$\Sigma^+$ or for any operator.  The proofs below therefore work on $G$ itself.
 
-\subsection{Boundary Windows and Auxiliary Invariants}
-\label{subsec:boundary-polydata}
-
-The refined thickness need not be polynomially controlled by the original
-good presentation (Proposition~\ref{prop:typed-thickness-exponential}).
-A transfer is nevertheless possible whenever the typing is determined by a
-fixed prefix--suffix window together with an auxiliary finite invariant that
-can itself be preserved by short replacements.  We use the
-thickness-sensitive representation model of
-Yoshinaka~\cite[Section~4.3]{Yoshinaka2011}.
-
-\begin{lemma}[Window skeletons]
-\label{lem:boundary-short-canonical}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$ and
-rule rank at most $r_{\max}\ge1$.  Fix $k,\ell\ge0$, a morphism
-$\kappa:\Sigma^*\to N$ into a finite monoid, and a finite typing
-$\widehat{s}\preceq(\widehat{s}_{k,\ell},\kappa)$.  Let $\widetilde G_0$ be the trimmed
-$\widehat{s}$-refinement and $n_{\mathrm{typ}}$ its number of non-start typed
-nonterminals.  Suppose that $\beta\ge0$ is such that for every $C\in V$ and
-$\tuple x\in L_C(G)$ there is $\tuple x'\in L_C(G)$ with
-$\kappa^{(\fan(C))}(\tuple x')=\kappa^{(\fan(C))}(\tuple x)$ and
-$\|\tuple x'\|_1\le\beta$.  Then every non-start typed nonterminal $X$ has a
-canonical tuple with
-\[
- \|\omega(X)\|_1\le f(k+\ell+1)\,n_{\mathrm{typ}}\,
- \bigl(\bar\theta_G+r_{\max}\beta\bigr).
-\]
-For trivial $\kappa$, $\beta=\bar\theta_G$ is admissible by
-Lemma~\ref{lem:thickness-equivalence}(ii), so
-\(\|\omega(X)\|_1\le f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G\)
-whenever $\widehat{s}\preceq \widehat{s}_{k,\ell}$.
-\end{lemma}
-
-\begin{proof}
-Choose a terminal derivation $D$ from $X$ in $\widetilde G_0$ with the minimum
-number of grammar-rule nodes, and let $\tuple u$ be its root tuple.  No typed
-nonterminal occurs twice on a root-to-leaf path: replacing the upper subtree
-by the lower one would give a derivation from $X$ with fewer nodes.  Hence
-every path has at most $n_{\mathrm{typ}}$ grammar nodes.
-
-Mark in each component of $\tuple u$ the terminals that determine its
-$\widehat{s}_{k,\ell}$-type (Definition~\ref{def:prefix-suffix-typing}): all
-terminals of a component shorter than $m_0=\max\{1,k+\ell\}$, and otherwise
-its first $k$ and last $\ell$ terminals (one arbitrary terminal when
-$k=\ell=0$).  There are at most $f(k+\ell+1)$ marks.  Each terminal is written
-explicitly by exactly one node, so the union $\mathcal K$ of the root paths to
-the marked terminals has at most $f(k+\ell+1)n_{\mathrm{typ}}$ nodes.  Call a
-child of a node of $\mathcal K$ that is not itself in $\mathcal K$
-\emph{omitted}.  By linearity and nondeletion, each component of an omitted
-child is one contiguous block of exactly one root component, and this block
-contains no mark.
-
-Replace each omitted subtree, with underlying nonterminal $C$ and yield
-$\tuple x$, by a $G$-derivation of a tuple $\tuple x'$ as in the hypothesis,
-and forget all typed labels; this gives a $G$-derivation from the underlying
-nonterminal $B$ of $X$ with root tuple $\tuple u'$.  A short root component
-consists only of marked terminals, so it receives no replaced block and is
-unchanged.  In a long component every replaced block lies strictly between the
-marked first $k$ and last $\ell$ terminals, and goodness keeps it nonempty;
-the marked prefix and suffix remain literal, and the component stays on the
-long side of the threshold.  Hence $\widehat{s}_{k,\ell}$-vectors agree.  Each
-root component is the ordered product of explicit terminals and child
-components, and every replaced block keeps its $\kappa$-value; so
-$\kappa$-vectors agree, with no commutativity used.  Thus
-$(\widehat{s}_{k,\ell},\kappa)^{(d)}(\tuple u')=
-(\widehat{s}_{k,\ell},\kappa)^{(d)}(\tuple u)$, and
-Lemma~\ref{lem:type-preserving-replacement} gives $\tuple u'\in L_X$.
-Each node of $\mathcal K$ writes at most $\bar\theta_G$ terminals
-(Lemma~\ref{lem:thickness-equivalence}(i)) and has at most $r_{\max}$ omitted
-children, each of length at most $\beta$; the bound follows.
-\end{proof}
-
-\begin{theorem}[Polynomial data for prefix--suffix-determined typings]
-\label{thm:boundary-polydata}
-Fix $f\ge1$, $r_{\max}\ge1$, $k$, $\ell$, a finite alphabet $\Sigma$, and a
-finite-semigroup typing $s:\Sigma^+\to\mathsf S$ satisfying
-$s\preceq s_{k,\ell}$; write $\widehat{s}$ for its canonical completion.
-Let $L\in\Cmcf{f}{s}$ and let $G$ be a reduced good
-fan-out-$\le f$, rank-$\le r_{\max}$ grammar with
-$L(G)=L\cap\Sigma^+$. Then
-$\mathcal B_{f,s}^{\le r_{\max}}$ is polynomial-time in the positive sample.
-A characteristic sample for $L$ is
-$K=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$, with
-\[
- |\Wit(\widetilde G_0)|=O_{f,r_{\max},s}(\|G\|),
- \qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},k,\ell,s,\Sigma}
-   (\|G\|^2\bar\theta_G),
-\]
-where $\bar\theta_G=\max\{1,\theta_G\}$.  For a reduced $\lambda$-free input
-presentation $G_{\mathrm{in}}$ (deleting rules allowed), the structural
-good-form conversion of Proposition~\ref{prop:structural-good-thickness}
-yields the explicit presentation-relative bound
-\[
- O_{f,r_{\max},k,\ell,s,\Sigma}\!\left(
- \|G_{\mathrm{in}}\|^3\max\{1,t_{G_{\mathrm{in}}}\}\right).
-\]
-\end{theorem}
-
-\begin{proof}
-By Lemma~\ref{lem:semigroup-transfer} we may use $\widehat{s}$.
-Lemma~\ref{lem:boundary-short-canonical} with trivial $\kappa$ gives
-$b_{\mathrm{can}}=f(k+\ell+1)n_{\mathrm{typ}}(r_{\max}+1)\bar\theta_G$, and
-$n_{\mathrm{typ}}\le|V||\mathsf S^\sharp|^f=O(\|G\|)$.  Lemma~\ref{lem:witness-length-template}
-bounds every witness by $O(\|G\|\bar\theta_G)$ and their number by
-$O(\|G\|)$, and gives the characteristic property; the datum $\eps$ adds at
-most one.  Theorem~\ref{thm:poly} gives the construction time.
-For the input clause, Proposition~\ref{prop:structural-good-thickness} gives
-$\|G\|=O(\|G_{\mathrm{in}}\|)$ and
-$\bar\theta_G=O(\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\})$;
-nonterminal thickness is used because deleting source rules may erase
-material before good-form conversion.
-\end{proof}
-
-Corollary~\ref{cor:capped-gold-poly} gives polynomial time per datum for the
-capped conservative learner.  At fan-out one, polynomial time-and-thick-data
-learning for fixed windows is already due to
-Yoshinaka~\cite[Theorem~1]{Yoshinaka2008}.  As explained in the Introduction, our quadratic total-encoded-length
-bound is measured relative to a reduced good presentation; the degree in
-that presentation size is uniform for fixed window parameters, without
-claiming an improvement over Yoshinaka's bounds after normalization.  The contribution of
-Lemma~\ref{lem:boundary-short-canonical} is to preserve boundary information
-simultaneously across \emph{multiple} tuple components at every fixed
-$f\ge2$.  Theorem~\ref{thm:intrinsic-ranktwo-witness} shows that this
-higher-rank regime is needed at the language level: it gives a
-non-context-free $(1,1)$-typed target of minimum fan-out two and minimum rule
-rank two over all finite fan-outs, whereas the rank-one examples are covered
-by Theorem~\ref{thm:rankone-polydata}.
-
-\subsection{Finite-Group Invariants}
+\subsection{Short Representatives by Minimal Counterexamples}
 \label{subsec:group-invariants}
 
-Window--group typings require short tuples with \emph{prescribed}
-componentwise group values.  The length bound is obtained from a single
-count of heavy nodes, which we state for an arbitrary finite-monoid invariant
-because Appendix~\ref{app:local-group} reuses it.
-
-\paragraph{Realizable yield-type vectors.}
-For a nonterminal $B$ of arity $d$ and a monoid morphism
-$\mu:\Sigma^*\to M$, a vector $\mathbf t\in M^d$ is
-\emph{realizable at $B$} if
-$\mu^{(d)}(\tuple u)=\mathbf t$ for some $\tuple u\in L_B(G)$.
-For a positive-word typing we use its canonical fresh-identity
-completion; realizability does not mean that a representative has
-already been computed.
+Let $\lambda:\Sigma^*\to N$ be a finite-monoid morphism.  A vector
+$\mathbf t\in N^d$ is \emph{realizable at} $B$ (of fan-out $d$) if
+$\mathbf t=\lambda^{(d)}(\tuple u)$ for some $\tuple u\in L_B(G)$.  A
+\emph{$\lambda$-minimal} derivation for $(B,\mathbf t)$ is a terminal derivation
+from $B$ with root $\lambda$-vector $\mathbf t$ that minimizes first the total
+yield length and then the number of nodes.  For a threshold $b$, a node is
+\emph{heavy} if its yield has total length greater than $b$.
 
 \begin{lemma}[Heavy-node count]
 \label{lem:heavy-node-count}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$ and
-rule rank at most $r_{\max}\ge1$, let $\lambda:\Sigma^*\to N$ be a morphism
-into a finite monoid, and let $b\ge\bar\theta_G$ and $c\ge0$.  Let $T$ be a
-terminal derivation from $B\in V$ that minimizes first the total yield length
-and then the number of nodes among derivations from $B$ with the same root
-$\lambda$-vector.  Call a node \emph{heavy} if its subtree yield has total
-length greater than $b$.  If every set of pairwise incomparable heavy nodes of
-$T$ has at most $c$ elements, then
+Let $b\ge\bar\theta_G$ and $c\ge0$, and let $T$ be $\lambda$-minimal for
+$(B,\mathbf t)$.  If every antichain of heavy nodes of $T$ has at most $c$
+elements, then
 \[
  \|\text{root tuple of }T\|_1\le(r_{\max}+1)\,b\,\max\{1,c\,|V||N|^f\}.
 \]
 \end{lemma}
 
 \begin{proof}
-Label each node by its nonterminal and the $\lambda$-vector of its yield;
-there are at most $|V||N|^f$ labels.  If an ancestor and a proper descendant
-had the same label, replacing the former subtree by the latter would keep the
-root $\lambda$-vector (templates evaluate homomorphically, as in
-Proposition~\ref{prop:output-invariants}), would not increase the yield
-(nondeletion) and would remove nodes.  So every root-to-leaf path has at most
-$|V||N|^f$ nodes.  If the root is light, its yield has length at most $b$.
-Otherwise the heavy nodes form an ancestor-closed subtree, whose leaves are
-pairwise incomparable; hence there are at most $c|V||N|^f$ heavy nodes.  Every
-terminal of the root yield is written either by a heavy node (at most
-$\bar\theta_G\le b$ per node, Lemma~\ref{lem:thickness-equivalence}(i)) or
-inside a light child of a heavy node (at most $r_{\max}$ children of length at
-most $b$ each).
+Label each node by its nonterminal and the $\lambda$-vector of its yield; there
+are at most $|V||N|^f$ labels.  If an ancestor and a proper descendant had the same
+label, replacing the ancestor's subtree by the descendant's would keep the root
+$\lambda$-vector (templates evaluate $\lambda$ homomorphically), would not
+lengthen the root yield (by linearity the descendant's yield is part of the
+ancestor's), and would remove nodes, contradicting minimality.  So every
+root-to-leaf path has at most $|V||N|^f$ nodes.  If the root is light its yield has
+length at most $b$.  Otherwise the heavy nodes form an ancestor-closed subtree
+whose leaves form an antichain, so there are at most $c|V||N|^f$ heavy nodes.
+Every terminal of the root yield is written by a heavy node (at most
+$\bar\theta_G\le b$ each, Lemma~\ref{lem:thickness-equivalence}(i)) or lies in a
+light child of a heavy node (at most $r_{\max}$ children of length at most $b$).
 \end{proof}
 
-For a finite abelian group $H$ write $\mathsf d(H)$ for the maximal length of a
-zero-sum-free sequence over $H$, so that $\mathsf D(H)=\mathsf d(H)+1$ is its
-Davenport constant.  For a finite group $A$ and $f\ge1$ put
+\paragraph{Group constants.}
+For a finite abelian group $H$, $\mathsf d(H)$ is the maximal length of a
+zero-sum-free sequence over $H$ (so $\mathsf d(H)+1$ is the Davenport constant;
+$\mathsf d(\{1\})=0$).  For a finite group $A$ and $f\ge1$ put
 \[
  N_{A,f}=\max\{3,|A|^f\},\quad
  U_f=f^{f+1}f!,\quad
@@ -1418,638 +1282,393 @@ Davenport constant.  For a finite group $A$ and $f\ge1$ put
  M_{A,f}-1,&\text{otherwise}.
  \end{cases}
 \]
+$U_f$ bounds the number of block patterns of one owner, and $N_{A,f}\ge3$ is
+needed by the order classification in Appendix~\ref{app:window-group}.
 
-The lower floor $N_{A,f}\ge3$ is required for the mixed-direction
-cases in the block-order decomposition; the $|A|^f$ term supplies
-repeated group boundary states.
+\paragraph{Simultaneous block replacement.}
+A \emph{block-replacement family} of width $f$ over $A$
+(Definition~\ref{def:block-family}) consists of $d\le f$ rows, each an ordered
+product in $A$ of fixed constants and \emph{blocks}; each block has an
+\emph{owner} in $[m]$, an original value and a replacement value, and each owner
+owns at most $f$ blocks, which may interleave with other owners' blocks
+arbitrarily.  $\operatorname{val}_c(J)$ is the value of row $c$ when exactly the
+blocks of owners in $J\subseteq[m]$ take their replacement values.
 
-\begin{proposition}[Simultaneous block replacement: the exact interface]
+\begin{proposition}[Simultaneous block replacement]
 \label{prop:block-replacement-interface}
-Let $A$ be a finite group and $f\ge1$. There are $d$ ordered output
-rows ($1\le d\le f$). Row $c$ is a fixed-order product of $q_c$ blocks,
-interspersed with unaltered constants $a_{c,0},\ldots,a_{c,q_c}\in A$.
-A block $\beta_{c,j}$ has an owner $o(c,j)\in[m]$ and an original and a
-replacement value $x_{c,j},x'_{c,j}\in A$. Every owner has at most $f$
-blocks over all rows. Different owners' blocks may interleave arbitrarily;
-all material not replaced is absorbed into the intervening constants.
-For $J\subseteq[m]$ put
-\[
- \operatorname{val}_c(J)
- =a_{c,0}y_{c,1}a_{c,1}\cdots y_{c,q_c}a_{c,q_c},\qquad
- y_{c,j}=\begin{cases}
- x'_{c,j},&o(c,j)\in J,\\
- x_{c,j},&o(c,j)\notin J.
- \end{cases}
-\]
-With $c_{A,f}$ as defined above, if $m>c_{A,f}$ there exists a nonempty
-$J\subseteq[m]$ such that
-\(\operatorname{val}_c(J)=\operatorname{val}_c(\varnothing) \qquad(c=1,\ldots,d)\).
-For abelian $A$, one may take $c_{A,f}=\mathsf d(A^f)$; for an arbitrary
-finite group, $c_{A,f}=M_{A,f}-1$ suffices. Individual block or owner
-values need not be preserved.
+In a block-replacement family of width $f$ over a finite group $A$ with
+$m>c_{A,f}$ owners there is a nonempty $J\subseteq[m]$ with
+$\operatorname{val}_c(J)=\operatorname{val}_c(\varnothing)$ for every row $c$.
+Individual block or owner values need not be preserved.
 \end{proposition}
+
 \begin{proof}
-This is Lemma~\ref{lem:block-replacement} of
-Appendix~\ref{app:group-blocks}, written with root-component notation.
-For abelian $A$, associate with each owner its difference vector in
-$A^d$ and select a nonempty zero-sum subsequence. In a nonabelian group
-one must not commute factors. Instead fix a common owner pattern and
-homogenize pairwise order comparisons by
-Lemma~\ref{lem:order-homogenize}; Lemma~\ref{lem:group-block-order}
-then decomposes the output rows into consecutive rank chunks, and
-Lemma~\ref{lem:group-interval} selects a nonempty interval of owners
-preserving all ordered row products. The threshold is at most $M_{A,f}$.
-The detailed extraction and constants appear in Appendix~\ref{app:group-blocks}.
+This is Lemma~\ref{lem:block-replacement}.  For abelian $A$ one selects a
+nonempty zero-sum subsequence of the owners' difference vectors in
+$A^d\le A^f$.  For arbitrary $A$ no factors are commuted: among owners with a
+common block pattern (at most $U_f$ patterns) one homogenizes all pairwise order
+comparisons (Lemma~\ref{lem:order-homogenize}), which decomposes every row into
+consecutive rank chunks (Lemma~\ref{lem:group-block-order}); a pigeonhole on
+prefix-product boundary states then yields an interval of owners preserving all
+ordered row products (Lemma~\ref{lem:group-interval}).
 \end{proof}
 
-\paragraph{Two noncommutative ingredients.}
-The following combinatorial statements are used in the proof of
-Proposition~\ref{prop:block-replacement-interface}. Here a
-block-replacement family is as formally specified in
-Definition~\ref{def:block-family}; the proofs, including opposite
-owner orders on different output components, are in
-Appendix~\ref{app:window-group}.
+Owner contributions cannot be commuted: if the two rows are
+$\beta_{1,1}\beta_{2,1}$ and $\beta_{2,2}\beta_{1,2}$, with value $\sigma=(12)$ on the
+blocks of owner~1 and $\tau=(23)$ on those of owner~2 in $S_3$, the row values are
+$\sigma\tau\ne\tau\sigma$.
+Example~\ref{ex:nonabelian-reverse-owner} shows a replacement preserving rows of
+opposite owner orientation.
 
-\begin{lemma}[A homogeneous block-order lemma]
-\label{lem:group-block-order}
-Fix positive integers $e,n$ with $n\ge3$.  For each
-$t\in[e]$ and $i\in[n]$, let $(t,i)$ be a distinct point
-on a line, with a total left-to-right order.  Suppose that
-(i) the order of $(t,i)$ and $(u,i)$ is independent of $i$;
-and (ii) for each ordered pair $(t,u)$, including $t=u$,
-the order of $(t,i)$ and $(u,j)$ for $i<j$ is independent
-of the choice of $i<j$.
-Then the types at the points have a partition into classes,
-each occupying a consecutive region of the line.  Every
-class has one direction (increasing or decreasing in $i$);
-inside its region the points occur in $n$ successive
-\emph{chunks}, one per rank in that direction.  Each
-chunk consists of exactly one point of each type in the
-class (in a fixed within-chunk order).
-\end{lemma}
-
-\begin{lemma}[Simultaneous finite-group interval shortening]
-\label{lem:group-interval}
-Let $A$ be any finite group, and consider a block-replacement family of width
-$f$ over $A$ with $n\ge\max\{3,|A|^f\}$ indices in which all indices have the
-same number of blocks, the same lines for them and the same within-index
-order, and in which every cross-index comparison between the $t$-th block of
-index $i$ and the $u$-th block of index $j$ on a common line has the same
-truth value for all $i<j$.  Then a nonempty interval $J$ of indices satisfies
-$\mathrm{val}_c(J)=\mathrm{val}_c(\emptyset)$ for every line $c$.
-\end{lemma}
-
-\begin{theorem}[Short tuples with prescribed finite-group values]
-\label{thm:group-typed-shortest}
-\label{lem:group-typed-shortest}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG
-of fan-out at most $f$ and maximum rule rank
-$r_{\max}\ge1$.  Let $g:\Sigma^*\to A$ be a
-homomorphism into \emph{any} finite group $A$.
-For every $B\in V$ and every realizable
-$\mathbf s\in A^{\fan(B)}$ there is
-$\tuple u\in L_B(G)$ with
-$g^{(\fan(B))}(\tuple u)=\mathbf s$ and
+\begin{lemma}[Short representatives for window--group invariants]
+\label{lem:marked-heavy-window-group}
+Fix $k,\ell\ge0$, a finite group $A$ (possibly trivial) and a morphism
+$g:\Sigma^*\to A$.  Put $\lambda:=(\widehat s_{k,\ell},g):\Sigma^*\to
+N:=M_{k,\ell}\times A$ and $h:=f(k+\ell+1)$.  Then $(\mathrm R_\beta^\lambda)$ holds with
 \[
- \|\tuple u\|_1\le
- \beta_g:=
- (r_{\max}+1)\bar\theta_G
- \max\{1,c_{A,f}|V||A|^f\}.
+ \beta=b_{k,\ell,A}:=(r_{\max}+1)\,\bar\theta_G\,(c_{A,f}+h)\,|V||N|^f
+ \;\le\;(r_{\max}+1)(c_{A,f}+h)|N|^f\,\|G\|\,\bar\theta_G .
 \]
-In particular $\beta_g=O_{A,f,r_{\max}}(\|G\|\bar\theta_G)$; when $A$ is
-abelian the antichain constant is the zero-sum constant $\mathsf d(A^f)$.
+\end{lemma}
+
+\begin{proof}
+Let $\tuple u\in L_B(G)$, $\mathbf t:=\lambda^{(\fan(B))}(\tuple u)$, and let $T$ be
+$\lambda$-minimal for $(B,\mathbf t)$, with heavy threshold $b=\bar\theta_G$.  In
+each root component of length at least $m_0=\max\{1,k+\ell\}$ mark the first $k$
+and the last $\ell$ positions (one arbitrary position if $k=\ell=0$), and in each
+shorter component mark all positions: at most $h$ marks.  Let $Q$ be an antichain
+of heavy nodes.  Incomparable subtrees have disjoint yields, so at most $h$ nodes
+of $Q$ contain a mark; let $Q_0$ be the others.
+
+Suppose $|Q_0|>c_{A,f}$.  For $v\in Q_0$ with nonterminal $C_v$ fix a tuple of
+$L_{C_v}(G)$ of total length at most $\bar\theta_G$
+(Lemma~\ref{lem:thickness-equivalence}(ii)).  By linearity and nondeletion each
+$v\in Q_0$ contributes at most $f$ disjoint contiguous blocks to the root
+components, and the $g$-value of each root component is the ordered product of
+the $g$-values of fixed material and of these blocks.  This is a
+block-replacement family over $A$ with owners $Q_0$, so
+Proposition~\ref{prop:block-replacement-interface} gives a nonempty
+$J\subseteq Q_0$ whose simultaneous replacement preserves every root $g$-value.
+The replaced blocks contain no mark: short root components are untouched, and in
+a long component they lie strictly between the marked prefix and suffix, which
+keep their letters and positions relative to the ends, while the component keeps
+its $k+\ell$ marked letters (at least one if $k=\ell=0$) and stays long.  So the
+root $\widehat s_{k,\ell}$-vector is preserved as well, and the result is a derivation
+from $B$ with root $\lambda$-vector $\mathbf t$ that is strictly shorter, since each
+replaced yield exceeded $\bar\theta_G$.  This contradicts minimality.
+
+Hence every heavy antichain has at most $c_{A,f}+h$ elements, and
+Lemma~\ref{lem:heavy-node-count} with $c=c_{A,f}+h\ge1$ gives the bound; the
+second inequality uses $|V|\le\|G\|$.
+\end{proof}
+
+\begin{corollary}[Window representatives]
+\label{lem:boundary-short-canonical}
+For $k,\ell\ge0$, $(\mathrm R_\beta^{\widehat s_{k,\ell}})$ holds with
+$\beta=b_{k,\ell}:=(r_{\max}+1)\bar\theta_G\,f(k+\ell+1)\,|V||M_{k,\ell}|^f$.
+\end{corollary}
+
+\begin{proof}
+Take $A$ trivial in Lemma~\ref{lem:marked-heavy-window-group}: then $c_{A,f}=0$
+and $N\cong M_{k,\ell}$.
+\end{proof}
+
+\subsection{Window and Window--Group Typings}
+\label{subsec:boundary-polydata}
+
+\begin{theorem}[Polynomial data for prefix--suffix-determined typings]
+\label{thm:boundary-polydata}
+Let $s\preceq s_{k,\ell}$, let $L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$.  Then
+$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for
+$\mathcal B^{\le r_{\max}}_{f,s}$ with $|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$ and
+\[
+ \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell}\,\|G\|^2\bar\theta_G,\qquad
+ K_{k,\ell}:=|\mathsf S^\sharp|^{fr_{\max}}
+   \bigl(3+r_{\max}(r_{\max}+1)f(k+\ell+1)|M_{k,\ell}|^f\bigr).
+\]
 \end{theorem}
 
 \begin{proof}
-Let $T$ be minimal as in Lemma~\ref{lem:heavy-node-count} with $\lambda=g$ and
-$b=\bar\theta_G$, and let $v_1,\ldots,v_m$ be pairwise incomparable heavy
-nodes.  For each $v_i$, labelled $C_i$, fix a $C_i$-derivation of length at most
-$\bar\theta_G$ (Lemma~\ref{lem:thickness-equivalence}(ii)); for
-$J\subseteq[m]$ let $T_J$ replace the subtrees at $v_i$, $i\in J$.  By
-linearity and nondeletion each component of $v_i$ is a contiguous block of
-one root component, and blocks of different $v_i$ are disjoint.  The $g$-value
-of a root component of $T_J$ is the ordered product of the $g$-values of its
-fixed segments and of its blocks, each block contributing its original or its
-replacement value according to whether its owner lies outside or inside $J$.
-This is a block-replacement family over $A$ in the sense of
-Definition~\ref{def:block-family}.  If $m>c_{A,f}$,
-Proposition~\ref{prop:block-replacement-interface} yields a nonempty
-$J$ for which $T_J$ has the
-root $g$-vector of $T$; but $T_J$ is strictly shorter, since every replaced
-subtree has length greater than $\bar\theta_G$.  This contradicts minimality,
-so Lemma~\ref{lem:heavy-node-count} applies with $c=c_{A,f}$ and $N=A$.
+Corollary~\ref{lem:boundary-short-canonical} and
+Lemma~\ref{lem:witness-length-template}(i),(ii),(iv) with
+$\lambda=\widehat s_{k,\ell}$ and $b=b_{k,\ell}$ give the sample and
+$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}b_{k,\ell})$; insert
+$C_s(G)\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|$, $1+2\bar\theta_G\le3\|G\|\bar\theta_G$ and
+$|V|\le\|G\|$.
 \end{proof}
-
-\begin{lemma}[Marked heavy nodes for simultaneous window--group shortening]
-\label{lem:marked-heavy-window-group}
-Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most $f$
-and rule rank at most $r_{\max}\ge1$. Fix $k,\ell\ge0$, a finite group $A$,
-and a homomorphism $g:\Sigma^*\to A$. Put
-$\lambda=(\widehat{s}_{k,\ell},g):\Sigma^*\to
- N:=M_{k,\ell}\times A$,
-$h:=f(k+\ell+1)$, and $n_\lambda:=|V||N|^f$.
-For every $B\in V$ and realizable vector
-$\mathbf t\in N^{\fan(B)}$, there exists $\tuple u\in L_B(G)$ with
-$\lambda^{(\fan(B))}(\tuple u)=\mathbf t$ and
-\[
- \|\tuple u\|_1\le b_{\mathrm{mark}}:=
- (r_{\max}+1)\bar\theta_G\max\{1,(c_{A,f}+h)n_\lambda\}.
-\]
-Hence $b_{\mathrm{mark}}=O(\|G\|\bar\theta_G)$ with
-$f,r_{\max},k,\ell,A,g,\Sigma$ fixed.  If $A$ is abelian,
-$c_{A,f}$ can be taken as $\mathsf d(A^f)$.
-\end{lemma}
-\begin{proof}
-Among $B$-derivations with root componentwise $\lambda$-value
-$\mathbf t$, choose $T$ minimizing total yield length, then node count.
-As in Lemma~\ref{lem:heavy-node-count}, a root--leaf path repeats no pair
-of a nonterminal and its componentwise $\lambda$-value; its number of
-nodes is at most $n_\lambda$.
-
-Mark the first $k$ and last $\ell$ terminal positions in each root
-component of length at least $m_0:=\max\{1,k+\ell\}$, and all positions
-in a shorter component.  If $k=\ell=0$, mark one position per component
-to ensure that nonemptiness is explicitly preserved.  There are at most
-$h=f(k+\ell+1)$ marks in total.
-
-Call a node heavy if its subtree yields more than $\bar\theta_G$ terminals.
-Fix an arbitrary antichain $Q$ of heavy nodes.  Since incomparable
-subtrees occupy disjoint sets of terminal positions, at most $h$ nodes
-of $Q$ contain marked terminals.  Let $Q_0$ consist of all other nodes.
-For each $v\in Q_0$ with nonterminal $C_v$, fix a derivation producing
-a tuple of total length at most $\bar\theta_G$, which exists by
-Lemma~\ref{lem:thickness-equivalence}(ii).  Each replacement strictly
-shortens the original heavy subtree.
-
-Suppose $|Q_0|>c_{A,f}$.  By linearity and nondeletion, every node in
-$Q_0$ contributes at most $f$ nonoverlapping blocks distributed among
-at most $f$ ordered root components.  Everything outside these
-subtrees remains fixed.  Since $g$ is a homomorphism, each root group
-value is the ordered product of the unchanged pieces and the original
-or replacement block values.  Proposition~\ref{prop:block-replacement-interface} thus
-selects a nonempty set of owners whose simultaneous replacement
-preserves all root group values, without assuming commutativity.
-
-No selected subtree contains a mark.  Short root components are
-untouched, while the marked prefixes and suffixes of long components
-retain their letters and order.  Every replacement component is
-nonempty by goodness.  Consequently all root
-$\widehat{s}_{k,\ell}$-values are preserved.  The root $\lambda$-vector
-is unchanged, while the total yield length strictly decreases, a
-contradiction to the choice of $T$.  Every heavy antichain therefore
-has at most $c_{A,f}+h$ members.  Lemma~\ref{lem:heavy-node-count},
-with $b=\bar\theta_G$, $c=c_{A,f}+h$ and
-$N=M_{k,\ell}\times A$, gives the displayed bound.  For abelian $A$
-use Lemma~\ref{lem:block-replacement}(a).
-\end{proof}
-
-\begin{example}[Two components with crossed owner order]
-Two owners with two blocks each may appear in the root tuple in the
-order $(\beta_{1,1}\beta_{2,1},\,\beta_{2,2}\beta_{1,2})$.
-Take $A=S_3$, put $\sigma=(12)$ and $\tau=(23)$, and assign value
-$\sigma$ to the blocks of owner $1$ and $\tau$ to those of owner $2$.
-The root group vector is $(\sigma\tau,\tau\sigma)$, with
-$\sigma\tau\ne\tau\sigma$. Thus commuting owner contributions
-would be invalid. This illustrates a block-replacement arrangement,
-not a proof that any particular target language requires a nonabelian
-typing. Proposition~\ref{prop:block-replacement-interface}
-preserves the two ordered root products simultaneously.
-\end{example}
 
 \begin{theorem}[Polynomial characteristic data for window--finite-group typing]
 \label{thm:window-group-polydata}
-Fix $f,r_{\max},k,\ell,\Sigma$, a finite group $A$, a homomorphism
-$g:\Sigma^*\to A$, and a fixed positive-word typing
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ whose fresh-identity completion
-satisfies $\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$.
-For every target $L\in\Cmcf{f}{s}$ and reduced good
-fan-out-$\le f$, rank-$\le r_{\max}$ grammar $G$ with
-$L(G)=L\cap\Sigma^+$, the capped reconstruction operator
-$\mathcal B^{\le r_{\max}}_{f,s}$ has a characteristic sample with
+Let $A$ be a finite group, $g:\Sigma^*\to A$ a morphism, and
+$\widehat s\preceq(\widehat s_{k,\ell},g)$; let $L\in\Cmcf{f}{s}$ and
+$L(G)=L\cap\Sigma^+$.  Then $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a
+characteristic sample for $\mathcal B^{\le r_{\max}}_{f,s}$ with
+$|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$ and
 \[
- |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},k,\ell,\widehat{s},g,\Sigma}
-   (\|G\|^2\bar\theta_G).
+ \begin{gathered}
+ \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell,A}\,\|G\|^2\bar\theta_G,\\
+ K_{k,\ell,A}:=|\mathsf S^\sharp|^{fr_{\max}}
+ \bigl(3+r_{\max}(r_{\max}+1)(c_{A,f}+f(k+\ell+1))(|M_{k,\ell}||A|)^f\bigr).
+ \end{gathered}
 \]
+The group may be noncommutative and its blocks may interleave across components.
 \end{theorem}
+
 \begin{proof}
-Apply Lemma~\ref{lem:marked-heavy-window-group} to
-$\lambda=(\widehat{s}_{k,\ell},g)$.  Since
-$\widehat{s}\preceq\lambda$, every realizable $\widehat{s}$-typed
-non-start nonterminal $X=B_{\mathbf s}$ has an untyped $B$-tuple
-of the same root $\lambda$-value and total length at most
-$b_{\mathrm{mark}}=O(\|G\|\bar\theta_G)$.
-Lemma~\ref{lem:type-preserving-replacement} lifts its derivation to
-$X$, so $b_{\mathrm{can}}\le b_{\mathrm{mark}}$.
-The witness template (Lemma~\ref{lem:witness-length-template}) gives
-$O(\|G\|)$ witnesses, each of length
-$O(\|G\|\bar\theta_G)$; the total encoded length is
-$O(\|G\|^2\bar\theta_G)$.  Handle $\eps$ by its direct start rule.
+As for Theorem~\ref{thm:boundary-polydata}, with
+Lemma~\ref{lem:marked-heavy-window-group} and $b=b_{k,\ell,A}$.
 \end{proof}
 
 \begin{theorem}[Polynomial data for window--abelian typing]
 \label{thm:window-abelian-polydata}
-Fix $f,r_{\max},k,\ell,\Sigma$, a finite abelian group $A$, a
-homomorphism $g:\Sigma^*\to A$, and a fixed positive-word typing
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ whose fresh-identity completion
-satisfies $\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$.
-For every $L\in\Cmcf{f}{s}$ and reduced good fan-out-$\le f$,
-rank-$\le r_{\max}$ grammar $G$ with $L(G)=L\cap\Sigma^+$, the capped
-operator $\mathcal B^{\le r_{\max}}_{f,s}$ has a characteristic sample
-satisfying
-\[
- |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},k,\ell,\widehat{s},g,\Sigma}
-   (\|G\|^2\bar\theta_G).
-\]
-In particular the bound uses the marked-node constant
-\[
- b_{\mathrm{mark}}=(r_{\max}+1)\bar\theta_G
- \max\{1,(\mathsf d(A^f)+f(k+\ell+1))
-           |V|(|M_{k,\ell}||A|)^f\}.
-\]
+If in Theorem~\ref{thm:window-group-polydata} the group $A$ is abelian, then
+$c_{A,f}=\mathsf d(A^f)=O(\exp(A)\,f\log|A|)$
+(Remark~\ref{rem:davenport-size}), so $K_{k,\ell,A}$ is polynomial in $f$ apart from
+the factors $|\mathsf S^\sharp|^{fr_{\max}}$ and $(|M_{k,\ell}||A|)^f$; for
+nonabelian $A$, $c_{A,f}=M_{A,f}-1$ grows doubly exponentially in $f$.
 \end{theorem}
+
 \begin{proof}
-Apply the proof of Theorem~\ref{thm:window-group-polydata} using the
-abelian case of Lemma~\ref{lem:marked-heavy-window-group}.
-Lemma~\ref{lem:block-replacement}(a) permits
-$c_{A,f}=\mathsf d(A^f)$ rather than $M_{A,f}-1$, with
-$\mathsf d(A^f)=O(\exp(A)f\log|A|)$
-(Remark~\ref{rem:davenport-size}).
+Lemma~\ref{lem:block-replacement}(a).
 \end{proof}
 
-Commutativity is used only in the zero-sum case of
-Lemma~\ref{lem:block-replacement}. For nonabelian $A$, the
-order-homogenization proof of Appendix~\ref{app:window-group} controls
-blocks interleaving across multiple root components.
-
-% The complete proof, including the noncommutative extraction constants,
-% is retained verbatim in Appendix~\ref{app:group-blocks}.
-\noindent The finite-group block-replacement lemma and its full proof,
-including the nonabelian order-homogenization and interval-state arguments,
-are in Appendix~\ref{app:group-blocks}.
-
-
+At fan-out one, polynomial time and thick-data learning for fixed windows is due
+to Yoshinaka~\cite[Theorem~1]{Yoshinaka2008}; the bounds above are relative to a
+reduced good presentation and are not claimed to improve on that result after
+normalization.  What is new is that window and ordered group values are preserved
+\emph{simultaneously} across up to $f$ interleaved components.  This higher-rank
+regime is needed at the language level: Theorem~\ref{thm:intrinsic-ranktwo-witness}
+gives a non-context-free $(1,1)$-typed target of minimum fan-out two and minimum
+rule rank two, whereas rank one is covered by Theorem~\ref{thm:rankone-polydata}.
 
 \subsection{An Algebraic Criterion for Polynomial Characteristic Data}
 \label{subsec:algebraic-typed-data}
 
-Write $\mathbf{LI}$ for the pseudovariety of finite locally trivial
-semigroups and $\mathbf{Grp}$ for the pseudovariety of finite groups.
-Their join $\mathbf{LI}\vee\mathbf{Grp}$ consists of divisors of
-finite products $S\times A$, with $S\in\mathbf{LI}$ and $A$ a finite group
-\cite{Costa2002LI,Costa2002LIG}.  The following criterion makes the
-window--group hypothesis intrinsic to the positive image of the fixed typing.
-The semigroup identities used in its proof are classical \cite{Pin1986}.
+$\mathbf{LI}$ is the pseudovariety of finite locally trivial semigroups
+($eSe=\{e\}$ for every idempotent $e$), $\mathbf{Grp}$ that of finite groups, and
+$\mathbf{LI}\vee\mathbf{Grp}$ consists of the divisors of products $S\times A$
+with $S\in\mathbf{LI}$ and $A$ a finite group \cite{Costa2002LI,Costa2002LIG}.
+The following lemma makes the window--group hypothesis intrinsic to the
+positive image $\mathsf S$; the semigroup facts are classical \cite{Pin1986}.
 
 \begin{lemma}[Locally trivial--group typings admit window--group refinements]
 \label{lem:mcfg-li-group-window}
-Let $\Sigma$ be a nonempty finite alphabet and let
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ be a finite-semigroup typing;
-write $\widehat{s}$ for its canonical completion. If $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$, then
-there exist $k,\ell\ge0$, a finite group $A$, and a
-morphism $g:\Sigma^*\to A$ such that
-\(\widehat{s}\preceq (\widehat{s}_{k,\ell},g) \quad\text{on all of }\Sigma^*\).
-If $\mathsf S\in\mathbf{LI}$, the group factor can
-be taken trivial, so $\widehat{s}\preceq \widehat{s}_{k,\ell}$.
+Let $\Sigma\ne\emptyset$.  If $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$, there are
+$k\ge1$, a finite group $A$ and a morphism $g:\Sigma^*\to A$ with
+$\widehat s\preceq(\widehat s_{k,k},g)$; if $\mathsf S\in\mathbf{LI}$, $A$ can be
+trivial.
 \end{lemma}
+
 \begin{proof}
-Choose a finite locally trivial semigroup $S$, a finite group
-$A$, a subsemigroup $T\subseteq S\times A$, and an onto
-semigroup morphism $\pi:T\to\mathsf S$.  Lifting each $s(a)$ to some
-$(s_a,g_a)\in T$ defines a morphism $\rho:\Sigma^+\to T$ with $\pi\rho=s$;
-let $\sigma:\Sigma^+\to S$ and $g:\Sigma^*\to A$ (with $g(\eps)=1_A$) be its
-coordinates.  The positive image $S_0=\sigma(\Sigma^+)$ is locally trivial.
-Put $q=|S_0|+1$.  The finite locally trivial identities
-$S_0^q=S_0E(S_0)S_0$ and $euf=ef$ for idempotents $e,f$ and $u\in S_0$
-\cite{Pin1986} show that $\sigma(w)$ is determined by the
-length-$q$ prefix and suffix of $w$ when $|w|\ge2q$: writing $w=pxz$ with
-$|p|=|z|=q$, $\sigma(p)=aeb$, $\sigma(z)=cfd$ and $\sigma^1(\eps)=1$,
-\(\sigma(pxz)=ae\,(b\,\sigma^1(x)\,c)\,fd=aefd=\sigma(pz)\),
-where the parenthesized factor lies in $S_0$ because $b,c\in S_0$.  Words
-shorter than $2q$ are recorded exactly by $\widehat{s}_{q,q}$.  Hence equal
-$(\widehat{s}_{q,q},g)$-values on $\Sigma^+$ give equal $\rho$- and $\widehat{s}$-values;
-the window typing separates $\eps$ from $\Sigma^+$.  Take $k=\ell=q$.  If
-$\mathsf S\in\mathbf{LI}$, use $S=\mathsf S$, $\pi=\mathrm{id}$ and the
-trivial group.
+Choose a finite $S'\in\mathbf{LI}$, a finite group $A$, a subsemigroup
+$T\le S'\times A$ and a surjective morphism $\pi:T\to\mathsf S$ (for
+$\mathsf S\in\mathbf{LI}$: $S'=\mathsf S$, $A=\{1\}$).  Lifting each $s(a)$ to
+$(\sigma_a,g_a)\in T$ defines a morphism $\rho=(\sigma,g):\Sigma^+\to T$ with
+$\pi\rho=s$; put $g(\eps)=1_A$.  The subsemigroup $S_0:=\sigma(\Sigma^+)\le S'$ is
+locally trivial; let $n:=|S_0|$.  Two facts:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item $S_0^n\subseteq S_0E(S_0)S_0$.  Let $t_i$ be the prefix products of
+$s_1\cdots s_n$.  If $t_i=t_j$ with $i<j$, then $t_i=t_iu=t_iu^\omega$ for
+$u=s_{i+1}\cdots s_j$, so the product is $t_iu^\omega y$ with $y\in S_0^1$;
+otherwise the $t_i$ exhaust $S_0$, one of them is an idempotent $e$, and the
+product is $ey$.  In both cases it is $xey$ with $x,y\in S_0^1$, and
+$xey=(xe)e(ey)$.
+\item $euf=ef$ for $e,f\in E(S_0)$ and $u\in S_0^1$: $euf=eu(fef)=(e(uf)e)f=ef$.
+\end{enumerate}
+For $|w|\ge2n$ write $w=pxz$ with $|p|=|z|=n$.  By (a),
+$\sigma(p)=aeb$ and $\sigma(z)=cfd$ with $a,b,c,d\in S_0$ and $e,f$ idempotent, and
+by (b) $\sigma(w)=ae\,(b\,\sigma(x)c)\,fd=aefd$ (with $\sigma(\eps):=1$), which
+depends only on $p=\operatorname{pref}_n(w)$ and $z=\operatorname{suf}_n(w)$.
+Shorter words are recorded exactly by $\widehat s_{n,n}$, which also separates
+$\eps$.  Hence equal $(\widehat s_{n,n},g)$-values imply equal $\rho$-values and
+equal $s$-values; take $k=n$.
 \end{proof}
 
-\begin{corollary}[Algebraic sufficient conditions for polynomial data]
+\begin{corollary}[Algebraic sufficient condition for polynomial data]
 \label{cor:mcfg-li-group-polydata}
-Fix a nonempty finite $\Sigma$, a fan-out cap $f\ge1$,
-a rule-rank cap $r_{\max}\ge1$, and a finite-semigroup typing
-$s:\Sigma^+\to\mathsf S$; write $\widehat{s}$ for its canonical completion.
-Let $G$ be any reduced good fan-out-$\le f$,
-rank-$\le r_{\max}$ presentation of a target in $\Cmcf{f}{s}$,
-and put $\bar\theta_G=\max\{1,\theta_G\}$.
-The capped reconstruction operator has a characteristic sample
-of cardinality $O_{f,r_{\max},s}(\|G\|)$ with:
-\[
-\|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)
-\qquad\text{if }\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}.
-\]
-The locally trivial case $\mathbf{LI}$ is included, with a trivial
-group factor.
+If $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$, then for every $L\in\Cmcf{f}{s}$ and
+every $G$ as above with $L(G)=L\cap\Sigma^+$, $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$
+is a characteristic sample for $\mathcal B^{\le r_{\max}}_{f,s}$ of cardinality
+$O(\|G\|)$ and total length $O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$.
 \end{corollary}
+
 \begin{proof}
-Combine Lemma~\ref{lem:mcfg-li-group-window} with
-Theorem~\ref{thm:boundary-polydata} or
-Theorem~\ref{thm:window-group-polydata}; the refining parameters depend only
-on $s$ and $\Sigma$, not on $G$.
+Lemma~\ref{lem:mcfg-li-group-window} and
+Theorem~\ref{thm:window-group-polydata}; $k$, $A$ and $g$ depend only on $s$.
 \end{proof}
 
-The local-group characterization and the detailed shortening argument appear in
-Appendix~\ref{app:local-group}.
-A finite semigroup belongs to $\mathbf{LG}$ (the \emph{local groups}) if
-$eSe$ is a group for every idempotent $e\in S$.  This condition concerns
-the \emph{positive image}, never the fresh-identity completion.
+A finite semigroup is a \emph{local group}, $S\in\mathbf{LG}$, if $eSe$ is a
+group for every idempotent $e\in S$.  This is always tested on the positive image
+$\mathsf S$, never on $\mathsf S^\sharp$.  By
+Proposition~\ref{prop:li-g-strict}, $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$.
 
 \begin{definition}[Local-group typing]
 \label{def:local-group-typing}
-Fix $k\ge1$ and a finite group $A$. Let $\nu:\Sigma^{k+1}\to A$ be any map, the \emph{sliding-factor labelling}.  For $|w|\ge2k$ put
-\[
- \gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots \nu(F_{|w|-k}),
- \qquad \sigma_k(w)=(F_1,\ldots,F_{|w|-k}),
-\]
-the ordered product in $A$, and put $\gamma_{k,\nu}(w):=1_A$ for
-$|w|<2k$.  The \emph{local-group typing} is
-\(\lambda_{k,\nu}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,\nu}(w)\bigr)\).
-A finite typing $\widehat{s}$ is \emph{local-group-determined} if
-$\widehat{s}\preceq\lambda_{k,\nu}$ for some $k$, $A$ and $\nu$.
+Fix $k\ge1$, a finite group $A$ and a map $\nu:\Sigma^{k+1}\to A$ (the
+\emph{sliding-factor labelling}).  For $|w|\ge2k$ let
+$\sigma_k(w)=(F_1,\ldots,F_{|w|-k})$ be the factors of length $k+1$ of $w$ in
+order of their starting positions, and put
+$\gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k})$ (ordered product in
+$A$); put $\gamma_{k,\nu}(w):=1_A$ for $|w|<2k$.  The \emph{local-group typing}
+is $\lambda_{k,\nu}(w):=\bigl(\widehat s_{k,k}(w),\gamma_{k,\nu}(w)\bigr)$; by
+Lemma~\ref{lem:local-group-morphism} it is a morphism onto a finite monoid
+$M_{k,\nu}$.  The typing $s$ is \emph{local-group-determined} if
+$\widehat s\preceq\lambda_{k,\nu}$ for some $k$, $A$ and $\nu$.
 \end{definition}
 
 \begin{theorem}[Polynomial characteristic data for local-group typing]
 \label{thm:local-group-polydata}
-Fix $f,r_{\max},\Sigma$ and a finite-semigroup typing
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ with $\mathsf S\in\mathbf{LG}$;
-write $\widehat{s}$ for its canonical fresh-identity completion. For every $L\in\Cmcf{f}{s}$
-and reduced good fan-out-$\le f$, rank-$\le r_{\max}$ grammar $G$
-with $L(G)=L\cap\Sigma^+$, the capped operator
-$\mathcal B^{\le r_{\max}}_{f,s}$ has a characteristic sample with
+Let $\mathsf S\in\mathbf{LG}$, $L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$.  Then
+$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for
+$\mathcal B^{\le r_{\max}}_{f,s}$ with
 \[
  |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},s,\Sigma}(\|G\|^3\bar\theta_G).
+ \|\Wit(\widetilde G_0)\|_+=O_{f,r_{\max},s,\Sigma}(\|G\|^3\bar\theta_G).
 \]
 \end{theorem}
 
 \begin{proof}
-By the classical finite local-group representation, implemented in
-Theorem~\ref{thm:lg-characterization} of Appendix~\ref{app:local-group},
-there are fixed $k$, a finite group $A$ and a sliding-factor labelling $\nu$
-such that $\widehat{s}\preceq\lambda_{k,\nu}$.
-Lemma~\ref{lem:local-group-shortest} constructs, for each realizable
-$\lambda_{k,\nu}$-tuple type, a representative of length
-$O(\|G\|^2\bar\theta_G)$: first replace heavy subtrees by short
-window-compatible tuples, then select a nonempty simultaneous family
-whose ordered group products remain unchanged
-(Lemmas~\ref{lem:local-group-blocks} and~\ref{lem:block-replacement}).
-Type-preserving replacement (Lemma~\ref{lem:type-preserving-replacement})
-transfers these representatives to the typed refinement, which has
-$O(\|G\|)$ relevant rules.  The witness-length template
-(Lemma~\ref{lem:witness-length-template}) gives the cubic total-length
-bound.  The coordinate construction and all intermediate constants are
-proved in Appendix~\ref{app:local-group}.
+By Theorem~\ref{thm:lg-characterization}, $\widehat s\preceq\lambda:=\lambda_{k,\nu}$
+for $k=|\mathsf S|$ and some $A,\nu$ depending only on $s$.
+Lemma~\ref{lem:local-group-shortest} gives $(\mathrm R_\beta^\lambda)$ with
+$\beta=\beta_\lambda=O(\|G\|^2\bar\theta_G)$: heavy subtrees are first exchanged
+for short tuples with the same window vector
+(Corollary~\ref{lem:boundary-short-canonical}), and then a nonempty family is
+selected whose ordered sliding-factor products remain unchanged
+(Lemma~\ref{lem:local-group-blocks} and
+Proposition~\ref{prop:block-replacement-interface}).
+Lemma~\ref{lem:witness-length-template} gives
+$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}\beta_\lambda)=O(\|G\|^3\bar\theta_G)$.
 \end{proof}
 
-The strict inclusion $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$
-is proved in Proposition~\ref{prop:li-g-strict}. The Rees/sliding-factor
-coordinates are classical; their combination with owner-wise MCFG block
-shortening is the quantitative step here. Window--group typings retain the
-sharper quadratic bound of Theorem~\ref{thm:window-group-polydata}.
+The Rees and sliding-factor coordinates are classical; their combination with
+owner-wise block shortening is the quantitative step.  For window and
+window--group typings the quadratic bounds of
+Theorems~\ref{thm:boundary-polydata} and~\ref{thm:window-group-polydata} are
+sharper.
 
 \paragraph{The algebraic boundary for full refinement thickness.}
-For a surjective typing $s$ and reduced good $G$, set
-$\theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}$,
-where $\widetilde G_0$ is the trimmed full yield-type refinement.
-For a fixed $f\ge1$, say a pseudovariety $\mathbf V$ has
-\emph{polynomial refinement thickness at fan-out $f$} if, for every
-nonempty finite alphabet $\Sigma$, every rank cap $r_{\max}\ge1$,
-and every surjective $s:\Sigma^+\twoheadrightarrow\mathsf S$ with
-$\mathsf S\in\mathbf V$, a polynomial $q=q_{f,r_{\max},s,\Sigma}$
-exists such that every reduced good fan-out-$\le f$,
-rank-$\le r_{\max}$ grammar $G$ over $\Sigma$ satisfies
-\[
- \theta_{\mathrm{typ}}(G,s)\le q(\|G\|,\bar\theta_G).
-\]
-The polynomial may depend on the fixed typing, but not on $G$ or its
-language. Its degree in the following result is uniform for fixed
-$f,r_{\max}$.
+Put $\theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}$.  For $f\ge1$, a
+pseudovariety $\mathbf V$ has \emph{polynomial refinement thickness at fan-out
+$f$} if for every nonempty finite $\Sigma$, every $r_{\max}\ge1$ and every
+surjective $s:\Sigma^+\twoheadrightarrow\mathsf S$ with $\mathsf S\in\mathbf V$ there
+is a polynomial $q=q_{f,r_{\max},s,\Sigma}$ such that every reduced good
+fan-out-$\le f$, rank-$\le r_{\max}$ grammar $G$ over $\Sigma$ satisfies
+$\theta_{\mathrm{typ}}(G,s)\le q(\|G\|,\bar\theta_G)$.
 
 \begin{corollary}[Refinement-thickness dichotomy]
 \label{cor:refinement-dichotomy}
-For every $f\ge1$ and every pseudovariety $\mathbf V$ of finite
-semigroups, polynomial refinement thickness at fan-out $f$ holds if and
-only if $\mathbf V\subseteq\mathbf{LG}$. For $\mathbf V\subseteq\mathbf{LG}$,
-one may take
-\[
- \theta_{\mathrm{typ}}(G,s)
- =O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G).
-\]
-The equivalence also holds when the defining property is restricted
-to grammars $G$ presenting $L\cap\Sigma^+$ for some
-$L\in\Cmcf{f}{s}$. In fact, for each individual surjective typing
-whose positive image is not a local group, the polynomial bound already
-fails at fan-out one and rule rank two.
+For every $f\ge1$ and every pseudovariety $\mathbf V$ of finite semigroups,
+$\mathbf V$ has polynomial refinement thickness at fan-out $f$ if and only if
+$\mathbf V\subseteq\mathbf{LG}$; for $\mathbf V\subseteq\mathbf{LG}$ one may take
+$\theta_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$.  The
+equivalence persists if $G$ ranges only over presentations of $L\cap\Sigma^+$
+with $L\in\Cmcf{f}{s}$.  For each single typing with $\mathsf S\notin\mathbf{LG}$
+the polynomial bound already fails at fan-out one and rule rank two.
 \end{corollary}
 
 \begin{proof}
-Suppose first that $\mathsf S\in\mathbf{LG}$. Theorem~\ref{thm:lg-characterization}
-gives a fixed sliding-factor morphism $\lambda=\lambda_{k,\nu}$
-with $\widehat s\preceq\lambda$. Let $X=B_{\mathbf t}$ be any retained
-non-start typed nonterminal. By productivity, some
-$\tuple u\in L_X$ realizes $\mathbf t$. Its $\lambda$-vector is
-realizable at $B$, so Lemma~\ref{lem:local-group-shortest} supplies
-$\tuple u'\in L_B(G)$ with the same $\lambda$-vector and
-$\|\tuple u'\|_1\le\beta_\lambda=O(\|G\|^2\bar\theta_G)$.
-Since $\widehat s\preceq\lambda$, its $\widehat s$-vector is also
-$\mathbf t$. The unique-lifting property
-(Proposition~\ref{prop:output-invariants}(ii)) therefore gives
-$\tuple u'\in L_X$. This applies to every retained non-start typed
-nonterminal, including those with the original start symbol on the
-left-hand side.
+If $\mathsf S\in\mathbf{LG}$, the proof of Theorem~\ref{thm:local-group-polydata}
+gives $(\mathrm R_\beta^\lambda)$ with $\beta_\lambda=O(\|G\|^2\bar\theta_G)$, and
+Lemma~\ref{lem:witness-length-template}(i),(iii), which do not use
+substitutability, give
+$\theta_{\widetilde G_0}\le2\bar\theta_G+r_{\max}\beta_\lambda$.
 
-Now take any retained non-start typed rule
-$\widetilde R:X\to\rho(Y_1,\ldots,Y_q)$ with source rule
-$R:B\to\rho(C_1,\ldots,C_q)$. Choose the preceding short terminal
-derivations for its children $Y_i$ and apply $\widetilde R$ to obtain
-a derivation $D$ from $X$ with root yield $\tuple z$ satisfying
-\[
- \|\tuple z\|_1\le\bar\theta_G+r_{\max}\beta_\lambda
-\]
-by Lemma~\ref{lem:thickness-equivalence}(i).
-If $\widetilde S\to X$ is a retained start link, this immediately
-gives a successful derivation using $\widetilde R$.
-Otherwise choose the context $E_B$ of
-Lemma~\ref{lem:thickness-equivalence}(iv), obtained by deleting a
-$B$-subtree from a successful original derivation, with
-$|E_B|_{\mathrm{fix}}\le\bar\theta_G$. Filling this hole with the
-erasure of $D$ gives a successful derivation in $G$.
-Its unique yield-typed lift restricts to precisely $D$ at the
-inserted occurrence, because the typed labels and rules are
-determined by the terminal yields of their subtrees
-(Proposition~\ref{prop:output-invariants}(ii)). Thus the successful
-typed derivation uses $\widetilde R$ and has length at most
-$2\bar\theta_G+r_{\max}\beta_\lambda$.
-Every retained start-link rule similarly has a successful derivation
-of length at most $\beta_\lambda$. Therefore every rule of
-$\widetilde G_0$ has rule thickness
-$O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$.
-No tuple-substitutability hypothesis entered this argument.
-
-Conversely, the obstruction is stronger than required for the
-pseudovariety assertion: it occurs for \emph{each fixed surjective}
-typing $s:\Sigma^+\twoheadrightarrow\mathsf S$ with
-$\mathsf S\notin\mathbf{LG}$. By the classical $U_1$-exclusion
-criterion (Theorem~\ref{thm:lg-characterization}(i)--(ii)), there are
-distinct idempotents $e,z\in\mathsf S$ with
-$e^2=e$, $ez=ze=z$, and $z^2=z$. Choose fixed nonempty words
-$u,v\in\Sigma^+$ with $s(u)=e$ and $s(v)=z$; these exist by
-surjectivity. For each $n\ge1$ consider the fan-out-one, rank-two
-presentation
-\[
- S\to SS\mid a\ (a\in\Sigma)\mid A_0\mid\cdots\mid A_n,
- \qquad A_0\to u,\qquad
- A_i\to A_{i-1}A_{i-1}\mid v\quad(1\le i\le n).
-\]
-Here $u$ and $v$ are fixed terminal strings in the respective
-constant templates, not extra alphabet symbols. The grammar is
-reduced and good, has $\|G_n\|=O_s(n)$, generates $\Sigma^+$, and
-has $\bar\theta_{G_n}=O_s(1)$: every rule has a successful use in
-which each $A_i$ is completed by $v$ (or $u$ for $A_0$), and a
-binary rule needs only two such bounded completions.
-On the other hand, $s(w)=e$ for a yield $w\in L_{A_n}(G_n)$
-requires every leaf at which a constant rule is applied to use $u$,
-because any occurrence of $v$ changes the value of the total product
-to the absorbing element $z$ in $\{e,z\}$. Consequently the sole
-yield of $(A_n)_{(e)}$ is $u^{2^n}$, and the retained typed rule
-$S_{(e)}\to(A_n)_{(e)}$ can occur in a successful typed derivation
-only at sentence length at least $|u|2^n$. Hence
-$\theta_{\mathrm{typ}}(G_n,s)\ge |u|2^n$, contradicting every
-polynomial bound already at rank cap two. Since $\Sigma^+$ belongs
-to $\Cmcf{f}{s}$ for every $f\ge1$, the same construction proves
-the version restricted to target presentations. Finally, if
-$\mathbf V\not\subseteq\mathbf{LG}$, choose any
-$\mathsf S\in\mathbf V\setminus\mathbf{LG}$ and apply this
-pointwise counterexample. The fixed-
-$U_1$ instance of Proposition~\ref{prop:typed-thickness-exponential}
-is the case of one-letter choices $u,v$.
+If $\mathsf S\notin\mathbf{LG}$, Theorem~\ref{thm:lg-characterization}(ii) gives a
+subsemigroup $\{e,z\}\cong U_1$: idempotents $e\ne z$ with $ez=ze=z$.  By
+surjectivity choose $u,v\in\Sigma^+$ with $s(u)=e$, $s(v)=z$.
+Proposition~\ref{prop:typed-thickness-exponential}(a) gives fan-out-one, rank-two
+grammars $G_n$ with $\|G_n\|=O(n)$, $\bar\theta_{G_n}=O(1)$ and
+$\theta_{\mathrm{typ}}(G_n,s)\ge2^n$; they present
+$\Sigma^+=\widehat s^{-1}(\mathsf S)\in\Cmcf{f}{s}$.  Finally, if
+$\mathbf V\not\subseteq\mathbf{LG}$, pick $\mathsf S\in\mathbf V\setminus\mathbf{LG}$;
+it is the positive image of the evaluation typing $\mathsf S^+\to\mathsf S$ over the
+alphabet $\Sigma:=\mathsf S$.
 \end{proof}
 
 \begin{remark}[Refinement thickness is not a data lower bound]
 \label{rem:refinement-vs-data}
-The corollary concerns the thickness of a particular full yield-type
-refinement, not the minimal encoded length of characteristic positive
-data and not a lower bound for arbitrary Gold learners. The negative
-direction uses rank two; it does not assert failure in the rank-one
-fragment, where typed derivations have bounded-length acyclic chains.
-Polynomial refinement thickness gives a polynomial upper bound on data through
-Lemma~\ref{lem:typed-thickness-baseline}, but the converse does not
-follow: short distributional representatives may exist even when
-full refinement is exponentially thick
-(Proposition~\ref{prop:mcfg-relaxed-witnesses}). At fan-out two and above,
-$\mathbf{LG}$ remains a sufficient regime for short data, while its
-necessity for characteristic-data length is open
-(Open Problem~\ref{op:fanout-two}).
+The corollary concerns one particular refinement, not the minimal encoded length
+of characteristic data and not arbitrary learners; its negative direction uses
+rank two.  Polynomial refinement thickness yields polynomial data
+(Lemma~\ref{lem:typed-thickness-baseline}), but not conversely: short
+distributional representatives may exist although the refinement is
+exponentially thick (Proposition~\ref{prop:mcfg-relaxed-witnesses}).  Whether
+$\mathbf{LG}$ is necessary for polynomial characteristic data at fan-out
+$\ge2$ is open (Open Problem~\ref{op:fanout-two}).
 \end{remark}
 
 \subsection{Unrestricted Standard Input MCFGs}
 \label{subsec:unrestricted-source}
 
-The preceding bounds use a reduced good presentation to make the
-quantitative witness argument transparent.  Goodness, nondeletion,
-nonpermutation, nonmerging, and nonemptiness of tuple components need
-\emph{not} be imposed on the grammar supplied for the target language.
-What matters when empty components are permitted is the cost of realizing
-each nonempty-component pattern; this is the second primary scale in
-Table~\ref{tab:thickness-scales}, not a renaming of the source's rule
-thickness.
+The input grammar need not be good: deleting, permuting and merging rules and
+empty components are all allowed.  What then matters is the cost of realizing
+each nonempty-component pattern.
 
 \begin{definition}[Component-pattern thickness]
 \label{def:component-pattern-thickness}
-For a productive nonterminal $A$ of a standard MCFG $H$, let
+For a productive nonterminal $A$ of a standard MCFG $H$ let
 $\operatorname{supp}(\tuple u):=\{i:u_i\ne\eps\}$ and
-$\mathsf{Pat}_H(A):=\{\operatorname{supp}(\tuple u):
-\tuple u\in L_A(H)\}$.  Put
+$\mathsf{Pat}_H(A):=\{\operatorname{supp}(\tuple u):\tuple u\in L_A(H)\}$.  Put
 \[
  t_{\mathrm{pat}}(H):=
  \max_{\substack{A\text{ productive}\\I\in\mathsf{Pat}_H(A)}}
- \min_{\substack{\tuple u\in L_A(H)\\
-                  \operatorname{supp}(\tuple u)=I}}
+ \min_{\substack{\tuple u\in L_A(H)\\ \operatorname{supp}(\tuple u)=I}}
  \|\tuple u\|_1 ,
  \qquad
  \bar t_{\mathrm{pat}}(H):=\max\{1,t_{\mathrm{pat}}(H)\},
 \]
-with the maximum over an empty set taken as zero.
-In particular, the all-empty pattern costs zero.
+with $\max\emptyset:=0$.  If $H$ is reduced and $\lambda$-free, only the full
+pattern occurs and $t_{\mathrm{pat}}(H)=t_H$.
 \end{definition}
 
 \begin{proposition}[Good normalization controlled by pattern thickness]
 \label{prop:pattern-thickness-transfer}
-Fix $f,r\ge1$.  Let $H$ be any standard fan-out-$\le f$,
-rank-$\le r$ MCFG with $L(H)\cap\Sigma^+\ne\emptyset$, and
-let $H_{\mathrm{red}}$ be its trimmed presentation.  There exists
-a reduced good MCFG $G$ for $L(H)\cap\Sigma^+$ with the same
-fan-out and rank bounds and
+Let $H$ be a standard fan-out-$\le f$, rank-$\le r$ MCFG with
+$L(H)\cap\Sigma^+\ne\emptyset$, and $H_{\mathrm{red}}$ its trimmed form.  There is a
+reduced good MCFG $G$ for $L(H)\cap\Sigma^+$ with the same fan-out and rank
+bounds and
 \[
  \|G\|=O_{f,r}(\|H\|),\qquad
  t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}}),\qquad
- \bar\theta_G=O_{f,r}\!\bigl(
-   \|H\|\bar t_{\mathrm{pat}}(H_{\mathrm{red}})\bigr).
+ \bar\theta_G=O_{f,r}\bigl(\|H\|\,\bar t_{\mathrm{pat}}(H_{\mathrm{red}})\bigr).
 \]
 \end{proposition}
+
 \begin{proof}
-Use Proposition~\ref{prop:good-normalization} and the
-stagewise tuple-language identities of
-Lemma~\ref{lem:normalization-stages}.  Every retained nonterminal
-language is an image of a union of original support-pattern fibres
-under component deletion, permutation and concatenation.  These
-maps do not increase total yield length, so a shortest representative
-of one contributing original pattern bounds each retained
-nonterminal's shortest yield by
-$t_{\mathrm{pat}}(H_{\mathrm{red}})$.
-Lemma~\ref{lem:thickness-equivalence}(iii) then gives the
-thickness estimate.  The precise fibre-transfer argument is in
-Appendix~\ref{app:pattern-thickness}.
+Take $G$ from Proposition~\ref{prop:good-normalization}.  By
+Lemma~\ref{lem:normalization-stages}, each nonterminal language of $G$ is an
+image of a union of support-pattern fibres of $H_{\mathrm{red}}$ under component
+deletion, permutation and concatenation, which do not increase total length;
+so $t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}})$
+(Appendix~\ref{app:pattern-thickness}).
+Lemma~\ref{lem:thickness-equivalence}(iii) gives the bound on $\bar\theta_G$.
 \end{proof}
 
 \begin{corollary}[Total characteristic-data length from any standard MCFG]
 \label{cor:unrestricted-standard-mcfg-data}
-Fix $f,r\ge1$, a finite alphabet $\Sigma$, and a fixed finite
-typing $s$.  Let $H$ be \emph{any} finite standard
-fan-out-$\le f$, rank-$\le r$ MCFG (deleting rules, permutations,
-merging and empty components permitted) for
-$L\in\Cmcf{f}{s}$.  Put
-$n:=\max\{1,\|H\|\}$ and
-$t:=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$.
-The capped reconstruction operator admits a characteristic
-sample $K\subseteq L$ of cardinality $O_{f,r,s}(n)$ with
+Let $H$ be any finite standard fan-out-$\le f$, rank-$\le r$ MCFG for
+$L\in\Cmcf{f}{s}$; put $n:=\max\{1,\|H\|\}$ and
+$t:=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$.  The operator
+$\mathcal B^{\le r}_{f,s}$ has a characteristic sample $K\subseteq L$ with
+$|K|=O(n)$ and
 \[
  \|K\|_+=
  \begin{cases}
- O(n^3t),&\text{if $s\preceq s_{k,\ell}$ or
- $\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$
- for a fixed finite-group morphism $g$,}\\
- O(n^4t),&\text{if $\mathsf S\in\mathbf{LG}$.}
+ O(n^3t),&\text{if }\widehat s\preceq(\widehat s_{k,\ell},g)\text{ for some }k,\ell
+ \text{ and finite-group morphism }g\text{ (possibly trivial)},\\
+ O(n^4t),&\text{if }\mathsf S\in\mathbf{LG},
  \end{cases}
 \]
-The hidden constants depend on the fixed alphabet, typing,
-rank, fan-out, and (where applicable) window and group,
-not on $H$; an optional datum $\eps$ costs one.
+with constants depending on $f,r,s,\Sigma$ (and $k,\ell,g$), not on $H$.
 \end{corollary}
-\begin{proof}
-For a nonempty positive core apply
-Proposition~\ref{prop:pattern-thickness-transfer} and then
-Theorem~\ref{thm:boundary-polydata},
-\ref{thm:window-group-polydata}, or
-\ref{thm:local-group-polydata}, respectively.
-The size is $O(n)$ and the new thickness is $O(nt)$.
-If $L\subseteq\{\eps\}$, use $K=L$.
-\end{proof}
 
+\begin{proof}
+If $L\subseteq\{\eps\}$ take $K=L$.  Otherwise
+Proposition~\ref{prop:pattern-thickness-transfer} gives $G$ with $\|G\|=O(n)$ and
+$\bar\theta_G=O(nt)$; apply Theorem~\ref{thm:window-group-polydata} or
+Theorem~\ref{thm:local-group-polydata}.
+\end{proof}
 
 \section{Further Quantitative Results}
 \label{sec:further}
@@ -3300,7 +2919,7 @@ evaluate empty template factors; by Lemma~\ref{lem:semigroup-transfer} this
 changes neither nonempty tuple comparisons nor the selected witnesses.
 
 We now prove the purely group-theoretic statement used in
-Theorem~\ref{thm:group-typed-shortest} and Lemma~\ref{lem:local-group-shortest}.
+Lemma~\ref{lem:marked-heavy-window-group} and Lemma~\ref{lem:local-group-shortest}.
 The commutative case is a zero-sum argument; the general case needs an
 order-homogenization argument because, for $f\ge2$, blocks of different
 indices can interleave differently on different lines.  The proof has
@@ -3381,7 +3000,24 @@ realizes such a configuration.
 \subsection{Arbitrary Finite Groups: Order Homogenization}
 \label{app:window-group}
 
-\paragraph{Proof of Lemma~\ref{lem:group-block-order}.}
+\begin{lemma}[A homogeneous block-order lemma]
+\label{lem:group-block-order}
+Fix positive integers $e,n$ with $n\ge3$.  For each
+$t\in[e]$ and $i\in[n]$, let $(t,i)$ be a distinct point
+on a line, with a total left-to-right order.  Suppose that
+(i) the order of $(t,i)$ and $(u,i)$ is independent of $i$;
+and (ii) for each ordered pair $(t,u)$, including $t=u$,
+the order of $(t,i)$ and $(u,j)$ for $i<j$ is independent
+of the choice of $i<j$.
+Then the types at the points have a partition into classes,
+each occupying a consecutive region of the line.  Every
+class has one direction (increasing or decreasing in $i$);
+inside its region the points occur in $n$ successive
+\emph{chunks}, one per rank in that direction.  Each
+chunk consists of exactly one point of each type in the
+class (in a fixed within-chunk order).
+\end{lemma}
+
 \begin{proof}
 By (ii) with $t=u$, each type's points are monotone.  For distinct types
 $t,u$ write $X$ for $(t,i)<(u,j)$ and $Y$ for $(u,i)<(t,j)$, $i<j$; both are
@@ -3410,7 +3046,17 @@ comparisons give successive chunks, and the within-chunk order is independent
 of rank by (i).
 \end{proof}
 
-\paragraph{Proof of Lemma~\ref{lem:group-interval}.}
+\begin{lemma}[Simultaneous finite-group interval shortening]
+\label{lem:group-interval}
+Let $A$ be any finite group, and consider a block-replacement family of width
+$f$ over $A$ with $n\ge\max\{3,|A|^f\}$ indices in which all indices have the
+same number of blocks, the same lines for them and the same within-index
+order, and in which every cross-index comparison between the $t$-th block of
+index $i$ and the $u$-th block of index $j$ on a common line has the same
+truth value for all $i<j$.  Then a nonempty interval $J$ of indices satisfies
+$\mathrm{val}_c(J)=\mathrm{val}_c(\emptyset)$ for every line $c$.
+\end{lemma}
+
 \begin{proof}
 Apply Lemma~\ref{lem:group-block-order} on each line to the block types going
 to that line.  Across all lines there are $q\le f$ class regions.  For such a
@@ -3847,9 +3493,8 @@ $h_{\mathtt{ab}}$ window--group-determined.
 \label{lem:local-group-shortest}
 Let $G=(V,\Sigma,P,S,\fan)$ be a reduced good MCFG of fan-out at most
 $f$ and rule rank at most $r_{\max}\ge1$, and let $\lambda=\lambda_{k,\nu}$.
-Let $b_{\mathrm w}:=f(2k+1)n_{\mathrm w}(r_{\max}+1)\bar\theta_G$, where
-$n_{\mathrm w}\le|V||M_{k,k}|^f$ is the number of non-start typed
-nonterminals of the trimmed $\widehat{s}_{k,k}$-refinement.  Put
+Let $b_{\mathrm w}:=b_{k,k}=(r_{\max}+1)\bar\theta_G\,f(2k+1)\,|V||M_{k,k}|^f$ be the
+window constant of Corollary~\ref{lem:boundary-short-canonical}.  Put
 $n_\lambda:=|V||M_{k,\nu}|^f$, and let $M_{A,f}$ be the constant of
 Section~\ref{subsec:group-invariants}.  For every $B\in V$ and every
 realizable $\mathbf t\in M_{k,\nu}^{\fan(B)}$ there is $\tuple u\in L_B(G)$
@@ -3864,13 +3509,10 @@ If $A$ is abelian, $M_{A,f}-1$ may be replaced by $\mathsf d(A^f)$.
 \begin{proof}
 Let $T$ be minimal as in Lemma~\ref{lem:heavy-node-count} with root
 $\lambda$-vector $\mathbf t$ and threshold $b=b_{\mathrm w}\ge\bar\theta_G$.
-For a heavy node $v$ labelled $C$, with yield $\tuple x$ and window vector
-$\boldsymbol\omega=\widehat{s}_{k,k}(\tuple x)$, the typed nonterminal
-$C_{\boldsymbol\omega}$ is retained in the trimmed $\widehat{s}_{k,k}$-refinement,
-because $T$ can be inserted into a successful derivation ($G$ is reduced).
-Lemma~\ref{lem:boundary-short-canonical} (trivial $\kappa$) gives a
-replacement tuple of $C$ with the same window vector and length at most
-$b_{\mathrm w}$.  For pairwise incomparable heavy nodes $v_1,\ldots,v_m$ and
+For a heavy node $v$ labelled $C$ with yield $\tuple x$,
+Corollary~\ref{lem:boundary-short-canonical} gives a replacement tuple
+$\tuple x'\in L_C(G)$ with the same $\widehat{s}_{k,k}$-vector and
+$\|\tuple x'\|_1\le b_{\mathrm w}$.  For pairwise incomparable heavy nodes $v_1,\ldots,v_m$ and
 $J\subseteq[m]$, let $T_J$ replace the subtrees at $v_i$, $i\in J$.  The
 components of the $v_i$ are disjoint contiguous blocks of the root components.
 By Lemma~\ref{lem:local-group-blocks}, every $T_J$ has the root window vector of
