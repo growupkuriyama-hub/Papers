@@ -3127,6 +3127,64 @@ $g^{-1}(R)$へ置き換えても，同じ型付けの型繊維の和集合であ
 \end{proof}
 
 % BEGIN INLINE: algebraic_separations_JP.tex
+\begin{proposition}[共通素性型付けに対する明示的なデータ予算]
+\label{prop:feature-family-witness-budget}
+系~\ref{cor:feature-relation-family}の固定型付け$s$を用いる．任意の非空$R\subseteq\{0,1\}^2$と$f\ge2$について，上限付き作用素$\mathcal B_{f,s}^{\le2}$には
+\[
+ \|K_R\|_+=36|R|+22
+\]
+を満たす特徴標本$K_R\subseteq L_R$が存在する．$R=\varnothing$なら空標本が空言語の特徴標本となる．逆に，同じ族の\emph{全ての}$L_R$について特徴標本を持つ任意の集合駆動型作用素$\mathcal D$を取ると，$L_R$の任意の特徴標本$K$は
+\[
+ \|K\|_+\ge7|R|
+\]
+を満たす．この下界は族全体を同じ作用素で学習することに対するものであり，既知の一つの$R$に特化して設計された学習器の下界ではない．
+\end{proposition}
+\begin{proof}
+$R\ne\varnothing$として$(i_0,j_0)\in R$を一つ固定する．$(i,j)\in R$，$m,n\ge1$について
+\[
+ w_{ij}^{m,n}=\mathtt a^m\mathtt p_i\mathtt b^n
+                   \mathtt c^m\mathtt q_j\mathtt d^n
+\]
+とおき，
+\[
+ K_R=\{w_{ij}^{m,n}:(i,j)\in R,\ m,n\in\{1,2\}\}
+       \cup\{w_{i_0j_0}^{3,1},w_{i_0j_0}^{1,3}\}
+\]
+とする．これらは相異なる$L_R$の語で，$(m,n)=(1,1),(2,1),(1,2),(2,2)$の符号化費用は順に$7,9,9,11$，追加の2語はそれぞれ$11$である．従って$\|K_R\|_+=36|R|+22$となる．
+
+命題~\ref{prop:feature-cross-typed}の良形ファンアウト2・ランク2文法で，開始規則をちょうど$R$に属する組に制限する．刈り込んだ$\widehat s$型細分化では，$s_{1,1}$が長さ1の成分と長さ2以上の成分を区別するため，$A,B$はそれぞれ\emph{二つ}の生成語型を持つ．$(\mathtt a,\mathtt c)$と$(\mathtt a^2,\mathtt c^2)$の型を$A_1,A_+$，$(\mathtt b,\mathtt d)$と$(\mathtt b^2,\mathtt d^2)$の型を$B_1,B_+$と書く．これで生産的な子の型は尽くされる．$(i,j)\in R$に対して一つの型付き開始非終端$S_{ij}$があり，その型は素性対を区別するが$m,n$に依存しない．
+
+正準タプルを
+\[
+ \begin{gathered}
+ \omega(A_1)=(\mathtt a,\mathtt c),\quad
+ \omega(A_+)=(\mathtt a^2,\mathtt c^2),\\
+ \omega(B_1)=(\mathtt b,\mathtt d),\quad
+ \omega(B_+)=(\mathtt b^2,\mathtt d^2),\quad
+ \omega(S_{ij})=(w_{ij}^{1,1})
+ \end{gathered}
+\]
+と選ぶ．$S_{ij}$には恒等文脈を与える．$A,B$の両型について，他方の子を一文字の基底型に固定し，素性対$(i_0,j_0)$を持つ導出的文脈
+\[
+ \begin{aligned}
+ \chi(A_\bullet)[(x,y)]&=x\mathtt p_{i_0}\mathtt b\,y
+                           \mathtt q_{j_0}\mathtt d,\\
+ \chi(B_\bullet)[(x,y)]&=\mathtt a\mathtt p_{i_0}x\mathtt c
+                           \mathtt q_{j_0}y\quad(\bullet\in\{1,+\})
+ \end{aligned}
+\]
+を用いる．$A_1,B_1$の代表とランク0規則は$w_{i_0j_0}^{1,1}$，長い型$A_+,B_+$の代表は$w_{i_0j_0}^{2,1}$と$w_{i_0j_0}^{1,2}$が証拠となる．長さ1の型から長い型への再帰規則は後二者で，長い型から同じ長い型への再帰規則は$w_{i_0j_0}^{3,1}$と$w_{i_0j_0}^{1,3}$で証拠づけられる．各$(i,j)\in R$の四つの開始規則（子の型は$\{A_1,A_+\}\times\{B_1,B_+\}$）には，$w_{ij}^{1,1},w_{ij}^{2,1},w_{ij}^{1,2},w_{ij}^{2,2}$を与える．これですべての型付き非終端と型付き規則が覆われるため，定義~\ref{def:witness-set}の証拠集合は$K_R$に含まれる．定理~\ref{thm:exact-reconstruction}から$K_R$は特徴標本である．$R=\varnothing$では開始規則がないので空標本が特徴的である．
+
+下界を示す．$(i,j)\in R$について，$L_R$の特徴標本$K$が$\mathtt p_i,\mathtt q_j$を含む語を一つも持たないなら，
+$K\subseteq L_{R\setminus\{(i,j)\}}$である．後者の特徴標本$F$を$\mathcal D$について取ると，有限集合$K\cup F$は両特徴標本の拡大であり，$L_R$と$L_{R\setminus\{(i,j)\}}$という異なる二言語を同時に再構成しなければならない．矛盾．よって各許可対ごとに少なくとも一語必要で，異なる対は異なる語を要する．各語は長さ6以上，符号化費用7以上だから$\|K\|_+\ge7|R|$となる．
+\end{proof}
+\begin{remark}[有限素性値の拡張]
+固定した任意の有限集合$I=\{0,\ldots,p-1\}$，$J=\{0,\ldots,q-1\}$にも同じ構成が適用できる．異なる一文字標識$\mathtt p_i,\mathtt q_j$を用意し，$g:\Sigma^*\to\mathbb Z_p\times\mathbb Z_q$でそれらを$(i,0)$，$(0,j)$に，他の四つのカウント文字を零元に送る．同じ先頭末尾文字の型と併せれば，一つの固定型付けで$R\subseteq I\times J$に対応する$2^{pq}$個の異なる標的を扱える．非空$R$に対する標本費用$36|R|+22$も維持される．ただし$p,q$が変わればアルファベット・群・型付けも変わるため，それらについて一様な定数という意味ではない．
+\end{remark}
+\begin{remark}[この例が示す範囲]
+これは特定の自然言語の忠実な文法モデルを主張しない．素性適合の有限な制約によって型なしの不適切な置換を排除しながら，二つの無限の交差依存は学習対象として残る．系~\ref{cor:feature-relation-family}と命題~\ref{prop:feature-family-witness-budget}は，標的ごとでなく\emph{クラス全体で}与える型付けの意味を正確にする．ただし非可換短縮や局所群短縮の必要性を示す例ではない．
+\end{remark}
+
 \subsection{窓・群決定的型付けの外にある標的}
 \label{subsec:necessity}
 前節の有限素性例は窓と可換群の積で扱えた．
