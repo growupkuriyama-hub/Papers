@@ -1106,6 +1106,7 @@ $H_0$ を学習モデルで固定した空言語仮説とする．
 
 \begin{corollary}[Gold/TxtEx 同定]
 \label{cor:gold-explanatory}
+\label{cor:capped-gold-poly}
 任意の有限半群型付け$s:\Sigma^+\to\mathsf S$と$f\ge1$に対し，
 保守的学習器$\mathcal A_{f,s}$は
 $\Cmcf{f}{s}$を正例データからTxtEx同定する．
@@ -1784,6 +1785,40 @@ $x_{c,j},x'_{c,j}\in A$ をもち，
 詳細な証明と定数評価は同付録に置く．
 \end{proof}
 
+\begin{lemma}[均質なブロック配置の構造]
+\label{lem:group-block-order}
+$e\ge1,n\ge3$ とする．各 $t\in[e]$ と
+$i\in[n]$ に対応する相異なる点 $(t,i)$ が
+一直線上に全順序で並んでいるとする．
+(i) 同じ添字 $i$ における $(t,i)$ と $(u,i)$ の順序は
+$i$ に依存しない．
+(ii) 任意の順序付き型対 $(t,u)$（$t=u$ も許す）について，
+$i<j$ のときの $(t,i)$ と $(u,j)$ の順序は
+$i<j$ の取り方に依存しない．
+このとき型の集合は，それぞれ連続した領域を占める
+いくつかのクラスに分割される．各クラスには
+添字に関する一つの向き（昇順または降順）があり，
+領域内はその向きに沿うランク別の連続した
+$n$ 個のチャンクに分かれる．
+各チャンクはクラス内の各型の点をちょうど一つずつ含み，
+同じチャンク内の型の順序はランクによらない．
+\end{lemma}
+
+\begin{lemma}[有限群における複数成分同時の区間短縮]
+\label{lem:group-interval}
+$A$ を任意の有限群とする．$n$ 個の添字が，
+高々 $f$ 個の順序付き出力成分へ，
+添字一つにつき高々 $f$ 個の重ならないブロックを
+寄与するとする．各ブロックには代替ブロックが固定され，
+添字を選択するとその添字のすべてのブロックを同時に置換する．
+その他の材料は変更しない．
+ブロックの出力先と同じ添字内の順序が一定であり，
+さらに $i<j$ の型対間の左右比較も添字対によらず一定とする．
+$n\ge\max\{3,|A|^f\}$ なら，非空の連続添字区間が存在し，
+その添字のブロックを同時置換しても，
+すべての出力成分の $A$-値を保存できる．
+\end{lemma}
+
 \begin{theorem}[任意有限群の成分別値を指定した短いタプル]
 \label{thm:group-typed-shortest}
 \label{lem:group-typed-shortest}
@@ -2149,6 +2184,22 @@ $\mathbf{LI}\vee\mathbf{Grp}$ の場合，
 この条件は，新単位元を追加したモノイドではなく
 型付けの\emph{正語像半群}に課す．
 
+以下で $\Sigma$ は非空，$k\ge1$，$A$ は有限群とする．長さ$k+1$の連続因子を左から並べる列を$\sigma_k(w)$と書く．
+
+\begin{definition}[局所群型付け]
+\label{def:local-group-typing}
+$\nu:\Sigma^{k+1}\to A$ を任意の写像とする．$|w|\ge2k$ に対し，
+\[
+ \gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k}),
+ \qquad \sigma_k(w)=(F_1,\ldots,F_{|w|-k})
+\]
+を $A$ における順序つき積とし，$|w|<2k$ に対しては $\gamma_{k,\nu}(w):=1_A$ とする．
+\emph{局所群型付け}を
+\(\lambda_{k,\nu}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,\nu}(w)\bigr)\)
+で定める．ある $k,A,\nu$ について $\widehat{s}\preceq\lambda_{k,\nu}$ となる有限型付け $\widehat{s}$ を
+\emph{局所群決定的}という．
+\end{definition}
+
 \begin{theorem}[局所群型付けに対する多項式特徴データ]
 \label{thm:local-group-polydata}
 $f,r_{\max},\Sigma$ と有限半群型付け
@@ -2230,21 +2281,7 @@ $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$ は真の包含である
 
 下界側は次の交わり補題によって正確に述べられる．
 
-\begin{lemma}[型フィルタは代入可能性を保つ]
-\label{lem:type-filter}
-$s:\Sigma^+\to\mathsf S$を有限半群型付け，
-$F\subseteq\mathsf S^\sharp$とする．
-$L$が$(f,s)$-タプル代入可能なら，
-$L\cap\widehat{s}^{-1}(F)$も$(f,s)$-タプル代入可能である．
-\end{lemma}
 
-\begin{proof}
-$\tuple x,\tuple y$ が等しい $\widehat{s}$-ベクトルをもち，
-$L':=L\cap \widehat{s}^{-1}(F)$ において文脈 $E$ を共有するとする．
-両者は $L$ でも $E$ を共有するので，$L$ における分布が等しい．
-$E'[\tuple x]\in L'$ なら $E'[\tuple y]\in L$ であり，
-$\widehat{s}(E'[\tuple y])=\widehat{s}(E'[\tuple x])\in F$ なので $E'[\tuple y]\in L'$ である．
-\end{proof}
 
 \paragraph{完全生成語型精密化厚さの代数的境界．}
 全射型付け$s$と縮約済み良形文法$G$に対し，刈り込んだ完全生成語型精密化$\widetilde G_0$の規則厚さを
@@ -3837,25 +3874,7 @@ $A=C_2$ では反鎖の上界は $2^f-1$ から $f$ に下がる．
 \paragraph{一般有限群の場合：順序均質化}
 \label{app:window-group}
 
-\begin{lemma}[均質なブロック配置の構造]
-\label{lem:group-block-order}
-$e\ge1,n\ge3$ とする．各 $t\in[e]$ と
-$i\in[n]$ に対応する相異なる点 $(t,i)$ が
-一直線上に全順序で並んでいるとする．
-(i) 同じ添字 $i$ における $(t,i)$ と $(u,i)$ の順序は
-$i$ に依存しない．
-(ii) 任意の順序付き型対 $(t,u)$（$t=u$ も許す）について，
-$i<j$ のときの $(t,i)$ と $(u,j)$ の順序は
-$i<j$ の取り方に依存しない．
-このとき型の集合は，それぞれ連続した領域を占める
-いくつかのクラスに分割される．各クラスには
-添字に関する一つの向き（昇順または降順）があり，
-領域内はその向きに沿うランク別の連続した
-$n$ 個のチャンクに分かれる．
-各チャンクはクラス内の各型の点をちょうど一つずつ含み，
-同じチャンク内の型の順序はランクによらない．
-\end{lemma}
-\begin{proof}
+\begin{proof}[補題~\ref{lem:group-block-order}の証明]
 (ii) で $t=u$ と置くと，各型の点列は単調である．
 相異なる型 $t,u$ に対し，$i<j$ のときの
 $(t,i)<(u,j)$ を $X$，$(u,i)<(t,j)$ を $Y$
@@ -3903,21 +3922,7 @@ $(t,1)<(u,2)<(v,3)<(t,1)$
 (i) が各チャンク内の順序を与える．
 \end{proof}
 
-\begin{lemma}[有限群における複数成分同時の区間短縮]
-\label{lem:group-interval}
-$A$ を任意の有限群とする．$n$ 個の添字が，
-高々 $f$ 個の順序付き出力成分へ，
-添字一つにつき高々 $f$ 個の重ならないブロックを
-寄与するとする．各ブロックには代替ブロックが固定され，
-添字を選択するとその添字のすべてのブロックを同時に置換する．
-その他の材料は変更しない．
-ブロックの出力先と同じ添字内の順序が一定であり，
-さらに $i<j$ の型対間の左右比較も添字対によらず一定とする．
-$n\ge\max\{3,|A|^f\}$ なら，非空の連続添字区間が存在し，
-その添字のブロックを同時置換しても，
-すべての出力成分の $A$-値を保存できる．
-\end{lemma}
-\begin{proof}
+\begin{proof}[補題~\ref{lem:group-interval}の証明]
 補題~\ref{lem:group-block-order} を各根成分に適用する．
 全根成分を通じたクラス領域数は $q\le f$ である．
 一つのクラス領域 $K$ を考え，チャンクを左から
@@ -4121,19 +4126,8 @@ MCFG の定量的評価に必要な窓と局所因子に沿った群積による
 この節を通じて，$\Sigma$ は空でなく，$k\ge1$，$A$ は有限群とする．
 $|w|\ge k+1$ の語 $w$ について，長さ $k+1$ の因子を開始位置の順に並べた列を $\sigma_k(w)$ と書く．
 
-\begin{definition}[局所群型付け]
-\label{def:local-group-typing}
-$\nu:\Sigma^{k+1}\to A$ を任意の写像とする．$|w|\ge2k$ に対し，
-\[
- \gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k}),
- \qquad \sigma_k(w)=(F_1,\ldots,F_{|w|-k})
-\]
-を $A$ における順序つき積とし，$|w|<2k$ に対しては $\gamma_{k,\nu}(w):=1_A$ とする．
-\emph{局所群型付け}を
-\(\lambda_{k,\nu}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,\nu}(w)\bigr)\)
-で定める．ある $k,A,\nu$ について $\widehat{s}\preceq\lambda_{k,\nu}$ となる有限型付け $\widehat{s}$ を
-\emph{局所群決定的}という．
-\end{definition}
+定義~\ref{def:local-group-typing}の記法を用いる．
+
 
 定義~\ref{def:prefix-suffix-typing} で $\ell=k$ とすると，
 長さ $2k$ 未満の語は\emph{短い}語としてそのまま記録され，
@@ -4717,27 +4711,7 @@ MCFG所属判定は決定可能である~\cite{SekiEtAl1991}．
 更新がなければ標本整合性と保守性から現仮説が既に$L$を生成する．
 \end{proof}
 
-\begin{corollary}[規則ランク有界の場合の保守的多項式時間学習]
-\label{cor:capped-gold-poly}
-$f,r_{\max}$ と有限半群型付け $s$ を固定する．
-定義~\ref{def:conservative-learner} の方針で，
-$\mathcal B^{\le r_{\max}}_{f,s}$ を用いる学習器は，
-\(\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})\)
-を TxtEx 同定する．
-各データ処理に要する時間は，
-その時点までの正例標本の総サイズに関して多項式である．
-\end{corollary}
 
-\begin{proof}
-命題~\ref{prop:good-normalization},
-\ref{prop:reconstruction-soundness},
-\ref{prop:completeness} がランク上界内で特徴標本を与える．
-定理~\ref{thm:poly} が再構成時間を抑え，
-ランクとファンアウトが有界なMCFGの所属判定も
-文法符号長・入力語長に関して多項式時間である
-~\cite[Proposition~4]{Yoshinaka2011}（有限な単項閉包を含む）．
-系~\ref{cor:gold-explanatory} の保守的学習の議論を適用する．
-\end{proof}
 
 \paragraph{計算時間と収束段階の区別．}
 定理~\ref{thm:poly} と系~\ref{cor:capped-gold-poly} の
