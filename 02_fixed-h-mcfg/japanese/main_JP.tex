@@ -462,1230 +462,381 @@ $f\ge1$と$s$を固定する．
 
 \section{特徴データ長の上界}
 \label{sec:char-data}
-規則ランクを固定すれば，命題~\ref{prop:completeness}の有限証拠から，多項式\emph{個数}の特徴語が得られる．本節はそれらの\emph{符号化総長}を元の文法表示に相対的に評価する．完全生成語型精密化では最短証拠が元の厚さに比べて指数的に長くなり得る（命題~\ref{prop:typed-thickness-exponential}）ため，主な証明は元の表示の上で行う．窓型付けは導出木の有界な骨格の保持によって制御する（補題~\ref{lem:boundary-short-canonical}）．有限群値については多数の重い部分木を同時に置換し，非可換の場合にも全成分の順序積を保存する（命題~\ref{prop:block-replacement-interface}，補題~\ref{lem:group-block-order}と~\ref{lem:group-interval}）．局所群の場合にはsliding-factor座標によってこれら二層へ帰着し，任意標準入力には成分パターン厚さに制御された正規化を適用する．
 
-\subsection{主要な厚さ尺度と証拠語長の共通構成}
+本節を通じて$f$，$r_{\max}\ge1$，$\Sigma$，型付け$s:\Sigma^+\twoheadrightarrow\mathsf S$を固定し，$G=(V,\Sigma,P,S,\fan)$をファンアウト$\le f$，規則ランク$\le r_{\max}$の縮約済み良形MCFG，$\widetilde G_0$をその刈り込んだ$\widehat s$-精密化とする．ランク上界の下では定理~\ref{thm:exact-reconstruction}がすでに$O(\|G\|)$個の特徴語を与える．課題はそれらの総長を\emph{$G$によって}抑えることである．全ての上界は次の一つの枠組みに従う．
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=*]
+\item \emph{証拠語長}（補題~\ref{lem:witness-length-template}）．$s$を精密化する補助的な有限モノイド準同型$\lambda$について，各非終端記号の各タプルを，同じ非終端記号の同じ$\lambda$-ベクトルで総長高々$\beta$のタプルに取り替えられるなら，$\Wit(\widetilde G_0)$は特徴標本であり，その総長は$O(\|G\|(\bar\theta_G+\beta))$である．
+\item \emph{最小反例}（\ref{subsec:group-invariants}節）．根の$\lambda$-ベクトルを指定した最短導出において，重い部分木の大きな反鎖があれば，そのベクトルを保つ同時置換が可能になる．よって反鎖は小さく，補題~\ref{lem:heavy-node-count}がこれを$\beta=O(\|G\|\bar\theta_G)$または$O(\|G\|^2\bar\theta_G)$に変換する．
+\item \emph{各領域}．変わるのは$\lambda$と置換の手順だけである．窓型付けでは標識した境界文字を保ち，窓・群型付けではさらに順序付き群積を保ち（命題~\ref{prop:block-replacement-interface}），局所群型付けはsliding-factor座標によってこれらに帰着する（\ref{subsec:algebraic-typed-data}節）．
+\end{enumerate}
+完全生成語型精密化は厚さの評価には用いない．その厚さは$G$の厚さに対して指数的になり得るからである（命題~\ref{prop:typed-thickness-exponential}）．これがいつ起こるかは系~\ref{cor:refinement-dichotomy}で特徴づける．\ref{subsec:unrestricted-source}節では全ての上界を任意の標準入力文法へ移す．
+
+\subsection{厚さ尺度と証拠語長}
 \label{subsec:thickness-contexts}
-定量的な主定理では，Yoshinakaの固定次元・固定規則ランクの良形表示~\cite[Section~2.3, after Example~2]{Yoshinaka2011}と同様に，縮約済み良形MCFGを用いる．規則$R$の\emph{規則厚さ}を
+
+$G$の規則$R$について
 \[
- \theta_G(R)=\min\{|w|:w\in L(G)\text{は$R$を用いる成功導出を持つ}\}
+ \theta_G(R):=\min\{\,|w|:w\in L(G)\text{は}R\text{を使う成功導出をもつ}\,\}
 \]
-とし，$\theta_G=\max_{R\in P}\theta_G(R)$，$\bar\theta_G=\max\{1,\theta_G\}$とおく．また\emph{非終端厚さ}を
-\(t_G=\max_A\min\{\|\tuple u\|_1:\tuple u\in L_A(G)\}\)
-と定める．Yoshinakaの$\tau_G$は本稿の$\theta_G$に対応する~\cite[Section~4.3]{Yoshinaka2011}．本稿では$\theta_G$に記号を統一する．
+とおく．これは導出の長さではなく，導出された\emph{文}の長さである．$\theta_G:=\max_{R\in P}\theta_G(R)$，$\bar\theta_G:=\max\{1,\theta_G\}$，$t_G:=\max_{A\in V}\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}$とする（規則厚さと非終端記号厚さ．Yoshinakaは$\theta_G$を$\tau_G$と書く~\cite[Section~4.3]{Yoshinaka2011}）．表~\ref{tab:thickness-scales}は，これらの尺度を\ref{subsec:unrestricted-source}節のパターン尺度および二つの補助量とともに示す．$\theta_{\mathrm{typ}}$と$\kappa_G$は$G$をそれ自身の刈り込み精密化と比べる量であり，主定理のパラメータではない．
 
 \begin{table}[htbp]
-\caption{厚さの尺度：主定理の二つの入力尺度と三つの補助量}
+\caption{厚さ尺度：定理の二つのパラメータと三つの補助量．}
 \label{tab:thickness-scales}
-\centering\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.22}
-\begin{tabularx}{\linewidth}{@{}p{0.16\linewidth}p{0.40\linewidth}X@{}}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{0.155\linewidth}p{0.405\linewidth}X@{}}
 \hline
-尺度 & 意味と役割 & 比較関係・増大例\\
+尺度 & 測るもの／役割 & 比較または障害\\
 \hline
-$\theta_G$ & 各規則を使う最短受理文長の最大値．縮約済み良形$G$の\emph{主尺度}． &
-$t_G\le\theta_G\le2\|G\|\max\{1,t_G\}$（補題~\ref{lem:thickness-equivalence}）．\\
-$t_G$ & 各非終端の最短導出タプル長の最大値．良形文法の証明用． &
-良形では$\theta_G$と多項式因子を除いて同等．\\
-$t_{\mathrm{pat}}(H)$ & 実現可能な非空成分配置それぞれの最短タプル長の最大値．一般入力$H$の\emph{主尺度}． &
-$t_H\le t_{\mathrm{pat}}(H)$．$E_n$では$\theta_{E_n}=O(n)$でも$t_{\mathrm{pat}}(E_n)\ge2^n$（命題~\ref{prop:empty-component-blowup}）．\\
-$\theta_{\mathrm{typ}}$ & 刈り込んだ完全生成語型精密化$\widetilde G_0$の規則厚さ．一般基準上界のみに用いる． &
-$\theta_{\mathrm{typ}}\ge\theta_G$．$\theta_G\le2$でも$\theta_{\mathrm{typ}}\ge2^n$となり得る（命題~\ref{prop:typed-thickness-exponential}）．\\
-$\kappa_G$ & 型付き分布同値類の最短代表元の最大長．アーベル型フィルタ用の補助量． &
-$\kappa_G\le\theta_{\mathrm{typ}}$．代表元は型付き非終端から導出できるとは限らない（命題~\ref{prop:mcfg-relaxed-witnesses}）．\\
+$\theta_G$ & 各規則を使う最短受理文の長さの最大値．\emph{縮約済み良形$G$の主尺度}． & $t_G\le\theta_G\le 2\|G\|\max\{1,t_G\}$（補題~\ref{lem:thickness-equivalence}）．\\
+$t_G$ & 非終端記号の最短生成語総長の最大値．良形での証明用尺度． & 縮約済み良形表示では$\theta_G$と多項式的に同値．\\
+$t_{\mathrm{pat}}(H)$ & \emph{実現される非空成分パターン}ごとの最短生成語長の最大値．\emph{任意の$H$の主尺度}． & $t_H\le t_{\mathrm{pat}}(H)$，縮約済み$\lambda$-自由$H$では等号．族$E_n$は$\theta_{E_n}=O(n)$だが$t_{\mathrm{pat}}(E_n)\ge2^n$（命題~\ref{prop:empty-component-blowup}）．\\
+$\theta_{\mathrm{typ}}$ & 刈り込んだ完全生成語型精密化$\widetilde G_0$の規則厚さ．基準値のみ． & $\theta_{\mathrm{typ}}\ge\theta_G$．$\theta_G\le2$でも$\ge2^n$となり得る（命題~\ref{prop:typed-thickness-exponential}）．\\
+$\kappa_G$ & 各型付き分布同値類の最短代表の長さの最大値．アーベル型フィルタ付き標的の補助量． & $\kappa_G\le\theta_{\mathrm{typ}}$．代表は型付き非終端記号から導出できるとは限らない（命題~\ref{prop:mcfg-relaxed-witnesses}）．\\
 \hline
 \end{tabularx}
 \end{table}
-ここで$t_H$は良形性を仮定しない非終端最短長である．$t_{\mathrm{pat}}$の正式定義は節~\ref{subsec:unrestricted-source}に置く．良形文法では各成分が非空なので$t_{\mathrm{pat}}(G)=t_G$となる．精密化厚さと分布代表元長の比較は，同じ元文法の刈り込んだ細分化についてのものである．$\theta_{\mathrm{typ}}$と$\kappa_G$は主定理の入力尺度ではない．空語を含む標的については非空部分に定理を適用し，必要なら$\eps$を1語追加する．
 
-\paragraph{導出的な受理文脈．}
-型付き非終端記号$X$の文脈が\emph{導出的}であるとは，成功した型付き導出における一つの$X$部分木を削除して得られることをいう．その文脈が許容されることは補題~\ref{lem:filling-identity}から従う．
+標的$L$が$\eps$を含むときは，以下の主張を$L\cap\Sigma^+$に適用し，定理~\ref{thm:exact-reconstruction}と同様にデータ$\eps$を加える．符号化総長は1増える．
 
-\begin{lemma}[厚みと共通導出文脈の基本補題]
+\begin{lemma}[厚さの補題]
 \label{lem:thickness-equivalence}
 \label{lem:thickness-local-bounds}
 \label{lem:untyped-contexts}
-$G=(V,\Sigma,P,S,\fan)$を縮約済み良形MCFGとする．
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item 各規則が明示的に書き込む終端記号数は$\theta_G$以下である．
-\item $t_G\le\theta_G$であり，任意の$A\in V$には
-  $\|\tuple u\|_1\le\theta_G$を満たす$\tuple u\in L_A(G)$が存在する．
-\item $\theta_G\le2\|G\|\max\{1,t_G\}$である．
-\item 各$A\in V$のファンアウトを$d$とすると，
-$|E_A|_{\mathrm{fix}}\le\theta_G$を満たす$E_A\in\mathcal E_d$で，
-全ての$\tuple u\in L_A(G)$に対して$E_A[\tuple u]\in L(G)$となるものが
-存在する．$E_S=\blank_1$と選べる．さらに，任意の有限型付け$\widehat{s}$，
-刈り込んだ精密化$\widetilde G_0$の非開始記号$X=A_{\mathbf t}$について
-$\chi(X)=E_A$は定義~\ref{def:target-canonical}を満たし，
-$E_A$は$X$の部分木を一つ除去した成功型付き導出から得られる．
+$G$を縮約済み良形とする．
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item 各規則が明示的に書く終端記号は高々$\theta_G$個である．
+\item $t_G\le\theta_G$．すなわち各$A\in V$は$\|\tuple u\|_1\le\theta_G$なる$\tuple u\in L_A(G)$をもつ．
+\item $\theta_G\le 2\|G\|\max\{1,t_G\}$．
+\item ファンアウト$d$の各$A\in V$は，ある成功導出から$A$-部分木の出現を一つ削除して得られる文脈$E_A\in\mathcal E_d$で$|E_A|_{\mathrm{fix}}\le\theta_G$なるものをもつ．$E_S=\blank_1$であり，全ての$\tuple u\in L_A(G)$について$E_A[\tuple u]\in L(G)$である．各型付き非終端記号$X=A_{\mathbf t}$について，$\chi(X):=E_A$は定義~\ref{def:target-canonical}を満たし，かつ$X$について\emph{導出的}である．すなわち，$\widetilde G_0$のある成功導出から$X$-部分木の出現を一つ削除して得られる．
 \end{enumerate}
 \end{lemma}
+
 \begin{proof}
-左辺非終端記号を$A$とする規則$R$を固定し，$R$を用いる成功導出で生成語長が$\theta_G(R)$のものを$D_R$とする．縮約済みなので存在する．非消去性により，$R$が明示する終端記号も，その出現において$A$が生成するタプルの各成分も，最終文中にそれぞれちょうど一度残る．これにより(i)が従い，各生産的な$A$には規則があるため(ii)も従う．
+左辺$A$の規則$R$について，$R$を使う長さ$\theta_G(R)$の成功導出$D_R$を固定する．$G$は縮約済みなので存在する．非消去性により，$R$が書く各終端記号と，その$A$の出現で生成されるタプルの各成分は，文の中にちょうど一度ずつ残る．これより(i)が従い，各生産的な$A$は規則をもつので(ii)も従う．
 
-(iv)を$A\ne S$について示す．上記の導出で$A$を根とする部分木を除き，その成分の位置に番号順の穴を置く．根までの経路に沿って補題~\ref{lem:filling-identity}を繰り返し適用すると，得られる文脈$E_A$は$\mathcal E_d$に属し，その固定部分は選んだ最終文の一部なので$|E_A|_{\mathrm{fix}}\le\theta_G$である．任意の$\tuple u\in L_A(G)$を充填すれば新しい成功導出を得る．命題~\ref{prop:output-invariants}(i)より$L_X\subseteq L_A(G)$なので，$E_A$は型付き非終端記号$X=A_{\mathbf t}$の全生成タプルを受理する．開始リンクを持つ型付き非終端は$S_{\mathbf t}$の形だから，この場合は$E_S=\blank_1$を選ぶ．$E_A$の導出の穴に$X$の導出を充填し，命題~\ref{prop:output-invariants}(ii)で型付きに一意に持ち上げれば，その穴に$X$が位置する．従って$E_A$は$X$に対して導出的である．
+(iv) $A=S$なら$\blank_1$をとる．そうでなければ$D_R$の$A$-部分木を削除し，その各成分の位置に順序付きの穴を置く．根への経路に沿って補題~\ref{lem:filling-identity}を繰り返し適用すると（兄弟の生成語は非空），$E_A\in\mathcal E_d$であり，その固定文字は$D_R$の文に属する．任意の$A$-導出を挿入すれば成功導出が得られるので，$E_A$は$L_A(G)\supseteq L_X$を受理する（命題~\ref{prop:output-invariants}(i)）．開始リンクをもつ型付き非終端記号は$S_{\mathbf t}$の形であり，$E_S=\blank_1$である．導出性については，$X$からの任意の$\widetilde G_0$-導出$D_X$の標識を消して穴に挿入する．得られる成功導出の一意な持ち上げ（命題~\ref{prop:output-invariants}(ii)）は，$D_X$と同様に各節点に非終端記号とその生成語の$\widehat s$-ベクトルを標識するので，穴の位置に$D_X$を含み，その$X$-部分木を削除すると$E_A$が残る．
 
-(iii)では依存グラフの$S$から$A$への最短経路を取る．非終端記号は重複しないため経路上の規則は相異なり，$R$とも異なる．経路の子だけを未完成のまま残し，各兄弟と$R$の全ての子を，長さが高々$t_G$の最短終端タプルで埋めて$R$を適用する．用いた異なる規則に書かれた終端文字数の総和は高々$\|G\|$，子の出現回数の総和も高々$\|G\|$である．従って得られる最終文長は
-\[
- \|G\|+\|G\|t_G\le2\|G\|\max\{1,t_G\}.
-\]
-これが所望の上界である．
+(iii) $S$から$A$への最短の依存経路をたどる．経路は非終端記号を繰り返さないので，その規則は互いに異なり$R$とも異なる．経路上の各兄弟と$R$の各子を最短の終端タプル（長さ$\le t_G$）で完成させ，$R$を適用する．使う相異なる規則が書く終端記号は合計高々$\|G\|$個，子の出現は合計高々$\|G\|$個なので，文の長さは高々$\|G\|+\|G\|t_G\le2\|G\|\max\{1,t_G\}$である．
 \end{proof}
 
-良形文法では規則厚みと非終端記号厚みは多項式的に同値である．
-以下の証拠語長評価はこの共通導出文脈を利用する．
+したがって縮約済み良形表示では$\theta_G$と$t_G$は多項式的に同値である．Yoshinakaの効率性の基準は，データ量を標的のサイズと規則厚さで測る~\cite[Definition~1]{Yoshinaka2011}（\cite{EyraudHeinzYoshinaka2016}も参照）．
 
-\begin{lemma}[特徴証拠語長の共通テンプレート]
+有限モノイド準同型$\lambda:\Sigma^*\to N$について，$\ker(\lambda|_{\Sigma^+})\subseteq\ker s$のとき$s\preceq\lambda$と書く．$\widehat s$は$\eps$を分離するので，$\lambda$も$\eps$を$\Sigma^+$から分離するなら，これは定義~\ref{def:semigroup-typing}の関係と一致する．$\beta\ge0$について次の条件を考える．
+\begin{itemize}[leftmargin=4em]
+\item[$(\mathrm R_\beta^\lambda)$] 任意の$B\in V$と$\tuple u\in L_B(G)$について，$\lambda^{(\fan(B))}(\tuple u')=\lambda^{(\fan(B))}(\tuple u)$かつ$\|\tuple u'\|_1\le\beta$なる$\tuple u'\in L_B(G)$が存在する．
+\end{itemize}
+また
+\[
+ C_s(G):=|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}}
+ \;\le\;|\mathsf S^\sharp|^{fr_{\max}}\,\|G\|
+\]
+とおく（$|V|+|P|\le\|G\|$を用いた）．型付き規則は元の規則と高々$r_{\max}$個の子の型ベクトルで決まるので，$C_s(G)$は型付き非終端記号の数と型付き規則の数の和を抑える．
+
+\begin{lemma}[証拠語長]
 \label{lem:witness-length-template}
-$G$をファンアウト高々$f$，規則ランク高々
-$r_{\max}\ge1$の縮約済み良形MCFGとし，
-$\widetilde G_0$を有限型付け$\widehat{s}:\Sigma^*\to \mathsf S^\sharp$による
-刈り込んだ生成語型精密化とする．
-全ての非開始型付き非終端記号$X$の正準タプルについて
-$\|\omega(X)\|_1\le b_{\mathrm{can}}$とし，
-$\chi(X)=E_A$を補題~\ref{lem:untyped-contexts}の
-導出的文脈から選ぶ．
-このとき特徴証拠集合$\Wit(\widetilde G_0)$の全ての語の長さは
-$2\bar\theta_G+r_{\max}b_{\mathrm{can}}$以下であり，
-\[
- |\Wit(\widetilde G_0)|\le
- |V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}},
-\]
-\[
- \|\Wit(\widetilde G_0)\|_+\le
- (|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}})
- (1+2\bar\theta_G+r_{\max}b_{\mathrm{can}}).
-\]
-さらに$L(G)=L\cap\Sigma^+$かつ$L\in\Cmcf{f}{s}$なら，
-$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は
-$\mathcal B_{f,s}^{\le r_{\max}}$の特徴標本となる．
-\end{lemma}
-\begin{proof}
-補題~\ref{lem:untyped-contexts}により文脈固定部は
-高々$\bar\theta_G$，各規則の明示終端文字数も
-補題~\ref{lem:thickness-local-bounds}(i)により
-高々$\bar\theta_G$である．
-各規則は高々$r_{\max}$個の子タプルを持つので，
-一証拠語の上界が従う．
-個数は型付き非終端と型付き規則をそれぞれ一度数えることから従い，
-特徴性は命題~\ref{prop:completeness}と
-命題~\ref{prop:reconstruction-soundness}による．
-空語は開始規則の直接証拠で処理する．
-\end{proof}
-
-\begin{lemma}[型を保存する置換]
 \label{lem:type-preserving-replacement}
-$G$を縮約済み良形MCFG，$s:\Sigma^+\to\mathsf S$を有限半群型付け，
-$\lambda:\Sigma^*\to N$を有限モノイドへの補助準同型とし，
-$s\preceq\lambda|_{\Sigma^+}$を仮定する．
-$\widehat{s}:\Sigma^*\to\mathsf S^\sharp$を$s$の新単位元添加とする．
-$\widetilde G_0$を刈り込んだ$\widehat{s}$-精密化とし，
-$X=B_{\mathbf t}$をその非開始型付き非終端記号とする．
-$\tuple u\in L_X$，$\tuple u'\in L_B(G)$が
-$\lambda^{(\fan(B))}(\tuple u')=
-\lambda^{(\fan(B))}(\tuple u)$を満たすなら，
-$\tuple u'\in L_X$である．
-したがって$\tuple u'$を$X$の正準タプルとして選ぶこともできる．
+$\lambda:\Sigma^*\to N$を$s\preceq\lambda$なる有限モノイド準同型とする．
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item \emph{（型を保つ交換）}$X=B_{\mathbf t}$を型付き非終端記号，$\tuple u\in L_X$，$\tuple u'\in L_B(G)$，$\lambda^{(\fan(B))}(\tuple u')=\lambda^{(\fan(B))}(\tuple u)$なら$\tuple u'\in L_X$である．よって$(\mathrm R_\beta^\lambda)$の下で，全ての$X$について$\|\omega(X)\|_1\le\beta$なる正準タプルが存在する．
+\item \emph{（長さ）}全ての$X$について$\|\omega(X)\|_1\le b$であり，$\chi(X):=E_B$（補題~\ref{lem:thickness-equivalence}(iv)）とすると，$\Wit(\widetilde G_0)$の各語の長さは高々$2\bar\theta_G+r_{\max}b$であり，
+\[
+ |\Wit(\widetilde G_0)|\le C_s(G),\qquad
+ \|\Wit(\widetilde G_0)\|_+\le C_s(G)\,\bigl(1+2\bar\theta_G+r_{\max}b\bigr).
+\]
+\item \emph{（精密化の厚さ）}(ii)において，各規則語$\chi(X)[\rho(\omega(Y_1),\ldots,\omega(Y_q))]$は，型付き規則$X\to\rho(Y_1,\ldots,Y_q)$を使う$\widetilde G_0$の成功導出の生成語である．よって$\theta_{\widetilde G_0}\le2\bar\theta_G+r_{\max}b$である．
+\item \emph{（特徴標本）}ある$L\in\Cmcf{f}{s}$について$L(G)=L\cap\Sigma^+$なら，$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$と$\mathcal B_{f,s}$の特徴標本である．
+\end{enumerate}
+(i)--(iii)は代入可能性を用いない．
 \end{lemma}
+
 \begin{proof}
-良形性により両タプルの全成分は非空である．
-$s\preceq\lambda|_{\Sigma^+}$からそれらの成分別$\widehat{s}$-型は
-$\mathbf t$に等しい．
-命題~\ref{prop:output-invariants}(ii)により
-$\tuple u'$の$G$-導出を根が$X$である型付き導出に持ち上げられる．
-$X$は刈り込んだ精密化に残るので，
-$X$を含む成功導出へこの導出を挿入でき，
-必要な型付き規則もすべて刈り込み後に残る．
+(i) $G$は$\lambda$-自由なので全成分は非空であり，$s\preceq\lambda$と命題~\ref{prop:output-invariants}(i)から$\widehat s^{(\fan(B))}(\tuple u')=\widehat s^{(\fan(B))}(\tuple u)=\mathbf t$である．命題~\ref{prop:output-invariants}(ii)により$\tuple u'$の$G$-導出は$X$からの$G^{\widehat s}$-導出に持ち上がる．型付き規則は型付き記号のみに依存するので，これを$\widetilde G_0$の成功導出における$X$の出現に挿入すると成功導出が得られる．よってその全ての規則は刈り込みで残り，$\tuple u'\in L_X$である．後半はある$\tuple u\in L_X\ne\emptyset$に$(\mathrm R_\beta^\lambda)$を適用すればよい．
+
+(ii) 証拠語は$\chi(X)[\omega(X)]$か規則語である．文脈の固定文字は高々$\bar\theta_G$個，型付き規則は元の規則のテンプレートをもつので書く文字は高々$\bar\theta_G$個（補題~\ref{lem:thickness-equivalence}(i)），子タプルは高々$r_{\max}$個である．語は型付き非終端記号ごと・型付き規則ごとに一つである．
+
+(iii) $\omega(Y_j)\in L_{Y_j}$の$\widetilde G_0$-導出に型付き規則を適用し，標識を消して，$E_B$を得たもとの成功$G$-導出に挿入する．補題~\ref{lem:thickness-equivalence}(iv)の証明と同様に，一意な持ち上げは穴の位置に型付き導出を含み，$G^{\widehat s}$の成功導出の規則は全て刈り込みで残る．開始リンク$\widetilde S\to S_{\mathbf t}$は長さ高々$b$の$\omega(S_{\mathbf t})$の成功導出で使われる．
+
+(iv) $\iota=\omega$とした命題~\ref{prop:completeness}（$r_G\le r_{\max}$，$\chi(S_{\mathbf t})=E_S=\blank_1$）と命題~\ref{prop:reconstruction-soundness}により，$\Wit(\widetilde G_0)\subseteq K\subseteq L$なる全ての有限$K$について$L(\mathcal B(K))\cap\Sigma^+=L\cap\Sigma^+$である．$\eps$はStart規則が扱う．
 \end{proof}
-
-\paragraph{補足：精密化後の文脈長．}
-次の補助上界はランク1の直接計数でも用いる．
-
-
 
 \subsection{精密化厚さの基本上界}
 \label{subsec:typed-thickness}
 
-$\eps$ を含まない標的の縮約済み良形表示 $G$ に対して，
-刈り込んだ完全生成語型精密化を
-$\widetilde G_0$ とし，
-\(\bar\theta_{\mathrm{typ}} :=\max\{1,\theta_{\widetilde G_0}\}\)
-とおく．
-ここで $\theta_{\widetilde G_0}$ は
-精密化後の文法で計算した規則厚みである．
-元の型なし文法の厚みとの比較は仮定しない．
+刈り込み精密化自身の規則厚さを$\bar\theta_{\mathrm{typ}}:=\max\{1,\theta_{\widetilde G_0}\}$とする．$G$の各規則$R$は刈り込みで残る型付きコピーをもち（$R$を使う成功導出を持ち上げればよい），そのコピーを使う成功導出は標識を消すと$R$を使う成功導出になる．よって$\theta_G\le\theta_{\widetilde G_0}$である．
 
-\begin{lemma}[精密化後の厚みを用いた基準上界]
+\begin{lemma}[精密化厚さの基本上界]
 \label{lem:typed-thickness-baseline}
-$f\ge1$，$r_{\max}\ge1$，
-有限アルファベット $\Sigma$ と
-有限半群型付け $s:\Sigma^+\to\mathsf S$ の標準延長 $\widehat{s}:\Sigma^*\to\mathsf S^\sharp$ を固定する．
-$G$ を，$\Cmcf{f}{s}$ に属する
-$\eps$-自由言語の縮約済み良形表示とし，
-そのファンアウトは高々 $f$，
-規則ランクは高々 $r_{\max}$ とする．
-$\widetilde G_0$ を刈り込んだ生成語型精密化とする．
-このとき標的証拠集合の個数は $\|G\|$ の多項式，
-正例総文字数は
-$\|G\|$ と
-$\bar\theta_{\mathrm{typ}}
-=\max\{1,\theta_{\widetilde G_0}\}$
-の多項式で抑えられる．
+正準タプルを適切に選べば$\|\Wit(\widetilde G_0)\|_+\le C_s(G)\,\bigl(1+(r_{\max}+2)\bar\theta_{\mathrm{typ}}\bigr)$である．
 \end{lemma}
 
 \begin{proof}
-刈り込んだ精密化 $\widetilde G_0$ も
-縮約済み良形である．
-左辺が $X$ の型付き規則を用いる
-生成語長最小の成功導出には，
-総文字数が高々 $\bar\theta_{\mathrm{typ}}$
-である $X$-タプルが含まれる．
-これを正準タプルとして選ぶ．
-$\widetilde S\to X$ があれば
-$\chi(X)=\blank_1$ とする．
-そうでなければ，同じ成功導出から
-選んだ $X$-部分木を除くと，
-固定終端部分が高々
-$\bar\theta_{\mathrm{typ}}$ の正準文脈が得られる．
-各型付き規則が明示的に書く終端記号数も
-高々 $\bar\theta_{\mathrm{typ}}$ で，
-子の正準タプルは高々 $r_{\max}$ 個なので，
-各証拠語の長さは
-$(r_{\max}+2)\bar\theta_{\mathrm{typ}}$
-以下である．
-したがって
-\[
- |\Wit(\widetilde G_0)|
- \le |V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}},
- \qquad
- \|\Wit(\widetilde G_0)\|_+
- \le
- (|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}})
- (1+(r_{\max}+2)\bar\theta_{\mathrm{typ}})
-\]
-となり，$f,r_{\max},s$ を固定すれば多項式である．
+$\widetilde G_0$は縮約済み良形なので，これに補題~\ref{lem:thickness-equivalence}(ii)を適用すると$\|\omega(X)\|_1\le\theta_{\widetilde G_0}$なる$\omega(X)\in L_X$が得られる．$b=\theta_{\widetilde G_0}$として補題~\ref{lem:witness-length-template}(ii)を適用し，$\bar\theta_G\le\bar\theta_{\mathrm{typ}}$を使う．
 \end{proof}
 
-自明型付けの場合，
-生成語型によって非終端記号は分割されず，
-元の厚みの尺度が保たれる．
-これは Yoshinaka の型なし特徴データ上界
-~\cite[Lemma~7]{Yoshinaka2011}
-を回復する．
-型の一意性がなければ，
-次の命題が示すように精密化後の厚みが大幅に増加し得る．
+自明型付けでは$\lambda$-自由な文法の非終端記号は一つの型しかもたないので，$\widetilde G_0$は$G$に開始リンクを加えたものであり，この補題はYoshinakaの型なしの評価$|K_G|\le|P|$，$\|K_G\|\le|P|\theta_G$~\cite[Lemma~7 and Theorem~1]{Yoshinaka2011}を回復する．非自明な型付けでは精密化はずっと厚くなり得る．
 
-\begin{proposition}[完全生成語型精密化による指数的増大]
+\begin{proposition}[完全生成語型精密化の指数的増大]
 \label{prop:typed-thickness-exponential}
-固定二元型付け $h_{\mathtt c}$ と，
-サイズが $O(n)$，
-ファンアウト1，規則ランク2の
-縮約済み良形文法 $G_n$ が存在して，
-$\theta_{G_n}\le2$ を満たす．
-しかも
-$L(G_n)=\{\mathtt a,\mathtt c\}^+$
-である一方，
-刈り込んだ完全生成語型精密化
-$\widetilde G_{n,0}$ では
-\(\theta_{\widetilde G_{n,0}}\ge2^n\)
-となる．
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item $e\ne z$を$ez=ze=z$なる$\mathsf S$のべき等元とし，$u,v\in\Sigma^+$を$s(u)=e$，$s(v)=z$とする．$n\ge1$について$G_n$をファンアウト1，ランク2の文法
+\[
+ S\to SS\mid a\ (a\in\Sigma)\mid A_0\mid\cdots\mid A_n,\qquad
+ A_0\to u,\qquad
+ A_i\to A_{i-1}A_{i-1}\mid v\quad(1\le i\le n)
+\]
+とする（$u,v$は定数テンプレート）．このとき$G_n$は縮約済み良形，$L(G_n)=\Sigma^+$，$\|G_n\|=O_{\Sigma,u,v}(n)$，$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$であり，$\theta_{\widetilde G_{n,0}}\ge|u|2^n$である．
+\item 特に，$\Sigma=\{\mathtt a,\mathtt c\}$，$s_{\mathtt c}(\mathtt a)=1$，$s_{\mathtt c}(\mathtt c)=\zeta$で定まる$\{1,\zeta\}$（$\zeta^2=\zeta$）への二元型付け$s_{\mathtt c}$について，$u=\mathtt a$，$v=\mathtt c$とすれば$\|G_n\|=O(n)$，$\theta_{G_n}\le2$，$\theta_{\widetilde G_{n,0}}\ge2^n$である．
+\end{enumerate}
 \end{proposition}
 
 \begin{proof}
-$M_{\mathtt c}=\{1,\zeta\}$，
-$\zeta^2=\zeta$ とし，
-$h_{\mathtt c}(\mathtt a)=1$，
-$h_{\mathtt c}(\mathtt c)=\zeta$ とする．
-$n\ge1$ に対し，
-\[
-\begin{aligned}
- S&\to SS\mid\mathtt a\mid\mathtt c\mid A_0\mid\cdots\mid A_n,\\
- A_0&\to\mathtt a,\qquad
- A_i\to A_{i-1}A_{i-1}\mid\mathtt c\quad(1\le i\le n)
-\end{aligned}
-\]
-をファンアウト1の MCFG とみなす．
-これは縮約済み良形であり，
-サイズは $O(n)$，規則ランクは2，
-生成言語は $\{\mathtt a,\mathtt c\}^+$ である．
-各規則は長さ高々2の成功導出に出現するため，
-$\theta_{G_n}\le2$ である．
-
-完全精密化の残存コピー $(A_n)_1$ は，
-$\mathtt c$ を含まない語しか生成できない．
-帰納的に，そのような生成語は一意で，
-$\mathtt a^{2^n}$ となる．
-よって型付き規則
-$S_{(1)}\to(A_n)_1$ を使用する
-成功導出の長さは少なくとも $2^n$ である．
+全てのテンプレートは非空で各変数を順に一度ずつ使うので$G_n$は良形である．縮約済みであり，$S\to SS\mid a$により$\Sigma^+$を生成する．各$A_i$を$v$（$i\ge1$）または$u$（$i=0$）で完成させれば，各規則は長さ高々$\max\{2,2|u|,2|v|\}$の成功した使用をもつ．$A_n$の生成語は葉の値$s(u)=e$，$s(v)=z$の積であり，$e^2=e$かつ$z$は$\{e,z\}$で吸収的なので，その型が$e$であるのは$v$を使う葉がないときに限る．よって$(A_n)_{(e)}$の生成語は$u^{2^n}$だけであり，型付き規則$S_{(e)}\to(A_n)_{(e)}$は（$S\to A_n$を介して）残り，これを使う成功導出の長さは$|u|2^n$以上である．(b)では$e=1$，$z=\zeta$である．
 \end{proof}
 
-したがって任意の固定型付けについて，
-完全生成語型精密化は，
-すでにファンアウト1・規則ランク2でも
-$\|G\|\max\{1,\theta_G\}$ の多項式による
-一様な上界を許さない．
-これは完全精密化という証明経路の制約であり，
-言語 $\{\mathtt a,\mathtt c\}^+$ 自体の下界ではない．
+この障害は精密化に関するものであり，$\Sigma^+$や任意の作用素に対する特徴データ長に関するものではない．そこで以下の証明は$G$そのものの上で行う．
 
-\paragraph{ファンアウト1における既知の下界．}
-関連する改訂 CFG 論文は，
-固定二元半束型付けについて，
-すでにファンアウト1・規則ランク2で
-作用素に依存しない指数的な特徴データ下界を証明する
-~\cite{kuriyamaCFG}．
-本稿ではその先行 CFG 結果の証明は繰り返さない．
-ファンアウトが高くなると
-代入可能性はより多くのタプルアリティについて検査されるため，
-この結果がそのまま高ファンアウトへ拡張されるわけではない．
-
-\paragraph{規則ランク1：文法サイズに関する多項式特徴データ}
-
-
-一つの子しかもたない導出の鎖では，
-任意の固定成分別型付けの下でも，
-厚みに依存しない文法サイズ上界が得られる．
-
-\subsection{境界窓と補助不変量}
-\label{subsec:boundary-polydata}
-
-補題~\ref{lem:typed-thickness-baseline} は，任意の $\widehat{s}$ に対する特徴データ上界を，
-型付き精密化文法の厚みによって与える．
-命題~\ref{prop:typed-thickness-exponential} によれば，
-この精密化後の厚みが元の良形表示のパラメータで多項式に抑えられるとは限らない．
-それでも，有限型付けが固定接頭辞--接尾辞窓によって決まる場合には，
-より強い転移結果が得られる．
-この境界型付けの場合を，Yoshinaka~\cite[Section~4.3]{Yoshinaka2011} と同様の，
-厚みを考慮した文法表示の尺度で定式化する．
-
-$G=(V,\Sigma,P,S,\fan)$ を縮約済み良形 MCFG とし，
-\(\bar\theta_G:=\max\{1,\theta_G\}\)
-とおく．$\theta_G$ は既に定義した規則厚みである．
-以下の議論は $\lambda$-自由な良形の核心部分について述べる．
-標的が $\eps$ も含む場合，定理~\ref{thm:exact-reconstruction} と同様に，
-$L\setminus\{\eps\}$ に議論を適用してから，
-開始記号に証拠 $\eps$ を一つ加えればよい．
-これは長さ0の例を一つ増やすだけで，どちらの多項式上界にも影響しない．
-
-
-$k,\ell\ge0$ を固定し，
-$\widehat{s}\preceq \widehat{s}_{k,\ell}$ を満たす
-任意の有限半群型付け $s:\Sigma^+\to\mathsf S$ の標準延長 $\widehat{s}:\Sigma^*\to\mathsf S^\sharp$ を考える．
-すなわち $\widehat{s}$ は，全射な接頭辞--接尾辞型付け
-$\widehat{s}_{k,\ell}$ を通じて因子化する．
-$G$ のファンアウトは高々 $f$，
-規則ランクは固定された $r_{\max}\ge1$ 以下とする．
-$\widetilde G_0$ は $G$ の完全 $\widehat{s}$-型付き精密化の刈り込み結果とし，
-残存する開始記号以外の $\widehat{s}$-型付き非終端記号の数を
-$n_{\mathrm{typ}}$ とする．
-
-
-\begin{lemma}[補助不変量付きの窓スケルトン]
-\label{lem:boundary-short-canonical}
-
-
-$G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
-規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとする．
-$k,\ell\ge0$を固定し，有限モノイド$N$への準同型
-$\kappa:\Sigma^*\to N$と有限型付け
-$\widehat{s}\preceq(\widehat{s}_{k,\ell},\kappa)$をとる．
-$\widetilde G_0$を刈り込んだ$\widehat{s}$-精密化，
-$n_{\mathrm{typ}}$をその非開始型付き非終端記号数とする．
-$\beta\ge0$が，任意の$C\in V$と$\tuple x\in L_C(G)$について，
-\[
- \tuple x'\in L_C(G),\quad
- \kappa^{(\fan(C))}(\tuple x')
-   =\kappa^{(\fan(C))}(\tuple x),\quad
- \|\tuple x'\|_1\le\beta
-\]
-となるタプル$\tuple x'$の存在を保証すると仮定する．
-このとき，任意の非開始型付き非終端記号$X$には
-\(\|\omega(X)\|_1\le f(k+\ell+1)n_{\mathrm{typ}} (\bar\theta_G+r_{\max}\beta)\)
-を満たす正準タプルを選べる．
-$\kappa$が自明な場合は，
-補題~\ref{lem:thickness-local-bounds}(ii)により
-$\beta=\bar\theta_G$とでき，従来の窓型付けについて
-\(\|\omega(X)\|_1\le f(k+\ell+1)n_{\mathrm{typ}} (r_{\max}+1)\bar\theta_G\)
-が得られる．
-\end{lemma}
-\begin{proof}
-$\widetilde G_0$における$X$からの終端導出で，
-規則節点数が最小のものを$D$とする．
-同じ型付き非終端記号が一本の根から葉への経路上で二度現れれば，
-上位の部分木を同じ記号の下位の部分木で置き換えて
-節点数を真に減らせるため，最小性に矛盾する．
-従って各経路の規則節点数は高々$n_{\mathrm{typ}}$である．
-
-根の各成分で窓型を決める終端位置を標識する．
-長さが$m_0=\max\{1,k+\ell\}$より短い成分では全位置を，
-長い成分では最初の$k$個と最後の$\ell$個を標識する．
-$k=\ell=0$なら一位置を標識して非空性を保証する．
-標識総数は高々$f(k+\ell+1)$である．
-各標識位置へ至る根経路の合併を骨格$\mathcal K$とすると，
-その節点数は高々$f(k+\ell+1)n_{\mathrm{typ}}$となる．
-
-骨格外にある子部分木は，線形性・非消去性・非置換性により，
-根の成分それぞれに連続した互いに素な区間を与え，
-標識位置を含まない．
-各子部分木の元の非終端記号を$C$，生成タプルを$\tuple x$とし，
-仮定による同じ成分別$\kappa$-値を持つ
-長さ高々$\beta$の$\tuple x'$の$G$-導出へ置き換える．
-根成分が短いときは全位置が標識されているので置換は起こらない．
-根成分が長いときは先頭・末尾の標識位置は保持され，
-良形性により置換後の全成分は非空であり，長短の境界も変わらない．
-従って根の$\widehat{s}_{k,\ell}$-ベクトルは保存される．
-
-各根成分は規則の明示終端因子と子成分の順序付き連結である．
-各置換区間の$\kappa$-値が変わらないから，
-準同型性により根の成分別$\kappa$-値も変わらない．
-$\kappa$の可換性は必要ない．
-よって根の$(\widehat{s}_{k,\ell},\kappa)$-ベクトルが保存され，
-補題~\ref{lem:type-preserving-replacement}により
-置換後の根タプルは同じ$X$から導出できる．
-
-骨格節点が明示する終端記号は
-補題~\ref{lem:thickness-local-bounds}(i)から高々$\bar\theta_G$個，
-各節点から除外した子部分木は高々$r_{\max}$個で
-それぞれ総長が高々$\beta$である．
-骨格の節点数を掛ければ所望の上界が従う．
-\end{proof}
-
-補題~\ref{lem:untyped-contexts} を
-\(b_{\mathrm{can}} =f(k+\ell+1)n_{\mathrm{typ}} (r_{\max}+1)\bar\theta_G\)
-として適用する．
-すると各証拠語の長さは高々
-$2\bar\theta_G+r_{\max}b_{\mathrm{can}}
- =O_{f,r_{\max},k,\ell,s,\Sigma}
-   (\|G\|\bar\theta_G)$
-となる．ここで
-$n_{\mathrm{typ}}\le|V||\mathsf S^\sharp|^f$ を用いた．
-
-\begin{theorem}[接頭辞--接尾辞窓で決まる型付けの多項式特徴データ]
-\label{thm:boundary-polydata}
-$f\ge1$，$r_{\max}\ge1$，$k$，$\ell$，
-有限アルファベット $\Sigma$，
-および $s\preceq s_{k,\ell}$ を満たす有限半群型付け
-$s:\Sigma^+\to\mathsf S$ を固定し，$\widehat{s}$ とおく．
-$L\in\Cmcf{f}{s}$ とし，$G$ を
-$L(G)=L\cap\Sigma^+$ を満たす縮約済み良形文法とする．
-そのファンアウトは高々 $f$，
-規則ランクは高々 $r_{\max}$ とする．
-このとき
-$\mathcal B_{f,s}^{\le r_{\max}}$ は正例標本のサイズについて
-多項式時間で計算できる．
-さらに，$L$ の特徴標本を
-$K=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ と選び，
-\[
- |\Wit(\widetilde G_0)|=O_{f,r_{\max},s}(\|G\|),
- \qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},k,\ell,s,\Sigma}
-   (\|G\|^2\bar\theta_G)
-\]
-を満たすように選べる．
-ここで $\bar\theta_G=\max\{1,\theta_G\}$ である．
-消去規則を許した縮約済み $\lambda$-自由入力表示
-$G_{\mathrm{in}}$ に対しても，
-命題~\ref{prop:structural-good-thickness} の
-構造的良形変換を通せば，
-特徴データの総長はより具体的に
-\[
- O_{f,r_{\max},k,\ell,s,\Sigma}\!\left(
- \|G_{\mathrm{in}}\|^3
- \max\{1,t_{G_{\mathrm{in}}}\}\right)
-\]
-で抑えられる．
-\end{theorem}
-
-\begin{proof}
-$\widehat{s}$-精密化文法の型付き非終端記号数は高々
-$|V||\mathsf S^\sharp|^f$，
-型付き規則の個数は高々
-$|P||\mathsf S^\sharp|^{fr_{\max}}$ である．
-より細かい $\widehat{s}_{k,\ell}$ の境界型を保存すれば
-それを通じて決まるより粗い $\widehat{s}$-型も保存されるため，
-補題~\ref{lem:boundary-short-canonical} が適用できる．
-さらに補題~\ref{lem:untyped-contexts} から，
-各証拠語の長さは
-\(O_{f,r_{\max},k,\ell,s,\Sigma} (\|G\|\bar\theta_G)\)
-以下となる．
-命題~\ref{lem:witness-length-template} により
-\(|\Wit(\widetilde G_0)| \le n_{\mathrm{typ}}+|P||\mathsf S^\sharp|^{f r_{\max}},\)
-ただし $n_{\mathrm{typ}}\le|V||\mathsf S^\sharp|^f$ である．
-証拠語の多項式個数に上の各語の長さ上界を掛け，
-必要なら $\eps$ の証拠を高々一つ加えると，
-主張した正例総文字数の上界を得る．
-同じ成功導出に基づく証拠は
-型付き精密化文法の規則厚みにも多項式上界を与えるが，
-この中間パラメータは上界の証明には不要である．
-仮説文法の構成時間に関する主張は
-定理~\ref{thm:poly} に従う．
-\end{proof}
-
-入力表示に関する主張は
-命題~\ref{prop:structural-good-thickness} による．
-消去規則を含む入力文法では，
-良形変換に先立って終端記号が消えることがあり得るため，
-非終端記号の厚みを用いる．
-系~\ref{cor:capped-gold-poly} は，
-対応するランク制限付き保守的学習器の
-各データ処理における多項式時間上界を与える．
-
-ファンアウト1で固定窓型付けからの正例同定と
-厚みを考慮した多項式特徴データが得られること自体は，
-Yoshinaka~\cite[Theorem~1]{Yoshinaka2008} による既知結果である．
-一方，序論で比較したとおり，本稿は縮約済み良形表示の
-\emph{元の規則厚み}を用い，窓長に依存しない
-文法サイズ次数2の総符号長上界を与える．
-補題~\ref{lem:boundary-short-canonical} のMCFG固有の寄与は，
-\emph{複数の}タプル成分の境界情報を同時に保存し，
-任意の固定ファンアウト $f\ge2$ にもこれを適用する点にある．
-また窓・群型付けに関するファンアウト1の既知の十分条件は
-関連CFG論文~\cite{kuriyamaCFG} に帰属する．
-
-上界は縮約済み良形の規則ランク有界な文法表示に相対的なものである．
-後述の定理~\ref{thm:intrinsic-ranktwo-witness} は，
-この高ランクの場合が言語レベルで必要であることを示す．
-すなわち，競合する文法が任意の有限ファンアウトを使ってよい場合でも，
-最小ファンアウトと最小規則ランクがともに2である，
-$(1,1)$-境界型付けされた非文脈自由標的を与える．
-後の例では，$L_{\mathrm{intr}}$ が窓型付けの定理の対象となり，
-ランク1の言語 $L_{\mathrm{cd}}$ と $L_\star$ は
-定理~\ref{thm:rankone-polydata} の対象となる．
-したがって，いずれの分離結果も
-対応する定量的学習上界と両立している．
-
-
-\subsection{有限群不変量}
+\subsection{最小反例による短い代表}
 \label{subsec:group-invariants}
 
-次の計数原理は，有限群の値を指定した短いタプルと
-局所群型付けにおける短縮証明に共通する．
-群に関する非可換な置換操作そのものは，
-後続の群論付録で別途正当化する．
+$\lambda:\Sigma^*\to N$を有限モノイド準同型とする．ベクトル$\mathbf t\in N^d$は，ある$\tuple u\in L_B(G)$について$\mathbf t=\lambda^{(d)}(\tuple u)$となるとき（ファンアウト$d$の）$B$で\emph{実現可能}であるという．$(B,\mathbf t)$に対する\emph{$\lambda$-最小}導出とは，根の$\lambda$-ベクトルが$\mathbf t$である$B$からの終端導出のうち，まず生成語総長を，次に節点数を最小化するものである．閾値$b$について，生成語総長が$b$を超える節点を\emph{重い}と呼ぶ．
 
-\begin{lemma}[重い節点の計数]
+\begin{lemma}[重い節点の数え上げ]
 \label{lem:heavy-node-count}
-$G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
-規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとし，
-$\lambda:\Sigma^*\to N$を有限モノイド準同型，
-$b\ge\bar\theta_G$，$c\ge0$とする．
-ある$B\in V$からの終端導出$T$を，
-根の成分別$\lambda$-値を固定したうえで，
-まず生成タプルの総長，次に節点数が最小になるように選ぶ．
-部分木の生成語総長が$b$を超える節点を「重い」と呼ぶ．
-$T$において比較不能な重い節点の任意の集合が
-高々$c$個の節点しか含まないならば，根タプルの総長は
+$b\ge\bar\theta_G$，$c\ge0$とし，$T$を$(B,\mathbf t)$に対する$\lambda$-最小導出とする．$T$の重い節点の任意の反鎖の大きさが高々$c$なら，
 \[
- (r_{\max}+1)b\max\{1,c|V||N|^f\}
+ \|T\text{の根タプル}\|_1\le(r_{\max}+1)\,b\,\max\{1,c\,|V||N|^f\}.
 \]
-以下である．
 \end{lemma}
+
 \begin{proof}
-節点にその非終端記号と成分別$\lambda$-値の組を標識する．
-一本の根から葉への経路でこの組が反復すると，
-上位の部分木を下位の部分木で置換して根の
-$\lambda$-値と生成語長の非増加性を保ちながら
-節点数を減らせるため，最小性に矛盾する．
-よって各経路の長さは高々$|V||N|^f$である．
-非消去性により重い節点は祖先について閉じ，
-その極大元は比較不能な重い節点からなる．
-したがって重い節点の総数は
-高々$c|V||N|^f$となる．
-根タプルの各終端記号は，
-重い節点が明示的に書いた高々$b$個の終端記号，
-または重い節点の軽い子部分木
-（各長さ高々$b$，子は高々$r_{\max}$個）
-のいずれかに由来する．
-根が軽ければ総長は高々$b$であり，
-以上から表示した上界が従う．
+各節点に非終端記号とその生成語の$\lambda$-ベクトルを標識する．標識は高々$|V||N|^f$種類である．祖先と真の子孫が同じ標識をもてば，祖先の部分木を子孫の部分木で置き換えても，根の$\lambda$-ベクトルは変わらず（テンプレートは$\lambda$を準同型的に評価する），根の生成語は長くならず（線形性により子孫の生成語は祖先の生成語の一部），節点は減るので，最小性に反する．よって各根葉経路の節点数は高々$|V||N|^f$である．根が軽ければその生成語の長さは高々$b$である．そうでなければ重い節点は祖先について閉じた部分木をなし，その葉は反鎖をなすので，重い節点は高々$c|V||N|^f$個である．根の生成語の各終端記号は，重い節点が書くもの（各節点高々$\bar\theta_G\le b$個，補題~\ref{lem:thickness-equivalence}(i)）か，重い節点の軽い子の中にあるもの（子は高々$r_{\max}$個，各長さ高々$b$）である．
 \end{proof}
 
-
-有限アーベル群$H$について，非空の零和部分列を含まない
-$H$-上の列の最大長を$\mathsf d(H)$と書く．
-従ってDavenport定数は$\mathsf D(H)=\mathsf d(H)+1$である．
-任意の有限群$A$と$f\ge1$に対し
+\paragraph{群の定数．}
+有限アーベル群$H$について，$\mathsf d(H)$を$H$上の零和を含まない列の最大長とする（$\mathsf d(H)+1$がDavenport定数であり，$\mathsf d(\{1\})=0$）．有限群$A$と$f\ge1$について
 \[
  N_{A,f}=\max\{3,|A|^f\},\quad
  U_f=f^{f+1}f!,\quad
- M_{A,f}=U_fN_{A,f}^{2^{f^2}},\qquad
- c_{A,f}=
+ M_{A,f}=U_f\,N_{A,f}^{\,2^{f^2}},
+ \qquad
+ c_{A,f}:=
  \begin{cases}
  \mathsf d(A^f),&A\text{が可換},\\
- M_{A,f}-1,&\text{それ以外}.
+ M_{A,f}-1,&\text{それ以外}
  \end{cases}
 \]
-とおく．
+とおく．$U_f$は一つの所有者のブロックパターンの数を抑え，$N_{A,f}\ge3$は付録~\ref{app:window-group}の順序分類で必要となる．
 
-\begin{proposition}[同時ブロック置換補題の本文用定式化]
+\paragraph{同時ブロック置換．}
+幅$f$の$A$上の\emph{ブロック置換族}（定義~\ref{def:block-family}）は，$d\le f$本の列からなり，各列は固定定数と\emph{ブロック}の$A$における順序付き積である．各ブロックは$[m]$に属する\emph{所有者}，元の値，置換後の値をもち，各所有者は高々$f$個のブロックを所有し，それらは他の所有者のブロックと任意に交錯してよい．$\operatorname{val}_c(J)$は，$J\subseteq[m]$に属する所有者のブロックだけが置換後の値をとるときの列$c$の値である．
+
+\begin{proposition}[同時ブロック置換]
 \label{prop:block-replacement-interface}
-$A$ を有限群，$f\ge1$ とする．高々 $f$ 本の順序付き列
-$c=1,\ldots,d$（$1\le d\le f$）を考える．
-列 $c$ は，変更しない群定数 $a_{c,0},\ldots,a_{c,q_c}\in A$
-と，左から右へ並ぶ $q_c$ 個のブロック
-$\beta_{c,1},\ldots,\beta_{c,q_c}$ からなる．
-各ブロック $\beta_{c,j}$ は，所有者
-$o(c,j)\in[m]$，置換前後の値
-$x_{c,j},x'_{c,j}\in A$ をもち，
-各所有者のブロック総数は，全列を通じて高々 $f$ とする．
-（異なる所有者のブロックは任意に交錯してよく，
-その間の変更しない材料は群定数に含める．）
-所有者の集合 $J\subseteq[m]$ を同時に置換したときの列の積を
-\[
- \operatorname{val}_c(J)
- =a_{c,0}y_{c,1}a_{c,1}\cdots y_{c,q_c}a_{c,q_c},
- \qquad
- y_{c,j}=\begin{cases}
- x'_{c,j},&o(c,j)\in J,\\
- x_{c,j},&o(c,j)\notin J
- \end{cases}
-\]
-と定義する．$c_{A,f}$ は直前に定義した定数とする．
-このとき $m>c_{A,f}$ なら，非空の $J\subseteq[m]$ が存在し，
-すべての列について同時に
-\(\operatorname{val}_c(J)=\operatorname{val}_c(\varnothing) \qquad(c=1,\ldots,d)\)
-が成立する．$A$ が可換なら $c_{A,f}=\mathsf d(A^f)$，
-一般の有限群なら $c_{A,f}=M_{A,f}-1$ でよい．
-個々のブロックの値や個々の所有者の積は
-保存されなくてもよい．
+有限群$A$上の幅$f$のブロック置換族で所有者数が$m>c_{A,f}$なら，全ての列$c$について$\operatorname{val}_c(J)=\operatorname{val}_c(\varnothing)$となる非空な$J\subseteq[m]$が存在する．個々のブロックや所有者の値は保存されなくてよい．
 \end{proposition}
+
 \begin{proof}
-これは節~\ref{app:group-blocks} の
-補題~\ref{lem:block-replacement} を，
-本稿で使用する根成分と所有者の記法で書き直したものである．
-可換群では所有者 $i$ の置換差分を $A^d$ の元にまとめ，
-非空零和部分列を選べば同時保存が得られる．
-非可換群では群因子を交換してはいけないため，
-まず所有者のブロック配置パターンを揃え，
-補題~\ref{lem:order-homogenize} で所有者間の順序比較を
-均質化する．補題~\ref{lem:group-block-order} の
-ランク別連続チャンク分解と
-補題~\ref{lem:group-interval} の接頭積の一致条件により，
-非空の所有者区間が全列の群積を保存する．
-この抽出に必要な所有者数は $M_{A,f}$ 以下であり，
-詳細な証明と定数評価は同付録に置く．
+これは補題~\ref{lem:block-replacement}である．$A$が可換なら，所有者の差分ベクトルからなる$A^d\le A^f$上の列の非空な零和部分列を選ぶ．任意の$A$では因子を交換しない．共通のブロックパターンをもつ所有者（パターンは高々$U_f$種類）の間で全ての対の順序比較を均質化し（補題~\ref{lem:order-homogenize}），各列を連続したランク別チャンクに分解する（補題~\ref{lem:group-block-order}）．接頭積の境界状態に鳩の巣原理を適用すると，全ての順序付き列積を保つ所有者の区間が得られる（補題~\ref{lem:group-interval}）．
 \end{proof}
 
-\begin{lemma}[均質なブロック配置の構造]
-\label{lem:group-block-order}
-$e\ge1,n\ge3$ とする．各 $t\in[e]$ と
-$i\in[n]$ に対応する相異なる点 $(t,i)$ が
-一直線上に全順序で並んでいるとする．
-(i) 同じ添字 $i$ における $(t,i)$ と $(u,i)$ の順序は
-$i$ に依存しない．
-(ii) 任意の順序付き型対 $(t,u)$（$t=u$ も許す）について，
-$i<j$ のときの $(t,i)$ と $(u,j)$ の順序は
-$i<j$ の取り方に依存しない．
-このとき型の集合は，それぞれ連続した領域を占める
-いくつかのクラスに分割される．各クラスには
-添字に関する一つの向き（昇順または降順）があり，
-領域内はその向きに沿うランク別の連続した
-$n$ 個のチャンクに分かれる．
-各チャンクはクラス内の各型の点をちょうど一つずつ含み，
-同じチャンク内の型の順序はランクによらない．
-\end{lemma}
+所有者の寄与は交換できない．二つの列が$\beta_{1,1}\beta_{2,1}$と$\beta_{2,2}\beta_{1,2}$であり，$S_3$で所有者1のブロックに$\sigma=(12)$，所有者2のブロックに$\tau=(23)$を与えると，列の値は$\sigma\tau\ne\tau\sigma$である．例~\ref{ex:nonabelian-reverse-owner}は，所有者の向きが逆の列を同時に保つ置換を示す．
 
-\begin{lemma}[有限群における複数成分同時の区間短縮]
-\label{lem:group-interval}
-$A$を任意の有限群とし，その上の幅$f$のブロック置換族を考える．$n\ge\max\{3,|A|^f\}$個の添字が同じブロック数，同じ出力列への割当て，同じ添字内順序を持つとする．同一列上の添字$i$の第$t$ブロックと添字$j$の第$u$ブロックの左右比較の真偽値も，全ての$i<j$で添字対によらず一定と仮定する．このとき添字の非空な連続区間$J$が存在し，全ての出力列$c$について
-\[
- \operatorname{val}_c(J)=\operatorname{val}_c(\emptyset)
-\]
-が成り立つ．つまり区間$J$の各所有者に属するブロックをまとめて代替しても，どの出力列の群値も変化しない．
-\end{lemma}
-\begin{theorem}[任意有限群の成分別値を指定した短いタプル]
-\label{thm:group-typed-shortest}
-\label{lem:group-typed-shortest}
-$G=(V,\Sigma,P,S,\fan)$をファンアウト高々$f$，
-規則ランク高々$r_{\max}\ge1$の縮約済み良形MCFGとする．
-$g:\Sigma^*\to A$を任意の有限群への準同型とすると，
-各$B\in V$と実現可能な$\mathbf s\in A^{\fan(B)}$に対して
-$g^{(\fan(B))}(\tuple u)=\mathbf s$を満たし
-\[
- \|\tuple u\|_1\le\beta_g:=
- (r_{\max}+1)\bar\theta_G
- \max\{1,c_{A,f}|V||A|^f\}
-\]
-となる$\tuple u\in L_B(G)$が存在する．
-特に$\beta_g=O_{A,f,r_{\max}}(\|G\|\bar\theta_G)$である．
-可換群なら反鎖定数は零和定数$\mathsf d(A^f)$でよい．
-\end{theorem}
-\begin{proof}
-根の成分別$\lambda$-値が$\mathbf t$である$B$-導出から，まず生成タプル総長，次に規則節点数を最小にするもの$T$を選ぶ．補題~\ref{lem:heavy-node-count}と同様，一つの根葉経路に同じ非終端記号と成分別$\lambda$-値の対は二度出現せず，経路の節点数は高々$n_\lambda$である．
-
-根の各成分の長さが$m_0=\max\{1,k+\ell\}$以上なら先頭$k$箇所と末尾$\ell$箇所，それ未満なら全終端位置を標識する．$k=\ell=0$の場合には非空性を明示的に維持するため，各成分で一箇所を標識する．標識位置は合計高々$h=f(k+\ell+1)$箇所である．
-
-部分木の生成語総長が$\bar\theta_G$を超える節点を\emph{重い}と呼ぶ．重い節点の任意の反鎖$Q$を固定する．互いに比較不能な部分木は終端位置を共有しないから，標識を含む節点は$Q$内で高々$h$個である．残りを$Q_0$とする．$Q_0$の各節点$v$の元の非終端記号を$C_v$とし，補題~\ref{lem:thickness-equivalence}(ii)によって長さ高々$\bar\theta_G$の$C_v$-導出を固定する．これに置換すれば各重い部分木は真に短くなる．
-
-仮に$|Q_0|>c_{A,f}$とする．線形性・非消去性より，$Q_0$の各節点は高々$f$個の重ならないブロックを，順序を持つ高々$f$個の根成分へ寄与する．これらの部分木以外は固定される．$g$が準同型なので，各根成分の群値は，変更しない因子と，元のブロック値または代替ブロック値を\emph{順序通りに掛けた積}である．命題~\ref{prop:block-replacement-interface}を適用すると，非空の所有者集合を同時に置換して全根成分の群値を維持できる．可換性は仮定しない．
-
-選んだ部分木は標識を含まない．短い根成分は変更されず，長い成分の標識付き接頭辞・接尾辞の文字と順序も維持される．各代替成分は良形性により非空なので，全ての根$\widehat s_{k,\ell}$-型も維持される．従って根の$\lambda$-ベクトルは変化しない一方，生成語総長は真に減少し，$T$の最小性に反する．どの重い反鎖の大きさも高々$c_{A,f}+h$である．補題~\ref{lem:heavy-node-count}に$b=\bar\theta_G$，$c=c_{A,f}+h$，$N=M_{k,\ell}\times A$を代入して表示した上界を得る．$A$が可換なら補題~\ref{lem:block-replacement}(a)を用いる．
-\end{proof}
-
-\begin{lemma}[印付き重い節点による窓・群の同時短縮]
+\begin{lemma}[窓・群不変量の短い代表]
 \label{lem:marked-heavy-window-group}
-$G=(V,\Sigma,P,S,\fan)$ をファンアウト高々 $f$，
-規則ランク高々 $r_{\max}\ge1$ の縮約済み良形 MCFG とする．
-$k,\ell\ge0$，有限群 $A$ および準同型
-$g:\Sigma^*\to A$ を固定し，
-$\lambda=(\widehat{s}_{k,\ell},g):\Sigma^*\to
- N:=M_{k,\ell}\times A$ とおく．
-$h:=f(k+\ell+1)$，
-$n_{\lambda}:=|V||N|^f$ とすると，
-各 $B\in V$ と実現可能な
-$\mathbf t\in N^{\fan(B)}$ に対して，
-$\lambda^{(\fan(B))}(\tuple u)=\mathbf t$ を満たす
-$\tuple u\in L_B(G)$ で
+$k,\ell\ge0$，有限群$A$（自明でもよい），準同型$g:\Sigma^*\to A$を固定し，$\lambda:=(\widehat s_{k,\ell},g):\Sigma^*\to N:=M_{k,\ell}\times A$，$h:=f(k+\ell+1)$とおく．このとき$(\mathrm R_\beta^\lambda)$が
 \[
- \|\tuple u\|_1\le
- b_{\mathrm{mark}}:=(r_{\max}+1)\bar\theta_G
- \max\{1,(c_{A,f}+h)n_{\lambda}\}
+ \beta=b_{k,\ell,A}:=(r_{\max}+1)\,\bar\theta_G\,(c_{A,f}+h)\,|V||N|^f
+ \;\le\;(r_{\max}+1)(c_{A,f}+h)|N|^f\,\|G\|\,\bar\theta_G
 \]
-となるものが存在する．特に固定された
-$f,r_{\max},k,\ell,A,g,\Sigma$ に対して
-$b_{\mathrm{mark}}=O(\|G\|\bar\theta_G)$ である．
-$A$ が可換なときは
-$c_{A,f}=\mathsf d(A^f)$ としてよい．
+で成り立つ．
 \end{lemma}
+
 \begin{proof}
-根の $\lambda$-ベクトルを $\mathbf t$ に固定し，
-生成タプルの総長，次に規則節点数を辞書式に最小化した
-$B$-導出 $T$ を選ぶ．
-補題~\ref{lem:heavy-node-count} と同じく，
-経路上で非終端記号とその成分別 $\lambda$-型の組は繰り返されず，
-各根葉経路の節点数は高々 $n_\lambda$ である．
+$\tuple u\in L_B(G)$，$\mathbf t:=\lambda^{(\fan(B))}(\tuple u)$とし，$T$を$(B,\mathbf t)$に対する$\lambda$-最小導出，重さの閾値を$b=\bar\theta_G$とする．長さ$m_0=\max\{1,k+\ell\}$以上の各根成分では先頭$k$箇所と末尾$\ell$箇所（$k=\ell=0$なら任意の一箇所）を，それより短い成分では全ての位置を標識する．標識は高々$h$個である．$Q$を重い節点の反鎖とする．比較不能な部分木の生成語は互いに素なので，$Q$のうち標識を含む節点は高々$h$個である．残りを$Q_0$とする．
 
-根の各出力成分で，長さが
-$m_0:=\max\{1,k+\ell\}$ 未満なら全ての終端位置，
-そうでなければ先頭 $k$ 個と末尾 $\ell$ 個の位置を標識する．
-$k=\ell=0$ の場合は各成分の一位置を標識し，
-非空性を明示的に保証する．標識位置の総数は高々 $h$ である．
+$|Q_0|>c_{A,f}$と仮定する．$v\in Q_0$の非終端記号$C_v$について，総長高々$\bar\theta_G$の$L_{C_v}(G)$のタプルを固定する（補題~\ref{lem:thickness-equivalence}(ii)）．線形性と非消去性により，各$v\in Q_0$は根成分に高々$f$個の互いに素な連続ブロックを与え，各根成分の$g$-値は固定部分とこれらのブロックの$g$-値の順序付き積である．これは所有者を$Q_0$とする$A$上のブロック置換族なので，命題~\ref{prop:block-replacement-interface}により，同時置換が全ての根$g$-値を保つ非空な$J\subseteq Q_0$が存在する．置換されるブロックは標識を含まない．短い根成分は変更されず，長い成分ではブロックは標識付きの接頭辞と接尾辞の間に真に含まれる．接頭辞と接尾辞はその文字と端からの位置を保ち，成分は$k+\ell$個の標識付き文字（$k=\ell=0$なら少なくとも一つ）を保つので長いままである．よって根の$\widehat s_{k,\ell}$-ベクトルも保たれ，根の$\lambda$-ベクトルが$\mathbf t$の$B$からの導出で，真に短いものが得られる（置換された生成語はいずれも$\bar\theta_G$を超えていた）．これは最小性に反する．
 
-部分木の総生成長が $\bar\theta_G$ を超える節点を重いとする．
-比較不能な重い節点の任意の集合 $Q$ をとる．
-各根成分における終端位置は一つの節点の生成成分に由来し，
-比較不能な部分木の出力位置は互いに重ならないので，
-$Q$ 内で標識位置を含む節点は高々 $h$ 個である．
-残りの節点の集合を $Q_0$ とし，
-各 $v\in Q_0$ の元の非終端記号 $C_v$ に対し
-補題~\ref{lem:thickness-equivalence}(ii) の
-総長高々 $\bar\theta_G$ の終端導出を代替として選ぶ．
-したがって各代替は元の重い部分木を真に短くする．
-
-$|Q_0|>c_{A,f}$ と仮定する．
-MCFG の線形性・非消去性により，$Q_0$ の各節点の成分は
-根の高々 $f$ 成分に現れる相互に重ならないブロックを与え，
-一節点の所有ブロック数も高々 $f$ である．
-$Q_0$ の外側の材料は一切変更せず，
-各根成分の $g$-値を固定材料と元・代替ブロックの
-非可換な順序付き積として表す．
-命題~\ref{prop:block-replacement-interface} により，
-$Q_0$ の非空部分集合を同時に置換しても，
-全根成分の $g$-値を保存できる．
-
-置換対象の節点は標識位置を一つも含まない．
-根の短い成分では全位置が標識済みなので置換は起こらない．
-長い成分では標識した先頭・末尾の文字が順序を保って残り，
-良形性は各代替成分の非空性を保証する．
-従って根の全成分の $\widehat{s}_{k,\ell}$-値も保存される．
-こうして根の $\lambda$-ベクトルを保ったまま
-総生成長が真に減るので，$T$ の最小性に矛盾する．
-ゆえに任意の重い節点反鎖の濃度は
-$c_{A,f}+h$ 以下である．
-補題~\ref{lem:heavy-node-count} を
-$b=\bar\theta_G$，$c=c_{A,f}+h$，
-$N=M_{k,\ell}\times A$ として適用すれば，
-表示した $b_{\mathrm{mark}}$ の上界を得る．
-可換群の定数は補題~\ref{lem:block-replacement}(a) による．
+したがって重い反鎖の大きさは高々$c_{A,f}+h$であり，$c=c_{A,f}+h\ge1$として補題~\ref{lem:heavy-node-count}を適用すれば上界を得る．二つ目の不等式は$|V|\le\|G\|$による．
 \end{proof}
 
-\paragraph{非可換群での同時置換を支える不変量．}
-上の証明で使用する命題~\ref{prop:block-replacement-interface} の
-非可換群の場合，すなわち付録の
-補題~\ref{lem:block-replacement}(b) の
-要点を，群積の順序が変わらない形で明示しておく．
-まず所有者ごとのブロック配置を揃え，
-補題~\ref{lem:order-homogenize} によって所有者間の全順序比較を
-均質化する．その結果，補題~\ref{lem:group-block-order} により，
-選ばれた $N=N_{A,f}$ 人の所有者のブロックは，
-根の出力成分全体で合計 $q\le f$ 個のクラス領域に分かれる．
-各領域には，所有者の添字に関して昇順または降順の
-$N$ 個の連続チャンクがある．
-固定された文字列・選ばれなかったブロックの群値も，
-各チャンクの間に置かれる定数として元の位置に保持する．
+\begin{corollary}[窓の代表]
+\label{lem:boundary-short-canonical}
+$k,\ell\ge0$について，$(\mathrm R_\beta^{\widehat s_{k,\ell}})$は$\beta=b_{k,\ell}:=(r_{\max}+1)\bar\theta_G\,f(k+\ell+1)\,|V||M_{k,\ell}|^f$で成り立つ．
+\end{corollary}
 
-一つのクラス領域 $K$ について，チャンク $p$ の終わりまでの
-元の積を $P_p^K$，最初の $p$ チャンクだけを代替ブロックにした
-積を $Q_p^K$ とし，$P_0^K=Q_0^K=1_A$ と置く．
-以下の「差」は群の逆元を用いたものであり，可換性を用いない：
-\(\kappa_p^K=P_p^K(Q_p^K)^{-1}\qquad(0\le p\le N)\).
-チャンク $(a,b]$ のみを置換した後の領域全体の積は，
-順序を一切入れ替えずに
-\(P_a^K(Q_a^K)^{-1}Q_b^K(P_b^K)^{-1}P_N^K\)
-と表せる．したがって
-$\kappa_a^K=\kappa_b^K$ ならこの積は $P_N^K$ に等しい．
-降順領域については所有者の添字区間 $(a,b]$ が
-チャンク区間 $(N-b,N-a]$ に対応するので，
-$\kappa_{N-j}^K$ を比較する．
-すべての領域についてこれらの値を集めた状態は $A^q$ に属し，
-$N+1>|A|^q$ である．ゆえに鳩の巣原理で
-$0\le a<b\le N$ の同一状態を選べる．
-このとき所有者 $a+1,\ldots,b$ の全ブロックを同時に置換しても，
-各領域，従って根のすべての出力成分の群値が保存される．
-これは各部分木や各ブロックの群値が個別に保存される，
-という主張ではない．定数 $M_{A,f}$ が保証するのは，
-上記 $N$ 人の均質な部分族を抽出できるだけの所有者数である．
+\begin{proof}
+補題~\ref{lem:marked-heavy-window-group}で$A$を自明群とすれば，$c_{A,f}=0$かつ$N\cong M_{k,\ell}$である．
+\end{proof}
 
-\begin{example}[ファンアウト2での交錯と非可換性]
-二つの所有者 $1,2$ がそれぞれ二つのブロックをもち，
-根の二成分に
-\((\beta_{1,1}\beta_{2,1},\;\beta_{2,2}\beta_{1,2})\)
-の順序で現れる場合を考える．$A=S_3$ とし，
-所有者 $1$ の各ブロックの値を $\sigma=(12)$，
-所有者 $2$ の各ブロックの値を $\tau=(23)$ とすると，
-根の群値は $(\sigma\tau,\tau\sigma)$ となる．
-$\sigma\tau\ne\tau\sigma$ なので，二成分で所有者の出現順序が
-異なることを無視して可換な差分和へ帰着させることはできない．
-この配置はブロック置換族の一例であり，
-特定の標的言語について群型付けの必要性を
-証明する例ではない．命題~\ref{prop:block-replacement-interface}
-は，このような交錯を許したまま根の各成分の積を
-同時に保存する置換集合の存在を保証する．
-\end{example}
+\subsection{窓型付けと窓・群型付け}
+\label{subsec:boundary-polydata}
 
-\begin{theorem}[窓と一般有限群型付けの多項式特徴データ]
+\begin{theorem}[接頭辞--接尾辞決定的型付けの多項式データ]
+\label{thm:boundary-polydata}
+$s\preceq s_{k,\ell}$，$L\in\Cmcf{f}{s}$，$L(G)=L\cap\Sigma^+$とする．このとき$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$の特徴標本であり，$|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$かつ
+\[
+ \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell}\,\|G\|^2\bar\theta_G,\qquad
+ K_{k,\ell}:=|\mathsf S^\sharp|^{fr_{\max}}
+   \bigl(3+r_{\max}(r_{\max}+1)f(k+\ell+1)|M_{k,\ell}|^f\bigr)
+\]
+である．
+\end{theorem}
+
+\begin{proof}
+系~\ref{lem:boundary-short-canonical}と，$\lambda=\widehat s_{k,\ell}$，$b=b_{k,\ell}$とした補題~\ref{lem:witness-length-template}(i),(ii),(iv)から，特徴標本であることと$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}b_{k,\ell})$が従う．$C_s(G)\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|$，$1+2\bar\theta_G\le3\|G\|\bar\theta_G$，$|V|\le\|G\|$を代入する．
+\end{proof}
+
+\begin{theorem}[窓・有限群型付けの多項式特徴データ]
 \label{thm:window-group-polydata}
-$f,r_{\max},k,\ell,\Sigma$，任意の有限群 $A$，
-準同型 $g:\Sigma^*\to A$，および正語上の固定有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定する．
-$s$ の新単位元添加 $\widehat{s}$ は
-$\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$ を満たすと仮定する．
-$L\in\Cmcf{f}{s}$ と，$L(G)=L\cap\Sigma^+$ となる
-縮約済み良形のファンアウト高々 $f$・ランク高々 $r_{\max}$ の
-文法 $G$ について，
-$\mathcal B_{f,s}^{\le r_{\max}}$ の特徴標本で
+$A$を有限群，$g:\Sigma^*\to A$を準同型，$\widehat s\preceq(\widehat s_{k,\ell},g)$とし，$L\in\Cmcf{f}{s}$，$L(G)=L\cap\Sigma^+$とする．このとき$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$の特徴標本であり，$|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$かつ
 \[
- |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},k,\ell,\widehat{s},g,\Sigma}
-   (\|G\|^2\bar\theta_G)
+ \begin{gathered}
+ \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell,A}\,\|G\|^2\bar\theta_G,\\
+ K_{k,\ell,A}:=|\mathsf S^\sharp|^{fr_{\max}}
+ \bigl(3+r_{\max}(r_{\max}+1)(c_{A,f}+f(k+\ell+1))(|M_{k,\ell}||A|)^f\bigr)
+ \end{gathered}
 \]
-を満たすものが存在する．
+である．群は非可換でもよく，そのブロックは成分をまたいで交錯してよい．
 \end{theorem}
+
 \begin{proof}
-補題~\ref{lem:marked-heavy-window-group} を
-$\lambda=(\widehat{s}_{k,\ell},g)$ に適用する．
-$\widehat{s}\preceq\lambda$ であるから，
-刈り込んだ $\widehat{s}$-精密化の各非開始記号
-$X=B_{\mathbf s}$ とその実現可能な成分別 $\lambda$-型について，
-長さ高々
-\[
- b_{\mathrm{mark}}=(r_{\max}+1)\bar\theta_G
- \max\{1,(c_{A,f}+f(k+\ell+1))|V||N|^f\}
-\]
-の $B$-導出が存在する．
-根の $\widehat{s}$-型は一致するので，
-補題~\ref{lem:type-preserving-replacement} により
-同じ $X$ の正準タプルとして採用できる．
-従って $b_{\mathrm{can}}\le b_{\mathrm{mark}}
-=O(\|G\|\bar\theta_G)$ である．
-補題~\ref{lem:witness-length-template} により，
-型付き規則証拠の個数が $O(\|G\|)$，
-各証拠語長が $O(\|G\|\bar\theta_G)$ となるため，
-総符号化長は $O(\|G\|^2\bar\theta_G)$ に収まる．
-$\eps$ は直接開始規則で扱う．
+補題~\ref{lem:marked-heavy-window-group}と$b=b_{k,\ell,A}$を用いて，定理~\ref{thm:boundary-polydata}と同様に示す．
 \end{proof}
 
-\begin{theorem}[窓と有限アーベル群型付けの多項式特徴データ]
+\begin{theorem}[窓・アーベル群型付けの多項式データ]
 \label{thm:window-abelian-polydata}
-$f,r_{\max},k,\ell,\Sigma$，有限アーベル群$A$，
-準同型$g:\Sigma^*\to A$，および正語上の固定有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定する．
-$s$ の新単位元添加 $\widehat{s}$ は
-$\widehat{s}\preceq(\widehat{s}_{k,\ell},g)$ を満たすと仮定する．
-任意の$L\in\Cmcf{f}{s}$と，
-$L(G)=L\cap\Sigma^+$を満たす縮約済み良形の
-ファンアウト高々$f$，ランク高々$r_{\max}$の文法$G$について，
-上限付き作用素$\mathcal B_{f,s}^{\le r_{\max}}$には，
-\[
- |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},k,\ell,\widehat{s},g,\Sigma}
-   (\|G\|^2\bar\theta_G)
-\]
-を満たす特徴標本が存在する．
-その定数は$\mathsf d(A^f)$を用いた
-\[
- b_{\mathrm{mark}}=(r_{\max}+1)\bar\theta_G
- \max\{1,(\mathsf d(A^f)+f(k+\ell+1))
-            |V|(|M_{k,\ell}||A|)^f\}
-\]
-によって評価でき，$\mathsf d(A^f)
-=O(\exp(A)\,f\log|A|)$である
-（注意~\ref{rem:davenport-size}）．
+定理~\ref{thm:window-group-polydata}で$A$が可換なら$c_{A,f}=\mathsf d(A^f)=O(\exp(A)\,f\log|A|)$（備考~\ref{rem:davenport-size}）であり，$K_{k,\ell,A}$は因子$|\mathsf S^\sharp|^{fr_{\max}}$と$(|M_{k,\ell}||A|)^f$を除いて$f$の多項式である．非可換な$A$では$c_{A,f}=M_{A,f}-1$は$f$について二重指数的に増大する．
 \end{theorem}
+
 \begin{proof}
-定理~\ref{thm:window-group-polydata}の証明を可換群に適用する．
-印付き重い節点補題~\ref{lem:marked-heavy-window-group} では，
-零和部分列によって反鎖定数を
-$M_{A,f}-1$ から $\mathsf d(A^f)$ へ改善できる．
+補題~\ref{lem:block-replacement}(a)による．
 \end{proof}
 
-可換性を用いるのは零和部分列による短縮だけであり，
-非可換群の場合は節~\ref{app:window-group}の
-順序均質化によりブロックの交錯を処理する．
+ファンアウト1では，固定窓に対する多項式時間・thick-data学習はYoshinaka~\cite[Theorem~1]{Yoshinaka2008}による．上の上界は縮約済み良形表示に相対的なものであり，正規化後にその結果を改良するとは主張しない．新しいのは，窓の値と順序付き群値を，交錯する高々$f$個の成分にわたって\emph{同時に}保つ点である．この高ランクの領域は言語のレベルで必要である．定理~\ref{thm:intrinsic-ranktwo-witness}は，最小ファンアウト2かつ最小規則ランク2の文脈自由でない$(1,1)$-型付き標的を与え，ランク1の場合は定理~\ref{thm:rankone-polydata}が扱う．
 
 \subsection{多項式特徴データの代数的条件}
 \label{subsec:algebraic-typed-data}
 
-有限局所自明半群の擬多様体を $\mathbf{LI}$，
-有限群の擬多様体を $\mathbf{Grp}$ と書く．
-その結び $\mathbf{LI}\vee\mathbf{Grp}$ は，
-$S\in\mathbf{LI}$ と有限群 $A$ の直積 $S\times A$ の
-有限の除法因子（部分半群の準同型像）からなる
-~\cite{Costa2002LI,Costa2002LIG}．
-次の判定条件は，窓・群の表示に依存した仮定を，
-固定型付けの正語像半群に対する内在的条件へ移す．
-用いる有限半群に関する事実は関連する
-CFG 論文~\cite{kuriyamaCFG} にも現れる．
+$\mathbf{LI}$は有限局所自明半群（全てのべき等元$e$について$eSe=\{e\}$）の擬多様体，$\mathbf{Grp}$は有限群の擬多様体であり，$\mathbf{LI}\vee\mathbf{Grp}$は$S\in\mathbf{LI}$と有限群$A$の積$S\times A$の因子全体からなる~\cite{Costa2002LI,Costa2002LIG}．次の補題は窓・群の仮定を正語像$\mathsf S$に内在的な条件にする．半群に関する事実は古典的である~\cite{Pin1986}．
 
-\begin{lemma}[局所自明・群型付けの窓・群精密化]
+\begin{lemma}[局所自明・群型付けは窓・群精密化をもつ]
 \label{lem:mcfg-li-group-window}
-$\Sigma$ を空でない有限アルファベット，
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を有限半群型付けとし，
-$\widehat{s}$ とおく．
-もし $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$ ならば，
-ある $k,\ell\ge0$，有限群 $A$，および
-準同型 $g:\Sigma^*\to A$ が存在して
-\(\widehat{s}\preceq(\widehat{s}_{k,\ell},g) \quad(\Sigma^*\text{ 全体上})\)
-が成り立つ．
-さらに $\mathsf S\in\mathbf{LI}$ ならば，
-群因子を自明群としてよく，
-$\widehat{s}\preceq \widehat{s}_{k,\ell}$ となる．
+$\Sigma\ne\emptyset$とする．$\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$なら，$k\ge1$，有限群$A$，準同型$g:\Sigma^*\to A$で$\widehat s\preceq(\widehat s_{k,k},g)$となるものが存在する．$\mathsf S\in\mathbf{LI}$なら$A$は自明にとれる．
 \end{lemma}
+
 \begin{proof}
-有限局所自明半群 $S$，有限群 $A$，
-部分半群 $T\subseteq S\times A$，
-全射半群準同型 $\pi:T\to\mathsf S$ を取る．
-各 $a\in\Sigma$ について $s(a)$ の逆像
-$(s_a,g_a)\in T$ を一つ選ぶ．
-これらの積により $\rho:\Sigma^+\to T$ を定めると，
-$\pi\rho=s$ である．
-二つの座標準同型を
-$\sigma:\Sigma^+\to S$，$g:\Sigma^*\to A$
-と書き，$g(\eps)=1_A$ とする．
-
-正語像 $S_0=\sigma(\Sigma^+)$ は局所自明である．
-$q=|S_0|+1$ とおく．
-有限局所自明半群に対する標準的な恒等式
-$S_0^q=S_0E(S_0)S_0$ および
-冪等元 $e,f$ と任意の $u\in S_0$ に対する
-$euf=ef$~\cite{Pin1986} より，
-長さ $2q$ 以上の語の $\sigma$-値は
-長さ $q$ の接頭辞・接尾辞で決まる．
-実際，$w=pxz$，$|p|=|z|=q$ と書き，
-$\sigma(p)=aeb$，$\sigma(z)=cfd$ とすれば，
-$x$ が空でないとき
-\(\sigma(pxz)=ae\,(b\,\sigma(x)\,c)\,fd =aefd=\sigma(pz)\)
-となる．$x=\eps$ の場合も中央の積を
-$bc\in S_0$ と解釈すれば同じ恒等式が使える．
-長さが $2q$ 未満の語は
-$\widehat{s}_{q,q}$ が個別に区別する．
-したがって非空語について窓型が一致すれば
-$\sigma$-値が一致し，さらに $g$-値も一致すれば
-$\rho$-値，よって $\widehat{s}$-値も一致する．
-
-窓型は空語 $\eps$ と非空語を区別するので，
-核の包含は $\Sigma^*$ 全体に拡張される．
-$k=\ell=q$ とすれば第一の主張が従う．
-$\mathsf S$ 自体が局所自明ならば，
-$S=\mathsf S$ とし，群因子を自明群に取ればよい．
+有限な$S'\in\mathbf{LI}$，有限群$A$，部分半群$T\le S'\times A$，全射準同型$\pi:T\to\mathsf S$を選ぶ（$\mathsf S\in\mathbf{LI}$なら$S'=\mathsf S$，$A=\{1\}$）．各$s(a)$を$(\sigma_a,g_a)\in T$へ持ち上げると，$\pi\rho=s$なる準同型$\rho=(\sigma,g):\Sigma^+\to T$が定まる．$g(\eps)=1_A$とおく．部分半群$S_0:=\sigma(\Sigma^+)\le S'$は局所自明である．$n:=|S_0|$とおく．次の二つが成り立つ．
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item $S_0^n\subseteq S_0E(S_0)S_0$．$s_1\cdots s_n$の接頭積を$t_i$とする．$i<j$で$t_i=t_j$なら，$u=s_{i+1}\cdots s_j$について$t_i=t_iu=t_iu^\omega$なので，積は$y\in S_0^1$を用いて$t_iu^\omega y$と書ける．そうでなければ$t_i$は$S_0$を尽くし，そのどれかはべき等元$e$であり，積は$ey$と書ける．いずれの場合も積は$x,y\in S_0^1$を用いて$xey$であり，$xey=(xe)e(ey)$である．
+\item $e,f\in E(S_0)$，$u\in S_0^1$について$euf=ef$：$euf=eu(fef)=(e(uf)e)f=ef$．
+\end{enumerate}
+$|w|\ge2n$なら$|p|=|z|=n$として$w=pxz$と書く．(a)より，$a,b,c,d\in S_0$とべき等元$e,f$を用いて$\sigma(p)=aeb$，$\sigma(z)=cfd$であり，(b)より$\sigma(w)=ae\,(b\,\sigma(x)c)\,fd=aefd$（$\sigma(\eps):=1$）となる．これは$p=\operatorname{pref}_n(w)$と$z=\operatorname{suf}_n(w)$だけで決まる．より短い語は$\widehat s_{n,n}$に正確に記録され，$\widehat s_{n,n}$は$\eps$も分離する．よって$(\widehat s_{n,n},g)$-値が等しければ$\rho$-値も$s$-値も等しい．$k=n$とすればよい．
 \end{proof}
 
-\begin{corollary}[多項式特徴データの代数的十分条件]
+\begin{corollary}[多項式データの代数的十分条件]
 \label{cor:mcfg-li-group-polydata}
-空でない有限 $\Sigma$，ファンアウト上界 $f\ge1$，
-規則ランク上界 $r_{\max}\ge1$，有限半群型付け
-$s:\Sigma^+\to\mathsf S$ を固定し，$\widehat{s}$ とおく．
-$\Cmcf{f}{s}$ の標的を生成する縮約済み良形の
-ファンアウト高々 $f$・ランク高々 $r_{\max}$ の
-文法 $G$ に対し，
-$\bar\theta_G=\max\{1,\theta_G\}$ とする．
-ランク制限付き再構成作用素は
-個数 $O_{f,r_{\max},s}(\|G\|)$ の特徴標本を持ち，
-その総長は
-\[
-\begin{array}{ll}
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G),
- & \mathsf S\in\mathbf{LI}\text{ の場合},\\[2pt]
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G),
- & \mathsf S\in\mathbf{LI}\vee\mathbf{Grp}\text{ の場合}.
-\end{array}
-\]
+$\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$なら，任意の$L\in\Cmcf{f}{s}$と$L(G)=L\cap\Sigma^+$を満たす上述の任意の$G$について，$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$の特徴標本であり，要素数は$O(\|G\|)$，総長は$O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$である．
 \end{corollary}
+
 \begin{proof}
-$\mathbf{LI}$ の場合，
-補題~\ref{lem:mcfg-li-group-window} により
-群因子を自明群として窓型付けに帰着し，
-定理~\ref{thm:boundary-polydata} を適用する．
-$\mathbf{LI}\vee\mathbf{Grp}$ の場合，
-同補題による窓・有限群への精密化と
-定理~\ref{thm:window-group-polydata} を適用する．
-精密化の諸パラメータは固定した型付けと
-アルファベットだけに依存し，$G$ には依存しない．
-特徴標本の個数についての上界も両方で成立する．
+補題~\ref{lem:mcfg-li-group-window}と定理~\ref{thm:window-group-polydata}による．$k$，$A$，$g$は$s$のみに依存する．
 \end{proof}
 
-次に，局所群への拡張を本文の主定理として明示する．
-この上界は $f=1$ でも成立し，
-関連CFG論文の $\mathbf{LI}\vee\mathbf{Grp}$ という
-十分条件を真に広げる（命題~\ref{prop:li-g-strict}）．
-ただし局所群に関する代数的特徴づけ自体は既知であり，
-本稿の主張はMCFGの特徴データ長への適用である．
-有限半群 $S$ が\emph{局所群}（$\mathbf{LG}$）に属するとは，
-各冪等元 $e\in S$ に対し $eSe$ が群となることをいう．
-この条件は，新単位元を追加したモノイドではなく
-型付けの\emph{正語像半群}に課す．
-
-以下で $\Sigma$ は非空，$k\ge1$，$A$ は有限群とする．長さ$k+1$の連続因子を左から並べる列を$\sigma_k(w)$と書く．
+有限半群$S$は，全てのべき等元$e\in S$について$eSe$が群であるとき\emph{局所群}であるといい，$S\in\mathbf{LG}$と書く．これは常に正語像$\mathsf S$について判定し，$\mathsf S^\sharp$については判定しない．命題~\ref{prop:li-g-strict}により$\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$である．
 
 \begin{definition}[局所群型付け]
 \label{def:local-group-typing}
-$\nu:\Sigma^{k+1}\to A$ を任意の写像とする．$|w|\ge2k$ に対し，
-\[
- \gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k}),
- \qquad \sigma_k(w)=(F_1,\ldots,F_{|w|-k})
-\]
-を $A$ における順序つき積とし，$|w|<2k$ に対しては $\gamma_{k,\nu}(w):=1_A$ とする．
-\emph{局所群型付け}を
-\(\lambda_{k,\nu}(w):=\bigl(\widehat{s}_{k,k}(w),\gamma_{k,\nu}(w)\bigr)\)
-で定める．ある $k,A,\nu$ について $\widehat{s}\preceq\lambda_{k,\nu}$ となる有限型付け $\widehat{s}$ を
-\emph{局所群決定的}という．
+$k\ge1$，有限群$A$，写像$\nu:\Sigma^{k+1}\to A$（\emph{sliding-factorラベル}）を固定する．$|w|\ge2k$について$\sigma_k(w)=(F_1,\ldots,F_{|w|-k})$を$w$の長さ$k+1$の因子を開始位置の順に並べたものとし，$\gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k})$（$A$における順序付き積）とおく．$|w|<2k$なら$\gamma_{k,\nu}(w):=1_A$とする．\emph{局所群型付け}を$\lambda_{k,\nu}(w):=\bigl(\widehat s_{k,k}(w),\gamma_{k,\nu}(w)\bigr)$と定める．補題~\ref{lem:local-group-morphism}により，これは有限モノイド$M_{k,\nu}$への全射準同型である．ある$k$，$A$，$\nu$について$\widehat s\preceq\lambda_{k,\nu}$となるとき，型付け$s$は\emph{局所群決定的}であるという．
 \end{definition}
 
-\begin{theorem}[局所群型付けに対する多項式特徴データ]
+\begin{theorem}[局所群型付けの多項式特徴データ]
 \label{thm:local-group-polydata}
-$f,r_{\max},\Sigma$ と有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定し，
-$\mathsf S\in\mathbf{LG}$ とする．
-空の終端ギャップはその新単位元添加 $\widehat{s}$ で評価する．
-任意の $L\in\Cmcf{f}{s}$ と，
-$L(G)=L\cap\Sigma^+$ を満たす
-ファンアウト高々 $f$，ランク高々 $r_{\max}$ の
-縮約済み良形文法 $G$ に対して，
-上限付き作用素 $\mathcal B_{f,s}^{\le r_{\max}}$ は
+$\mathsf S\in\mathbf{LG}$，$L\in\Cmcf{f}{s}$，$L(G)=L\cap\Sigma^+$とする．このとき$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$の特徴標本であり，
 \[
  |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+
- =O_{f,r_{\max},s,\Sigma}(\|G\|^3\bar\theta_G)
+ \|\Wit(\widetilde G_0)\|_+=O_{f,r_{\max},s,\Sigma}(\|G\|^3\bar\theta_G)
 \]
-を満たす特徴標本をもつ．
+である．
 \end{theorem}
+
 \begin{proof}
-定理~\ref{thm:lg-characterization} により，固定した $s$ だけに
-依存する整数 $k$，有限群 $A$，sliding-factorラベル $\nu$ を選び，
-正語の型を $\lambda_{k,\nu}$ で精密化できる．
-局所群の条件は $s(\Sigma^+)$ に課しており，
-空語を区別するための新単位元添加には課さない．
-
-まず $\widehat{s}_{k,k}$ の窓型だけを保存して短縮する．
-対応する縮約済み窓精密化の非終端記号数を $n_{\mathrm w}$ とすると，
-補題~\ref{lem:boundary-short-canonical} から，
-各実現可能な窓型をもつ代替タプルの長さは
-\[
- b_{\mathrm w}
- =f(2k+1)n_{\mathrm w}(r_{\max}+1)\bar\theta_G
- =O_{f,r_{\max},s,\Sigma}(\|G\|\bar\theta_G)
-\]
-以下でよい．この段階では代替タプルの群値が
-元の部分木ごとに一致するとは仮定しない．
-
-次に，根の全 $\lambda_{k,\nu}$-型を固定して総長最小の導出を取る．
-そのうち長さ $b_{\mathrm w}$ を超える節点の反鎖に，
-窓型を保つ短い代替導出を指定する．
-補題~\ref{lem:local-group-blocks} により，
-置換の際に根の窓型は変化せず，
-滑動因子の群値の変化は順序付きブロック積として記述できる．
-補題~\ref{lem:block-replacement} に従い，
-各成分の\emph{積全体}を同時に保存する非空の節点集合を選べるため，
-重い節点の反鎖の大きさは高々 $M_{A,f}-1$ である．
-これは代替部分木が個々に群値を保存するという仮定を必要としない．
-補題~\ref{lem:local-group-shortest} の表示を用い，
-$n_\lambda:=|V||M_{k,g}|^f$ とおくと，
-実現可能な各精密化型をもつ短いタプルの長さは
-\[
- \beta_\lambda=(r_{\max}+1)b_{\mathrm w}
-       \max\{1,(M_{A,f}-1)n_\lambda\}
- =O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)
-\]
-となる．ここで $n_{\mathrm w},n_\lambda=O_{f,s,\Sigma}(\|G\|)$ であり，
-$k,A,M_{A,f}$ は $G$ に依存しない定数である．
-
-最後に，補題~\ref{lem:untyped-contexts} により
-各規則証拠語の長さは
-$2\bar\theta_G+r_{\max}\beta_\lambda
- =O(\|G\|^2\bar\theta_G)$ 以下である．
-命題~\ref{lem:witness-length-template} は必要な証拠語数を
-$O_{f,r_{\max},s}(\|G\|)$ に抑える．
-両上界を掛け合わせ，必要なら空語の証拠を一つ加えれば，
-総長 $O(\|G\|^3\bar\theta_G)$ を得る．
-群積保存と反鎖短縮の詳細は節~\ref{app:local-group} に示す．
+定理~\ref{thm:lg-characterization}により，$k=|\mathsf S|$と$s$のみに依存する$A,\nu$について$\widehat s\preceq\lambda:=\lambda_{k,\nu}$である．補題~\ref{lem:local-group-shortest}は$\beta=\beta_\lambda=O(\|G\|^2\bar\theta_G)$として$(\mathrm R_\beta^\lambda)$を与える．まず重い部分木を同じ窓ベクトルの短いタプルに取り替え（系~\ref{lem:boundary-short-canonical}），次に順序付きsliding-factor積を変えない非空な族を選ぶ（補題~\ref{lem:local-group-blocks}と命題~\ref{prop:block-replacement-interface}）．補題~\ref{lem:witness-length-template}により$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}\beta_\lambda)=O(\|G\|^3\bar\theta_G)$である．
 \end{proof}
 
-$\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$ は真の包含である
-（命題~\ref{prop:li-g-strict}）．
-擬多様体水準の下界側はファンアウト1における
-関連CFG論文~\cite{kuriyamaCFG}の結果に依存する
-（系~\ref{cor:refinement-dichotomy}）．
-ここでの上界条件は\emph{十分条件}であり，
-高ファンアウト下界は問題~\ref{op:fanout-two}として残る．
-空アルファベットの場合は自明である．
+Rees座標とsliding-factor座標は古典的であり，それらと所有者別ブロック短縮との組合せが定量的な手順である．窓型付けと窓・群型付けについては，定理~\ref{thm:boundary-polydata}と~\ref{thm:window-group-polydata}の二次上界の方が鋭い．
 
-
-下界側は次の交わり補題によって正確に述べられる．
-
-
-
-\paragraph{完全生成語型精密化厚さの代数的境界．}
-全射型付け$s$と縮約済み良形文法$G$に対し，刈り込んだ完全生成語型精密化$\widetilde G_0$の規則厚さを
-$\theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}$と書く．固定した$f\ge1$について，有限半群の擬多様体$\mathbf V$が\emph{ファンアウト$f$で多項式精密化厚さを持つ}とは，全ての非空有限アルファベット$\Sigma$，規則ランク上限$r_{\max}\ge1$，$\mathsf S\in\mathbf V$への全射型付け$s:\Sigma^+\twoheadrightarrow\mathsf S$について多項式$q=q_{f,r_{\max},s,\Sigma}$が存在し，$\Sigma$上の全ての縮約済み良形，ファンアウト高々$f$，規則ランク高々$r_{\max}$の文法$G$について
-\[
- \theta_{\mathrm{typ}}(G,s)\le q(\|G\|,\bar\theta_G)
-\]
-となることをいう．$q$は固定された型付けに依存してよいが，文法や標的言語には依存しない．以下では$f,r_{\max}$を固定したとき多項式の次数も一様に選べる．
+\paragraph{完全精密化の厚さに関する代数的境界．}
+$\theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}$とおく．$f\ge1$について，擬多様体$\mathbf V$が\emph{ファンアウト$f$で多項式精密化厚さをもつ}とは，任意の空でない有限$\Sigma$，任意の$r_{\max}\ge1$，$\mathsf S\in\mathbf V$なる任意の全射$s:\Sigma^+\twoheadrightarrow\mathsf S$について，多項式$q=q_{f,r_{\max},s,\Sigma}$が存在し，$\Sigma$上のファンアウト$\le f$，ランク$\le r_{\max}$の全ての縮約済み良形文法$G$が$\theta_{\mathrm{typ}}(G,s)\le q(\|G\|,\bar\theta_G)$を満たすことをいう．
 
 \begin{corollary}[精密化厚さの二分法]
 \label{cor:refinement-dichotomy}
-任意の$f\ge1$と有限半群の擬多様体$\mathbf V$について，ファンアウト$f$で多項式精密化厚さを持つことと，$\mathbf V\subseteq\mathbf{LG}$は同値である．$\mathbf V\subseteq\mathbf{LG}$なら
-\[
- \theta_{\mathrm{typ}}(G,s)=
- O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)
-\]
-と取れる．この同値は，$L\in\Cmcf{f}{s}$について$L(G)=L\cap\Sigma^+$を満たす表示だけに文法$G$を制限しても成立する．実際，正語像が局所群でない\emph{各固定全射型付け}に対し，すでにファンアウト1，規則ランク2で多項式上界は成立しない．
+任意の$f\ge1$と有限半群の任意の擬多様体$\mathbf V$について，$\mathbf V$がファンアウト$f$で多項式精密化厚さをもつのは$\mathbf V\subseteq\mathbf{LG}$のとき，かつそのときに限る．$\mathbf V\subseteq\mathbf{LG}$なら$\theta_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$ととれる．$G$を$L\in\Cmcf{f}{s}$なる$L\cap\Sigma^+$の表示に限っても同値性は保たれる．$\mathsf S\notin\mathbf{LG}$なる個々の型付けについて，多項式上界はファンアウト1・規則ランク2ですでに成り立たない．
 \end{corollary}
+
 \begin{proof}
-まず$\mathsf S\in\mathbf{LG}$とする．定理~\ref{thm:lg-characterization}から，$\widehat s\preceq\lambda$を満たす固定のsliding-factor準同型$\lambda=\lambda_{k,\nu}$が存在する．刈り込んだ細分化の任意の非開始型付き非終端$X=B_{\mathbf t}$を取る．生産性から，$\mathbf t$を実現する$\tuple u\in L_X$が存在する．その$\lambda$-ベクトルは$B$で実現可能なので，補題~\ref{lem:local-group-shortest}から同じ$\lambda$-ベクトルを持ち
-\[
- \|\tuple u'\|_1\le\beta_\lambda=
- O(\|G\|^2\bar\theta_G)
-\]
-を満たす$\tuple u'\in L_B(G)$が存在する．$\widehat s\preceq\lambda$だからその$\widehat s$-ベクトルも$\mathbf t$であり，型付き導出の一意持ち上げ（命題~\ref{prop:output-invariants}(ii)）から$\tuple u'\in L_X$となる．元の開始記号を左辺に持つ非開始型付き非終端にも同じ議論が適用される．
+$\mathsf S\in\mathbf{LG}$なら，定理~\ref{thm:local-group-polydata}の証明が$\beta_\lambda=O(\|G\|^2\bar\theta_G)$で$(\mathrm R_\beta^\lambda)$を与え，代入可能性を用いない補題~\ref{lem:witness-length-template}(i),(iii)により$\theta_{\widetilde G_0}\le2\bar\theta_G+r_{\max}\beta_\lambda$である．
 
-任意の残存する非開始型付き規則
-$\widetilde R:X\to\rho(Y_1,\ldots,Y_q)$を取る．元の規則を$R:B\to\rho(C_1,\ldots,C_q)$とする．各子$Y_i$に上の短い終端導出を選び，$\widetilde R$へ代入して根の生成タプル$\tuple z$を持つ導出$D$を作る．補題~\ref{lem:thickness-equivalence}(i)によって
-\[
- \|\tuple z\|_1\le\bar\theta_G+r_{\max}\beta_\lambda.
-\]
-開始リンク$\widetilde S\to X$が存在する場合，直ちに$\widetilde R$を使う成功導出が得られる．存在しない場合は，補題~\ref{lem:thickness-equivalence}(iv)の文脈$E_B$を用いる．これは元の成功導出から一つの$B$部分木を消去して得られ，$|E_B|_{\mathrm{fix}}\le\bar\theta_G$を満たす．この穴に$D$の型を忘れた導出を埋め込むと$G$の成功導出となる．その一意な生成語型付き持ち上げは，部分木の型と規則がその終端生成語によって一意に定まることから，挿入した部分木で元の$D$と一致する（命題~\ref{prop:output-invariants}(ii)）．よって$\widetilde R$を使う成功した型付き導出の語長は高々$2\bar\theta_G+r_{\max}\beta_\lambda$である．開始リンク規則にも$\beta_\lambda$以下の成功導出がある．従って，刈り込んだ細分化の全規則厚さは主張の二次上界を満たす．この議論にはタプル代入可能性を仮定していない．
-
-逆向きはさらに強く，$\mathsf S\notin\mathbf{LG}$となる\emph{任意の固定全射型付け}
-$s:\Sigma^+\twoheadrightarrow\mathsf S$について反例を与える．古典的な$U_1$排除判定（定理~\ref{thm:lg-characterization}(i)--(ii)）によって，相異なる冪等元$e,z\in\mathsf S$で
-$e^2=e$，$ez=ze=z$，$z^2=z$を満たすものが存在する．全射性から非空語$u,v\in\Sigma^+$を$s(u)=e$，$s(v)=z$となるように固定する．各$n\ge1$に対してファンアウト1，規則ランク2の文法
-\[
- S\to SS\mid a\ (a\in\Sigma)\mid A_0\mid\cdots\mid A_n,\quad
- A_0\to u,\quad
- A_i\to A_{i-1}A_{i-1}\mid v\quad(1\le i\le n)
-\]
-を考える．$u,v$は固定した終端文字列であり，追加のアルファベット文字ではない．この$G_n$は縮約済み良形で，$\|G_n\|=O_s(n)$，$L(G_n)=\Sigma^+$，$\bar\theta_{G_n}=O_s(1)$を満たす．各規則は，$A_i$を$v$（$A_0$は$u$）で終端させることで定数長の成功導出に使用できる．
-
-一方，$L_{A_n}(G_n)$の生成語$w$が$s(w)=e$であるには，全ての葉の定数規則で$u$を使わなければならない．$v$が一度でも現れると，$\{e,z\}$内の積は吸収元$z$になるからである．ゆえに$(A_n)_{(e)}$の生成語は$u^{2^n}$だけであり，残存する型付き規則$S_{(e)}\to(A_n)_{(e)}$を使う成功導出の語長は少なくとも$|u|2^n$である．従って
-$\theta_{\mathrm{typ}}(G_n,s)\ge|u|2^n$となり，規則ランク上限2で既に任意の多項式上界に反する．$\Sigma^+\in\Cmcf{f}{s}$は全$f\ge1$で成立するので，標的表示へ制限した場合も同様である．$\mathbf V\not\subseteq\mathbf{LG}$なら$\mathbf V$の非LG元を選べばよい．命題~\ref{prop:typed-thickness-exponential}の2元半束例は$u,v$が1文字の場合に対応する．
+$\mathsf S\notin\mathbf{LG}$なら，定理~\ref{thm:lg-characterization}(ii)により部分半群$\{e,z\}\cong U_1$，すなわち$ez=ze=z$なるべき等元$e\ne z$が存在する．全射性から$s(u)=e$，$s(v)=z$なる$u,v\in\Sigma^+$を選ぶ．命題~\ref{prop:typed-thickness-exponential}(a)により，$\|G_n\|=O(n)$，$\bar\theta_{G_n}=O(1)$，$\theta_{\mathrm{typ}}(G_n,s)\ge2^n$なるファンアウト1，ランク2の文法$G_n$が得られ，これらは$\Sigma^+=\widehat s^{-1}(\mathsf S)\in\Cmcf{f}{s}$を表示する．最後に，$\mathbf V\not\subseteq\mathbf{LG}$なら$\mathsf S\in\mathbf V\setminus\mathbf{LG}$を選べばよい．これはアルファベット$\Sigma:=\mathsf S$上の評価型付け$\mathsf S^+\to\mathsf S$の正語像である．
 \end{proof}
 
-\begin{remark}[精密化厚さと特徴データ長の違い]
+\begin{remark}[精密化厚さはデータの下界ではない]
 \label{rem:refinement-vs-data}
-この系が特徴づけるのは\emph{特定の完全生成語型精密化}の規則厚さであって，特徴正例の最小符号化総長や任意のGold学習器の下界ではない．逆向きの反例では規則ランク2を使うので，規則ランク1での失敗を意味しない．多項式精密化厚さは補題~\ref{lem:typed-thickness-baseline}を介して多項式特徴データ上界を与えるが，逆は従わない．分布同値の短い代表が存在すれば，完全精密化が指数的に厚くてもよい（命題~\ref{prop:mcfg-relaxed-witnesses}）．ファンアウト2以上で$\mathbf{LG}$は短い特徴データの十分条件であり，必要性はなお未解決である（問題~\ref{op:fanout-two}）．
+この系は一つの特定の精密化に関するものであり，特徴データの最小符号化総長や任意の学習器に関するものではない．否定方向はランク2を用いる．多項式精密化厚さからは多項式データが従う（補題~\ref{lem:typed-thickness-baseline}）が，逆は従わない．精密化が指数的に厚くても，短い分布的代表が存在し得る（命題~\ref{prop:mcfg-relaxed-witnesses}）．ファンアウト$\ge2$で多項式特徴データに$\mathbf{LG}$が必要かどうかは未解決である（未解決問題~\ref{op:fanout-two}）．
 \end{remark}
 
-\subsection{一般の標準MCFG入力への拡張}
+\subsection{制限のない標準入力MCFG}
 \label{subsec:unrestricted-source}
-従来の定量評価では良形の縮約済み文法を用いたが，
-\emph{入力文法}には良形性，非消去性，非置換性，
-非融合性，$\lambda$-自由性を要求しなくてよい．
-空成分がある場合には，その非空成分パターンを実現する最短長を測る．
 
-\begin{definition}[成分パターン厚み]
+入力文法は良形である必要はなく，消去・置換・融合規則や空成分を許す．そのとき重要なのは，各非空成分パターンを実現するコストである．
+
+\begin{definition}[成分パターン厚さ]
 \label{def:component-pattern-thickness}
-標準MCFG $H$の生産的な非終端記号$A$について
-$\operatorname{supp}(\tuple u):=\{i:u_i\ne\eps\}$，
-$\mathsf{Pat}_H(A):=\{\operatorname{supp}(\tuple u):
-\tuple u\in L_A(H)\}$とおく．
+標準MCFG $H$の生産的な非終端記号$A$について，$\operatorname{supp}(\tuple u):=\{i:u_i\ne\eps\}$，$\mathsf{Pat}_H(A):=\{\operatorname{supp}(\tuple u):\tuple u\in L_A(H)\}$とし，
 \[
  t_{\mathrm{pat}}(H):=
- \max_{\substack{A\text{ は生産的}\\I\in\mathsf{Pat}_H(A)}}
- \min_{\substack{\tuple u\in L_A(H)\\
- \operatorname{supp}(\tuple u)=I}}
- \|\tuple u\|_1,\qquad
+ \max_{\substack{A\text{ 生産的}\\I\in\mathsf{Pat}_H(A)}}
+ \min_{\substack{\tuple u\in L_A(H)\\ \operatorname{supp}(\tuple u)=I}}
+ \|\tuple u\|_1 ,
+ \qquad
  \bar t_{\mathrm{pat}}(H):=\max\{1,t_{\mathrm{pat}}(H)\}
 \]
-を成分パターン厚みと呼ぶ．空集合の最大値は0とする．
-全成分が空のパターンの最短長も0である．
+とおく（$\max\emptyset:=0$）．$H$が縮約済みかつ$\lambda$-自由なら全成分パターンだけが現れ，$t_{\mathrm{pat}}(H)=t_H$である．
 \end{definition}
 
-\begin{proposition}[成分パターン厚みによる良形正規化]
+\begin{proposition}[パターン厚さで制御される良形正規化]
 \label{prop:pattern-thickness-transfer}
-$f,r\ge1$を固定し，$H$をファンアウト高々$f$，
-ランク高々$r$の任意の標準MCFGとする．
-$L(H)\cap\Sigma^+\ne\emptyset$なら，
-その刈り込み済み文法を$H_{\mathrm{red}}$として，
-同じファンアウトとランクの上界をもち，
-$L(H)\cap\Sigma^+$を生成する縮約済み良形MCFG $G$が存在して
+$H$を$L(H)\cap\Sigma^+\ne\emptyset$なるファンアウト$\le f$，ランク$\le r$の標準MCFG，$H_{\mathrm{red}}$をその刈り込み形とする．このとき同じファンアウト・ランク上界をもつ$L(H)\cap\Sigma^+$の縮約済み良形MCFG $G$で
 \[
- \|G\|=O_{f,r}(\|H\|),\quad
- t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}}),\quad
- \bar\theta_G=O_{f,r}(
- \|H\|\bar t_{\mathrm{pat}}(H_{\mathrm{red}}))
+ \|G\|=O_{f,r}(\|H\|),\qquad
+ t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}}),\qquad
+ \bar\theta_G=O_{f,r}\bigl(\|H\|\,\bar t_{\mathrm{pat}}(H_{\mathrm{red}})\bigr)
 \]
-を満たす．
+なるものが存在する．
 \end{proposition}
+
 \begin{proof}
-命題~\ref{prop:good-normalization}で正規化し，
-補題~\ref{lem:normalization-stages}の
-タプル言語の等式を用いる．
-保持記号の生成言語は，元の文法の成分パターン別の
-言語の和集合を，成分射影・置換・連結した像となる．
-これらは総長を増加させず，元の各非空ファイバーには
-長さ$t_{\mathrm{pat}}(H_{\mathrm{red}})$以下の代表がある．
-よって$t_G$を抑え，補題~\ref{lem:thickness-equivalence}(iii)で
-$\theta_G$を抑えられる．
-詳細は付録~\ref{app:pattern-thickness}に示す．
+命題~\ref{prop:good-normalization}の$G$をとる．補題~\ref{lem:normalization-stages}により，$G$の各非終端記号の言語は，$H_{\mathrm{red}}$の台パターンのファイバーの和集合の，成分の削除・置換・連結による像である．これらは総長を増やさないので$t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}})$である（付録~\ref{app:pattern-thickness}）．補題~\ref{lem:thickness-equivalence}(iii)が$\bar\theta_G$の上界を与える．
 \end{proof}
 
-\begin{corollary}[任意の標準MCFG入力に対する定量保証]
+\begin{corollary}[任意の標準MCFGからの特徴データ総長]
 \label{cor:unrestricted-standard-mcfg-data}
-$f,r\ge1$，有限アルファベット$\Sigma$，
-有限半群型付け$s$を固定する．
-$L\in\Cmcf{f}{s}$を生成する任意の有限な標準MCFG $H$が
-ファンアウト高々$f$，規則ランク高々$r$なら，
-$n:=\max\{1,\|H\|\}$と
-$t:=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$に対し，
-再構成器$\mathcal B_{f,s}^{\le r}$には
-$O_{f,r,s}(n)$語からなる特徴標本$K\subseteq L$が存在し，
+$H$を$L\in\Cmcf{f}{s}$に対するファンアウト$\le f$，ランク$\le r$の任意の有限標準MCFGとし，$n:=\max\{1,\|H\|\}$，$t:=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$とおく．作用素$\mathcal B^{\le r}_{f,s}$は$|K|=O(n)$かつ
 \[
- \|K\|_+=\begin{cases}
- O(n^3t),&
- s\preceq s_{k,\ell}\text{，または }
- \widehat{s}\preceq(\widehat{s}_{k,\ell},g)
- \text{（固定有限群準同型$g$）},\\
- O(n^4t),&\mathsf S\in\mathbf{LG}
+ \|K\|_+=
+ \begin{cases}
+ O(n^3t),&\text{ある}k,\ell\text{と有限群への準同型}g\text{（自明でもよい）について}\widehat s\preceq(\widehat s_{k,\ell},g)\text{のとき},\\
+ O(n^4t),&\mathsf S\in\mathbf{LG}\text{のとき}
  \end{cases}
 \]
-となる．定数は固定したアルファベット・型付け・
-ファンアウト・ランク・窓・群にのみ依存する．
-入力の消去，置換，融合，空成分はすべて許される．
-$\eps\in L$の場合は長さ1の追加証拠を加える．
+なる特徴標本$K\subseteq L$をもつ．定数は$f,r,s,\Sigma$（および$k,\ell,g$）に依存し，$H$には依存しない．
 \end{corollary}
+
 \begin{proof}
-正語部分が非空なら命題~\ref{prop:pattern-thickness-transfer}と
-定理~\ref{thm:boundary-polydata}，
-\ref{thm:window-group-polydata}，
-\ref{thm:local-group-polydata}を順に用いる．
-$\|G\|=O(n)$，$\bar\theta_G=O(nt)$である．
-$L\subseteq\{\eps\}$は$K=L$で足りる．
+$L\subseteq\{\eps\}$なら$K=L$とする．そうでなければ命題~\ref{prop:pattern-thickness-transfer}により$\|G\|=O(n)$，$\bar\theta_G=O(nt)$なる$G$が得られ，定理~\ref{thm:window-group-polydata}または定理~\ref{thm:local-group-polydata}を適用する．
 \end{proof}
 
 \section{補足的な定量結果}
@@ -2980,7 +2131,7 @@ $f\ge2$を固定する．正語像が$\mathbf{LG}$に属さない固定有限半
 補題~\ref{lem:semigroup-transfer}によって正の長さのタプルの比較，
 ならびに今回の特徴正例標本の性質は変化しない．
 
-本節では定理~\ref{thm:group-typed-shortest}および
+本節では補題~\ref{lem:marked-heavy-window-group}および
 補題~\ref{lem:local-group-shortest}に共通する群論的命題を証明する．
 可換な場合は零和部分列を用い，非可換な場合はブロックの
 相対順序を均質化する．
@@ -3039,8 +2190,7 @@ $m>\mathsf d(A^f)$なら列$(\delta_i)_{i=1}^m$は
 \begin{remark}[零和定数の大きさ]
 \label{rem:davenport-size}
 接頭部分和に対する鳩の巣論法から $\mathsf d(A^f)\le|A|^f-1$ が従う．
-したがって補題~\ref{lem:group-typed-shortest} は，
-連続部分和から得られる上界より弱くなることはなく，
+零和の上界 $\mathsf d(A^f)$ はこれより弱くなることはなく，
 通常ははるかに強い．
 $A\cong C_{n_1}\oplus\cdots\oplus C_{n_s}$，$n=\exp(A)\ge2$ と書くと
 \[
@@ -3064,6 +2214,25 @@ $A=C_2$ では反鎖の上界は $2^f-1$ から $f$ に下がる．
 
 \paragraph{一般有限群の場合：順序均質化}
 \label{app:window-group}
+
+\begin{lemma}[均質なブロック配置の構造]
+\label{lem:group-block-order}
+$e\ge1,n\ge3$ とする．各 $t\in[e]$ と
+$i\in[n]$ に対応する相異なる点 $(t,i)$ が
+一直線上に全順序で並んでいるとする．
+(i) 同じ添字 $i$ における $(t,i)$ と $(u,i)$ の順序は
+$i$ に依存しない．
+(ii) 任意の順序付き型対 $(t,u)$（$t=u$ も許す）について，
+$i<j$ のときの $(t,i)$ と $(u,j)$ の順序は
+$i<j$ の取り方に依存しない．
+このとき型の集合は，それぞれ連続した領域を占める
+いくつかのクラスに分割される．各クラスには
+添字に関する一つの向き（昇順または降順）があり，
+領域内はその向きに沿うランク別の連続した
+$n$ 個のチャンクに分かれる．
+各チャンクはクラス内の各型の点をちょうど一つずつ含み，
+同じチャンク内の型の順序はランクによらない．
+\end{lemma}
 
 \begin{proof}[補題~\ref{lem:group-block-order}の証明]
 (ii) で $t=u$ と置くと，各型の点列は単調である．
@@ -3112,6 +2281,15 @@ $(t,1)<(u,2)<(v,3)<(t,1)$
 ランク間の順序関係がチャンクの連続性を与え，
 (i) が各チャンク内の順序を与える．
 \end{proof}
+
+\begin{lemma}[有限群における複数成分同時の区間短縮]
+\label{lem:group-interval}
+$A$を任意の有限群とし，その上の幅$f$のブロック置換族を考える．$n\ge\max\{3,|A|^f\}$個の添字が同じブロック数，同じ出力列への割当て，同じ添字内順序を持つとする．同一列上の添字$i$の第$t$ブロックと添字$j$の第$u$ブロックの左右比較の真偽値も，全ての$i<j$で添字対によらず一定と仮定する．このとき添字の非空な連続区間$J$が存在し，全ての出力列$c$について
+\[
+ \operatorname{val}_c(J)=\operatorname{val}_c(\emptyset)
+\]
+が成り立つ．つまり区間$J$の各所有者に属するブロックをまとめて代替しても，どの出力列の群値も変化しない．
+\end{lemma}
 
 \begin{proof}[補題~\ref{lem:group-interval}の証明]
 補題~\ref{lem:group-block-order} を各根成分に適用する．
@@ -3575,10 +2753,8 @@ $\mathbf{LI}\vee\mathbf{Grp}$ への非所属は姉妹論文の特徴づけか�
 \label{lem:local-group-shortest}
 $G=(V,\Sigma,P,S,\fan)$ を，ファンアウト高々 $f$，規則ランク高々 $r_{\max}\ge1$ の
 縮約済み良形 MCFG とし，$\lambda=\lambda_{k,\nu}$ とする．
-縮約された $\widehat{s}_{k,k}$-精密化の開始記号以外の型付き非終端記号の個数を
-$n_{\mathrm w}\le|V||M_{k,k}|^f$ とし，
-$b_{\mathrm w}:=f(2k+1)n_{\mathrm w}(r_{\max}+1)\bar\theta_G$ と置く．
-$n_\lambda:=|V||M_{k,\nu}|^f$ とし，$M_{A,f}$ を\ref{subsec:group-invariants}節で定義した定数とする．
+$b_{\mathrm w}:=b_{k,k}=(r_{\max}+1)\bar\theta_G\,f(2k+1)\,|V||M_{k,k}|^f$ を系~\ref{lem:boundary-short-canonical}の窓定数とし，
+$n_\lambda:=|V||M_{k,\nu}|^f$，$M_{A,f}$ を\ref{subsec:group-invariants}節の定数とする．
 各 $B\in V$ と実現可能な各 $\mathbf t\in M_{k,\nu}^{\fan(B)}$ について，
 $\lambda^{(\fan(B))}(\tuple u)=\mathbf t$ かつ
 \[
@@ -3590,100 +2766,14 @@ $A$ が可換なら $M_{A,f}-1$ を $\mathsf d(A^f)$ に置き換えてよい．
 \end{lemma}
 
 \begin{proof}
-根の型が $\mathbf t$ となる $B$ からの終端導出のうち，
-まず総出力長，次に節点数を最小化するもの $T$ を選ぶ．
-各節点に，非終端記号とその出力の $\lambda$-ベクトルを標識する．
-補題~\ref{lem:group-typed-shortest} と同様に，経路上で標識は繰り返されない．
-$\lambda$ は準同型であり（補題~\ref{lem:local-group-morphism}），
-規則テンプレートは準同型的に評価されるからである．
-よって各経路の節点数は高々 $n_\lambda$ である．
-
-出力の総長が $b_{\mathrm w}$ を超える節点を\emph{重い}と呼ぶ．重い節点は祖先について閉じている．
-重い節点 $v$ の標識を $C$ とし，その出力の $\widehat{s}_{k,k}$-ベクトルを $\boldsymbol\omega$ とする．
-$G$ は縮約済みなので，$T$ は成功する導出に埋め込める．
-よって $C_{\boldsymbol\omega}$ は縮約された $\widehat{s}_{k,k}$-精密化に残る型付き非終端記号であり，
-補題~\ref{lem:boundary-short-canonical} により，
-出力の窓ベクトルが同じで総長が高々 $b_{\mathrm w}$ の $C$ からの導出が存在する．
-各重い節点についてこの置換を固定する．
-
-重い節点の反鎖 $v_1,\ldots,v_m$ を考える．
-各 $v_i$ は根の成分に高々 $f$ 個の互いに素なブロックを与える．
-任意の添字集合 $J$ の部分木を置換すると，総長が真に小さい正しい導出が得られる．
-補題~\ref{lem:local-group-blocks} を根の各成分に適用すると，
-この置換は根の窓型を変えない．
-また長い根成分の $\gamma$ 値は，各ブロックが固定定数の間に自分の $\gamma$ 値を与える
-順序つき積を通じてのみ変わる．
-これを群$A$上のブロック置換族として明示する．
-各添字$i$は節点$v_i$が根の各成分に与えるブロックを所有し，
-その総数は高々$f$である．窓型の短いブロックは
-型一致により実際の文字列が不変だから，固定部分へ吸収する．
-残る長いブロックの$\gamma$-値だけが置換によって変化し，
-補題~\ref{lem:local-group-blocks}の定数因子は選択集合$J$に依存しない．
-したがって各根成分の$\gamma$-値は，
-固定定数と各所有者の元のブロック値／置換後のブロック値との
-非可換な\emph{順序付き積}として表せる．
-所有するブロックがゼロの添字があればそれだけを置換でき，
-根の型を保って出力を短縮できるので，
-以下では各添字が少なくとも一つのブロックを持つと仮定してよい．
-
-所有者ごとのブロック数，各ブロックの根成分，
-同一所有者内の順序で定まるパターンは高々
-$U_f=f^{f+1}f!$種類である．
-$m\ge M_{A,f}=U_fN_{A,f}^{2^{f^2}}$なら，
-同一パターンの添字が少なくとも
-$N_{A,f}^{2^{f^2}}$個存在する．
-その他のブロックは固定定数へ吸収する．
-補題~\ref{lem:order-homogenize}を高々$f^2$個の
-比較型へ適用すると，少なくとも
-$N_{A,f}=\max\{3,|A|^f\}$個の添字について
-所有者間のブロックの順序比較をすべて斉次化できる．
-その部分族には補題~\ref{lem:group-interval}が適用でき，
-非空の添字区間を同時に置換して各根成分の
-順序付き群積を完全に保存する．
-窓型も保存されるため根の$\lambda$-ベクトルが一致し，
-各重い節点の置換は総長を真に減らすので最小性に矛盾する．
-$m\ge M_{A,f}$ なら，置換のある非空集合が根の $\lambda$-ベクトル全体を保存し，最小性に矛盾する．
-$A$ が可換なら，補題~\ref{lem:group-typed-shortest} の零和論法を差分
-$\gamma(\beta')-\gamma(\beta)$ に適用して，上界 $\mathsf d(A^f)$ を得る．
-
-以上により，任意の重い節点反鎖の濃度は
-高々$M_{A,f}-1$である．
-この条件を，$\lambda=\lambda_{k,\nu}$，
-$b=b_{\mathrm w}$，$c=M_{A,f}-1$として
-補題~\ref{lem:heavy-node-count}に適用すれば，
-根タプルの総長は表示した$\beta_\lambda$以下となる．
-可換群の場合はブロック置換の零和論法により
-$c=\mathsf d(A^f)$と置ける．
-\end{proof}
-
-\paragraph{定理~\ref{thm:local-group-polydata}の詳細証明．}
-定理の主張は本文の第~\ref{subsec:algebraic-typed-data}節に置いた．
-ここでは滑動因子による特徴づけと，
-非可換な順序付き群積の同時短縮を使って
-総文字数の三次上界を導く．
-
-
-\begin{proof}[定理~\ref{thm:local-group-polydata}の証明]
-定理~\ref{thm:lg-characterization} により，$\widehat{s}$ だけに依存するある $k,A,g$ について
-$\widehat{s}\preceq\lambda_{k,\nu}$ である．
-$X=B_{\mathbf s}$ を縮約された $\widehat{s}$-精密化の開始記号以外の型付き非終端記号とし，
-$\tuple u\in L_X$ とする．
-$\tuple u$ の $\lambda$-ベクトルに補題~\ref{lem:local-group-shortest} を適用すると，
-同じ $\lambda$-ベクトル（したがって同じ $\widehat{s}$-ベクトル）をもち
-$\|\tuple u'\|_1\le\beta_\lambda$ となる $\tuple u'\in L_B(G)$ が得られる．
-命題~\ref{prop:output-invariants}(ii) によりその導出は根 $X$ に持ち上がり，
-補題~\ref{lem:boundary-short-canonical} と同様に縮約後も残る．
-この二段階の短縮には異なる役割がある．
-第一段階の窓短縮では長さ $b_{\mathrm w}$ 以下の代替導出を得るが，
-その群値が各部分木で保存されるとは仮定しない．
-第二段階で，補題~\ref{lem:block-replacement} により
-複数部分木の非空集合を選び，置換後の\emph{根全体}の
-順序付き群積を同時に保存する．
-よって長さ高々 $\beta_\lambda=O(\|G\|^2\bar\theta_G)$ の正準タプルが存在する．
-ここで $b_{\mathrm w}=O(\|G\|\bar\theta_G)$，$n_\lambda=O(\|G\|)$ を用いた．
-補題~\ref{lem:untyped-contexts} により各証拠語の長さは高々
-$2\bar\theta_G+r_{\max}\beta_\lambda$ であり，
-命題~\ref{lem:witness-length-template} によりその個数は $O(\|G\|)$ である．
+$T$ を，根の $\lambda$-ベクトルが $\mathbf t$ で閾値 $b=b_{\mathrm w}\ge\bar\theta_G$ の，補題~\ref{lem:heavy-node-count}の意味で最小な導出とする．
+標識 $C$，生成語 $\tuple x$ の重い節点 $v$ について，系~\ref{lem:boundary-short-canonical}により，同じ $\widehat{s}_{k,k}$-ベクトルをもち $\|\tuple x'\|_1\le b_{\mathrm w}$ なる代替タプル $\tuple x'\in L_C(G)$ が存在する．
+互いに比較不能な重い節点 $v_1,\ldots,v_m$ と $J\subseteq[m]$ について，$v_i$（$i\in J$）の部分木を置換したものを $T_J$ とする．
+$v_i$ の成分は根成分の互いに素な連続ブロックである．
+補題~\ref{lem:local-group-blocks}により，各 $T_J$ は $T$ と同じ根の窓ベクトルをもつ．短い根成分は変わらず，長い根成分では $\gamma_{k,\nu}$ は，$J$ に依存しない定数の間にブロック値を挟んだ順序付き積 $c_0y_1c_1\cdots y_qc_q$ である．
+よって長い根成分は $A$ 上のブロック置換族（定義~\ref{def:block-family}）をなす．
+$m\ge M_{A,f}$（$A$ が可換なら $m>\mathsf d(A^f)$）なら，補題~\ref{lem:block-replacement}により，$T$ の根の $\lambda$-ベクトルをもつ非空な $J$ が存在し，$T_J$ は真に短い．
+これは最小性に反するので，$N=M_{k,\nu}$ として補題~\ref{lem:heavy-node-count}を適用すれば上界を得る．
 \end{proof}
 
 定理~\ref{thm:local-group-polydata} は，命題~\ref{prop:li-g-strict}(i) により
