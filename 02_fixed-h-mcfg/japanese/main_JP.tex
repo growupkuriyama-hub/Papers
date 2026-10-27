@@ -64,40 +64,8 @@
 \maketitle
 
 \begin{abstract}
-固定した有限半群型付けの下でタプル代入可能な多重文脈自由言語について，
-特徴正例標本の\emph{符号化総長}
-$\|K\|_+=\sum_{w\in K}(|w|+1)$の多項式上界を研究する．
-質的な再構成と正例からの同定はYoshinakaの分布的学習枠組みに基づく．
-本稿の独立した成果は，MCFG表示に相対的な証拠語の長さについての定量的評価である．
-有限アルファベット，ファンアウト，規則ランク上限，型付けを固定する．
-縮約済み良形MCFG $G$ の規則厚みを$\bar\theta_G$とすると，
-接頭辞--接尾辞窓，および可換・非可換を問わない任意の有限群を加えた窓・群型付けに対し
-$O(\|G\|^2\bar\theta_G)$を示す．
-所有者別の同時ブロック短縮補題により，交錯した複数のタプル成分の
-順序付き群積を交換せずに保存する．
-局所群の正語像を持つ型付けには，既知のsliding-factor座標と
-MCFGブロック分解を組み合わせて
-$O(\|G\|^3\bar\theta_G)$を示す．
-空成分・消去規則を含む任意の標準MCFG入力では，
-元の文法サイズ$n$と成分パターン厚み$t$により，
-それぞれ$O(n^3t)$および$O(n^4t)$となる．
-ただし$t$は$n$に対し指数的に増大し得るので，
-これらは文法サイズのみの多項式保証ではなく，パラメータ付き上界である．
-規則ランク1では任意の固定型付けに対し$O(n^3)$が得られる．
-別個の保守的学習器によりGoldの極限同定も得られる．
-また，有限素性の適合制約と二つの交差依存を組み合わせた，
-未型付け多次元代入可能性を満たさないファンアウト2の非CFL例と，
-最小ファンアウト・規則ランクがともに2である別の例を示す．
-ファンアウト2の二つの非CFL例により，
-局所群型付けと窓・群決定的型付けの標的クラス，
-および非可換群型付けと窓・アーベル群決定的型付けの標的クラスを分離する．
-ファンアウト1では本稿の局所群上界が関連CFG論文の
-局所自明・群型付けの十分条件を真に拡張し，
-同論文の半束下界と合わせて，文法サイズと規則厚みに対して
-$\mathbf{LG}$が擬多様体水準の正確な境界となる．
-ファンアウト2以上での必要性は未解決である．
+固定した有限半群型付けの下でタプル代入可能な多重文脈自由言語を正例から学習する問題について，MCFG表示に相対的な特徴標本の符号化総長を評価する．質的同定はYoshinakaの分布的学習の枠組みに基づき，本稿の寄与は定量的な保証にある．アルファベット，ファンアウト，規則ランク，型付けを固定するとき，縮約済み良形文法$G$の規則厚さを$\bar\theta_G$として，接頭辞--接尾辞窓と任意の有限群（非可換群を含む）による型付けには$O(\|G\|^2\bar\theta_G)$，正語像が局所群である型付けには$O(\|G\|^3\bar\theta_G)$の特徴データ総長上界を示す．証明では，交錯するタプル成分を同時に短縮し，各成分の順序付き群積を保存する．加えて，完全生成語型精密化の規則厚さが多項式で抑えられる有限半群の代数的領域が，任意の固定ファンアウトにおいてちょうど局所群であることを特徴づける．これは特徴データ長の下界ではない．任意の標準MCFG入力に対しては，文法サイズについて指数的にもなり得る成分パターン厚さを用いたパラメータ付き上界を得る．保守的な別の学習器はGold同定を与える．また，交差依存言語族について，クラス全体で共有される有限素性バイアスと明示的な特徴標本を示す．ファンアウト2以上で局所群条件が特徴データ長の多項式性に必要かどうかは未解決である．
 \end{abstract}
-
 \medskip
 \noindent\textbf{キーワード：}
 文法推論；多重文脈自由文法；正例データ；有限半群型付け；
@@ -107,167 +75,49 @@ $\mathbf{LG}$が擬多様体水準の正確な境界となる．
 \section{序論}
 \label{sec:introduction}
 
-正例データからの文法推論は，正例の列挙だけから言語を回復できる条件を問う
-~\cite{Gold1967,Angluin1980}．分布的学習は，語やタプルに共通する文脈から
-構成素を推測する．Clark--Eyraud の置換可能CFGに始まるこの方法は，
-不連続構成素・交差依存を表現するMCFGへと拡張されてきた
-~\cite{ClarkEyraud2007,Yoshinaka2008,SekiEtAl1991,Yoshinaka2009,Yoshinaka2011,Kallmeyer2010}．
+正例データからの文法推論は，正例の列挙のみから言語を同定できる条件を研究する~\cite{Gold1967,Angluin1980}．分布的学習は語やタプルが共有する文脈から構成素を推定する．この考え方は代入可能CFG~\cite{ClarkEyraud2007,Yoshinaka2008}から，不連続構成素と交差依存を扱うMCFGへ拡張されてきた~\cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011,Kallmeyer2010}．
 
-\paragraph{資源としての標本個数ではなく符号化総長．}
-有界ランクに特殊化したYoshinaka (2015)の有限signature枠組みは，
-すでに質的な正例同定と多項式個数の特徴証拠を与える
-~\cite{Yoshinaka2015General}．しかし標本の\emph{個数}が多項式でも，
-各証拠語の長さが指数的になり得る．
-本稿では $|K|$ ではなく
-$\|K\|_+=\sum_{w\in K}(|w|+1)$ を評価する．
-これはEyraud--Heinz--Yoshinakaの多項式\emph{thick-data}
-という見方に対応する~\cite[Section~2.5.2]{EyraudHeinzYoshinaka2016}．
-文法のサイズと，生産的な規則を実現する導出の長さは
-別々の資源だからである．集合駆動型の再構成器に対する特徴データを
-評価し，Goldの保守的逐次学習器とは区別する．
+\paragraph{標本の個数ではなく符号化総長．}
+有界規則ランクの場合，Yoshinaka (2015) の有限signature理論は質的同定と多項式\emph{個数}の特徴証拠をすでに与える~\cite{Yoshinaka2015General}．しかし各証拠語の長さが指数的なら，個数だけを評価してもデータ量は制御できない．そこで本稿は$|K|$ではなく
+$\|K\|_+=\sum_{w\in K}(|w|+1)$を評価する．文法サイズと成功導出に必要な語長を区別するthick-dataの立場~\cite[Section~2.5.2]{EyraudHeinzYoshinaka2016}に基づき，集合駆動型再構成器の特徴標本と，別個の保守的Gold学習器を扱う．
 
-\paragraph{型付き精密化ではなく元の規則厚み．}
-固定した2元半群型付け$h_{\mathtt c}$の下で，
-ランク2のCFG表示$G_n$が
-$L(G_n)=\{\mathtt a,\mathtt c\}^+$，
-$\|G_n\|=O(n)$，$\theta_{G_n}\le2$ を満たすのに，
-完全生成語型精密化を刈り込むと
-$\theta_{\widetilde G_{n,0}}\ge2^n$となる
-（命題~\ref{prop:typed-thickness-exponential}）．
-問題は精密化自体に要する厚みではなく，
-\emph{元の文法表示}に対する短い特徴データの保証である．
-どの有限半群の代数的構造なら，精密化に伴うこの増大を
-支払う前に複数成分を同時に短縮できるかを問う．
+\paragraph{元の文法の厚さと完全精密化の厚さ．}
+固定した2元半群型付け$s_{\mathtt c}$について，規則ランク2，サイズ$O(n)$，元の規則厚さ$\theta_{G_n}\le2$のCFG表示であっても，刈り込んだ完全生成語型精密化の規則厚さが$\theta_{\widetilde G_{n,0}}\ge2^n$となり得る（命題~\ref{prop:typed-thickness-exponential}）．この増大を精密化前に回避することが定量的問題の中心である．さらに，系~\ref{cor:refinement-dichotomy}は完全精密化の厚さに関する一様多項式境界を正確に特徴づけ，その境界が正語像の局所群性であることを示す．ただし，これだけで特徴データ総長に関する逆向きの下界は得られない．
 
-\paragraph{なぜ型付けを先に固定するのか．}
-不連続構成素間の無限の依存はMCFGに扱わせ，
-格や一致など有限個の適合素性は既知の学習バイアスとして
-与えることができる．例えば
-$\mathcal R_{\mathrm{feat}}=\{(0,0),(0,1),(1,0)\}$として
+\paragraph{なぜ型付けを事前に与えるのか：クラス単位の学習バイアス．}
+型付けは未知の標的言語ごとに選び直すのではなく，標的を見る前に\emph{一度だけ}固定する．例えば，同じ窓・群型付け
+$s=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$を，全ての関係$R\subseteq\{0,1\}^2$について共通に用い，
 \[
-L_{\mathrm{feat}}=
-\{\mathtt a^m\mathtt p_i\mathtt b^n
-  \mathtt c^m\mathtt q_j\mathtt d^n:
-m,n\ge1,\ (i,j)\in\mathcal R_{\mathrm{feat}}\}
+ L_R=\{\mathtt a^m\mathtt p_i\mathtt b^n
+ \mathtt c^m\mathtt q_j\mathtt d^n:
+ m,n\ge1,\ (i,j)\in R\}
 \]
-を考える．$a/c$と$b/d$の二つの依存は交差し，
-内部の$p_i,q_j$が有限の非直積的適合関係を担う．
-接頭辞--接尾辞窓と有限アーベル群の積で型付けすると，
-この言語はファンアウト2の型付き代入可能MCFLとなるが，
-型なしの$\YSub{f}$には属さず，窓型だけでも十分でない
-（命題~\ref{prop:feature-cross-typed}）．
-この例は窓・群型上界の適用対象である．
-学習器があらかじめ知るのは有限の素性バイアスであり，
-無限の交差依存や生成文法そのものではない．
-特定の自然言語を忠実にモデル化したと主張するものではない．
+とする．系~\ref{cor:feature-relation-family}は全ての$R$について$L_R\in\Cmcf{2}{s}$を与える．既知の準同型$g$が記録するのは二つの素性\emph{値}であり，標的によって異なる適合関係$R$ではない．$R$と無限の交差依存を正例から推定する必要があり，標的文法も$R$も学習器の入力ではない．非空$R$については命題~\ref{prop:feature-family-witness-budget}が総長$36|R|+22$以下の明示的特徴標本を構成し，同一作用素が全ての$R$を扱う場合は各許可対を表す語が必要であることも示す．非直積の$R=\{(0,0),(0,1),(1,0)\}$は，型なしおよび境界窓のみの代入可能性が破れることを示す（命題~\ref{prop:feature-cross-typed}）．
 
-主結果は，縮約済み良形MCFG $G$ に対し，
-窓型付けと窓・有限群型付けでは
-$O(\|G\|^2\bar\theta_G)$，
-正語像半群が局所群に属する型付けでは
-$O(\|G\|^3\bar\theta_G)$ の特徴データ総長上界を与える．
-後者で用いるsliding-factor座標は古典的な代数理論に基づく．
-本稿の新規な点は，異なる出力成分に交錯して現れる
-非可換な順序付き群積を所有者ごとに同時短縮することである．
-任意の標準MCFG入力への正規化，および規則ランク1の場合も扱う．
+\paragraph{型の細分化：表現可能性と証拠コスト．}
+$s\preceq t$，すなわち$\ker t\subseteq\ker s$なら，
+$\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$である．型の細分化は不正な置換を減らし，より多くの標的を許す一方，完全型付き文法の非終端記号は最大$|V||\mathsf T^\sharp|^f$個，規則は最大$|P||\mathsf T^\sharp|^{fr}$個となり，最短の型付き証拠が長くなる場合もある．しかしこれは最小特徴データ長の単調増大を意味しない．型を変えると再構成器自体も変わり，多項式上界が成立する代数的領域から外れる可能性もある．本稿は型付けの推定や最適化ではなく，\emph{固定された}型付けの下でのクラス一様な上界を問う．
 
-\paragraph{設定・先行研究．}
-アルファベット$\Sigma$，ファンアウト，ランク上限と，
-全データを見る前に固定した全射有限半群準同型
-$s:\Sigma^+\twoheadrightarrow\mathsf S$を考える．
-比較する非空タプル成分は同じ$s$値を持つものに限る．
-空語はgrammar templateの評価時だけ新単位元を持つ
-$\widehat s:\Sigma^*\to\mathsf S^\sharp$で処理する．
-有限素性を既知のバイアスとして渡す考え方は，
-automata inferenceのtyping biasと整合する
-~\cite{CosteTyping2004}．
-正則control set~\cite{Takada1988,Takada1995}や局所代入可能性
-~\cite{CosteGaretNicolas2012,CosteNicolas2019}は別種の制約である．
-他の弱文脈依存文法形式の正例学習は~\cite{OatesEtAl2006}，
-所属質問や二重の文脈集合を用いるMCFG学習は
-~\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}
-で研究されている．近年のMCFLの代入補題
-~\cite{DuncanEtAl2026Substitution}はMCFL所属の必要条件であり，
-学習可能性の判定条件ではない．
-MCFG学習の質的部分はYoshinaka (2009, 2011, 2015)に基づく
-~\cite{Yoshinaka2009,Yoshinaka2011,Yoshinaka2015General}．
-本稿のConst/Link/Comp再構成作用素については健全性・完全性を
-直接証明する．関連CFG論文~\cite{kuriyamaCFG}と異なる
-再構成作用素を扱っている点にも注意する．
-Yoshinaka (2008)の$(k,\ell)$-Greibach正規形と本稿のgood MCFGは
-正規形・大きさ・厚みの尺度が異なるので，
-多項式の次数は直接比較しない
-~\cite[Lemmas~2, 6 and~7]{Yoshinaka2008}．
-ランク1分離例にはGallotおよびBishopらのEDT0Lに関する結果を使う
-~\cite{Gallot2021,BishopEtAl2026EDT0L}．
+\paragraph{固定型付けへの一様保証とアーベル型フィルタとの違い．}
+窓・群および局所群に関する主定理は，固定した$s,f,r_{\max},\Sigma$と所定の文法表示について，$\Cmcf{f}{s}$の\emph{全標的}に一様に適用される．とくに，標的ごとの
+\[
+ L=\widehat{s}^{-1}(\mathsf{Acc})\cap
+ \varphi^{-1}(\gamma+\mathsf H)
+\]
+というアーベル群剰余類表示を要求しない．これに対し定理~\ref{thm:mcfg-abelian-filter-data}はその特殊な表示を持つ標的を扱う．細かい型付け$s'$によって個々の例をこの形式に入れられても，それは元の$s$に対する再構成器の保証とは別である．後の型付けクラス分離例は，個々の言語に特定の短縮手法が不可欠だと主張するものではない．
 
-\paragraph{寄与と上界の一覧．}
-固定$f,r_{\max},|\Sigma|,s$のもと，
-縮約済み良形MCFGを$G$，$\bar\theta=\bar\theta_G$とおく．
-任意の標準入力文法を$H$，$n=\max\{1,\|H\|\}$，
-$t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$とおく．
+\paragraph{設定と先行研究との関係．}
+本稿は正の語についての全射半群準同型$s:\Sigma^+\twoheadrightarrow\mathsf S$を事前に固定し，非空成分だけを$s$で比較する．空語を含む文法テンプレートは新単位元添加$\widehat s:\Sigma^*\to\mathsf S^\sharp$で評価する．これはautomata inferenceのtyping bias~\cite{CosteTyping2004}と整合する．正則control set~\cite{Takada1988,Takada1995}，局所代入可能性~\cite{CosteGaretNicolas2012,CosteNicolas2019}，他形式の正例学習~\cite{OatesEtAl2006}，所属質問によるMCFG学習~\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}とは情報モデルと条件を区別する．最近のMCFL代入補題~\cite{DuncanEtAl2026Substitution}は学習判定ではなく所属の必要条件である．
 
-\begin{center}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\linewidth}{@{}p{0.27\linewidth}p{0.22\linewidth}p{0.25\linewidth}X@{}}
-\hline
-型付け・ランク & good表示 $(\|G\|,\bar\theta)$ & 任意入力 $(n,t)$ & 出典\\
-\hline
-規則ランク$\le1$；任意型
- & --- & $O(n^3)$ & 定理~\ref{thm:rankone-polydata}\\
-接頭辞--接尾辞窓
- & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & 定理~\ref{thm:boundary-polydata}\\
-窓と任意の有限群
- & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & 定理~\ref{thm:window-group-polydata}\\
-正語像が$\mathbf{LG}$に属する
- & $O(\|G\|^3\bar\theta)$ & $O(n^4t)$ & 定理~\ref{thm:local-group-polydata}\\
-\hline
-\end{tabularx}
-\end{center}
-任意入力の列は系~\ref{cor:unrestricted-standard-mcfg-data}に基づき，
-ランク1の列は独立の正規化に基づく．
-定数は固定したalphabet，fan-out，rank，typingに依存する．
-非可換群では特に
-$M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$
-を含み，$f$に対して二重指数的に増大し得る．
-計算可能な規則証拠予算
-（命題~\ref{prop:computed-witness-budget}），
-アーベル型フィルタ上界
-（定理~\ref{thm:mcfg-abelian-filter-data}），
-内在的ランク2の例
-（定理~\ref{thm:intrinsic-ranktwo-witness}）も示す．
-局所群条件には古典的な$\mathbf{LG}=\mathbf G*\mathbf D$
-およびStraubing・Tilson・Almeidaらの結果を使う
-~\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}．
-本稿の貢献はその代数的特徴づけ自体ではなく，
-補題~\ref{lem:local-group-blocks}によるブロック分解と
-同時短縮への適用である．
+Yoshinaka (2008) の固定窓型CFG，Yoshinaka (2009, 2011) の多次元代入可能MCFG，Yoshinaka (2015) の有限signatureにおける質的学習と証拠個数は既知の基礎である~\cite{Yoshinaka2008,Yoshinaka2009,Yoshinaka2011,Yoshinaka2015General}．Const/Link/Compによる再構成を独立の新規性とはしない．関連する別投稿のCFG論文~\cite{kuriyamaCFG}は有限半群型付きCFGを扱うが，その下界構成と境界定理は本稿に再掲せず，証明の前提にも用いない．本稿の独自の寄与は非可換な交錯成分の所有者別同時短縮（命題~\ref{prop:block-replacement-interface}），そこからの窓・群および局所群上界（定理~\ref{thm:window-group-polydata}, \ref{thm:local-group-polydata}），成分パターン厚さに制御された正規化（命題~\ref{prop:pattern-thickness-transfer}），および完全型細分化の厚さ境界（系~\ref{cor:refinement-dichotomy}）である．古典的な有限半群構造定理には適切な原典を引用する~\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}．
 
-\paragraph{適用範囲．}
-総長上界は固定型付けと指定したConst/Link/Comp作用素・
-文法表示に対するものであり，Gold同定の多項式収束段階を主張しない．
-ファンアウト1の作用素非依存下界は関連CFG論文に帰属し，
-本稿の付録にも証明を収録する．
-$\mathbf{LG}$は任意のファンアウトで十分条件だが，
-ファンアウト2以上での必要性と多項式の指数の最適性は未解決である．
-以下で前提・再構成・上界・例を示した後，
-結論で高ファンアウトに残る一つの未解決問題を提示する．
+\paragraph{寄与と二つの主要な厚さ尺度．}
+ファンアウト，規則ランク，アルファベット，型付けを固定する．縮約済み良形文法$G$の主尺度は$\bar\theta_G=\max\{1,\theta_G\}$（各規則を使用する最短受理語長の最大値）である．一般入力文法$H$の正規化には$\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$（各実現可能な非空成分パターンの最短実現長）を使う．空成分を含む文法では両者を取り替えられない．非終端厚さ，精密化後の規則厚さ，分布同値代表元長は補助尺度であり，表~\ref{tab:thickness-scales}に整理する．
+縮約済み良形文法について窓および窓・任意有限群では$O(\|G\|^2\bar\theta_G)$，局所群では$O(\|G\|^3\bar\theta_G)$を得る．任意標準入力$H$のサイズを$n$，成分パターン厚さを$t$とすればそれぞれ$O(n^3t)$，$O(n^4t)$であり，これは文法サイズだけの多項式保証ではない．規則ランク1では任意の固定型付けで$O(n^3)$となる．これらの定数は固定パラメータに依存し，特に非可換群の場合に大きくなり得る．さらに系~\ref{cor:refinement-dichotomy}は，完全型細分化の厚さについてファンアウトによらないLGの必要十分境界を与える．これを特徴データ長の必要条件と混同してはならない．
 
-\paragraph{著者の関連原稿との差分．}
-著者の旧MCFGプレプリント~\cite{kuriyamaMCFGPreprint}は，
-有限観測の下でのタプル再構成，質的同定，観測情報量の階層を扱う．
-本稿はその質的再構成機構そのものを独立の新規性とはしない．
-TCSに提出した関連CFG改訂稿~\cite{kuriyamaCFG}は，
-ファンアウト1の型付けと区別対下界を扱う．
-本稿の独自の成果は，非可換群値を保つ交錯成分の同時短縮，
-既知の$\mathbf{LI}\vee\mathbf{Grp}$条件を真に拡張する局所群上界，
-および一般MCFGの成分パターン厚み転送である．
-ファンアウト1の必要性は関連CFG論文の半束下界に基づき，
-その証明を付録~\cite{kuriyamaCFG}に再掲する．
-境界系~\ref{cor:refinement-dichotomy}は新たな十分性と既知の下界の結合である．
-公開arXiv版とTCS提出改訂稿は命題番号が異なり得るので区別する．
+\paragraph{主張の適用範囲．}
+上界は指定した集合駆動型作用素と文法表示に対する特徴標本の総長の上界であり，Gold学習器の多項式収束段階を主張しない．一般標準入力では$t_{\mathrm{pat}}$が文法サイズに対して指数的にもなり得る．完全精密化厚さについてはLGが必要十分だが，特徴\emph{データ}総長についてLGがファンアウト2以上で必要かどうかは未解決である（問題~\ref{op:fanout-two}）．
+
 
 \section{準備}
 \label{sec:prelim}
