@@ -4,7 +4,8 @@
 **Target journal:** Information and Computation (pre-submission)  
 **Preprint:** [arXiv:2605.11644](https://arxiv.org/abs/2605.11644) (the public version may be older)
 
-**2026-10-27 integrated review:** English `main.tex` is the 52-page integrated I&C working draft. The Japanese translation and its additional fan-out-one and algebraic-separation source files are synchronized to the revised theorem scope and higher-arity proof. The standalone lower-bound Appendix remains in both languages. Mathematical verification and author sign-off remain distinct from compiling.
+**2026-10-27 M5–M6 bilingual master:** The English source is the 51-page I&C pre-submission draft. The Japanese `japanese/main_JP.tex` is synchronized for its principal results: class-level typing bias, characteristic-data witness budgets, two thickness scales, noncommutative shortening, and the new refinement-thickness LG dichotomy. The prior CFG companion's fan-out-one characteristic-data boundary and lower-bound appendix have been removed from both sources. The refinement-thickness dichotomy does **not** imply a characteristic-data lower bound.
+
 
 **2026-10-27 Japanese single-file consolidation:** `japanese/main_JP.tex` contains all Japanese text, theorem proofs, appendices and references in one UTF-8 LuaLaTeX source. Its technical appendix order now follows the English master; no `\\input` or `\\include` statements remain. Legacy supplement files are recoverable in Git history. English theorem and lemma labels and cross-references were checked against the Japanese version.
 
