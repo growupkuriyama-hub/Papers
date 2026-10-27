@@ -95,147 +95,192 @@ characteristic-data length at fan-out two or more remains open.
 \section{Introduction}
 \label{sec:introduction}
 
-Positive-data grammatical inference asks when a language can be recovered from
-an enumeration of positive examples alone \cite{Gold1967,Angluin1980}.
-Distributional learning builds grammatical constituents from recurring word or
-tuple contexts, beginning with substitutable CFGs \cite{ClarkEyraud2007,Yoshinaka2008}
-and extending to MCFGs with discontinuous and cross-serial dependencies
-\cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011,Kallmeyer2010}.
+Positive-data grammatical inference asks when a language can be identified
+in the limit from positive examples alone \cite{Gold1967,Angluin1980}.
+Distributional learning answers this question by treating words, or tuples
+of words, that occur in common contexts as candidate constituents.  The
+approach began with substitutable CFGs \cite{ClarkEyraud2007,Yoshinaka2008}
+and was extended to multiple context-free grammars (MCFGs), whose
+tuple-valued nonterminals express discontinuous and cross-serial
+dependencies \cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011,Kallmeyer2010}.
+Yoshinaka's finite-signature generalization \cite{Yoshinaka2015General}
+provides positive-data identification and, in the corresponding
+bounded-rank specialization, characteristic samples consisting of
+polynomially many words.
 
-\paragraph{The resource is encoded data length, not sample cardinality.}
-Yoshinaka's finite-signature generalization already provides positive-data
-identification and polynomially many characteristic witnesses in the
-corresponding bounded-rank specialization \cite{Yoshinaka2015General}.
-But a sample of polynomial \emph{cardinality} may contain exponentially
-long words.  We therefore bound
-$\|K\|_+=\sum_{w\in K}(|w|+1)$, not merely $|K|$.
-This follows the polynomial \emph{thick-data} perspective reviewed by
-Eyraud, Heinz and Yoshinaka \cite[Section~2.5.2]{EyraudHeinzYoshinaka2016}:
-the size of a grammar and the length needed to realize its productive
-rules are distinct resources.  We study presentation-sensitive characteristic data for a set-driven
-reconstruction operator and a separate conservative Gold learner.
+\paragraph{The question: how long must characteristic data be?}
+A sample of polynomial \emph{cardinality} may still contain exponentially
+long words.  We therefore measure a finite sample $K$ by its total encoded
+length $\|K\|_+=\sum_{w\in K}(|w|+1)$, not merely by $|K|$.  This follows
+the polynomial \emph{thick-data} perspective reviewed by Eyraud, Heinz and
+Yoshinaka \cite[Section~2.5.2]{EyraudHeinzYoshinaka2016}: the size of a
+grammar and the length needed to exercise its productive rules are distinct
+resources.  Our aim is to bound the total encoded length of characteristic
+data relative to an MCFG presentation of the target.  Qualitative
+identification is inherited from Yoshinaka's framework; the contribution of
+this paper is quantitative.
 
-\paragraph{The original thickness, not the cost of a typed refinement.}
-There is a fixed two-element typing $s_{\mathtt c}$ and a family of
-rank-two CFG presentations $G_n$ with
-$L(G_n)=\{\mathtt a,\mathtt c\}^+$,
-$\|G_n\|=O(n)$ and ordinary rule thickness $\theta_{G_n}\le2$,
-but the trimmed full yield-type refinement has
-$\theta_{\widetilde G_{n,0}}\ge2^n$
-(Proposition~\ref{prop:typed-thickness-exponential}).
-The example isolates an exponential cost of typed refinement relative
-to original thickness, motivating an analysis directly on the original
-presentation.  The central question is when the algebra of a
-fixed typing permits simultaneous shortening \emph{before} paying that cost.
-The refined-thickness obstruction has an exact algebraic boundary:
-Corollary~\ref{cor:refinement-dichotomy} proves that the positive-image
-local groups, and only those, give uniformly polynomial full-refinement
-thickness at every fan-out. This does \emph{not} settle the stronger
-question of which typings force long characteristic data.
+\paragraph{The setting: a fixed finite-semigroup typing.}
+We study this question for learners equipped with a finite bias.  Before
+any data are seen, we fix a fan-out bound $f$ and a surjective
+finite-semigroup homomorphism $s:\Sigma^+\twoheadrightarrow\mathsf S$,
+called a \emph{typing}.  The learner compares observed \emph{nonempty}
+tuple components only when their $s$-values agree; the target class
+$\Cmcf{f}{s}$ consists of the $f$-MCFLs that are tuple-substitutable under
+this restriction (Definition~\ref{def:class-cmcf}).  The canonical
+fresh-identity completion $\widehat{s}:\Sigma^*\to\mathsf S^\sharp$ is used
+only to evaluate grammar templates, including empty terminal gaps.  Fixing
+the typing in advance separates the choice of a finite bias from learning
+under that bias~\cite{CosteTyping2004}.  Prefix--suffix windows, values in
+a finite group, their products, and DFA transition morphisms are typical
+instances.  Other biases restrict derivations by regular control sets
+\cite{Takada1988,Takada1995} or restrict the evidence used to compare
+factors \cite{CosteGaretNicolas2012,CosteNicolas2019}.
 
-\paragraph{Why supply a finite typing in advance? A class-level bias.}
-The typing is supplied \emph{once, before the target is known}; it is not
-chosen to recognize each target separately.  Finite features, such as
-morphological compatibility or case licensing, can constrain substitution
-between discontinuous constituents while an MCFG accounts for unbounded
-dependencies.  To make the quantifiers explicit, fix the same window--group
-typing $s=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$ for \emph{every}
-$R\subseteq\{0,1\}^2$, and consider
+The typing is a \emph{class-level} bias: it is supplied once, before the
+target is known, and is not chosen to recognize each target separately.
+Finite features, such as morphological compatibility or case licensing,
+can constrain substitution between discontinuous constituents while the
+MCFG accounts for unbounded dependencies.  For example, fix one
+window--group typing $s=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$ for
+\emph{every} $R\subseteq\{0,1\}^2$, and consider
 \[
  L_R=\{\mathtt a^m\mathtt p_i\mathtt b^n
        \mathtt c^m\mathtt q_j\mathtt d^n:
        m,n\ge1,\ (i,j)\in R\}.
 \]
-Corollary~\ref{cor:feature-relation-family} proves
-$L_R\in\Cmcf{2}{s}$ for all such $R$; for nonempty $R$ these are
-non-context-free cross-serial languages.  The known morphism $g$ records
-the two feature values, \emph{not} the unknown compatibility relation $R$.
-The learner must recover the target-specific licensing information and the
-unbounded crossing dependencies from positive examples; no target grammar
-or relation $R$ is an input to the learner.  In fact,
-Proposition~\ref{prop:feature-family-witness-budget} provides explicit
-characteristic samples with encoded length at most $36|R|+22$ for
-$R\ne\emptyset$, while every sample characteristic for a single
-set-driven operator on the entire family must exhibit every licensed pair.
-The nonrectangular instance
-$R=\{(0,0),(0,1),(1,0)\}$ additionally witnesses the failure of untyped
-and boundary-only substitutability
+Every $L_R$ belongs to $\Cmcf{2}{s}$, and for nonempty $R$ these are
+non-context-free cross-serial languages
+(Corollary~\ref{cor:feature-relation-family}).  The group component $g$
+records the two feature \emph{values}, not the compatibility relation $R$;
+neither $R$ nor a target grammar is an input to the learner, which must
+recover both the licensing information and the unbounded crossing
+dependencies from positive examples.  Explicit characteristic samples of
+encoded length at most $36|R|+22$ exist for $R\ne\emptyset$, while every
+sample characteristic for a single set-driven operator on the whole family
+must exhibit every licensed pair
+(Proposition~\ref{prop:feature-family-witness-budget}).  The nonrectangular
+instance $R=\{(0,0),(0,1),(1,0)\}$ shows that untyped and boundary-only
+substitutability both fail here
 (Proposition~\ref{prop:feature-cross-typed}).
 
-\paragraph{Refinement: expressive scope versus witness cost.}
-If $s\preceq t$ (that is, $\ker t\subseteq\ker s$ on $\Sigma^+$),
-then $\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$: finer types prevent some
-unsound substitutions and can admit more target languages.  However,
-the full typed construction may contain as many as
-$|V||\mathsf T^\sharp|^f$ nonterminals and
-$|P||\mathsf T^\sharp|^{fr}$ rules, and its shortest typed witnesses
-may grow sharply (Proposition~\ref{prop:typed-thickness-exponential}).
-This is a \emph{potential} cost, not a monotonicity theorem for minimal
-characteristic-data length.  Refining the typing also changes the
-reconstruction operator and can leave the algebraic regimes for which
-we prove polynomial bounds.  We ask when a \emph{fixed, externally given}
-typing has class-uniform short witnesses, not how to infer or optimize
-that typing.
-Our principal quantitative results give
-$O(\|G\|^2\bar\theta_G)$ characteristic-data bounds for
-window and window--group typings and
-$O(\|G\|^3\bar\theta_G)$ for positive-image local groups, with
-alphabet, fan-out, rule rank and typing fixed.  Classical sliding-factor
-coordinates are used only as input to the new owner-wise simultaneous
-shortening of noncommutative, interleaved tuple components.  Arbitrary
-input-grammar normalization and the rank-one case are treated separately.
+\paragraph{Why bound the original presentation?}
+A natural route is to refine the grammar by types and apply untyped
+estimates to the refinement.  This route can be expensive.  The full
+typed construction may contain as many as $|V||\mathsf T^\sharp|^f$
+nonterminals and $|P||\mathsf T^\sharp|^{fr}$ rules, and its thickness can
+explode. This is a \emph{potential} cost, not a monotonicity theorem for minimal characteristic-data length, but it can be exponential: for a fixed two-element typing $s_{\mathtt c}$ there are rank-two
+CFG presentations $G_n$ of $\{\mathtt a,\mathtt c\}^+$ with $\|G_n\|=O(n)$
+and rule thickness $\theta_{G_n}\le2$, whose trimmed full yield-type
+refinement has thickness $\theta_{\widetilde G_{n,0}}\ge2^n$
+(Proposition~\ref{prop:typed-thickness-exponential}).  We therefore bound
+characteristic data directly in terms of the original presentation, and
+ask when the algebra of the fixed typing permits short witnesses
+\emph{before} this cost is paid.  For the same reason we treat the typing
+as given rather than something to infer or optimize: a finer typing
+$s\preceq t$ (that is, $\ker t\subseteq\ker s$ on $\Sigma^+$) enlarges the
+class, $\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$, but it also changes the
+reconstruction operator and may leave the algebraic regimes covered by our
+bounds.  We ask when a fixed, externally given typing has class-uniform
+short witnesses.
 
-The algebraic dichotomy for full-refinement thickness is stated in
-Corollary~\ref{cor:refinement-dichotomy}; it applies without a
-target-specific substitutability hypothesis, unlike the characteristic-
-data theorem, and it must not be read as a lower bound on sample length.
+\paragraph{The technical obstacle.}
+Short witnesses are obtained by replacing long subderivations with shorter
+ones of the same type.  For tuples at higher rule rank this cannot be done
+one subtree at a time: in a noncommutative finite group, the blocks
+contributed by one subtree may appear in different orders, interleaved
+with blocks of other subtrees, across different output components.
+Preserving the group value of each omitted subtree separately therefore
+does not preserve the ordered product of each component.  Our new
+quantitative step is an \emph{owner-wise simultaneous} selection of
+replacements that preserves all ordered root products at once
+(Proposition~\ref{prop:block-replacement-interface}).
 
-\paragraph{Uniformity for a fixed typing versus abelian filtering.}
-The principal bounds are \emph{class-uniform}: once $s$, $f$, the rule-rank
-cap, and the alphabet are fixed in the stated algebraic regimes, they
-apply to every $L\in\Cmcf{f}{s}$ admitting a presentation of the
-specified form, with a polynomial in that presentation's size and
-thickness and constants independent of the particular target.
-In particular, neither the window--group nor the local-group bound
-assumes a target-specific representation
-\[
- L=\widehat{s}^{-1}(\mathsf{Acc})\cap
-      \varphi^{-1}(\gamma+\mathsf H)
-\]
-for an abelian-group morphism $\varphi$ and a subgroup $\mathsf H$.
-Theorem~\ref{thm:mcfg-abelian-filter-data}, by contrast, gives a
-polynomial bound for targets \emph{having} such a representation, even
-when the auxiliary abelian group is infinite; it is not a general bound
-for every member of $\Cmcf{f}{s}$.  A refinement $s'$ of $s$ may put an
-individual example into the abelian-filtered form, but it changes the
+\paragraph{Main results.}
+Two input-sensitive thickness scales appear.  For a reduced good MCFG $G$,
+the primary scale is its \emph{rule thickness}
+$\bar\theta_G=\max\{1,\theta_G\}$: the maximum, over rules, of the
+shortest accepted sentence using that rule
+(Section~\ref{subsec:thickness-contexts}).  For an arbitrary standard MCFG
+$H$, the normalization bounds use instead the \emph{component-pattern
+thickness} $\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$, which measures the
+shortest way to realize each feasible pattern of nonempty tuple components
+(Definition~\ref{def:component-pattern-thickness}).  The two scales are not
+interchangeable for inputs with empty components;
+Table~\ref{tab:thickness-scales} compares them with the auxiliary
+quantities used in the proofs.  With the alphabet, fan-out $f$, rule-rank
+bound $r_{\max}$ and typing fixed, write $\bar\theta=\bar\theta_G$ for a
+reduced good grammar $G$, and $n=\max\{1,\|H\|\}$,
+$t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$ for a standard input grammar
+$H$.  The principal bounds on total encoded characteristic-data length for
+the set-driven Const/Link/Comp reconstruction operator are:
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}p{0.255\linewidth}p{0.222\linewidth}p{0.262\linewidth}X@{}}
+\hline
+Fixed typing / rank & Reduced good $(\|G\|,\bar\theta)$ & Any standard input $(n,t)$ & Source\\
+\hline
+Rule rank $\le1$; any typing
+ & --- & $O(n^3)$ & Thm.~\ref{thm:rankone-polydata}\\
+Prefix--suffix window
+ & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & Thm.~\ref{thm:boundary-polydata}\\
+Window with finite group
+ & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & Thm.~\ref{thm:window-group-polydata}\\
+Positive image in $\mathbf{LG}$
+ & $O(\|G\|^3\bar\theta)$ & $O(n^4t)$ & Thm.~\ref{thm:local-group-polydata}\\
+\hline
+\end{tabularx}
+\end{center}
+
+\noindent
+The finite group may be noncommutative.  The arbitrary-input column
+follows from Corollary~\ref{cor:unrestricted-standard-mcfg-data} via
+normalization controlled by component-pattern thickness
+(Proposition~\ref{prop:pattern-thickness-transfer}), and the rank-one row
+is a separate normalization argument.  The bounds are \emph{class-uniform}:
+they apply to every $L\in\Cmcf{f}{s}$ admitting a presentation of the
+stated form, with constants independent of the particular target.  The
+hidden constants depend on $f$, $r_{\max}$, $|\Sigma|$ and the typing, and
+may grow rapidly with them; for noncommutative-group shortening they
+contain $M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$, which may grow doubly
+exponentially with $f$.  The abelian case has sharper constants
+(Theorem~\ref{thm:window-abelian-polydata}).  A separate conservative
+learner gives Gold identification.
+
+The obstruction of Proposition~\ref{prop:typed-thickness-exponential} has
+an exact algebraic boundary.  Corollary~\ref{cor:refinement-dichotomy}
+shows that the typings whose positive image is a local group, and only
+those, give uniformly polynomial full-refinement thickness at every fan-out; unlike
+the characteristic-data theorems, this needs no target-specific
+substitutability hypothesis.  It concerns refinement thickness, and is
+\emph{not} a lower bound on characteristic-data length.
+
+Further results include a local-group sufficient condition strictly beyond
+$\mathbf{LI}\vee\mathbf{Grp}$ (Proposition~\ref{prop:li-g-strict}), a
+rule-only computable witness budget
+(Proposition~\ref{prop:computed-witness-budget}), and an intrinsically
+rank-two example (Theorem~\ref{thm:intrinsic-ranktwo-witness}).
+Theorem~\ref{thm:mcfg-abelian-filter-data} complements the class-uniform
+bounds: it gives a polynomial bound for targets that \emph{have} a
+representation
+\(
+ L=\widehat{s}^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathsf H)
+\)
+for an abelian-group morphism $\varphi$ and a subgroup $\mathsf H$, even
+when the auxiliary abelian group is infinite.  This is not a bound for
+every member of $\Cmcf{f}{s}$, and neither the window--group nor the
+local-group bound assumes such a representation.  A refinement $s'$ of
+$s$ may put an individual example into this form, but it changes the
 supplied typing and hence the reconstruction operator.  The typing-class
 separations in Section~\ref{sec:comparison} do not assert that either
 shortening technique is necessary for any single example.
 
-This paper fixes, as part of the learning bias, a surjective finite-semigroup
-homomorphism $s:\Sigma^+\twoheadrightarrow\mathsf S$ and compares observed
-\emph{nonempty} tuple components only when their $s$-values agree.  The
-canonical fresh-identity completion $\widehat{s}:\Sigma^*\to\mathsf S^\sharp$ is
-used only to evaluate grammar templates, including empty terminal gaps.  The typing and the fan-out bound are fixed before any data are seen, separating the
-choice of a finite bias from learning under that bias~\cite{CosteTyping2004}.
-Proposition~\ref{prop:feature-cross-typed} and
-Corollary~\ref{cor:feature-relation-family} use a fixed window--group
-product: its group component records feature \emph{values}, while the
-compatible pairs, a target grammar, and the unbounded crossing counts
-are not supplied.
-Prefix--suffix windows and DFA transition morphisms are other instances.
-Other biases restrict derivations by regular control sets
-\cite{Takada1988,Takada1995} or restrict the evidence used to compare factors
-\cite{CosteGaretNicolas2012,CosteNicolas2019}; positive-data learning of other
-mildly context-sensitive formalisms is studied in \cite{OatesEtAl2006}, and
-MCFG learning with membership queries or dual context sets in
-\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  A recent
-substitution lemma for MCFLs \cite{DuncanEtAl2026Substitution} is a necessary
-condition for membership, not a learning criterion.
-
-\paragraph{Prior work and the exact novelty boundary.}
-The following comparison concerns the guarantees used in this paper;
-it does not attempt an exhaustive classification of prior learning models.
+\paragraph{Relation to prior work.}
+The following comparison concerns the guarantees used in this paper; it
+does not attempt an exhaustive classification of prior learning models.
 \begin{center}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -257,104 +302,43 @@ Yoshinaka (2015) \cite{Yoshinaka2015General}
 \end{tabularx}
 \end{center}
 The Const/Link/Comp construction specializes Yoshinaka's qualitative
-learning principle rather than claiming it as new.  A related, separately
-submitted manuscript addresses finite-semigroup-typed CFG learning
-\cite{kuriyamaCFG}; no lower-bound construction or sharpness theorem from
-that manuscript is reproduced or used as a premise here.
-The independent contribution is quantitative: noncommutative owner-wise shortening
-(Proposition~\ref{prop:block-replacement-interface}), the resulting
-window--group and local-group bounds
+learning principle rather than claiming it as new.  The underlying
+finite-semigroup identities, local-group and delay coordinates, and finite
+characteristic-data cardinality results are attributed to their original
+sources~\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}, and classical sliding-factor coordinates serve only as input to
+the new shortening step; the rank-one obstruction uses
+\cite{Gallot2021,BishopEtAl2026EDT0L}.  Our independent contribution is
+the noncommutative owner-wise shortening, the resulting window--group and
+local-group bounds
 (Theorems~\ref{thm:window-group-polydata} and~\ref{thm:local-group-polydata}),
-and normalization controlled by component-pattern thickness
-(Proposition~\ref{prop:pattern-thickness-transfer}).
-The underlying finite-semigroup identities, local-group/delay coordinates,
-and finite characteristic-data cardinality results are attributed to their
-original sources; the rank-one obstruction uses
-\cite{Gallot2021,BishopEtAl2026EDT0L}.
+and the normalization controlled by component-pattern thickness.
+A related, separately submitted manuscript addresses finite-semigroup-typed
+CFG learning \cite{kuriyamaCFG}; no lower-bound construction or sharpness
+theorem from that manuscript is reproduced or used as a premise here.
+Positive-data learning of other mildly context-sensitive formalisms is
+studied in \cite{OatesEtAl2006}, and MCFG learning with membership queries
+or dual context sets in
+\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}.  A recent
+substitution lemma for MCFLs \cite{DuncanEtAl2026Substitution} is a
+necessary condition for membership, not a learning criterion.
 
-\paragraph{Contributions.}
-Our object is the \emph{total encoded length} of characteristic positive data
-relative to an MCFG presentation, for typed \emph{tuples} at higher rule rank,
-where several component boundaries must be preserved simultaneously.
-An untyped pruning argument cannot simply shorten child derivations while
-retaining their types: in noncommutative finite groups, blocks from one
-subtree may appear in different orders across different output components.
-The new quantitative step is an \emph{owner-wise simultaneous} selection of
-replacements preserving all ordered root products, rather than preserving
-each omitted subtree's group value separately.  The bounds below hold
-with $f,r_{\max},|\Sigma|$ and the typing fixed; their hidden constants can
-grow rapidly with these fixed parameters.  Two input-sensitive thickness scales appear in the main results.
-For a reduced good MCFG $G$, the primary scale is its \emph{rule thickness}
-$\bar\theta_G=\max\{1,\theta_G\}$: the maximum, over rules, of the
-shortest accepted sentence using that rule (Definition in
-Section~\ref{subsec:thickness-contexts}).  For an arbitrary standard MCFG
-$H$, the normalization bounds use instead the \emph{component-pattern
-thickness} $\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$, which measures the
-shortest way to realize each feasible pattern of nonempty tuple components
-(Definition~\ref{def:component-pattern-thickness}).  These are not
-interchangeable for inputs with empty components.  Nonterminal thickness,
-refined rule thickness, and the relaxed representative length are auxiliary
-quantities only; Table~\ref{tab:thickness-scales} collects their meanings
-and comparisons.
-
-With the alphabet, fan-out, rule-rank bound, and typing fixed, the
-principal length bounds are as follows.  For a reduced good grammar
-$G$, write $\bar\theta=\bar\theta_G$.  For any standard
-input grammar $H$, put $n=\max\{1,\|H\|\}$ and
-$t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$.
-
-\begin{center}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\linewidth}{@{}p{0.255\linewidth}p{0.222\linewidth}p{0.262\linewidth}X@{}}
-\hline
-Fixed typing / rank & Reduced good $(\|G\|,\bar\theta)$ & Any standard input $(n,t)$ & Source\\
-\hline
-Rule rank $\le1$; any typing
- & --- & $O(n^3)$ & Thm.~\ref{thm:rankone-polydata}\\
-Prefix--suffix window
- & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & Thm.~\ref{thm:boundary-polydata}\\
-Window with finite group
- & $O(\|G\|^2\bar\theta)$ & $O(n^3t)$ & Thm.~\ref{thm:window-group-polydata}\\
-Positive image in $\mathbf{LG}$
- & $O(\|G\|^3\bar\theta)$ & $O(n^4t)$ & Thm.~\ref{thm:local-group-polydata}\\
-\hline
-\end{tabularx}
-\end{center}
-\noindent
-The arbitrary-input columns follow from
-Corollary~\ref{cor:unrestricted-standard-mcfg-data}; the rank-one row
-is a separate normalization argument.  Bounds measure the total
-encoded length, not an intrinsic minimum grammar size.  Hidden
-constants depend on fixed $f$, rule rank, alphabet and typing;
-for noncommutative-group shortening they contain
-$M_{A,f}=U_f\max\{3,|A|^f\}^{2^{f^2}}$, which may grow doubly exponentially
-with $f$.  The abelian case has sharper
-constants (Theorem~\ref{thm:window-abelian-polydata}).
-
-
-
-The proofs establish a local-group sufficient condition strictly
-beyond $\mathbf{LI}\vee\mathbf{Grp}$
-(Proposition~\ref{prop:li-g-strict}), a rule-only computable budget
-(Proposition~\ref{prop:computed-witness-budget}), an
-abelian-filtered bound (Theorem~\ref{thm:mcfg-abelian-filter-data}),
-and an intrinsically rank-two example
-(Theorem~\ref{thm:intrinsic-ranktwo-witness}).
-
-\paragraph{Scope.}
-The typing, alphabet and arity bounds are fixed before data arrive.
-The characteristic-data guarantees apply to the specified
-Const/Link/Comp reconstruction operator and the stated grammar
-presentations.  No presentation-independent stage of Gold convergence
-is claimed.  The local-group condition is sufficient at every fixed
-fan-out; whether it is necessary for higher fan-out is open
-(Open Problem~\ref{op:fanout-two}).  The polynomial exponents are not
-established as optimal.  Sections~\ref{sec:prelim}--\ref{sec:comparison}
-develop the setting, operator, upper bounds and examples.  The
+\paragraph{Scope and organization.}
+The characteristic-data guarantees apply to the specified reconstruction
+operator and the stated grammar presentations; no
+presentation-independent stage of Gold convergence is claimed.  The bounds
+measure total encoded length, not an intrinsic minimum grammar size;
+for general standard inputs, component-pattern thickness may be
+exponential in grammar size.  The polynomial exponents are not established as optimal.  The local-group
+condition is sufficient at every fixed fan-out; whether it is necessary
+for polynomial characteristic-data length at fan-out two or more is open
+(Open Problem~\ref{op:fanout-two}).
+Section~\ref{sec:prelim} fixes the setting, Section~\ref{sec:learner}
+defines the reconstruction operator and its qualitative guarantees,
+Sections~\ref{sec:char-data} and~\ref{sec:further} prove the quantitative
+bounds, and Section~\ref{sec:comparison} compares the typed classes with
+multidimensional substitutability and develops the examples.  The
 appendices prove the technical shortening, normalization and
-reconstruction statements used in this paper.
+reconstruction statements.
 
 \section{Preliminaries}
 \label{sec:prelim}
