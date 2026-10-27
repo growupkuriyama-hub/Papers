@@ -504,10 +504,9 @@ further restriction, is called \emph{standard}.  Its \emph{size} is
  \|G\|:=|V|+\sum_{(A\to\rho(B_1,\ldots,B_r))\in P}
  \Bigl(1+r+\textstyle\sum_{i}|\alpha_i|\Bigr),
 \]
-where $|\alpha_i|$ counts terminal and variable occurrences.  For
-fixed fan-out and rule rank, this is the symbol-level grammar-size
-measure used in the quantitative bounds; it does not count binary
-encodings of nonterminal names.
+where $|\alpha_i|$ counts terminal and variable occurrences.  All
+bounds use this symbol-level size; a bit-level encoding with binary
+nonterminal names changes it by at most a factor $O(\log\|G\|)$.
 \end{definition}
 
 $\mathsf{MCFL}(f,r)$ is the class of languages of MCFGs of fan-out $\le f$ and
@@ -516,9 +515,10 @@ and the minimum rule rank of a language is taken over all its fan-out-$\le f$
 presentations.  For nonterminals of equal fan-out $d$, $A\to B$ abbreviates
 $A\to(\xi_1^1,\ldots,\xi_1^d)(B)$, and $A\to\tuple c$ a constant rule.  Rule
 variables are always $\xi_j^\kappa$; terminals in examples are in
-\texttt{typewriter} font.  Fan-out and rank are distinct resources: no rank
-reduction preserves an arbitrary fixed fan-out
-\cite{RambowSatta1999,GomezRodriguezEtAl2009}, so the reconstruction below
+\texttt{typewriter} font.  Fan-out and rank are distinct resources: at fan-out
+$\ge2$, rank cannot in general be reduced without increasing fan-out, even up
+to weak equivalence \cite{RambowSatta1999,GomezRodriguezEtAl2009} (CFGs, of
+fan-out one, can always be binarized).  The reconstruction below therefore
 assumes neither a binary normal form nor a known rank cap.
 
 \begin{definition}[Grammar properties]
@@ -563,7 +563,8 @@ $E\in\mathcal E_d$ obtained by replacing these intervals by
 $\blank_1,\ldots,\blank_d$, so that $E[\tuple x]=w$.  For finite $K$,
 $\mathrm{Obs}_d(K):=\{\tuple x\in(\Sigma^+)^d:E[\tuple x]\in K\text{ for some
 }E\in\mathcal E_d\}$ is the set of tuples arising from such occurrences, and
-$\mathrm{Obs}(K):=\bigcup_{1\le d\le f}\mathrm{Obs}_d(K)$.
+$\mathrm{Obs}(K):=\bigcup_{1\le d\le f}\mathrm{Obs}_d(K)$ for the fixed fan-out
+bound $f$.
 \end{definition}
 
 \begin{definition}[$(f,s)$-tuple substitutability and the target class]
@@ -595,7 +596,8 @@ their distributions.  The bias consists of both $s$ and $f$:
 $\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$; in particular
 $\Cmcf{f}{s_{\mathrm{triv}}}\subseteq\Cmcf{f}{s}$.  This compares classes
 only: the operators $\mathcal B_{f,s}$ and $\mathcal B_{f,t}$ of
-Section~\ref{sec:learner} differ, and no monotonicity of characteristic-data
+Section~\ref{sec:learner} differ in general (they coincide when
+$\ker s=\ker t$), and no monotonicity of characteristic-data
 length in the typing is claimed.
 \item $\Cmcf{f+1}{s}\cap f\text{-}\mathrm{MCFL}\subseteq\Cmcf{f}{s}$, but the
 class is not monotone in $f$: for trivial typing $\{w\mathtt{\#}w^R\}$ is
@@ -631,16 +633,15 @@ $\delta:=\sum_i(\varphi(y_i)-\varphi(x_i))\in\mathsf H$, and by commutativity
 $\varphi(E'[\tuple y])-\varphi(E'[\tuple x])=\delta$ for every
 $E'\in\mathcal E_d$, so coset membership transfers in both directions.  Thus
 $\varphi^{-1}(\gamma+\mathsf H)$ is $(f,s_{\mathrm{triv}})$-, hence
-$(f,s)$-tuple-substitutable; apply (i).  The final membership claim
-also uses the type-recognizable-language observation in item (c)
-immediately before the proposition, and the stated $f$-MCFL assumption.
+$(f,s)$-tuple-substitutable; apply (i).  The last two claims follow from
+(i), (ii) and item (c) above.
 \end{proof}
 
 \section{Reconstruction and Qualitative Learning}
 \label{sec:learner}
 
 This section fixes the reconstruction operator analysed later and records
-its qualitative guarantees, which are not claimed as independent novelty.
+its qualitative guarantees, none of which is claimed as new.
 For fixed $f$, rank cap and typing, the operator is a concrete form of
 Yoshinaka's learner for
 substitutable languages over a finite signature
@@ -653,17 +654,20 @@ substitutable languages over a finite signature
 \hline
 Here & Antecedent & Addition needed later\\
 \hline
-Prop.~\ref{prop:reconstruction-soundness} (soundness) & \cite[Lemma~2]{Yoshinaka2015General} & uncapped rank\\
+Prop.~\ref{prop:reconstruction-soundness} (soundness) & \cite[Lemma~2]{Yoshinaka2015General} & ---\\
 Prop.~\ref{prop:completeness} (completeness) & \cite[Lemma~3]{Yoshinaka2015General} & arbitrary same-type representatives\\
-Thm.~\ref{thm:exact-reconstruction}, Cor.~\ref{cor:gold-explanatory} & \cite[Theorem~1]{Yoshinaka2015General} & uncapped rank\\
+Thm.~\ref{thm:exact-reconstruction} (exact reconstruction) & \cite[Lemmas~2--3]{Yoshinaka2015General} & as for Prop.~\ref{prop:completeness}\\
+Cor.~\ref{cor:gold-explanatory} (identification) & \cite[Theorem~1]{Yoshinaka2015General} & unbounded rank over the class\\
 \hline
 \end{tabular}
 \end{center}
 The additions are why the statements are given for the concrete grammar, with
 routine proofs in Appendices~\ref{app:qualitative-construction-details}
 and~\ref{app:typed-witness-aux-proofs}; no embedding into the signature
-framework is used as a premise.  The uncapped operator has sample-dependent
-rank, outside the bounded-arity assumption of
+framework is used as a premise.  For a fixed sample the uncapped operator
+is the finite cap $\|K\|_+$, so soundness needs no addition; but identifying
+all of $\Cmcf{f}{s}$, whose members have unbounded minimum rank, uses a
+sample-dependent cap, outside the bounded-arity assumption of
 \cite{Yoshinaka2015General}.  Representatives that are not derivable from
 their nonterminal are used in Propositions~\ref{prop:mcfg-relaxed-witnesses}
 and~\ref{prop:computed-witness-budget}.  Finally,
@@ -758,8 +762,9 @@ composition witness in $K$.  Both operators are sample-consistent, via
 $\widehat S\to[(w)]\to(w)$ and $\widehat S\to\eps$.  All non-start templates
 are $\lambda$-free, so $\widehat S\Rightarrow^*\eps$ only by the rule
 $\widehat S\to\eps$.  For trivial typing and $\eps\notin K$, Comp/Const, Link
-and Start are the rule Types~I--III of \cite[Section~4.1]{Yoshinaka2011}, and
-$\mathcal B_{f,s}$ is the operator of the unbounded-rank learner
+and Start correspond to the rule Types~I--III of
+\cite[Section~4.1]{Yoshinaka2011}, and $\mathcal B_{f,s}$ corresponds to the
+operator of the unbounded-rank learner
 $\mathcal A(p,*)$ of \cite[Corollary~2]{Yoshinaka2011}.
 
 \subsection{Yield-Typed Refinement and Witnesses}
@@ -815,7 +820,7 @@ $\chi(X)=\blank_1$.
 
 \begin{lemma}[Typed nonterminals are distributionally homogeneous]
 \label{lem:typed-homogeneity}
-Let $G$ be good with $L:=L(G)\in\Cmcf{f}{s}$.  For every typed nonterminal $X$
+Let $G$ be good of fan-out $\le f$ with $L:=L(G)\in\Cmcf{f}{s}$.  For every typed nonterminal $X$
 of arity $d$, $L_X$ lies in a single $\equiv_{L,s}^d$-class, denoted $[X]$.
 \end{lemma}
 
@@ -4188,6 +4193,13 @@ Induction on derivation height gives (i) and the unique lifting (ii).  Erasing
 indices gives $L(G^{\widehat{s}})\subseteq L(G)$, (ii) the converse, and trimming keeps
 every rule of every successful derivation.
 \end{proof}
+
+Definitions~\ref{def:class-cmcf}, \ref{def:reconstruction}
+and~\ref{def:output-refinement} apply verbatim with any finite-monoid
+morphism $h:\Sigma^*\to N$ in place of $\widehat s$ (types of tuples being
+$h^{(d)}$); write $\Cmcf{f}{h}$ for the resulting class.  The class and the
+reconstruction operator use types of nonempty components only, hence depend
+only on $h|_{\Sigma^+}$.
 
 \begin{lemma}[Monoid implementations]
 \label{lem:semigroup-transfer}
