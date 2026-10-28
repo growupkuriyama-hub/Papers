@@ -168,6 +168,28 @@ instance $R=\{(0,0),(0,1),(1,0)\}$ shows that untyped and boundary-only
 substitutability both fail here
 (Proposition~\ref{prop:feature-cross-typed}).
 
+\paragraph{Why noncommutative and local-group typings?}
+A fixed typing is a bias of the learner, not a target-specific proof device:
+refining it changes the reconstruction operator as well as the target
+class.  A finite permutation automaton naturally supplies a group-valued
+feature; its transition group need not be commutative (two transpositions
+of three states already generate $S_3$).  For discontinuous constituents,
+the order in which features compose can matter.  The agreement family
+$L^A_R$ of Proposition~\ref{prop:group-agreement} compares group values
+of separated blocks under one fixed window--$(A\times A)$ typing.
+For $A=S_3$, agreement belongs to this class, but no window--abelian
+typing admits it at fan-out two.  This is a separation of fixed
+learning biases, not a lower bound on characteristic-data length for
+an individual target.  Theorem~\ref{thm:window-group-polydata}
+provides class-uniform $O(\|G\|^2\bar\theta_G)$ data for such typings,
+whereas Theorem~\ref{thm:mcfg-abelian-filter-data} applies to
+specially filtered targets and may use a different typing and operator.
+Local groups further allow group contributions from sliding factors,
+such as the parity of occurrences of a bigram, beyond letterwise group
+morphisms together with fixed boundary windows
+(Proposition~\ref{prop:li-g-strict}).
+
+
 \paragraph{Why bound the original presentation?}
 A natural route is to refine the grammar by types and apply untyped
 estimates to the refinement.  This route can be expensive.  The full
@@ -1574,6 +1596,17 @@ $M_{k,\nu}$.  The typing $s$ is \emph{local-group-determined} if
 $\widehat s\preceq\lambda_{k,\nu}$ for some $k$, $A$ and $\nu$.
 \end{definition}
 
+A local-group typing can encode a group contribution determined by a
+sliding factor, rather than by each letter alone.  For example,
+$\lambda_{1,\nu}$ with $\nu(\mathtt{ab})=1\in\mathbb Z_2$ and zero on
+other pairs records the parity of occurrences of $\mathtt{ab}$.
+Even on $\{\mathtt a,\mathtt b\}$ this is not determined by any
+fixed boundary window combined with a finite-group morphism
+(Proposition~\ref{prop:li-g-strict}(ii)).  The local-group
+characterization below expresses this additional power without
+requiring a new learner or a target-specific typing.
+
+
 \begin{theorem}[Polynomial characteristic data for local-group typing]
 \label{thm:local-group-polydata}
 Let $\mathsf S\in\mathbf{LG}$, $L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$.  Then
@@ -2218,6 +2251,114 @@ The example models a finite case-licensing or feature-compatibility constraint; 
 claim about a specific natural language is made.  The relation $R$ varies with the
 target, while the morphism $g$ and the operator do not.
 
+\paragraph{Group-valued agreement.}
+Let $A$ be a finite group, $\Delta_1$ a finite alphabet whose letter
+images generate $A$ under a morphism $g_1:\Delta_1^*\to A$, and
+$\Delta_2=\{\bar\delta:\delta\in\Delta_1\}$ a disjoint copy.  Put
+$\Sigma_{\mathrm{agr}}:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}
+\uplus\Delta_1\uplus\Delta_2$, and define
+$g:\Sigma_{\mathrm{agr}}^*\to A\times A$ by
+$g(\delta)=(g_1(\delta),1)$, $g(\bar\delta)=(1,g_1(\delta))$,
+and $g(\mathtt a)=g(\mathtt b)=g(\mathtt c)=g(\mathtt d)=(1,1)$.
+For $R\subseteq A\times A$, let
+\[
+ L_R^A:=\{\mathtt a^m u\mathtt b^n\mathtt c^m v\mathtt d^n:
+     m,n\ge1,\ u\in\Delta_1^+,\ v\in\Delta_2^+,\ g(uv)\in R\},
+\]
+let $L_{\mathrm{agr}}^A:=L_{\{(x,x):x\in A\}}^A$, and fix the
+corestricted positive typing
+$s_{\mathrm{agr}}:=(s_{1,1},g)|_{\Sigma_{\mathrm{agr}}^+}$.
+Here the finite group factor of the typing is $A\times A$, not $A$.
+
+\begin{proposition}[Agreement of ordered group-valued features]
+\label{prop:group-agreement}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item For every $R\subseteq A\times A$,
+$L_R^A\in\mathsf{MCFL}(2,2)\cap\Cmcf{f}{s_{\mathrm{agr}}}$
+for all $f\ge2$.  If $R\ne\emptyset$, then $L_R^A$ is not context-free.
+\item If the commutator subgroup $[A,A]$ is not contained in the centre
+$Z(A)$, then $L_{\mathrm{agr}}^A\notin\Cmcf{f}{t}$ for every $f\ge2$
+and every typing $t\preceq(s_{k,\ell},g')|_{\Sigma_{\mathrm{agr}}^+}$,
+where $k,\ell\ge0$ and $g'$ maps into a finite abelian group.
+In particular $L_{\mathrm{agr}}^A\notin\YSub{f}$.
+\end{enumerate}
+For $A=S_3$ the hypotheses of \textup{(ii)} hold, while
+Theorem~\ref{thm:window-group-polydata} applies uniformly to
+$\Cmcf{f}{s_{\mathrm{agr}}}$ with a window--$(S_3\times S_3)$ typing.
+\end{proposition}
+
+\begin{proof}
+(i) For each $x\in A$ take a good right-linear grammar $U_x$ for
+$g_1^{-1}(x)\cap\Delta_1^+$ and let $\bar U_x$ generate its copied
+language over $\Delta_2$.  These exist because every group element has
+a nonempty positive-word representative.  With the fan-out-two rules
+\[
+\begin{aligned}
+ P&\to(\xi_1^1,\xi_2^1)(U_x,\bar U_y) &&((x,y)\in R),\\
+ C&\to(\mathtt a,\mathtt c)
+       \mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(C),\\
+ D&\to(\mathtt b,\mathtt d)
+       \mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(D),\\
+ T&\to(\xi_1^1\xi_2^1,\xi_1^2\xi_2^2)(C,P),\\
+ S&\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(T,D),
+\end{aligned}
+\]
+we generate $L_R^A$ with fan-out and rank at most two; the adjacent
+variables in each component of $T$ and $S$ belong to different children.
+For $R=\emptyset$ the language is empty.  Otherwise choose $(x,y)\in R$
+and positive $p,q\in\Delta_1^+$ with $g_1(p)=x$, $g_1(q)=y$.
+Intersection with
+$\mathtt a^+p\mathtt b^+\mathtt c^+\bar q\mathtt d^+$,
+followed by erasing the feature blocks, yields
+$\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n:m,n\ge1\}$;
+thus $L_R^A$ is not context-free.
+
+For typed substitutability write
+$L_R^A=Q\cap g^{-1}(R)\cap\varphi^{-1}(0)$, where
+$Q=\mathtt a^+\Delta_1^+\mathtt b^+\mathtt c^+
+\Delta_2^+\mathtt d^+$ is strictly $2$-local and
+$\varphi:\Sigma_{\mathrm{agr}}^*\to\mathbb Z^2$ sends
+$\mathtt a,\mathtt c,\mathtt b,\mathtt d$ to
+$(1,0),(-1,0),(0,1),(0,-1)$, respectively, and all feature letters
+to $0$.  Lemma~\ref{lem:sl2-boundary-control} handles $Q$;
+$g^{-1}(R)$ is a union of $s_{\mathrm{agr}}$-classes; and
+Proposition~\ref{prop:abelian-coset-filter} handles the abelian
+filter and intersection.  Hence $L_R^A\in\Cmcf{f}{s_{\mathrm{agr}}}$.
+
+(ii) Since $[A,A]\not\subseteq Z(A)$, some commutator
+$z:=yx y^{-1}x^{-1}$ is noncentral.  Choose $h\in A$ with $hz\ne zh$,
+and nonempty $p,q,w\in\Delta_1^+$ whose $g_1$-values are $x,y,h$.
+Let $N=|A|$, $K\ge\max\{k+\ell,1\}$, choose
+$\delta\in\Delta_1$ and put $\pi:=\delta^{KN}$.
+Set
+\[
+ u=\pi p q q^{N-1}p^{N-1}\pi,\qquad
+ u'=\pi q p q^{N-1}p^{N-1}\pi.
+\]
+Then $g_1(u)=1$, $g_1(u')=z$, while $u,u'$ have identical Parikh
+vectors and agree on their length-$k$ prefixes and length-$\ell$
+suffixes.  Thus every window--abelian typing as in the statement
+gives $t(u)=t(u')$, and likewise $t(\bar u)=t(\bar u')$.
+The tuples $X:=(u,\bar u)$ and $Y:=(u',\bar u')$ therefore have equal
+$t$-type.  Both are admitted by
+$E:=\mathtt a\blank_1\mathtt{bc}\blank_2\mathtt d$,
+since their two group values are respectively $(1,1)$ and $(z,z)$.
+Choose also
+$F:=\mathtt a w\blank_1\mathtt{bc}\blank_2\bar w\mathtt d$.
+Then $F[X]\in L_{\mathrm{agr}}^A$ has values $(h,h)$, but
+$F[Y]\notin L_{\mathrm{agr}}^A$ has values $(hz,zh)$.
+Thus the common context $E$ does not imply equal distributions,
+contradicting $(f,t)$-substitutability at arity two.  Trivial typing
+is a special case.  For $A=S_3$, $[S_3,S_3]=A_3$ is not central.
+\end{proof}
+
+\begin{remark}
+The separating contexts above use a noncentral commutator.
+No corresponding claim is made here for groups whose commutator
+subgroup is central, such as $Q_8$.
+\end{remark}
+
+
 \subsection{Separating the Typing Classes}
 \label{subsec:necessity}
 
@@ -2370,18 +2511,30 @@ window, window--group and window--abelian theorems and
 Corollary~\ref{cor:mcfg-li-group-polydata} assume a typing of the excluded kind.
 \end{proof}
 
-\begin{remark}[Scope of the separations]
+\begin{remark}[Scope of the typing separations]
 \label{rem:necessity-scope}
-These propositions separate \emph{typing classes}; they do not show that local-group
-or nonabelian shortening is needed for short data for $L_{\mathrm A}$ or $L_{\mathrm B}$.
-Indeed, refining $s_{\mathrm A}$ by the syntactic morphism of $Q_{\mathrm A}$ gives a
-typing $s'$ with $L_{\mathrm A}=\widehat{s'}^{-1}(\mathsf{Acc}')\cap\varphi_\times^{-1}(0)$,
-so Theorem~\ref{thm:mcfg-abelian-filter-data} gives polynomial data for
-$\mathcal B^{\le2}_{f,s'}$ (similarly for $L_{\mathrm B}$); this concerns the refined
-operator, not $\mathcal B^{\le2}_{f,s_{\mathrm A}}$.  The separation also happens at arity
-one (Lemma~\ref{lem:flag-separation}), so these examples isolate the expressiveness of
-the typing, not its interaction with interleaved components
-(Example~\ref{ex:nonabelian-reverse-owner}).
+Propositions~\ref{prop:lg-needed-target},
+\ref{prop:nonabelian-needed-target} and~\ref{prop:group-agreement}
+separate classes determined by \emph{fixed typings}: a learner with
+one of the excluded window or window--abelian biases cannot learn
+these targets as members of its corresponding substitutable class.
+The first two separations already occur at arity one
+(Lemma~\ref{lem:flag-separation}), whereas the exhibited group-agreement separation uses arity-two
+contexts (without claiming that arity one is impossible).
+None of them establishes a lower bound on characteristic-data length
+for an individual target.  By refining the original typing with a
+finite morphism recognizing its strictly $2$-local structural language,
+each target can be written as
+$\widehat{s'}^{-1}(\mathsf{Acc}')\cap\varphi^{-1}(0)$,
+for an abelian morphism $\varphi$.  Theorem~\ref{thm:mcfg-abelian-filter-data}
+then supplies polynomial data for the \emph{different} operator
+$\mathcal B^{\le2}_{f,s'}$.  The window--group and local-group bounds
+instead apply uniformly to every member of the original fixed-typing
+class, with a degree independent of $|\Sigma|$.
+For the $S_3$ agreement instance with two generators,
+$|\Sigma_{\mathrm{agr}}|=8$, so the corresponding displayed bounds have
+exponents $2$ (keeping $\bar\theta_G$ separate) and $3|\Sigma|+2=26$;
+these are upper bounds for different operators, not tight lower bounds.
 \end{remark}
 
 \subsection{An Intrinsically Rank-Two Boundary-Typed Target}
@@ -2898,8 +3051,9 @@ subsemigroup of it, hence a subgroup.
 \item If $\widehat s\preceq(\widehat s_{k,\ell},g)$ for a morphism $g$ into a finite
 group, then $\widehat s\preceq\lambda_{\hat k,\nu}$ with $\hat k=\max\{k,\ell,1\}$ and
 $\nu(F):=g(\text{last letter of }F)$.  Hence $\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$.
-\item For $\Sigma=\{\mathtt a,\mathtt b,\mathtt c\}$ and $h_{\mathtt{ab}}:=\lambda_{1,\nu}$
-with $\nu(\mathtt{ab})=1\in\mathbb Z_2$ and $\nu=0$ otherwise,
+\item Already for $\Sigma=\{\mathtt a,\mathtt b\}$ and
+$h_{\mathtt{ab}}:=\lambda_{1,\nu}$ with
+$\nu(\mathtt{ab})=1\in\mathbb Z_2$ and $\nu=0$ otherwise,
 $h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$.
 \end{enumerate}
 \end{proposition}
@@ -2912,12 +3066,18 @@ semigroup $S\in\mathbf{LI}\vee\mathbf{Grp}$ is the positive image of the evaluat
 typing over the alphabet $S$, which is window--group-determined by
 Lemma~\ref{lem:mcfg-li-group-window}, hence local-group-determined, so
 $S\in\mathbf{LG}$ by Theorem~\ref{thm:lg-characterization}.
-(ii) Membership in $\mathbf{LG}$ is Theorem~\ref{thm:lg-characterization}.  The words
-$u,v$ in the proof of Proposition~\ref{prop:lg-needed-target}(iii) lie in
-$\{\mathtt a,\mathtt b,\mathtt c\}^+$, have equal $(\widehat s_{k,\ell},g')$-values for
-any given $k,\ell,g'$, and differ in the parity of $\#_{\mathtt{ab}}$; so
-$h_{\mathtt{ab}}$ is not window--group-determined, and
-Lemma~\ref{lem:mcfg-li-group-window} excludes $\mathbf{LI}\vee\mathbf{Grp}$.
+(ii) Membership in $\mathbf{LG}$ follows from
+Theorem~\ref{thm:lg-characterization}.  Let $k,\ell\ge0$ and let
+$g':\Sigma^*\to H$ map into an arbitrary finite group.  Choose
+$K\ge k+\ell+1$ and $N\ge1$ divisible by the order of $g'(\mathtt a)$,
+and put $u=\mathtt b^K\mathtt a^N\mathtt b^K$ and
+$v=\mathtt b^{2K}$.  They have equal length-$k$ prefix and
+length-$\ell$ suffix, are long for $s_{k,\ell}$, and satisfy
+$g'(u)=g'(\mathtt b)^{2K}=g'(v)$, but
+$\#_{\mathtt{ab}}(u)=1$ and $\#_{\mathtt{ab}}(v)=0$.
+Thus $h_{\mathtt{ab}}$ is not window--group-determined, and
+Lemma~\ref{lem:mcfg-li-group-window} excludes
+$\mathbf{LI}\vee\mathbf{Grp}$.
 \end{proof}
 
 \begin{lemma}[Short tuples with prescribed local-group type]
