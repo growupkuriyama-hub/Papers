@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{ltjsarticle}
 
 % 日本語査読用：LuaLaTeX + LuaTeX-ja
-% 英語I&C統合改訂版（2026-10-27）に対応する日本語研究翻訳。
+% 英語I&C最新版（2026-10-28、M1・M5統合）に対応する日本語研究翻訳。
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \numberwithin{equation}{section}
 \usepackage{enumitem}
@@ -64,7 +64,7 @@
 \maketitle
 
 \begin{abstract}
-固定した有限半群型付けの下でタプル代入可能な多重文脈自由言語を正例から学習する問題について，MCFG表示に相対的な特徴標本の符号化総長を評価する．質的同定はYoshinakaの分布的学習の枠組みに基づき，本稿の寄与は定量的な保証にある．アルファベット，ファンアウト，規則ランク，型付けを固定するとき，縮約済み良形文法$G$の規則厚さを$\bar\theta_G$として，接頭辞--接尾辞窓と任意の有限群（非可換群を含む）による型付けには$O(\|G\|^2\bar\theta_G)$，正語像が局所群である型付けには$O(\|G\|^3\bar\theta_G)$の特徴データ総長上界を示す．証明では，交錯するタプル成分を同時に短縮し，各成分の順序付き群積を保存する．加えて，完全生成語型精密化の規則厚さが多項式で抑えられる有限半群の代数的領域が，任意の固定ファンアウトにおいてちょうど局所群であることを特徴づける．これは特徴データ長の下界ではない．任意の標準MCFG入力に対しては，文法サイズについて指数的にもなり得る成分パターン厚さを用いたパラメータ付き上界を得る．保守的な別の学習器はGold同定を与える．また，交差依存言語族について，クラス全体で共有される有限素性バイアスと明示的な特徴標本を示す．ファンアウト2以上で局所群条件が特徴データ長の多項式性に必要かどうかは未解決である．
+固定した有限半群型付けの下でタプル代入可能な多重文脈自由言語を正例から学習する問題について，MCFG表示に相対的な特徴標本の符号化総長を評価する．質的同定はYoshinakaの分布的学習の枠組みに基づき，本稿の寄与は定量的な保証にある．完全生成語型精密化の最短生成語長$t_{\mathrm{typ}}$という単一の計算可能なパラメータが，証拠語の符号化総長を制御する．アルファベット，ファンアウト，規則ランク，型付けを固定するとき，縮約済み良形文法$G$の規則厚さを$\bar\theta_G$として，接頭辞--接尾辞窓と任意の有限群（非可換群を含む）による型付けには$O(\|G\|^2\bar\theta_G)$，正語像が局所群である型付けには$O(\|G\|^3\bar\theta_G)$の特徴データ総長上界を示す．証明では，交錯するタプル成分を同時に短縮し，各成分の順序付き群積を保存する．加えて，完全生成語型精密化の規則厚さが多項式で抑えられる有限半群の代数的領域が，任意の固定ファンアウトにおいてちょうど局所群であることを特徴づける．これは特徴データ長の下界ではない．任意の標準MCFG入力に対しては，文法サイズについて指数的にもなり得る成分パターン厚さを用いたパラメータ付き上界を得る．保守的な別の学習器はGold同定を与える．また，交差依存言語族について，クラス全体で共有される有限素性バイアスと明示的な特徴標本を示す．ファンアウト2以上で局所群条件が特徴データ長の多項式性に必要かどうかは未解決である．
 \end{abstract}
 \medskip
 \noindent\textbf{キーワード：}
@@ -91,14 +91,23 @@
 \]
 を考える．全ての$L_R$は$\Cmcf{2}{s}$に属し，$R$が非空ならこれらは文脈自由でない交差依存言語である（系~\ref{cor:feature-relation-family}）．群成分$g$が記録するのは二つの素性の\emph{値}であって，適合関係$R$ではない．$R$も標的文法も学習器の入力ではなく，学習器は認可情報と無限の交差依存の両方を正例から復元しなければならない．$R\ne\emptyset$については符号化総長$36|R|+22$以下の明示的な特徴標本が存在し，一方で族全体に対する単一の集合駆動型作用素の特徴標本は，許可される全ての対を示さなければならない（命題~\ref{prop:feature-family-witness-budget}）．非直積の例$R=\{(0,0),(0,1),(1,0)\}$では，型なしの代入可能性も境界窓のみの代入可能性も成り立たない（命題~\ref{prop:feature-cross-typed}）．
 
+\paragraph{なぜ非可換群・局所群の型付けが必要なのか．}
+固定した型付けは標的ごとの証明道具ではなく，学習器そのもののバイアスである．型付けを精密化すると再構成作用素も標的クラスも変わる．有限の置換オートマトンは自然に群値の素性を与えるが，その遷移群は可換とは限らない．例えば3状態の二つの互換から$S_3$が生成される．不連続構成素に対しては，素性を合成する順序が意味をもつ．命題~\ref{prop:group-agreement}の一致言語族$L_R^A$は，一つの固定した窓・$(A\times A)$型付けの下で，離れたブロックの群値を比較する．$A=S_3$の場合，一致言語はこのクラスに属するが，ファンアウト2でこれを許す窓・アーベル型付けは存在しない．これは\emph{固定した学習バイアスの分離}であって，個々の標的の特徴データ長の下界ではない．定理~\ref{thm:window-group-polydata}はその型付けのクラス全体に一様な$O(\|G\|^2\bar\theta_G)$のデータを与える．一方，定理~\ref{thm:mcfg-abelian-filter-data}は特定のフィルタ付き標的に適用され，型付けと作用素が別になる場合がある．局所群はさらに，文字ごとの群準同型と固定境界窓だけでは記録できないbigramの出現数の偶奇など，sliding factorに依存する群値を許す（命題~\ref{prop:li-g-strict}）．
+
 \paragraph{なぜ元の文法表示で評価するのか．}
-自然な方針は，文法を型で精密化し，精密化した文法に型なしの評価を適用することである．しかしこの方針は高くつきうる．完全型付き構成は最大で$|V||\mathsf T^\sharp|^f$個の非終端記号と$|P||\mathsf T^\sharp|^{fr}$個の規則を持ち，その厚さは爆発しうる．これは\emph{潜在的な}コストであって，最小特徴データ長の単調性を述べる定理ではないが，指数的になりうる．実際，固定した2元型付け$s_{\mathtt c}$について，$\{\mathtt a,\mathtt c\}^+$のランク2のCFG表示$G_n$で，$\|G_n\|=O(n)$かつ規則厚さ$\theta_{G_n}\le2$でありながら，刈り込んだ完全生成語型精密化の厚さが$\theta_{\widetilde G_{n,0}}\ge2^n$となるものが存在する（命題~\ref{prop:typed-thickness-exponential}）．そこで本稿は特徴データを元の文法表示によって直接評価し，固定した型付けの代数がこのコストを\emph{払う前に}短い証拠を許すのはいつかを問う．同じ理由で，型付けは推定や最適化の対象ではなく所与のものとして扱う．より細かい型付け$s\preceq t$（すなわち$\Sigma^+$上で$\ker t\subseteq\ker s$）はクラスを$\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$と広げるが，再構成作用素も変えてしまい，本稿の上界が成り立つ代数的領域から外れることもある．本稿が問うのは，外部から与えられた固定の型付けがクラス一様な短い証拠を持つのはいつか，である．
+自然な方針は，文法を型で精密化し，精密化した文法に型なしの評価を適用することである．しかしこの方針は高くつきうる．完全型付き構成は最大で$|V||\mathsf T^\sharp|^f$個の非終端記号と$|P||\mathsf T^\sharp|^{fr}$個の規則を持ち，その厚さは爆発しうる．これは\emph{潜在的な}コストであって，最小特徴データ長の単調性を述べる定理ではないが，指数的になりうる．実際，固定した2元型付け$s_{\mathtt c}$について，$\{\mathtt a,\mathtt c\}^+$のランク2のCFG表示$G_n$で，$\|G_n\|=O(n)$かつ規則厚さ$\theta_{G_n}\le2$でありながら，刈り込んだ完全生成語型精密化の最短生成語長も規則厚さも$t_{\mathrm{typ}}(G_n,s)\ge2^n$，$\theta_{\widetilde G_{n,0}}\ge2^n$となるものが存在する（命題~\ref{prop:typed-thickness-exponential}）．そこで本稿は特徴データを元の文法表示によって直接評価し，固定した型付けの代数がこのコストを\emph{払う前に}短い証拠を許すのはいつかを問う．同じ理由で，型付けは推定や最適化の対象ではなく所与のものとして扱う．より細かい型付け$s\preceq t$（すなわち$\Sigma^+$上で$\ker t\subseteq\ker s$）はクラスを$\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$と広げるが，再構成作用素も変えてしまい，本稿の上界が成り立つ代数的領域から外れることもある．本稿が問うのは，外部から与えられた固定の型付けがクラス一様な短い証拠を持つのはいつか，である．
 
 \paragraph{技術的な障害．}
 指定された根の型に対する短い代表を得るには，長い部分導出の一部を，置換対象の部分木の各成分における群値を必ずしも保存しない短い導出で置き換える．多成分MCFGの導出では，一つの部分木が異なる根成分へ複数のブロックを寄与し，それらが他の部分木のブロックと交錯しうる．非可換群の場合，同時置換の効果はこれらのブロックの順序に依存する．そこで本稿では，個々の置換ブロックの群値が変化しても，\emph{所有者別に同時に}置換する集合を選び，根の全成分の順序付き群積を保存する（命題~\ref{prop:block-replacement-interface}）．
 
 \paragraph{主結果．}
-主結果には入力に依存する二つの厚さ尺度が現れる．縮約済み良形MCFG $G$に対する主尺度は\emph{規則厚さ}$\bar\theta_G=\max\{1,\theta_G\}$であり，各規則についてその規則を使う最短の受理文の長さを取った最大値である（\ref{subsec:thickness-contexts}節）．任意の標準MCFG $H$に対する正規化の上界では，代わりに\emph{成分パターン厚さ}$\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$を用いる．これは非空タプル成分の各実現可能なパターンを最短で実現する長さを測る（定義~\ref{def:component-pattern-thickness}）．空成分を持つ入力では両者は取り替えられない．証明で用いる補助的な量との比較は表~\ref{tab:thickness-scales}にまとめる．アルファベット，ファンアウト$f$，規則ランク上限$r_{\max}$，型付けを固定し，縮約済み良形文法$G$について$\bar\theta=\bar\theta_G$，標準入力文法$H$について$n=\max\{1,\|H\|\}$，$t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$と書く．集合駆動型Const/Link/Comp再構成作用素に対する特徴データ符号化総長の主な上界は次の通りである．
+主結果には入力に依存する二つの厚さ尺度が現れる．縮約済み良形MCFG $G$に対する主尺度は\emph{規則厚さ}$\bar\theta_G=\max\{1,\theta_G\}$であり，各規則についてその規則を使う最短の受理文の長さを取った最大値である（\ref{subsec:thickness-contexts}節）．任意の標準MCFG $H$に対する正規化の上界では，代わりに\emph{成分パターン厚さ}$\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$を用いる．これは非空タプル成分の各実現可能なパターンを最短で実現する長さを測る（定義~\ref{def:component-pattern-thickness}）．空成分を持つ入力では両者は取り替えられない．証明で用いる補助的な量との比較は表~\ref{tab:thickness-scales}にまとめる．とくに型付き非終端記号からの最短タプル生成語長の最大値$t_{\mathrm{typ}}(G,s)$を中心的な中間尺度として，定理~\ref{thm:data-from-typed-thickness}は任意の型付けについて
+\[
+ \|\Wit(\widetilde G_0)\|_+\le
+ N_{\mathrm{typ}}\bigl(1+2\bar\theta_G+r_{\max}t_{\mathrm{typ}}\bigr),
+ \qquad N_{\mathrm{typ}}=O(\|G\|)
+\]
+を与える．窓・群型付けと局所群型付けでは，$t_{\mathrm{typ}}$をそれぞれ$O(\|G\|\bar\theta_G)$，$O(\|G\|^2\bar\theta_G)$で抑えることが決定的な手順である．これらは証拠語構成についての十分な上界であり，精密化の指数的増大は特徴データ長の下界ではない．アルファベット，ファンアウト$f$，規則ランク上限$r_{\max}$，型付けを固定し，縮約済み良形文法$G$について$\bar\theta=\bar\theta_G$，標準入力文法$H$について$n=\max\{1,\|H\|\}$，$t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$と書く．集合駆動型Const/Link/Comp再構成作用素に対する特徴データ符号化総長の主な上界は次の通りである．
 
 \begin{center}
 \footnotesize
@@ -478,10 +487,10 @@ $G$の規則$R$について
 \[
  \theta_G(R):=\min\{\,|w|:w\in L(G)\text{は}R\text{を使う成功導出をもつ}\,\}
 \]
-とおく．これは導出の長さではなく，導出された\emph{文}の長さである．$\theta_G:=\max_{R\in P}\theta_G(R)$，$\bar\theta_G:=\max\{1,\theta_G\}$，$t_G:=\max_{A\in V}\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}$とする（規則厚さと非終端記号厚さ．Yoshinakaは$\theta_G$を$\tau_G$と書く~\cite[Section~4.3]{Yoshinaka2011}）．表~\ref{tab:thickness-scales}は，これらの尺度を\ref{subsec:unrestricted-source}節のパターン尺度および二つの補助量とともに示す．$\theta_{\mathrm{typ}}$と$\kappa_G$は$G$をそれ自身の刈り込み精密化と比べる量であり，主定理のパラメータではない．
+とおく．これは導出の長さではなく，導出された\emph{文}の長さである．$\theta_G:=\max_{R\in P}\theta_G(R)$，$\bar\theta_G:=\max\{1,\theta_G\}$，$t_G:=\max_{A\in V}\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}$とする（規則厚さと非終端記号厚さ．Yoshinakaは$\theta_G$を$\tau_G$と書く~\cite[Section~4.3]{Yoshinaka2011}）．表~\ref{tab:thickness-scales}は，これらの尺度を\ref{subsec:unrestricted-source}節のパターン尺度および三つの量とともに示す．$t_{\mathrm{typ}}$は特徴データ長の中心的な中間尺度であり，$\theta_{\mathrm{typ}}$と$\kappa_G$は完全精密化の厚さと分布的代表を比較する補助量である．
 
 \begin{table}[htbp]
-\caption{厚さ尺度：定理の二つのパラメータと三つの補助量．}
+\caption{厚さ尺度：二つの入力尺度，中心となる型付き尺度と二つの補助量．}
 \label{tab:thickness-scales}
 \centering
 \footnotesize
@@ -494,7 +503,8 @@ $G$の規則$R$について
 $\theta_G$ & 各規則を使う最短受理文の長さの最大値．\emph{縮約済み良形$G$の主尺度}． & $t_G\le\theta_G\le 2\|G\|\max\{1,t_G\}$（補題~\ref{lem:thickness-equivalence}）．\\
 $t_G$ & 非終端記号の最短生成語総長の最大値．良形での証明用尺度． & 縮約済み良形表示では$\theta_G$と多項式的に同値．\\
 $t_{\mathrm{pat}}(H)$ & \emph{実現される非空成分パターン}ごとの最短生成語長の最大値．\emph{任意の$H$の主尺度}． & $t_H\le t_{\mathrm{pat}}(H)$，縮約済み$\lambda$-自由$H$では等号．族$E_n$は$\theta_{E_n}=O(n)$だが$t_{\mathrm{pat}}(E_n)\ge2^n$（命題~\ref{prop:empty-component-blowup}）．\\
-$\theta_{\mathrm{typ}}$ & 刈り込んだ完全生成語型精密化$\widetilde G_0$の規則厚さ．基準値のみ． & $\theta_{\mathrm{typ}}\ge\theta_G$．$\theta_G\le2$でも$\ge2^n$となり得る（命題~\ref{prop:typed-thickness-exponential}）．\\
+$t_{\mathrm{typ}}$ & 開始記号以外の型付き非終端記号が導出する最短タプル総長の最大値．定理~\ref{thm:data-from-typed-thickness}の\emph{中心パラメータ}． & $t_{\mathrm{typ}}\le\theta_{\mathrm{typ}}\le2\bar\theta_G+r_{\max}t_{\mathrm{typ}}$（補題~\ref{lem:typed-thickness-equivalence}）．\\
+$\theta_{\mathrm{typ}}$ & 刈り込んだ完全生成語型精密化$\widetilde G_0$の規則厚さ． & $\theta_{\mathrm{typ}}\ge\theta_G$．$\theta_G\le2$でも$\ge2^n$となり得る（命題~\ref{prop:typed-thickness-exponential}）．\\
 $\kappa_G$ & 各型付き分布同値類の最短代表の長さの最大値．アーベル型フィルタ付き標的の補助量． & $\kappa_G\le\theta_{\mathrm{typ}}$．代表は型付き非終端記号から導出できるとは限らない（命題~\ref{prop:mcfg-relaxed-witnesses}）．\\
 \hline
 \end{tabularx}
@@ -563,21 +573,48 @@ $\lambda:\Sigma^*\to N$を$s\preceq\lambda$なる有限モノイド準同型と�
 (iv) $\iota=\omega$とした命題~\ref{prop:completeness}（$r_G\le r_{\max}$，$\chi(S_{\mathbf t})=E_S=\blank_1$）と命題~\ref{prop:reconstruction-soundness}により，$\Wit(\widetilde G_0)\subseteq K\subseteq L$なる全ての有限$K$について$L(\mathcal B(K))\cap\Sigma^+=L\cap\Sigma^+$である．$\eps$はStart規則が扱う．
 \end{proof}
 
-\subsection{精密化厚さの基本上界}
+\subsection{型付き厚さと特徴データ}
 \label{subsec:typed-thickness}
 
-刈り込み精密化自身の規則厚さを$\bar\theta_{\mathrm{typ}}:=\max\{1,\theta_{\widetilde G_0}\}$とする．$G$の各規則$R$は刈り込みで残る型付きコピーをもち（$R$を使う成功導出を持ち上げればよい），そのコピーを使う成功導出は標識を消すと$R$を使う成功導出になる．よって$\theta_G\le\theta_{\widetilde G_0}$である．
+縮約済み良形文法$G$について，$\widetilde G_0$を刈り込んだ完全生成語型精密化（定義~\ref{def:output-refinement}）とする．
+\[
+ t_{\mathrm{typ}}(G,s):=
+ \max_X\min_{\tuple u\in L_X}\|\tuple u\|_1,\qquad
+ \theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}
+\]
+と定める．最大値は開始記号以外の型付き非終端記号$X$にわたる．$N_{\mathrm{typ}}(G,s)$を，そのような型付き非終端記号の数と，開始規則以外の型付き規則の数の和とする．特に
+\[
+ N_{\mathrm{typ}}\le C_s(G)\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|
+\]
+である．$f,r_{\max},s$を固定すれば，これらのパラメータは数値を二進表示として$\|G\|$の多項式時間で計算できる（命題~\ref{prop:effective-char-data}）．$G$の各規則には刈り込みで残る型付きコピーがあり，成功導出から型の標識を除けば$G$の導出に戻るので，$\theta_G\le\theta_{\widetilde G_0}\le\theta_{\mathrm{typ}}$である．
 
-\begin{lemma}[精密化厚さの基本上界]
-\label{lem:typed-thickness-baseline}
-正準タプルを適切に選べば$\|\Wit(\widetilde G_0)\|_+\le C_s(G)\,\bigl(1+(r_{\max}+2)\bar\theta_{\mathrm{typ}}\bigr)$である．
+\begin{lemma}[二つの型付き厚さ尺度の比較]
+\label{lem:typed-thickness-equivalence}
+任意の縮約済み良形$G$について，
+\[
+ t_{\mathrm{typ}}\le\theta_{\mathrm{typ}}
+ \le2\bar\theta_G+r_{\max}t_{\mathrm{typ}}.
+\]
 \end{lemma}
-
 \begin{proof}
-$\widetilde G_0$は縮約済み良形なので，これに補題~\ref{lem:thickness-equivalence}(ii)を適用すると$\|\omega(X)\|_1\le\theta_{\widetilde G_0}$なる$\omega(X)\in L_X$が得られる．$b=\theta_{\widetilde G_0}$として補題~\ref{lem:witness-length-template}(ii)を適用し，$\bar\theta_G\le\bar\theta_{\mathrm{typ}}$を使う．
+第一の不等式は縮約済み良形な$\widetilde G_0$に補題~\ref{lem:thickness-equivalence}(ii)を適用して得る．第二の不等式については，各正準タプル$\omega(X)$を総長最小に選ぶと$\|\omega(X)\|_1\le t_{\mathrm{typ}}$である．補題~\ref{lem:witness-length-template}(iii)を適用すればよい．開始リンクも同補題で扱われる．
 \end{proof}
 
-自明型付けでは$\lambda$-自由な文法の各非終端記号が実現する型は一つなので，$\widetilde G_0$は$G$に開始リンクを加えたものとなる．この場合の基本上界は，Yoshinakaのより鋭い\emph{型なし}の証拠評価$|K_G|\le|P|$，$\|K_G\|\le|P|\theta_G$~\cite[Lemma~7 and Theorem~1]{Yoshinaka2011}と同じ多項式オーダーにある．ただし，本補題の表示式は本稿の型付き証拠構成を評価しており，そのまま先行研究と同じ鋭い個数・長さの定数を主張するものではない．非自明な型付けでは精密化はずっと厚くなり得る．
+\begin{theorem}[型付き厚さからの特徴データ]
+\label{thm:data-from-typed-thickness}
+$L\in\Cmcf{f}{s}$とし，$G$を$L(G)=L\cap\Sigma^+$なるファンアウト$\le f$，ランク$\le r_{\max}$の縮約済み良形文法とする．正準タプルは総長最小に選び，文脈には補題~\ref{lem:thickness-equivalence}(iv)の導出的文脈$E_B$を用いる．このとき$K=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$と$\mathcal B_{f,s}$の双方の特徴標本であり，
+\[
+ |\Wit(\widetilde G_0)|\le N_{\mathrm{typ}},\qquad
+ \|\Wit(\widetilde G_0)\|_+\le
+ N_{\mathrm{typ}}\bigl(1+2\bar\theta_G+r_{\max}t_{\mathrm{typ}}\bigr).
+\]
+完全な標本$K$の符号化総長には，さらに$\mathbf 1_{\{\eps\in L\}}$を加える．数値的な長さの評価は任意の型付けで成立し，代入可能性を使うのは特徴標本であることの主張だけである．
+\end{theorem}
+\begin{proof}
+最短の正準タプルは$\|\omega(X)\|_1\le t_{\mathrm{typ}}$を満たす．補題~\ref{lem:witness-length-template}(ii),(iv)を適用し，$C_s(G)$という上界の代わりに開始記号以外の型付き非終端記号と規則の数を数える．
+\end{proof}
+
+自明型付けでは，$\lambda$-自由な$G$の各非終端記号が実現する型ベクトルは一つなので，$t_{\mathrm{typ}}=t_G$であり，$N_{\mathrm{typ}}=|V|+|P|\le\|G\|$である．この定理は型なしの$O(\|G\|\bar\theta_G)$という尺度を回復するが，Yoshinakaの元の標本には，より鋭い上界$|K_G|\le|P|$，$\|K_G\|\le|P|\theta_G$がある~\cite[Lemma~7 and Theorem~1]{Yoshinaka2011}．一方，非自明な型付けでは$t_{\mathrm{typ}}$が指数的に増大し得る．
 
 \begin{proposition}[完全生成語型精密化の指数的増大]
 \label{prop:typed-thickness-exponential}
@@ -588,13 +625,13 @@ $\widetilde G_0$は縮約済み良形なので，これに補題~\ref{lem:thickn
  A_0\to u,\qquad
  A_i\to A_{i-1}A_{i-1}\mid v\quad(1\le i\le n)
 \]
-とする（$u,v$は定数テンプレート）．このとき$G_n$は縮約済み良形，$L(G_n)=\Sigma^+$，$\|G_n\|=O_{\Sigma,u,v}(n)$，$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$であり，$\theta_{\widetilde G_{n,0}}\ge|u|2^n$である．
+とする（$u,v$は定数テンプレート）．このとき$G_n$は縮約済み良形，$L(G_n)=\Sigma^+$，$\|G_n\|=O_{\Sigma,u,v}(n)$，$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$であり，$t_{\mathrm{typ}}(G_n,s)\ge|u|2^n$かつ$\theta_{\widetilde G_{n,0}}\ge|u|2^n$である．
 \item 特に，$\Sigma=\{\mathtt a,\mathtt c\}$，$s_{\mathtt c}(\mathtt a)=1$，$s_{\mathtt c}(\mathtt c)=\zeta$で定まる$\{1,\zeta\}$（$\zeta^2=\zeta$）への二元型付け$s_{\mathtt c}$について，$u=\mathtt a$，$v=\mathtt c$とすれば$\|G_n\|=O(n)$，$\theta_{G_n}\le2$，$\theta_{\widetilde G_{n,0}}\ge2^n$である．
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
-全てのテンプレートは非空で各変数を順に一度ずつ使うので$G_n$は良形である．縮約済みであり，$S\to SS\mid a$により$\Sigma^+$を生成する．各$A_i$を$v$（$i\ge1$）または$u$（$i=0$）で完成させれば，各規則は長さ高々$\max\{2,2|u|,2|v|\}$の成功した使用をもつ．$A_n$の生成語は葉の値$s(u)=e$，$s(v)=z$の積であり，$e^2=e$かつ$z$は$\{e,z\}$で吸収的なので，その型が$e$であるのは$v$を使う葉がないときに限る．よって$(A_n)_{(e)}$の生成語は$u^{2^n}$だけであり，型付き規則$S_{(e)}\to(A_n)_{(e)}$は（$S\to A_n$を介して）残り，これを使う成功導出の長さは$|u|2^n$以上である．(b)では$e=1$，$z=\zeta$である．
+全てのテンプレートは非空で各変数を順に一度ずつ使うので$G_n$は良形である．縮約済みであり，$S\to SS\mid a$により$\Sigma^+$を生成する．各$A_i$を$v$（$i\ge1$）または$u$（$i=0$）で完成させれば，各規則は長さ高々$\max\{2,2|u|,2|v|\}$の成功した使用をもつ．$A_n$の生成語は葉の値$s(u)=e$，$s(v)=z$の積であり，$e^2=e$かつ$z$は$\{e,z\}$で吸収的なので，その型が$e$であるのは$v$を使う葉がないときに限る．よって$(A_n)_{(e)}$の生成語は$u^{2^n}$だけであり，$t_{\mathrm{typ}}(G_n,s)\ge|u|2^n$が従う．型付き規則$S_{(e)}\to(A_n)_{(e)}$は（$S\to A_n$を介して）残り，これを使う成功導出の長さは$|u|2^n$以上である．(b)では$e=1$，$z=\zeta$である．
 \end{proof}
 
 この障害は精密化に関するものであり，$\Sigma^+$や任意の作用素に対する特徴データ長に関するものではない．そこで以下の証明は$G$そのものの上で行う．
@@ -753,6 +790,8 @@ $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$なら，任意の$L\in\Cmcf{f}{s}$と$
 $k\ge1$，有限群$A$，写像$\nu:\Sigma^{k+1}\to A$（\emph{sliding-factorラベル}）を固定する．$|w|\ge2k$について$\sigma_k(w)=(F_1,\ldots,F_{|w|-k})$を$w$の長さ$k+1$の因子を開始位置の順に並べたものとし，$\gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k})$（$A$における順序付き積）とおく．$|w|<2k$なら$\gamma_{k,\nu}(w):=1_A$とする．\emph{局所群型付け}を$\lambda_{k,\nu}(w):=\bigl(\widehat s_{k,k}(w),\gamma_{k,\nu}(w)\bigr)$と定める．補題~\ref{lem:local-group-morphism}により，これは有限モノイド$M_{k,\nu}$への全射準同型である．ある$k$，$A$，$\nu$について$\widehat s\preceq\lambda_{k,\nu}$となるとき，型付け$s$は\emph{局所群決定的}であるという．
 \end{definition}
 
+局所群型付けは，群への寄与を文字ごとではなくsliding factorによって決めることができる．例えば$\nu(\mathtt{ab})=1\in\mathbb Z_2$，他の対では$0$とした$\lambda_{1,\nu}$は，因子$\mathtt{ab}$の出現回数の偶奇を記録する．これは\emph{二文字アルファベット}$\{\mathtt a,\mathtt b\}$上ですら，固定した任意の接頭辞--接尾辞窓と有限群準同型の組からは復元できない（命題~\ref{prop:li-g-strict}(ii)）．後の局所群の特徴付けは，新しい学習器や標的固有の型付けを導入することなく，この追加的な表現力を捉える．
+
 \begin{theorem}[局所群型付けの多項式特徴データ]
 \label{thm:local-group-polydata}
 $\mathsf S\in\mathbf{LG}$，$L\in\Cmcf{f}{s}$，$L(G)=L\cap\Sigma^+$とする．このとき$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$の特徴標本であり，
@@ -764,28 +803,28 @@ $\mathsf S\in\mathbf{LG}$，$L\in\Cmcf{f}{s}$，$L(G)=L\cap\Sigma^+$とする．
 \end{theorem}
 
 \begin{proof}
-定理~\ref{thm:lg-characterization}により，$k=|\mathsf S|$と$s$のみに依存する$A,\nu$について$\widehat s\preceq\lambda:=\lambda_{k,\nu}$である．補題~\ref{lem:local-group-shortest}は$\beta=\beta_\lambda=O(\|G\|^2\bar\theta_G)$として$(\mathrm R_\beta^\lambda)$を与える．まず重い部分木を同じ窓ベクトルの短いタプルに取り替え（系~\ref{lem:boundary-short-canonical}），次に順序付きsliding-factor積を変えない非空な族を選ぶ（補題~\ref{lem:local-group-blocks}と命題~\ref{prop:block-replacement-interface}）．補題~\ref{lem:witness-length-template}により$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}\beta_\lambda)=O(\|G\|^3\bar\theta_G)$である．
+定理~\ref{thm:lg-characterization}により，$k=|\mathsf S|$と$s$のみに依存する$A,\nu$について$\widehat s\preceq\lambda:=\lambda_{k,\nu}$である．補題~\ref{lem:local-group-shortest}は$\beta=\beta_\lambda=O(\|G\|^2\bar\theta_G)$として$(\mathrm R_\beta^\lambda)$を与える．まず重い部分木を同じ窓ベクトルの短いタプルに取り替え（系~\ref{lem:boundary-short-canonical}），次に順序付きsliding-factor積を変えない非空な族を選ぶ（補題~\ref{lem:local-group-blocks}と命題~\ref{prop:block-replacement-interface}）．補題~\ref{lem:witness-length-template}(i)から$t_{\mathrm{typ}}\le\beta_\lambda=O(\|G\|^2\bar\theta_G)$が得られ，定理~\ref{thm:data-from-typed-thickness}より$\|\Wit\|_+\le N_{\mathrm{typ}}(1+2\bar\theta_G+r_{\max}\beta_\lambda)=O(\|G\|^3\bar\theta_G)$である．
 \end{proof}
 
 Rees座標とsliding-factor座標は古典的であり，それらと所有者別ブロック短縮との組合せが定量的な手順である．窓型付けと窓・群型付けについては，定理~\ref{thm:boundary-polydata}と~\ref{thm:window-group-polydata}の二次上界の方が鋭い．
 
 \paragraph{完全精密化の厚さに関する代数的境界．}
-$\theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}$とおく．$f\ge1$について，擬多様体$\mathbf V$が\emph{ファンアウト$f$で多項式精密化厚さをもつ}とは，任意の空でない有限$\Sigma$，任意の$r_{\max}\ge1$，$\mathsf S\in\mathbf V$なる任意の全射$s:\Sigma^+\twoheadrightarrow\mathsf S$について，多項式$q=q_{f,r_{\max},s,\Sigma}$が存在し，$\Sigma$上のファンアウト$\le f$，ランク$\le r_{\max}$の全ての縮約済み良形文法$G$が$\theta_{\mathrm{typ}}(G,s)\le q(\|G\|,\bar\theta_G)$を満たすことをいう．
+$f\ge1$について，擬多様体$\mathbf V$が\emph{ファンアウト$f$で多項式精密化厚さをもつ}とは，任意の空でない有限$\Sigma$，任意の$r_{\max}\ge1$，$\mathsf S\in\mathbf V$なる任意の全射$s:\Sigma^+\twoheadrightarrow\mathsf S$について，多項式$q=q_{f,r_{\max},s,\Sigma}$が存在し，$\Sigma$上のファンアウト$\le f$，ランク$\le r_{\max}$の全ての縮約済み良形文法$G$が$\theta_{\mathrm{typ}}(G,s)\le q(\|G\|,\bar\theta_G)$を満たすことをいう．
 
 \begin{corollary}[精密化厚さの二分法]
 \label{cor:refinement-dichotomy}
-任意の$f\ge1$と有限半群の任意の擬多様体$\mathbf V$について，$\mathbf V$がファンアウト$f$で多項式精密化厚さをもつのは$\mathbf V\subseteq\mathbf{LG}$のとき，かつそのときに限る．$\mathbf V\subseteq\mathbf{LG}$なら$\theta_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$ととれる．$G$を$L\in\Cmcf{f}{s}$なる$L\cap\Sigma^+$の表示に限っても同値性は保たれる．$\mathsf S\notin\mathbf{LG}$なる個々の型付けについて，多項式上界はファンアウト1・規則ランク2ですでに成り立たない．
+任意の$f\ge1$と有限半群の任意の擬多様体$\mathbf V$について，$\mathbf V$がファンアウト$f$で多項式精密化厚さをもつのは$\mathbf V\subseteq\mathbf{LG}$のとき，かつそのときに限る．$\mathbf V\subseteq\mathbf{LG}$なら$\theta_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$ととれる．$G$を$L\in\Cmcf{f}{s}$なる$L\cap\Sigma^+$の表示に限っても同値性は保たれる．また$\theta_{\mathrm{typ}}$を一貫して$t_{\mathrm{typ}}$に置き換えても同じ同値性が成り立つ．$\mathsf S\notin\mathbf{LG}$なる個々の型付けについて，多項式上界はファンアウト1・規則ランク2ですでに成り立たない．
 \end{corollary}
 
 \begin{proof}
 $\mathsf S\in\mathbf{LG}$なら，定理~\ref{thm:local-group-polydata}の証明が$\beta_\lambda=O(\|G\|^2\bar\theta_G)$で$(\mathrm R_\beta^\lambda)$を与え，代入可能性を用いない補題~\ref{lem:witness-length-template}(i),(iii)により$\theta_{\widetilde G_0}\le2\bar\theta_G+r_{\max}\beta_\lambda$である．
 
-$\mathsf S\notin\mathbf{LG}$なら，定理~\ref{thm:lg-characterization}(ii)により部分半群$\{e,z\}\cong U_1$，すなわち$ez=ze=z$なるべき等元$e\ne z$が存在する．全射性から$s(u)=e$，$s(v)=z$なる$u,v\in\Sigma^+$を選ぶ．命題~\ref{prop:typed-thickness-exponential}(a)により，$\|G_n\|=O(n)$，$\bar\theta_{G_n}=O(1)$，$\theta_{\mathrm{typ}}(G_n,s)\ge2^n$なるファンアウト1，ランク2の文法$G_n$が得られ，これらは$\Sigma^+=\widehat s^{-1}(\mathsf S)\in\Cmcf{f}{s}$を表示する．最後に，$\mathbf V\not\subseteq\mathbf{LG}$なら$\mathsf S\in\mathbf V\setminus\mathbf{LG}$を選べばよい．これはアルファベット$\Sigma:=\mathsf S$上の評価型付け$\mathsf S^+\to\mathsf S$の正語像である．
+$\mathsf S\notin\mathbf{LG}$なら，定理~\ref{thm:lg-characterization}(ii)により部分半群$\{e,z\}\cong U_1$，すなわち$ez=ze=z$なるべき等元$e\ne z$が存在する．全射性から$s(u)=e$，$s(v)=z$なる$u,v\in\Sigma^+$を選ぶ．命題~\ref{prop:typed-thickness-exponential}(a)により，$\|G_n\|=O(n)$，$\bar\theta_{G_n}=O(1)$，$\theta_{\mathrm{typ}}(G_n,s)\ge2^n$なるファンアウト1，ランク2の文法$G_n$が得られ，これらは$\Sigma^+=\widehat s^{-1}(\mathsf S)\in\Cmcf{f}{s}$を表示する．最後に，$\mathbf V\not\subseteq\mathbf{LG}$なら$\mathsf S\in\mathbf V\setminus\mathbf{LG}$を選べばよい．これはアルファベット$\Sigma:=\mathsf S$上の評価型付け$\mathsf S^+\to\mathsf S$の正語像である．$t_{\mathrm{typ}}$について，肯定方向は補題~\ref{lem:witness-length-template}(i)と同じ$(\mathrm R_\beta^\lambda)$評価から，否定方向は強化された命題~\ref{prop:typed-thickness-exponential}(a)から従う．
 \end{proof}
 
 \begin{remark}[精密化厚さはデータの下界ではない]
 \label{rem:refinement-vs-data}
-この系は一つの特定の精密化に関するものであり，特徴データの最小符号化総長や任意の学習器に関するものではない．否定方向はランク2を用いる．多項式精密化厚さからは多項式データが従う（補題~\ref{lem:typed-thickness-baseline}）が，逆は従わない．精密化が指数的に厚くても，短い分布的代表が存在し得る（命題~\ref{prop:mcfg-relaxed-witnesses}）．ファンアウト$\ge2$で多項式特徴データに$\mathbf{LG}$が必要かどうかは未解決である（未解決問題~\ref{op:fanout-two}）．
+この系は一つの特定の精密化に関するものであり，特徴データの最小符号化総長や任意の学習器に関するものではない．否定方向はランク2を用いる．多項式精密化厚さからは多項式データが従う（定理~\ref{thm:data-from-typed-thickness}および補題~\ref{lem:typed-thickness-equivalence}）が，逆は従わない．精密化が指数的に厚くても，短い分布的代表が存在し得る（命題~\ref{prop:mcfg-relaxed-witnesses}）．ファンアウト$\ge2$で多項式特徴データに$\mathbf{LG}$が必要かどうかは未解決である（未解決問題~\ref{op:fanout-two}）．
 \end{remark}
 
 \subsection{制限のない標準入力MCFG}
@@ -1050,6 +1089,80 @@ $f\ge2$，$R\ne\emptyset$とする．作用素$\mathcal B^{\le2}_{f,s}$は$\|K_R
 
 この例は有限の格認可や素性の適合性の制約を模したものであり，特定の自然言語についての主張はしない．関係$R$は標的ごとに変わるが，準同型$g$と作用素は変わらない．
 
+\paragraph{群値の一致．}
+$A$を有限群，$\Delta_1$をその文字像が準同型$g_1:\Delta_1^*\to A$の下で$A$を生成する有限アルファベットとし，$\Delta_2=\{\bar\delta:\delta\in\Delta_1\}$を互いに素なコピーとする．
+$\Sigma_{\mathrm{agr}}:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}\uplus\Delta_1\uplus\Delta_2$とおき，準同型$g:\Sigma_{\mathrm{agr}}^*\to A\times A$を
+\[
+ g(\delta)=(g_1(\delta),1),\qquad
+ g(\bar\delta)=(1,g_1(\delta)),\qquad
+ g(\mathtt a)=g(\mathtt b)=g(\mathtt c)=g(\mathtt d)=(1,1)
+\]
+で定める．$R\subseteq A\times A$について
+\[
+ L_R^A:=\{\mathtt a^m u\mathtt b^n\mathtt c^m v\mathtt d^n:
+ m,n\ge1,\ u\in\Delta_1^+,\ v\in\Delta_2^+,\ g(uv)\in R\}
+\]
+とし，対角関係に対する言語を
+$L_{\mathrm{agr}}^A:=L_{\{(x,x):x\in A\}}^A$と書く．像への値域制限を行った正語型付け
+$s_{\mathrm{agr}}:=(s_{1,1},g)|_{\Sigma_{\mathrm{agr}}^+}$
+を固定する．この型付けの群成分は$A$ではなく$A\times A$である．
+
+\begin{proposition}[順序付き群値をもつ素性の一致]
+\label{prop:group-agreement}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item 任意の$R\subseteq A\times A$について，全ての$f\ge2$で
+$L_R^A\in\mathsf{MCFL}(2,2)\cap\Cmcf{f}{s_{\mathrm{agr}}}$である．$R\ne\emptyset$なら$L_R^A$は文脈自由でない．
+\item 交換子部分群$[A,A]$が中心$Z(A)$に含まれないなら，任意の$f\ge2$および任意の型付け
+$t\preceq(s_{k,\ell},g')|_{\Sigma_{\mathrm{agr}}^+}$について
+$L_{\mathrm{agr}}^A\notin\Cmcf{f}{t}$である．ここで$k,\ell\ge0$で，$g'$は有限\emph{アーベル}群への準同型とする．特に$L_{\mathrm{agr}}^A\notin\YSub{f}$である．
+\end{enumerate}
+$A=S_3$では\textup{(ii)}の仮定が成り立つ．一方，定理~\ref{thm:window-group-polydata}は窓・$(S_3\times S_3)$型付けのクラス$\Cmcf{f}{s_{\mathrm{agr}}}$全体に一様に適用できる．
+\end{proposition}
+
+\begin{proof}
+(i) 各$x\in A$について，正則言語$g_1^{-1}(x)\cap\Delta_1^+$の良形な右線形文法$U_x$をとり，その$\Delta_2$上のコピーを生成する文法を$\bar U_x$とする．全ての群元は非空正語で表現できるので，これらは存在する．ファンアウト2の規則
+\[
+\begin{aligned}
+ P&\to(\xi_1^1,\xi_2^1)(U_x,\bar U_y) &&((x,y)\in R),\\
+ C&\to(\mathtt a,\mathtt c)
+      \mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(C),\\
+ D&\to(\mathtt b,\mathtt d)
+      \mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(D),\\
+ T&\to(\xi_1^1\xi_2^1,\xi_1^2\xi_2^2)(C,P),\\
+ S&\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(T,D)
+\end{aligned}
+\]
+によって$L_R^A$を生成でき，ファンアウトと規則ランクはいずれも高々2である．$T$と$S$の各成分で隣接する変数は異なる子に属するので，文法は良形である．$R=\emptyset$なら言語は空である．そうでなければ$(x,y)\in R$をとり，$g_1(p)=x$，$g_1(q)=y$なる非空語$p,q\in\Delta_1^+$を選ぶ．正則言語
+$\mathtt a^+p\mathtt b^+\mathtt c^+\bar q\mathtt d^+$
+との共通部分をとり，素性ブロックを消去すると
+$\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n:m,n\ge1\}$
+が得られるので，$L_R^A$は文脈自由でない．
+
+型付き代入可能性について，
+$L_R^A=Q\cap g^{-1}(R)\cap\varphi^{-1}(0)$と書く．ここで
+$Q=\mathtt a^+\Delta_1^+\mathtt b^+\mathtt c^+\Delta_2^+\mathtt d^+$
+は狭義2-局所であり，$\varphi:\Sigma_{\mathrm{agr}}^*\to\mathbb Z^2$は
+$\mathtt a,\mathtt c,\mathtt b,\mathtt d$を順に
+$(1,0),(-1,0),(0,1),(0,-1)$に写し，全ての素性文字を$0$に写す．$Q$には補題~\ref{lem:sl2-boundary-control}が適用でき，$g^{-1}(R)$は$s_{\mathrm{agr}}$-同値類の和集合であり，アーベルな条件と共通部分は命題~\ref{prop:abelian-coset-filter}で扱える．よって$L_R^A\in\Cmcf{f}{s_{\mathrm{agr}}}$である．
+
+(ii) $[A,A]\not\subseteq Z(A)$なので，中心的でない交換子
+$z:=yx y^{-1}x^{-1}$が存在する．$hz\ne zh$なる$h\in A$を選び，$g_1$-値がそれぞれ$x,y,h$である非空語$p,q,w\in\Delta_1^+$をとる．$N=|A|$とし，$K\ge\max\{k+\ell,1\}$，$\delta\in\Delta_1$を選んで$\pi:=\delta^{KN}$とおく．
+\[
+ u=\pi p q q^{N-1}p^{N-1}\pi,\qquad
+ u'=\pi q p q^{N-1}p^{N-1}\pi
+\]
+とする．このとき$g_1(u)=1$，$g_1(u')=z$であるが，$u,u'$のParikhベクトルは一致し，長さ$k$の接頭辞と長さ$\ell$の接尾辞も一致する．したがって，命題の任意の窓・アーベル型付けは$t(u)=t(u')$を満たし，コピーについても$t(\bar u)=t(\bar u')$である．タプル$X:=(u,\bar u)$と$Y:=(u',\bar u')$の$t$-型は等しい．文脈
+$E:=\mathtt a\blank_1\mathtt{bc}\blank_2\mathtt d$
+は，それぞれの群値が$(1,1)$と$(z,z)$なので両方を受理する．さらに
+$F:=\mathtt a w\blank_1\mathtt{bc}\blank_2\bar w\mathtt d$
+とおくと，$F[X]\in L_{\mathrm{agr}}^A$の群値は$(h,h)$だが，
+$F[Y]\notin L_{\mathrm{agr}}^A$の群値は$(hz,zh)$であり，$hz\ne zh$である．よって共通文脈$E$が存在しても分布は一致せず，アリティ2での$(f,t)$-代入可能性に反する．自明型付けも特別な場合として含まれる．$A=S_3$では$[S_3,S_3]=A_3$は中心に含まれない．
+\end{proof}
+
+\begin{remark}
+上の分離文脈は中心的でない交換子を用いている．$Q_8$のように交換子部分群が中心に含まれる群について，同じ主張が成立するとはここでは主張しない．
+\end{remark}
+
 \subsection{型付けクラスの分離}
 \label{subsec:necessity}
 
@@ -1119,9 +1232,13 @@ $\mathrm B$の(iii)．$\hat k\ge\max\{k,\ell,1\}$を偶数とし，$u=\mathtt a^
 \emph{帰結．}$s_{\mathrm A}(\Sigma_{\mathrm A}^+)$が$\mathbf{LI}\vee\mathbf{Grp}$に属するなら，$t=s_{\mathrm A}$とした(iii)は(ii)に矛盾する．窓，窓・群，窓・アーベルの定理と系~\ref{cor:mcfg-li-group-polydata}は，除外された種類の型付けを仮定する．
 \end{proof}
 
-\begin{remark}[分離の範囲]
+\begin{remark}[型付けクラスの分離が意味する範囲]
 \label{rem:necessity-scope}
-これらの命題は\emph{型付けクラス}を分離するものであり，$L_{\mathrm A}$や$L_{\mathrm B}$の短いデータに局所群や非可換の短縮が必要であることは示さない．実際，$s_{\mathrm A}$を$Q_{\mathrm A}$の構文準同型で精密化した型付け$s'$について$L_{\mathrm A}=\widehat{s'}^{-1}(\mathsf{Acc}')\cap\varphi_\times^{-1}(0)$となるので，定理~\ref{thm:mcfg-abelian-filter-data}は$\mathcal B^{\le2}_{f,s'}$に多項式データを与える（$L_{\mathrm B}$も同様）．これは精密化した作用素に関するものであり，$\mathcal B^{\le2}_{f,s_{\mathrm A}}$に関するものではない．また分離はアリティ1で起こる（補題~\ref{lem:flag-separation}）ので，これらの例は型付けの表現力を切り出すものであって，交錯する成分との相互作用（例~\ref{ex:nonabelian-reverse-owner}）を切り出すものではない．
+命題~\ref{prop:lg-needed-target}，\ref{prop:nonabelian-needed-target}および~\ref{prop:group-agreement}は，\emph{固定した型付け}によって定まるクラスを分離する．排除された窓型付けや窓・アーベル型付けをバイアスとする学習器は，これらの標的を対応する代入可能クラスの元として扱えない．最初の二つの分離は，補題~\ref{lem:flag-separation}によりすでにアリティ1で起こるが，ここに示した群値一致の分離はアリティ2の文脈を用いる（アリティ1では不可能だとは主張しない）．いずれも個々の標的の特徴データ長の下界を示すものではない．元の型付けを，その狭義2-局所な構造言語を認識する有限準同型で精密化すると，各標的はアーベル準同型$\varphi$を用いて
+\[
+ L=\widehat{s'}^{-1}(\mathsf{Acc}')\cap\varphi^{-1}(0)
+\]
+と表せる．このとき定理~\ref{thm:mcfg-abelian-filter-data}は\emph{別の}作用素$\mathcal B^{\le2}_{f,s'}$に多項式長のデータを与える．これに対して，窓・群および局所群の上界は，元の固定型付けのクラスの全ての元に一様に適用でき，$\|G\|$に関する次数は$|\Sigma|$に依存しない．二つの生成元をもつ$S_3$の一致言語では$|\Sigma_{\mathrm{agr}}|=8$であり，表示された上界の指数は，$\bar\theta_G$を別に数えた場合の$2$と$3|\Sigma|+2=26$である．ただし，これは異なる作用素に関する上界の比較であり，鋭い下界を示すものではない．
 \end{remark}
 
 \subsection{本質的にランク2を要する境界型付き標的}
@@ -1166,7 +1283,7 @@ $L_{\mathrm{intr}}\in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}$であり，任意�
 \section{結論}
 \label{sec:conclusion}
 
-本稿は，型付きMCFGに対する正例学習の質的原理を，与えられた表示に相対的な特徴標本の\emph{符号化総長}の上界へと変換した．アルファベット，ファンアウト，ランク，型付けを固定すると，縮約済み良形文法$G$について次が成り立つ．
+本稿は，型付きMCFGに対する正例学習の質的原理を，与えられた表示に相対的な特徴標本の\emph{符号化総長}の上界へと変換した．アルファベット，ファンアウト，ランク，型付けを固定すると，縮約済み良形文法$G$について，定理~\ref{thm:data-from-typed-thickness}は主なクラス一様の符号化総長上界を，計算可能な$t_{\mathrm{typ}}(G,s)$と$N_{\mathrm{typ}}=O(\|G\|)$へ還元する．具体的には次が成り立つ．
 \begin{itemize}[leftmargin=*]
 \item 窓型付けと窓・有限群型付けは，非可換群と交錯するタプル成分を含めて$O(\|G\|^2\bar\theta_G)$を与える（定理~\ref{thm:boundary-polydata}，\ref{thm:window-group-polydata}）．
 \item 局所群型付けは，古典的なsliding-factor座標と所有者別ブロック短縮を組み合わせて$O(\|G\|^3\bar\theta_G)$を与える（定理~\ref{thm:local-group-polydata}）．
@@ -1360,13 +1477,15 @@ $S$を，べき等元が全て最小イデアル$\mathsf K=\mathcal M(H;I,\Lambd
 \label{prop:li-g-strict}
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
 \item 有限群への準同型$g$について$\widehat s\preceq(\widehat s_{k,\ell},g)$なら，$\hat k=\max\{k,\ell,1\}$，$\nu(F):=g(F\text{の最後の文字})$について$\widehat s\preceq\lambda_{\hat k,\nu}$である．よって$\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$である．
-\item $\Sigma=\{\mathtt a,\mathtt b,\mathtt c\}$とし，$\nu(\mathtt{ab})=1\in\mathbb Z_2$，それ以外$\nu=0$として$h_{\mathtt{ab}}:=\lambda_{1,\nu}$とすると，$h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$である．
+\item すでに$\Sigma=\{\mathtt a,\mathtt b\}$について，$\nu(\mathtt{ab})=1\in\mathbb Z_2$，それ以外$\nu=0$として$h_{\mathtt{ab}}:=\lambda_{1,\nu}$とすると，$h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$である．
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
 (i) $|w|\ge2\hat k$なら$g(w)=g(\operatorname{pref}_{\hat k}w)\,\gamma_{\hat k,\nu}(w)$であり，$\operatorname{pref}_{\hat k},\operatorname{suf}_{\hat k}$は$\widehat s_{k,\ell}(w)$を定める．より短い語は正確に記録される．包含については，$S\in\mathbf{LI}\vee\mathbf{Grp}$はアルファベット$S$上の評価型付けの正語像であり，これは補題~\ref{lem:mcfg-li-group-window}により窓・群決定的，したがって局所群決定的なので，定理~\ref{thm:lg-characterization}により$S\in\mathbf{LG}$である．
-(ii) $\mathbf{LG}$への所属は定理~\ref{thm:lg-characterization}による．命題~\ref{prop:lg-needed-target}(iii)の証明の語$u,v$は$\{\mathtt a,\mathtt b,\mathtt c\}^+$に属し，与えられた任意の$k,\ell,g'$について$(\widehat s_{k,\ell},g')$-値が等しく，$\#_{\mathtt{ab}}$の偶奇が異なる．よって$h_{\mathtt{ab}}$は窓・群決定的でなく，補題~\ref{lem:mcfg-li-group-window}により$\mathbf{LI}\vee\mathbf{Grp}$は除外される．
+(ii) $\mathbf{LG}$への所属は定理~\ref{thm:lg-characterization}による．任意の$k,\ell\ge0$と任意の有限群への準同型$g':\Sigma^*\to H$をとる．$K\ge k+\ell+1$，$N\ge1$を$g'(\mathtt a)$の位数で割り切れるように選び，
+$u=\mathtt b^K\mathtt a^N\mathtt b^K$，
+$v=\mathtt b^{2K}$とする．両者は長さ$k$の接頭辞と長さ$\ell$の接尾辞が一致し，$s_{k,\ell}$について十分長い．また$g'(u)=g'(\mathtt b)^{2K}=g'(v)$だが，$\#_{\mathtt{ab}}(u)=1$，$\#_{\mathtt{ab}}(v)=0$である．よって$h_{\mathtt{ab}}$は窓・群決定的でなく，補題~\ref{lem:mcfg-li-group-window}により$\mathbf{LI}\vee\mathbf{Grp}$に属さない．
 \end{proof}
 
 \begin{lemma}[局所群型を指定した短いタプル]
