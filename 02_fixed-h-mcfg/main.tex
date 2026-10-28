@@ -68,7 +68,9 @@ We study positive-data learning of multiple context-free languages that
 are tuple-substitutable under a fixed finite-semigroup typing and bound
 the total encoded length of characteristic samples relative to their
 MCFG presentations. Qualitative identification follows Yoshinaka's
-distributional framework; our contribution is quantitative. With the
+distributional framework; our contribution is quantitative.  A single
+computable parameter, the shortest yield length $t_{\mathrm{typ}}$ of the
+full yield-type refinement, controls the encoded witness length.  With the
 alphabet, fan-out, rule rank, and typing fixed, a reduced good grammar
 $G$ of rule thickness $\bar\theta_G$ admits characteristic data of length
 $O(\|G\|^2\bar\theta_G)$ for prefix--suffix-window typings combined
@@ -211,7 +213,16 @@ shortest way to realize each feasible pattern of nonempty tuple components
 (Definition~\ref{def:component-pattern-thickness}).  The two scales are not
 interchangeable for inputs with empty components;
 Table~\ref{tab:thickness-scales} compares them with the auxiliary
-quantities used in the proofs.  With the alphabet, fan-out $f$, rule-rank
+quantities used in the proofs.  The central reduction
+(Theorem~\ref{thm:data-from-typed-thickness}) measures the smallest
+typed tuple yields by $t_{\mathrm{typ}}(G,s)$ and bounds total
+characteristic-data length by
+$N_{\mathrm{typ}}(1+2\bar\theta_G+r_{\max}t_{\mathrm{typ}})$,
+where $N_{\mathrm{typ}}=O(\|G\|)$.  The window--group and local-group
+theorems then bound this one parameter by
+$O(\|G\|\bar\theta_G)$ and $O(\|G\|^2\bar\theta_G)$,
+respectively.  These are sufficiency bounds for this witness construction;
+the refinement obstruction is not a characteristic-data lower bound.  With the alphabet, fan-out $f$, rule-rank
 bound $r_{\max}$ and typing fixed, write $\bar\theta=\bar\theta_G$ for a
 reduced good grammar $G$, and $n=\max\{1,\|H\|\}$,
 $t=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$ for a standard input grammar
@@ -1005,11 +1016,13 @@ $t_G:=\max_{A\in V}\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}$ (rule and
 nonterminal thickness; Yoshinaka writes $\tau_G$ for $\theta_G$
 \cite[Section~4.3]{Yoshinaka2011}).  Table~\ref{tab:thickness-scales} lists these
 scales together with the pattern scale of Section~\ref{subsec:unrestricted-source}
-and two auxiliary quantities; $\theta_{\mathrm{typ}}$ and $\kappa_G$ compare $G$
-with its own trimmed refinement and are not parameters of the main theorems.
+and three additional quantities; $t_{\mathrm{typ}}$ is the central
+intermediate parameter for characteristic-data bounds, while
+$\theta_{\mathrm{typ}}$ and $\kappa_G$ compare the full refinement and
+distributional representatives.
 
 \begin{table}[htbp]
-\caption{Thickness scales: two theorem parameters and three auxiliary quantities.}
+\caption{Thickness scales: two input parameters, a central typed parameter, and two auxiliary quantities.}
 \label{tab:thickness-scales}
 \centering
 \footnotesize
@@ -1022,7 +1035,8 @@ Scale & What it measures / role & Comparison or obstruction\\
 $\theta_G$ & Shortest accepted sentence using each rule, maximized over rules; \emph{primary for reduced good $G$}. & $t_G\le\theta_G\le 2\|G\|\max\{1,t_G\}$ (Lemma~\ref{lem:thickness-equivalence}).\\
 $t_G$ & Largest minimum total yield length of a nonterminal; proof-scale for good forms. & Polynomially equivalent to $\theta_G$ on reduced good presentations.\\
 $t_{\mathrm{pat}}(H)$ & Largest minimum yield length over \emph{realized nonempty-component support patterns}; \emph{primary for arbitrary $H$}. & $t_H\le t_{\mathrm{pat}}(H)$, with equality for reduced $\lambda$-free $H$; the family $E_n$ has $\theta_{E_n}=O(n)$ but $t_{\mathrm{pat}}(E_n)\ge2^n$ (Prop.~\ref{prop:empty-component-blowup}).\\
-$\theta_{\mathrm{typ}}$ & Rule thickness of the trimmed full yield-type refinement $\widetilde G_0$; baseline only. & $\theta_{\mathrm{typ}}\ge\theta_G$; it can be $\ge2^n$ with $\theta_G\le2$ (Prop.~\ref{prop:typed-thickness-exponential}).\\
+$t_{\mathrm{typ}}$ & Largest shortest tuple yield over non-start typed nonterminals; \emph{central parameter} in Theorem~\ref{thm:data-from-typed-thickness}. & $t_{\mathrm{typ}}\le\theta_{\mathrm{typ}}\le2\bar\theta_G+r_{\max}t_{\mathrm{typ}}$ (Lemma~\ref{lem:typed-thickness-equivalence}).\\
+$\theta_{\mathrm{typ}}$ & Rule thickness of the trimmed full yield-type refinement $\widetilde G_0$. & $\theta_{\mathrm{typ}}\ge\theta_G$; it can be $\ge2^n$ with $\theta_G\le2$ (Prop.~\ref{prop:typed-thickness-exponential}).\\
 $\kappa_G$ & Shortest representative of each typed distribution class, maximized over classes; auxiliary for abelian-filtered targets. & $\kappa_G\le\theta_{\mathrm{typ}}$; representatives need not be derivable from the typed nonterminal (Prop.~\ref{prop:mcfg-relaxed-witnesses}).\\
 \hline
 \end{tabularx}
@@ -1167,37 +1181,74 @@ $L(\mathcal B(K))\cap\Sigma^+=L\cap\Sigma^+$ for every finite $K$ with
 $\Wit(\widetilde G_0)\subseteq K\subseteq L$; the Start rule handles $\eps$.
 \end{proof}
 
-\subsection{Refined-Thickness Baseline}
+\subsection{Typed Thickness and Characteristic Data}
 \label{subsec:typed-thickness}
 
-Put $\bar\theta_{\mathrm{typ}}:=\max\{1,\theta_{\widetilde G_0}\}$, the rule
-thickness of the trimmed refinement itself.  Every rule $R$ of $G$ has a retained
-typed copy (lift a successful derivation using $R$), and every successful
-derivation using a copy erases to one using $R$; hence
-$\theta_G\le\theta_{\widetilde G_0}$.
+For a reduced good grammar $G$, let $\widetilde G_0$ be its trimmed
+full yield-type refinement (Definition~\ref{def:output-refinement}).  Define
+\[
+ t_{\mathrm{typ}}(G,s):=\max_{X}\min_{\tuple u\in L_X}\|\tuple u\|_1,
+ \qquad \theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\},
+\]
+where $X$ ranges over the non-start typed nonterminals, and let
+$N_{\mathrm{typ}}(G,s)$ denote their number plus the number of non-start
+typed rules.  In particular $N_{\mathrm{typ}}\le C_s(G)\le
+|\mathsf S^\sharp|^{fr_{\max}}\|G\|$.  These parameters are computable
+in time polynomial in $\|G\|$ for fixed $f,r_{\max},s$, with numerical
+outputs represented in binary (Proposition~\ref{prop:effective-char-data}).
+Every rule of $G$ has a retained typed copy, and erasing typed labels
+from a successful derivation recovers a $G$-derivation; therefore
+$\theta_G\le\theta_{\widetilde G_0}\le\theta_{\mathrm{typ}}$.
 
-\begin{lemma}[Refined-thickness baseline]
-\label{lem:typed-thickness-baseline}
-Canonical tuples can be chosen so that
-$\|\Wit(\widetilde G_0)\|_+\le C_s(G)\,\bigl(1+(r_{\max}+2)\bar\theta_{\mathrm{typ}}\bigr)$.
+\begin{lemma}[Comparison of the two typed thickness measures]
+\label{lem:typed-thickness-equivalence}
+For every reduced good $G$,
+\[
+ t_{\mathrm{typ}}\le\theta_{\mathrm{typ}}
+ \le 2\bar\theta_G+r_{\max}t_{\mathrm{typ}}.
+\]
 \end{lemma}
 
 \begin{proof}
-$\widetilde G_0$ is reduced and good, so
-Lemma~\ref{lem:thickness-equivalence}(ii) applied to it gives
-$\omega(X)\in L_X$ with $\|\omega(X)\|_1\le\theta_{\widetilde G_0}$.  Apply
-Lemma~\ref{lem:witness-length-template}(ii) with
-$b=\theta_{\widetilde G_0}$ and use $\bar\theta_G\le\bar\theta_{\mathrm{typ}}$.
+Apply Lemma~\ref{lem:thickness-equivalence}(ii) to the reduced good
+$\widetilde G_0$ for the first inequality.  For the second, choose each
+canonical tuple $\omega(X)$ to have the shortest total length, at most
+$t_{\mathrm{typ}}$, and use Lemma~\ref{lem:witness-length-template}(iii).
+The start links are covered by that lemma as well.
 \end{proof}
 
-For trivial typing a nonterminal of a $\lambda$-free grammar has a single
-realized type, so $\widetilde G_0$ is $G$ with start links.  The resulting
-baseline is of the same polynomial scale as Yoshinaka's sharper
-\emph{untyped} witness estimates $|K_G|\le|P|$ and
+\begin{theorem}[Characteristic data from typed thickness]
+\label{thm:data-from-typed-thickness}
+Let $L\in\Cmcf{f}{s}$ and $G$ be a reduced good fan-out-$\le f$,
+rank-$\le r_{\max}$ grammar with $L(G)=L\cap\Sigma^+$.
+Take shortest canonical tuples and the derivational contexts $E_B$ of
+Lemma~\ref{lem:thickness-equivalence}(iv).  Then
+$K=\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample
+for both $\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$, with
+\[
+ |\Wit(\widetilde G_0)|\le N_{\mathrm{typ}},\qquad
+ \|\Wit(\widetilde G_0)\|_+\le
+ N_{\mathrm{typ}}\bigl(1+2\bar\theta_G+r_{\max}t_{\mathrm{typ}}\bigr).
+\]
+For the full sample $K$, the length bound has the additional term
+$\mathbf 1_{\{\eps\in L\}}$.  The numerical length estimate holds for
+any typing; substitutability is used only for the characteristic-sample claim.
+\end{theorem}
+
+\begin{proof}
+The chosen shortest tuples satisfy
+$\|\omega(X)\|_1\le t_{\mathrm{typ}}$.  Apply
+Lemma~\ref{lem:witness-length-template}(ii),(iv), counting non-start typed
+nonterminals and rules instead of the upper bound $C_s(G)$.
+\end{proof}
+
+For trivial typing, every nonterminal of the $\lambda$-free $G$ has one
+realized type vector, so $t_{\mathrm{typ}}=t_G$ and
+$N_{\mathrm{typ}}=|V|+|P|\le\|G\|$.  The theorem recovers the
+$O(\|G\|\bar\theta_G)$ untyped scale, although Yoshinaka's original
+sample has the sharper bounds $|K_G|\le|P|$ and
 $\|K_G\|\le|P|\theta_G$ \cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.
-The displayed bound here concerns our particular typed witness
-construction and does not itself assert those sharper cardinality or
-length constants.  Under a nontrivial typing the refinement can be much thicker:
+A nontrivial typing may instead make $t_{\mathrm{typ}}$ exponential:
 
 \begin{proposition}[Exponential blow-up of full yield-type refinement]
 \label{prop:typed-thickness-exponential}
@@ -1212,7 +1263,9 @@ fan-out-one, rank-two grammar
 \]
 where $u,v$ are constant templates.  Then $G_n$ is reduced and good,
 $L(G_n)=\Sigma^+$, $\|G_n\|=O_{\Sigma,u,v}(n)$,
-$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$, and $\theta_{\widetilde G_{n,0}}\ge|u|2^n$.
+$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$, and both
+$t_{\mathrm{typ}}(G_n,s)\ge|u|2^n$ and
+$\theta_{\widetilde G_{n,0}}\ge|u|2^n$.
 \item In particular, for $\Sigma=\{\mathtt a,\mathtt c\}$ and the two-element
 typing $s_{\mathtt c}$ onto $\{1,\zeta\}$ ($\zeta^2=\zeta$) with
 $s_{\mathtt c}(\mathtt a)=1$, $s_{\mathtt c}(\mathtt c)=\zeta$, taking $u=\mathtt a$,
@@ -1228,7 +1281,7 @@ successful use of length at most $\max\{2,2|u|,2|v|\}$: complete every $A_i$ by
 $v$ ($i\ge1$) or $u$ ($i=0$).  A yield of $A_n$ is a product of leaf values
 $s(u)=e$ and $s(v)=z$; since $e^2=e$ and $z$ is absorbing in $\{e,z\}$, its type is
 $e$ iff no leaf uses $v$.  Hence the unique yield of $(A_n)_{(e)}$ is
-$u^{2^n}$; the typed rule $S_{(e)}\to(A_n)_{(e)}$ is retained (via
+$u^{2^n}$, proving $t_{\mathrm{typ}}(G_n,s)\ge|u|2^n$; the typed rule $S_{(e)}\to(A_n)_{(e)}$ is retained (via
 $S\to A_n$), and every successful derivation using it has length at least
 $|u|2^n$.  In (b), $e=1$ and $z=\zeta$.
 \end{proof}
@@ -1542,8 +1595,11 @@ for short tuples with the same window vector
 selected whose ordered sliding-factor products remain unchanged
 (Lemma~\ref{lem:local-group-blocks} and
 Proposition~\ref{prop:block-replacement-interface}).
-Lemma~\ref{lem:witness-length-template} gives
-$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}\beta_\lambda)=O(\|G\|^3\bar\theta_G)$.
+Lemma~\ref{lem:witness-length-template}(i) gives
+$t_{\mathrm{typ}}\le\beta_\lambda=O(\|G\|^2\bar\theta_G)$, and
+Theorem~\ref{thm:data-from-typed-thickness} gives
+$\|\Wit\|_+\le N_{\mathrm{typ}}(1+2\bar\theta_G+r_{\max}\beta_\lambda)
+=O(\|G\|^3\bar\theta_G)$.
 \end{proof}
 
 The Rees and sliding-factor coordinates are classical; their combination with
@@ -1553,7 +1609,7 @@ Theorems~\ref{thm:boundary-polydata} and~\ref{thm:window-group-polydata} are
 sharper.
 
 \paragraph{The algebraic boundary for full refinement thickness.}
-Put $\theta_{\mathrm{typ}}(G,s):=\max\{1,\theta_{\widetilde G_0}\}$.  For $f\ge1$, a
+For $f\ge1$, a
 pseudovariety $\mathbf V$ has \emph{polynomial refinement thickness at fan-out
 $f$} if for every nonempty finite $\Sigma$, every $r_{\max}\ge1$ and every
 surjective $s:\Sigma^+\twoheadrightarrow\mathsf S$ with $\mathsf S\in\mathbf V$ there
@@ -1568,7 +1624,9 @@ $\mathbf V$ has polynomial refinement thickness at fan-out $f$ if and only if
 $\mathbf V\subseteq\mathbf{LG}$; for $\mathbf V\subseteq\mathbf{LG}$ one may take
 $\theta_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$.  The
 equivalence persists if $G$ ranges only over presentations of $L\cap\Sigma^+$
-with $L\in\Cmcf{f}{s}$.  For each single typing with $\mathsf S\notin\mathbf{LG}$
+with $L\in\Cmcf{f}{s}$, and also holds when $\theta_{\mathrm{typ}}$ is
+replaced throughout by $t_{\mathrm{typ}}$.
+For each single typing with $\mathsf S\notin\mathbf{LG}$
 the polynomial bound already fails at fan-out one and rule rank two.
 \end{corollary}
 
@@ -1588,7 +1646,11 @@ $\theta_{\mathrm{typ}}(G_n,s)\ge2^n$; they present
 $\Sigma^+=\widehat s^{-1}(\mathsf S)\in\Cmcf{f}{s}$.  Finally, if
 $\mathbf V\not\subseteq\mathbf{LG}$, pick $\mathsf S\in\mathbf V\setminus\mathbf{LG}$;
 it is the positive image of the evaluation typing $\mathsf S^+\to\mathsf S$ over the
-alphabet $\Sigma:=\mathsf S$.
+alphabet $\Sigma:=\mathsf S$.  For $t_{\mathrm{typ}}$, the positive
+direction follows from Lemma~\ref{lem:witness-length-template}(i) and
+the same $(\mathrm R_{\beta}^{\lambda})$ estimate; the negative
+direction follows from the strengthened
+Proposition~\ref{prop:typed-thickness-exponential}(a).
 \end{proof}
 
 \begin{remark}[Refinement thickness is not a data lower bound]
@@ -1596,7 +1658,8 @@ alphabet $\Sigma:=\mathsf S$.
 The corollary concerns one particular refinement, not the minimal encoded length
 of characteristic data and not arbitrary learners; its negative direction uses
 rank two.  Polynomial refinement thickness yields polynomial data
-(Lemma~\ref{lem:typed-thickness-baseline}), but not conversely: short
+(Theorem~\ref{thm:data-from-typed-thickness} and
+Lemma~\ref{lem:typed-thickness-equivalence}), but not conversely: short
 distributional representatives may exist although the refinement is
 exponentially thick (Proposition~\ref{prop:mcfg-relaxed-witnesses}).  Whether
 $\mathbf{LG}$ is necessary for polynomial characteristic data at fan-out
@@ -1734,6 +1797,10 @@ Proposition~\ref{prop:good-normalization} gives a reduced good rank-$\le1$
 presentation $G$ of $L\cap\Sigma^+$ with $\|G\|=O_f(\|G_{\mathrm{in}}\|)$; apply (i).
 \end{proof}
 
+Here the special rank-one argument $\bar\theta_G\le2\|G\|$ is
+essential for the cubic bound; applying only the general thickness lemma
+would lose a power of $\|G\|$.  Equivalently, the shortest typed chains
+above give $t_{\mathrm{typ}}\le |V||\mathsf S^\sharp|^f\bar\theta_G$.
 No thickness parameter is needed at rank one, and the typing affects only the
 constant; this extends the rank-one untyped scale
 \cite[Lemma~7]{Yoshinaka2011}.  Rank two needs thickness: the size-$O(n)$
@@ -2414,7 +2481,9 @@ implication keeps it outside Yoshinaka's baseline.
 This paper turns the qualitative positive-data learning principle for typed
 MCFGs into upper bounds on the \emph{total encoded length} of characteristic
 samples, measured against a given presentation.  For a reduced good grammar $G$
-and fixed alphabet, fan-out, rank and typing:
+and fixed alphabet, fan-out, rank and typing, Theorem~\ref{thm:data-from-typed-thickness}
+reduces the principal uniform encoded-length bounds to the computable
+$t_{\mathrm{typ}}(G,s)$ and $N_{\mathrm{typ}}=O(\|G\|)$:
 \begin{itemize}[leftmargin=*]
 \item window and window--finite-group typings give $O(\|G\|^2\bar\theta_G)$, for
 noncommutative groups and interleaved tuple components alike
@@ -3331,7 +3400,7 @@ finite-semigroup typing.
 \newblock Revised manuscript submitted to \emph{Theoretical Computer Science},
 October 2026 (TCS-D-26-00494R1).  The cited Proposition~6.4 is in
 this revision; the earlier, substantively different public preprint is
-arXiv:1409.6247v4.
+arXiv:1409.6247v5.
 \newblock \url{https://arxiv.org/abs/1409.6247}.
 
 \bibitem{Pin1986}
