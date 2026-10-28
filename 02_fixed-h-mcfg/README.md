@@ -4,6 +4,8 @@
 **Target journal:** Information and Computation (pre-submission)  
 **Preprint:** [arXiv:2605.11644](https://arxiv.org/abs/2605.11644) (the public version may be older)
 
+**2026-10-28 M1 self-containment (referee pre-review):** The fan-out-one pseudovariety boundary no longer relies on an unrefereed result of the companion CFG manuscript. The bracketed doubling family is stated as Proposition `prop:bracketed-family` (size and thickness $O(n)$, unique ceiling-free word $W_n$, exponential sample lower bound via the rare-type proposition), and its Clark–Eyraud substitutability is proved in a new final appendix (`app:bracketed-family`) by an adapted deterministic-parser argument. The abstract, introduction, related-work paragraph, Remark `rem:fanout-one-data`, Theorem `thm:doubling-no-lift`, conclusion and Open Problem now cite the companion for attribution only. English and Japanese masters are synchronized.
+
 **2026-10-27 M5–M6 bilingual master:** The English source is the 51-page I&C pre-submission draft. The Japanese `japanese/main_JP.tex` is synchronized for its principal results: class-level typing bias, characteristic-data witness budgets, two thickness scales, noncommutative shortening, and the new refinement-thickness LG dichotomy. The prior CFG companion's fan-out-one characteristic-data boundary and lower-bound appendix have been removed from both sources. The refinement-thickness dichotomy does **not** imply a characteristic-data lower bound.
 
 
