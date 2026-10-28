@@ -91,6 +91,9 @@
 \]
 を考える．全ての$L_R$は$\Cmcf{2}{s}$に属し，$R$が非空ならこれらは文脈自由でない交差依存言語である（系~\ref{cor:feature-relation-family}）．群成分$g$が記録するのは二つの素性の\emph{値}であって，適合関係$R$ではない．$R$も標的文法も学習器の入力ではなく，学習器は認可情報と無限の交差依存の両方を正例から復元しなければならない．$R\ne\emptyset$については符号化総長$36|R|+22$以下の明示的な特徴標本が存在し，一方で族全体に対する単一の集合駆動型作用素の特徴標本は，許可される全ての対を示さなければならない（命題~\ref{prop:feature-family-witness-budget}）．非直積の例$R=\{(0,0),(0,1),(1,0)\}$では，型なしの代入可能性も境界窓のみの代入可能性も成り立たない（命題~\ref{prop:feature-cross-typed}）．
 
+\paragraph{なぜ非可換群・局所群の型付けが必要なのか．}
+固定した型付けは標的ごとの証明道具ではなく，学習器そのもののバイアスである．型付けを精密化すると再構成作用素も標的クラスも変わる．有限の置換オートマトンは自然に群値の素性を与えるが，その遷移群は可換とは限らない．例えば3状態の二つの互換から$S_3$が生成される．不連続構成素に対しては，素性を合成する順序が意味をもつ．命題~\ref{prop:group-agreement}の一致言語族$L_R^A$は，一つの固定した窓・$(A\times A)$型付けの下で，離れたブロックの群値を比較する．$A=S_3$の場合，一致言語はこのクラスに属するが，ファンアウト2でこれを許す窓・アーベル型付けは存在しない．これは\emph{固定した学習バイアスの分離}であって，個々の標的の特徴データ長の下界ではない．定理~\ref{thm:window-group-polydata}はその型付けのクラス全体に一様な$O(\|G\|^2\bar\theta_G)$のデータを与える．一方，定理~\ref{thm:mcfg-abelian-filter-data}は特定のフィルタ付き標的に適用され，型付けと作用素が別になる場合がある．局所群はさらに，文字ごとの群準同型と固定境界窓だけでは記録できないbigramの出現数の偶奇など，sliding factorに依存する群値を許す（命題~\ref{prop:li-g-strict}）．
+
 \paragraph{なぜ元の文法表示で評価するのか．}
 自然な方針は，文法を型で精密化し，精密化した文法に型なしの評価を適用することである．しかしこの方針は高くつきうる．完全型付き構成は最大で$|V||\mathsf T^\sharp|^f$個の非終端記号と$|P||\mathsf T^\sharp|^{fr}$個の規則を持ち，その厚さは爆発しうる．これは\emph{潜在的な}コストであって，最小特徴データ長の単調性を述べる定理ではないが，指数的になりうる．実際，固定した2元型付け$s_{\mathtt c}$について，$\{\mathtt a,\mathtt c\}^+$のランク2のCFG表示$G_n$で，$\|G_n\|=O(n)$かつ規則厚さ$\theta_{G_n}\le2$でありながら，刈り込んだ完全生成語型精密化の厚さが$\theta_{\widetilde G_{n,0}}\ge2^n$となるものが存在する（命題~\ref{prop:typed-thickness-exponential}）．そこで本稿は特徴データを元の文法表示によって直接評価し，固定した型付けの代数がこのコストを\emph{払う前に}短い証拠を許すのはいつかを問う．同じ理由で，型付けは推定や最適化の対象ではなく所与のものとして扱う．より細かい型付け$s\preceq t$（すなわち$\Sigma^+$上で$\ker t\subseteq\ker s$）はクラスを$\Cmcf{f}{s}\subseteq\Cmcf{f}{t}$と広げるが，再構成作用素も変えてしまい，本稿の上界が成り立つ代数的領域から外れることもある．本稿が問うのは，外部から与えられた固定の型付けがクラス一様な短い証拠を持つのはいつか，である．
 
@@ -781,6 +784,8 @@ $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$なら，任意の$L\in\Cmcf{f}{s}$と$
 $k\ge1$，有限群$A$，写像$\nu:\Sigma^{k+1}\to A$（\emph{sliding-factorラベル}）を固定する．$|w|\ge2k$について$\sigma_k(w)=(F_1,\ldots,F_{|w|-k})$を$w$の長さ$k+1$の因子を開始位置の順に並べたものとし，$\gamma_{k,\nu}(w):=\nu(F_1)\nu(F_2)\cdots\nu(F_{|w|-k})$（$A$における順序付き積）とおく．$|w|<2k$なら$\gamma_{k,\nu}(w):=1_A$とする．\emph{局所群型付け}を$\lambda_{k,\nu}(w):=\bigl(\widehat s_{k,k}(w),\gamma_{k,\nu}(w)\bigr)$と定める．補題~\ref{lem:local-group-morphism}により，これは有限モノイド$M_{k,\nu}$への全射準同型である．ある$k$，$A$，$\nu$について$\widehat s\preceq\lambda_{k,\nu}$となるとき，型付け$s$は\emph{局所群決定的}であるという．
 \end{definition}
 
+局所群型付けは，群への寄与を文字ごとではなくsliding factorによって決めることができる．例えば$\nu(\mathtt{ab})=1\in\mathbb Z_2$，他の対では$0$とした$\lambda_{1,\nu}$は，因子$\mathtt{ab}$の出現回数の偶奇を記録する．これは\emph{二文字アルファベット}$\{\mathtt a,\mathtt b\}$上ですら，固定した任意の接頭辞--接尾辞窓と有限群準同型の組からは復元できない（命題~\ref{prop:li-g-strict}(ii)）．後の局所群の特徴付けは，新しい学習器や標的固有の型付けを導入することなく，この追加的な表現力を捉える．
+
 \begin{theorem}[局所群型付けの多項式特徴データ]
 \label{thm:local-group-polydata}
 $\mathsf S\in\mathbf{LG}$，$L\in\Cmcf{f}{s}$，$L(G)=L\cap\Sigma^+$とする．このとき$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$は$\mathcal B^{\le r_{\max}}_{f,s}$の特徴標本であり，
@@ -1221,9 +1226,13 @@ $\mathrm B$の(iii)．$\hat k\ge\max\{k,\ell,1\}$を偶数とし，$u=\mathtt a^
 \emph{帰結．}$s_{\mathrm A}(\Sigma_{\mathrm A}^+)$が$\mathbf{LI}\vee\mathbf{Grp}$に属するなら，$t=s_{\mathrm A}$とした(iii)は(ii)に矛盾する．窓，窓・群，窓・アーベルの定理と系~\ref{cor:mcfg-li-group-polydata}は，除外された種類の型付けを仮定する．
 \end{proof}
 
-\begin{remark}[分離の範囲]
+\begin{remark}[型付けクラスの分離が意味する範囲]
 \label{rem:necessity-scope}
-これらの命題は\emph{型付けクラス}を分離するものであり，$L_{\mathrm A}$や$L_{\mathrm B}$の短いデータに局所群や非可換の短縮が必要であることは示さない．実際，$s_{\mathrm A}$を$Q_{\mathrm A}$の構文準同型で精密化した型付け$s'$について$L_{\mathrm A}=\widehat{s'}^{-1}(\mathsf{Acc}')\cap\varphi_\times^{-1}(0)$となるので，定理~\ref{thm:mcfg-abelian-filter-data}は$\mathcal B^{\le2}_{f,s'}$に多項式データを与える（$L_{\mathrm B}$も同様）．これは精密化した作用素に関するものであり，$\mathcal B^{\le2}_{f,s_{\mathrm A}}$に関するものではない．また分離はアリティ1で起こる（補題~\ref{lem:flag-separation}）ので，これらの例は型付けの表現力を切り出すものであって，交錯する成分との相互作用（例~\ref{ex:nonabelian-reverse-owner}）を切り出すものではない．
+命題~\ref{prop:lg-needed-target}，\ref{prop:nonabelian-needed-target}および~\ref{prop:group-agreement}は，\emph{固定した型付け}によって定まるクラスを分離する．排除された窓型付けや窓・アーベル型付けをバイアスとする学習器は，これらの標的を対応する代入可能クラスの元として扱えない．最初の二つの分離は，補題~\ref{lem:flag-separation}によりすでにアリティ1で起こるが，ここに示した群値一致の分離はアリティ2の文脈を用いる（アリティ1では不可能だとは主張しない）．いずれも個々の標的の特徴データ長の下界を示すものではない．元の型付けを，その狭義2-局所な構造言語を認識する有限準同型で精密化すると，各標的はアーベル準同型$\varphi$を用いて
+\[
+ L=\widehat{s'}^{-1}(\mathsf{Acc}')\cap\varphi^{-1}(0)
+\]
+と表せる．このとき定理~\ref{thm:mcfg-abelian-filter-data}は\emph{別の}作用素$\mathcal B^{\le2}_{f,s'}$に多項式長のデータを与える．これに対して，窓・群および局所群の上界は，元の固定型付けのクラスの全ての元に一様に適用でき，$\|G\|$に関する次数は$|\Sigma|$に依存しない．二つの生成元をもつ$S_3$の一致言語では$|\Sigma_{\mathrm{agr}}|=8$であり，表示された上界の指数は，$\bar\theta_G$を別に数えた場合の$2$と$3|\Sigma|+2=26$である．ただし，これは異なる作用素に関する上界の比較であり，鋭い下界を示すものではない．
 \end{remark}
 
 \subsection{本質的にランク2を要する境界型付き標的}
@@ -1462,13 +1471,15 @@ $S$を，べき等元が全て最小イデアル$\mathsf K=\mathcal M(H;I,\Lambd
 \label{prop:li-g-strict}
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
 \item 有限群への準同型$g$について$\widehat s\preceq(\widehat s_{k,\ell},g)$なら，$\hat k=\max\{k,\ell,1\}$，$\nu(F):=g(F\text{の最後の文字})$について$\widehat s\preceq\lambda_{\hat k,\nu}$である．よって$\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$である．
-\item $\Sigma=\{\mathtt a,\mathtt b,\mathtt c\}$とし，$\nu(\mathtt{ab})=1\in\mathbb Z_2$，それ以外$\nu=0$として$h_{\mathtt{ab}}:=\lambda_{1,\nu}$とすると，$h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$である．
+\item すでに$\Sigma=\{\mathtt a,\mathtt b\}$について，$\nu(\mathtt{ab})=1\in\mathbb Z_2$，それ以外$\nu=0$として$h_{\mathtt{ab}}:=\lambda_{1,\nu}$とすると，$h_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$である．
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
 (i) $|w|\ge2\hat k$なら$g(w)=g(\operatorname{pref}_{\hat k}w)\,\gamma_{\hat k,\nu}(w)$であり，$\operatorname{pref}_{\hat k},\operatorname{suf}_{\hat k}$は$\widehat s_{k,\ell}(w)$を定める．より短い語は正確に記録される．包含については，$S\in\mathbf{LI}\vee\mathbf{Grp}$はアルファベット$S$上の評価型付けの正語像であり，これは補題~\ref{lem:mcfg-li-group-window}により窓・群決定的，したがって局所群決定的なので，定理~\ref{thm:lg-characterization}により$S\in\mathbf{LG}$である．
-(ii) $\mathbf{LG}$への所属は定理~\ref{thm:lg-characterization}による．命題~\ref{prop:lg-needed-target}(iii)の証明の語$u,v$は$\{\mathtt a,\mathtt b,\mathtt c\}^+$に属し，与えられた任意の$k,\ell,g'$について$(\widehat s_{k,\ell},g')$-値が等しく，$\#_{\mathtt{ab}}$の偶奇が異なる．よって$h_{\mathtt{ab}}$は窓・群決定的でなく，補題~\ref{lem:mcfg-li-group-window}により$\mathbf{LI}\vee\mathbf{Grp}$は除外される．
+(ii) $\mathbf{LG}$への所属は定理~\ref{thm:lg-characterization}による．任意の$k,\ell\ge0$と任意の有限群への準同型$g':\Sigma^*\to H$をとる．$K\ge k+\ell+1$，$N\ge1$を$g'(\mathtt a)$の位数で割り切れるように選び，
+$u=\mathtt b^K\mathtt a^N\mathtt b^K$，
+$v=\mathtt b^{2K}$とする．両者は長さ$k$の接頭辞と長さ$\ell$の接尾辞が一致し，$s_{k,\ell}$について十分長い．また$g'(u)=g'(\mathtt b)^{2K}=g'(v)$だが，$\#_{\mathtt{ab}}(u)=1$，$\#_{\mathtt{ab}}(v)=0$である．よって$h_{\mathtt{ab}}$は窓・群決定的でなく，補題~\ref{lem:mcfg-li-group-window}により$\mathbf{LI}\vee\mathbf{Grp}$に属さない．
 \end{proof}
 
 \begin{lemma}[局所群型を指定した短いタプル]
