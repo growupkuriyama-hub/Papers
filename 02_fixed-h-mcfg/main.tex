@@ -72,9 +72,9 @@ distributional framework.  With the alphabet, fan-out, rule rank and
 typing fixed, a reduced good grammar $G$ of rule thickness $\bar\theta_G$
 admits characteristic data of length $O(\|G\|^2\bar\theta_G)$ for
 prefix--suffix-window typings combined with any finite, possibly
-noncommutative, group, and of length $O(\|G\|^3\bar\theta_G)$ whenever the
-positive typing image is a local group.  The key step shortens interleaved
-tuple components simultaneously while preserving ordered group products.
+noncommutative, group, and more generally whenever the positive typing image
+is a local group.  The key step shortens interleaved tuple components
+simultaneously while preserving ordered group products.
 Conversely, the shortest word of each realized type is a
 presentation-independent lower bound.  At fan-out one this yields a
 characterization: with rule rank two allowed, the pseudovarieties of finite
@@ -156,7 +156,11 @@ different root components, interleaved with blocks of other subtrees, and
 for noncommutative groups the effect of simultaneous replacements depends on
 this order.  The key step is an \emph{owner-wise simultaneous selection} of
 replacements that preserves the ordered group product of every root
-component (Proposition~\ref{prop:block-replacement-interface}).
+component (Proposition~\ref{prop:block-replacement-interface}).  For
+local-group typings the group value is a product over sliding factors, which
+straddle block boundaries; selecting owners whose blocks lie far apart and
+enlarging each block by unchanged boundary letters reduces this case to the
+same selection (Lemma~\ref{lem:lg-buffered-owners}).
 
 \paragraph{Main results.}
 For a reduced good MCFG $G$ we use its rule thickness $\bar\theta_G$, the
@@ -180,7 +184,7 @@ Rule rank $\le1$; any typing
 Prefix--suffix window with a finite group (possibly trivial or noncommutative)
  & $O(\|G\|^2\bar\theta_G)$ & Thm.~\ref{thm:window-group-polydata}\\
 Positive image in $\mathbf{LG}$
- & $O(\|G\|^3\bar\theta_G)$ & Thm.~\ref{thm:local-group-polydata}\\
+ & $O(\|G\|^2\bar\theta_G)$ & Thm.~\ref{thm:local-group-polydata}\\
 \hline
 \end{tabularx}
 \end{center}
@@ -1384,7 +1388,7 @@ presentations are within a constant factor of the smallest reduced good ones,
 so the bound is not obtained by padding $G$.  With trivial typing the
 proposition shows that Yoshinaka's bound $\|K_G\|\le|P|\theta_G$ is attained
 up to a constant factor.  Since $t_{\mathrm{typ}}=\bar\theta_G$ in this family,
-it says nothing about the further factors $\|G\|$ in
+it says nothing about the further factor $\|G\|$ in
 Theorems~\ref{thm:window-group-polydata} and~\ref{thm:local-group-polydata}.
 The family is specific to fan-out one: in $L_{2,1}$ the pairs
 $(\mathtt d,\mathtt{ac})$ and $(\mathtt{da},\mathtt c)$ share the context
@@ -1746,12 +1750,15 @@ requiring a new learner or a target-specific typing.
 
 \begin{theorem}[Polynomial characteristic data for local-group typing]
 \label{thm:local-group-polydata}
-Let $\mathsf S\in\mathbf{LG}$, $L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$.  Then
+Let $\mathsf S\in\mathbf{LG}$.  Every reduced good fan-out-$\le f$,
+rank-$\le r_{\max}$ grammar $G$ satisfies
+$t_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|\bar\theta_G)$.  If moreover
+$L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$, then
 $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for both
 $\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ with
 \[
  |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
- \|\Wit(\widetilde G_0)\|_+=O_{f,r_{\max},s,\Sigma}(\|G\|^3\bar\theta_G).
+ \|\Wit(\widetilde G_0)\|_+=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G).
 \]
 \end{theorem}
 
@@ -1759,23 +1766,26 @@ $\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ with
 By Theorem~\ref{thm:lg-characterization}, $\widehat s\preceq\lambda:=\lambda_{k,\nu}$
 for $k=|\mathsf S|$ and some ${\mathbb G},\nu$ depending only on $s$.
 Lemma~\ref{lem:local-group-shortest} gives $(\mathrm R_\beta^\lambda)$ with
-$\beta=\beta_\lambda=O(\|G\|^2\bar\theta_G)$: heavy subtrees are first exchanged
-for short tuples with the same window vector
-(Corollary~\ref{lem:boundary-short-canonical}), and then a nonempty family is
-selected whose ordered sliding-factor products remain unchanged
-(Lemma~\ref{lem:local-group-blocks} and
-Proposition~\ref{prop:block-replacement-interface}).
-Lemma~\ref{lem:witness-length-template}(i) gives
-$t_{\mathrm{typ}}\le\beta_\lambda=O(\|G\|^2\bar\theta_G)$, and
+$\beta=\beta_\lambda=O(\|G\|\bar\theta_G)$: heavy subtrees are replaced by
+arbitrary short yields of their nonterminals, after the owners have been thinned
+so that their blocks lie at least $2k$ letters apart and each block has been
+enlarged by $k$ unchanged letters on both sides
+(Lemma~\ref{lem:lg-buffered-owners}); the enlarged blocks keep their window
+types, so the ordered sliding-factor products are controlled by
+Lemma~\ref{lem:local-group-blocks} and
+Proposition~\ref{prop:block-replacement-interface}.  This step uses no
+substitutability.  Lemma~\ref{lem:witness-length-template}(i) gives
+$t_{\mathrm{typ}}\le\beta_\lambda$, and
 Theorem~\ref{thm:data-from-typed-thickness} gives
 $\|\Wit\|_+\le N_{\mathrm{typ}}(1+2\bar\theta_G+r_{\max}\beta_\lambda)
-=O(\|G\|^3\bar\theta_G)$.
+=O(\|G\|^2\bar\theta_G)$.
 \end{proof}
 
 The Rees and sliding-factor coordinates are classical; their combination with
-owner-wise block shortening is the quantitative step.  For window--group
-typings the quadratic bound of Theorem~\ref{thm:window-group-polydata} is
-sharper.
+owner-wise block shortening is the quantitative step.  Local-group and
+window--group typings thus have the same quadratic dependence on $\|G\|$;
+Theorem~\ref{thm:window-group-polydata} gives explicit constants for the
+latter.
 
 \paragraph{A bracketed doubling family.}
 Let $\Gamma_{\mathrm{br}}=\{\mathtt a,\lfloor,\rfloor,\lceil,\rceil\}$, let
@@ -1867,7 +1877,7 @@ semigroups.
 fan-out one and rank $r_{\max}$ if and only if
 $\mathbf V\subseteq\mathbf{LG}$.
 \item If $\mathbf V\subseteq\mathbf{LG}$, one may take
-$p(\|G\|,\bar\theta_G)=O_{r_{\max},s,\Sigma}(\|G\|^3\bar\theta_G)$ in
+$p(\|G\|,\bar\theta_G)=O_{r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$ in
 Definition~\ref{def:uniform-polydata}.
 \item If $\mathbf V\not\subseteq\mathbf{LG}$, the typing $s_U$ of
 Proposition~\ref{prop:bracketed-family} has positive image
@@ -2331,8 +2341,8 @@ $N_{\mathrm{typ}}=O(\|G\|)$ witness words.  Owner-wise simultaneous replacement
 (Proposition~\ref{prop:block-replacement-interface}) then gives
 $O(\|G\|^2\bar\theta_G)$ for window--group typings, for noncommutative groups and
 interleaved tuple components alike (Theorem~\ref{thm:window-group-polydata}), and
-$O(\|G\|^3\bar\theta_G)$ for local-group typings
-(Theorem~\ref{thm:local-group-polydata}); rank one gives $O(\|G\|^3)$ under every
+the same order $O(\|G\|^2\bar\theta_G)$ for local-group typings, after thinning
+and padding the owners (Theorem~\ref{thm:local-group-polydata}); rank one gives $O(\|G\|^3)$ under every
 typing (Theorem~\ref{thm:rankone-polydata}).  For characteristic-data length itself,
 the rare-type lower bound (Proposition~\ref{prop:rare-type}) makes $\mathbf{LG}$ an
 exact boundary at fan-out one, at the level of pseudovarieties
@@ -2363,20 +2373,26 @@ $t_{\mathrm{typ}}(G,s)$.
 \end{openproblem}
 
 \paragraph{Tightness of the exponents.}
-In $O(\|G\|^2\bar\theta_G)$ one factor $\|G\|$ counts the witness words and the
-other bounds root-to-leaf paths in a $\lambda$-minimal derivation by the number of
-node labels (Lemma~\ref{lem:heavy-node-count}); the third factor in the local-group
-bound comes from first exchanging heavy subtrees for window representatives
-(Lemma~\ref{lem:local-group-shortest}) and may be an artefact of this two-stage
-argument.  At fan-out one the product $\|G\|\bar\theta_G$ is necessary under every
+In $O(\|G\|^2\bar\theta_G)$, for window--group and local-group typings alike,
+one factor $\|G\|$ counts the witness words and the other bounds root-to-leaf
+paths in a $\lambda$-minimal derivation by the number of node labels
+(Lemma~\ref{lem:heavy-node-count}).  The path factor is genuine for the witness
+construction: the grammars $S\to SS\mid\mathtt a\mid\mathtt b\mid A_0\mid\cdots\mid A_n$,
+$A_0\to\mathtt b$, $A_i\to\mathtt a\mid A_{i-1}\mathtt b$ ($1\le i\le n$) generate
+$\{\mathtt a,\mathtt b\}^+$ with $\|G_n\|=10n+16$ and $\bar\theta_{G_n}=2$, but
+$\mathtt b^{n+1}$ is the only yield of $A_n$ of $s_{1,1}$-type
+$\langle\mathtt b,\mathtt b\rangle$, so $t_{\mathrm{typ}}(G_n,s_{1,1})\ge n+1$.  For this
+target, however, $\tau(G_n,s_{1,1})\le2$
+(Corollary~\ref{cor:distribution-representatives}), so the example bounds the
+witness method, not the data.  At fan-out one the product $\|G\|\bar\theta_G$ is necessary under every
 fixed typing, even for asymptotically smallest presentations and for every
 set-driven operator with characteristic samples throughout $\Cmcf{1}{s}$
-(Proposition~\ref{prop:linear-factor-sharp}); there the remaining gap is a factor
-$\|G\|$ (window--group) or $\|G\|^2$ (local group).  At fan-out two or more that
+(Proposition~\ref{prop:linear-factor-sharp}); there the remaining gap is a single
+factor $\|G\|$ for every typing with $\mathsf S\in\mathbf{LG}$.  At fan-out two or more that
 family is not tuple-substitutable, and the known examples force only
 $\Omega(\bar\theta_G)$: the size-$O(n)$ grammar for $\{\mathtt c^{2^n}\}$ of
 Section~\ref{subsec:rank-one} has $\bar\theta_G=2^n$, which leaves a factor
-$\|G\|^2$ or $\|G\|^3$.  These are gaps between the known examples and the bounds,
+$\|G\|^2$.  These are gaps between the known examples and the bounds,
 not proved ratios.  Neither lower-bound argument closes them: for a fixed typing
 the rare-type argument yields at most $|\mathsf S|(t_{\mathrm{typ}}+1)$, and the
 family of Proposition~\ref{prop:linear-factor-sharp} consists of $O(\|G\|)$ words
@@ -2811,33 +2827,104 @@ Lemma~\ref{lem:mcfg-li-group-window} excludes
 $\mathbf{LI}\vee\mathbf{Grp}$.
 \end{proof}
 
+\begin{lemma}[Thinned and padded owners]
+\label{lem:lg-buffered-owners}
+Fix $k\ge1$.  Consider pairwise disjoint nonempty intervals in at most $f$
+words (\emph{rows}), each interval belonging to one of $m$ owners and each
+owner holding at most $f$ intervals, and suppose that no interval meets the
+first or last $k$ letters of its row.  Then there is a set $I$ of at least
+$m/(4kf+1)$ owners with the following property.  For arbitrary nonempty
+replacement words of the intervals of the owners in $I$, there are pairwise
+disjoint \emph{enlarged blocks}, at most $f$ per owner, such that
+\textup{(a)} each enlarged block contains intervals of exactly one owner in
+$I$, and every interval of an owner in $I$ lies in exactly one enlarged
+block; \textup{(b)} replacing, inside an enlarged block, the intervals of its
+owner yields a word of length at least $2k+1$ with the same first and last
+$k$ letters as the block, which itself has length at least $2k+1$; and
+\textup{(c)} for every $J\subseteq I$, replacing the intervals of the owners
+in $J$ equals replacing their enlarged blocks as in \textup{(b)}.
+\end{lemma}
+
+\begin{proof}
+Join two distinct owners if some interval of one and some interval of the
+other lie in the same row with fewer than $2k$ letters between them.  A
+neighbouring interval to the right of an interval $[l,r)$ (in cut positions)
+starts at one of the $2k$ cuts $r,\ldots,r+2k-1$, and disjointness and
+nonemptiness allow at most one interval per cut; the same holds on the left.
+So each owner has at most $4kf$ neighbours, and greedily choosing an owner and
+deleting its closed neighbourhood gives an independent set $I$ of at least
+$m/(4kf+1)$ owners.
+
+Enlarge every interval of an owner in $I$ by $k$ letters on each side; the
+boundary hypothesis keeps the enlargement inside its row.  Intervals of
+distinct owners in $I$ are at least $2k$ letters apart, so their enlargements
+have disjoint interiors; merge overlapping enlargements of the same owner.
+This gives (a) and does not increase the number of blocks per owner.  Let
+$[l,r)$ be the union of the merged enlargements and $l_0$ the smallest left end
+of an interval in it, so $l=l_0-k$.  No interval of an owner in $I$ meets
+$[l,l_0)$: one of the same owner would have been merged with a smaller left
+end, and one of another owner in $I$ would end at least $2k$ letters before
+$l_0$.  Symmetrically for the last $k$ letters.  Replacing only the owner's
+intervals therefore keeps the first and last $k$ letters, and the replacement
+contains at least one nonempty word besides these $2k$ letters, which gives
+(b).  Letters of owners outside $I$ inside a block are never replaced, so
+(c) holds for every $J\subseteq I$.
+\end{proof}
+
 \begin{lemma}[Short tuples with prescribed local-group type]
 \label{lem:local-group-shortest}
 Let $G$ be reduced and good of fan-out $\le f$ and rank $\le r_{\max}$, and
-$\lambda=\lambda_{k,\nu}$.  Let $b_{\mathrm w}:=b_{k,k}=(r_{\max}+1)\bar\theta_G\,
-f(2k+1)\,|V||M_{k,k}|^f$ (Corollary~\ref{lem:boundary-short-canonical}) and
+$\lambda=\lambda_{k,\nu}$ with group ${\mathbb G}$.  Put
+$C^{\mathrm{buf}}_{k,{\mathbb G},f}:=2kf+(4kf+1)c_{{\mathbb G},f}$ and
 $n_\lambda:=|V||M_{k,\nu}|^f$.  For every $B\in V$ and every realizable
 $\mathbf t\in M_{k,\nu}^{\fan(B)}$ there is $\tuple u\in L_B(G)$ with
 $\lambda^{(\fan(B))}(\tuple u)=\mathbf t$ and
 \[
- \|\tuple u\|_1\le\beta_\lambda:=(r_{\max}+1)\,b_{\mathrm w}\max\{1,c_{{\mathbb G},f}\,n_\lambda\}.
+ \|\tuple u\|_1\le\beta_\lambda:=(r_{\max}+1)\,\bar\theta_G\,
+ C^{\mathrm{buf}}_{k,{\mathbb G},f}\,n_\lambda .
 \]
+Substitutability is not used.
 \end{lemma}
 
 \begin{proof}
 Let $T$ be $\lambda$-minimal for $(B,\mathbf t)$ with heavy threshold
-$b=b_{\mathrm w}\ge\bar\theta_G$.  For a heavy node $v$ with nonterminal $C$ and yield
-$\tuple x$, Corollary~\ref{lem:boundary-short-canonical} gives $\tuple x'\in L_C(G)$
-with the same $\widehat s_{k,k}$-vector and $\|\tuple x'\|_1\le b_{\mathrm w}$.  For an
-antichain $v_1,\ldots,v_m$ of heavy nodes and $J\subseteq[m]$, let $T_J$ replace the
-subtrees at $v_i$, $i\in J$; their components are disjoint contiguous blocks of the
-root components.  By Lemma~\ref{lem:local-group-blocks}, every $T_J$ has the root
-window vector of $T$, short root components are unchanged, and on each long root
-component $\gamma_{k,\nu}$ is an ordered product of block values between constants
-independent of $J$: a block-replacement family over ${\mathbb G}$ with owners $v_1,\ldots,v_m$.
-If $m>c_{{\mathbb G},f}$, Lemma~\ref{lem:block-replacement} gives a nonempty $J$ with
-$\lambda$-vector $\mathbf t$, and $T_J$ is strictly shorter, contradicting minimality.
-Lemma~\ref{lem:heavy-node-count} with $c=c_{{\mathbb G},f}$ and $\mathsf N=M_{k,\nu}$ gives the bound.
+$b=\bar\theta_G$.  In each root component of length at least $2k$ mark the first
+and the last $k$ letters, and in each shorter component mark every letter: at
+most $2kf$ marks.  Let $Q$ be an antichain of heavy nodes.  By linearity and
+nondeletion their components occupy disjoint nonempty intervals of the root
+components, at most $f$ per node, and at most $2kf$ nodes contain a mark; let
+$Q_0$ be the others, so their intervals avoid the first and last $k$ letters of
+every root component and lie in components of length at least $2k$.
+
+Suppose $|Q|>C^{\mathrm{buf}}_{k,{\mathbb G},f}$.  Then
+$|Q_0|>(4kf+1)c_{{\mathbb G},f}$, and Lemma~\ref{lem:lg-buffered-owners} gives a set
+$I\subseteq Q_0$ of more than $c_{{\mathbb G},f}$ owners.  For $v\in I$ with nonterminal
+$C_v$ fix a tuple of $L_{C_v}(G)$ of total length at most $\bar\theta_G$
+(Lemma~\ref{lem:thickness-equivalence}(ii)); its components are nonempty, and no
+window or group condition is imposed on it.  By
+Lemma~\ref{lem:lg-buffered-owners}(b) every enlarged block and its replacement
+are long and have the same first and last $k$ letters, hence the same
+$\widehat s_{k,k}$-type.  So Lemma~\ref{lem:local-group-blocks}, applied with the
+enlarged blocks, writes $\gamma_{k,\nu}$ of every long root component as an
+ordered product of the block values and constants that do not depend on which
+owners are replaced.  This is a block-replacement family of width $f$ over ${\mathbb G}$
+with more than $c_{{\mathbb G},f}$ owners, and
+Proposition~\ref{prop:block-replacement-interface} gives a nonempty $J\subseteq I$
+preserving every root $\gamma_{k,\nu}$-value.
+
+Replace the subtrees at the nodes of $J$ by derivations of the chosen tuples.
+This is a derivation from $B$ because $J$ is an antichain, and by
+Lemma~\ref{lem:lg-buffered-owners}(c) its root components are those of the
+enlarged-block replacement.  Short root components contain no replaced letter
+and are unchanged; long ones keep their marked first and last $k$ letters and
+stay long, so their $\widehat s_{k,k}$-types are unchanged, and their
+$\gamma_{k,\nu}$-values are preserved by the choice of $J$.  Hence the root
+$\lambda$-vector is $\mathbf t$.  Every replaced node had total yield length
+greater than $\bar\theta_G$ and its replacement has at most $\bar\theta_G$, so the
+new derivation is strictly shorter, contradicting minimality.  Therefore every
+heavy antichain has at most $C^{\mathrm{buf}}_{k,{\mathbb G},f}\ge1$ elements, and
+Lemma~\ref{lem:heavy-node-count} with $b=\bar\theta_G$ and $\mathsf N=M_{k,\nu}$ gives
+the bound.
 \end{proof}
 
 \section{Auxiliary Verification of Qualitative Reconstruction}
