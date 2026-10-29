@@ -2462,9 +2462,14 @@ two is open, and so is whether the binary typing needs superpolynomial data at
 fan-out one (Remark~\ref{rem:fanout-one-data}(b)).
 (b) The proof uses the arity-two condition only through runs of the single
 neutral letter; with two neutral letters a long pure factor need not contain a
-long run.  Lemma~\ref{lem:app-u1-shallow} holds for every typing onto $U_1$,
-so any superpolynomial family for such a typing must contain deep insertions
-whose pure flanks grow superpolynomially.
+long run.  For every typing onto $U_1$ and every fan-out,
+Lemma~\ref{lem:app-u1-shallow} bounds $\tau(G,s)$ linearly in the flank length
+of deep insertions, and Lemma~\ref{lem:app-u1-runs} bounds
+$t_{\mathrm{typ}}(G,s)\ge\tau(G,s)$ linearly in the number of maximal
+factors without letters of type $1$, without using substitutability.  So any
+superpolynomial family for such a typing must contain deep insertions whose
+pure flanks grow superpolynomially and words with superpolynomially many such
+factors.
 (c) The proof treats tuples of arity at most two; fan-out $f\ge3$ is open.
 \end{remark}
 
@@ -3594,6 +3599,57 @@ $\Sigma_1$ also stay, so the final tuple has type $\mathbf t$ and lies in $L_X$ 
 Lemma~\ref{lem:witness-length-template}(i).  Each node of $H$ writes at most
 $\theta$ letters and has at most $r$ replaced children of length at most
 $\theta$, so the tuple has length at most $(r+1)\theta|H|$.
+\end{proof}
+
+The next lemma needs no substitutability.  A \emph{$\zeta$-run} of a word is a
+maximal factor that contains no letter of $\Sigma_1$.
+
+\begin{lemma}\label{lem:app-u1-runs}
+Let $s$ be a typing onto $U_1$ and $k\ge0$, and suppose every word of $L(G)$ has
+at most $k$ $\zeta$-runs.  Then
+$t_{\mathrm{typ}}(G,s)\le2^f(r+1)\bigl(2f+(2f+1)k\bigr)v\theta$.
+\end{lemma}
+
+\begin{proof}
+Let $X=A_{\mathbf t}$ be a typed nonterminal and $T$ a derivation of
+$\widetilde G_0$ from $X$ whose yield $\tuple u$ has the least total length and,
+among those, the fewest nodes.  Cutting between two equal typed labels on a path
+gives a derivation from $X$ with a yield that is not longer and with fewer
+nodes, so paths of $T$ have at most $2^fv$ nodes.  Mark the first and the last
+letter of each pure root component and one letter outside $\Sigma_1$ in each
+other component; there are at most $2f$ marks.  Call a node heavy if its yield
+has total length greater than $\theta$.
+
+Let $Q$ be an antichain of heavy nodes and $Q_0\subseteq Q$ the nodes whose
+subtrees write no mark, so $|Q\setminus Q_0|\le2f$.  For $h\in Q_0$ with
+nonterminal $C_h$, erase the type indices and replace the subtree at $h$ by a
+derivation of $\omega_{C_h}$.  The new root tuple lies in $L_A(G)$ and is shorter,
+since by nondeletion every letter of the yield of $h$ occurs in $\tuple u$.  The
+marks keep every impure root component impure.  If every pure root component
+stayed pure, the new tuple would have type $\mathbf t$ and lie in $L_X$ by
+Lemma~\ref{lem:witness-length-template}(i), contradicting the choice of $T$.
+Hence $\omega_{C_h}$ puts a letter outside $\Sigma_1$ into a block of $h$ lying in
+an originally pure root component.
+
+Each $h\in Q_0$ owns at most $f$ blocks, which are disjoint intervals of root
+components and contain no mark.  Join two owners when blocks of theirs in a pure
+root component are adjacent with no letter between them.  Each block has at most
+two adjacent blocks, so this graph has maximum degree at most $2f$ and an
+independent set $I$ with $|I|\ge|Q_0|/(2f+1)$.  Replace the subtrees at all
+$h\in I$ at once, giving $\tuple u'\in L_A(G)$.  In a pure root component, two
+blocks of distinct owners in $I$ are separated by an unchanged letter of
+$\Sigma_1$: either their gap was nonempty, or it contains a block of an owner
+outside $I$, which is kept.  The first and the last letter of the component are
+marks and stay.  Hence every $h\in I$ contributes a $\zeta$-run of
+$E_A[\tuple u']\in L(G)$, different owners contribute different runs, so
+$|I|\le k$, $|Q_0|\le(2f+1)k$ and $|Q|\le2f+(2f+1)k$.
+
+The heavy nodes are closed under ancestors.  Those without heavy children form
+an antichain, and every heavy node lies on the path from the root to one of
+them; so there are at most $2^fv(2f+(2f+1)k)$ heavy nodes.  Every letter of
+$\tuple u$ is written by a heavy node or lies in a light child of one, and each
+heavy node writes at most $\theta$ letters and has at most $r$ children.  Hence
+$\|\tuple u\|_1\le\max\{\theta,(r+1)\theta\cdot2^fv(2f+(2f+1)k)\}$.
 \end{proof}
 
 From now on $\Sigma=\{\mathtt a,\mathtt b\}$, $s=s_{U,2}$, $\Psi(w):=(|w|_{\mathtt a},|w|_{\mathtt b})$,
