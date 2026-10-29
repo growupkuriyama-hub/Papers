@@ -1,0 +1,1132 @@
+% =====================================================================
+% PARKED MATERIAL from 02_fixed-h-mcfg/main.tex (English master)
+% Parked on 2026-10-29 by the 'ic-slim' restructuring (branch mcfg-ic-slim-20261029).
+% Source version: main.tex at commit 66897a1 (also preserved in full on branch
+%   archive/mcfg-pre-slim-full-20261029).
+% Each block below is copied VERBATIM; the line numbers refer to that source version.
+% Do NOT \input this file into the article: labels collide with the article
+% and some blocks refer to results that remain in the article.
+% See README.md in this folder for status, dependencies and restore notes.
+% =====================================================================
+
+
+% ---------------------------------------------------------------------
+% [P1] Appendix H (Supplementary Results): effective witness computation and rule-only budget (H.1), distributional representatives kappa_G and the abelian-filter theorem thm:mcfg-abelian-filter-data (H.2), feature-family witness budget (H.3), group-valued agreement prop:group-agreement (H.4), EDT0L lemma and intrinsically rank-two target thm:intrinsic-ranktwo-witness (H.5)
+% original lines 3450-3984
+% ---------------------------------------------------------------------
+\section{Supplementary Results}
+\label{app:supplementary}
+
+This appendix collects results that complement the main line but are not
+used in it: the effective computation of short witness sets, characteristic
+samples from distributional representatives (with the abelian-filtered
+targets), an explicit data budget for the feature family of
+Section~\ref{subsec:baseline}, a group-valued agreement family, and an
+intrinsically rank-two target.  Notation is that of
+Section~\ref{sec:char-data}; in particular
+$C_s(G)=|V||\mathsf S^\sharp|^f+|P||\mathsf S^\sharp|^{fr_{\max}}\le
+|\mathsf S^\sharp|^{fr_{\max}}\|G\|$.
+
+\subsection{Computing Short Characteristic Data}
+\label{subsec:effective-char-data}
+
+Let $G$ be reduced and good of fan-out $\le f$ and rank $\le r_{\max}$.  For a
+typed rule $R:X\to\rho(Y_1,\ldots,Y_q)$ let $\mathrm{ter}_R$ be the number of terminals
+written by $\rho$ and $\operatorname{lhs}R:=X$; let $\mathcal R$ be the set of
+typed rules of $\widetilde G_0$ (rank zero included).  Put
+\[
+ \ell_{\mathrm{in}}(X):=\min_{\tuple u\in L_X}\|\tuple u\|_1,\qquad
+ \ell_{\mathrm{out}}(X):=\min\{|\chi|_{\mathrm{fix}}:\chi\text{ derivational for }X\},
+\]
+(derivational as in Lemma~\ref{lem:thickness-equivalence}(iv); so
+$\ell_{\mathrm{out}}(X)=0$ if $\widetilde S\to X$ is a rule), and
+\[
+ b(R):=\mathrm{ter}_R+\sum_{j=1}^q\ell_{\mathrm{in}}(Y_j),\qquad
+ \mathsf B_{\mathrm{rule}}(G,s):=
+ \sum_{R\in\mathcal R}\bigl(1+\ell_{\mathrm{out}}(\operatorname{lhs}R)+b(R)\bigr).
+\]
+
+\begin{proposition}[Effective short characteristic data and a rule-only budget]
+\label{prop:effective-char-data}
+\label{prop:computed-witness-budget}
+\label{prop:rule-only-witnesses}
+Fix $f$, $r_{\max}$ and $s$.  Given $G$, the following are computable in time
+polynomial in $\|G\|$, numbers being written in binary.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $\widetilde G_0$, all values $\ell_{\mathrm{in}}(X)$, $\ell_{\mathrm{out}}(X)$
+and $\mathsf B_{\mathrm{rule}}(G,s)$, and $\theta_G(R)$ for every rule $R$ of $G$ (hence
+$\theta_G$ and $t_G$).
+\item For each typed nonterminal $X$, a rule $R_X:X\to\rho_X(Y_1,\ldots,Y_q)$ such
+that the recursion $\omega(X):=\rho_X(\omega(Y_1),\ldots,\omega(Y_q))$ is
+well-founded and gives $\omega(X)\in L_X$ with $\|\omega(X)\|_1=\ell_{\mathrm{in}}(X)$;
+and a derivational context $\chi(X)$ with $|\chi(X)|_{\mathrm{fix}}=\ell_{\mathrm{out}}(X)$,
+equal to $\blank_1$ whenever $\widetilde S\to X$ is a rule.  Both are given by
+derivation DAGs of size polynomial in $\|G\|$.
+\end{enumerate}
+For these choices,
+\[
+ \begin{gathered}
+ \Wit(\widetilde G_0)=\bigl\{\chi(\operatorname{lhs}R)[\rho_R(\omega(Y_1),\ldots,\omega(Y_q))]:
+ R\in\mathcal R\bigr\},\\
+ |\Wit(\widetilde G_0)|\le|\mathcal R|,\qquad
+ \|\Wit(\widetilde G_0)\|_+\le\mathsf B_{\mathrm{rule}}(G,s),
+ \end{gathered}
+\]
+the words can be written out in time polynomial in
+$\|G\|+\|\Wit(\widetilde G_0)\|_+$, and every bound on $\Wit(\widetilde G_0)$ proved in
+Sections~\ref{subsec:thickness-contexts}--\ref{subsec:algebraic-typed-data},
+Section~\ref{subsec:rank-one} and Appendix~\ref{app:local-group} holds for this set;
+in particular it is characteristic whenever $L(G)=L\cap\Sigma^+$ with
+$L\in\Cmcf{f}{s}$.
+\end{proposition}
+
+\begin{proof}
+For fixed $f,r_{\max},s$ the full refinement has $O(C_s(G))$ symbols and rules,
+and trimming is a linear-time productivity and reachability computation.
+
+\emph{Inside values.}  Give a derivation the weight (terminal length, number of
+nodes), ordered lexicographically.  A rule $R$ maps child weights $(x_j,n_j)$ to
+$(\mathrm{ter}_R,1)+\sum_j(x_j,n_j)$, which is strictly larger than every argument.  Knuth's
+generalization of Dijkstra's algorithm, in Nederhof's weighted-deduction form
+\cite{Nederhof2003} (see also \cite{RamalingamReps1996}), therefore computes the
+minimum weight of every typed nonterminal together with a minimizing rule $R_X$
+whose children are finalized before $X$.  This order makes the recursion for
+$\omega$ well-founded, the chosen rules form a DAG, and the first coordinate of
+the weight is $\ell_{\mathrm{in}}(X)=\|\omega(X)\|_1$.
+
+\emph{Outside values.}  Run Dijkstra's algorithm on the graph with an edge
+$X\to Y_j$ of weight $\mathrm{ter}_R+\sum_{i\ne j}\ell_{\mathrm{in}}(Y_i)$ for every typed rule
+$R:X\to\rho(Y_1,\ldots,Y_q)$, from the sources $X$ with $\widetilde S\to X$ at
+distance~$0$.  A path from a source to $X$ yields, by composing its templates and
+filling the siblings with $\omega(Y_i)$, a context of $X$ of that fixed length; it is
+admissible by Lemma~\ref{lem:filling-identity} and derivational because it arises
+from a successful derivation by deleting the $X$-subtree.  Conversely every
+derivational context of $X$ comes from a root-to-$X$ path whose siblings have
+yields at least $\ell_{\mathrm{in}}$.  Hence the distance is $\ell_{\mathrm{out}}(X)$,
+and the shortest-path tree with the inside DAG represents $\chi(X)$.  The same two
+passes on $G$ give $t_G=\max_A\ell_{\mathrm{in}}(A)$ and
+$\theta_G(R)=\ell_{\mathrm{out}}(A)+\mathrm{ter}_R+\sum_j\ell_{\mathrm{in}}(B_j)$ for
+$R:A\to\rho(B_1,\ldots,B_q)$, since outside and inside parts of a derivation can be
+chosen independently.  All values are at most exponential in $\|G\|$, so have
+polynomial binary length.
+
+\emph{Witness set and budget.}  By definition of $\omega$, $\chi(X)[\omega(X)]$ is the
+rule word of $R_X$, and every other word of Definition~\ref{def:witness-set} is a
+rule word.  The rule word of $R$ has length exactly
+$\ell_{\mathrm{out}}(\operatorname{lhs}R)+b(R)$; summing $|w|+1$ over $\mathcal R$
+gives $\mathsf B_{\mathrm{rule}}$, and passing to distinct words can only lower it.
+Expanding a DAG takes time linear in the length of the word it represents.
+
+\emph{Inherited bounds.}  Each cited bound is proved by exhibiting \emph{some}
+$\omega(X)\in L_X$ and the derivational context $E_B$
+(Lemma~\ref{lem:thickness-equivalence}(iv)); the computed minima are no longer and
+the number of words is unchanged.  The characteristic property is
+Lemma~\ref{lem:witness-length-template}(iv).
+\end{proof}
+
+The budget $\mathsf B_{\mathrm{rule}}$ is a presentation-sensitive \emph{upper
+certificate}, often far below the worst-case bounds; it is not the size of a
+minimum characteristic sample.  For $\{\mathtt c^{2^n}\}$ of
+Section~\ref{subsec:rank-one} the words are exponentially longer than $\|G\|$, but
+their DAGs have polynomial size.
+
+\subsection{Distributional Representatives and Abelian-Filtered Targets}
+\label{subsec:short-distributional-representatives}
+
+Proposition~\ref{prop:completeness} does not require a representative to be
+derivable from its nonterminal.  One may therefore use the shortest member of the
+whole typed distribution class.  Let $G$ be a reduced good fan-out-$\le f$,
+rank-$\le r$ presentation of $L\cap\Sigma^+$ with $L\in\Cmcf{f}{s}$.  For a typed
+nonterminal $X$ let $\operatorname{Cl}_{L,s}(X)$ be the $\equiv_{L,s}$-class containing $L_X$
+(Lemma~\ref{lem:typed-homogeneity}) and put
+\[
+ \kappa_G(X):=\min_{\tuple v\in\operatorname{Cl}_{L,s}(X)}\|\tuple v\|_1\le\ell_{\mathrm{in}}(X),\qquad
+ \kappa_G:=\max_X\kappa_G(X).
+\]
+
+\begin{proposition}[Relaxed distributional witnesses]
+\label{prop:mcfg-relaxed-witnesses}
+For each typed nonterminal $X=B_{\mathbf t}$ choose $\iota(X)\in\operatorname{Cl}_{L,s}(X)$ with
+$\|\iota(X)\|_1=\kappa_G(X)$ and put $\chi(X):=E_B$
+(Lemma~\ref{lem:thickness-equivalence}(iv)).  The words $\chi(X)[\iota(X)]$ and
+$\chi(X)[\rho(\iota(Y_1),\ldots,\iota(Y_q))]$, over all typed nonterminals and
+typed rules $X\to\rho(Y_1,\ldots,Y_q)$, form a set $K^\dagger\subseteq L$ such that
+$K^\dagger\cup(\{\eps\}\cap L)$ is characteristic for $\mathcal B^{\le r}_{f,s}$ and
+$\mathcal B_{f,s}$, and
+\[
+ |K^\dagger|\le C_s(G),\qquad
+ \|K^\dagger\|_+\le C_s(G)\bigl(1+2\bar\theta_G+r\kappa_G\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $\tuple u_X\in L_X$ for every $X$.  Since $\iota(X)\equiv_{L,s}\tuple u_X$ and
+$E_B$ accepts $\tuple u_X$, it accepts $\iota(X)$; so
+$\chi(X)[\iota(X)]\in L$.  By Lemma~\ref{lem:witnessed-composition},
+$\rho(\iota(Y_1),\ldots,\iota(Y_q))\equiv_{L,s}\rho(\tuple u_{Y_1},\ldots,
+\tuple u_{Y_q})\in L_X$, so the rule words also lie in $L$.  Each $\iota(X)$ has
+$\widehat s$-vector $\mathbf t$, nonempty components, and $\chi(S_{\mathbf t})=
+E_S=\blank_1$, so Proposition~\ref{prop:completeness} applies with this $\iota$
+and gives $L\cap\Sigma^+\subseteq L(\mathcal B(K))$ for $K\supseteq K^\dagger$;
+Proposition~\ref{prop:reconstruction-soundness} gives the converse for
+$K\subseteq L$, and the Start rule handles $\eps$.  The length bound is
+Lemma~\ref{lem:witness-length-template}(ii) with $b=\kappa_G$, whose proof uses only
+$\|\iota(X)\|_1\le b$.
+\end{proof}
+
+Unlike Proposition~\ref{prop:effective-char-data}, the words $\chi(X)[\iota(X)]$
+cannot in general be omitted.  For fixed $f,r,s$, a family $G_n$ with
+$\|G_n\|\bar\theta_{G_n}=n^{O(1)}$ that requires superpolynomial characteristic
+data must therefore have $\kappa_{G_n}=n^{\omega(1)}$; this is a necessary
+condition, not a proof that such a family exists.
+
+\begin{theorem}[Polynomial data for abelian-filtered targets]
+\label{thm:mcfg-abelian-filter-data}
+Fix a nonempty alphabet $\Sigma$, a typing $s$ and $f,r\ge1$.  There is a constant
+$C_{\mathrm{ab}}$ depending only on $\Sigma,s,f,r$ such that the following holds for every
+abelian group $\mathsf A$, morphism $\varphi:\Sigma^*\to\mathsf A$, subgroup
+$\mathsf H\le\mathsf A$, $\gamma\in\mathsf A$ and $\mathsf{Acc}\subseteq\mathsf S^\sharp$.
+If $L:=\widehat s^{-1}(\mathsf{Acc})\cap\varphi^{-1}(\gamma+\mathsf H)$ and $L\cap\Sigma^+$
+has a reduced good fan-out-$\le f$, rank-$\le r$ presentation $G$, then
+$L\in\Cmcf{f}{s}$ and $\mathcal B^{\le r}_{f,s}$ and $\mathcal B_{f,s}$ have a common
+characteristic sample $K$ with
+\[
+ \|K\|_+\le C_{\mathrm{ab}}\,\bigl(\|G\|\bar\theta_G\bigr)^{3|\Sigma|+2}.
+\]
+\end{theorem}
+
+\begin{proof}
+$L\in\Cmcf{f}{s}$ by Proposition~\ref{prop:abelian-coset-filter}.  By
+Proposition~\ref{prop:mcfg-relaxed-witnesses} and
+$C_s(G)\le|\mathsf S^\sharp|^{fr}\|G\|$ it suffices to show
+$\kappa_G\le C'(\Theta+1)^{3|\Sigma|+1}$ with $\Theta:=(r+1)t_G+\|G\|\le(r+2)\|G\|\bar\theta_G$
+and $C'$ depending only on $\Sigma,s,f$.
+
+\emph{A lattice of admissible Parikh shifts.}  Let
+$\psi:\Sigma^*\to\mathbb N^\Sigma$ be the Parikh map,
+$\psi(w)=(|w|_a)_{a\in\Sigma}$, and put
+$\Psi(\tuple u):=\sum_i\psi(u_i)$.  Let
+$\overline\varphi:\mathbb Z^\Sigma\to\mathsf A$ be the homomorphism
+satisfying $\varphi=\overline\varphi\circ\psi$, and set
+$\Upsilon:=\overline\varphi^{-1}(\mathsf H)$.  For each $C\in V$ fix
+$\omega_C\in L_C(G)$ with $\|\omega_C\|_1\le t_G$.  For $\tuple u\in L_C(G)$ the
+context $E_C$ accepts $\tuple u$ and $\omega_C$, and $L\subseteq\varphi^{-1}(\gamma+\mathsf H)$,
+so
+\[
+ \Psi(\tuple u)-\Psi(\omega_C)\in\Upsilon.\tag{$*$}
+\]
+For a rule $R:C\to\rho(B_1,\ldots,B_q)$ let $\psi_R\in\mathbb N^\Sigma$
+be its terminal-letter Parikh vector and put
+$\delta_R:=\Psi(\omega_C)-\psi_R-\sum_j\Psi(\omega_{B_j})$.  Applying $(*)$ to
+$\rho(\omega_{B_1},\ldots,\omega_{B_q})$ gives $\delta_R\in\Upsilon$, and
+$\|\delta_R\|_1\le \Theta$.  Let $\Gamma_\Theta:=\{z\in\Upsilon:\|z\|_1\le \Theta\}$ and
+$\Upsilon_\Theta:=\langle\Gamma_\Theta\rangle$.  For $\tuple u=\rho(\tuple u_1,\ldots,\tuple u_q)$
+with $\tuple u_j\in L_{B_j}(G)$,
+$\Psi(\tuple u)-\Psi(\omega_C)=\sum_j(\Psi(\tuple u_j)-\Psi(\omega_{B_j}))-\delta_R$,
+so induction on derivations gives $\Psi(\tuple u)-\Psi(\omega_C)\in\Upsilon_\Theta$ for all
+$\tuple u\in L_C(G)$.
+
+\emph{A short representative.}  Let $X=C_{\mathbf t}$ have arity $d\le f$ and
+$\tuple u\in L_X$.  For each $i$ fix, once and for all, a semilinear representation
+(a finite union of linear sets) of the Parikh image of the regular language $\widehat s^{-1}(t_i)\cap\Sigma^+$,
+which is semilinear by Parikh's theorem \cite{Parikh1966}
+(here $t_i\in\mathsf S$: since $G$ is $\lambda$-free, every component of a tuple in
+$L_X$ is nonempty, so its type is never $\mathbf 1_\sharp$), and
+choose a linear set $\mathbf o_i+\sum_{p\in P_i}\mathbb Np$ of it containing $\psi(u_i)$;
+the number and size of these generators depend only on $\Sigma$ and $s$.  Write
+$\Psi(\tuple u)-\Psi(\omega_C)=\sum_{z\in\Gamma_\Theta}m_zz$ with $m_z\in\mathbb Z$.
+Then the system
+\[
+ \sum_{i=1}^d\sum_{p\in P_i}\eta_{i,p}\,p-\sum_{z\in\Gamma_\Theta}(\mu^+_z-\mu^-_z)\,z
+ =\Psi(\omega_C)-\sum_{i=1}^d\mathbf o_i
+\]
+has a solution in nonnegative integers (the coefficients of $\psi(u_i)$ and
+$\mu^\pm_z:=\max\{\pm m_z,0\}$).  It has $\bar m=|\Sigma|$ equations,
+$\bar n\le D+2(2\Theta+1)^{|\Sigma|}$ unknowns and entries of absolute value at most
+$a\le D(\Theta+1)$, with $D$ depending only on $\Sigma,s,f$.  By Papadimitriou's
+bound~\cite{Papadimitriou1981} it has a nonnegative integer solution with all
+entries at most $\bar n(\bar m a)^{2\bar m+1}=O\bigl((\Theta+1)^{3|\Sigma|+1}\bigr)$.  For each $i$ the
+vector $\mathbf o_i+\sum_p\eta_{i,p}p$ is the Parikh vector of some nonempty
+$v_i\in\widehat s^{-1}(t_i)$; put $\tuple v:=(v_1,\ldots,v_d)$.  Then
+$\|\tuple v\|_1=O((\Theta+1)^{3|\Sigma|+1})$, $\widehat s^{(d)}(\tuple v)=\mathbf t$, and
+$\Psi(\tuple v)-\Psi(\tuple u)\in\Upsilon_\Theta\subseteq\Upsilon$.  For every admissible
+$E$, $E[\tuple v]$ and $E[\tuple u]$ have the same $\widehat s$-value, and
+$\varphi(E[\tuple v])-\varphi(E[\tuple u])=\overline\varphi(\Psi(\tuple v)-\Psi(\tuple u))
+\in\mathsf H$; so $E[\tuple v]\in L$ iff $E[\tuple u]\in L$, i.e.\
+$\tuple v\equiv_{L,s}\tuple u$ and $\kappa_G(X)\le\|\tuple v\|_1$.
+\end{proof}
+
+The theorem holds even when $\mathsf S\notin\mathbf{LG}$: its hypothesis concerns the
+target, not the typing.  No polynomial-time construction is claimed for
+ineffectively presented groups $\mathsf A$.
+
+\subsection{An Explicit Data Budget for the Feature Family}
+\label{app:feature-budget}
+
+We use the notation of Section~\ref{subsec:baseline}.
+
+\begin{proposition}[Explicit data budget for a common feature typing]
+\label{prop:feature-family-witness-budget}
+Let $f\ge2$ and $R\ne\emptyset$.  The operator $\mathcal B^{\le2}_{f,s}$ has a
+characteristic sample $K_R\subseteq L_R$ with $\|K_R\|_+=36|R|+22$ (for
+$R=\emptyset$ the empty sample is characteristic).  Conversely, if a set-driven
+operator $\mathcal D$ has characteristic samples for \emph{all} $L_{R'}$,
+$R'\subseteq\{0,1\}^2$, then every characteristic sample $K$ for $L_R$ under
+$\mathcal D$ contains a word with markers $\mathtt p_i,\mathtt q_j$ for each
+$(i,j)\in R$; hence $\|K\|_+\ge7|R|$.
+\end{proposition}
+
+\begin{proof}
+Write $w^{m,n}_{ij}:=\mathtt a^m\mathtt p_i\mathtt b^n\mathtt c^m\mathtt q_j\mathtt d^n$,
+of length $2m+2n+2$, fix $(i_0,j_0)\in R$, and let
+\[
+ K_R:=\{w^{m,n}_{ij}:(i,j)\in R,\ m,n\in\{1,2\}\}\cup
+ \{w^{3,1}_{i_0j_0},w^{1,3}_{i_0j_0}\}.
+\]
+The encoded costs are $7+9+9+11=36$ per pair and $11+11$ for the two extra words.
+
+\emph{Typed refinement.}  For the grammar $G$ of
+Proposition~\ref{prop:feature-cross-typed} with start rules indexed by $R$, the
+$s$-type of $(\mathtt a^m,\mathtt c^m)$ depends only on whether $m=1$ (short words
+are recorded exactly), so $A$ has two typed copies $A_1,A_+$, and likewise $B_1,B_+$;
+the type of $w^{m,n}_{ij}$ is determined by $(i,j)$, giving one typed start
+nonterminal $S_{ij}$ per $(i,j)\in R$.  With $\rho_A:=(\mathtt a\xi_1^1,\mathtt c\xi_1^2)$, the typed rules are
+$A_1\to(\mathtt a,\mathtt c)$, $A_+\to\rho_A(A_1)$, $A_+\to\rho_A(A_+)$,
+their $B$-analogues, and four start rules $S_{ij}\to\rho_{ij}(A_\bullet,B_\circ)$ per
+$(i,j)\in R$.
+
+\emph{Witnesses.}  Take $\iota(A_1)=(\mathtt a,\mathtt c)$,
+$\iota(A_+)=(\mathtt a^2,\mathtt c^2)$, $\iota(B_1)=(\mathtt b,\mathtt d)$,
+$\iota(B_+)=(\mathtt b^2,\mathtt d^2)$, $\iota(S_{ij})=w^{1,1}_{ij}$, the contexts
+$\chi(A_\bullet)=\blank_1\mathtt p_{i_0}\mathtt b\blank_2\mathtt q_{j_0}\mathtt d$,
+$\chi(B_\circ)=\mathtt a\mathtt p_{i_0}\blank_1\mathtt c\mathtt q_{j_0}\blank_2$ and
+$\chi(S_{ij})=\blank_1$.  The required words of
+Proposition~\ref{prop:completeness} are: $w^{1,1}_{i_0j_0}$ for $A_1$, $B_1$ and their
+constant rules; $w^{2,1}_{i_0j_0}$ and $w^{1,2}_{i_0j_0}$ for $A_+$, $B_+$ and the rules
+from $A_1$, $B_1$; $w^{3,1}_{i_0j_0}$ and $w^{1,3}_{i_0j_0}$ for the rules from $A_+$,
+$B_+$; and $w^{m,n}_{ij}$, $m,n\in\{1,2\}$, for $S_{ij}$ and its four rules.  All lie in
+$K_R$.  Since $K_R\subseteq L_R\in\Cmcf{f}{s}$, Propositions~\ref{prop:completeness}
+and~\ref{prop:reconstruction-soundness} make $K_R$ characteristic for
+$\mathcal B^{\le2}_{f,s}$.
+
+\emph{Lower bound.}  If $K$ contains no word with markers $\mathtt p_i,\mathtt q_j$,
+then $K\subseteq L_{R'}$ for $R'=R\setminus\{(i,j)\}$.  For a characteristic sample $F$
+of $L_{R'}$, the set $K\cup F$ lies between $K$ and $L_R$ and between $F$ and
+$L_{R'}$, so $L(\mathcal D(K\cup F))$ would equal both $L_R\ne L_{R'}$.  Distinct pairs
+need distinct words, each of length at least $6$.
+\end{proof}
+
+The example models a finite case-licensing or feature-compatibility constraint; no
+claim about a specific natural language is made.  The relation $R$ varies with the
+target, while the morphism $g$ and the operator do not.
+
+\subsection{Group-Valued Agreement}
+\label{app:group-agreement}
+
+Let ${\mathbb G}$ be a finite group, $\Delta_1$ a finite alphabet whose letter
+images generate ${\mathbb G}$ under a morphism $g_1:\Delta_1^*\to {\mathbb G}$, and
+$\Delta_2=\{\bar\delta:\delta\in\Delta_1\}$ a disjoint copy.  Put
+$\Sigma_{\mathrm{agr}}:=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d\}
+\uplus\Delta_1\uplus\Delta_2$, and define
+$g:\Sigma_{\mathrm{agr}}^*\to {\mathbb G}\times {\mathbb G}$ by
+$g(\delta)=(g_1(\delta),1)$, $g(\bar\delta)=(1,g_1(\delta))$,
+and $g(\mathtt a)=g(\mathtt b)=g(\mathtt c)=g(\mathtt d)=(1,1)$.
+For $R\subseteq {\mathbb G}\times {\mathbb G}$, let
+\[
+ L_R^{\mathbb G}:=\{\mathtt a^m u\mathtt b^n\mathtt c^m v\mathtt d^n:
+     m,n\ge1,\ u\in\Delta_1^+,\ v\in\Delta_2^+,\ g(uv)\in R\},
+\]
+let $L_{\mathrm{agr}}^{\mathbb G}:=L_{\{(x,x):x\in {\mathbb G}\}}^{\mathbb G}$, and fix the
+corestricted positive typing
+$s_{\mathrm{agr}}:=(s_{1,1},g)|_{\Sigma_{\mathrm{agr}}^+}$.
+Here the finite group factor of the typing is ${\mathbb G}\times {\mathbb G}$, not ${\mathbb G}$.
+
+\begin{proposition}[Agreement of ordered group-valued features]
+\label{prop:group-agreement}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item For every $R\subseteq {\mathbb G}\times {\mathbb G}$,
+$L_R^{\mathbb G}\in\mathsf{MCFL}(2,2)\cap\Cmcf{f}{s_{\mathrm{agr}}}$
+for all $f\ge2$.  If $R\ne\emptyset$, then $L_R^{\mathbb G}$ is not context-free.
+\item If the commutator subgroup $[{\mathbb G},{\mathbb G}]$ is not contained in the centre
+$Z({\mathbb G})$, then $L_{\mathrm{agr}}^{\mathbb G}\notin\Cmcf{f}{s'}$ for every $f\ge2$
+and every typing $s'\preceq(s_{k,\ell},g')|_{\Sigma_{\mathrm{agr}}^+}$,
+where $k,\ell\ge0$ and $g'$ maps into a finite abelian group.
+In particular $L_{\mathrm{agr}}^{\mathbb G}\notin\YSub{f}$.
+\end{enumerate}
+For ${\mathbb G}=S_3$ the hypotheses of \textup{(ii)} hold, while
+Theorem~\ref{thm:window-group-polydata} applies uniformly to
+$\Cmcf{f}{s_{\mathrm{agr}}}$ with a window--$(S_3\times S_3)$ typing.
+\end{proposition}
+
+\begin{proof}
+(i) For each $x\in {\mathbb G}$ take a good right-linear grammar $U_x$ for
+$g_1^{-1}(x)\cap\Delta_1^+$ and let $\bar U_x$ generate its copied
+language over $\Delta_2$.  These exist because every group element has
+a nonempty positive-word representative.  With the fan-out-two rules
+\[
+\begin{aligned}
+ P&\to(\xi_1^1,\xi_2^1)(U_x,\bar U_y) &&((x,y)\in R),\\
+ C&\to(\mathtt a,\mathtt c)
+       \mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(C),\\
+ D&\to(\mathtt b,\mathtt d)
+       \mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(D),\\
+ Y&\to(\xi_1^1\xi_2^1,\xi_1^2\xi_2^2)(C,P),\\
+ S&\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(Y,D),
+\end{aligned}
+\]
+we generate $L_R^{\mathbb G}$ with fan-out and rank at most two; the adjacent
+variables in each component of $Y$ and $S$ belong to different children.
+For $R=\emptyset$ the language is empty.  Otherwise choose $(x,y)\in R$
+and positive $p,q\in\Delta_1^+$ with $g_1(p)=x$, $g_1(q)=y$.
+Intersection with
+$\mathtt a^+p\mathtt b^+\mathtt c^+\bar q\mathtt d^+$,
+followed by erasing the feature blocks, yields
+$\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n:m,n\ge1\}$;
+thus $L_R^{\mathbb G}$ is not context-free.
+
+For typed substitutability write
+$L_R^{\mathbb G}=Q\cap g^{-1}(R)\cap\varphi^{-1}(0)$, where
+$Q=\mathtt a^+\Delta_1^+\mathtt b^+\mathtt c^+
+\Delta_2^+\mathtt d^+$ is strictly $2$-local and
+$\varphi:\Sigma_{\mathrm{agr}}^*\to\mathbb Z^2$ sends
+$\mathtt a,\mathtt c,\mathtt b,\mathtt d$ to
+$(1,0),(-1,0),(0,1),(0,-1)$, respectively, and all feature letters
+to $0$.  Lemma~\ref{lem:sl2-boundary-control} handles $Q$;
+$g^{-1}(R)$ is a union of $s_{\mathrm{agr}}$-classes; and
+Proposition~\ref{prop:abelian-coset-filter} handles the abelian
+filter and intersection.  Hence $L_R^{\mathbb G}\in\Cmcf{f}{s_{\mathrm{agr}}}$.
+
+(ii) Since $[{\mathbb G},{\mathbb G}]\not\subseteq Z({\mathbb G})$, some commutator
+$z:=yx y^{-1}x^{-1}$ is noncentral.  Choose $h\in {\mathbb G}$ with $hz\ne zh$,
+and nonempty $p,q,w\in\Delta_1^+$ whose $g_1$-values are $x,y,h$.
+Let $\hat k\ge\max\{k+\ell,1\}$, choose
+$\delta\in\Delta_1$ and put $\mathit{pad}:=\delta^{\hat k|{\mathbb G}|}$.
+Set
+\[
+ u=\mathit{pad} p q q^{|{\mathbb G}|-1}p^{|{\mathbb G}|-1}\mathit{pad},\qquad
+ u'=\mathit{pad} q p q^{|{\mathbb G}|-1}p^{|{\mathbb G}|-1}\mathit{pad}.
+\]
+Then $g_1(u)=1$, $g_1(u')=z$, while $u,u'$ have identical Parikh
+vectors and agree on their length-$k$ prefixes and length-$\ell$
+suffixes.  Thus every window--abelian typing as in the statement
+gives $s'(u)=s'(u')$, and likewise $s'(\bar u)=s'(\bar u')$.
+The tuples $\mathbf u:=(u,\bar u)$ and $\mathbf u':=(u',\bar u')$ therefore have equal
+$s'$-type.  Both are admitted by
+$E:=\mathtt a\blank_1\mathtt{bc}\blank_2\mathtt d$,
+since their two group values are respectively $(1,1)$ and $(z,z)$.
+Choose also
+$F:=\mathtt a w\blank_1\mathtt{bc}\blank_2\bar w\mathtt d$.
+Then $F[\mathbf u]\in L_{\mathrm{agr}}^{\mathbb G}$ has values $(h,h)$, but
+$F[\mathbf u']\notin L_{\mathrm{agr}}^{\mathbb G}$ has values $(hz,zh)$.
+Thus the common context $E$ does not imply equal distributions,
+contradicting $(f,s')$-substitutability at arity two.  Trivial typing
+is a special case.  For ${\mathbb G}=S_3$, $[S_3,S_3]=A_3$ is not central.
+\end{proof}
+
+\begin{remark}
+The separating contexts above use a noncentral commutator.
+No corresponding claim is made here for groups whose commutator
+subgroup is central, such as $Q_8$.
+\end{remark}
+
+\subsection{An Intrinsically Rank-Two Boundary-Typed Target}
+\label{subsec:intrinsic-ranktwo}
+
+Let $\Sigma_{\mathrm{intr}}:=\{\mathtt a,\mathtt b,\mathtt l,\mathtt r,\mathtt p,\mathtt q,
+\mathtt c,\mathtt d,\mathtt\#,\mathtt\$,\mathtt u,\mathtt v,\mathtt w\}$,
+$P_{\mathrm{intr}}:=\{\mathtt{lpc},\mathtt{lpd},\mathtt{lqc},\mathtt{rpc},\mathtt{rpd}\}$,
+\[
+ \mathrm{MIX}_2^+:=\{x\in\{\mathtt a,\mathtt b\}^+:|x|_{\mathtt a}=|x|_{\mathtt b}\},\quad
+ T_3^+:=\{\mathtt u^n\mathtt v^n\mathtt w^n:n\ge1\},\quad
+ L_{\mathrm{intr}}:=P_{\mathrm{intr}}\,\mathtt\#\,\mathrm{MIX}_2^+\,\mathtt\$\,T_3^+ .
+\]
+The factor $\mathrm{MIX}_2^+$ forces rule rank two, $T_3^+$ forces fan-out two, and the
+wrapper $P_{\mathrm{intr}}$ separates the target from $\YSub{f}$.
+
+An EDT0L system consists of a finite working alphabet containing the
+terminal alphabet, an axiom, and a finite set of \emph{tables}, each a
+substitution assigning one word to every symbol; it generates the terminal
+words obtained from the axiom by some finite sequence of tables, every
+sequence being permitted \cite[Definition~37]{Gallot2021}.  It has
+\emph{index at most $k$} if every word obtained from the axiom by a sequence
+of tables contains at most $k$ nonterminal occurrences.
+
+\begin{lemma}[Rank-one MCFLs are finite-index EDT0L]
+\label{lem:rank-one-edt0l}
+Every language in $\mathsf{MCFL}(f',1)$ has an EDT0L system of index at most $f'$.
+\end{lemma}
+
+\begin{proof}
+Let $H$ be reduced, of fan-out $\le f'$ and rank $\le1$.  Use a symbol $[B,j]$ for each
+nonterminal $B$ and component $j$, axiom $[S,1]$, and for each rule $A\to\rho(B)$ (or
+$A\to\rho$) a table mapping $[A,j]$ to the $j$th component of $\rho$ with $\xi_1^k$
+replaced by $[B,k]$, and fixing every other symbol.  Since each rule has at most one
+child and is linear, every reachable sentential form contains symbols of a single
+nonterminal, each at most once, so at most $f'$ nonterminal occurrences.  Every
+table sequence is permitted; a table whose left-hand side does not occur acts as the
+identity.
+
+\emph{From derivations to tables.}  A derivation of $H$ is a chain of rules
+$R_1,\ldots,R_m$, the child of $R_j$ being the left-hand side of $R_{j+1}$ and $R_m$
+having no child.  By induction on $j$, applying the tables of $R_1,\ldots,R_j$ to
+$[S,1]$ yields the yield of the derivation in which the child $B$ of $R_j$ is left
+unexpanded, with its $k$th component written $[B,k]$ (components not used are
+absent).  For $j=m$ this is the terminal word of the derivation.
+
+\emph{From tables to derivations.}  Let a table sequence produce a terminal word $w$.
+Discard the steps whose left-hand side does not occur in the current form; they act
+as the identity.  In the remaining steps $R_1,\ldots,R_j$, each left-hand side is the
+nonterminal of the symbols present, that is, the child of the preceding rule (or $S$),
+so the steps form a chain from $S$.  If $R_j$ has no child, the chain is a
+derivation with yield $w$.  Otherwise no symbol $[B,k]$ of the child $B$ of $R_j$
+remains, so all components of $B$ are deleted; as $H$ is reduced, $B$ derives some
+tuple, and extending the chain by any derivation of $B$ gives a derivation of $H$
+whose yield is still $w$.
+\end{proof}
+
+Only membership in EDT0L is used below.  The index bound is recorded because it
+matches Gallot's identification of non-branching MCFLs with finite-index EDT0L
+languages \cite[Theorem~29]{Gallot2021}.
+
+\begin{theorem}[A non-context-free intrinsic-rank-two typed witness]
+\label{thm:intrinsic-ranktwo-witness}
+$L_{\mathrm{intr}}\in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}$, and
+$L_{\mathrm{intr}}\in\Cmcf{f}{s_{1,1}}\setminus\YSub{f}$ for every $f\ge2$, but
+$L_{\mathrm{intr}}\notin\mathsf{MCFL}(f',1)$ for every finite $f'$.  Thus its minimum
+fan-out is two and its minimum rule rank over all finite-fan-out presentations is
+two: Theorem~\ref{thm:boundary-polydata} applies to it, while
+Theorem~\ref{thm:rankone-polydata} does not at any finite fan-out.
+\end{theorem}
+
+\begin{proof}
+\emph{Grammar.}  The fan-out-one rules
+$B\to\mathtt aB\mathtt bB\mid\mathtt bB\mathtt aB\mid\mathtt aB\mathtt b\mid
+\mathtt{ab}B\mid\mathtt{ab}\mid\mathtt bB\mathtt a\mid\mathtt{ba}B\mid\mathtt{ba}$
+give $L_B=\mathrm{MIX}_2^+$: every word they generate is balanced, and conversely a
+balanced word decomposes at the first return of $|\cdot|_{\mathtt a}-|\cdot|_{\mathtt b}$
+to zero as $\mathtt ay\mathtt bz$ or $\mathtt by\mathtt az$ with $y,z$ balanced and
+possibly empty.  With $A\to(\mathtt u,\mathtt w)\mid(\mathtt u\xi_1^1\mathtt v,
+\mathtt w\xi_1^2)(A)$ we get $L_A=\{(\mathtt u^n\mathtt v^{n-1},\mathtt w^n)\}$, and
+the rules $S\to(\alpha\mathtt\#\xi_1^1\mathtt\$\xi_2^1\mathtt v\xi_2^2)(B,A)$,
+$\alpha\in P_{\mathrm{intr}}$, generate $L_{\mathrm{intr}}$.  The grammar is reduced and
+good (the components of $A$ are separated by $\mathtt v$), of fan-out and rank two.
+
+\emph{Not context-free.}  Intersecting with $\mathtt{lpc\#ab\$}\mathtt u^+\mathtt v^+
+\mathtt w^+$ and erasing the prefix gives $T_3^+$.
+
+\emph{Typed membership.}  $L_{\mathrm{intr}}=Q_{\mathrm{intr}}\cap\Phi^{-1}(0)$, where
+$Q_{\mathrm{intr}}:=P_{\mathrm{intr}}\mathtt\#\{\mathtt a,\mathtt b\}^+\mathtt\$\,
+\mathtt u^+\mathtt v^+\mathtt w^+$ is strictly 2-local, with pairs
+$\vdash\mathtt l$, $\vdash\mathtt r$, $\mathtt{lp},\mathtt{lq},\mathtt{rp},\mathtt{pc},
+\mathtt{pd},\mathtt{qc},\mathtt{c\#},\mathtt{d\#}$, $\mathtt{\#}x$, $xy$, $x\mathtt\$$
+($x,y\in\{\mathtt a,\mathtt b\}$), $\mathtt{\$u},\mathtt{uu},\mathtt{uv},\mathtt{vv},
+\mathtt{vw},\mathtt{ww},\mathtt w\dashv$ (the first six letter pairs admit exactly the
+words of $P_{\mathrm{intr}}$), and $\Phi:\Sigma_{\mathrm{intr}}^*\to\mathbb Z^3$ maps
+$\mathtt a,\mathtt b,\mathtt u,\mathtt v,\mathtt w$ to $(1,0,0),(-1,0,0),(0,1,0),
+(0,-1,1),(0,0,-1)$ and other letters to $0$.  Lemma~\ref{lem:sl2-boundary-control} and
+Proposition~\ref{prop:abelian-coset-filter} give
+$L_{\mathrm{intr}}\in\Cmcf{f}{s_{1,1}}$ for $f\ge2$.
+
+\emph{Outside $\YSub{f}$.}  For $x=\mathtt p$, $y=\mathtt q$,
+$E=\mathtt l\blank_1\mathtt{c\#ab\$uvw}$, $F=\mathtt r\blank_1\mathtt{d\#ab\$uvw}$:
+$E[x],E[y],F[x]\in L_{\mathrm{intr}}$ but $F[y]\notin L_{\mathrm{intr}}$; the boundary
+typing separates $x$ and $y$.
+
+\emph{Rank one is impossible.}  $\mathsf{MCFL}(f',1)$ is closed under letter-to-word
+homomorphisms (apply them to the templates).  If $L_{\mathrm{intr}}\in\mathsf{MCFL}(f',1)$,
+erasing all letters except $\mathtt a,\mathtt b$ would put $\mathrm{MIX}_2^+$ in
+$\mathsf{MCFL}(f',1)$, hence make it EDT0L by Lemma~\ref{lem:rank-one-edt0l}, and then
+also $\mathrm{MIX}_2=\mathrm{MIX}_2^+\cup\{\eps\}$ (EDT0L is closed under union).  But
+$\mathrm{MIX}_2$ is the word problem of $\mathbb Z$, which is not EDT0L
+\cite{BishopEtAl2026EDT0L}; see also \cite[Corollary~32]{Gallot2021}.
+Lemma~\ref{lem:rank-one-edt0l} agrees with Gallot's characterization of
+non-branching MCFGs \cite[Definition~38 and Theorems~28--29]{Gallot2021}, where
+definitions and theorems are numbered separately.
+\end{proof}
+
+The two lower bounds come from separate factors, and the non-branching lower bound is
+prior work.  What is specific here is that a strictly local wrapper and the $(1,1)$
+boundary typing place the target inside the typed class while the substitution
+implication keeps it outside Yoshinaka's baseline.
+
+
+% ---------------------------------------------------------------------
+% [P2] Section 4.6 Unrestricted Standard Input MCFGs: def:component-pattern-thickness, prop:pattern-thickness-transfer, cor:unrestricted-standard-mcfg-data
+% original lines 1952-2023
+% ---------------------------------------------------------------------
+\subsection{Unrestricted Standard Input MCFGs}
+\label{subsec:unrestricted-source}
+
+The input grammar need not be good: deleting, permuting and merging rules and
+empty components are all allowed.  What then matters is the cost of realizing
+each nonempty-component pattern.
+
+\begin{definition}[Component-pattern thickness]
+\label{def:component-pattern-thickness}
+For a productive nonterminal $A$ of a standard MCFG $H$ let
+$\operatorname{supp}(\tuple u):=\{i:u_i\ne\eps\}$ and
+$\mathsf{Pat}_H(A):=\{\operatorname{supp}(\tuple u):\tuple u\in L_A(H)\}$.  Put
+\[
+ t_{\mathrm{pat}}(H):=
+ \max_{\substack{A\text{ productive}\\I\in\mathsf{Pat}_H(A)}}
+ \min_{\substack{\tuple u\in L_A(H)\\ \operatorname{supp}(\tuple u)=I}}
+ \|\tuple u\|_1 ,
+ \qquad
+ \bar t_{\mathrm{pat}}(H):=\max\{1,t_{\mathrm{pat}}(H)\},
+\]
+with $\max\emptyset:=0$.  If $H$ is reduced and $\lambda$-free, only the full
+pattern occurs and $t_{\mathrm{pat}}(H)=t_H$.
+\end{definition}
+
+\begin{proposition}[Good normalization controlled by pattern thickness]
+\label{prop:pattern-thickness-transfer}
+Let $H$ be a standard fan-out-$\le f$, rank-$\le r$ MCFG with
+$L(H)\cap\Sigma^+\ne\emptyset$, and $H_{\mathrm{red}}$ its trimmed form.  There is a
+reduced good MCFG $G$ for $L(H)\cap\Sigma^+$ with the same fan-out and rank
+bounds and
+\[
+ \|G\|=O_{f,r}(\|H\|),\qquad
+ t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}}),\qquad
+ \bar\theta_G=O_{f,r}\bigl(\|H\|\,\bar t_{\mathrm{pat}}(H_{\mathrm{red}})\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Take $G$ from Proposition~\ref{prop:good-normalization}.  By
+Lemma~\ref{lem:normalization-stages}, each nonterminal language of $G$ is an
+image of a union of support-pattern fibres of $H_{\mathrm{red}}$ under component
+deletion, permutation and concatenation, which do not increase total length;
+so $t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}})$
+(Appendix~\ref{app:pattern-thickness}).
+Lemma~\ref{lem:thickness-equivalence}(iii) gives the bound on $\bar\theta_G$.
+\end{proof}
+
+\begin{corollary}[Total characteristic-data length from any standard MCFG]
+\label{cor:unrestricted-standard-mcfg-data}
+Let $H$ be any finite standard fan-out-$\le f$, rank-$\le r$ MCFG for
+$L\in\Cmcf{f}{s}$; put $n_H:=\max\{1,\|H\|\}$ and
+$t:=\bar t_{\mathrm{pat}}(H_{\mathrm{red}})$.  The operators
+$\mathcal B^{\le r}_{f,s}$ and $\mathcal B_{f,s}$ have a common characteristic
+sample $K\subseteq L$ with
+$|K|=O(n_H)$ and
+\[
+ \|K\|_+=
+ \begin{cases}
+ O(n_H^3t),&\text{if }\widehat s\preceq(\widehat s_{k,\ell},g)\text{ for some }k,\ell
+ \text{ and finite-group morphism }g\text{ (possibly trivial)},\\
+ O(n_H^4t),&\text{if }\mathsf S\in\mathbf{LG},
+ \end{cases}
+\]
+with constants depending on $f,r,s,\Sigma$ (and $k,\ell,g$), not on $H$.
+\end{corollary}
+
+\begin{proof}
+If $L\subseteq\{\eps\}$ take $K=L$.  Otherwise
+Proposition~\ref{prop:pattern-thickness-transfer} gives $G$ with $\|G\|=O(n_H)$ and
+$\bar\theta_G=O(n_Ht)$; apply Theorem~\ref{thm:window-group-polydata} or
+Theorem~\ref{thm:local-group-polydata}.
+\end{proof}
+
+% ---------------------------------------------------------------------
+% [P3] Appendix C (Pattern-Thickness Transfer for General MCFG Presentations), incl. prop:structural-good-thickness
+% original lines 3036-3079
+% ---------------------------------------------------------------------
+\section{Pattern-Thickness Transfer for General MCFG Presentations}
+\label{app:pattern-thickness}
+
+\begin{proof}[Proof of $t_G\le t_{\mathrm{pat}}(H_{\mathrm{red}})$ in
+Proposition~\ref{prop:pattern-thickness-transfer}]
+For a nonterminal $A$ of $H_{\mathrm{red}}$ and a realized pattern
+$I\in\mathsf{Pat}_{H_{\mathrm{red}}}(A)$
+let $F_{A,I}:=\{\tuple u\in L_A(H_{\mathrm{red}}):\operatorname{supp}(\tuple u)=I\}$; it
+contains a tuple of length at most $t_{\mathrm{pat}}(H_{\mathrm{red}})$, and
+$L_A(H_{\mathrm{red}})=\bigcup_IF_{A,I}$.  Call a map \emph{admissible} if it is a composition of
+projections $\pi_J$, permutations $\sigma$ and merges $\mu$; it does not increase total
+length, and the support of $\phi(\tuple u)$ depends only on that of $\tuple u$.  Follow
+the stages of Lemma~\ref{lem:normalization-stages} applied to $H_{\mathrm{red}}$.
+After (a) and (b), every nonterminal $X$ has $L_X=\phi_X(L_A)$ for an original $A$ and
+an admissible $\phi_X$.  Stage (c) creates $X^{I'}$, for realized $I'$, with
+$L_{X^{I'}}=\pi_{I'}\{\tuple u\in L_X:\operatorname{supp}(\tuple u)=I'\}$; as supports of
+images depend only on supports, this contains $\pi_{I'}\phi_X(F_{A,I})$ for some realized
+$I$.  Stage (d) replaces languages by their images under merges, and final trimming does
+not change surviving languages.  Hence every nonterminal $Y$ of $G$ satisfies
+$\psi(F_{A,I})\subseteq L_Y$ for some $A$, realized $I$ and admissible $\psi$, so
+$\min_{\tuple u\in L_Y}\|\tuple u\|_1\le t_{\mathrm{pat}}(H_{\mathrm{red}})$.
+\end{proof}
+
+\begin{proposition}[Thickness under good-form conversion of $\lambda$-free inputs]
+\label{prop:structural-good-thickness}
+Let $G_{\mathrm{in}}$ be a reduced $\lambda$-free fan-out-$\le f$, rank-$\le r_{\max}$
+MCFG, possibly with deleting rules, with $L(G_{\mathrm{in}})\cap\Sigma^+\ne\emptyset$.
+The good normalization yields a reduced good $G$ with the same bounds and
+\[
+  \|G\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|),\qquad
+  t_G\le t_{G_{\mathrm{in}}},\qquad
+  \bar\theta_G=O_{f,r_{\max}}\bigl(\|G_{\mathrm{in}}\|\max\{1,t_{G_{\mathrm{in}}}\}\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+For reduced $\lambda$-free $G_{\mathrm{in}}$ only full patterns occur, so
+$t_{\mathrm{pat}}(G_{\mathrm{in}})=t_{G_{\mathrm{in}}}$; apply
+Proposition~\ref{prop:pattern-thickness-transfer}.
+\end{proof}
+
+Thus deleting rules alone do not obstruct thickness transfer; genuinely empty
+components can (Proposition~\ref{prop:empty-component-blowup}).
+
+
+% ---------------------------------------------------------------------
+% [P4] Appendix F: prop:empty-component-blowup and the following comparison paragraph
+% original lines 3298-3319
+% ---------------------------------------------------------------------
+\begin{proposition}[Empty-component elimination can blow up thickness]
+\label{prop:empty-component-blowup}
+For every $n\ge1$ there is a reduced fan-out-two, rank-two MCFG $E_n$ of size $O(n)$
+with $t_{E_n}\le2$ and $\theta_{E_n}=O(n)$ whose stage-(c) conversion contains a
+nonterminal and a rule of thickness at least $2^n$; in particular
+$t_{\mathrm{pat}}(E_n)\ge2^n$.
+\end{proposition}
+
+\begin{proof}
+Let $E_n$ have rules
+$A_0\to(\mathtt a,\eps)$, $A_i\to(\eps,\mathtt c)\mid(\xi_1^1\xi_2^1,\xi_1^2\xi_2^2)
+(A_{i-1},A_{i-1})$ for $1\le i\le n$, and $S\to(\xi_1^1\mathtt d\,\xi_1^2)(A_n)$.  It is
+reduced, nondeleting, nonpermuting and nonmerging.  Completing every $A_i$ by
+$(\eps,\mathtt c)$ (or $A_0$ by $(\mathtt a,\eps)$) gives $t_{E_n}\le2$ and, along a
+path of length at most $n$, $\theta_{E_n}=O(n)$.  An $A_i$-tuple of support $\{1\}$
+cannot use $(\eps,\mathtt c)$, so it is $(\mathtt a^{2^i},\eps)$.  Hence $A_n^{\{1\}}$ and
+the rule $S\to(\xi_1^1\mathtt d)(A_n^{\{1\}})$ have thickness at least $2^n$.
+\end{proof}
+
+This differs from Proposition~\ref{prop:typed-thickness-exponential}: here a support
+pattern of the source forces an exponentially long tuple, there the typed refinement
+does.  Neither is a characteristic-data lower bound.
+
+% ---------------------------------------------------------------------
+% [P5] Section 4.5 tail: refinement-thickness boundary paragraph, cor:refinement-dichotomy, rem:refinement-vs-data
+% original lines 1755-1814
+% ---------------------------------------------------------------------
+\paragraph{The algebraic boundary for full refinement thickness.}
+For $f\ge1$, a
+pseudovariety $\mathbf V$ has \emph{polynomial refinement thickness at fan-out
+$f$} if for every nonempty finite $\Sigma$, every $r_{\max}\ge1$ and every
+surjective $s:\Sigma^+\twoheadrightarrow\mathsf S$ with $\mathsf S\in\mathbf V$ there
+is a polynomial $p=p_{f,r_{\max},s,\Sigma}$ such that every reduced good
+fan-out-$\le f$, rank-$\le r_{\max}$ grammar $G$ over $\Sigma$ satisfies
+$\theta_{\mathrm{typ}}(G,s)\le p(\|G\|,\bar\theta_G)$.
+
+\begin{corollary}[Refinement-thickness dichotomy]
+\label{cor:refinement-dichotomy}
+For every $f\ge1$ and every pseudovariety $\mathbf V$ of finite semigroups,
+$\mathbf V$ has polynomial refinement thickness at fan-out $f$ if and only if
+$\mathbf V\subseteq\mathbf{LG}$; for $\mathbf V\subseteq\mathbf{LG}$ one may take
+$\theta_{\mathrm{typ}}(G,s)=O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$.  The
+equivalence persists if $G$ ranges only over presentations of $L\cap\Sigma^+$
+with $L\in\Cmcf{f}{s}$, and also holds when $\theta_{\mathrm{typ}}$ is
+replaced throughout by $t_{\mathrm{typ}}$.
+For each single typing with $\mathsf S\notin\mathbf{LG}$
+the polynomial bound already fails at fan-out one and rule rank two.
+\end{corollary}
+
+\begin{proof}
+If $\mathsf S\in\mathbf{LG}$, the proof of Theorem~\ref{thm:local-group-polydata}
+gives $(\mathrm R_\beta^\lambda)$ with $\beta_\lambda=O(\|G\|^2\bar\theta_G)$, and
+Lemma~\ref{lem:witness-length-template}(i),(iii), which do not use
+substitutability, give
+$\theta_{\widetilde G_0}\le2\bar\theta_G+r_{\max}\beta_\lambda$.
+
+If $\mathsf S\notin\mathbf{LG}$, Theorem~\ref{thm:lg-characterization}(ii) gives a
+subsemigroup $\{e,z\}\cong U_1$: idempotents $e\ne z$ with $ez=ze=z$.  By
+surjectivity choose $u,v\in\Sigma^+$ with $s(u)=e$, $s(v)=z$.
+Proposition~\ref{prop:typed-thickness-exponential}(a) gives fan-out-one, rank-two
+grammars $G_n$ with $\|G_n\|=O(n)$, $\bar\theta_{G_n}=O(1)$ and
+$\theta_{\mathrm{typ}}(G_n,s)\ge2^n$; they present
+$\Sigma^+=\widehat s^{-1}(\mathsf S)\in\Cmcf{f}{s}$.  Finally, if
+$\mathbf V\not\subseteq\mathbf{LG}$, pick $\mathsf S\in\mathbf V\setminus\mathbf{LG}$;
+it is the positive image of the evaluation typing $\mathsf S^+\to\mathsf S$ over the
+alphabet $\Sigma:=\mathsf S$.  For $t_{\mathrm{typ}}$, the positive
+direction follows from Lemma~\ref{lem:witness-length-template}(i) and
+the same $(\mathrm R_{\beta}^{\lambda})$ estimate; the negative
+direction follows from
+Proposition~\ref{prop:typed-thickness-exponential}(a).
+\end{proof}
+
+\begin{remark}[Where the refinement obstruction lies]
+\label{rem:refinement-vs-data}
+The grammars of Proposition~\ref{prop:typed-thickness-exponential}
+all present $\Sigma^+$. Every element of the fixed positive image
+$\mathsf S$ is represented by a positive word of length at most
+$|\mathsf S|$: a shortest word cannot repeat a nonempty prefix product
+without allowing a shortening. Hence
+$\mu^\star(\Sigma^+,s)\le|\mathsf S|$, whereas
+$t_{\mathrm{typ}}(G_n,s)\ge2^n$. The exponential thickness is internal
+to the refinement, not at its start symbols. This explains why it
+alone is not a lower bound on characteristic-data length: the latter
+requires distinguishing target languages. Short distributional
+representatives can also coexist with thick refinements
+(Proposition~\ref{prop:mcfg-relaxed-witnesses}).
+\end{remark}
+
+% ---------------------------------------------------------------------
+% [P6] Section 4.4: thm:boundary-polydata (now the trivial-group case of thm:window-group-polydata)
+% original lines 1566-1586
+% ---------------------------------------------------------------------
+\begin{theorem}[Polynomial data for prefix--suffix-determined typings]
+\label{thm:boundary-polydata}
+Let $s\preceq s_{k,\ell}$, let $L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$.  Then
+$\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for both
+$\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ with
+$|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$ and
+\[
+ \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell}\,\|G\|^2\bar\theta_G,\qquad
+ K_{k,\ell}:=|\mathsf S^\sharp|^{fr_{\max}}
+   \bigl(3+r_{\max}(r_{\max}+1)f(k+\ell+1)|M_{k,\ell}|^f\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Corollary~\ref{lem:boundary-short-canonical} and
+Lemma~\ref{lem:witness-length-template}(i),(ii),(iv) with
+$\lambda=\widehat s_{k,\ell}$ and $b=b_{k,\ell}$ give the sample and
+$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}b_{k,\ell})$; insert
+$C_s(G)\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|$, $1+2\bar\theta_G\le3\|G\|\bar\theta_G$ and
+$|V|\le\|G\|$.
+\end{proof}
+
+% ---------------------------------------------------------------------
+% [P7] Section 4.4: thm:window-abelian-polydata (now Remark rem:window-abelian) and the following paragraph citing thm:intrinsic-ranktwo-witness
+% original lines 1610-1632
+% ---------------------------------------------------------------------
+\begin{theorem}[Polynomial data for window--abelian typing]
+\label{thm:window-abelian-polydata}
+Here $\exp({\mathbb G})$ denotes the exponent of the finite group ${\mathbb G}$, i.e.,
+the least common multiple of its element orders.  If in
+Theorem~\ref{thm:window-group-polydata} the group ${\mathbb G}$ is abelian, then
+$c_{{\mathbb G},f}=\mathsf d({\mathbb G}^f)=O(\exp({\mathbb G})\,f\log|{\mathbb G}|)$
+(Remark~\ref{rem:davenport-size}), so $K_{k,\ell,{\mathbb G}}$ is polynomial in $f$ apart from
+the factors $|\mathsf S^\sharp|^{fr_{\max}}$ and $(|M_{k,\ell}||{\mathbb G}|)^f$; for
+nonabelian ${\mathbb G}$, $c_{{\mathbb G},f}=M_{{\mathbb G},f}-1$ grows doubly exponentially in $f$.
+\end{theorem}
+
+\begin{proof}
+Lemma~\ref{lem:block-replacement}(a).
+\end{proof}
+
+At fan-out one, polynomial time and thick-data learning for fixed windows is due
+to Yoshinaka~\cite[Theorem~1]{Yoshinaka2008}; the bounds above are relative to a
+reduced good presentation and are not claimed to improve on that result after
+normalization.  What is new is that window and ordered group values are preserved
+\emph{simultaneously} across up to $f$ interleaved components.  This higher-rank
+regime is needed at the language level: Theorem~\ref{thm:intrinsic-ranktwo-witness}
+gives a non-context-free $(1,1)$-typed target of minimum fan-out two and minimum
+rule rank two, whereas rank one is covered by Theorem~\ref{thm:rankone-polydata}.
+
+% ---------------------------------------------------------------------
+% [P8] Section 4.5: cor:mcfg-li-group-polydata (now one sentence after lem:mcfg-li-group-window)
+% original lines 1677-1689
+% ---------------------------------------------------------------------
+\begin{corollary}[Algebraic sufficient condition for polynomial data]
+\label{cor:mcfg-li-group-polydata}
+If $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$, then for every $L\in\Cmcf{f}{s}$ and
+every $G$ as above with $L(G)=L\cap\Sigma^+$, $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$
+is a characteristic sample for both $\mathcal B^{\le r_{\max}}_{f,s}$ and
+$\mathcal B_{f,s}$ of cardinality
+$O(\|G\|)$ and total length $O_{f,r_{\max},s,\Sigma}(\|G\|^2\bar\theta_G)$.
+\end{corollary}
+
+\begin{proof}
+Lemma~\ref{lem:mcfg-li-group-window} and
+Theorem~\ref{thm:window-group-polydata}; $k$, ${\mathbb G}$ and $g$ depend only on $s$.
+\end{proof}
+
+% ---------------------------------------------------------------------
+% [P9] Section 4.2: original prop:typed-thickness-exponential with general part (a) (now only the two-letter instance)
+% original lines 1376-1410
+% ---------------------------------------------------------------------
+\begin{proposition}[Exponential blow-up of full yield-type refinement]
+\label{prop:typed-thickness-exponential}
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item Let $e\ne z$ be idempotents of $\mathsf S$ with $ez=ze=z$, and let
+$u,v\in\Sigma^+$ with $s(u)=e$ and $s(v)=z$.  For $n\ge1$ let $G_n$ be the
+fan-out-one, rank-two grammar
+\[
+ S\to SS\mid a\ (a\in\Sigma)\mid A_0\mid\cdots\mid A_n,\qquad
+ A_0\to u,\qquad
+ A_i\to A_{i-1}A_{i-1}\mid v\quad(1\le i\le n),
+\]
+where $u,v$ are constant templates.  Then $G_n$ is reduced and good,
+$L(G_n)=\Sigma^+$, $\|G_n\|=O_{\Sigma,u,v}(n)$,
+$\theta_{G_n}\le\max\{2,2|u|,2|v|\}$, and both
+$t_{\mathrm{typ}}(G_n,s)\ge|u|2^n$ and
+$\theta_{\widetilde G_{n,0}}\ge|u|2^n$.
+\item In particular, for $\Sigma=\{\mathtt a,\mathtt c\}$ and the two-element
+typing $s_{\mathtt c}$ onto $\{1,\zeta\}$ ($\zeta^2=\zeta$) with
+$s_{\mathtt c}(\mathtt a)=1$, $s_{\mathtt c}(\mathtt c)=\zeta$, taking $u=\mathtt a$,
+$v=\mathtt c$ gives $\|G_n\|=O(n)$, $\theta_{G_n}\le2$ and
+$\theta_{\widetilde G_{n,0}}\ge2^n$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+All templates are nonempty and use each variable once in order, so $G_n$ is
+good; it is reduced and generates $\Sigma^+$ via $S\to SS\mid a$.  Each rule has a
+successful use of length at most $\max\{2,2|u|,2|v|\}$: complete every $A_i$ by
+$v$ ($i\ge1$) or $u$ ($i=0$).  A yield of $A_n$ is a product of leaf values
+$s(u)=e$ and $s(v)=z$; since $e^2=e$ and $z$ is absorbing in $\{e,z\}$, its type is
+$e$ iff no leaf uses $v$.  Hence the unique yield of $(A_n)_{(e)}$ is
+$u^{2^n}$, proving $t_{\mathrm{typ}}(G_n,s)\ge|u|2^n$; the typed rule $S_{(e)}\to(A_n)_{(e)}$ is retained (via
+$S\to A_n$), and every successful derivation using it has length at least
+$|u|2^n$.  In (b), $e=1$ and $z=\zeta$.
+\end{proof}
+
+% ---------------------------------------------------------------------
+% [P10] Section 4.1: thickness-scales table tab:thickness-scales
+% original lines 1046-1065
+% ---------------------------------------------------------------------
+\begin{table}[htbp]
+\caption{Thickness scales: two input parameters, a central typed parameter, and two auxiliary quantities.}
+\label{tab:thickness-scales}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{0.155\linewidth}p{0.405\linewidth}X@{}}
+\hline
+Scale & What it measures / role & Comparison or obstruction\\
+\hline
+$\theta_G$ & Shortest accepted sentence using each rule, maximized over rules; \emph{primary for reduced good $G$}. & $t_G\le\theta_G\le 2\|G\|\max\{1,t_G\}$ (Lemma~\ref{lem:thickness-equivalence}).\\
+$t_G$ & Largest minimum total yield length of a nonterminal; proof-scale for good forms. & Polynomially equivalent to $\theta_G$ on reduced good presentations.\\
+$t_{\mathrm{pat}}(H)$ & Largest minimum yield length over \emph{realized nonempty-component support patterns}; \emph{primary for arbitrary $H$}. & $t_H\le t_{\mathrm{pat}}(H)$, with equality for reduced $\lambda$-free $H$; the family $E_n$ has $\theta_{E_n}=O(n)$ but $t_{\mathrm{pat}}(E_n)\ge2^n$ (Prop.~\ref{prop:empty-component-blowup}).\\
+$t_{\mathrm{typ}}$ & Largest shortest tuple yield over non-start typed nonterminals; \emph{central parameter} in Theorem~\ref{thm:data-from-typed-thickness}. & $t_{\mathrm{typ}}\le\theta_{\mathrm{typ}}\le2\bar\theta_G+r_{\max}t_{\mathrm{typ}}$ (Lemma~\ref{lem:typed-thickness-equivalence}).\\
+$\theta_{\mathrm{typ}}$ & Rule thickness of the trimmed full yield-type refinement $\widetilde G_0$. & $\theta_{\mathrm{typ}}\ge\theta_G$; it can be $\ge2^n$ with $\theta_G\le2$ (Prop.~\ref{prop:typed-thickness-exponential}).\\
+$\kappa_G$ & Shortest representative of each typed distribution class, maximized over classes; auxiliary for abelian-filtered targets. & $\kappa_G\le\theta_{\mathrm{typ}}$; representatives need not be derivable from the typed nonterminal (Prop.~\ref{prop:mcfg-relaxed-witnesses}).\\
+\hline
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------------
+% [P11] Section 6.1: prop:feature-cross-typed and cor:feature-relation-family before merging
+% original lines 2161-2223
+% ---------------------------------------------------------------------
+\begin{proposition}[Cross-serial dependencies with finite feature licensing]
+\label{prop:feature-cross-typed}
+Let $\Sigma_{\mathrm{feat}}=\{\mathtt p_0,\mathtt p_1,\mathtt q_0,\mathtt q_1,
+\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$, $\mathcal R_{\mathrm{feat}}=
+\{(0,0),(0,1),(1,0)\}$, and
+\[
+ L_{\mathrm{feat}}=\{\mathtt a^m\mathtt p_i\mathtt b^n\mathtt c^m\mathtt q_j\mathtt d^n:
+ m,n\ge1,\ (i,j)\in\mathcal R_{\mathrm{feat}}\}.
+\]
+Let $g:\Sigma_{\mathrm{feat}}^*\to\mathbb Z_2^2$ map $\mathtt p_1\mapsto(1,0)$,
+$\mathtt q_1\mapsto(0,1)$ and all other letters to $0$, and let
+$s:=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$ (corestricted to its image).  Then
+$L_{\mathrm{feat}}\in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}$ and
+$L_{\mathrm{feat}}\in\Cmcf{f}{s}\setminus\YSub{f}$ for every $f\ge2$; moreover
+$L_{\mathrm{feat}}$ is not $(1,s_{1,1})$-tuple-substitutable.
+\end{proposition}
+
+\begin{proof}
+\emph{Grammar.}  With fan-out-two $A,B$ and rules
+$A\to(\mathtt a,\mathtt c)\mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(A)$,
+$B\to(\mathtt b,\mathtt d)\mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(B)$ and
+$S\to(\xi_1^1\mathtt p_i\xi_2^1\xi_1^2\mathtt q_j\xi_2^2)(A,B)$ for
+$(i,j)\in\mathcal R_{\mathrm{feat}}$, we get $L_A=\{(\mathtt a^m,\mathtt c^m)\}$,
+$L_B=\{(\mathtt b^n,\mathtt d^n)\}$ and $L(G)=L_{\mathrm{feat}}$; the grammar is good,
+of fan-out and rank two.  Intersecting with $\mathtt a^+\mathtt p_0\mathtt b^+
+\mathtt c^+\mathtt q_0\mathtt d^+$ and erasing the markers gives the classical
+non-context-free $\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n\}$.
+
+\emph{Typed substitutability.}  Let
+$Q=\mathtt a^+\{\mathtt p_0,\mathtt p_1\}\mathtt b^+\mathtt c^+\{\mathtt q_0,\mathtt q_1\}
+\mathtt d^+$ (strictly 2-local), $K_{\mathrm{feat}}:=\{w\in\Sigma_{\mathrm{feat}}^+:
+g(w)\in\mathcal R_{\mathrm{feat}}\}$, and let $\varphi$ map
+$\mathtt a,\mathtt c,\mathtt b,\mathtt d$ to $(1,0),(-1,0),(0,1),(0,-1)\in\mathbb Z^2$
+and the markers to $0$.  On $Q$, $g(w)=(i,j)$ for the markers $\mathtt p_i,\mathtt q_j$
+of $w$, so $L_{\mathrm{feat}}=Q\cap K_{\mathrm{feat}}\cap\varphi^{-1}(0)$.  The three
+languages are $(f,s)$-tuple-substitutable by Lemma~\ref{lem:sl2-boundary-control},
+by item~(c) after Definition~\ref{def:class-cmcf} ($K_{\mathrm{feat}}$ is a union of
+$s$-classes), and by Proposition~\ref{prop:abelian-coset-filter}(ii);
+Proposition~\ref{prop:abelian-coset-filter}(i) gives the intersection.
+
+\emph{Failure without $g$.}  For $x=\mathtt{ap_0b}$, $y=\mathtt{ap_1b}$,
+$E=\blank_1\mathtt{cq_0d}$ and $F=\blank_1\mathtt{cq_1d}$ we have
+$E[x],E[y],F[x]\in L_{\mathrm{feat}}$ but $F[y]\notin L_{\mathrm{feat}}$, since
+$(1,1)\notin\mathcal R_{\mathrm{feat}}$.  Here $s_{1,1}(x)=s_{1,1}(y)$ but
+$g(x)\ne g(y)$.
+\end{proof}
+
+\begin{corollary}[Uniform finite feature licensing]
+\label{cor:feature-relation-family}
+With the \emph{same} typing $s$, for every $R\subseteq\{0,1\}^2$ the language
+$L_R:=\{\mathtt a^m\mathtt p_i\mathtt b^n\mathtt c^m\mathtt q_j\mathtt d^n:m,n\ge1,
+\ (i,j)\in R\}$ lies in $\Cmcf{f}{s}$ for all $f\ge2$, and for $R\ne\emptyset$ it is
+not context-free.  The typing is fixed once for the whole family; the same holds for
+any fixed inventories $\{0,\ldots,p-1\}\times\{0,\ldots,q-1\}$ with $g$ into
+$\mathbb Z_p\times\mathbb Z_q$.
+\end{corollary}
+
+\begin{proof}
+Keep the start rules indexed by $R$, replace $\mathcal R_{\mathrm{feat}}$ by $R$ in
+$K_{\mathrm{feat}}$ (still a union of $s$-classes), and repeat the proof; for
+$(i,j)\in R$ use $\mathtt a^+\mathtt p_i\mathtt b^+\mathtt c^+\mathtt q_j\mathtt d^+$
+for non-context-freeness.
+\end{proof}
+
+% ---------------------------------------------------------------------
+% [P12] Section 6.2: rem:necessity-scope (refers to the parked abelian-filter theorem)
+% original lines 2377-2389
+% ---------------------------------------------------------------------
+\begin{remark}[Scope of the typing separations]
+\label{rem:necessity-scope}
+The first two separations already occur at arity one
+(Lemma~\ref{lem:flag-separation}); the group-agreement separation uses
+arity-two contexts.  Let $s_{\mathrm{ref}}:=(s,h)$ be the refinement of the
+typing $s$ of the target by a finite morphism $h$ recognizing its strictly
+$2$-local structural language.  Each target is then
+$\widehat s_{\mathrm{ref}}^{-1}(\mathsf{Acc}')\cap\varphi^{-1}(0)$ for some
+acceptance set $\mathsf{Acc}'$ and an abelian
+$\varphi$, so Theorem~\ref{thm:mcfg-abelian-filter-data} gives polynomial
+data for the \emph{different} operator $\mathcal B^{\le2}_{f,s_{\mathrm{ref}}}$, with
+degree $3|\Sigma|+2$ depending on the alphabet.  The window--group and
+local-group bounds instead hold uniformly for the original fixed-typing
+
+% ---------------------------------------------------------------------
+% [P13] Section 3 paragraph on Yoshinaka (2015) mentioning parked H.2 results
+% original lines 695-710
+% ---------------------------------------------------------------------
+\end{center}
+The table records qualitative analogues rather than literal identities
+of reconstruction operators.  The concrete grammar statements and their
+adaptations are verified directly in
+Appendices~\ref{app:qualitative-construction-details}
+and~\ref{app:typed-witness-aux-proofs}; no embedding into the signature
+framework is used as a premise.  For a fixed sample the uncapped operator
+is the finite cap $\|K\|_+$, so soundness needs no addition; but identifying
+all of $\Cmcf{f}{s}$, whose members have unbounded minimum rank, uses a
+sample-dependent cap, outside the bounded-arity assumption of
+\cite{Yoshinaka2015General}.  Representatives that are not derivable from
+their nonterminal are used in Proposition~\ref{prop:mcfg-relaxed-witnesses}
+and hence Theorem~\ref{thm:mcfg-abelian-filter-data}.  Finally,
+\cite{Yoshinaka2015General} bounds the \emph{number} of characteristic words
+by the number of target rules and nonterminals; their \emph{length}, which
+this paper bounds, is not addressed there.
+
+% ---------------------------------------------------------------------
+% [P14] Conclusion before rewriting (original lines 2466-2580)
+% ---------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper turns the qualitative positive-data learning principle for typed
+MCFGs into upper bounds on the \emph{total encoded length} of characteristic
+samples, measured against a given presentation.  For a reduced good grammar $G$
+and fixed alphabet, fan-out, rank and typing, Theorem~\ref{thm:data-from-typed-thickness}
+reduces the principal uniform encoded-length bounds to the computable
+$t_{\mathrm{typ}}(G,s)$ and $N_{\mathrm{typ}}=O(\|G\|)$:
+\begin{itemize}[leftmargin=*]
+\item window and window--finite-group typings give $O(\|G\|^2\bar\theta_G)$, for
+noncommutative groups and interleaved tuple components alike
+(Theorems~\ref{thm:boundary-polydata} and~\ref{thm:window-group-polydata});
+\item local-group typings give $O(\|G\|^3\bar\theta_G)$, by combining classical
+sliding-factor coordinates with owner-wise block shortening
+(Theorem~\ref{thm:local-group-polydata});
+\item rank one gives $O(\|G\|^3)$ under every typing
+(Theorem~\ref{thm:rankone-polydata}), and arbitrary standard input grammars are
+covered through component-pattern thickness
+(Corollary~\ref{cor:unrestricted-standard-mcfg-data}).
+\end{itemize}
+The refinement-thickness dichotomy (Corollary~\ref{cor:refinement-dichotomy})
+places the exact boundary for polynomial thickness of the full yield-type
+refinement at $\mathbf{LG}$, at every fan-out; this limits the witness
+construction, not the data.  For characteristic-data length itself, the
+rare-type lower bound (Proposition~\ref{prop:rare-type}) makes
+$\mathbf{LG}$ an exact boundary only at fan-out one, at the level of
+pseudovarieties (Theorem~\ref{thm:fanout-one-data}); at fan-out two or
+more the paper proves upper bounds only. The exponential
+lower-bound family was introduced in the companion CFG manuscript
+\cite[Proposition~6.4]{kuriyamaCFG}; the properties used here are proved
+in Proposition~\ref{prop:bracketed-family} and
+Appendix~\ref{app:bracketed-family}. At fan-out two the same family fails
+tuple-substitutability under every fixed finite typing
+(Theorem~\ref{thm:doubling-no-lift}). The feature-licensing family of
+Section~\ref{subsec:baseline} gives separate examples of fixed finite biases
+for non-context-free cross-serial targets.
+
+\begin{openproblem}[Characteristic-data length at higher fan-out]
+\label{op:fanout-two}
+Fix $f\ge2$ and $r_{\max}\ge2$.  Is there a typing $s$ with
+$\mathsf S\notin\mathbf{LG}$ and a polynomial $p$ such that, for every
+$L\in\Cmcf{f}{s}$ and every reduced good fan-out-$\le f$, rank-$\le r_{\max}$
+presentation $G$ of $L\cap\Sigma^+$, the \emph{fixed} operator
+$\mathcal B^{\le r_{\max}}_{f,s}$ has a characteristic sample of total length
+at most $p(\|G\|,\bar\theta_G)$?
+
+For the opposite direction, take a fixed surjective typing $s$ with
+positive image $U_1$.  Do there exist fixed $f\ge2$, $r_{\max}\ge2$ and
+targets $L_n\in\Cmcf{f}{s}$ with reduced good presentations $G_n$ of
+fan-out $\le f$ and rank $\le r_{\max}$, such that
+$\|G_n\|\bar\theta_{G_n}=n^{O(1)}$, but \emph{every} characteristic sample
+for $\mathcal B^{\le r_{\max}}_{f,s}$ on $L_n$ has total length
+$n^{\omega(1)}$?  This would be a lower bound for the specified operator,
+not automatically for every set-driven learner.  The refinement-thickness
+dichotomy (Corollary~\ref{cor:refinement-dichotomy}) does not answer either
+characteristic-data question. By Proposition~\ref{prop:rare-type},
+producing a family with $\mu^\star(L_n,s)=n^{\omega(1)}$
+would suffice, and would give the same lower bound for any
+set-driven operator that has characteristic samples throughout the
+fixed-typing class. Theorem~\ref{thm:doubling-no-lift} excludes the
+bracketed doubling family of Proposition~\ref{prop:bracketed-family} as
+such a construction.
+\end{openproblem}
+
+A more focused, unproved question is whether, for every fixed typing
+$s$ and rank bound $r_{\max}$, a polynomial
+$p_{s,r_{\max},\Sigma}$ always bounds
+$\mu^\star(L,s)$ by $p(\|G\|,\bar\theta_G)$ for all
+$L\in\Cmcf{2}{s}$ with reduced good fan-out-$\le2$,
+rank-$\le r_{\max}$ presentations $G$.
+This holds for local-group typings by
+\eqref{eq:root-thickness} and Theorem~\ref{thm:local-group-polydata},
+and for the abelian-filtered targets of
+Theorem~\ref{thm:mcfg-abelian-filter-data}; at fan-out one the
+analogous statement fails. Neither power transfer nor these special
+cases settles the question.
+
+\paragraph{Tightness of the exponents.}
+The source of each factor in the polynomial exponents is explicit.  In $O(\|G\|^2\bar\theta_G)$, one factor $\|G\|$
+counts the witness words
+($N_{\mathrm{typ}}\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|$,
+Theorem~\ref{thm:data-from-typed-thickness}), and the other bounds the
+length of a root-to-leaf path in a $\lambda$-minimal derivation by the
+number $|V||\mathsf N|^f$ of node labels (Lemma~\ref{lem:heavy-node-count}).  The
+further factor in the local-group bound $O(\|G\|^3\bar\theta_G)$ arises
+because heavy subtrees are first exchanged for window representatives of
+length $O(\|G\|\bar\theta_G)$
+(Corollary~\ref{lem:boundary-short-canonical} and
+Lemma~\ref{lem:local-group-shortest}); it may be an artefact of this
+two-stage argument.  Similarly, for noncommutative groups the constant
+$M_{\mathbb G,f}$ is doubly exponential in $f$ because of the Ramsey-type
+homogenization (Lemma~\ref{lem:order-homogenize}); whether
+$\mathrm{poly}(|\mathbb G|^f)$ owners suffice, as they do for abelian groups,
+is open.  On the other side, $\bar\theta_G$ cannot be
+removed: the size-$O(n)$ grammar for $\{\mathtt c^{2^n}\}$ of
+Section~\ref{subsec:rank-one} has $\bar\theta_G=2^n$, and every
+characteristic sample contains $\mathtt c^{2^n}$.  For typings with
+$\mathsf S\in\mathbf{LG}$ the examples of this paper force no more than
+$\Omega(\bar\theta_G)$, so the remaining gap is a factor $\|G\|^2$ for
+window--group typings and $\|G\|^3$ for local-group typings.  Is there, for some fixed typing (possibly trivial), a family
+of targets with reduced good presentations $G_n$ whose characteristic
+samples need total length $\Omega(\|G_n\|\,\bar\theta_{G_n})$?  The
+rare-type argument cannot give this: for a fixed typing it yields at most
+$\sum_{m\in M_L}(\mu_m(L)+1)\le|\mathsf S|(t_{\mathrm{typ}}+1)$ by
+\eqref{eq:root-thickness}.  A factor $\|G\|$ requires $\Theta(\|G\|)$
+words that each separate two targets, and over a fixed alphabet and
+typing such words must be encoded; the operator's generalization across
+equal-type factors then tends to reconstruct the whole family from a few
+of them.
+
+Thus the outstanding issue concerns characteristic-data complexity for a
+fixed reconstruction operator across a typed target class, not whether
+an individual grammar has a thick full yield-type refinement.
+
