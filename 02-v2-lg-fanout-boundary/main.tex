@@ -1,0 +1,330 @@
+% =====================================================================
+%  02-v2  (new-born paper #2)  --  SKELETON, started 2026-10-30
+%  Source of all mathematics: ../02_fixed-h-mcfg/main.tex  ("v1", frozen).
+%  Read INSTRUCTIONS_FOR_AI.md before editing.  Every \port{...} box says
+%  what to move here from v1 (by label) and how to shorten it.
+%  Nothing in this file is a new mathematical claim: Theorems A--C restate
+%  results proved in v1 (labels given in the boxes and in the instructions).
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\numberwithin{equation}{section}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\hypersetup{hidelinks}
+\setlength{\emergencystretch}{3em}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{mainthm}{Theorem}
+\renewcommand{\themainthm}{\Alph{mainthm}}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{openproblem}[theorem]{Open Problem}
+
+% --- macros kept identical to v1 so that ported text compiles unchanged ---
+\newcommand{\Wit}{\mathsf{W}}
+\newcommand{\Cmcf}[2]{\mathcal{C}^{\mathrm{mcf}}_{#1,#2}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\out}{\mathrm{out}}
+\newcommand{\tuple}[1]{\vec{#1}}
+\newcommand{\blank}{\square}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\fan}{\operatorname{fan}}
+\newcommand{\YSub}[1]{\mathsf{YSub}(#1)}
+
+% --- skeleton-only macro: remove every \port box before submission ---
+\newcommand{\port}[1]{\leavevmode\par\medskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\color{blue!50!black}\textbf{PORT / TODO.} #1}}\par\medskip}
+
+\title{Local Groups and the Fan-Out Dependence of Characteristic-Data Length\\
+in Typed Distributional Learning of Multiple Context-Free Languages}
+\author{Takayuki Kuriyama\\
+Independent Researcher, Tokyo, Japan\\
+\texttt{growup.kuriyama@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study positive-data learning of multiple context-free languages in which
+nonempty factors and tuples are compared only when their types under a fixed
+morphism $s:\Sigma^+\to\mathsf S$ into a finite semigroup agree, continuing
+the context-free case~\cite{kuriyamaCFG}.  We measure the total length of
+characteristic samples relative to a presentation $G$, in terms of its size
+$\|G\|$ and its rule thickness $\bar\theta_G$.  First, we determine where
+characteristic data are cheap.  If the positive image of $s$ is a local group,
+data of length $O(\|G\|^2\bar\theta_G)$ exist at every fan-out, and under every
+typing some targets with asymptotically smallest presentations need
+$\Omega(\|G\|\bar\theta_G)$, the exact order for the trivial typing.  At fan-out
+one, local groups are exactly the pseudovarieties with uniform polynomial
+data.  For individual typings onto $U_1$ the cost depends on the letters of
+type $1$: two such letters force exponential data, and a single one already
+forces data quadratic in $\bar\theta_G$ for presentations of logarithmic size.
+Second, the boundary moves with fan-out: at fan-out two the typing onto $U_1$
+with a single letter of type $1$ admits polynomial data, and the exponential
+fan-out-one families are not tuple-substitutable under any fixed typing.  The
+main tools are simultaneous shortening of interleaved tuple components with
+ordered group products, and two-hole power transfer.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\port{Write the motivation paragraph (about 10 lines): fixed finite-semigroup
+typing as a learning bias \cite{kuriyamaCFG,CosteTyping2004}; Yoshinaka's
+multidimensional substitutability \cite{Yoshinaka2011} as the untyped baseline;
+the question of this paper: \emph{for which typings is characteristic data
+polynomial, and does the answer depend on fan-out?}  Reuse sentences from v1
+\S1 (lines 98--350) where possible, but keep the three-theorem storyline
+below.  Target length of the whole Introduction: at most 4 pages.}
+
+\paragraph{Setting.}
+A \emph{typing} is a morphism $s:\Sigma^+\to\mathsf S$ onto a finite semigroup.
+The class $\Cmcf{f}{s}$ consists of the languages whose nonempty part is a
+multiple context-free language of fan-out at most $f$ and which are
+$(f,s)$-tuple-substitutable: tuples of equal types that share one admissible
+context (internal separators nonempty) have the same distribution.  For a
+reduced good presentation $G$ we use its size $\|G\|$ and its rule thickness
+$\bar\theta_G$, the largest length of a shortest sentence using a given rule.
+Lower bounds are stated for every set-driven operator with characteristic
+samples throughout the class; upper bounds for the reconstruction operator of
+\cite{kuriyamaCFG} lifted to tuples.
+
+\paragraph{Main results.}
+Fix the alphabet, the fan-out $f$, a rule-rank bound $r_{\max}\ge2$ and the
+typing $s$.
+
+\begin{mainthm}[Local groups and the linear factor]
+\label{thm:A}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item If the positive image of $s$ is a local group, every
+$L\in\Cmcf{f}{s}$ has characteristic data of total length
+$O(\|G\|^2\bar\theta_G)$ for every reduced good presentation $G$.
+\item For every $f\ge1$ and every typing $s$ there are finite targets in
+$\Cmcf{f}{s}$, with presentations of asymptotically smallest size, whose
+characteristic samples all have length $\Omega(\|G\|\bar\theta_G)$.
+\item Hence for the trivial typing the order $\Theta(\|G\|\bar\theta_G)$ is exact
+at every fan-out.
+\end{enumerate}
+\end{mainthm}
+
+\begin{mainthm}[The boundary at fan-out one]
+\label{thm:B}
+Let $f=1$.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item A pseudovariety of finite semigroups admits uniform polynomial
+characteristic-data length iff it is contained in $\mathbf{LG}$.
+\item If some copy of $U_1$ in $\mathsf S$ is realized by two letters of its
+identity type and one letter of its absorbing type, the class needs
+exponential characteristic data.
+\item For $\Sigma=\{\mathtt a,\mathtt b\}$ and $\mathtt a\mapsto1$,
+$\mathtt b\mapsto\zeta$ onto $U_1$, there are targets with $\|G\|=O(\log\bar\theta_G)$
+whose characteristic samples exceed $\bar\theta_G^{\,2}/4$; in particular no bound
+$p(\|G\|)\,\bar\theta_G$ with $p$ a polynomial holds.
+\end{enumerate}
+\end{mainthm}
+
+\begin{mainthm}[The boundary moves at fan-out two]
+\label{thm:C}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item For the typing of Theorem~\ref{thm:B}\textup{(iii)} and $f=2$, every target
+has characteristic data of length $O(\|G\|^3\bar\theta_G^{\,5})$.
+\item The exponential family behind Theorem~\ref{thm:B}\textup{(i)} is not
+$(f,s)$-tuple-substitutable for any fixed finite typing and any $f\ge2$.
+\end{enumerate}
+\end{mainthm}
+
+\port{\textbf{Where each part is proved in v1} (port statement + proof, keep
+labels):
+A(i) = \texttt{thm:local-group-polydata} (with \texttt{thm:window-group-polydata}
+as the special case);
+A(ii) = \texttt{prop:linear-factor-all-fanout} (the three-letter
+\texttt{prop:linear-factor-sharp} becomes a remark);
+A(iii) = trivial typing: $t_{\mathrm{typ}}\le\bar\theta_G$ and
+\texttt{thm:data-from-typed-thickness};
+B(i) = \texttt{thm:fanout-one-data} (+ \texttt{prop:bracketed-family});
+B(ii) = \texttt{cor:typing-level-obstruction} (+ \texttt{prop:three-letter-family});
+B(iii) = \texttt{prop:binary-u1-quadratic};
+C(i) = \texttt{thm:binary-u1-polydata};
+C(ii) = \texttt{thm:doubling-no-lift} (+ \texttt{lem:power-transfer}).
+\textbf{If the open problem S1 below is resolved, Theorem~\ref{thm:B}(iii) and
+Theorem~\ref{thm:C} change: see INSTRUCTIONS\_FOR\_AI.md \S5.}}
+
+\paragraph{The remaining question.}
+Theorems~\ref{thm:B}(iii) and~\ref{thm:C}(i) bracket one typing: at fan-out one
+it needs data quadratic in $\bar\theta_G$, at fan-out two it needs only
+polynomial data.  Whether its data at fan-out one are polynomial is the
+central open problem (Open Problem~\ref{op:S1}).  A negative answer would show
+that raising the fan-out can make learning strictly cheaper; a positive answer
+would classify all typings onto $U_1$ at fan-out one by their number of
+neutral letters.
+
+\paragraph{Techniques.}
+\port{Half a page.  (1) Owner-wise simultaneous replacement of interleaved
+tuple components preserving ordered products in a finite group, with
+Ramsey-type order homogenization for noncommutative groups
+(\texttt{prop:block-replacement-interface}, App.~A of v1); this has no
+fan-out-one analogue.  (2) Thinning and padding of owners for local groups
+(\texttt{lem:lg-buffered-owners}).  (3) Distribution representatives instead
+of generated witnesses (\texttt{cor:distribution-representatives}).
+(4) Two-hole power transfer and Parikh saturation
+(\texttt{lem:power-transfer}, \texttt{lem:app-u1-transfer}, \texttt{lem:app-u1-deep}).
+(5) Marker families whose every subset stays in the class
+(\texttt{prop:linear-factor-all-fanout}).}
+
+\paragraph{Relation to prior work and to the companion paper.}
+\port{Port v1 ``Relation to prior work'' and Table \texttt{tab:companion-overlap}
+(v1 lines ~250--320), shortened.  Must state clearly: what is new relative to
+\cite{kuriyamaCFG} (local groups instead of windows and groups; exactness at
+fan-out one; typing-level results; all fan-out results), and that qualitative
+learning is credited to Yoshinaka \cite{Yoshinaka2011}.}
+
+\paragraph{Organization.}
+\port{One paragraph, written last.}
+
+% =====================================================================
+\section{Preliminaries}
+\label{sec:prelim}
+\port{Port v1 \S2 verbatim (lines 352--647): positive-data learning,
+\texttt{def:characteristic-sample}, typings, \texttt{def:prefix-suffix-typing},
+\texttt{def:standard-mcfg}, \texttt{def:grammar-properties},
+\texttt{def:tuple-occurrence}, \texttt{def:tuple-substitutable}.
+Decide whether \texttt{prop:abelian-coset-filter} is still needed (grep its
+uses); if not, park it.}
+
+% =====================================================================
+\section{Reconstruction and Typed Witnesses}
+\label{sec:reconstruction}
+\port{Port v1 \S3 (lines 648--962) but \textbf{shorten}: keep definitions
+(\texttt{def:reconstruction}, \texttt{def:output-refinement},
+\texttt{def:target-canonical}), the statements of
+\texttt{prop:reconstruction-soundness}, \texttt{prop:completeness},
+\texttt{prop:good-normalization}, \texttt{thm:exact-reconstruction},
+\texttt{thm:poly}, \texttt{cor:gold-explanatory}; move proofs that only adapt
+\cite{kuriyamaCFG,Yoshinaka2011} to the appendix.  Credit Yoshinaka.}
+
+% =====================================================================
+\section{Characteristic Data from Thickness and Representatives}
+\label{sec:data}
+\port{Port v1 \S4.1--4.2 (lines 963--1541): \texttt{lem:thickness-equivalence},
+\texttt{lem:witness-length-template}, \texttt{lem:typed-thickness-equivalence},
+\texttt{thm:data-from-typed-thickness}, \texttt{prop:rare-type},
+\texttt{cor:typed-sandwich}, \texttt{cor:distribution-representatives}.
+Reduce \texttt{prop:typed-thickness-exponential} to a remark (it limits the
+witness method, not the data).  \textbf{Do not} put the linear-factor
+propositions here: they go to \S\ref{sec:linear}.}
+
+% =====================================================================
+\section{Upper Bound: Local Groups at Every Fan-Out}
+\label{sec:upper}
+\port{Theorem~\ref{thm:A}(i).  Port v1 \S4.3--4.5 (lines 1542--1868):
+\texttt{lem:heavy-node-count}, \texttt{prop:block-replacement-interface},
+\texttt{lem:marked-heavy-window-group}, \texttt{thm:window-group-polydata},
+\texttt{lem:mcfg-li-group-window}, \texttt{def:local-group-typing},
+\texttt{thm:local-group-polydata}.  State at the start of the section that
+the interleaving of components across subtrees is the MCFG-specific
+difficulty.}
+
+% =====================================================================
+\section{Lower Bound: The Linear Factor at Every Fan-Out}
+\label{sec:linear}
+\port{Theorem~\ref{thm:A}(ii)--(iii).  Main statement:
+\texttt{prop:linear-factor-all-fanout} (v1 lines 1423--1461, proof App.\ I of
+v1).  \texttt{prop:linear-factor-sharp} (three letters, $f=1$) becomes a remark
+with its short proof or is cited as the case that motivated the marker
+construction.  Add the one-line derivation of A(iii).}
+
+% =====================================================================
+\section{The Boundary at Fan-Out One}
+\label{sec:fanout-one}
+\port{Theorem~\ref{thm:B}.  Port: \texttt{prop:bracketed-family},
+\texttt{def:uniform-polydata}, \texttt{thm:fanout-one-data},
+\texttt{rem:fanout-one-data} (rewrite (b) as the typing-level summary),
+\texttt{prop:three-letter-family}, \texttt{cor:typing-level-obstruction}
+(v1 lines 1869--2051), and \texttt{prop:binary-u1-quadratic} (v1 lines
+2528--2556, proof App.\ J of v1).  End the section with the typing-level
+trichotomy for typings onto $U_1$ (two neutral letters: exponential; one:
+quadratic lower bound, polynomiality open; local groups: polynomial).}
+
+% =====================================================================
+\section{The Boundary Moves at Fan-Out Two}
+\label{sec:fanout-two}
+\port{Theorem~\ref{thm:C}.  Port \texttt{lem:power-transfer},
+\texttt{thm:doubling-no-lift} (v1 lines 2387--2459),
+\texttt{thm:binary-u1-polydata} with its outline and
+\texttt{rem:binary-u1-scope} (v1 lines 2460--2527), proof App.\ H of v1.
+Shorten \texttt{lem:app-u1-runs} to one sentence in the scope remark unless it
+is needed elsewhere.}
+
+% =====================================================================
+\section{Conclusion and Open Problems}
+\label{sec:conclusion}
+\port{Rewrite around Theorems A--C.  Keep the ``Tightness of the exponents''
+discussion (v1 lines ~2600--2640) but shortened.}
+
+\begin{openproblem}[The single-neutral-letter typing at fan-out one]
+\label{op:S1}
+For $\Sigma=\{\mathtt a,\mathtt b\}$, $\mathtt a\mapsto1$, $\mathtt b\mapsto\zeta$ onto
+$U_1$, fan-out one and $r_{\max}\ge2$: is the characteristic-data length
+bounded by a polynomial in $\|G\|$ and $\bar\theta_G$?
+\end{openproblem}
+
+\begin{openproblem}[Pseudovarieties at higher fan-out]
+\label{op:fanout-two}
+\port{Port v1 \texttt{op:fanout-two}: for $f\ge2$, which pseudovarieties outside
+$\mathbf{LG}$ admit uniform polynomial data?  Note that every pseudovariety not
+contained in $\mathbf{LG}$ contains $U_1$, so a superpolynomial lower bound for
+one typing onto $U_1$ at fan-out two would make $\mathbf{LG}$ the boundary at
+fan-out two as well.}
+\end{openproblem}
+
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+During preparation of this work, the author used ChatGPT (OpenAI) and Claude
+(Anthropic) to assist with organization of the manuscript, expression and
+translation of text, cross-checks of references and notation, and editing of
+\LaTeX{} source. After using these tools, the author reviewed and edited the
+material as needed and takes full responsibility for the content of the publication.
+
+% =====================================================================
+\appendix
+\section{Appendices to be ported}
+\port{Port, in this order, from v1: A block replacement in finite groups
+(\texttt{def:block-family} \ldots\ \texttt{lem:order-homogenize});
+B local-group coordinates (\texttt{lem:local-group-morphism} \ldots\
+\texttt{lem:local-group-shortest}, incl.\ \texttt{lem:lg-buffered-owners},
+\texttt{thm:lg-characterization}, \texttt{prop:li-g-strict});
+C qualitative reconstruction; D typed witnesses; E good normalization;
+F bracketed doubling family; G three-letter family;
+H binary typing at fan-out two (\texttt{app:binary-u1});
+I linear factor at every fan-out (\texttt{lem:app-lf-path},
+\texttt{lem:app-lf-descent}; \textbf{park} \texttt{prop:unary-cyclic-linear});
+J quadratic data at fan-out one (\texttt{app:binary-u1-quadratic}).
+\textbf{Park} (move to \texttt{parked/} with a note): v1 \S5 Rule Rank One
+(\texttt{thm:rankone-polydata}), v1 \S6.1--6.2 comparison with
+multidimensional substitutability and typing separations
+(\texttt{def:yoshinaka-pd-substitutability}, \texttt{lem:sl2-boundary-control},
+\texttt{prop:feature-cross-typed}, \texttt{lem:flag-separation},
+\texttt{prop:lg-needed-target}, \texttt{prop:nonabelian-needed-target}),
+\texttt{prop:unary-cyclic-linear}.}
+
+\input{bib_from_v1}
+
+\end{document}
