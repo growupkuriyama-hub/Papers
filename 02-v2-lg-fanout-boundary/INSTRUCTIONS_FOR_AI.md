@@ -1,6 +1,6 @@
 # 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
-最初に読むこと。この文書だけで作業を続けられるように書いてある。最終更新：2026-10-30（Phase 1〜3 完了時点）。
+最初に読むこと。この文書だけで作業を続けられるように書いてある。最終更新：2026-10-30（Phase 4 の主要部分＝本文短縮が完了した時点）。
 
 - 著者：栗山貴之（Takayuki Kuriyama）
 - 正本：この folder の `main.tex`（英語）。日本語版はまだない（Phase 5）。
@@ -34,6 +34,12 @@
 - `\port` マクロと xcolor を削除。
 - v1 の要旨・序論・結論にも同じ「任意の型付け」の言い過ぎがあったので、v1（英日）も修正した（凍結の例外：誤りの修正）。
 - 現在 51 ページ（本文 26、付録 A〜L 22、文献 3）。
+
+**Phase 4（短縮）の主要部分を実施（2026-10-30）**：本文 26 → 24 ページ（§9 結論が p.23–24、付録 A が p.25 から）。全体は 51 ページのまま（証明を付録に移しただけで、削った数学はない）。
+- §3：`lem:filling-identity` の証明を付録 C の冒頭へ。§3 冒頭の表の後の段落を短縮（内容は同じ：概念上の対応であって同一ではない、全て付録で直接証明、標本依存の上限 ‖K‖₊、Yoshinaka は個数のみで長さは扱わない）。
+- §4：`lem:thickness-equivalence`、`lem:witness-length-template`、`lem:typed-thickness-equivalence`、`thm:data-from-typed-thickness`、`lem:type-deletion`、`prop:rare-type`、`cor:typed-sandwich`、`prop:typed-thickness-exponential`、`cor:distribution-representatives` の証明を付録 D（題名を "Proofs for Typed Witnesses and Characteristic Data" に変更、label は同じ）へ。§4 冒頭に「証明は付録 D」の一文。
+- §7：`prop:bracketed-family` の証明を付録 F の末尾へ、`prop:three-letter-family` の証明を付録 G の末尾へ、`prop:binary-u1-weight-slice` の証明を付録 J の末尾へ。本文には付録への参照と、重み一定の命題については証明の要点（2文）を残した。`rem:fanout-one-data`(b) の後半（二文字 U₁ の説明）は §7 末尾の段落と重複していたので削り、「有限の標的は型1の語を高々1つ持つ」という観察は `op:S1` に移した。
+- 本文に残した証明：§5（定理A(i) の証明一式）、§6 の `cor:trivial-exact`、§7 の `thm:fanout-one-data` と `cor:typing-level-obstruction`、§8 全部。これらは論文の主結果なので、これ以上付録に移さないこと。
 
 **未完了**：Phase 4（短縮）、Phase 5（日本語版）、Phase 6（独立査読、特に付録 H の `lem:app-u1-parikh` と付録 A の `lem:order-homogenize`）、Phase 7（S1 の研究）。
 
@@ -78,18 +84,20 @@ v2 は同じ数学を、一本の主張と三つの定理に組み直したも�
 |---|---|---|
 | §1 Introduction | 問い、設定、定理A〜C、残る問い、手法、先行研究、01 との重複表、主張の範囲、構成 | 1–4 |
 | §2 Preliminaries | v1 §2 そのまま | 4–7 |
-| §3 Reconstruction and Qualitative Learning | v1 §3 そのまま | 7–11 |
-| §4 Characteristic-Data Bounds | 厚さ、型付き厚さ、稀な型、代表長 | 11–15 |
-| §5 Upper Bound: Local Groups at Every Fan-Out | 最小反例による短縮、窓・群、局所群 | 15–19 |
-| §6 Lower Bound: The Linear Factor at Every Fan-Out | 2つの線形因子の命題、`cor:trivial-exact` | 19–21 |
-| §7 The Boundary at Fan-Out One | 括弧付き倍増族、特徴付け、三文字族、二次の族、重み一定 | 21–25 |
-| §8 The Boundary Moves at Fan-Out Two | 冪の移行、二文字 U₁ の多項式上界 | 25–26 |
-| §9 Conclusion and Open Problems | 要約、`op:S1`、`op:fanout-two`、指数のタイトさ | 26–27 |
-| 付録 A〜L | A ブロック置換、B 局所群の座標、C 質的再構成、D 型付き証拠、E 良形化、F 括弧付き倍増族、G 三文字族、H 二文字 U₁（ファンアウト2）、I 線形因子（`prop:linear-factor-sharp` の証明を含む）、J 二次の族、K 多次元代入可能性との比較と型付けの分離、L ランク1 | 27–51 |
+| §3 Reconstruction and Qualitative Learning | v1 §3（証明は全て付録 C・D） | 7–10 |
+| §4 Characteristic-Data Bounds | 厚さ、型付き厚さ、稀な型、代表長（証明は付録 D） | 10–14 |
+| §5 Upper Bound: Local Groups at Every Fan-Out | 最小反例による短縮、窓・群、局所群 | 14–18 |
+| §6 Lower Bound: The Linear Factor at Every Fan-Out | 2つの線形因子の命題、`cor:trivial-exact` | 18–19 |
+| §7 The Boundary at Fan-Out One | 括弧付き倍増族、特徴付け、三文字族、二次の族、重み一定 | 19–22 |
+| §8 The Boundary Moves at Fan-Out Two | 冪の移行、二文字 U₁ の多項式上界 | 22–23 |
+| §9 Conclusion and Open Problems | 要約、`op:S1`、`op:fanout-two`、指数のタイトさ | 23–24 |
+| 付録 A〜L | A ブロック置換、B 局所群の座標、C 質的再構成（`lem:filling-identity` の証明を含む）、D 型付き証拠と特徴データ（§4 の証明）、E 良形化、F 括弧付き倍増族（`prop:bracketed-family` の証明を含む）、G 三文字族（`prop:three-letter-family` の証明を含む）、H 二文字 U₁（ファンアウト2）、I 線形因子（`prop:linear-factor-sharp` の証明を含む）、J 二次の族と重み一定（`prop:binary-u1-weight-slice` の証明を含む）、K 多次元代入可能性との比較と型付けの分離、L ランク1 | 25–51 |
 
 ## 5. 次にやること（順番どおり）
 
 ### Phase 4：短縮（目標：本文22〜24ページ、全体45ページ前後。ChatGPT 査読：新しい証明を削ってまでページ数を守る必要はない）
+
+**2026-10-30 実施済み**：下の候補 1・2・4 は「証明を付録へ移す」形で実施し、本文 24 ページになった（§0 参照）。残り：候補 3（`prop:linear-factor-sharp` を注意に縮めるか。ChatGPT は短い主張として残すことを推奨、現状は主張を本文・証明を付録 I）と候補 5。全体ページ数（51）を減らしたい場合は、付録 K（3ページ強）の圧縮か、付録 C・D の証明の文体を詰めるのが次の手。
 候補と、削れるページの目安：
 1. **§3 の短縮**（約−2ページ）：01 と Yoshinaka の議論の焼き直しである証明（`prop:reconstruction-soundness`、`prop:completeness` など）を付録 C に移し、本文には主張と一行の出典だけを残す。
 2. **`prop:typed-thickness-exponential` を注意に縮める**（約−1ページ）：証拠の方法の限界を示すだけなので、主張と文献化した構成だけ残し、証明は付録へ。
