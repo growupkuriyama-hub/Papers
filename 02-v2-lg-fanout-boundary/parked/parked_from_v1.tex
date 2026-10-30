@@ -1,0 +1,325 @@
+% Material parked from v1 (../02_fixed-h-mcfg/main.tex) when building 02-v2, 2026-10-30.
+% Not part of v2. Kept for possible use in a later paper or the thesis.
+% (1) v1 Section 6.1-6.2: comparison with multidimensional substitutability and typing separations.
+% (2) v1 Proposition prop:unary-cyclic-linear (one-letter cyclic typing, tau <= 2m theta-bar) and its proof.
+
+\section{Comparison with Multidimensional Substitutability}
+\label{sec:comparison}
+
+Yoshinaka's multidimensional substitutability~\cite{Yoshinaka2009,Yoshinaka2011}
+is the direct positive-data baseline.  This section shows that
+(i) trivial typing recovers it and window typing recovers the CFG $(k,\ell)$
+hierarchy of~\cite{Yoshinaka2008}, while a fixed finite typing admits
+non-context-free targets outside the baseline
+(Section~\ref{subsec:baseline}); (ii) the algebraic regimes of
+Section~\ref{sec:char-data} are separated at the level of targets
+(Section~\ref{subsec:necessity}); and (iii) the fan-out-one lower-bound family
+does not lift to fan-out two (Section~\ref{subsec:power-transfer}).
+Since every $(f,s)$ condition includes arity one,
+$\Cmcf{f}{s}\cap\mathrm{CFL}\subseteq\Cmcf{1}{s}$.
+
+\subsection{Yoshinaka's Baseline and Finite Feature Licensing}
+\label{subsec:baseline}
+
+\begin{definition}[Multidimensional substitutability]
+\label{def:yoshinaka-pd-substitutability}
+A language $L$ is \emph{$f$D-substitutable} if for every $1\le d\le f$, all
+$E,F\in\mathcal E_d$ and all $\tuple x,\tuple y\in(\Sigma^+)^d$,
+\(E[\tuple x],E[\tuple y],F[\tuple x]\in L\Rightarrow F[\tuple y]\in L\)
+(the \emph{substitution implication}); $\YSub{f}$ is the class of these languages.
+This is Yoshinaka's definition, with nonempty components and nonempty internal
+separators \cite[Section~3.1 and footnote~3]{Yoshinaka2011}.
+\end{definition}
+
+The substitution implication is $(f,s_{\mathrm{triv}})$-tuple substitutability,
+so $\Cmcf{f}{s_{\mathrm{triv}}}=\YSub{f}\cap f\text{-}\mathrm{MCFL}\subseteq\Cmcf{f}{s}$
+for every $s$.  Yoshinaka \cite[Definition~2]{Yoshinaka2008} calls $L$
+\emph{$k,l$-substitutable} if for all $x_1,y_1,z_1,x_2,y_2,z_2\in\Sigma^*$,
+$v\in\Sigma^k$ and $u\in\Sigma^\ell$ with $vy_1u,vy_2u\ne\eps$,
+$x_1vy_1uz_1,x_1vy_2uz_1,x_2vy_1uz_2\in L$ implies $x_2vy_2uz_2\in L$.  Here
+$y_1,y_2$ may be empty; only the factors $vy_iu$ must be nonempty.  Exchanging
+$y_1$ and $y_2$ gives the converse implication, so the condition says that two
+such factors with a common context have equal distributions.  Two nonempty words
+have equal $s_{k,\ell}$-type iff they are identical or both have length at least
+$\max\{1,k+\ell\}$ with the same first $k$ and last $\ell$ letters, i.e.\ iff they
+are of the forms $vy_1u,vy_2u$ above, with $y_1,y_2$ possibly empty, or equal.
+Words shorter than $k+\ell$ are therefore compared only with themselves, in line
+with Yoshinaka's remark that the condition says nothing about them.  Hence
+$(1,s_{k,\ell})$-tuple substitutability is exactly Yoshinaka's $(k,\ell)$
+condition; the componentwise version at higher fan-out is a definition of this
+paper.
+
+A language $L$ is \emph{strictly 2-local} if there is a set $\Pi$ of pairs over
+$\Sigma\cup\{\vdash,\dashv\}$ such that a word $w$ lies in $L$ iff every pair of
+adjacent symbols of $\vdash w\dashv$ lies in $\Pi$.
+
+\begin{lemma}[Strictly 2-local languages are boundary typed]
+\label{lem:sl2-boundary-control}
+Every strictly 2-local $L$ is $(f,s_{1,1})$-tuple-substitutable for every $f$; in
+particular $L\in\Cmcf{f}{s_{1,1}}$, and $L\in\Cmcf{f}{s}$ whenever $s_{1,1}\preceq s$.
+\end{lemma}
+
+\begin{proof}
+Let $\tuple x,\tuple y\in(\Sigma^+)^d$ have equal $s_{1,1}$-types, so
+corresponding components are identical letters or share first and last letters,
+and let $E_0[\tuple x],E_0[\tuple y]\in L$.  Suppose $E[\tuple x]\in L$.  Since the
+internal separators of $E$ are nonempty, every adjacent pair of
+$\vdash E[\tuple y]\dashv$ either lies inside some $y_i$, and then occurs in
+$E_0[\tuple y]\in L$, or joins a first or last letter of some $y_i$ to a symbol of
+$\vdash E\dashv$, or lies in $\vdash E\dashv$, and then occurs in
+$\vdash E[\tuple x]\dashv$.  So $E[\tuple y]\in L$; symmetry and $s_{1,1}\preceq s$
+finish the proof (regular languages are MCFLs).
+\end{proof}
+
+\begin{proposition}[Cross-serial dependencies with finite feature licensing]
+\label{prop:feature-cross-typed}
+Let $\Sigma_{\mathrm{feat}}=\{\mathtt p_0,\mathtt p_1,\mathtt q_0,\mathtt q_1,
+\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$, let $g:\Sigma_{\mathrm{feat}}^*\to\mathbb Z_2^2$
+map $\mathtt p_1\mapsto(1,0)$, $\mathtt q_1\mapsto(0,1)$ and all other letters to $0$, and
+let $s:=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$ (corestricted to its image).  For
+$R\subseteq\{0,1\}^2$ put
+\[
+ L_R:=\{\mathtt a^m\mathtt p_i\mathtt b^n\mathtt c^m\mathtt q_j\mathtt d^n:
+ m,n\ge1,\ (i,j)\in R\}.
+\]
+Then for every $R$ and every $f\ge2$, $L_R\in\mathsf{MCFL}(2,2)\cap\Cmcf{f}{s}$, and
+$L_R$ is not context-free if $R\ne\emptyset$.  For
+$\mathcal R_{\mathrm{feat}}=\{(0,0),(0,1),(1,0)\}$, the language
+$L_{\mathcal R_{\mathrm{feat}}}$ is neither in $\YSub{f}$ nor
+$(1,s_{1,1})$-tuple-substitutable.  The typing is fixed once for the whole
+family.
+\end{proposition}
+
+\begin{proof}
+\emph{Grammar.}  With fan-out-two $A,B$ and rules
+$A\to(\mathtt a,\mathtt c)\mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(A)$,
+$B\to(\mathtt b,\mathtt d)\mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(B)$ and
+$S\to(\xi_1^1\mathtt p_i\xi_2^1\xi_1^2\mathtt q_j\xi_2^2)(A,B)$ for
+$(i,j)\in R$, we get $L_A=\{(\mathtt a^m,\mathtt c^m)\}$,
+$L_B=\{(\mathtt b^n,\mathtt d^n)\}$ and $L(G)=L_R$; the grammar is good,
+of fan-out and rank two.  For $(i,j)\in R$, intersecting with
+$\mathtt a^+\mathtt p_i\mathtt b^+\mathtt c^+\mathtt q_j\mathtt d^+$ and erasing the
+markers gives the non-context-free $\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n\}$.
+
+\emph{Typed substitutability.}  Let
+$Q=\mathtt a^+\{\mathtt p_0,\mathtt p_1\}\mathtt b^+\mathtt c^+\{\mathtt q_0,\mathtt q_1\}
+\mathtt d^+$ (strictly 2-local), $K_R:=\{w\in\Sigma_{\mathrm{feat}}^+:g(w)\in R\}$, and let
+$\varphi$ map $\mathtt a,\mathtt c,\mathtt b,\mathtt d$ to
+$(1,0),(-1,0),(0,1),(0,-1)\in\mathbb Z^2$ and the markers to $0$.  On $Q$,
+$g(w)=(i,j)$ for the markers $\mathtt p_i,\mathtt q_j$ of $w$, so
+$L_R=Q\cap K_R\cap\varphi^{-1}(0)$.  The three languages are
+$(f,s)$-tuple-substitutable by Lemma~\ref{lem:sl2-boundary-control}, by item~(c)
+after Definition~\ref{def:class-cmcf} ($K_R$ is a union of $s$-classes), and by
+Proposition~\ref{prop:abelian-coset-filter}(ii);
+Proposition~\ref{prop:abelian-coset-filter}(i) gives the intersection.
+
+\emph{Failure without $g$.}  For $R=\mathcal R_{\mathrm{feat}}$, $x=\mathtt{ap_0b}$,
+$y=\mathtt{ap_1b}$, $E=\blank_1\mathtt{cq_0d}$ and $F=\blank_1\mathtt{cq_1d}$ we have
+$E[x],E[y],F[x]\in L_R$ but $F[y]\notin L_R$, since $(1,1)\notin R$.  Here
+$s_{1,1}(x)=s_{1,1}(y)$ but $g(x)\ne g(y)$.  The same four words violate the
+substitution implication of Definition~\ref{def:yoshinaka-pd-substitutability} at
+$d=1$, so $L_R\notin\YSub{f}$ for every $f\ge1$.
+\end{proof}
+
+\subsection{Separating the Typing Classes}
+\label{subsec:necessity}
+
+The feature example is covered by a window and an abelian group.  Two further
+fan-out-two targets separate the regimes of Section~\ref{sec:char-data}: $L_{\mathrm A}$
+is admitted by a local-group typing but by no window--group-determined typing, and
+$L_{\mathrm B}$ by a window--$S_3$ typing but by no window--abelian one.  Both have
+the form $\varsigma w\mathtt\$x_\times$: a flag $\varsigma=\mathtt r$ leaves $w$ unconstrained,
+$\varsigma=\mathtt l$ imposes a typing-dependent condition on $w$, and
+$x_\times\in C_\times:=\{\mathtt{1}^m\mathtt{2}^n\mathtt{3}^m\mathtt{4}^n:m,n\ge1\}$ makes the
+target non-context-free.  Let $\varphi_\times$ map
+$\mathtt 1,\mathtt 3,\mathtt 2,\mathtt 4$ to $(1,0),(-1,0),(0,1),(0,-1)\in\mathbb Z^2$
+and all other letters to $0$, and let $\#_{\mathtt{ab}}(w)$ be the number of
+occurrences of the factor $\mathtt{ab}$ in $w$.
+
+\begin{lemma}[Flag separation]
+\label{lem:flag-separation}
+Let $s'$ be a typing, $u,v\in\Sigma^+$ with $s'(u)=s'(v)$, and $z\in\Sigma^*$.  If $L$
+contains $\mathtt ruz$, $\mathtt rvz$ and $\mathtt luz$ but not $\mathtt lvz$, then
+$L\notin\Cmcf{f}{s'}$ for every $f\ge1$.
+\end{lemma}
+
+\begin{proof}
+$\mathtt r\blank_1z\in\mathcal E_1$ accepts $u$ and $v$, while $\mathtt l\blank_1z$
+accepts $u$ but not $v$; so $\D^{(1)}_L(u)\ne\D^{(1)}_L(v)$, and every $(f,s')$
+condition includes arity one.
+\end{proof}
+
+\paragraph{The targets.}
+Let $\Sigma_{\mathrm A}=\{\mathtt l,\mathtt r,\mathtt a,\mathtt b,\mathtt c,\mathtt\$,
+\mathtt 1,\mathtt 2,\mathtt 3,\mathtt 4\}$,
+\[
+ L_{\mathrm A}:=\{\varsigma w\mathtt\$x_\times:\varsigma\in\{\mathtt l,\mathtt r\},\
+ w\in\{\mathtt a,\mathtt b,\mathtt c\}^+,\ x_\times\in C_\times,\
+ \varsigma=\mathtt r\text{ or }\#_{\mathtt{ab}}(w)\text{ even}\},
+\]
+and $s_{\mathrm A}:=\lambda_{1,\nu}|_{\Sigma_{\mathrm A}^+}$ with
+$\nu:\Sigma_{\mathrm A}^2\to\mathbb Z_2$, $\nu(\mathtt{ab})=1$ and $\nu=0$ otherwise
+(Definition~\ref{def:local-group-typing}); it records the first and last letters and,
+for $|w|\ge2$, the parity of $\#_{\mathtt{ab}}(w)$.  Let
+$\Sigma_{\mathrm B}=\Sigma_{\mathrm A}\setminus\{\mathtt c\}$, $\alpha=(12)$,
+$\beta=(23)\in S_3$, $g_{\mathrm B}:\Sigma_{\mathrm B}^*\to S_3$ with
+$\mathtt a\mapsto\alpha$, $\mathtt b\mapsto\beta$ and all other letters $\mapsto1$,
+\[
+ L_{\mathrm B}:=\{\varsigma w\mathtt\$x_\times:\varsigma\in\{\mathtt l,\mathtt r\},\
+ w\in\{\mathtt a,\mathtt b\}^+,\ x_\times\in C_\times,\
+ \varsigma=\mathtt r\text{ or }g_{\mathrm B}(w)=1\},
+\]
+and $s_{\mathrm B}:=(s_{1,1},g_{\mathrm B})|_{\Sigma_{\mathrm B}^+}$, corestricted.
+$\mathbf{Ab}$ is the pseudovariety of finite abelian groups, and
+$\mathbf{LI}\vee\mathbf{Ab}$ consists of the divisors of $\mathsf T\times {\mathbb G}$ with
+$\mathsf T\in\mathbf{LI}$ and ${\mathbb G}$ finite abelian.
+
+\begin{proposition}[A target separating local-group and window--group typings]
+\label{prop:lg-needed-target}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $L_{\mathrm A}\in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}$.
+\item $L_{\mathrm A}\in\Cmcf{f}{s_{\mathrm A}}$ for every $f\ge2$, and
+$s_{\mathrm A}(\Sigma_{\mathrm A}^+)\in\mathbf{LG}$.
+\item If $s'\preceq(s_{k,\ell},g'|_{\Sigma_{\mathrm A}^+})$ for some $k,\ell$ and a
+morphism $g'$ into a finite group (in particular if
+$s'(\Sigma_{\mathrm A}^+)\in\mathbf{LI}\vee\mathbf{Grp}$), then
+$L_{\mathrm A}\notin\Cmcf{f}{s'}$ for all $f\ge1$.
+\end{enumerate}
+Hence $s_{\mathrm A}(\Sigma_{\mathrm A}^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$,
+and $L_{\mathrm A}$ is covered by Theorem~\ref{thm:local-group-polydata} but, for no
+typing, by Theorem~\ref{thm:window-group-polydata}, even with
+Lemma~\ref{lem:mcfg-li-group-window}.
+\end{proposition}
+
+\begin{proposition}[A target separating nonabelian and window--abelian typings]
+\label{prop:nonabelian-needed-target}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $L_{\mathrm B}\in\mathsf{MCFL}(2,2)\setminus\mathrm{CFL}$.
+\item $L_{\mathrm B}\in\Cmcf{f}{s_{\mathrm B}}$ for every $f\ge2$, and $s_{\mathrm B}$ is
+window--group-determined with group $S_3$.
+\item If $s'\preceq(s_{k,\ell},g'|_{\Sigma_{\mathrm B}^+})$ for some $k,\ell$ and a
+morphism $g'$ into a finite \emph{abelian} group (in particular if
+$s'(\Sigma_{\mathrm B}^+)\in\mathbf{LI}\vee\mathbf{Ab}$), then
+$L_{\mathrm B}\notin\Cmcf{f}{s'}$ for all $f\ge1$.
+\end{enumerate}
+Hence $L_{\mathrm B}$ is covered by Theorem~\ref{thm:window-group-polydata} with the
+nonabelian constant $c_{S_3,f}=M_{S_3,f}-1$, but for no typing by its trivial-group or
+abelian-group cases (Remark~\ref{rem:window-abelian}).
+\end{proposition}
+
+\begin{proof}[Proof of Propositions~\ref{prop:lg-needed-target}
+and~\ref{prop:nonabelian-needed-target}]
+Write $\diamond\in\{\mathrm A,\mathrm B\}$, let $\Sigma_\diamond^\circ$ be $\{\mathtt a,\mathtt b,
+\mathtt c\}$ or $\{\mathtt a,\mathtt b\}$, and let $P_\diamond(w)$ be ``$\#_{\mathtt{ab}}(w)$
+even'' or ``$g_{\mathrm B}(w)=1$''.
+
+(i) Let $W$ be a right-linear (fan-out-one, rank-one, good) grammar for the regular
+language $\{\varsigma w:\varsigma\in\{\mathtt l,\mathtt r\},w\in(\Sigma_\diamond^\circ)^+,
+\varsigma=\mathtt r\text{ or }P_\diamond(w)\}$; it tracks the last letter and the parity,
+respectively the value in $S_3$.  Add
+\[
+ C\to(\xi_1^1\mathtt\$\mathtt 1,\mathtt 3)(W)\mid(\xi_1^1\mathtt 1,\xi_1^2\mathtt 3)(C),\quad
+ D\to(\mathtt 2,\mathtt 4)\mid(\xi_1^1\mathtt 2,\xi_1^2\mathtt 4)(D),\quad
+ S\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(C,D).
+\]
+Then $L_C=\{(\varsigma w\mathtt\$\mathtt 1^m,\mathtt 3^m)\}$, $L_D=\{(\mathtt 2^n,\mathtt 4^n)\}$,
+and $S$ generates $L_\diamond$; the grammar is good (adjacent variables in the start
+template belong to different children).  Intersecting with
+$\mathtt{ra\$}\mathtt 1^+\mathtt 2^+\mathtt 3^+\mathtt 4^+$ and erasing $\mathtt{ra\$}$
+gives the non-context-free $C_\times$.
+
+(ii) $L_\diamond=Q_\diamond\cap\Pi_\diamond\cap\varphi_\times^{-1}(0)$ with
+$Q_\diamond=\{\mathtt l,\mathtt r\}(\Sigma_\diamond^\circ)^+\mathtt\$\mathtt 1^+\mathtt 2^+\mathtt 3^+
+\mathtt 4^+$ and $\Pi_\diamond$ the set of nonempty words that begin with $\mathtt r$, or begin
+with $\mathtt l$ and satisfy $P_\diamond$ for the whole word.  On $Q_\diamond$ the condition $P_\diamond$ of
+the whole word is that of $w$: no factor $\mathtt{ab}$ meets $\varsigma$, $\mathtt\$$ or
+the digits, and $g_{\mathrm B}$ is trivial on all other letters.  $Q_\diamond$ is strictly
+2-local (its pairs are $\vdash\varsigma$, $\varsigma x$, $xy$, $x\mathtt\$$, $\mathtt{\$1}$,
+$\mathtt{11},\mathtt{12},\mathtt{22},\mathtt{23},\mathtt{33},\mathtt{34},\mathtt{44}$,
+$\mathtt 4\dashv$ for $\varsigma\in\{\mathtt l,\mathtt r\}$, $x,y\in\Sigma_\diamond^\circ$) and
+$s_{1,1}\preceq s_\diamond$, so Lemma~\ref{lem:sl2-boundary-control} applies.  $\Pi_\diamond$ is a
+union of $s_\diamond$-classes: $s_\diamond$ records the first letter, and for words of length at least
+two the parity of $\#_{\mathtt{ab}}$, respectively the value of $g_{\mathrm B}$ (the
+one-letter words $\mathtt l,\mathtt r$ lie in $\Pi_\diamond$); so item~(c) after
+Definition~\ref{def:class-cmcf} applies.  Proposition~\ref{prop:abelian-coset-filter}
+handles $\varphi_\times^{-1}(0)$ and the intersection; with (i),
+$L_\diamond\in\Cmcf{f}{s_\diamond}$ for $f\ge2$.  $s_{\mathrm A}$ is local-group-determined, so its
+positive image lies in $\mathbf{LG}$ by Theorem~\ref{thm:lg-characterization}.
+
+(iii) for $\mathrm A$.  Let $\hat k=\max\{k,\ell,1\}$, $q\ge2$ an even multiple of the
+exponent of the group of $g'$, $u=\mathtt a^{\hat k}(\mathtt{abc})^q\mathtt a^{\hat k}$
+and $v=\mathtt a^{\hat k}(\mathtt{bac})^q\mathtt a^{\hat k}$.  Both are long for
+$s_{k,\ell}$ with prefix $\mathtt a^k$ and suffix $\mathtt a^\ell$, and
+$g'(u)=g'(\mathtt a)^{2\hat k}=g'(v)$; so $s'(u)=s'(v)$.  But $\#_{\mathtt{ab}}(u)=q$ is
+even and $\#_{\mathtt{ab}}(v)=1$ (only at $\mathtt a^{\hat k}\mathtt b$).  With
+$z=\mathtt{\$1234}$, Lemma~\ref{lem:flag-separation} applies.  A typing with positive
+image in $\mathbf{LI}\vee\mathbf{Grp}$ satisfies the hypothesis by
+Lemma~\ref{lem:mcfg-li-group-window}.
+
+(iii) for $\mathrm B$.  Let $\hat k\ge\max\{k,\ell,1\}$ be even,
+$u=\mathtt a^{\hat k}(\mathtt{ab})^3\mathtt a^{\hat k}$ and
+$v=\mathtt a^{\hat k}(\mathtt{ab})^2\mathtt{ba}\,\mathtt a^{\hat k}$.  They have the same
+prefix $\mathtt a^k$, suffix $\mathtt a^\ell$ and Parikh vector, so $s'(u)=s'(v)$ for abelian
+$g'$.  Since $\alpha^2=\beta^2=1$, $\alpha\beta$ has order $3$ and
+$\beta\alpha=(\alpha\beta)^{-1}$, we get $g_{\mathrm B}(u)=(\alpha\beta)^3=1$ and
+$g_{\mathrm B}(v)=(\alpha\beta)^2(\alpha\beta)^{-1}=\alpha\beta\ne1$.  With
+$z=\mathtt{\$1234}$, Lemma~\ref{lem:flag-separation} applies.  For
+$\mathbf{LI}\vee\mathbf{Ab}$, the proof of Lemma~\ref{lem:mcfg-li-group-window} with
+an abelian group factor gives an abelian $g'$.
+
+\emph{Consequences.}  If $s_{\mathrm A}(\Sigma_{\mathrm A}^+)$ were in
+$\mathbf{LI}\vee\mathbf{Grp}$, (iii) with $s'=s_{\mathrm A}$ would contradict (ii).
+Theorem~\ref{thm:window-group-polydata} and its trivial-group and abelian cases
+assume a typing of the excluded kind.
+\end{proof}
+
+
+
+%% ---- (2) ----
+\begin{proposition}\label{prop:unary-cyclic-linear}
+Let $\Sigma=\{\mathtt a\}$, $m\ge2$, and let $s$ send $\mathtt a$ to a generator of
+$\mathbb Z_m$.  For every $L\in\Cmcf{f}{s}$ and every reduced good
+fan-out-$\le f$, rank-$\le r$ presentation $G$ of $L\cap\Sigma^+$,
+$\tau(G,s)\le2m\bar\theta_G$.  Hence $\mathcal B^{\le r}_{f,s}$ and
+$\mathcal B_{f,s}$ have a common characteristic sample $K$ with
+$\|K\|_+\le(m+1)^{fr}(3+2mr)\|G\|\bar\theta_G+\mathbf 1_{\{\eps\in L\}}$.
+\end{proposition}
+
+\begin{proof}
+Let $A:=\{n\ge1:\mathtt a^n\in L\}$, assumed nonempty, $\theta:=\bar\theta_G$ and
+$\mu:=\min A\le\theta$.  (a) If $n<n'$ lie in $A$ and $m\mid\delta:=n'-n$, then
+$\mathtt a$ and $\mathtt a^{1+\delta}$ have the same type and share the context
+$(\mathtt a^{n-1},\eps)$, so testing their common distribution on
+$(\mathtt a^{p-1},\eps)$ gives $p\in A\iff p+\delta\in A$ for all $p\ge1$.
+
+If $A$ is finite, its elements are pairwise incongruent modulo $m$ by (a), so
+$|A|\le m$, and Lemma~\ref{lem:app-lf-descent} reaches $\mu$ from $\max A$ in
+at most $|A|-1$ steps of length at most $\theta-\mu$; hence $\max A\le m\theta$.
+Every typed yield embeds into a word of $L$, so $\tau\le t_{\mathrm{typ}}\le m\theta$.
+
+Let $A$ be infinite and let $\Delta$ be the greatest common divisor of the set $D$ of
+differences $n'-n>0$ of elements of $A$ congruent modulo $m$; then $m\mid\Delta$.
+Fix $\delta_0\in D$ and let $\chi(z)=1$ iff $z+N\delta_0\in A$ for some, equivalently
+by (a) every, $N$ with $z+N\delta_0\ge1$; so $\chi$ extends the indicator of $A$ to
+$\mathbb Z$.  For $\delta\in D$ and $z\in\mathbb Z$, (a) applied to $p=z+N\delta_0$ with $N$
+large gives $\chi(z+\delta)=\chi(z)$.  The periods of $\chi$ form a subgroup of
+$\mathbb Z$, so $\Delta$ is a period.  Two elements of $A$ congruent modulo $m$ differ by a multiple of $\Delta$, so
+$A$ meets at most $m$ residue classes modulo $\Delta$, and some consecutive elements
+$u<v$ of $A$ with $u\ge\mu$ satisfy $v-u\ge\Delta/m$.  Lemma~\ref{lem:app-lf-descent}
+gives an element of $A$ in $[v-\theta,v)$, hence at most $u$, so $\Delta\le m\theta$.
+Now let $X$ be a typed nonterminal of arity $d$ and $\tuple x\in L_X$ of total
+length $T$.  Choose $\rho_h\in\{1,\ldots,m\}$ with $\rho_h\equiv|x_h|\pmod m$ and
+put $b:=\sum_h\rho_h\le md\le m\theta$, using $d\le\|\omega\|_1\le\theta$ for a short
+tuple $\omega$ of the underlying nonterminal.  Since $T\equiv b\pmod m$ and
+$m\mid\Delta$, some $T'\equiv T\pmod\Delta$ satisfies $b\le T'<b+\Delta$ and $m\mid T'-b$.  The
+tuple $\tuple y:=(\mathtt a^{\rho_1+T'-b},\mathtt a^{\rho_2},\ldots,\mathtt a^{\rho_d})$
+has the type of $\tuple x$, and $|F[\tuple y]|\equiv|F[\tuple x]|\pmod\Delta$ for every
+$d$-context $F$, so $\tuple x$ and $\tuple y$ have the same distribution.  Hence
+$\tau_X\le T'<b+\Delta\le2m\theta$.
+
+Corollary~\ref{cor:distribution-representatives} gives a common characteristic
+sample of length at most $N_{\mathrm{typ}}(1+2\theta+r\tau)+\mathbf 1_{\{\eps\in L\}}$,
+and $N_{\mathrm{typ}}\le|V|(m+1)^f+|P|(m+1)^{fr}\le(m+1)^{fr}\|G\|$ since
+$|\mathsf S^\sharp|=m+1$.
+\end{proof}
+

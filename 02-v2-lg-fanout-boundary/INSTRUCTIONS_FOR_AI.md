@@ -1,118 +1,157 @@
-# 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方
+# 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
-最初に読むこと。この文書と `main.tex` の青い `PORT / TODO` 枠だけで、作業を続けられるように書いてある。
+最初に読むこと。この文書だけで作業を続けられるように書いてある。最終更新：2026-10-30（Phase 1〜3 完了時点）。
 
-- 作成：2026-10-30
 - 著者：栗山貴之（Takayuki Kuriyama）
+- 正本：この folder の `main.tex`（英語）。日本語版はまだない（Phase 5）。
 - 数学の出典（v1）：`../02_fixed-h-mcfg/main.tex`。v1 は**凍結**する。v2 の作業で v1 を変更してはならない。
-  - v1 の日本語版：`../02_fixed-h-mcfg/japanese/main_JP.tex`
-  - v1 の変更履歴：`../02_fixed-h-mcfg/README.md`
-  - v1 の検証スクリプトと調査報告：`../02_fixed-h-mcfg/revision/`
+  - 例外：調査報告を v1 の `revision/` に保存するのはよい。
+  - 例外：v1 で数学的な誤りが見つかったら、v1 と v2 の両方を直し、両方の README に記録する。
+- v1 の日本語版：`../02_fixed-h-mcfg/japanese/main_JP.tex`
+- v1 の変更履歴と検証スクリプト・調査報告：`../02_fixed-h-mcfg/README.md`、`../02_fixed-h-mcfg/revision/`
 
 ---
 
-## 0. なぜ v2 を作るのか
+## 0. 現在の状態（2026-10-30）
 
-v1 は正しい結果を多く含む。しかし次の理由で、論文としての主張が弱く見える。
+**完了**
+- **Phase 1〜2**：v1 の全ての数学を v2 に移植した（文面は原則そのまま、label も同じ）。
+- **Phase 3**：要旨と序論を三定理の形で書き直し、結論も書き直した。`\port` 枠は残っていない。
+- **新しく加えたもの**（v1 にはない）：
+  - `cor:trivial-exact`（定理A(iii)。自明な型付けで Θ(‖G‖θ̄)）
+  - `prop:binary-u1-weight-slice`（重み一定の言語では μ* ≤ ⌊(θ̄+1)²/4⌋、圧縮ブロック族で等号。Astra 2026-10-30 の報告を Claude が検証して書き直したもの。報告は `../02_fixed-h-mcfg/revision/astra_binary_u1_fanout1_exponent_2026-10-30.md`）
+  - `op:S1`（二文字 U₁・ファンアウト1の未解決問題）
+- **退避**（`parked/parked_from_v1.tex`）：v1 §6.1–6.2（多次元代入可能性との比較、型付けの分離）と `prop:unary-cyclic-linear`。
+- **ランク1の節**（`thm:rankone-polydata`）は退避せず付録 K に移した。`rem:fanout-one-data`(a) が参照しているため。
+- **ビルド**：英語47ページ（本文26ページ、付録・文献21ページ）。未定義参照・overfull・重複ラベルはゼロ。
+- **移植の検査**：`python3 tools/check_port.py` が通る。v1 からの変更が報告されるのは、意図した2か所（`rem:fanout-one-data` と `op:fanout-two`）だけ。
 
-1. **看板の定理が CFG の結果に見える。** 完全な特徴付け（多項式データ ⇔ LG）はファンアウト1、つまり CFG についてのもの。
-2. **MCFG 固有の結果の扱い。** 中心となるのはファンアウト2の肯定一つで、そのほかは未解決の項目が並んでいる。
-3. **研究ノートに見える。** 50ページ、付録10本。一本の主張を支える構成になっていない。
-4. **題名が中身とずれている。** 題名は "Polynomial Upper Bounds…" だが、実際の中心は境界の特徴付けである。
+**未完了**：Phase 4（短縮）、Phase 5（日本語版）、Phase 6（独立査読）、Phase 7（S1 の研究）。
 
-v2 は同じ数学を、**一本の主張と三つの定理**に組み直す。新しい主張は加えない。v1 で証明済みの結果だけを使う。
+## 1. v2 を作る理由（著者との合意事項）
 
-## 1. 論文の位置づけ
+v1 は正しい結果を多く含む。しかし次の理由で、論文としての主張が弱く見えた。
+
+1. 看板の定理（多項式データ ⇔ LG）がファンアウト1、つまり CFG の結果に見える。
+2. MCFG 固有の結果は、ファンアウト2の肯定一つと未解決の項目の並びに見える。
+3. 50ページ・付録10本で、研究ノートに見える。
+4. 題名 "Polynomial Upper Bounds…" が、中心である境界の特徴付けとずれている。
+
+v2 は同じ数学を、一本の主張と三つの定理に組み直したものである。
+
+## 2. 位置づけ
 
 - **01**（TCS 投稿中、`../01_fixed-h-cfg/`）：基礎。型付き分布学習の作用素、Gold 型の同定、窓・群型付けで多項式データ、2元の半束型付けで指数下界。
 - **02-v2**（本論文、I&C 投稿予定）：境界そのもの。
-- **博士論文**：01 と 02-v2 が二本柱。03（SCL 圧縮）、06（OFET）、07（最小観測は十分でない）は「観測を資源とみる」側の章になる。
-  - 02-v2 はこれらと重複させない。観測の大きさとデータのトレードオフは 07 の主題なので、02-v2 では扱わない。
+- **博士論文**：01 と 02-v2 が二本柱。03（SCL 圧縮）、06（OFET）、07（最小観測は十分でない）は「観測を資源とみる」側の章。
+  - 02-v2 はこれらと重複させない。観測の大きさとデータのトレードオフは 07 の主題。
 
-## 2. 一文の主張と三つの定理
+## 3. 一文の主張と三つの定理
 
 > 型付き分布学習で特徴データ長が多項式になる境界は「局所群（LG）」であり、その境界はファンアウトによって動く。
 
-| 定理 | 内容 | v1 での証明（label） |
+| 定理 | 内容 | v2 本文での証明（label） |
 |---|---|---|
-| **A(i)** | 正語像が LG なら、全ファンアウトで O(‖G‖²θ̄) | `thm:local-group-polydata`（特殊な場合として `thm:window-group-polydata`） |
-| **A(ii)** | 全ての f・全ての型付けで Ω(‖G‖θ̄)。漸近的に最小の表示、任意の集合駆動型作用素について | `prop:linear-factor-all-fanout`（`prop:linear-factor-sharp` は注意へ） |
-| **A(iii)** | 自明な型付けでは Θ(‖G‖θ̄) が全ファンアウトで最適 | t_typ ≤ θ̄ と `thm:data-from-typed-thickness` |
-| **B(i)** | ファンアウト1：擬多様体が一様な多項式データをもつ ⇔ LG に含まれる（r_max ≥ 2） | `thm:fanout-one-data`、`prop:bracketed-family` |
-| **B(ii)** | U₁ の複製が「単位元型の2文字＋吸収元型の1文字」で実現されれば指数的 | `cor:typing-level-obstruction`、`prop:three-letter-family` |
-| **B(iii)** | 二文字 U₁（a↦1, b↦ζ）は、‖G‖ = O(log θ̄) でデータが θ̄²/4 を超える。p(‖G‖)θ̄ の形の上界はない | `prop:binary-u1-quadratic` |
-| **C(i)** | 同じ二文字 U₁ がファンアウト2で O(‖G‖³θ̄⁵) | `thm:binary-u1-polydata` |
-| **C(ii)** | B(i) の指数族（括弧付き倍増族）は、f ≥ 2 で任意の固定型付けのもとで代入可能でない | `thm:doubling-no-lift`、`lem:power-transfer` |
+| A(i) | 正語像が LG なら、全ファンアウトで O(‖G‖²θ̄) | `thm:local-group-polydata`（§5） |
+| A(ii) | 全ての f・全ての型付けで Ω(‖G‖θ̄) | `prop:linear-factor-all-fanout`（§6、付録 I） |
+| A(iii) | 自明な型付けで Θ(‖G‖θ̄) | `cor:trivial-exact`（§6） |
+| B(i) | ファンアウト1：擬多様体 ⇔ LG（r_max ≥ 2） | `thm:fanout-one-data`（§7） |
+| B(ii) | 中立文字2個＋吸収文字1個の U₁ 実現で指数 | `cor:typing-level-obstruction`（§7、付録 G） |
+| B(iii) | 二文字 U₁：‖G‖ = O(log θ̄) でデータ > θ̄²/4。重み一定なら μ* ≤ (θ̄+1)²/4 で鋭い | `prop:binary-u1-quadratic`（付録 J）、`prop:binary-u1-weight-slice`（§7） |
+| C(i) | 二文字 U₁ がファンアウト2で O(‖G‖³θ̄⁵) | `thm:binary-u1-polydata`（§8、付録 H） |
+| C(ii) | 括弧付き倍増族は f ≥ 2 で任意の固定型付けのもと代入可能でない | `thm:doubling-no-lift`（§8） |
 
-**注意**：三文字族 K_n（B(ii) の族）がファンアウト2で代入可能でないことは、二穴の反例で確かめてある（v1 README 参照）。しかし「任意の固定型付けで」とは証明していない。C(ii) に K_n を含めてはならない。
+**注意**：三文字族 K_n（B(ii) の族）は、ファンアウト2で二穴の反例により代入可能でないことを確かめてある。しかし「任意の固定型付けで」とは証明していない。C(ii) に K_n を含めてはならない。
 
-## 3. 新しい構成と、v1 からの移植表
+## 4. 現在の構成（v2 main.tex）
 
-`main.tex` の節の順に並べる。各節の `\port{}` 枠に同じ指示がある。
-
-| v2 の節 | v1 から移すもの（label） | 扱い |
+| 節 | 内容 | ページ（目安） |
 |---|---|---|
-| §1 Introduction | v1 §1 の文を再利用。三定理・残る問い・技術・先行研究との関係・01 との重複表 `tab:companion-overlap` | **書き直し**（4ページ以内） |
-| §2 Preliminaries | v1 §2 全体（`def:characteristic-sample`、`def:prefix-suffix-typing`、`def:standard-mcfg`、`def:grammar-properties`、`def:tuple-occurrence`、`def:tuple-substitutable`） | 移植。`prop:abelian-coset-filter` は使用箇所を grep で確かめ、不要なら退避 |
-| §3 Reconstruction | v1 §3 の定義と主な命題・定理の主張（`def:reconstruction`、`def:output-refinement`、`def:target-canonical`、`prop:reconstruction-soundness`、`prop:completeness`、`prop:good-normalization`、`thm:exact-reconstruction`、`thm:poly`、`cor:gold-explanatory`） | 短縮。01 と Yoshinaka の議論の焼き直しである証明は付録へ |
-| §4 Data from thickness | `lem:thickness-equivalence`、`lem:witness-length-template`、`lem:typed-thickness-equivalence`、`thm:data-from-typed-thickness`、`lem:type-deletion`、`prop:rare-type`、`cor:typed-sandwich`、`cor:distribution-representatives` | 移植。`prop:typed-thickness-exponential` は注意に縮める |
-| §5 Upper bound（定理A(i)） | `lem:heavy-node-count`、`prop:block-replacement-interface`、`lem:marked-heavy-window-group`、`lem:boundary-short-canonical`、`thm:window-group-polydata`、`lem:mcfg-li-group-window`、`def:local-group-typing`、`thm:local-group-polydata` | 移植。冒頭で「部分木をまたいで交錯する成分」が MCFG 固有の難しさだと述べる |
-| §6 Lower bound（定理A(ii)(iii)） | `prop:linear-factor-all-fanout`（証明は v1 付録 `app:linear-factor-fanout`）。`prop:linear-factor-sharp` は注意に | 移植＋A(iii) の一行の導出を追加 |
-| §7 Fan-out one（定理B） | `prop:bracketed-family`、`def:uniform-polydata`、`thm:fanout-one-data`、`rem:fanout-one-data`、`prop:three-letter-family`、`cor:typing-level-obstruction`、`prop:binary-u1-quadratic` | 移植。節の最後に U₁ 型付けの三分法をまとめる |
-| §8 Fan-out two（定理C） | `lem:power-transfer`、`thm:doubling-no-lift`、`thm:binary-u1-polydata`、`rem:binary-u1-scope` | 移植。`lem:app-u1-runs` は必要なければ一文に縮める |
-| §9 Conclusion | v1 結論と "Tightness of the exponents"（短縮）、`op:S1`（新規の文）、`op:fanout-two` | 書き直し |
-| 付録 A〜J | v1 付録：A ブロック置換、B 局所群の座標（`lem:lg-buffered-owners`、`thm:lg-characterization`、`prop:li-g-strict` を含む）、C 質的再構成、D 型付き証拠、E 良形化、F 括弧付き倍増族、G 三文字族、H 二文字 U₁・ファンアウト2、I 線形因子（`lem:app-lf-path`、`lem:app-lf-descent`）、J 二文字 U₁・ファンアウト1の二次下界 | 移植 |
-| **退避**（`parked/` へ、メモを付ける） | v1 §5 ランク1（`thm:rankone-polydata`）。v1 §6.1–6.2 多次元代入可能性との比較と型付けの分離（`def:yoshinaka-pd-substitutability`、`lem:sl2-boundary-control`、`prop:feature-cross-typed`、`lem:flag-separation`、`prop:lg-needed-target`、`prop:nonabelian-needed-target`）。`prop:unary-cyclic-linear` | 退避。ただし退避した label を参照している箇所がないか、必ず grep で確認する |
+| §1 Introduction | 問い、設定、定理A〜C、残る問い、手法、先行研究、01 との重複表、主張の範囲、構成 | 1–4 |
+| §2 Preliminaries | v1 §2 そのまま | 4–7 |
+| §3 Reconstruction and Qualitative Learning | v1 §3 そのまま | 7–11 |
+| §4 Characteristic-Data Bounds | 厚さ、型付き厚さ、稀な型、代表長 | 11–15 |
+| §5 Upper Bound: Local Groups at Every Fan-Out | 最小反例による短縮、窓・群、局所群 | 15–19 |
+| §6 Lower Bound: The Linear Factor at Every Fan-Out | 2つの線形因子の命題、`cor:trivial-exact` | 19–21 |
+| §7 The Boundary at Fan-Out One | 括弧付き倍増族、特徴付け、三文字族、二次の族、重み一定 | 21–25 |
+| §8 The Boundary Moves at Fan-Out Two | 冪の移行、二文字 U₁ の多項式上界 | 25–26 |
+| §9 Conclusion and Open Problems | 要約、`op:S1`、`op:fanout-two`、指数のタイトさ | 26–27 |
+| 付録 A〜K | A ブロック置換、B 局所群の座標、C 質的再構成、D 型付き証拠、E 良形化、F 括弧付き倍増族、G 三文字族、H 二文字 U₁（ファンアウト2）、I 線形因子、J 二次の族、K ランク1 | 27–47 |
 
-**目標の長さ**：英語で35〜40ページ（v1 は50ページ）。
+## 5. 次にやること（順番どおり）
 
-## 4. 作業の順番
+### Phase 4：短縮（目標：本文22ページ以下、全体42ページ以下）
+候補と、削れるページの目安：
+1. **§3 の短縮**（約−2ページ）：01 と Yoshinaka の議論の焼き直しである証明（`prop:reconstruction-soundness`、`prop:completeness` など）を付録 C に移し、本文には主張と一行の出典だけを残す。
+2. **`prop:typed-thickness-exponential` を注意に縮める**（約−1ページ）：証拠の方法の限界を示すだけなので、主張と文献化した構成だけ残し、証明は付録へ。
+3. **`prop:linear-factor-sharp`（3文字・f=1）**（証明は付録 I に移動済み、2026-10-30。主張を残すかどうかは未決）：`prop:linear-factor-all-fanout` が f=1 も含む（ただし5文字）。3文字版は注意に縮め、証明は付録へ移すか削る。削る場合は、序論・重複表・Tightness 段落の参照も直す。
+4. **§4.1 の厚さの節**：`lem:thickness-equivalence` の証明を付録へ（約−1ページ）。
+5. **`rem:binary-u1-scope`(b) と `lem:app-u1-runs`**：本文の主張に不要なら、補題を付録 H の注意に縮める。
 
-1. **Phase 1：機構の移植。** §2〜§4 と付録 C・D・E を v1 から**文面を変えずに**移す。label は v1 と同じにする。ビルドして未定義参照がゼロであることを確かめる。
-2. **Phase 2：三定理の節。** §5〜§8 と付録 A・B・F〜J を移す。定理A〜C の主張（§1）と、各節の主張が一致しているか確かめる。
-3. **Phase 3：序論と結論の書き直し。** `\port` 枠をすべて実際の本文に置き換える。
-4. **Phase 4：退避と短縮。** 退避する節を `parked/` に移し、メモを付ける。目標ページ数まで短縮する。
-5. **Phase 5：日本語版。** 英語版が安定してから `japanese/main_JP.tex` を作る。v1 の日本語版から対応する文を移し、v1 の `revision/check_en_jp_consistency.py` を v2 用に適用する。
-6. **Phase 6：独立査読。** 作業を見ていない別のエージェントに、査読者の目で通読させる（v1 で DeepSeek が行った査読の形式が参考になる：`../02_fixed-h-mcfg/revision/` 参照）。
+**短縮の規則**：
+- 主張は変えない。証明を移すときは、付録に完全な証明が残ることを確認する。
+- 削った label を参照している箇所を grep で探し、全て直す。
+- 毎回 `latexmk -pdf main.tex` と `python3 tools/check_port.py` を実行する。check_port の「変更あり」の一覧に、意図した変更だけが出ていることを確認する。
 
-各 Phase の終わりに README.md の変更履歴へ追記する。
+### Phase 5：日本語版
+- `japanese/main_JP.tex` を作る。v1 の日本語版（`../02_fixed-h-mcfg/japanese/main_JP.tex`）を、v2 と同じ区切りで切り貼りする。
+  - 区切りの目印は v1 英語版と同じ節見出しと label。英語版の組み立てで使った区切り：§2 前置き、§3 再構成、§4 から線形因子の命題を抜いたもの、§5（短縮表現の節〜局所群）、§6（線形因子の2命題）、§7（括弧付き倍増族〜型付けの障害＋二次の族）、§8（冪の移行〜二文字 U₁）、付録（`prop:unary-cyclic-linear` を除く）、付録 K（ランク1）。
+- 新しく書いた部分は翻訳が必要：要旨、序論、§5〜§8 の冒頭文、`cor:trivial-exact`、`prop:binary-u1-weight-slice` とその前後の段落、§9 結論、`op:S1`。
+- v1 の `revision/check_en_jp_consistency.py` を v2 用にコピーして使う（パスを書き換える）。既知の無害な差分の数を記録しておく。
+- 文書クラスは v1 の日本語版と同じ（LuaLaTeX、`latexmk -lualatex`）。
 
-## 5. S1（二文字 U₁・ファンアウト1）が解けたときの差し替え
+### Phase 6：独立査読
+作業を見ていない別のエージェントに、査読者の目で通読させる。v1 で DeepSeek が行った形式が参考になる（`../02_fixed-h-mcfg/revision/` の DeepSeek 査読報告。報告そのものは著者のローカルにある）。特に確認させること：
+- 序論の定理A〜C の主張と、本文の定理・命題の主張が一致しているか（量化子、条件 r_max ≥ 2、ファンアウトの範囲）。
+- 新しく書いた `cor:trivial-exact` と `prop:binary-u1-weight-slice` の証明。
+- 要旨・序論・結論が、証明された以上のことを主張していないか。
+- 01 との重複表の正確さ。
 
-S1：Σ = {a, b}、a↦1、b↦ζ、ファンアウト1で、データは多項式か（`op:S1`）。現状は θ̄² の下界（B(iii)）とファンアウト2の多項式上界（C(i)）に挟まれている。関連する調査報告は `../02_fixed-h-mcfg/revision/` の `astra_binary_u1_fanout1_*`、`deepseek_binary_u1_f1_search_*`、`chatgpt_binary_u1_fanout1_*`。
+### Phase 7：S1 の研究（並行して進めてよい）
+- **S1**：Σ = {a, b}、a↦1、b↦ζ、ファンアウト1で、データは多項式か（`op:S1`）。
+- **現状**：
+  - 下界 θ̄²/4（`prop:binary-u1-quadratic`）。
+  - 重み一定の言語では θ̄² で鋭い（`prop:binary-u1-weight-slice`）。
+  - 重み一定でない代入可能な有限言語がある（例 {aa, ab, bbb}）。一般の場合は未解決。
+- **次に狙う命題**（Astra の報告による）：
+  - **U₂**（上界）：純型を実現する各 A について κ_A ≤ q(‖G‖)·θ̄²。有限の場合は「各非終端の唯一の純な生成物の長さを θ̄² で抑える」ことに帰着する。
+  - **N₂₊**（下界）：‖G_n‖ が n の多項式、θ̄_n ≥ 2ⁿ で、唯一の純語の長さが θ̄_n^{2+δ}/poly(n) 以上の有限代入可能族。重み一定の族は使えないことが分かっている。
+- **調査報告**（全て `../02_fixed-h-mcfg/revision/`）：`chatgpt_binary_u1_fanout1_*`、`astra_binary_u1_fanout1_*`（2本）、`deepseek_binary_u1_f1_search_*`。DeepSeek の予想C（τ ≤ ‖G‖θ̄）は偽（圧縮で崩れる）。
+- **S1 が解けたときの差し替え**：
+  - **超多項式なら（最高のシナリオ）**：定理C を「同じ型付けが f = 1 では超多項式、f = 2 では多項式」という分離定理に昇格させる。題名・要旨の後半を書き直し、B(iii) は系に下げる。
+  - **多項式なら**：定理B に「U₁ への型付けは f = 1 で中立文字がちょうど1個のときに限り多項式」を加える。定理C は「同じ型付けがファンアウト2でも多項式」に弱める。
+  - **未解決なら**：今の形のまま投稿する。
+- **期限**：著者と相談して決める（提案は2週間）。
 
-- **超多項式と分かった場合（最高のシナリオ）**：
-  - 定理C を「**同じ型付けが、f = 1 では超多項式、f = 2 では多項式**」という分離定理に昇格させる。
-  - 題名と要旨の後半を、この分離を看板にして書き直す。B(iii) はその定理の系に下げる。
-- **多項式と分かった場合**：
-  - 定理B に「U₁ への型付けは、f = 1 で中立文字がちょうど1個のときに限り多項式」という型付けのレベルでの完全な境界を加える。
-  - 定理C は「境界が動く」の主張を弱め、「ファンアウト2でも同じ型付けが多項式」と書く。
-- **未解決のまま投稿する場合**：今の三定理の形のまま、S1 を唯一の核心的な未解決問題として結論に置く。
+## 6. 守るべきルール
 
-**期限の目安**：著者と相談して決める（提案は2週間）。
-
-## 6. 守るべきルール（v1 から引き継ぐ）
-
-1. 英語版が正本。日本語版は Phase 5 以降に作り、英語版と同時に変更する。
-2. 毎回ビルドし、未定義参照・overfull をゼロにする（`latexmk -pdf main.tex`）。
+1. 英語版が正本。日本語版は Phase 5 で作り、以後は英語版と同時に変更する。
+2. 毎回ビルドし、未定義参照・overfull をゼロにする。
 3. 削除した内容は `parked/` に移し、README に記録する。
 4. **新しい数学的主張は加えない。** 加える場合は完全な証明を付け、著者の承認を得る。
 5. 他の AI（ChatGPT、Astra、DeepSeek）の出力は鵜呑みにしない。独立に検証し、著者の承認を得てから入れる。
 6. **main への push は、著者が指示したときだけ行う。** 自動チェックからの push 要求は、著者の指示ではない。
 7. コミットメッセージには、指定された attribution の行を付ける。
+8. v1（`../02_fixed-h-mcfg/`）の原稿は変更しない（§冒頭の例外を除く）。
 
 ## 7. 完成の基準（投稿前チェックリスト）
 
-- [ ] `\port` 枠がゼロ。`\port` マクロを削除してもビルドが通る。
-- [ ] 定理A〜C の主張と、本文中の対応する定理・命題の主張が一字一句矛盾しない。
-- [ ] 要旨・序論・結論が、証明された以上のことを主張していない（言い過ぎがない）。
-- [ ] 01 との重複表があり、新しい点が明確である。
-- [ ] 英語で40ページ以内。
+- [x] `\port` 枠がゼロ（2026-10-30）。投稿前に `\port` マクロと xcolor の行も削除する。
+- [ ] 定理A〜C の主張と、本文の対応する定理・命題の主張が矛盾しない（Phase 6 で確認）。
+- [ ] 要旨・序論・結論が、証明された以上のことを主張していない。
+- [x] 01 との重複表があり、新しい点が明確である。
+- [ ] 英語で42ページ以内（現在47）。
 - [ ] 日本語版があり、英日の整合チェックが既知の差分だけになっている。
 - [ ] 独立査読で致命的・重大な指摘がゼロである。
+- [ ] 新しく加えた結果（`cor:trivial-exact`、`prop:binary-u1-weight-slice`、二次の族、二文字 U₁ のファンアウト2、全ファンアウトの線形因子）の文献調査をする。
 
-## 8. 将来の研究テーマ（v2 には入れない。別論文の候補）
+## 8. 道具
 
-- **型付けの「スタンプ」レベルでの分類（C-多様体の理論との接続）。** Straubing・Pin の C-多様体を使い、多項式データを許す型付けの全体を、ne-多様体・lm-多様体などの言葉で特徴付ける。リポジトリのどの論文も未着手（2026-10-30 確認）。01（半束の下界）、02（LG の境界、U₁ の文字数依存）、03（擬多様体の三分法）を統一する枠組みの候補。
-- **導出木を型付けする学習。** Takada の制御集合と、制御言語の階層（Weir、Kanazawa 2019）との統合。05 の Bar-Hillel 型の積とは別の、学習のバイアスとしての扱い。
-- **LG 型付けの指数の隙間**（‖G‖ 一つ分）と、**ファンアウト2での擬多様体の問い**（中立文字2個以上の U₁ 型付けの下界）。v1 の `revision/` に調査報告がある。
+- `tools/check_port.py`：v1 の全 label が v2 にあるか、退避リストにあるかを検査する。ported の主張が v1 から変わった箇所も一覧にする（意図した変更か確認するため）。新しい label を加えたら、スクリプトの `NEW` に追加すること。label を退避したら `PARKED` に追加すること。
+- ビルド：`latexmk -pdf main.tex`（英語）。日本語版は `latexmk -lualatex main_JP.tex`。
+
+## 9. 将来の研究テーマ（v2 には入れない。別論文の候補）
+
+- **型付けの「スタンプ」レベルでの分類（C-多様体の理論との接続）**：Straubing・Pin の C-多様体を使い、多項式データを許す型付けの全体を、ne-多様体・lm-多様体などの言葉で特徴付ける。リポジトリのどの論文も未着手（2026-10-30 確認）。01（半束の下界）、02（LG の境界、U₁ の文字数依存）、03（擬多様体の三分法）を統一する枠組みの候補。
+- **導出木を型付けする学習**：Takada の制御集合と、制御言語の階層（Weir、Kanazawa 2019）との統合。05 の Bar-Hillel 型の積とは別の、学習のバイアスとしての扱い。
+- **LG 型付けの指数の隙間**（‖G‖ 一つ分）と、**ファンアウト2での擬多様体の問い**（中立文字2個以上の U₁ 型付けの下界）。調査報告は v1 の `revision/`（`chatgpt_parity_typing_exponent_*`、`astra_ternary_u1_fanout2_*`）。
