@@ -10,9 +10,9 @@
 """
 import re, sys
 V1='../02_fixed-h-mcfg/main.tex'; V2='main.tex'; PK='parked/parked_from_v1.tex'
-PARKED={'def:yoshinaka-pd-substitutability','lem:sl2-boundary-control','prop:feature-cross-typed',
-        'lem:flag-separation','prop:lg-needed-target','prop:nonabelian-needed-target',
-        'prop:unary-cyclic-linear','sec:comparison','subsec:baseline','subsec:necessity'}
+PARKED={
+        
+        'prop:unary-cyclic-linear'}
 NEW={'thm:A','thm:B','thm:C','cor:trivial-exact','prop:binary-u1-weight-slice','op:S1',
      'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
