@@ -8,11 +8,6 @@ on:
         required: true
         default: main
         type: string
-      mcfg_ref:
-        description: "MCFG source ref (latest bilingual working draft)"
-        required: true
-        default: mcfg-v86-f3-type-indexed-integration
-        type: string
 
 permissions:
   contents: write
@@ -38,12 +33,6 @@ jobs:
           ref: ${{ inputs.cfg_ref || 'main' }}
           path: _paper_cfg_source
 
-      - name: Checkout latest MCFG manuscript
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.mcfg_ref || 'mcfg-v86-f3-type-indexed-integration' }}
-          path: _paper_mcfg_source
-
       - name: Compile CFG English Clean PDF
         uses: xu-cheng/latex-action@v4
         with:
@@ -57,28 +46,13 @@ jobs:
           root_file: main_JP.tex
           latexmk_use_lualatex: true
 
-      - name: Compile MCFG English PDF
-        uses: xu-cheng/latex-action@v4
-        with:
-          working_directory: _paper_mcfg_source/02_fixed-h-mcfg
-          root_file: main.tex
-
-      - name: Compile MCFG Japanese PDF
-        uses: xu-cheng/latex-action@v4
-        with:
-          working_directory: _paper_mcfg_source/02_fixed-h-mcfg/japanese
-          root_file: main_JP.tex
-          latexmk_use_lualatex: true
-
       - name: Replace only stable main-branch PDFs
         shell: bash
         run: |
           set -euo pipefail
           cp _paper_cfg_source/01_fixed-h-cfg/main.pdf 01_fixed-h-cfg/main.pdf
           cp _paper_cfg_source/01_fixed-h-cfg/japanese/main_JP.pdf 01_fixed-h-cfg/japanese/main_JP.pdf
-          cp _paper_mcfg_source/02_fixed-h-mcfg/main.pdf 02_fixed-h-mcfg/main.pdf
-          cp _paper_mcfg_source/02_fixed-h-mcfg/japanese/main_JP.pdf 02_fixed-h-mcfg/japanese/main_JP.pdf
-          for pdf in 01_fixed-h-cfg/main.pdf 01_fixed-h-cfg/japanese/main_JP.pdf 02_fixed-h-mcfg/main.pdf 02_fixed-h-mcfg/japanese/main_JP.pdf; do
+          for pdf in 01_fixed-h-cfg/main.pdf 01_fixed-h-cfg/japanese/main_JP.pdf; do
             test -s "$pdf"
             test "$(head -c 4 "$pdf")" = "%PDF"
             echo "Verified $pdf ($(wc -c < "$pdf") bytes)"
@@ -92,13 +66,11 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -f -- \
             01_fixed-h-cfg/main.pdf \
-            01_fixed-h-cfg/japanese/main_JP.pdf \
-            02_fixed-h-mcfg/main.pdf \
-            02_fixed-h-mcfg/japanese/main_JP.pdf
+            01_fixed-h-cfg/japanese/main_JP.pdf
           if git diff --cached --quiet; then
-            echo "All four stable PDF links already point to current compiled content."
+            echo "Both stable CFG PDF links already point to current compiled content."
             exit 0
           fi
-          git commit -m "Refresh stable bilingual CFG and MCFG PDFs from latest sources"
+          git commit -m "Refresh stable bilingual CFG PDFs from latest sources"
           git pull --rebase origin main
           git push origin HEAD:main
