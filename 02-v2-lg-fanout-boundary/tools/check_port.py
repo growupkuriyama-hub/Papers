@@ -14,7 +14,7 @@ PARKED={
         
         'prop:unary-cyclic-linear'}
 NEW={'thm:A','thm:B','thm:C','cor:trivial-exact','prop:binary-u1-weight-slice','op:S1',
-     'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two'}
+     'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two', 'prop:u1-weight-all-fanout'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
 v1=open(V1,encoding='utf-8').read(); v2=open(V2,encoding='utf-8').read(); pk=open(PK,encoding='utf-8').read()
 L1,L2,LP=set(labels(v1)),set(labels(v2)),set(labels(pk))

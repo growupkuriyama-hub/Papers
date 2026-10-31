@@ -1,4 +1,4 @@
-# #2 v2 — Local Groups and the Fan-Out Dependence of Characteristic-Data Length in Typed Distributional Learning of Multiple Context-Free Languages
+# #2 v2 — Local Groups, Fan-Out, and the Length of Characteristic Data in Typed Distributional Learning of Multiple Context-Free Languages
 
 **Author:** Takayuki Kuriyama
 **Target journal:** Information and Computation
@@ -8,13 +8,13 @@ This folder is the restructured ("new-born") version of paper #2. The mathematic
 
 - **Theorem A** — local-group upper bound $O(\|G\|^2\bar\theta_G)$ at every fan-out; linear factor $\Omega(\|G\|\bar\theta_G)$ under every typing at every fan-out; $\Theta(\|G\|\bar\theta_G)$ for the trivial typing.
 - **Theorem B** — the boundary at fan-out one: pseudovarieties ⇔ $\mathbf{LG}$; two letters of type 1 in a copy of $U_1$ force exponential data; the single-neutral-letter typing needs data quadratic in $\bar\theta_G$, sharp for constant weight.
-- **Theorem C** — the boundary moves at fan-out two: the single-neutral-letter typing admits polynomial data; the exponential fan-out-one family does not lift.
+- **Theorem C** — fan-out two: the single-neutral-letter typing admits polynomial data although $U_1\notin\mathbf{LG}$; the exponential fan-out-one family does not lift. Whether the boundary itself moves (one typing superpolynomial at $f=1$, polynomial at $f=2$) is open (S1, S2).
 
 **Start here:** [`INSTRUCTIONS_FOR_AI.md`](INSTRUCTIONS_FOR_AI.md) (status, structure, next phases, rules, checklist).
 
 ## Files
 
-- `main.tex` — English master (51 pages: body 24, appendices A–L 24, references 3). Builds with `latexmk -pdf main.tex`, no warnings.
+- `main.tex` — English master (52 pages: body 24, appendices A–L 25, references 3). Builds with `latexmk -pdf main.tex`, no warnings.
 - `parked/parked_from_v1.tex` — v1 material not used in v2 (one-letter cyclic typing).
 - `reviews/` — external reviews of v2 (ChatGPT comparison v1/v2, 2026-10-30).
 - `tools/check_port.py` — checks that every v1 label is in v2 or parked, and lists ported statements that differ from v1.
@@ -22,6 +22,7 @@ This folder is the restructured ("new-born") version of paper #2. The mathematic
 
 ## Change log
 
+- **2026-10-31 (6)** Claims aligned with what is proved (author's decision after three unsuccessful attempts on S2): title changed from "Local Groups and the Fan-Out Dependence of Characteristic-Data Length …" to "Local Groups, Fan-Out, and the Length of Characteristic Data …"; abstract second half, Theorem C title ("Fan-out two"), §8 title ("Fan-Out Two: Polynomial Data outside Local Groups") no longer say that the boundary moves; the remaining-question paragraph and `op:fanout-two` now state both routes to a genuine separation (S1 negative, or S2 positive). New `prop:u1-weight-all-fanout`: constant weight gives $\mu^\star\le\lfloor(\bar\theta_G+1)^2/4\rfloor$ at every fan-out and for every typing onto $U_1$, without substitutability (from Astra's 2026-10-31 pure-word report, verified and rewritten by Claude; proof in App. J); cited in Theorem B(iii) and in `op:fanout-two` (rare-type lower bounds need nonconstant weight). 52 pages.
 - **2026-10-30 (5)** Phase 4 shortening: body 26 → 24 pages, no mathematics removed. Proofs moved to appendices: `lem:filling-identity` (App. C); all proofs of §4 — `lem:thickness-equivalence`, `lem:witness-length-template`, `lem:typed-thickness-equivalence`, `thm:data-from-typed-thickness`, `lem:type-deletion`, `prop:rare-type`, `cor:typed-sandwich`, `prop:typed-thickness-exponential`, `cor:distribution-representatives` (App. D, retitled "Proofs for Typed Witnesses and Characteristic Data"); `prop:bracketed-family` (App. F), `prop:three-letter-family` (App. G), `prop:binary-u1-weight-slice` (App. J; key step kept in the body). §3 opening paragraph tightened; the second half of `rem:fanout-one-data`(b) duplicated the end of §7 and was cut, its observation (a finite target has at most one word of type 1) moved to `op:S1`. Proofs of the main results (§5, `cor:trivial-exact`, `thm:fanout-one-data`, `cor:typing-level-obstruction`, §8) stay in the body. `check_port.py` unchanged (intended changes only).
 - **2026-10-30 (4)** ChatGPT comparison review (`reviews/chatgpt_compare_v1_v2_2026-10-30.md`; v1 37/60, v2 46/60; two real errors in v2, both fixed): (a) Theorem A(ii) lacked the alphabet condition of `prop:linear-factor-all-fanout` (a one-letter alphabet is a counterexample) — now "if Σ has at least 4f+1 letters (3 if f=1)", also in the abstract, the ported sentence before `prop:linear-factor-sharp` and the Conclusion; (b) `cor:trivial-exact` spoke of the *largest* characteristic sample, which is unbounded (supersets of characteristic samples are characteristic) — restated as an upper bound for every target plus attainment by the marker family, with a remark that only shortest samples are meaningful; Theorem A(iii), abstract and Tightness paragraph synchronized. Also: C(ii) now states the threshold $n\ge2|\mathsf S|+3$; the existence of the critical node in `prop:binary-u1-weight-slice` is spelled out; v1 §6.1–6.2 (multidimensional substitutability, typing separations by explicit non-CFL targets) restored as Appendix K with the $L_R$ example in §1 and a summary paragraph at the end of §5 (reviewer: MCFG-specific evidence was lost); rank one is now Appendix L; `\port`/xcolor removed. 51 pages.
 - **2026-10-30 (3)** Phase 4 started: proof of `prop:linear-factor-sharp` moved to Appendix I (body unchanged in content).
