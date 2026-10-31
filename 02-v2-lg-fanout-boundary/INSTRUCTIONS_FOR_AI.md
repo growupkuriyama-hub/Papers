@@ -1,6 +1,6 @@
 # 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
-最初に読むこと。この文書だけで作業を続けられるように書いてある。最終更新：2026-10-31（看板を証明した範囲に合わせ、`prop:u1-weight-all-fanout` を追加した時点）。
+最初に読むこと。この文書だけで作業を続けられるように書いてある。最終更新：2026-10-31（「中」案で短縮した時点：U₁ 型付けの細分類を退避、43ページ）。
 
 - 著者：栗山貴之（Takayuki Kuriyama）
 - 正本：この folder の `main.tex`（英語）。日本語版はまだない（Phase 5）。
@@ -41,6 +41,12 @@
 - §7：`prop:bracketed-family` の証明を付録 F の末尾へ、`prop:three-letter-family` の証明を付録 G の末尾へ、`prop:binary-u1-weight-slice` の証明を付録 J の末尾へ。本文には付録への参照と、重み一定の命題については証明の要点（2文）を残した。`rem:fanout-one-data`(b) の後半（二文字 U₁ の説明）は §7 末尾の段落と重複していたので削り、「有限の標的は型1の語を高々1つ持つ」という観察は `op:S1` に移した。
 - 本文に残した証明：§5（定理A(i) の証明一式）、§6 の `cor:trivial-exact`、§7 の `thm:fanout-one-data` と `cor:typing-level-obstruction`、§8 全部。これらは論文の主結果なので、これ以上付録に移さないこと。
 
+**2026-10-31「中」案で短縮（著者の決定）**：52 → 43 ページ（本文 22、付録 A〜I 19、文献 2〜3）。
+- 退避（`parked/parked_u1_typing_level.tex`、label はそのまま。S1・S2 を扱う別論文の種）：三文字族と `cor:typing-level-obstruction`（旧付録 G）、`prop:binary-u1-quadratic`・`prop:binary-u1-weight-slice`・`prop:u1-weight-all-fanout`（旧付録 J）、3文字版の線形因子 `prop:linear-factor-sharp`、旧付録 K の後半（型付けの分離：`prop:lg-needed-target`、`prop:nonabelian-needed-target`）、旧付録 L（ランク1）。
+- 残したもの：定理A、定理B（(i) 擬多様体の境界、(ii) LG の外では指数）、定理C、旧付録 K の前半（序論の L_R の例の証明。今の付録 I）。
+- 結論に「Typings onto U₁」の段落を置き、退避した結果を「別稿で報告予定（to be reported separately）」として3文で要約し、未解決問題 S1・fanout-two につないだ。**別稿を書くときは、この段落の記述と一致させること。**
+- `rem:fanout-one-data`(a) はランク1を 01 の Theorem 8.3 で引用する形に変えた。
+
 **独立査読 1 回目（DeepSeek、2026-10-31、`reviews/deepseek_referee_2026-10-31.md`）を反映済み**：判定 minor revision。偽の主張なし。R1〜R5 を修正。R6（生成 AI 利用の宣言の範囲）は著者の判断待ち。DeepSeek は投稿前に `lem:app-u1-parikh` と `lem:order-homogenize` だけをもう一度、別の読み手に読ませることを勧めている。 → 2026-10-31 ChatGPT が二つとも段ごとに検証し、正しいと判断（`reviews/chatgpt_verify_parikh_homogenize_2026-10-31.md`）。説明の補足を2文入れた。
 
 **未完了**：Phase 4（短縮）、Phase 5（日本語版）、Phase 6（独立査読、特に付録 H の `lem:app-u1-parikh` と付録 A の `lem:order-homogenize`）、Phase 7（S1 の研究）。
@@ -72,12 +78,11 @@ v2 は同じ数学を、一本の主張と三つの定理に組み直したも�
 | 定理 | 内容 | v2 本文での証明（label） |
 |---|---|---|
 | A(i) | 正語像が LG なら、全ファンアウトで O(‖G‖²θ̄) | `thm:local-group-polydata`（§5） |
-| A(ii) | 全ての f・全ての型付けで Ω(‖G‖θ̄) | `prop:linear-factor-all-fanout`（§6、付録 I） |
+| A(ii) | 4f+1 文字以上なら、全ての f・全ての型付けで Ω(‖G‖θ̄) | `prop:linear-factor-all-fanout`（§6、付録 H） |
 | A(iii) | 自明な型付けで Θ(‖G‖θ̄) | `cor:trivial-exact`（§6） |
 | B(i) | ファンアウト1：擬多様体 ⇔ LG（r_max ≥ 2） | `thm:fanout-one-data`（§7） |
-| B(ii) | 中立文字2個＋吸収文字1個の U₁ 実現で指数 | `cor:typing-level-obstruction`（§7、付録 G） |
-| B(iii) | 二文字 U₁：‖G‖ = O(log θ̄) でデータ > θ̄²/4。重み一定なら μ* ≤ (θ̄+1)²/4 で鋭い。この上界は全ファンアウト・全ての U₁ 型付けで成り立つ | `prop:binary-u1-quadratic`（付録 J）、`prop:binary-u1-weight-slice`（§7）、`prop:u1-weight-all-fanout`（§7、証明は付録 J） |
-| C(i)（定理C の題は "Fan-out two"） | 二文字 U₁ がファンアウト2で O(‖G‖³θ̄⁵) | `thm:binary-u1-polydata`（§8、付録 H） |
+| B(ii) | LG の外では指数：s_U と括弧付き倍増族で ‖G‖, θ̄ = O(n)、データ ≥ 3·2ⁿ−1 | `thm:fanout-one-data`(iii)（§7）、`prop:bracketed-family`（付録 F） |
+| C(i)（定理C の題は "Fan-out two"） | 二文字 U₁ がファンアウト2で O(‖G‖³θ̄⁵) | `thm:binary-u1-polydata`（§8、付録 G） |
 | C(ii) | 括弧付き倍増族は f ≥ 2 で任意の固定型付けのもと代入可能でない | `thm:doubling-no-lift`（§8） |
 
 **注意**：三文字族 K_n（B(ii) の族）は、ファンアウト2で二穴の反例により代入可能でないことを確かめてある。しかし「任意の固定型付けで」とは証明していない。C(ii) に K_n を含めてはならない。
@@ -86,16 +91,16 @@ v2 は同じ数学を、一本の主張と三つの定理に組み直したも�
 
 | 節 | 内容 | ページ（目安） |
 |---|---|---|
-| §1 Introduction | 問い、設定、定理A〜C、残る問い、手法、先行研究、01 との重複表、主張の範囲、構成 | 1–4 |
+| §1 Introduction | 問い、設定（L_R の例）、定理A〜C、残る問い、手法、先行研究、01 との重複表、主張の範囲、構成 | 1–4 |
 | §2 Preliminaries | v1 §2 そのまま | 4–7 |
 | §3 Reconstruction and Qualitative Learning | v1 §3（証明は全て付録 C・D） | 7–10 |
 | §4 Characteristic-Data Bounds | 厚さ、型付き厚さ、稀な型、代表長（証明は付録 D） | 10–14 |
 | §5 Upper Bound: Local Groups at Every Fan-Out | 最小反例による短縮、窓・群、局所群 | 14–18 |
-| §6 Lower Bound: The Linear Factor at Every Fan-Out | 2つの線形因子の命題、`cor:trivial-exact` | 18–19 |
-| §7 The Boundary at Fan-Out One | 括弧付き倍増族、特徴付け、三文字族、二次の族、重み一定 | 19–22 |
-| §8 Fan-Out Two: Polynomial Data outside Local Groups | 冪の移行、二文字 U₁ の多項式上界 | 22–23 |
-| §9 Conclusion and Open Problems | 要約、`op:S1`、`op:fanout-two`、指数のタイトさ | 23–24 |
-| 付録 A〜L | A ブロック置換、B 局所群の座標、C 質的再構成（`lem:filling-identity` の証明を含む）、D 型付き証拠と特徴データ（§4 の証明）、E 良形化、F 括弧付き倍増族（`prop:bracketed-family` の証明を含む）、G 三文字族（`prop:three-letter-family` の証明を含む）、H 二文字 U₁（ファンアウト2）、I 線形因子（`prop:linear-factor-sharp` の証明を含む）、J 二次の族と重み一定（`prop:binary-u1-weight-slice` の証明を含む）、K 多次元代入可能性との比較と型付けの分離、L ランク1 | 25–51 |
+| §6 Lower Bound: The Linear Factor at Every Fan-Out | `prop:linear-factor-all-fanout`、`cor:trivial-exact` | 18–19 |
+| §7 The Boundary at Fan-Out One | 括弧付き倍増族、擬多様体の境界 | 19–20 |
+| §8 Fan-Out Two: Polynomial Data outside Local Groups | 冪の移行、二文字 U₁ の多項式上界（s_{U,2} はここで定義） | 20–21 |
+| §9 Conclusion and Open Problems | 要約、「Typings onto U₁」の段落（退避した結果の要約、別稿で報告予定と明記）、`op:S1`、`op:fanout-two`、指数のタイトさ | 21–22 |
+| 付録 A〜I | A ブロック置換、B 局所群の座標、C 質的再構成、D 型付き証拠と特徴データ、E 良形化、F 括弧付き倍増族、G 二文字 U₁（ファンアウト2）、H 線形因子、I 多次元代入可能性との比較（L_R の命題） | 23–41 |
 
 ## 5. 次にやること（順番どおり）
 

@@ -9,14 +9,12 @@
    intended edits can be reviewed (they are not errors by themselves).
 """
 import re, sys
-V1='../02_fixed-h-mcfg/main.tex'; V2='main.tex'; PK='parked/parked_from_v1.tex'
-PARKED={
-        
-        'prop:unary-cyclic-linear'}
-NEW={'thm:A','thm:B','thm:C','cor:trivial-exact','prop:binary-u1-weight-slice','op:S1',
-     'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two', 'prop:u1-weight-all-fanout'}
+V1='../02_fixed-h-mcfg/main.tex'; V2='main.tex'; PKS=['parked/parked_from_v1.tex','parked/parked_u1_typing_level.tex']
+PARKED={'subsec:rank-one', 'prop:unary-cyclic-linear', 'prop:linear-factor-sharp', 'app:three-letter-family', 'thm:rankone-polydata', 'subsec:necessity', 'sec:further', 'lem:flag-separation', 'prop:app-tl-congruence', 'prop:three-letter-family', 'app:binary-u1-quadratic', 'lem:app-lf-descent', 'lem:app-tl-recognition', 'prop:lg-needed-target', 'prop:nonabelian-needed-target', 'cor:typing-level-obstruction', 'lem:app-tl-reachable', 'subsec:baseline', 'prop:binary-u1-quadratic'}
+NEW={'thm:A','thm:B','thm:C','cor:trivial-exact','op:S1',
+     'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
-v1=open(V1,encoding='utf-8').read(); v2=open(V2,encoding='utf-8').read(); pk=open(PK,encoding='utf-8').read()
+v1=open(V1,encoding='utf-8').read(); v2=open(V2,encoding='utf-8').read(); pk='\n'.join(open(x,encoding='utf-8').read() for x in PKS)
 L1,L2,LP=set(labels(v1)),set(labels(v2)),set(labels(pk))
 ok=True
 missing=sorted(L1-L2-PARKED)
