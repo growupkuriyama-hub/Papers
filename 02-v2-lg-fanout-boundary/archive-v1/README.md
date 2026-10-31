@@ -1,3 +1,5 @@
+> **Archived 2026-10-31 (closed).** This is the frozen v1 of paper #2 (arXiv:2605.11644), moved here from the former top-level folder `02_fixed-h-mcfg/`. The current manuscript is [`../main.tex`](../main.tex) (02-v2); new research reports go to [`../reviews/`](../reviews/). Paths below are relative to this archive.
+
 # #2 — Polynomial Upper Bounds on Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
 
 **Author:** Takayuki Kuriyama  

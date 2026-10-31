@@ -10,7 +10,7 @@ Public source repository for Takayuki Kuriyama's research papers.
 ## Contents
 
 - **[`01_fixed-h-cfg/`](01_fixed-h-cfg/)** — *Distributional Learning of Context-Free Languages under Fixed Finite-Semigroup Typing* (**TCS-D-26-00494, current R1 v231**; [submission ZIP](01_fixed-h-cfg/TCS-D-26-00494_R1_3files.zip))
-- `02_fixed-h-mcfg/` — *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing* (working manuscript; arXiv:2605.11644)
+- **[`02-v2-lg-fanout-boundary/`](02-v2-lg-fanout-boundary/)** — *Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data* (paper #2, current manuscript; to be submitted to TCS). The earlier v1 (arXiv:2605.11644, formerly `02_fixed-h-mcfg/`) is archived in [`02-v2-lg-fanout-boundary/archive-v1/`](02-v2-lg-fanout-boundary/archive-v1/).
 - `03_scl-compression/` — *Finite-Monoid Compression in Syntactic Concept Lattices: Arity Hierarchies and a Pseudovariety Trichotomy* (arXiv:2608.29639)
 - `04_relative-factorization/` — *Relative Prime Factorization and Finite-State Presentations under Fixed Finite-Monoid Observation*
 - `05_jalc-occurrence-descriptors/` — *Finite Occurrence Descriptors for Context-Free Grammar Presentations under Monoid Typing* (JALC manuscript)

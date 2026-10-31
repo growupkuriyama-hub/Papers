@@ -15,7 +15,7 @@ Minimize dissertation-specific work while preserving the strongest possible rese
 The degree-critical core is exactly:
 
 1. `01_fixed-h-cfg/`
-2. `02_fixed-h-mcfg/`
+2. `02-v2-lg-fanout-boundary/` (v1 archived in its `archive-v1/`)
 3. `07_Minimal_Observation_Is_Not_Enough/` (MOINE)
 
 No separate #3 SCL-Compression chapter and no separate OFET chapter are required for this track.
@@ -42,9 +42,9 @@ Dissertation role:
 
 ## 3. Paper 2 — MCFG under fixed finite observation
 
-Directory: `../02_fixed-h-mcfg/`
+Directory: `../02-v2-lg-fanout-boundary/` (v1, arXiv:2605.11644, archived in `archive-v1/`)
 
-Title: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing*
+Title: *Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data*
 
 Current status:
 - pre-submission working manuscript

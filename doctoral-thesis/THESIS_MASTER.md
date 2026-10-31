@@ -59,9 +59,9 @@ Thesis role: foundational reconstruction chapter.
 
 ### Core B — #2 fixed-h MCFG
 
-Directory: `../02_fixed-h-mcfg/`
+Directory: `../02-v2-lg-fanout-boundary/` (v1, arXiv:2605.11644, archived in `archive-v1/`)
 
-Title: *Positive-Data Learning of Multiple Context-Free Languages under Fixed Finite-Monoid Typing*
+Title: *Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data*
 
 Role in dissertation:
 - extends fixed-observation reconstruction from CFGs to bounded-fan-out linear MCFGs;

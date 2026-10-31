@@ -11,7 +11,7 @@ This directory is the planning and integration layer for the doctoral dissertati
 The dissertation is **not yet maintained as a monolithic TeX source**. The five core research components are still evolving independently, so the thesis is currently managed master-first:
 
 1. `01_fixed-h-cfg/`
-2. `02_fixed-h-mcfg/`
+2. `02-v2-lg-fanout-boundary/` (v1 archived in its `archive-v1/`)
 3. `03_scl-compression/`
 4. `06_ofet/`
 5. `07_Minimal_Observation_Is_Not_Enough/`

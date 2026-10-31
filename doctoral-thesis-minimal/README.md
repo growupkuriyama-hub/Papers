@@ -11,7 +11,7 @@ This directory is the **minimal-dissertation track**.
 The goal is to obtain the strongest coherent doctoral thesis with the least thesis-specific additional work.  The core is deliberately restricted to:
 
 1. `01_fixed-h-cfg/`
-2. `02_fixed-h-mcfg/`
+2. `02-v2-lg-fanout-boundary/` (v1 archived in its `archive-v1/`)
 3. one short dissertation-level synthesis on moving **beyond one fixed observer**.
 
 The larger dissertation plan in `../doctoral-thesis/` remains preserved separately.  This minimal track does **not** require #3 SCL-Compression, OFET, or Observation Is Not Enough.
