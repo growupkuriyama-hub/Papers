@@ -14,7 +14,7 @@
 | Eyraud–Heinz–Yoshinaka 2016 | 出版版 PDF（REF-02-06） | Section 2.5.2（Thickness）、頁 25 始まり | 一致 |
 | Almeida et al. 2009（TAMS） | TAMS 出版版（著者提供の PDF、2026-10-31）と arXiv v1 | Lemma 2.2（Pumping Lemma）、Proposition 2.3 の (1)・(3)・(4)（(4) が U₁ を含まないこと）、巻 361・号 3・頁 1429–1461・DOI | **全て一致**（出版版と arXiv 版で番号は同じ） |
 | Geroldinger–Halter-Koch 2006（書籍） | 著者提供の PDF（2026-10-31） | Proposition 5.1.8（独立元から長さ Σ(ord(e_i)−1) の零和自由列、d*(G) ≤ d(G)）、Theorem 5.5.5（d(G) ≤ (n−1)+n log(\|G\|/n)、n = exp(G)）、Theorem 5.5.9（p 群で d(G) = d*(G)） | **全て一致**（原稿の下界・上界・等号の主張と番号の両方） |
-| Kuriyama（姉妹論文、arXiv:1409.6247v5） | 現行の `01_fixed-h-cfg/main.tex`（TCS R1） | 重複表の番号、Proposition 6.4 | 現行 R1 の番号とは一致（DeepSeek の R3 修正後）。**arXiv v5 の番号と一致するかは未確認** |
+| Kuriyama（姉妹論文、arXiv:1409.6247v5） | 現行の `01_fixed-h-cfg/main.tex`（TCS R1） | 重複表の番号、Proposition 6.4 | 現行 R1（凍結版 `archive/tcs-r1-2026-10-22/` と現行 `main.tex` は同一）の番号と一致（DeepSeek の R3 修正後）。arXiv v5 は R1 の翌日（2026-10-23）に新題名で公開されたとリポジトリに記録がある。**v5 の PDF そのものとの照合は未実施**（arXiv の取得が制限で失敗） |
 
 ## 原稿で直した箇所
 
@@ -25,4 +25,4 @@
 
 1. ~~Geroldinger–Halter-Koch の番号~~ → 著者提供の PDF で確認済み（一致）。
 2. ~~Almeida et al. の TAMS 版の番号~~ → 著者提供の TAMS 出版版で確認済み（一致）。
-3. **姉妹論文の引用の版**。原稿は arXiv v5 を引いているが、重複表の番号は TCS R1 の現行原稿に合わせてある。arXiv を R1 に更新してから v2 を投稿するか、引用を「TCS 審査中の原稿（R1）」に変える必要がある。
+3. **姉妹論文の引用の版**：著者の決定（2026-10-31）により arXiv v5 を基準とする。原稿の引用は既に v5。重複表の番号は R1 の番号で、v5 が R1 から作られていれば一致する。v5 の PDF で最終確認すること（確認すべき番号：Lemma 2.2、Proposition 3.5、Theorem 4.2、Theorems 5.2–5.3、Corollary 5.4、Lemma 6.2、Corollary 6.3、Proposition 6.4、Corollary 6.6、Lemma 7.1、Theorem 7.2、Lemma 7.4、Corollary 7.5、Lemma 7.6、Remark 7.7、Theorem 8.3、Appendix C）。
