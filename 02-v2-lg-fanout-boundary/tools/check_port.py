@@ -9,8 +9,8 @@
    intended edits can be reviewed (they are not errors by themselves).
 """
 import re, sys
-V1='../02_fixed-h-mcfg/main.tex'; V2='main.tex'; PKS=['parked/parked_from_v1.tex','parked/parked_u1_typing_level.tex']
-PARKED={'subsec:rank-one', 'prop:unary-cyclic-linear', 'prop:linear-factor-sharp', 'app:three-letter-family', 'thm:rankone-polydata', 'subsec:necessity', 'sec:further', 'lem:flag-separation', 'prop:app-tl-congruence', 'prop:three-letter-family', 'app:binary-u1-quadratic', 'lem:app-lf-descent', 'lem:app-tl-recognition', 'prop:lg-needed-target', 'prop:nonabelian-needed-target', 'cor:typing-level-obstruction', 'lem:app-tl-reachable', 'subsec:baseline', 'prop:binary-u1-quadratic'}
+V1='../02_fixed-h-mcfg/main.tex'; V2='main.tex'; PKS=['parked/parked_from_v1.tex','parked/parked_u1_typing_level.tex','parked/parked_fanout2_and_comparison.tex']
+PARKED={'app:three-letter-family', 'app:binary-u1', 'lem:sl2-boundary-control', 'subsec:rank-one', 'prop:three-letter-family', 'cor:typing-level-obstruction', 'lem:app-u1-shallow', 'lem:app-u1-runs', 'prop:unary-cyclic-linear', 'lem:app-br-exchange', 'sec:further', 'subsec:baseline', 'lem:flag-separation', 'thm:rankone-polydata', 'lem:app-u1-deep', 'lem:app-tl-recognition', 'lem:app-u1-transfer', 'lem:app-u1-fillers', 'prop:app-tl-congruence', 'lem:app-br-recognition', 'rem:binary-u1-scope', 'thm:binary-u1-polydata', 'prop:nonabelian-needed-target', 'subsec:binary-u1', 'prop:feature-cross-typed', 'prop:linear-factor-sharp', 'subsec:necessity', 'def:yoshinaka-pd-substitutability', 'prop:binary-u1-quadratic', 'lem:app-lf-descent', 'lem:app-u1-parikh', 'prop:app-br-congruence', 'prop:lg-needed-target', 'lem:app-br-branch', 'app:binary-u1-quadratic', 'lem:app-tl-reachable', 'lem:app-u1-identity', 'sec:comparison'}
 NEW={'thm:A','thm:B','thm:C','cor:trivial-exact','op:S1',
      'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
