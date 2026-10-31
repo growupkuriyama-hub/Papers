@@ -4,7 +4,7 @@ Public source repository for Takayuki Kuriyama's research papers.
 
 ## Latest TCS #1 revision — **v231 (2026-10-19)**
 
-**[TCS-D-26-00494: current submission files and exact three-file ZIP](01_fixed-h-cfg/README.md)** — revised manuscript, marked PDF, and synchronized response. The package is prepared, **not yet submitted to Editorial Manager**. Historical experiments and older versions are not current.
+**[TCS-D-26-00494: current submission files and exact three-file ZIP](01_fixed-h-cfg/README.md)** — revised manuscript, marked PDF, and synchronized response. **Submitted to Editorial Manager on 2026-10-22; under review (sent to reviewers, 2026-10-25).** Historical experiments and older versions are not current.
 
 
 ## Contents
