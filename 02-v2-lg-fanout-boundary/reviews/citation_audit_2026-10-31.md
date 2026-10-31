@@ -14,7 +14,7 @@
 | Eyraud–Heinz–Yoshinaka 2016 | 出版版 PDF（REF-02-06） | Section 2.5.2（Thickness）、頁 25 始まり | 一致 |
 | Almeida et al. 2009（TAMS） | TAMS 出版版（著者提供の PDF、2026-10-31）と arXiv v1 | Lemma 2.2（Pumping Lemma）、Proposition 2.3 の (1)・(3)・(4)（(4) が U₁ を含まないこと）、巻 361・号 3・頁 1429–1461・DOI | **全て一致**（出版版と arXiv 版で番号は同じ） |
 | Geroldinger–Halter-Koch 2006（書籍） | 著者提供の PDF（2026-10-31） | Proposition 5.1.8（独立元から長さ Σ(ord(e_i)−1) の零和自由列、d*(G) ≤ d(G)）、Theorem 5.5.5（d(G) ≤ (n−1)+n log(\|G\|/n)、n = exp(G)）、Theorem 5.5.9（p 群で d(G) = d*(G)） | **全て一致**（原稿の下界・上界・等号の主張と番号の両方） |
-| Kuriyama（姉妹論文、arXiv:1409.6247v5） | 現行の `01_fixed-h-cfg/main.tex`（TCS R1） | 重複表の番号、Proposition 6.4 | 現行 R1（凍結版 `archive/tcs-r1-2026-10-22/` と現行 `main.tex` は同一）の番号と一致（DeepSeek の R3 修正後）。arXiv v5 は R1 の翌日（2026-10-23）に新題名で公開されたとリポジトリに記録がある。**v5 の PDF そのものとの照合は未実施**（arXiv の取得が制限で失敗） |
+| Kuriyama（姉妹論文、arXiv:1409.6247v5） | arXiv v5 の PDF（著者提供、2026-10-31） | 重複表の全17項目（Lemma 2.2、Proposition 3.5、Theorem 4.2、Theorems 5.2–5.3、Corollary 5.4、Lemma 6.2、Corollary 6.3、Proposition 6.4、Corollary 6.6、Lemma 7.1、Theorem 7.2、Lemma 7.4、Corollary 7.5、Lemma 7.6、Remark 7.7、Theorem 8.3、Appendix C）と本文の Proposition 6.4 | **全て一致**（番号・内容とも。v5 は R1 と同じ番号） |
 
 ## 原稿で直した箇所
 
@@ -25,4 +25,8 @@
 
 1. ~~Geroldinger–Halter-Koch の番号~~ → 著者提供の PDF で確認済み（一致）。
 2. ~~Almeida et al. の TAMS 版の番号~~ → 著者提供の TAMS 出版版で確認済み（一致）。
-3. **姉妹論文の引用の版**：著者の決定（2026-10-31）により arXiv v5 を基準とする。原稿の引用は既に v5。重複表の番号は R1 の番号で、v5 が R1 から作られていれば一致する。v5 の PDF で最終確認すること（確認すべき番号：Lemma 2.2、Proposition 3.5、Theorem 4.2、Theorems 5.2–5.3、Corollary 5.4、Lemma 6.2、Corollary 6.3、Proposition 6.4、Corollary 6.6、Lemma 7.1、Theorem 7.2、Lemma 7.4、Corollary 7.5、Lemma 7.6、Remark 7.7、Theorem 8.3、Appendix C）。
+3. ~~姉妹論文の引用の版~~ → 著者の決定で arXiv v5 を基準とし、v5 の PDF で全17項目の一致を確認済み。
+
+## 結論
+
+位置指定つきの引用は全て原典と一致した（2026-10-31）。
