@@ -41,6 +41,8 @@
 - §7：`prop:bracketed-family` の証明を付録 F の末尾へ、`prop:three-letter-family` の証明を付録 G の末尾へ、`prop:binary-u1-weight-slice` の証明を付録 J の末尾へ。本文には付録への参照と、重み一定の命題については証明の要点（2文）を残した。`rem:fanout-one-data`(b) の後半（二文字 U₁ の説明）は §7 末尾の段落と重複していたので削り、「有限の標的は型1の語を高々1つ持つ」という観察は `op:S1` に移した。
 - 本文に残した証明：§5（定理A(i) の証明一式）、§6 の `cor:trivial-exact`、§7 の `thm:fanout-one-data` と `cor:typing-level-obstruction`、§8 全部。これらは論文の主結果なので、これ以上付録に移さないこと。
 
+**2026-10-31 題名と要旨を磨いた**：題は 01 と並ぶ形（"Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data"）。要旨は引用なし・約240語。要旨を直すときは、条件（ランク2以上、4f+1 文字以上、有界ランク）を落とさないこと。
+
 **2026-10-31 乙案＝閉じた核だけの版（著者の決定）**：43 → 36 ページ（本文 21、付録 12、AI 宣言と文献 3）。
 - 退避（`parked/parked_fanout2_and_comparison.tex`）：定理C(i)（二文字 U₁ がファンアウト2で多項式）とその証明（旧付録 G）、多次元代入可能性との比較の付録と序論の L_R の例、括弧付き倍増族の代入可能性の自己完結な証明（01 の Prop. 6.4(i)・App. C の引用に置き換え）、多項式時間と Gold 同定の詳しい証明。
 - 01 の結果で前提に使うのは、括弧付き倍増族の代入可能性だけ（序論に明記）。
