@@ -13,7 +13,7 @@
 | Seki et al. 1991（TCS 88） | 出版版 PDF（REF-03-01） | Lemma 2.2 の条件 (f3)（非削除） | 一致 |
 | Eyraud–Heinz–Yoshinaka 2016 | 出版版 PDF（REF-02-06） | Section 2.5.2（Thickness）、頁 25 始まり | 一致 |
 | Almeida et al. 2009（TAMS） | **arXiv v1（math/0702400）のみ** | Lemma 2.2（Pumping Lemma）、Proposition 2.3 の (1)・(3)・(4)（(4) が U₁ を含まないこと） | arXiv v1 では一致。**TAMS 出版版の番号は未確認** |
-| Geroldinger–Halter-Koch 2006（書籍） | **ライブラリに無い** | Proposition 5.1.8、Theorem 5.5.5、Theorem 5.5.9 | **未確認**（内容は Davenport 定数の標準的な上下界で、記述そのものは正しいと考えられる） |
+| Geroldinger–Halter-Koch 2006（書籍） | 著者提供の PDF（2026-10-31） | Proposition 5.1.8（独立元から長さ Σ(ord(e_i)−1) の零和自由列、d*(G) ≤ d(G)）、Theorem 5.5.5（d(G) ≤ (n−1)+n log(\|G\|/n)、n = exp(G)）、Theorem 5.5.9（p 群で d(G) = d*(G)） | **全て一致**（原稿の下界・上界・等号の主張と番号の両方） |
 | Kuriyama（姉妹論文、arXiv:1409.6247v5） | 現行の `01_fixed-h-cfg/main.tex`（TCS R1） | 重複表の番号、Proposition 6.4 | 現行 R1 の番号とは一致（DeepSeek の R3 修正後）。**arXiv v5 の番号と一致するかは未確認** |
 
 ## 原稿で直した箇所
@@ -23,6 +23,6 @@
 
 ## 著者に確認してほしいこと
 
-1. **Geroldinger–Halter-Koch の番号**（rem:davenport-size）。手元の本で確かめるか、原論文（van Emde Boas–Kruyswijk 1969、Olson 1969）を直接引く形に変える。
-2. **Almeida et al. の TAMS 版の番号**。arXiv v1 と同じなら問題なし。
+1. ~~Geroldinger–Halter-Koch の番号~~ → 著者提供の PDF で確認済み（一致）。
+2. **Almeida et al. の TAMS 版の番号**。著者提供の PDF も arXiv v1（math/0702400v1）と同一だったので、TAMS 版は未確認のまま。arXiv v1 と同じなら問題なし。
 3. **姉妹論文の引用の版**。原稿は arXiv v5 を引いているが、重複表の番号は TCS R1 の現行原稿に合わせてある。arXiv を R1 に更新してから v2 を投稿するか、引用を「TCS 審査中の原稿（R1）」に変える必要がある。
