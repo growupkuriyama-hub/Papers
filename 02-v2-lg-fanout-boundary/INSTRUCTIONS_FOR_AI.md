@@ -41,6 +41,8 @@
 - §7：`prop:bracketed-family` の証明を付録 F の末尾へ、`prop:three-letter-family` の証明を付録 G の末尾へ、`prop:binary-u1-weight-slice` の証明を付録 J の末尾へ。本文には付録への参照と、重み一定の命題については証明の要点（2文）を残した。`rem:fanout-one-data`(b) の後半（二文字 U₁ の説明）は §7 末尾の段落と重複していたので削り、「有限の標的は型1の語を高々1つ持つ」という観察は `op:S1` に移した。
 - 本文に残した証明：§5（定理A(i) の証明一式）、§6 の `cor:trivial-exact`、§7 の `thm:fanout-one-data` と `cor:typing-level-obstruction`、§8 全部。これらは論文の主結果なので、これ以上付録に移さないこと。
 
+**独立査読 1 回目（DeepSeek、2026-10-31、`reviews/deepseek_referee_2026-10-31.md`）を反映済み**：判定 minor revision。偽の主張なし。R1〜R5 を修正。R6（生成 AI 利用の宣言の範囲）は著者の判断待ち。DeepSeek は投稿前に `lem:app-u1-parikh` と `lem:order-homogenize` だけをもう一度、別の読み手に読ませることを勧めている。
+
 **未完了**：Phase 4（短縮）、Phase 5（日本語版）、Phase 6（独立査読、特に付録 H の `lem:app-u1-parikh` と付録 A の `lem:order-homogenize`）、Phase 7（S1 の研究）。
 
 ## 1. v2 を作る理由（著者との合意事項）
