@@ -25,7 +25,7 @@
 - **退避**（`parked/parked_from_v1.tex`）：`prop:unary-cyclic-linear` のみ（v1 §6.1–6.2 は外部査読を受けて付録 K に復活）。
 - **ランク1の節**（`thm:rankone-polydata`）は退避せず付録（現在は付録 L）に移した。`rem:fanout-one-data`(a) が参照しているため。
 - **ビルド**：英語51ページ（本文26ページ、付録22ページ、文献3ページ）。未定義参照・overfull・重複ラベルはゼロ。
-- **移植の検査**：`python3 tools/check_port.py` が通る。v1 からの変更が報告されるのは、意図した6か所（`rem:fanout-one-data`、`op:fanout-two`、2026-10-31 の最終通読で文言を直した `def:prefix-suffix-typing`・`prop:typed-thickness-exponential`・`rem:window-abelian`、2026-11-01 に付録 H へ戻した `prop:feature-cross-typed`）だけ。
+- **移植の検査**：`python3 tools/check_port.py` が通る。v1 からの変更が報告されるのは、意図した6か所（`rem:fanout-one-data`、`op:fanout-two`、2026-10-31 の最終通読で文言を直した `def:prefix-suffix-typing`・`prop:typed-thickness-exponential`・`rem:window-abelian`、2026-11-01 に比較の付録（現在は付録 I）へ戻した `prop:feature-cross-typed`）だけ。
 
 **外部査読 1 回目（ChatGPT の v1/v2 比較、2026-10-30、`reviews/chatgpt_compare_v1_v2_2026-10-30.md`）を反映済み**：
 - 定理A(ii) にアルファベット条件（4f+1 文字以上、f=1 なら 3 文字以上）を追加。要旨・§6 冒頭・結論も同期。**今後、下界の主張には必ずアルファベット条件を付けること**（1文字のアルファベットでは有限の代入可能言語は語を高々1つしか持たないため、下界は成り立たない）。
@@ -66,7 +66,7 @@
 
 **2026-11-01 SL への帰着を追加**：§8 末尾に `lem:typing-monotone` と `prop:sl-reduction`。`op:fanout-two` は「半束はファンアウト2で多項式データを持つか」に書き換えた。38ページ。根拠は `reviews/chatgpt_sl_fanout2_2026-11-01.md`（Claude が検証）。
 
-**2026-11-01 ファンアウト2の研究（原稿は変更なし）**：まとめは `reviews/STATUS_sl_fanout2_2026-11-01.md`。検証済みの報告の中で、**二文字の内容型付けはファンアウト2で一様な多項式データを持つ**（`reviews/claude_binary_case2_2026-11-01.md` の定理E。s_{U,2} と二文字の全ての半束型付けを含む）ことが証明された。三文字は未解決で、残る核は「成分の和に入らない文字の消去」（`reviews/claude_ternary_content_2026-11-01.md`）。三文字の倍増族 K_n はファンアウト2では n≥3 で代入可能でない。**定理E を原稿に入れるかは著者の承認待ち**（まとめの §4 に最小案と本格案）。
+**2026-11-01 ファンアウト2の研究（原稿は変更なし）**：まとめは `reviews/STATUS_sl_fanout2_2026-11-01.md`。検証済みの報告の中で、**二文字の内容型付けはファンアウト2で一様な多項式データを持つ**（`reviews/claude_binary_case2_2026-11-01.md` の定理E。s_{U,2} と二文字の全ての半束型付けを含む）ことが証明された。三文字は未解決で、残る核は「成分の和に入らない文字の消去」（`reviews/claude_ternary_content_2026-11-01.md`）。三文字の倍増族 K_n はファンアウト2では n≥3 で代入可能でない。**2026-11-01 著者の判断で本格案を採用**：§8 末尾に `thm:two-letter-content` と `cor:two-letter-semilattice`、証明は新しい付録 H（比較の付録は I に）。44ページ。
 
 **未完了**：Phase 5（日本語版）、Phase 7（S1・S2 の研究、U₁ の別稿）、投稿準備（カバーレターと査読者推薦。01 の判定を待って TCS に投稿）。
 
