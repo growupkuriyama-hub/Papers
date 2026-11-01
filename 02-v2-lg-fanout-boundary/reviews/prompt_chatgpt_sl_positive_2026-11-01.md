@@ -1,6 +1,6 @@
 # ChatGPT への依頼：内容型付けはファンアウト2で多項式データを持つか（肯定の向き）
 
-（2026-11-01 作成。反例の族の探索（`chatgpt_sl_fanout2_2026-11-01.md`、`chatgpt_parikh_closed_family_2026-11-01.md`、DeepSeek の途中経過 `deepseek_sl_fanout2_search_2026-11-01_interim.md`）がどれも二穴の交換で潰れたため、逆向きを狙う。）
+（2026-11-01 作成。反例の族の探索（`chatgpt_sl_fanout2_2026-11-01.md`、`chatgpt_parikh_closed_family_2026-11-01.md`、DeepSeek の途中経過 `deepseek_sl_fanout2_search_2026-11-01.md`）がどれも二穴の交換で潰れたため、逆向きを狙う。）
 
 ---
 
@@ -13,7 +13,7 @@
 - `parked/parked_fanout2_and_comparison.tex` の §1 と付録（`thm:binary-u1-polydata` とその証明。`lem:app-u1-fillers`、`lem:app-u1-shallow`、`lem:app-u1-runs`、`lem:app-u1-transfer`、`lem:app-u1-deep`、`lem:app-u1-parikh`）：**二文字の U₁ 型付け s_{U,2}（a ↦ 1、b ↦ ζ）はファンアウト2で多項式データを持つ**という、以前の証明済みの定理（あなた自身が以前に検証）。今回の出発点です。
 - `reviews/chatgpt_sl_fanout2_2026-11-01.md`：切り直し（補題5、定理7）、長さの種類（定理10）
 - `reviews/chatgpt_parikh_closed_family_2026-11-01.md`：Parikh のずれの法則（命題1.1）、混合の側からの漏れ（定理3.1、3.3）
-- `reviews/deepseek_sl_fanout2_search_2026-11-01_interim.md`：反例の候補が全て潰れた計算の記録（失敗の証人の分類 §5）
+- `reviews/deepseek_sl_fanout2_search_2026-11-01.md`：反例の候補が全て潰れた計算の記録（失敗の証人の分類 §5）
 - `archive-v1/revision/astra_s2_shortcontext_2026-10-31.md`、`astra_s2_pureword_2026-10-31.md`、`chatgpt_ternary_u1_fanout2_2026-10-30.md`：三文字の U₁ 型付け（S2）での部分結果と、止まった場所（「純な成分の内部に入った c の修復」）
 
 ## 1. 問い
