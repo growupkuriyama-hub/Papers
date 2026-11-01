@@ -12,7 +12,8 @@ import re, sys
 V1='archive-v1/main.tex'; V2='main.tex'; PKS=['parked/parked_from_v1.tex','parked/parked_u1_typing_level.tex','parked/parked_fanout2_and_comparison.tex']
 PARKED={'app:three-letter-family', 'app:binary-u1', 'subsec:rank-one', 'prop:three-letter-family', 'cor:typing-level-obstruction', 'lem:app-u1-shallow', 'lem:app-u1-runs', 'prop:unary-cyclic-linear', 'lem:app-br-exchange', 'sec:further', 'subsec:baseline', 'lem:flag-separation', 'thm:rankone-polydata', 'lem:app-u1-deep', 'lem:app-tl-recognition', 'lem:app-u1-transfer', 'lem:app-u1-fillers', 'prop:app-tl-congruence', 'lem:app-br-recognition', 'rem:binary-u1-scope', 'thm:binary-u1-polydata', 'prop:nonabelian-needed-target', 'subsec:binary-u1', 'prop:linear-factor-sharp', 'subsec:necessity', 'prop:binary-u1-quadratic', 'lem:app-lf-descent', 'lem:app-u1-parikh', 'prop:app-br-congruence', 'prop:lg-needed-target', 'lem:app-br-branch', 'app:binary-u1-quadratic', 'lem:app-tl-reachable', 'lem:app-u1-identity'}
 NEW={'thm:A','thm:B','thm:C','cor:trivial-exact','op:S1',
-     'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two'}
+     'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two',
+     'lem:typing-monotone','prop:sl-reduction'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
 v1=open(V1,encoding='utf-8').read(); v2=open(V2,encoding='utf-8').read(); pk='\n'.join(open(x,encoding='utf-8').read() for x in PKS)
 L1,L2,LP=set(labels(v1)),set(labels(v2)),set(labels(pk))
