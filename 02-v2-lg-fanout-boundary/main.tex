@@ -138,6 +138,17 @@ use its size $\|G\|$ and its rule thickness $\bar\theta_G$, the largest length
 of a shortest sentence using a given rule.  Lower bounds are stated for every
 set-driven operator with characteristic samples throughout the class; upper
 bounds for the Const/Link/Comp reconstruction operator.
+Already at fan-out two a single fixed typing admits targets outside the earlier
+positive-data classes: one window--group typing places every language
+\[
+ L_R=\{\mathtt a^m\mathtt p_i\mathtt b^n
+       \mathtt c^m\mathtt q_j\mathtt d^n:
+       m,n\ge1,\ (i,j)\in R\},\qquad R\subseteq\{0,1\}^2,
+\]
+in $\Cmcf{2}{s}$; the group component records the feature values $i,j$, while
+the cross-serial dependencies and the licensing relation $R$ are learned from
+data, and for $R=\{(0,0),(0,1),(1,0)\}$ the target is not multidimensionally
+substitutable (Proposition~\ref{prop:feature-cross-typed}).
 
 \paragraph{Main results.}
 Fix the alphabet, the fan-out $f$, a rule-rank bound $r_{\max}\ge2$ and the
@@ -194,6 +205,19 @@ Whether $\mathbf{LG}$ is still the boundary at fan-out $f\ge2$ is open
 (Section~\ref{sec:conclusion}); a typing that needs superpolynomial data at
 fan-out one but polynomial data at fan-out two would show that raising the
 fan-out can make learning strictly cheaper.
+
+\paragraph{What is specific to fan-out at least two.}
+Three results have no fan-out-one counterpart.  First, the upper bound needs
+a new replacement step: at fan-out one each replaced subtree occupies one
+contiguous block, and a pigeonhole on prefix products of the group values
+selects a replaceable interval; at fan-out $f\ge2$ a subtree owns up to $f$
+blocks interleaved with those of other subtrees, and the ordered products of
+all root components must be preserved at once
+(Proposition~\ref{prop:block-replacement-interface}).  Second, the
+exponential fan-out-one obstruction is excluded at fan-out two by a two-hole
+transfer of powers (Theorem~\ref{thm:C}).  Third, a fixed typing already admits
+non-context-free targets beyond multidimensional substitutability, such as
+$L_R$ above.
 
 \paragraph{Approach.}
 Refining the grammar by types and applying untyped estimates to the
@@ -310,7 +334,9 @@ to distribution representatives.  Sections~\ref{sec:upper}
 and~\ref{sec:linear} prove Theorem~\ref{thm:A}, Section~\ref{sec:fanout-one}
 proves Theorem~\ref{thm:B} and Section~\ref{sec:fanout-two} proves
 Theorem~\ref{thm:C}.  Section~\ref{sec:conclusion} discusses the exponents and
-open problems.  The appendices contain the technical proofs.
+open problems.  The appendices contain the technical proofs and, in
+Appendix~\ref{sec:comparison}, the comparison with multidimensional
+substitutability.
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -1864,6 +1890,13 @@ letters of type $1$ would show that one typing needs exponential data at fan-out
 one and polynomial data at fan-out two.
 \end{openproblem}
 
+For a different quantity the arity does matter: for the minimum size of a
+finite-monoid observation that preserves guarded tuple substitution through
+arity $f$, the least arity at which this minimum stabilizes uniformly over a
+pseudovariety of finite monoids is $1$, $2$ or $\infty$
+\cite{KuriyamaSCL2026}.  Whether the characteristic-data boundary depends on
+the fan-out is the corresponding question for data length.
+
 \paragraph{Tightness of the exponents.}
 In $O(\|G\|^2\bar\theta_G)$, for window--group and local-group typings alike,
 one factor $\|G\|$ counts the witness words and the other bounds root-to-leaf
@@ -2918,6 +2951,118 @@ has $q+1$ words.  The final estimate follows from (ii), (iii) and $|w_i|=W$.
 
 
 
+\section{Comparison with Multidimensional Substitutability}
+\label{sec:comparison}
+
+Yoshinaka's multidimensional substitutability~\cite{Yoshinaka2009,Yoshinaka2011}
+is the direct positive-data baseline.  This appendix shows that trivial typing
+recovers it and window typing recovers the CFG $(k,\ell)$ hierarchy
+of~\cite{Yoshinaka2008}, while a fixed finite typing admits non-context-free
+targets outside the baseline.
+Since every $(f,s)$ condition includes arity one,
+$\Cmcf{f}{s}\cap\mathrm{CFL}\subseteq\Cmcf{1}{s}$.
+
+
+\begin{definition}[Multidimensional substitutability]
+\label{def:yoshinaka-pd-substitutability}
+A language $L$ is \emph{$f$D-substitutable} if for every $1\le d\le f$, all
+$E,F\in\mathcal E_d$ and all $\tuple x,\tuple y\in(\Sigma^+)^d$,
+\(E[\tuple x],E[\tuple y],F[\tuple x]\in L\Rightarrow F[\tuple y]\in L\)
+(the \emph{substitution implication}); $\YSub{f}$ is the class of these languages.
+This is Yoshinaka's definition, with nonempty components and nonempty internal
+separators \cite[Section~3.1 and footnote~3]{Yoshinaka2011}.
+\end{definition}
+
+The substitution implication is $(f,s_{\mathrm{triv}})$-tuple substitutability,
+so $\Cmcf{f}{s_{\mathrm{triv}}}=\YSub{f}\cap f\text{-}\mathrm{MCFL}\subseteq\Cmcf{f}{s}$
+for every $s$.  Yoshinaka \cite[Definition~2]{Yoshinaka2008} calls $L$
+\emph{$k,l$-substitutable} if for all $x_1,y_1,z_1,x_2,y_2,z_2\in\Sigma^*$,
+$v\in\Sigma^k$ and $u\in\Sigma^\ell$ with $vy_1u,vy_2u\ne\eps$,
+$x_1vy_1uz_1,x_1vy_2uz_1,x_2vy_1uz_2\in L$ implies $x_2vy_2uz_2\in L$.  Here
+$y_1,y_2$ may be empty; only the factors $vy_iu$ must be nonempty.  Exchanging
+$y_1$ and $y_2$ gives the converse implication, so the condition says that two
+such factors with a common context have equal distributions.  Two nonempty words
+have equal $s_{k,\ell}$-type iff they are identical or both have length at least
+$\max\{1,k+\ell\}$ with the same first $k$ and last $\ell$ letters, i.e.\ iff they
+are of the forms $vy_1u,vy_2u$ above, with $y_1,y_2$ possibly empty, or equal.
+Words shorter than $k+\ell$ are therefore compared only with themselves, in line
+with Yoshinaka's remark that the condition says nothing about them.  Hence
+$(1,s_{k,\ell})$-tuple substitutability is exactly Yoshinaka's $(k,\ell)$
+condition; the componentwise version at higher fan-out is a definition of this
+paper.
+
+A language $L$ is \emph{strictly 2-local} if there is a set $\Pi$ of pairs over
+$\Sigma\cup\{\vdash,\dashv\}$ such that a word $w$ lies in $L$ iff every pair of
+adjacent symbols of $\vdash w\dashv$ lies in $\Pi$.
+
+\begin{lemma}[Strictly 2-local languages are boundary typed]
+\label{lem:sl2-boundary-control}
+Every strictly 2-local $L$ is $(f,s_{1,1})$-tuple-substitutable for every $f$; in
+particular $L\in\Cmcf{f}{s_{1,1}}$, and $L\in\Cmcf{f}{s}$ whenever $s_{1,1}\preceq s$.
+\end{lemma}
+
+\begin{proof}
+Let $\tuple x,\tuple y\in(\Sigma^+)^d$ have equal $s_{1,1}$-types, so
+corresponding components are identical letters or share first and last letters,
+and let $E_0[\tuple x],E_0[\tuple y]\in L$.  Suppose $E[\tuple x]\in L$.  Since the
+internal separators of $E$ are nonempty, every adjacent pair of
+$\vdash E[\tuple y]\dashv$ either lies inside some $y_i$, and then occurs in
+$E_0[\tuple y]\in L$, or joins a first or last letter of some $y_i$ to a symbol of
+$\vdash E\dashv$, or lies in $\vdash E\dashv$, and then occurs in
+$\vdash E[\tuple x]\dashv$.  So $E[\tuple y]\in L$; symmetry and $s_{1,1}\preceq s$
+finish the proof (regular languages are MCFLs).
+\end{proof}
+
+\begin{proposition}[Cross-serial dependencies and feature licensing]
+\label{prop:feature-cross-typed}
+Let $\Sigma_{\mathrm{feat}}=\{\mathtt p_0,\mathtt p_1,\allowbreak\mathtt q_0,\mathtt q_1,\allowbreak
+\mathtt a,\mathtt b,\mathtt c,\mathtt d\}$, let $g:\Sigma_{\mathrm{feat}}^*\to\mathbb Z_2^2$
+map $\mathtt p_1\mapsto(1,0)$, $\mathtt q_1\mapsto(0,1)$ and all other letters to $0$, and
+let $s:=(s_{1,1},g)|_{\Sigma_{\mathrm{feat}}^+}$ (corestricted to its image).  For
+$R\subseteq\{0,1\}^2$ put
+\[
+ L_R:=\{\mathtt a^m\mathtt p_i\mathtt b^n\mathtt c^m\mathtt q_j\mathtt d^n:
+ m,n\ge1,\ (i,j)\in R\}.
+\]
+Then for every $R$ and every $f\ge2$, $L_R\in\mathsf{MCFL}(2,2)\cap\Cmcf{f}{s}$, and
+$L_R$ is not context-free if $R\ne\emptyset$.  For
+$\mathcal R_{\mathrm{feat}}=\{(0,0),(0,1),(1,0)\}$, the language
+$L_{\mathcal R_{\mathrm{feat}}}$ is neither in $\YSub{f}$ nor
+$(1,s_{1,1})$-tuple-substitutable.  The typing is fixed once for the whole
+family.
+\end{proposition}
+
+\begin{proof}
+\emph{Grammar.}  With fan-out-two $A,B$ and rules
+$A\to(\mathtt a,\mathtt c)\mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(A)$,
+$B\to(\mathtt b,\mathtt d)\mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(B)$ and
+$S\to(\xi_1^1\mathtt p_i\xi_2^1\xi_1^2\mathtt q_j\xi_2^2)(A,B)$ for
+$(i,j)\in R$, we get $L_A=\{(\mathtt a^m,\mathtt c^m)\}$,
+$L_B=\{(\mathtt b^n,\mathtt d^n)\}$ and $L(G)=L_R$; the grammar is good,
+of fan-out and rank two.  For $(i,j)\in R$, intersecting with
+$\mathtt a^+\mathtt p_i\mathtt b^+\mathtt c^+\mathtt q_j\mathtt d^+$ and erasing the
+markers gives the non-context-free $\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n\}$.
+
+\emph{Typed substitutability.}  Let
+$Q=\mathtt a^+\{\mathtt p_0,\mathtt p_1\}\mathtt b^+\mathtt c^+\{\mathtt q_0,\mathtt q_1\}
+\mathtt d^+$ (strictly 2-local), $K_R:=\{w\in\Sigma_{\mathrm{feat}}^+:g(w)\in R\}$, and let
+$\varphi$ map $\mathtt a,\mathtt c,\mathtt b,\mathtt d$ to
+$(1,0),(-1,0),(0,1),(0,-1)\in\mathbb Z^2$ and the markers to $0$.  On $Q$,
+$g(w)=(i,j)$ for the markers $\mathtt p_i,\mathtt q_j$ of $w$, so
+$L_R=Q\cap K_R\cap\varphi^{-1}(0)$.  The three languages are
+$(f,s)$-tuple-substitutable by Lemma~\ref{lem:sl2-boundary-control}, by item~(c)
+after Definition~\ref{def:class-cmcf} ($K_R$ is a union of $s$-classes), and by
+Proposition~\ref{prop:abelian-coset-filter}(ii);
+Proposition~\ref{prop:abelian-coset-filter}(i) gives the intersection.
+
+\emph{Failure without $g$.}  For $R=\mathcal R_{\mathrm{feat}}$, $x=\mathtt{ap_0b}$,
+$y=\mathtt{ap_1b}$, $E=\blank_1\mathtt{cq_0d}$ and $F=\blank_1\mathtt{cq_1d}$ we have
+$E[x],E[y],F[x]\in L_R$ but $F[y]\notin L_R$, since $(1,1)\notin R$.  Here
+$s_{1,1}(x)=s_{1,1}(y)$ but $g(x)\ne g(y)$.  The same four words violate the
+substitution implication of Definition~\ref{def:yoshinaka-pd-substitutability} at
+$d=1$, so $L_R\notin\YSub{f}$ for every $f\ge1$.
+\end{proof}
+
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During preparation of this work, the author used ChatGPT (OpenAI) and Claude
 (Anthropic) to assist with organization of the manuscript, expression and
@@ -3074,6 +3219,12 @@ T.~Kuriyama.
 \newblock Distributional learning of context-free languages under fixed
 finite-semigroup typing.
 \newblock \url{https://arxiv.org/abs/1409.6247v5}.
+
+\bibitem{KuriyamaSCL2026}
+T.~Kuriyama.
+\newblock Finite-monoid compression in syntactic concept lattices: arity
+hierarchies and a pseudovariety trichotomy.
+\newblock \url{https://arxiv.org/abs/2608.29639v1}.
 
 \bibitem{Pin1986}
 J.-E. Pin.

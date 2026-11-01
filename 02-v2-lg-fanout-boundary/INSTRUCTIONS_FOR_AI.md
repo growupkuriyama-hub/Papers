@@ -25,7 +25,7 @@
 - **退避**（`parked/parked_from_v1.tex`）：`prop:unary-cyclic-linear` のみ（v1 §6.1–6.2 は外部査読を受けて付録 K に復活）。
 - **ランク1の節**（`thm:rankone-polydata`）は退避せず付録（現在は付録 L）に移した。`rem:fanout-one-data`(a) が参照しているため。
 - **ビルド**：英語51ページ（本文26ページ、付録22ページ、文献3ページ）。未定義参照・overfull・重複ラベルはゼロ。
-- **移植の検査**：`python3 tools/check_port.py` が通る。v1 からの変更が報告されるのは、意図した5か所（`rem:fanout-one-data`、`op:fanout-two`、および 2026-10-31 の最終通読で文言を直した `def:prefix-suffix-typing`・`prop:typed-thickness-exponential`・`rem:window-abelian`）だけ。
+- **移植の検査**：`python3 tools/check_port.py` が通る。v1 からの変更が報告されるのは、意図した6か所（`rem:fanout-one-data`、`op:fanout-two`、2026-10-31 の最終通読で文言を直した `def:prefix-suffix-typing`・`prop:typed-thickness-exponential`・`rem:window-abelian`、2026-11-01 に付録 H へ戻した `prop:feature-cross-typed`）だけ。
 
 **外部査読 1 回目（ChatGPT の v1/v2 比較、2026-10-30、`reviews/chatgpt_compare_v1_v2_2026-10-30.md`）を反映済み**：
 - 定理A(ii) にアルファベット条件（4f+1 文字以上、f=1 なら 3 文字以上）を追加。要旨・§6 冒頭・結論も同期。**今後、下界の主張には必ずアルファベット条件を付けること**（1文字のアルファベットでは有限の代入可能言語は語を高々1つしか持たないため、下界は成り立たない）。
@@ -61,6 +61,8 @@
 **完了（2026-10-31 時点）**：Phase 4（短縮、36ページ）、Phase 6（独立査読：DeepSeek の査読と、ChatGPT による `lem:order-homogenize`・`lem:app-u1-parikh` の再読。後者は今は退避済み）、引用照合、英文の最終通読。
 
 **2026-10-31 英文の最終通読（README Change log (13)）**：数学的な主張は変えずに、要旨と「残る問い」の定理C の言い過ぎ（指標 2|S|+3 以上の成員についての結果）、§7 の「全ての性質をここで証明」（代入可能性は 01 から引用）、`rem:fanout-one-data`(b) の参照先、`op:S1` の「別稿の結果」の扱い、用語（window typing・window--group typing の定義、定理の題の統一、U₁ の命名）を直した。
+
+**2026-11-01 補強**：序論に L_R の例と「ファンアウト2以上に固有の結果」の段落、付録 H（多次元代入可能性との比較、`sec:comparison` ほか4ラベルを退避先から復帰）、結論に 03（arXiv:2608.29639）への一段落。37ページ。
 
 **未完了**：Phase 5（日本語版）、Phase 7（S1・S2 の研究、U₁ の別稿）、投稿準備（カバーレターと査読者推薦。01 の判定を待って TCS に投稿）。
 
@@ -189,7 +191,7 @@ v2 は同じ数学を、一本の主張と三つの定理に組み直したも�
 - [x] 英語で42ページ以内（36ページ、2026-10-31）。
 - [ ] 日本語版があり、英日の整合チェックが既知の差分だけになっている。
 - [x] 独立査読で致命的・重大な指摘がゼロである（DeepSeek：minor、R1〜R5 修正済み）。
-- [ ] 新しく加えた結果のうち本文に残るもの（`cor:trivial-exact`、全ファンアウトの線形因子）の文献調査をする。U₁ 関係（`prop:binary-u1-weight-slice`、二次の族、二文字 U₁ のファンアウト2）は別稿で行う。
+- [x] 新しく加えた結果のうち本文に残るものの文献調査（2026-11-01、`reviews/literature_check_2026-11-01.md`。重なる先行研究なし。カバーレターで旧版 arXiv:2605.11644 との関係を書くこと）。U₁ 関係は別稿で行う。
 - [ ] TCS 向けのカバーレターと査読者推薦（吉仲先生・金沢先生は除く）。
 
 ## 8. 道具
