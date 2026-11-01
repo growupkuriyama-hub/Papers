@@ -42,3 +42,9 @@
 ## 6. 依頼文（プロンプト）
 
 `prompt_chatgpt_sl_fanout2_*`、`prompt_chatgpt_parikh_closed_family_*`、`prompt_deepseek_sl_fanout2_*`、`prompt_chatgpt_sl_positive_*`、`prompt_claude_binary_content_core_*`、`prompt_claude_binary_case2_*`、`prompt_claude_ternary_content_*`（全て 2026-11-01）。
+
+## 7. 追記（2026-11-01 夜）：二文字・ファンアウト1（`op:S1` とファンアウトの分離）
+
+- ChatGPT の2本（`chatgpt_two_letter_fanout1_*`、`chatgpt_two_letter_fanout1_lower_*`）と別スレッドの Claude（`claude_two_letter_fanout1_*`）。README (48)(49)(51)。
+- 未解決。ただし有限群の語問題への帰着（**問題G**）が得られた：群への準同型の原像は全ての型付けで一穴代入可能で、純な語の長さは φ(a) の位数。従って「二文字の内容型付けがファンアウト1で多項式」なら問題G は肯定。問題G が否定なら `op:S1` も否定で、s_{U,2} でファンアウトが分離する。
+- 候補：Z/(2ⁿ−1) ⋊ ⟨×2⟩。語問題の小さい文法の存在が鍵（未解決）。次は問題G の文献調査と、候補の文法の探索。
