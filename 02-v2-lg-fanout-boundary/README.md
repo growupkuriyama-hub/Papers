@@ -28,6 +28,7 @@ This folder is the restructured ("new-born") version of paper #2. The mathematic
 
 ## Change log
 
+- **2026-11-02 (91)** The question of (86) given to ChatGPT instead: `reviews/prompt_chatgpt_pure_letter_fanout2_2026-11-02.md` (same question; report file `chatgpt_pure_letter_fanout2_2026-11-02.md`; scripts allowed, no length limit).
 - **2026-11-02 (90)** The Astra run on `reviews/prompt_astra_pure_letter_fanout2_2026-11-02.md` (README (86)) stopped at the weekly limit without output. The prompt is unchanged and can be reused (Astra after the reset, or ChatGPT).
 - **2026-11-02 (89)** Prompt for ChatGPT on direction C1 of (85) saved: `reviews/prompt_chatgpt_binary_lt_typing_2026-11-02.md` (is $h(L_n)$ substitutable for all $n$, $h:\mathtt a,\mathtt b,\mathtt c\mapsto\mathtt{ab},\mathtt{aab},\mathtt{abb}$? If so, the binary locally testable typing (first letter, last letter, factor $\mathtt{bb}$) needs exponential data at fan-out one). Claude checked further that the general image lemma fails also for comma-free codes, so the proof must use the parser of the family.
 - **2026-11-02 (88)** Abstract: the sentence on fan-out two now states the strengthened Theorem C (no target there keeps the long word of the witness families as the only one of its type). 57 pages, no warnings.
