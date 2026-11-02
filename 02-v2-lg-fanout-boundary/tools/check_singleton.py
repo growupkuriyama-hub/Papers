@@ -5,10 +5,11 @@ Python 3 standard library only.  Run from this folder:  python3 tools/check_sing
 It reads Table `tab:singleton-certificates` from main.tex and checks:
   1. every row is a violation for arity 2 (E[x]=E[y]=F[x]=W != F[y], nonempty
      holes, nonempty middle separators);
-  2. the rows cover, up to exchange of letters and reversal, exactly the words of
-     length 7 outside the five shapes, and an exhaustive search confirms that the
-     other 10 words admit no violation for arity 2;
-  3. the transitions between consecutive length-7 factors listed in the proof.
+  2. (confirmation of Lemma lem:app-singleton-runs, whose proof is by hand) every
+     word of length 7..MAXLEN outside the five shapes contains, up to exchange of
+     letters and reversal, a word of the table, and the shapes admit no violation
+     for arity 2 at length 7.
+The proofs in the paper do not depend on this script.
 """
 import re, itertools
 from collections import defaultdict
@@ -58,21 +59,22 @@ for line in tab.splitlines():
     if line.startswith(r'$\mathtt{') and '&' in line:
         c = [z.strip() for z in line.rstrip('\\').split('&')]
         rows.append((word(c[0].strip('$')), tup(c[1]), tup(c[2]), tup(c[3]), tup(c[4]), word(c[5].strip('$'))))
-assert len(rows) == 32, len(rows)
-covered = set()
+assert len(rows) == 11, len(rows)
+table = [r[0] for r in rows]
 for W, E, x, y, F, Fy in rows:
-    assert len(W) == 7 and all(x) and all(y) and E[1] and F[1]
+    assert all(x) and all(y) and E[1] and F[1]
     assert plug(E, x) == plug(E, y) == plug(F, x) == W
     assert plug(F, y) == Fy != W
-    covered |= orbit(W)
-allw = {''.join(t) for t in itertools.product('ab', repeat=7)}
-good = shapes(7)
-assert len(good) == 10 and covered == allw - good
-assert all(not violation(w) for w in good) and all(violation(w) for w in allw - good)
-trans = {v: sorted(z for z in 'ab' if v[1:] + z in good) for v in good}
-expected = {'aaaaaaa': ['a', 'b'], 'baaaaaa': ['a', 'b'], 'aaaaaab': [], 'baaaaab': [],
-            'abababa': ['b'], 'bbbbbbb': ['a', 'b'], 'abbbbbb': ['a', 'b'], 'bbbbbba': [],
-            'abbbbba': [], 'bababab': ['a']}
-assert trans == expected, trans
-print('OK: 32 rows checked; they cover the 118 words of length 7 outside the 10 shapes;',
-      'the 10 shapes pass for arity 2; transitions as stated.')
+MAXLEN = 14
+count = 0
+for n in range(7, MAXLEN + 1):
+    good = shapes(n)
+    for t in itertools.product('ab', repeat=n):
+        w = ''.join(t)
+        if w in good:
+            continue
+        assert any(o in w for u in table for o in orbit(u)), w
+        count += 1
+assert all(not violation(w) for w in shapes(7))
+print('OK: 11 rows are violations; all %d words of length 7..%d outside the shapes'
+      ' contain a table word up to symmetry; the 10 shapes of length 7 pass.' % (count, MAXLEN))
