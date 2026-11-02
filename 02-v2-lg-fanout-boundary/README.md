@@ -10,7 +10,7 @@ This folder is the restructured ("new-born") version of paper #2. The mathematic
 - **Theorem B** — the boundary at fan-out one: pseudovarieties ⇔ $\mathbf{LG}$; outside $\mathbf{LG}$ explicit targets need exponential data.
 - **Theorem C** — fan-out two: the exponential fan-out-one family does not lift (it is not tuple-substitutable under any fixed typing). Whether $\mathbf{LG}$ remains the boundary at fan-out two is open.
 
-**Start here:** [`INSTRUCTIONS_FOR_AI.md`](INSTRUCTIONS_FOR_AI.md) (status, structure, next phases, rules, checklist). Latest handoff: [`HANDOFF_2026-11-01.md`](HANDOFF_2026-11-01.md).
+**Start here:** [`INSTRUCTIONS_FOR_AI.md`](INSTRUCTIONS_FOR_AI.md) (status, structure, next phases, rules, checklist). Latest handoff: [`HANDOFF_2026-11-02.md`](HANDOFF_2026-11-02.md) (previous: `HANDOFF_2026-11-01.md`).
 
 **Research on `op:fanout-two` (2026-11-01):** see [`reviews/STATUS_sl_fanout2_2026-11-01.md`](reviews/STATUS_sl_fanout2_2026-11-01.md). The two-letter content typing has uniform polynomial data at every fan-out $f\ge2$: `thm:two-letter-content` (§8, proof in Appendix H, added 2026-11-01, extended to all $f\ge2$ on 2026-11-02); fan-out one and three letters open.
 
