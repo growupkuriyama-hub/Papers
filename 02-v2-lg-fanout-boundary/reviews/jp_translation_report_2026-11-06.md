@@ -206,4 +206,4 @@ ALL CHECKS PASSED
 ## 7. 反映
 
 - ブランチ `japanese-v2-2026-11-06` に、新規 4 ファイルのみをコミット（`main.tex` を含む既存ファイルの変更なし）。
-- PR の状況は PR 本文または本報告の最終コミットで確認できる。
+- `main` への Pull Request：#102（https://github.com/growupkuriyama-hub/Papers/pull/102）。`main` には push していない。マージは著者が行う。
