@@ -498,7 +498,8 @@ The fresh completion evaluates grammar templates (including empty
 terminal gaps) and types tuple yields in the refinement of
 Section~\ref{sec:refinement}; its new identity is not a positive-word type.
 Algebraic conditions such as $\mathbf{LG}$ concern $\mathsf S$, not
-$\mathsf S^\sharp$.  A finite-monoid morphism $q:\Sigma^*\to\mathsf N$ determines
+$\mathsf S^\sharp$; indeed $\mathsf S^\sharp$ is never a local group, since
+$\{\mathbf1_\sharp,f\}\cong U_1$ for any idempotent $f$ of the minimal ideal of $\mathsf S$.  A finite-monoid morphism $q:\Sigma^*\to\mathsf N$ determines
 the positive typing $q|_{\Sigma^+}$: by
 Lemma~\ref{lem:semigroup-transfer}(i), it gives the same target class and
 set-driven reconstruction rules as the fresh completion of that typing.
@@ -2429,6 +2430,10 @@ $\mathbf{LG}$ is always tested on the positive image $\mathsf S=\widehat s(\Sigm
 classical identity $\mathbf{LG}=\mathbf{Grp}*\mathbf D$ places it within the
 sliding-window and delay theory \cite{Straubing1985,Tilson1987}, and the exclusion of
 $U_1=\{1,\zeta\}$ ($\zeta^2=\zeta$) is \cite[Proposition~2.3]{AlmeidaEtAl2009}.
+Equivalently, $\mathbf{LG}$ is defined by the single pseudo-identity
+$(x^\omega yx^\omega)^\omega=x^\omega$: for an idempotent $e=x^\omega$ the finite monoid
+$e\mathsf Se=\{eye:y\in\mathsf S\}$ is a group exactly when $e$ is its only idempotent, and
+every idempotent has the form $x^\omega$.
 The coordinates below are a self-contained implementation of this algebra, not a
 new characterization; what is specific to MCFG learning is the factorization of group
 values into fixed separators and replaceable blocks
@@ -2490,7 +2495,8 @@ $z_j$ be the ordered product of the factors between consecutive runs.
 \label{lem:lg-rees-window-coordinate}
 Let $\mathsf S$ be a finite semigroup whose idempotents all lie in its minimal ideal
 $\mathsf K=\mathcal M({\mathbb H};I,\Lambda;\mathsf P)$ (a Rees matrix semigroup with $\mathsf P$ over ${\mathbb H}$), let
-$k:=|\mathsf S|$, and let $h:\Sigma^+\to \mathsf S$ be a morphism.  There is
+$k\ge1$ satisfy $\mathsf S^k\subseteq\mathsf K$ (by step (1) of the proof, $k=|\mathsf S|$ will do; the least
+such $k$ gives the smallest windows), and let $h:\Sigma^+\to \mathsf S$ be a morphism.  There is
 $\nu:\Sigma^{k+1}\to {\mathbb H}$ such that every $w$ with $|w|\ge2k$ satisfies
 \[
  h(w)=\bigl(\operatorname{row}(h(\operatorname{pref}_kw)),\;
@@ -2504,9 +2510,9 @@ $k$ letters and an ordered product in ${\mathbb H}$.
 \end{lemma}
 
 \begin{proof}
-\emph{(1) Products of $k$ letters lie in $\mathsf K$.}  The Rees quotient $\mathsf S/\mathsf K$
+\emph{(1) Products of $|\mathsf S|$ elements lie in $\mathsf K$.}  The Rees quotient $\mathsf S/\mathsf K$
 has no idempotent but $0$, so each element has a power equal to $0$.  If a product of
-$m=|\mathsf S/\mathsf K|\le k$ elements were nonzero, two of its $m$ nonzero prefix products
+$m=|\mathsf S/\mathsf K|\le|\mathsf S|$ elements were nonzero, two of its $m$ nonzero prefix products
 would coincide, $t_i=t_j$ with $i<j$; then $t_i=t_ix^q$ for $x=v_{i+1}\cdots v_j$ and
 all $q$, impossible for $x^q=0$.
 
@@ -2523,7 +2529,7 @@ elements of $\mathsf K$ has the $\Lambda$-coordinate of its right factor.
 
 \emph{(3) Group coordinate.}  Let $w=a_1\cdots a_m$, $m\ge2k$, and
 $h(a_1\cdots a_k)=(i,a,\lambda_k)$.  For $j\ge k$ the $\Lambda$-coordinate $\lambda_j$
-of $h(a_1\cdots a_j)$ equals that of $h(a_{j-k+1}\cdots a_j)$ by (1) and (2).  Put
+of $h(a_1\cdots a_j)$ equals that of $h(a_{j-k+1}\cdots a_j)$ by $\mathsf S^k\subseteq\mathsf K$ and (2).  Put
 $\nu(F):=\operatorname{act}\bigl(\operatorname{col}(h(F[1..k])),h(F[k+1])\bigr)$.  Applying the
 right-action identity for $j=k,\ldots,m-1$ in order gives
 $h(w)=(i,\,a\prod_{j=k}^{m-1}\nu(a_{j-k+1}\cdots a_{j+1}),\,\lambda_m)$, and the
@@ -2535,7 +2541,7 @@ product is $\gamma_{k,\nu}(w)$.
 For a typing $s$ with positive image $\mathsf S$ the following are equivalent:
 \textup{(i)} $\mathsf S\in\mathbf{LG}$; \textup{(ii)} $\mathsf S$ has no subsemigroup isomorphic to
 $U_1$; \textup{(iii)} every idempotent of $\mathsf S$ lies in the minimal ideal of $\mathsf S$;
-\textup{(iv)} $s$ is local-group-determined, and one may take $k=|\mathsf S|$.
+\textup{(iv)} $s$ is local-group-determined, and one may take $k=|\mathsf S|$, or any $k$ with $\mathsf S^k=\mathsf K$.
 \end{theorem}
 
 \begin{proof}
@@ -2550,7 +2556,7 @@ $\mathsf S^k=\mathsf S E(\mathsf S)\mathsf S\subseteq\mathsf K$ for $k=|\mathsf 
 $\mathsf S^k\supseteq\mathsf K$ since $\mathsf S^k$ is an ideal.  So (i)--(iii) are equivalent.
 
 (iii)$\Rightarrow$(iv): Lemma~\ref{lem:lg-rees-window-coordinate} with
-$h=s$ and $k=|\mathsf S|$ determines $s(w)$ for $|w|\ge2k$ from
+$h=s$ and $k=|\mathsf S|$ (or any $k$ with $\mathsf S^k=\mathsf K$) determines $s(w)$ for $|w|\ge2k$ from
 $\lambda_{k,\nu}(w)$, and $\widehat s_{k,k}$ records shorter words and $\eps$ exactly;
 so $\widehat s\preceq\lambda_{k,\nu}$.
 
