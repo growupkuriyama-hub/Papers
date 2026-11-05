@@ -34,13 +34,30 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Decide whether the PDFs are out of date
+        id: stale
+        shell: bash
+        run: |
+          set -euo pipefail
+          d=02-v2-lg-fanout-boundary
+          src=$(git log -1 --format=%ct -- "$d/main.tex" "$d/japanese/main_JP.tex" .github/workflows/publish-02-v2-pdfs.yml)
+          pdf=$(git log -1 --format=%ct -- "$d/main.pdf" "$d/japanese/main_JP.pdf" || true)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ -f "$d/main.pdf" ] && [ -f "$d/japanese/main_JP.pdf" ] && [ -n "$pdf" ] && [ "$pdf" -ge "$src" ]; then
+            echo "PDFs are newer than their sources; nothing to do."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Compile English PDF (pdfLaTeX)
+        if: steps.stale.outputs.run == 'true'
         uses: xu-cheng/latex-action@v4
         with:
           working_directory: 02-v2-lg-fanout-boundary
           root_file: main.tex
 
       - name: Compile Japanese PDF (LuaLaTeX)
+        if: steps.stale.outputs.run == 'true'
         uses: xu-cheng/latex-action@v4
         with:
           working_directory: 02-v2-lg-fanout-boundary/japanese
@@ -48,6 +65,7 @@ jobs:
           latexmk_use_lualatex: true
 
       - name: Verify PDFs
+        if: steps.stale.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -58,6 +76,7 @@ jobs:
           done
 
       - name: Commit PDFs to fixed URLs
+        if: steps.stale.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
