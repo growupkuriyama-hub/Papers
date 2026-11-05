@@ -73,11 +73,12 @@ We study positive-data learning of multiple context-free languages under a
 fixed finite-semigroup typing: a morphism $s$ from $\Sigma^+$ onto a finite
 semigroup $\mathsf S$ is fixed in advance, and nonempty factors and tuple
 components are compared only when their $s$-values agree.  This continues the
-context-free case of a companion paper.  Identification in the limit is
-inherited from Yoshinaka's distributional framework; our subject is the total
+context-free case of a companion paper.  Identification in the limit follows
+Yoshinaka's distributional framework; our subject is the total
 length of characteristic samples, measured against the size $\|G\|$ and the
 rule thickness $\bar\theta_G$ of a presentation $G$ of the target.  We show
-that local groups are the boundary of polynomial characteristic data.  If
+that local groups give polynomial characteristic data at every fan-out and are
+the exact pseudovariety boundary at fan-out one.  If
 $\mathsf S$ is a local group, then for every fixed fan-out and rank bound, each
 target has characteristic data of length $O(\|G\|^2\bar\theta_G)$ for each of
 its reduced good presentations $G$ of bounded rank, so these classes are
@@ -91,7 +92,7 @@ pseudovarieties of finite semigroups with uniformly polynomial characteristic
 data, and hence exactly those whose classes are identifiable in polynomial time
 and thick data; outside them, targets with presentations of size and rule
 thickness $O(n)$ need data of length exponential in $n$, for every set-driven
-learner.  This witness family does not carry over to fan-out two: under any
+learner that has characteristic samples throughout the class.  This witness family does not carry over to fan-out two: under any
 fixed typing, all but finitely many of its members fail to be
 tuple-substitutable there, and no target there keeps their long word as the
 only one of its type.  Whether local groups remain the boundary at fan-out two
@@ -435,6 +436,8 @@ $g$ & a monoid morphism $\Sigma^*\to\mathbb G$ into a finite group\\
 $\mathsf T$, $\mathsf N$ & a finite semigroup; the finite monoid receiving an auxiliary morphism $\lambda$\\
 $T$ & a derivation tree\\
 $n$ & the index of a grammar family\\
+$t_{\mathrm{typ}}$, $\tau$, $\mu_m$ & shortest typed yield, representative length, shortest word of type $m$ (Section~\ref{sec:char-data}); none of them is a thickness of $G$\\
+$\mathcal B_{f,s}$, $\mathcal B^{\le r}_{f,s}$ & uncapped and rank-capped reconstruction operators (Definition~\ref{def:reconstruction})\\
 \hline
 \end{tabularx}
 \end{center}
@@ -1721,8 +1724,9 @@ Appendix~\ref{app:linear-factor-fanout}.
 Fix $f$ and $r_{\max}\ge1$.  For the trivial typing, every
 $L\in\Cmcf{f}{s_{\mathrm{triv}}}$ and every reduced good rank-$\le r_{\max}$
 presentation $G$ of $L\cap\Sigma^+$, the operator $\mathcal B_{f,s_{\mathrm{triv}}}$ has
-a characteristic sample of total length $O(\|G\|\bar\theta_G)$.  If moreover $r_{\max}\ge2$ and $\Sigma$ has
-at least $4f+1$ letters, or $f=1$ and $\Sigma$ has at least two, this is attained
+a characteristic sample of total length $O(\|G\|\bar\theta_G)$.  Suppose moreover
+that $r_{\max}\ge2$ and that $\Sigma$ has at least $4f+1$ letters, or that
+$r_{\max}\ge2$, $f=1$ and $\Sigma$ has at least two letters.  Then this bound is attained
 up to a constant factor: for the
 targets $L^{(f)}_{q,k}$ and presentations $G^{(f)}_{q,k}$ of
 Proposition~\ref{prop:linear-factor-all-fanout}, every characteristic sample has
@@ -1854,8 +1858,8 @@ $E_i\to\mathtt bE_{i-1}E_{i-1}\mathtt b$ are binary.  For targets represented by
 linear CFGs the companion manuscript gives, for every fixed typing,
 characteristic data polynomial in the grammar size alone
 \cite[Theorem~8.3]{kuriyamaCFG}.
-(b) The theorem concerns pseudovarieties; for an individual typing the
-answer depends on which words realize a copy of $U_1$, and is not treated here.
+(b) The theorem concerns pseudovarieties; which individual typings have
+polynomial data is not characterized here.
 (c) The upper bound is for the fixed operator
 $\mathcal B^{\le r_{\max}}_{1,s}$, whereas the lower bound holds for every
 set-driven operator with characteristic samples throughout the class.
@@ -1874,19 +1878,53 @@ of a target has a characteristic sample of size polynomial in the size of $R$
 and its thickness.  By Lemma~\ref{lem:thickness-equivalence}(ii),(iii), their
 thickness (the longest shortest yield of a nonterminal, $t_G$) and our rule
 thickness are polynomially equivalent given $\|G\|$.  The sample sizes
-$\sum_{w\in K}|w|$ and $\|K\|_+$ differ by at most the number of words.
+$\sum_{w\in K}|w|$ and $\|K\|_+$ differ by at most the number of words.  Their
+definition asks the algorithm to return a hypothesis in a fixed class of
+representations; the raw output of $\mathcal B^{\le r_{\max}}_{f,s}$ may contain
+the rule $\widehat S\to\eps$, so we first remove it.
+
+\begin{lemma}[Reduced good hypotheses]
+\label{lem:reduced-good-hypothesis}
+Fix $f$, $r_{\max}\ge1$ and $s$, let $K\subseteq\Sigma^*$ be finite with
+$K\cap\Sigma^+\ne\emptyset$, and let $G^+_K$ be
+$\mathcal B^{\le r_{\max}}_{f,s}(K)$ without the rule $\widehat S\to\eps$.  Then
+$G^+_K$ is a reduced good MCFG of fan-out $\le f$ and rank $\le r_{\max}$,
+$L(G^+_K)=L(\mathcal B^{\le r_{\max}}_{f,s}(K))\setminus\{\eps\}$, and $G^+_K$ is
+computable from $K$ in time $(1+\|K\|_+)^{O(fr_{\max})}$.
+\end{lemma}
+
+\begin{proof}
+Start and Link rules have identity templates, Const rules write tuples of
+nonempty words, and Comp rules have good templates
+(Definition~\ref{def:composition-witness}); so every rule of $G^+_K$ is good, and
+no nonterminal derives a tuple with an empty component.  Hence $\eps$ is derived
+only by the removed rule, which gives the language.  Every $[\tuple x]$ is
+productive by its Const rule, and $\widehat S$ is productive since $K$ has a
+nonempty word.  For reachability let $\tuple x\in\mathrm{Obs}_d(K)$, say
+$w=E[\tuple x]\in K$ with $E=(e_0,\ldots,e_d)\in\mathcal E_d$.  Then $w\ne\eps$,
+$(w)\in\mathrm{Obs}_1(K)$ with the context $\blank_1$, and the template
+$\rho=(e_0\xi^1e_1\cdots\xi^de_d)$ is good: it is $\lambda$-free, uses each
+variable once and in order, and is nonmerging since $e_1,\ldots,e_{d-1}$ are
+nonempty.  So $((w),\rho,(\tuple x))$ is a composition witness of rank one, and
+$\widehat S\to[(w)]\to\rho([\tuple x])$ reaches $[\tuple x]$.  Fan-out, rank and
+running time are those of Theorem~\ref{thm:poly}.
+\end{proof}
 
 \begin{corollary}[Identification in polynomial time and thick data]
 \label{cor:iptd}
-Fix $f\ge1$, $r_{\max}\ge1$ and a typing $s$, and take as representations of
-$L\in\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ the reduced good fan-out-$\le f$,
-rank-$\le r_{\max}$ presentations of $L\cap\Sigma^+$, together with the bit
-$[\eps\in L]$.
+Fix $f\ge1$, $r_{\max}\ge1$ and a typing $s$.  Let $\mathcal R$ consist of the
+pairs $(G,\beta)$ of a bit $\beta$ and either a reduced good fan-out-$\le f$,
+rank-$\le r_{\max}$ MCFG $G$ or a fixed grammar $G_\emptyset$ without rules; the pair
+represents $L(G)\cup\{\eps:\beta=1\}$.  The members of
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ are represented by
+$(G,[\eps\in L])$ with $G$ a reduced good fan-out-$\le f$, rank-$\le r_{\max}$
+presentation of $L\cap\Sigma^+$, or $G=G_\emptyset$ if $L\cap\Sigma^+=\emptyset$.
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item If $s(\Sigma^+)\in\mathbf{LG}$, the operator $\mathcal B^{\le r_{\max}}_{f,s}$
-identifies $\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ in polynomial time and
-thick data, with fan-out-$\le f$, rank-$\le r_{\max}$ MCFGs as hypotheses;
-these need not be reduced or good.
+\item If $s(\Sigma^+)\in\mathbf{LG}$, the algorithm returning
+$(G^+_K,[\eps\in K])$ of Lemma~\ref{lem:reduced-good-hypothesis}, or
+$(G_\emptyset,[\eps\in K])$ if $K\cap\Sigma^+=\emptyset$, identifies
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ in polynomial time and thick data for
+the class $\mathcal R$.
 \item If $f=1$ and $r_{\max}\ge2$, no set-driven algorithm, whatever its running
 time, satisfies the data condition of IPTtD for
 $\Cmcf{1}{s_U}\cap\mathsf{MCFL}(1,r_{\max})$.
@@ -1898,9 +1936,13 @@ $\Cmcf{1}{s}\cap\mathsf{MCFL}(1,r_{\max})$ is IPTtD by a set-driven algorithm.
 \end{corollary}
 
 \begin{proof}
-(i) The operator is sample-consistent and runs in time polynomial in
-$\|K\|_+$ (Theorem~\ref{thm:poly}).  Theorem~\ref{thm:local-group-polydata} gives
-a characteristic sample of length $O(\|G\|^2\bar\theta_G)$, and
+(i) By Lemma~\ref{lem:reduced-good-hypothesis} the hypothesis lies in
+$\mathcal R$, is computed in time polynomial in $\|K\|_+$, and represents
+$L(\mathcal B^{\le r_{\max}}_{f,s}(K))$, which contains $K$ (each $w\in K\cap\Sigma^+$
+is derived by its Start and Const rules).
+Theorem~\ref{thm:local-group-polydata} gives a sample $F$ of length
+$O(\|G\|^2\bar\theta_G)$ with $L(\mathcal B^{\le r_{\max}}_{f,s}(K))=L$ whenever
+$F\subseteq K\subseteq L$, so the hypothesis then represents $L$; and
 $\bar\theta_G\le2\|G\|\max\{1,t_G\}$.
 (ii) Such an algorithm has a characteristic sample for every member of the
 class, since every member $L$ with $L\cap\Sigma^+\ne\emptyset$ has a reduced good
@@ -1915,9 +1957,9 @@ contained in $\mathbf{LG}$ contains $U_1$
 (Theorem~\ref{thm:fanout-one-data}).
 \end{proof}
 
-Definition~2.12 of \cite{EyraudHeinzYoshinaka2016} asks for hypotheses in the
-representation class; ours are arbitrary MCFGs of the stated fan-out and rank,
-as for the learner of \cite{Yoshinaka2011}.  Item~(i) holds at every fan-out,
+The hypotheses lie in $\mathcal R$ on every sample; on samples that contain no
+characteristic sample their languages need not belong to the class, as for the
+learner of \cite{Yoshinaka2011}.  Item~(i) holds at every fan-out,
 item~(ii) only at fan-out one (Theorem~\ref{thm:doubling-no-lift}).
 
 \section{Fan-Out Two: The Lower Bound Does Not Lift}
@@ -1996,7 +2038,7 @@ excluded by every fixed finite typing at fan-out two, and that adding words to t
 $h(W_n)$ can no longer be the only word of its type.
 \end{remark}
 
-\section{Conclusion and Open Problems}
+\section{Conclusion and an Open Problem}
 \label{sec:conclusion}
 
 For a reduced good presentation $G$ and fixed alphabet, fan-out, rank and typing,
@@ -3102,13 +3144,40 @@ $E_{j-1}(E_{j-1}\hat{\mathtt b}_j)F_{j+1}\cdots F_n$ and $\mathtt c$ gives
 $E_{j-1}\hat{\mathtt c}_jF_{j+1}\cdots F_n$; popping the top leaves
 $F_{j+1}\cdots F_n$, which is $\eps$ or again of the stated form, a first frame
 $E_j\hat{\mathtt b}_{j+1}$ being read as $\mathcal Y=E_j$ followed by the frame
-$\hat{\mathtt b}_{j+1}$.  For injectivity it suffices to consider letters.  The
-letter $\mathtt a$ only pops $E_0$.  A $\mathtt b$-opening produces a stack beginning
-with two symbols $E$, from which $i$ and $\mathcal Z$ are recovered; a
-$\mathtt b$-closing produces $\eps$ or a product of frames, which begins with a
-marker or with $E_j\hat{\mathtt b}_{j+1}$, never with two symbols $E$, and whose
-first marker (or emptiness, for the level $n$) determines the popped level.
-The same holds for $\mathtt c$, whose openings begin with $E_{i-1}\hat{\mathtt c}_i$.
+$\hat{\mathtt b}_{j+1}$.
+
+For injectivity it suffices to consider letters, since moves map reachable
+stacks to reachable stacks.  A \emph{frame product} is a stack
+$F_{i+1}\cdots F_n$ with $F_k\in\mathcal F_k$ (the empty stack if $i=n$).  Each
+frame $F_k$ contains exactly one marker, of index $k$, so a frame product
+determines $i$: it is $n$ for $\eps$ and otherwise one less than the least
+marker index.  In a frame product a symbol $E$ is always followed by a marker
+$\hat{\mathtt b}$.  The moves of a letter on reachable stacks, and the shape of
+their results, are:
+\begin{center}
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}llll@{}}
+\hline
+Letter & Move (reachable source) & Result begins with & Source recovered from\\
+\hline
+$\mathtt a$ & $E_0\mathcal Z\to\mathcal Z$ & a frame product & $\mathcal Z$\\
+$\mathtt b$, opening & $E_i\mathcal Z\to E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z$ & two symbols $E$ & $i$ and $\mathcal Z$ read off\\
+$\mathtt b$, closing & $\hat{\mathtt b}_i\mathcal Z\to\mathcal Z$, $\mathcal Z$ a frame product & a marker, $E\hat{\mathtt b}$, or $\eps$ & $i$ from $\mathcal Z$\\
+$\mathtt c$, opening & $E_i\mathcal Z\to E_{i-1}\hat{\mathtt c}_i\mathcal Z$ & $E$ followed by $\hat{\mathtt c}$ & $i$ and $\mathcal Z$ read off\\
+$\mathtt c$, closing & $\hat{\mathtt c}_i\mathcal Z\to\mathcal Z$, $\mathcal Z$ a frame product & a marker, $E\hat{\mathtt b}$, or $\eps$ & $i$ from $\mathcal Z$\\
+\hline
+\end{tabular}
+\end{center}
+In the closing rows $\mathcal Z$ is a frame product because a reachable stack
+with a marker $\hat{\mathtt b}_i$ or $\hat{\mathtt c}_i$ on top is $\mathcal YF_{i+1}\cdots
+F_n$ with $\mathcal Y$ that marker.  For $\mathtt b$, an opening result begins with
+two symbols $E$ and a closing result never does, since in a frame product a
+symbol $E$ is followed by a marker; for $\mathtt c$, an opening result begins with
+$E\hat{\mathtt c}$, which never occurs in a frame product.  So the openings and the
+closings of one letter have disjoint images, each row is injective by its last
+column, and every letter, hence every word, acts as a partial injection on
+reachable stacks.
 \end{proof}
 
 \begin{lemma}\label{lem:app-br-exchange}
