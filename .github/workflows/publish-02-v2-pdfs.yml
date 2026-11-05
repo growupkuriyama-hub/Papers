@@ -1,0 +1,75 @@
+name: Publish paper 02 (v2) PDFs to fixed URLs
+
+# Builds the English and Japanese PDFs of 02-v2-lg-fanout-boundary and commits
+# them to fixed paths on main, so that these URLs always show the latest version:
+#   02-v2-lg-fanout-boundary/main.pdf
+#   02-v2-lg-fanout-boundary/japanese/main_JP.pdf
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "02-v2-lg-fanout-boundary/main.tex"
+      - "02-v2-lg-fanout-boundary/japanese/main_JP.tex"
+      - ".github/workflows/publish-02-v2-pdfs.yml"
+  schedule:
+    - cron: "17 18 * * *"   # daily at 03:17 JST, as a safety net
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stable-paper-pdf-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Compile English PDF (pdfLaTeX)
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: 02-v2-lg-fanout-boundary
+          root_file: main.tex
+
+      - name: Compile Japanese PDF (LuaLaTeX)
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: 02-v2-lg-fanout-boundary/japanese
+          root_file: main_JP.tex
+          latexmk_use_lualatex: true
+
+      - name: Verify PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for pdf in 02-v2-lg-fanout-boundary/main.pdf 02-v2-lg-fanout-boundary/japanese/main_JP.pdf; do
+            test -s "$pdf"
+            test "$(head -c 4 "$pdf")" = "%PDF"
+            echo "Verified $pdf ($(wc -c < "$pdf") bytes)"
+          done
+
+      - name: Commit PDFs to fixed URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- \
+            02-v2-lg-fanout-boundary/main.pdf \
+            02-v2-lg-fanout-boundary/japanese/main_JP.pdf
+          if git diff --cached --quiet; then
+            echo "Both PDFs already match the current sources."
+            exit 0
+          fi
+          git commit -m "Refresh paper 02 (v2) English and Japanese PDFs from main.tex and main_JP.tex"
+          git pull --rebase origin main
+          git push origin HEAD:main
