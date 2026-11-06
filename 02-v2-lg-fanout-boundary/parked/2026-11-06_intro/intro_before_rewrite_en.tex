@@ -1,0 +1,315 @@
+% English introduction replaced on 2026-11-06 (README (174)); verbatim, not compiled.
+\section{Introduction}
+\label{sec:introduction}
+
+Positive-data grammatical inference asks when a language can be identified
+in the limit from positive examples alone \cite{Gold1967,Angluin1980}.
+Distributional learning treats words, or tuples of words, that occur in
+common contexts as candidate constituents.  It began with substitutable
+CFGs \cite{ClarkEyraud2007,Yoshinaka2008} and was extended to multiple
+context-free grammars (MCFGs), whose tuple-valued nonterminals express
+discontinuous and cross-serial dependencies
+\cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011,Kallmeyer2010}.
+Yoshinaka's finite-signature framework \cite{Yoshinaka2015General} gives
+positive-data identification with characteristic samples of polynomially
+many words.  Polynomially many words may still be exponentially long, so we
+measure a finite sample $K$ by its total encoded length
+$\|K\|_+=\sum_{w\in K}(|w|+1)$, following the thick-data perspective of
+\cite[Section~2.5.2]{EyraudHeinzYoshinaka2016}.  Qualitative identification
+is inherited from Yoshinaka's framework; our subject is the length of
+characteristic samples relative to an MCFG presentation of the target, and the
+question is: \emph{for which comparison biases is this length polynomial, and
+does the answer depend on the fan-out?}
+
+\paragraph{The setting.}
+Before any data are seen, we fix a fan-out bound $f$ and a surjective
+finite-semigroup morphism $s:\Sigma^+\twoheadrightarrow\mathsf S$, a
+\emph{typing}.  The reconstruction compares observed nonempty tuple components
+only when their $s$-values agree, and the target class $\Cmcf{f}{s}$
+consists of the $f$-MCFLs that are tuple-substitutable under this
+restriction (Definition~\ref{def:class-cmcf}).  Already at fan-out two a
+group typing makes this class strictly larger than Yoshinaka's untyped class,
+with non-context-free witnesses on which the untyped reconstruction
+over-generalizes (Proposition~\ref{prop:typed-separation}).  The typing is a
+class-level bias in the sense of \cite{CosteTyping2004}, not chosen per
+target; other biases restrict derivations by control sets
+\cite{Takada1988,Takada1995} or restrict the evidence used to compare
+factors \cite{CosteGaretNicolas2012,CosteNicolas2019}.  Typical typings are
+prefix--suffix windows, values in a finite group, their products, and DFA
+transition morphisms.  Group values compose in
+the order of the blocks, so for noncommutative groups such as $S_3$ the order of
+interleaved components matters.  Local groups, finite semigroups $\mathsf T$ with
+$e\mathsf Te$ a group for every idempotent $e$, add group contributions of
+sliding factors: over $\{\mathtt a,\mathtt b\}$, recording the parity of the
+number of occurrences of $\mathtt{ab}$ is a local-group typing, but no
+prefix--suffix window combined with a group morphism determines it: for each
+window size and group morphism there are $m,n$ such that
+$\mathtt b^m\mathtt a^{n}\mathtt b^m$ and $\mathtt b^{2m}$ agree on both but
+differ in that parity
+(Proposition~\ref{prop:li-g-strict}).  Windows, groups and their products are local
+groups as well, but a DFA transition morphism need not be: if one letter acts as the
+identity and another as a constant map on at least two states, the two transformations
+form a copy of $U_1$, the obstruction of Theorem~\ref{thm:C} below.  For a reduced good presentation $G$ we
+use its size $\|G\|$ and its rule thickness $\bar\theta_G$, the largest length
+of a shortest sentence using a given rule.  Lower bounds are stated for every
+set-driven operator with characteristic samples throughout the class; upper
+bounds for Yoshinaka's reconstruction operator with typed links (Section~\ref{sec:learner}).
+
+\paragraph{Main results.}
+Fix the alphabet, the fan-out $f$, a rule-rank bound $r_{\max}\ge2$ and the
+typing $s$.
+
+\begin{mainthm}[Local groups]
+\label{thm:A}
+If the positive image of $s$ is a local group, every $L\in\Cmcf{f}{s}$ has
+characteristic data of total length $O(\|G\|^2\bar\theta_G)$ for every reduced
+good presentation $G$ \textup(Theorem~\ref{thm:local-group-polydata}\textup).
+\end{mainthm}
+
+\begin{mainthm}[The linear factor]
+\label{thm:B}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item If $\Sigma$ has at least $4f+1$ letters, or $f=1$ and $\Sigma$ has at least
+two letters, then for every typing $s$ there are finite targets in
+$\Cmcf{f}{s}$, with presentations within a constant factor of the smallest
+reduced good ones, whose characteristic samples all have length
+$\Omega(\|G\|\bar\theta_G)$
+\textup(Proposition~\ref{prop:linear-factor-all-fanout}\textup).
+\item For the trivial typing, Yoshinaka's bound $O(\|G\|\bar\theta_G)$ on characteristic
+data \cite{Yoshinaka2011} is attained up to a constant factor: under the alphabet
+condition of \textup{(i)}, by the targets of \textup{(i)}
+\textup(Corollary~\ref{cor:trivial-exact}\textup).
+\end{enumerate}
+\end{mainthm}
+
+\begin{mainthm}[The boundary at fan-out one]
+\label{thm:C}
+Let $f=1$ and $r_{\max}\ge2$.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item A pseudovariety of finite semigroups admits uniform polynomial
+characteristic-data length iff it is contained in $\mathbf{LG}$
+\textup(Theorem~\ref{thm:fanout-one-data}\textup).
+\item Outside $\mathbf{LG}$ the failure is exponential: for a typing $s_U$ onto
+the two-element semilattice $U_1$ there are targets in $\Cmcf{1}{s_U}$ with
+reduced good presentations of size and rule thickness $O(n)$ whose
+characteristic samples all have length at least $3\cdot2^n-1$, for every
+set-driven operator with characteristic samples throughout the class
+\textup(Theorem~\ref{thm:fanout-one-data}\textup).
+\end{enumerate}
+\end{mainthm}
+
+In the terminology of identification in polynomial time and thick data
+\cite{Yoshinaka2008,EyraudHeinzYoshinaka2016}, Theorems~\ref{thm:A}
+and~\ref{thm:C} say that for local-group typings the classes
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ are so identifiable at every fan-out,
+and that at fan-out one $\mathbf{LG}$ is exactly the pseudovariety boundary of
+this property (Corollary~\ref{cor:iptd}).  An MCFG of
+fan-out one is a context-free grammar, so Theorem~\ref{thm:C} is a statement
+about context-free languages; it turns the sufficient condition of the
+companion manuscript \cite{kuriyamaCFG} into a characterization.
+
+\paragraph{The remaining question.}
+Theorem~\ref{thm:A} gives the \emph{if} direction of Theorem~\ref{thm:C}(i) at
+every fan-out.  Whether $\mathbf{LG}$ is still the boundary at fan-out $f\ge2$
+is open (Open Problem~\ref{op:fanout-two}).  The witness family of
+Theorem~\ref{thm:C}(ii) does not decide it: by a two-hole transfer of powers,
+under every fixed typing all but finitely many of its members, and their images
+under letter-disjoint morphisms, leave the class at fan-out two, and no member
+of the class keeps their long word as the only word of its type
+(Theorem~\ref{thm:doubling-no-lift}).  A typing that needs superpolynomial data
+at fan-out one but polynomial data at fan-out two would show that raising the
+fan-out can make learning strictly cheaper.
+
+\paragraph{Approach.}
+Refining the grammar by types and applying untyped estimates to the
+refinement can be expensive: for a fixed two-element typing there are
+presentations $G_n$ of $\{\mathtt a,\mathtt c\}^+$ with $\|G_n\|=O(n)$ and
+rule thickness at most $2$ whose full yield-type refinement has thickness at
+least $2^n$ (Proposition~\ref{prop:typed-thickness-exponential}).  We
+therefore bound characteristic data in terms of the original presentation,
+and we use distribution-equivalent representatives rather than generated
+witnesses (Corollary~\ref{cor:distribution-representatives}).
+To obtain short tuples of prescribed type, we replace long subderivations
+by short ones that need not preserve the group values of the replaced
+subtrees; every regime is an instance of one shortening principle
+(Lemma~\ref{lem:heavy-node-count}(ii)), and only the word-level replacement step
+changes.  At fan-out one each replaced subtree occupies one contiguous block,
+and a pigeonhole on prefix products of the group values selects a replaceable
+interval.  In an MCFG derivation of fan-out $f\ge2$ a subtree contributes up to $f$
+blocks to different root components, interleaved with blocks of other subtrees,
+and for noncommutative groups the effect of simultaneous replacements depends on
+this order.  The key step, with no fan-out-one counterpart, is an
+\emph{owner-wise simultaneous selection} of replacements that preserves the
+ordered group product of every root component at once
+(Proposition~\ref{prop:block-replacement-interface}).  For
+local-group typings the group value is a product over sliding factors, which
+straddle block boundaries; selecting owners whose blocks lie far apart and
+enlarging each block by unchanged boundary letters reduces this case to the
+same selection (Lemma~\ref{lem:lg-buffered-owners}).  The lower bounds use
+marker families all of whose subsets stay in the class
+(Proposition~\ref{prop:linear-factor-all-fanout}) and rare types
+(Proposition~\ref{prop:rare-type}).  A second ingredient without a fan-out-one
+counterpart, a two-hole transfer of powers, excludes the exponential fan-out-one
+obstruction at fan-out two (Lemma~\ref{lem:power-transfer},
+Theorem~\ref{thm:doubling-no-lift}).
+
+\paragraph{Relation to prior work.}
+Yoshinaka bounded characteristic data of $(k,\ell)$-substitutable CFGs with
+a thickness parameter \cite{Yoshinaka2008}, learned multidimensionally
+substitutable MCFGs from positive data \cite{Yoshinaka2009,Yoshinaka2011},
+and gave the finite-signature learning principle with finite witness
+cardinality \cite{Yoshinaka2015General}; the qualitative results and the
+Const/Link/Comp construction used here are his.  The finite-semigroup
+structure theory and local-group representations are classical
+\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}.  Our contribution is
+the encoded-length analysis and the boundary results above.  Other
+mildly context-sensitive formalisms are learned from positive data in
+\cite{OatesEtAl2006}, and MCFGs with queries or dual context sets in
+\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}; the MCFL
+substitution lemma of \cite{DuncanEtAl2026Substitution} is a membership
+condition, not a learning criterion.
+
+\paragraph{Relation to the companion CFG manuscript.}
+The companion manuscript \cite{kuriyamaCFG} treats fan-out one.  In short, it
+proves polynomial data for typings in $\mathbf{LI}\vee\mathbf{Grp}$ as a
+sufficient condition and exponential data for one typing onto $U_1$; here the
+fan-out-one boundary is determined exactly ($\mathbf{LG}$), and the upper bound
+for $\mathbf{LG}$ and the linear-factor lower bound hold at every fan-out.
+Table~\ref{tab:companion-overlap} separates its results from ours (numbers in
+the second column refer to the companion).  No result of the companion is used
+as a premise: instead of its bracketed doubling family
+\cite[Proposition~6.4]{kuriyamaCFG} we use a three-letter variant, proved in
+Appendix~\ref{app:bracketed-family}, and its expressive results (counter and
+Dyck obstructions, comparison with congruential grammars) are not used.
+
+\begin{table}[htbp]
+\caption{Results of the companion CFG manuscript \cite{kuriyamaCFG}
+(fan-out one) and of the present paper.}
+\label{tab:companion-overlap}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}X@{}}
+\hline
+Topic & Companion \cite{kuriyamaCFG} & Here\\
+\hline
+Typed reconstruction, Gold learner, typed-thickness witness bound
+ & Theorem~4.2, Theorems~5.2--5.3, Corollary~5.4; Lemma~6.2, Corollary~6.3
+ & Tuple versions (Section~\ref{sec:learner},
+   Theorem~\ref{thm:data-from-typed-thickness}); qualitative results credited to
+   Yoshinaka; not new\\
+Window and window--group bounds
+ & Proposition~3.5, Lemma~7.1, Theorem~7.2, Lemma~7.4, Corollary~7.5
+ & Not new at $f=1$; new for $f\ge2$: owner-wise replacement across interleaved
+   components (Proposition~\ref{prop:block-replacement-interface})\\
+Local-group typings
+ & Not treated (only $\mathbf{LI}\vee\mathbf{Grp}$; Lemma~7.6)
+ & New for data length, at every $f$ (Theorems~\ref{thm:lg-characterization}
+   and~\ref{thm:local-group-polydata}); the characterization of $\mathbf{LG}$ by
+   $U_1$ and the semigroup algebra are classical \cite{AlmeidaEtAl2009}\\
+Doubling family under a typing onto $U_1$
+ & Proposition~6.4, Corollary~6.6, Appendix~C (five letters, brackets)
+ & Three-letter variant with the same bounds, proved here
+   (Proposition~\ref{prop:three-letter-family})\\
+Rare-type lower bound
+ & Proposition~6.4(iii)--(iv), for a single word
+ & Every realized type and every $f$ (Proposition~\ref{prop:rare-type})\\
+Fan-out-one pseudovariety boundary
+ & Sufficiency for $\mathbf{LI}\vee\mathbf{Grp}$ only (Remark~7.7)
+ & New (Theorem~\ref{thm:fanout-one-data})\\
+Typed versus untyped class
+ & Separations at $f=1$
+ & At $f\ge2$, a non-context-free member outside Yoshinaka's class
+   (Proposition~\ref{prop:typed-separation})\\
+Necessity of the factor $\|G\|\bar\theta_G$
+ & ---
+ & New at every $f$ (Proposition~\ref{prop:linear-factor-all-fanout})\\
+Fan-out two: power transfer
+ & ---
+ & New (Theorem~\ref{thm:doubling-no-lift})\\
+\hline
+\end{tabularx}
+\end{table}
+
+\paragraph{Scope of the claims.}
+All bounds concern the total encoded length of characteristic samples for
+the specified set-driven operator, relative to the stated presentation;
+they bound neither an intrinsic grammar size nor a stage of Gold
+convergence, and their exponents are discussed at the end of
+Section~\ref{sec:conclusion}.  Lower bounds on data come only from
+distinguishing targets (Propositions~\ref{prop:rare-type}
+and~\ref{prop:linear-factor-all-fanout}); thick refinements
+(Proposition~\ref{prop:typed-thickness-exponential}) limit the witness
+construction, not the data (Corollary~\ref{cor:distribution-representatives}).
+The typing is fixed before the target is seen; refining it enlarges the class
+but changes the reconstruction operator, so we neither infer nor optimize it.
+Table~\ref{tab:scope} lists, for each main claim, the parameters that are
+fixed, the operators it concerns and its side conditions; constants in upper
+bounds depend on the fixed parameters only.
+
+\begin{table}[htbp]
+\caption{Scope of the main claims.  ``Canonical'' means both
+$\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ (with one common sample);
+``class-wide'' means every set-driven operator with characteristic samples
+throughout the class.  $G$ is a reduced good presentation of $L\cap\Sigma^+$ of
+fan-out $\le f$ and rank $\le r_{\max}$.}
+\label{tab:scope}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}X@{}}
+\hline
+Claim & Fixed & Operators & Bound and conditions\\
+\hline
+Theorem~\ref{thm:A} (Theorem~\ref{thm:local-group-polydata})
+ & $f$, $r_{\max}$, $\Sigma$, $s$ with $s(\Sigma^+)\in\mathbf{LG}$
+ & canonical
+ & upper $O(\|G\|^2\bar\theta_G)$, every $L\in\Cmcf{f}{s}$ and every $G$\\
+Theorem~\ref{thm:B}(i) (Proposition~\ref{prop:linear-factor-all-fanout})
+ & $f$, any $s$
+ & canonical ($r\ge1$), class-wide
+ & lower $\Omega(\|G\|\bar\theta_G)$ for finite targets; needs $|\Sigma|\ge4f+1$ ($|\Sigma|\ge2$ if $f=1$);
+   presentations of rank two\\
+Theorem~\ref{thm:B}(ii) (Corollary~\ref{cor:trivial-exact})
+ & $f$, $r_{\max}\ge1$, $s_{\mathrm{triv}}$
+ & $\mathcal B_{f,s_{\mathrm{triv}}}$
+ & upper $O(\|G\|\bar\theta_G)$ (Yoshinaka \cite{Yoshinaka2011}); attained if $r_{\max}\ge2$ and $|\Sigma|\ge4f+1$ ($\ge2$ if $f=1$)\\
+Theorem~\ref{thm:C}(i) (Theorem~\ref{thm:fanout-one-data})
+ & $f=1$, $r_{\max}\ge2$, a pseudovariety
+ & $\mathcal B^{\le r_{\max}}_{1,s}$ (Definition~\ref{def:uniform-polydata})
+ & uniform polynomial data iff $\mathbf V\subseteq\mathbf{LG}$\\
+Theorem~\ref{thm:C}(ii)
+  & $f=1$, $s_U$ on three letters
+ & canonical, class-wide
+ & lower $3\cdot2^n-1$ for presentations of size and thickness $O(n)$\\
+Corollary~\ref{cor:iptd}
+ & $f$, $r_{\max}$, $s$
+ & set-driven
+ & IPTtD for $\mathbf{LG}$ at every $f$; at $f=1$ exactly for $\mathbf{V}\subseteq\mathbf{LG}$\\
+Theorem~\ref{thm:doubling-no-lift}
+ & any $f\ge2$, any $s$
+ & none (membership)
+  & the family of Theorem~\ref{thm:C}(ii) and its letter-disjoint images leave $\Cmcf{f}{s}$, and their forced word is never the only one of its type there; no data bound at $f\ge2$\\
+Open
+ & 
+ & 
+ & whether $\mathbf{LG}$ is the boundary at $f\ge2$ (Open Problem~\ref{op:fanout-two})\\
+\hline
+\end{tabularx}
+\end{table}
+
+\paragraph{Organization.}
+Section~\ref{sec:prelim} fixes the setting and Section~\ref{sec:learner}
+recalls the reconstruction operator and its qualitative guarantees, and
+separates the typed from the untyped class (Section~\ref{subsec:typed-separation}).
+Section~\ref{sec:char-data} reduces characteristic data to typed thickness and
+to distribution representatives.  Section~\ref{sec:upper} proves
+Theorem~\ref{thm:A}, Section~\ref{sec:linear} proves Theorem~\ref{thm:B}, and
+Section~\ref{sec:fanout-one} proves Theorem~\ref{thm:C} and restates the
+boundary in terms of identification in polynomial time and thick data.
+Section~\ref{sec:fanout-two} shows that the witness family does not carry over
+to fan-out two, and Section~\ref{sec:conclusion} discusses the exponents and the
+open problem.  The appendices contain the technical proofs.
+
