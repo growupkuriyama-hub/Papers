@@ -1,5 +1,7 @@
 # 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
+**2026-11-09 更新（2）：退避していた成果を #2 に戻した（README (229)）。著者の決定で #3 は作らない。** 戻したのは、`lem:no-insertion`、§7 の「U₁ の上への個々の型付け」（`cor:typing-level-obstruction`、`prop:binary-u1-quadratic`、付録 `app:u1-typings`）、§8 の半束への帰着（`prop:sl-reduction`）と二文字・ファンアウト f ≥ 2 の定理（`thm:two-letter-content`、付録 `app:two-letter-content`）。これで「二文字の半束型付けは全てのファンアウトで多項式、`op:fanout-two` は三文字以上の内容型付けの問題」と原稿の中で言える。英語 62 ページ、日本語 69 ページ。
+
 **2026-11-09 更新：二文字・ファンアウト1の定理を原稿に追加（README (228)、main に合流）。** `thm:two-letter-fanout-one`（二文字の内容型付けで代表元の長さ τ が多項式）と `cor:two-letter-fanout-one`（二文字の半束型付けはファンアウト1で多項式の特徴データ、r_max ≥ 2）を §7 に、証明を付録H `app:two-letter-fanout-one` に置いた。出典は `reviews/claude_S1_proofnote_2026-11-09.md`（第2版、ChatGPT 査読済み）。`op:S1` は二文字では肯定で閉じた（STATUS (21)）。英語 52 ページ、日本語 58 ページ。
 
 **2026-11-08 更新：A＋A+案で全面改訂（README (211)、(212) で main に合流）。** 主役は定理A（局所群、全ファンアウト）と同時短縮の技法。退避していた非CFLの分離する標的（`prop:lg-needed-target`、`prop:nonabelian-needed-target`、付録 `app:separating-targets`、`lem:sl2-boundary-control`）を §5.4 に戻した。定理C はファンアウト1の基準として残す。二文字の定理（`thm:two-letter-content`）は戻さない（U₁ 型付けの別稿 #3 の柱）。英語 46 ページ、日本語版 `japanese/main_JP.tex` は同期済み（52 ページ、LuaLaTeX）。`op:S1` の研究は `reviews/STATUS_S1_two_letter_fanout1_2026-11-08.md`（期限 11/21）。

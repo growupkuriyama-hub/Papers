@@ -7,6 +7,8 @@ Nothing was deleted. The material removed from `main.tex` is kept here.
 - `main_before_focus_59pp.tex` — the whole manuscript just before the cut (59 pages, README (147)). It builds as it is.
 - `removed_blocks.tex` — the removed blocks one by one, each headed by `%% REMOVED: ...`. `tools/check_port.py` reads this file.
 
+**2026-11-09:** restored into `main.tex` (README (229)): `lem:no-insertion`, `subsec:u1-typings` material (`cor:typing-level-obstruction`, `prop:binary-u1-quadratic`, `app:u1-typings`), the SL reduction, and the two-letter content theorem with its appendix. The blocks stay here as a record.
+
 ## What was removed
 
 | Block | Labels | Where it could go next |
