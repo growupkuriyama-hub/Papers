@@ -2396,6 +2396,13 @@ rank.  In particular, if $L$ contains a word of $\mathtt a^+$, its shortest one
 has length at most $C(\|G\|+2)^{22}\bar\theta_G^{\,8}$.
 \end{theorem}
 
+The theorem bounds only the type of the isolated letter.  The other types are
+bounded, for the two cases of the next corollary, by
+Lemma~\ref{lem:app-h-other}, and the assumption that all words containing
+$\mathtt a$ outside $\mathtt a^+$ have one type is essential: it fails for the
+content typing over three or more letters, where the data can be exponential
+(see below).
+
 \begin{corollary}[Polynomial data from isolated letters]
 \label{cor:two-letter-fanout-one}
 Let $r_{\max}\ge2$ and let $s$ be
@@ -4215,7 +4222,9 @@ $1+r+|\gamma|$ of the rule in $\|G\|$, so
 \]
 and $k_V\le\|G\|+2$, $|P'|\le\|G\|+2$ if $|\Sigma|=2$.  Moreover
 $\theta:=\bar\theta_{G'}\le\bar\theta_G$, since a derivation using a new rule
-corresponds to one using the rule of $G$ it comes from.  Every nonterminal of
+corresponds to one using the rule of $G$ it comes from, and a derivation using a
+preterminal rule $T_{\mathtt x}\to\mathtt x$ to one using a rule of $G$ that writes
+$\mathtt x$.  Every nonterminal of
 $G'$ has a yield of length $\le\theta$ and a derivational context $(l,r)$ with
 $|l|+|r|\le\theta$: take a shortest sentence through a rule with that
 nonterminal on the left, respectively on the right.  The nonterminals of $G$
@@ -4241,7 +4250,7 @@ $\mathtt a^{n_Y}$.
 \item Every label $Y$ of a heavy node has a yield $\omega_Y\notin\mathtt a^+$ of
 length $\le\theta$.
 \item Seeds have yields of length $\le2\theta$; seeds are pairwise disjoint;
-a subtree containing $k$ seeds has a yield of length $\le k(k_V+2)\theta$; and
+a subtree containing $k\ge1$ seeds has a yield of length $\le k(k_V+2)\theta$; and
 the left ends of two consecutive seeds differ by at most $2k_V\theta$.
 \end{enumerate}
 \end{lemma}
@@ -4263,8 +4272,9 @@ heavy one would contain a seed between $u$ and $v$.
 \end{proof}
 
 Let $X_0$ be the root of $T$ and $X_{i+1}$ the child of $X_i$ with the longer
-yield, so that $n_{X_i}\le2n_{X_{i+1}}$.  If the root subtree has at most $k_V$
-seeds, then $n\le k_V(k_V+2)\theta$.  Otherwise let $i^*$ be the largest index
+yield, so that $n_{X_i}\le2n_{X_{i+1}}$.  If the root subtree has no seed, the
+root is light and $n\le\theta$; if it has at least one and at most $k_V$ seeds,
+then $n\le k_V(k_V+2)\theta$.  Otherwise let $i^*$ be the largest index
 whose subtree contains at least $k_V+1$ seeds; then $X_{i^*+1}$ exists,
 $i^*\le k_V-2$ by Lemma~\ref{lem:app-h-tree}(a), and
 $B_0:=n_{X_{i^*}}\le2k_V(k_V+2)\theta$; we may assume $n_{X_{i^*}}<n$, and
@@ -4308,8 +4318,11 @@ $\omega$ is $\mathtt a$-free, then $n_Y=d$ and $x+y\ge1$.  For $y\ge1$,
 cancelling $\mathtt a^x$ and $\mathtt a^{y-1}$ gives $\omega\omega\mathtt
 a\sim\omega\mathtt a^{d+1}$, so $z_0z_0\sim\omega\omega\mathtt a^{2d}\sim\omega\mathtt
 a^{3d}=z_0\mathtt a^{2d}$; for $y=0$, cancelling $\mathtt a^{x-1}$ gives $\mathtt
-a\omega\omega\sim\mathtt a\omega\mathtt a^d$, so $z_0z_0\sim\mathtt
-a^{2d}\omega\omega\sim\mathtt a^{2d}z_0$.  The words compared here contain
+a\omega\omega\sim\mathtt a\omega\mathtt a^d$, so, keeping one letter $\mathtt a$
+in front of $\omega\omega$, $z_0z_0\sim\mathtt a^{2d}\omega\omega=\mathtt
+a^{2d-1}(\mathtt a\omega\omega)\sim\mathtt a^{2d-1}(\mathtt a\omega\mathtt
+a^d)=\mathtt a^{2d}z_0$; the $\mathtt a$-free word $\omega\omega$ is never compared
+with anything.  The words compared here contain
 $\mathtt a$ and $\omega$, so they are $\mathtt a$-mixed, and those cancelled from
 are factors of $W_1$.  In both cases $z_0\mathtt
 a^{2d}\sim\mathtt a^{2d}z_0$ and $\mathtt a^dz_0\sim z_0\mathtt a^d$.  Finally $z_0$
@@ -4399,7 +4412,7 @@ and $r_\circ:=\mathtt a^\rho r$, and $V^*:=e^*+c_0=n-\rho-\rho'$.
 \label{lem:app-h-period}
 Let $P_0:=\{p\ge0:\mathtt a^pz_0\sim z_0\}$.
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $P_0=\{0\}$ or $P_0=p_0\mathbb N$ for some $p_0\ge1$.
+\item $P_0=\{0\}$ or $P_0=p_0\mathbb Z_{\ge0}$ for some $p_0\ge1$.
 \item If $l'\mathtt a^fz_0r'\in L$ for some $f$, then
 $\{f\ge0:l'\mathtt a^fz_0r'\in L\}$ is a single point if $P_0=\{0\}$ and a
 full residue class modulo $p_0$ otherwise.
@@ -4410,8 +4423,10 @@ $\mathtt a^k$ is $\equiv_{L,s}$-equivalent to some $\mathtt a^{k'}$ with $1\le k
 
 \begin{proof}
 All words $\mathtt a^fz_0$ are $\mathtt a$-mixed, so they have one type by (I2).
-(i) $P_0$ is closed under sums, and under differences by
-Lemma~\ref{lem:app-h-cancel}, since $\D(\mathtt a^pz_0)=\D(z_0)\ne\emptyset$.
+(i) $P_0$ is closed under sums.  It is closed under differences $q-p$ with
+$q>p>0$ in $P_0$ by Lemma~\ref{lem:app-h-cancel}, applied to
+$\mathtt a^p(\mathtt a^{q-p}z_0)\sim\mathtt a^pz_0$, since $\D(\mathtt
+a^pz_0)=\D(z_0)\ne\emptyset$; the case $p=0$ is trivial.
 (ii) Two members $f<f'$ give $\mathtt a^fz_0\sim\mathtt a^{f'}z_0$, hence
 $f'-f\in P_0$ by Lemma~\ref{lem:app-h-cancel}; conversely the set is closed
 under adding and, by $\mathtt a^{p_0}z_0\sim z_0$, under subtracting $p_0$.  (iii)
@@ -4458,7 +4473,13 @@ $\kappa-1\le|I(\pi)|\le\kappa$.  The \emph{record} of $\pi$ consists of $X$,
 $p$, $q$, and, for each end of $[p,q)$ lying strictly inside one of the $M$
 codes, the index and the offset of that code; there are at most
 $k_V(m+1)^2(M\ell_z+1)^2$ records.  The three blocks $l_\circ$, $z_{\pi(1)}\cdots
-z_{\pi(M)}$ and $Qr_\circ$ occupy the same positions for all $\pi$.
+z_{\pi(M)}$ and $Qr_\circ$ occupy the same positions for all $\pi$.  The codes
+whose first letter lies in $[p,q)$ are those of $I(\pi)$ and at most one code
+that starts inside and ends after $q$; a code through $p$ starts before $p$.
+This gives $\kappa-1\le|I(\pi)|$.  Each end of $[p,q)$ lies in $l_\circ$, in
+$Qr_\circ$, on a boundary between two codes, or strictly inside a code; only in
+the last case is a code cut there, and then its index and offset are part of the
+record.
 
 Let $\pi,\pi'$ have the same record.  Replacing the subtree of $u$ in the tree
 of $w_\pi$ by the corresponding subtree of $w_{\pi'}$ gives a derivation of
@@ -4603,13 +4624,14 @@ $\Sigma$, then $\tau(A,\Sigma)\le3k_V\theta+2$.
 (i) Take a derivation of a yield of $A$ of type $\zeta$ with the least number of
 nodes and mark a leaf whose letter is not $\mathtt a$.  Replacing the subtree of a
 node on the path from the root to the marked leaf by the subtree of a lower node
-with the same label keeps the marked leaf, hence the type; so no label repeats on
+on the same path with the same label keeps the marked leaf, hence the type; so no label repeats on
 this path, which has at most $k_V$ nonterminal nodes.  Replacing the at most
 $k_V-1$ subtrees hanging off it by yields of length $\le\theta$ gives a yield of
 $A$ of type $\zeta$ and length $\le(k_V-1)\theta+1$.  (ii) Take a derivation of a
 yield of content $\Sigma$ with the least number of nodes and mark an $\mathtt
-a$-leaf and a $\mathtt b$-leaf.  By the same contraction on the three path segments
-between the root, the branching node and the two leaves, the skeleton has at most
+a$-leaf and a $\mathtt b$-leaf.  By the same contraction within each of the three
+path segments between the root, the branching node and the two leaves (never
+between different segments), the skeleton has at most
 $3k_V$ nodes; replacing the at most $3k_V$ subtrees hanging off it by yields of
 length $\le\theta$ gives a yield of content $\Sigma$ of length $\le3k_V\theta+2$.
 In both cases the new word is a yield of $A$ of the same type, hence in the same
