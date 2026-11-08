@@ -2,7 +2,9 @@ import sys
 import sys,random,itertools
 import os; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 sys.argv_saved=sys.argv
-from check_claude_sU2_closure_2026_11_08 import close, doubling
+import importlib.util as _u
+_sp=_u.spec_from_file_location('cl',os.path.join(os.path.dirname(os.path.abspath(__file__)),'check_claude_sU2_closure_2026-11-08.py'))
+_m=_u.module_from_spec(_sp); _sp.loader.exec_module(_m); close,doubling=_m.close,_m.doubling
 from collections import defaultdict
 def antichain_violation(L):
     bw=sorted((w for w in L if 'b' in w), key=len)
