@@ -1,6 +1,6 @@
 # 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
-**2026-11-08 更新：A＋A+案で全面改訂（README (211)、ブランチ `a-plus-revision-2026-11-08`）。** 主役は定理A（局所群、全ファンアウト）と同時短縮の技法。退避していた非CFLの分離する標的（`prop:lg-needed-target`、`prop:nonabelian-needed-target`、付録 `app:separating-targets`、`lem:sl2-boundary-control`）を §5.4 に戻した。定理C はファンアウト1の基準として残す。二文字の定理（`thm:two-letter-content`）は戻さない（U₁ 型付けの別稿 #3 の柱）。英語 46 ページ、日本語版 `japanese/main_JP.tex` は同期済み（52 ページ、LuaLaTeX）。`op:S1` の研究は `reviews/STATUS_S1_two_letter_fanout1_2026-11-08.md`（期限 11/21）。
+**2026-11-08 更新：A＋A+案で全面改訂（README (211)、(212) で main に合流）。** 主役は定理A（局所群、全ファンアウト）と同時短縮の技法。退避していた非CFLの分離する標的（`prop:lg-needed-target`、`prop:nonabelian-needed-target`、付録 `app:separating-targets`、`lem:sl2-boundary-control`）を §5.4 に戻した。定理C はファンアウト1の基準として残す。二文字の定理（`thm:two-letter-content`）は戻さない（U₁ 型付けの別稿 #3 の柱）。英語 46 ページ、日本語版 `japanese/main_JP.tex` は同期済み（52 ページ、LuaLaTeX）。`op:S1` の研究は `reviews/STATUS_S1_two_letter_fanout1_2026-11-08.md`（期限 11/21）。
 
 **2026-11-06 更新：原稿は一点集中版（41ページ、README (157)）になった。** 主張は「局所群が多項式の特徴データの境界」一本で、主定理は A（局所群の上界）・B（線形因子）・C（ファンアウト1の境界）。下の §4 の節の表は一点集中版より前のもの。削った内容は全て `parked/2026-11-06_focus/` にある（索引は同じフォルダの README.md）。退避した結果を原稿に戻すのは著者の承認の後に限る。
 
