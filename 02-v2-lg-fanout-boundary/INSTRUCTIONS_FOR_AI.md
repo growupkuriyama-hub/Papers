@@ -1,5 +1,16 @@
 # 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
+**2026-11-09 更新（3）：圧縮・`prop:zeta-capacity`・`op:fanout-two` の探索（README (232)〜(252)）。**
+- 原稿：英語版 64 ページ・日本語版 73 ページ。圧縮で削ったブロックは `parked/2026-11-09_compress/removed_blocks.tex` にある。
+- §8 に `prop:zeta-capacity` を追加した。内容 $M$ の最短語は $(2|M|-1+\kappa_{\overline M})\|G\|(\|G\|+r\bar\theta)$ 以下で、$U_1$ 版もこれに含まれる。代入可能性もファンアウトも使わない。注意として、この条件はファンアウト1の族でもみたされるので、ファンアウトを分けない。
+- 別スレッドの探索（第1〜6回、`reviews/claude_fanout2_*`、`reviews/claude_problemQ_round6_*`）の成果：
+  - 移送 T1 は長さと Parikh ベクトルを保つ。
+  - 仮定 (Hyp) は偽。
+  - 予想 R は $|M|=1$ のとき問題 Q を含む。
+  - **定理 III-B**（問題 Q の場合 III・分岐 (B*)）は ChatGPT が独立に確認した（README (252)）。直すべき記述も (252) に書いた。
+- 問題 Q の残りは、場合 II・III の分岐 (S)。場合 III・分岐 (S) は第7回として依頼中（`reviews/prompt_claude_problemQ_round7_2026-11-09.md`）。
+- 原稿に入れる候補として、次の二つが未着手：`thm:doubling-no-lift` の後に「内容型付けでは $n\ge3$ で足りる」と書くこと、`prop:zeta-capacity` に $\min\{\kappa,2\beta\}$ を加えること。
+
 **2026-11-09 更新（2）：退避していた成果を #2 に戻した（README (229)）。著者の決定で #3 は作らない。** 戻したのは、`lem:no-insertion`、§7 の「U₁ の上への個々の型付け」（`cor:typing-level-obstruction`、`prop:binary-u1-quadratic`、付録 `app:u1-typings`）、§8 の半束への帰着（`prop:sl-reduction`）と二文字・ファンアウト f ≥ 2 の定理（`thm:two-letter-content`、付録 `app:two-letter-content`）。これで「二文字の半束型付けは全てのファンアウトで多項式、`op:fanout-two` は三文字以上の内容型付けの問題」と原稿の中で言える。英語 62 ページ、日本語 69 ページ。
 
 **2026-11-09 更新：二文字・ファンアウト1の定理を原稿に追加（README (228)、main に合流）。** `thm:two-letter-fanout-one`（二文字の内容型付けで代表元の長さ τ が多項式）と `cor:two-letter-fanout-one`（二文字の半束型付けはファンアウト1で多項式の特徴データ、r_max ≥ 2）を §7 に、証明を付録H `app:two-letter-fanout-one` に置いた。出典は `reviews/claude_S1_proofnote_2026-11-09.md`（第2版、ChatGPT 査読済み）。`op:S1` は二文字では肯定で閉じた（STATUS (21)）。英語 52 ページ、日本語 58 ページ。
