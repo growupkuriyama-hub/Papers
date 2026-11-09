@@ -2734,60 +2734,81 @@ $|\Sigma|=2$ they have it at every fan-out
 (Corollary~\ref{cor:two-letter-fanout-one} and Theorem~\ref{thm:two-letter-content}),
 so the problem concerns alphabets of at least three letters.
 
-A rare type~$1$ needs many letters of type~$\zeta$.  For a typing
-$s:\Sigma^+\twoheadrightarrow U_1=\{1,\zeta\}$ put $\Sigma_1:=\{a\in\Sigma:s(a)=1\}$, so
-that $s^{-1}(1)=\Sigma_1^+$, write $\#_\zeta(w)$ for the number of letters of type
-$\zeta$ in $w$, and $\kappa_\zeta(L):=\sup\{\#_\zeta(w):w\in L\}$.
+Rare types need many foreign letters.  For $M\subseteq\Sigma$ write
+$\#_{\overline M}(w)$ for the number of occurrences in $w$ of letters outside $M$, and
+$\kappa_{\overline M}(L):=\sup\{\#_{\overline M}(w):w\in L\}$.  For the content typing,
+$\mu_M(L)$ is the length of a shortest word of $L$ with content exactly $M$; for a
+typing $s$ onto $U_1=\{1,\zeta\}$ the words of type $1$ are those of $\Sigma_1^+$,
+$\Sigma_1:=\{a\in\Sigma:s(a)=1\}$.
 
-\begin{proposition}[Short type-$1$ words from few $\zeta$-letters]
+\begin{proposition}[Short words from few foreign letters]
 \label{prop:zeta-capacity}
-Let $s:\Sigma^+\twoheadrightarrow U_1$ be a typing and let $G$ be a reduced
-$\eps$-free nondeleting MCFG of any fan-out and rank $\le r_{\max}$ with
-$\kappa_\zeta(L(G))<\infty$, and write $\kappa_\zeta$ for this number.  Then
-\[
- \mu_1(L(G))\le\max\bigl\{\bar\theta_G,\ \kappa_\zeta\,\|G\|\bigl(\|G\|+r_{\max}\bar\theta_G\bigr)\bigr\}.
-\]
+Let $G$ be a reduced $\eps$-free nondeleting MCFG of any fan-out and rank
+$\le r_{\max}$, let $L:=L(G)$, let $\emptyset\ne M\subseteq\Sigma$, and suppose
+$\kappa:=\kappa_{\overline M}(L)<\infty$.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item If $L$ has a word with content $M$, then
+$\mu_M(L)\le(2|M|-1+\kappa)\,\|G\|\bigl(\|G\|+r_{\max}\bar\theta_G\bigr)$.
+\item If $L\cap M^+\ne\emptyset$, its shortest word has length at most
+$\max\{\bar\theta_G,\ \kappa\,\|G\|(\|G\|+r_{\max}\bar\theta_G)\}$.  In particular,
+for a typing onto $U_1$, $\mu_1(L)$ obeys this bound with $M=\Sigma_1$.
+\end{enumerate}
 \end{proposition}
 
 \begin{proof}
-Assume $\mu:=\mu_1(L(G))$ is finite and exceeds $\bar\theta_G$.  For a
-nonterminal $A$ let $\lambda(A)$ be the least total length of a tuple of
-$L_A(G)$ over $\Sigma_1$ ($\infty$ if there is none) and
-$\operatorname{cap}(A):=\sup\{\#_\zeta(\tuple y):\tuple y\in L_A(G)\}$.  Among the
-derivation trees of words of $\Sigma_1^+$ of length $\mu$ choose one, $T$, with
-fewest nodes.  Since $G$ is nondeleting, every node $\eta$ (label $A_\eta$)
-derives a tuple $\tuple x_\eta$ over $\Sigma_1$ whose letters occur in the word,
-and replacing the subtree at $\eta$ by a derivation of a shorter tuple of
-$L_{A_\eta}(G)$ over $\Sigma_1$ would give a shorter word of type $1$; so
-$|\tuple x_\eta|=\lambda(A_\eta)$, and $\lambda$ does not increase from a node to
-its children.  If a label occurred twice on a path, replacing the upper
-subtree by the lower one would give a word of type $1$ of length at most $\mu$
-with fewer nodes; so every path has at most $|V|$ nodes.
+For a nonterminal $A$ let $\lambda(A)$ be the least total length of a tuple of
+$L_A(G)$ over $M$ ($\infty$ if there is none) and
+$\operatorname{cap}(A):=\sup\{\#_{\overline M}(\tuple y):\tuple y\in L_A(G)\}$.  Since
+$G$ is reduced, each $A$ has an outside context in $L$, so
+$\operatorname{cap}(A)\le\kappa$; since $G$ is nondeleting, a derivation keeps every
+letter of its subtrees, so $\operatorname{cap}(A)\ge\sum_j\operatorname{cap}(B_j)$ for
+every rule $A\to\rho(B_1,\ldots,B_m)$.
 
-Since $G$ is reduced, each $A$ has an outside context in $L(G)$, so
-$\operatorname{cap}(A)\le\kappa_\zeta$; and since $G$ is nondeleting,
-$\operatorname{cap}(A)\ge\sum_j\operatorname{cap}(B_j)$ for every rule
-$A\to\rho(B_1,\ldots,B_m)$.  Call $A$ heavy if $\lambda(A)>\bar\theta_G$.  A rule
+(i) Among the derivation trees of words of $L$ of length $\mu_M(L)$ and content
+$M$ choose one, $T$, with fewest nodes, and mark one occurrence of each letter of
+$M$ in its word.  Call a change of $T$ \emph{admissible} if it keeps the marks and
+adds only letters of $M$; the new word then has content $M$, so it is not
+shorter, and if it is equally long it has at least as many nodes.  For a node
+$\eta$ let $\mathrm{Mk}(\eta)$ be the set of marks written in its subtree.  The
+nonempty sets $\mathrm{Mk}(\eta)$ form a laminar family on $|M|$ points, so they
+take at most $2|M|-1$ values, and the nodes with one value form a chain.  If
+two nodes of one chain had the same label, replacing the upper subtree by the
+lower one would be admissible (the marks lie below the lower node, and the word
+only loses letters) and would remove nodes.  So at most $(2|M|-1)|V|$ nodes have
+marks below them.  A node $\eta$ without marks below derives a tuple
+$\tuple x_\eta$ over $M$, and replacing its subtree by a derivation of a tuple of
+length $\lambda(A_\eta)$ over $M$ is admissible; hence
+$|\tuple x_\eta|=\lambda(A_\eta)$, $\lambda$ does not increase from such a node to
+its children, and, as before, the labels on a path of such nodes are distinct.
+
+Call an unmarked node \emph{heavy} if its label has $\lambda>\bar\theta_G$.  A rule
 with left side $A$ is used in a successful derivation of a word of length at
-most $\bar\theta_G$, and the tuple derived there from $A$ has total length
-less than $\lambda(A)$, so it is not over $\Sigma_1$; hence heavy labels have
-capacity at least $1$.  The heavy nodes of $T$ form a subtree containing the
-root, and by induction from below, using superadditivity, the number of heavy
-nodes without heavy children below a heavy node is at most the capacity of its
-label.  Hence $T$ has at most $\kappa_\zeta$ such nodes and at most $\kappa_\zeta|V|$
-heavy nodes.  Every terminal of the word lies in the rule of a heavy node, at
-most $\|G\|$ per node, or below one of the at most $r_{\max}$ non-heavy children
-of a heavy node, at most $\bar\theta_G$ per child.  With $|V|\le\|G\|$ this gives
-the bound.
+most $\bar\theta_G$, and the tuple derived there from $A$ is shorter than
+$\lambda(A)$, so it contains a letter outside $M$; hence heavy labels have
+capacity at least $1$.  The unmarked parent of a heavy node is heavy, so the
+heavy nodes form subtrees hanging from marked nodes.  If $q$ heavy nodes have no
+heavy children, replacing their (disjoint) subtrees at once by derivations of
+tuples with a letter outside $M$ gives a word of $L$ with at least $q$ such
+letters; so $q\le\kappa$, and there are at most $\kappa|V|$ heavy nodes.  Every
+terminal of the word is written by a marked or a heavy node, at most $\|G\|$ per
+node, or lies below one of the at most $r_{\max}$ remaining children of such a
+node, at most $\bar\theta_G$ per child.  With $|V|\le\|G\|$ this gives (i).
+
+(ii) Argue in the same way without marks, starting from a tree of a shortest
+word of $L\cap M^+$ with fewest nodes.  If the root is not heavy, the word has
+length at most $\bar\theta_G$; otherwise all nodes are unmarked and the count
+above applies.
 \end{proof}
 
 Neither substitutability nor the fan-out is used.  So a family that answers
 Open Problem~\ref{op:fanout-two} positively through
-Proposition~\ref{prop:rare-type} and the type $1$ of a typing onto $U_1$ must have
-$\kappa_\zeta(L_n)$ superpolynomial in $\|G_n\|$ and $\bar\theta_{G_n}$.  The argument
-does not apply to the content typing $c_\Sigma$ of
-Proposition~\ref{prop:sl-reduction}: a short derivation that avoids the content
-$\{\mathtt a,\mathtt b\}$ may simply omit $\mathtt b$, which costs no capacity.
+Proposition~\ref{prop:rare-type}, for a content typing or for a typing onto
+$U_1$, must have $\kappa_{\overline M}(L_n)$ superpolynomial in $\|G_n\|$ and
+$\bar\theta_{G_n}$ for the rare content $M$.  The fan-out-one family $L_n$ of
+Proposition~\ref{prop:three-letter-family} has $\kappa_{\overline{\{\mathtt a,\mathtt b\}}}(L_n)=2^n$,
+so this condition does not by itself separate the fan-outs; at fan-out two the
+known additional constraint is power transfer
+(Lemma~\ref{lem:power-transfer}).
 
 For a related quantity, the size of finite-monoid observations preserving
 guarded tuple substitution, the arity at which it stabilizes over a
