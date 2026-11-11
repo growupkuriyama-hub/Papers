@@ -5,7 +5,7 @@
 **Working branch:** `paper02-plan2-editorial-2026-11-11`, stacked draft PR #104 against Plan1 PR #103.  
 **Target:** English 40–42 pages without discarding proofs of Theorems A/B/C.  
 **Actual English result:** **42 pages**, pdfLaTeX 2026 CI verified.  
-**Actual Japanese result:** **49 pages**, LuaLaTeX 2026 CI verified (the separate display alignment adjustment has been committed; final verification run must be checked).
+**Actual Japanese result:** **49 pages**, final LuaLaTeX 2026 CI verified without final-pass overfull/underfull/undefined-reference warnings.
 
 ## Editorial changes
 
@@ -19,7 +19,7 @@ English `main.tex`: shortened from **212,402 characters / 3,890 lines** (Plan1) 
 - Introduction and conclusion: removed repeated summaries of A/B/C, typed-class separation and fan-out-two boundary; scope table retains all parameter/rank/alphabet restrictions, with its duplicate open-problem row removed.
 - None of the steps hides an original proof or changes the value of a theorem.
 
-Japanese `japanese/main_JP.tex`: shortened from **162,018 characters / 3,948 lines** to **155,579 characters / 3,815 lines**. The corresponding narrative sections and introductory tables were revised in Japanese. A single displayed inequality in `lem:marked-heavy-window-group` was reflowed as a two-line `aligned` display; the mathematical formula remains the same. Compared to English, the Japanese Plan1 baseline retains three pre-existing explanatory statement labels not in the English Plan1 branch; a strict bijective EN/JP statement-by-statement review is still recommended.
+Japanese `japanese/main_JP.tex`: shortened from **162,018 characters / 3,948 lines** to **155,579 characters / 3,815 lines**. The corresponding narrative sections and introductory tables were revised in Japanese. A displayed inequality in `lem:marked-heavy-window-group` was tightened by removing extra `\;` math spacing on both sides of `\le`; the mathematical formula and lemma statement remain unchanged.  A two-line aligned display was tried and rejected because it increased pagination. Compared to English, the Japanese Plan1 baseline retains three pre-existing explanatory statement labels not in the English Plan1 branch; a strict bijective EN/JP statement-by-statement review is still recommended.
 
 ## Integrity checks (against Plan1 source)
 
@@ -27,7 +27,7 @@ Japanese `japanese/main_JP.tex`: shortened from **162,018 characters / 3,948 lin
 |---|---|---|
 | Main theorems A/B/C | exact same environments | exact same environments |
 | Complete proof environments | all identical | all identical |
-| Other theorem/lemma/proposition/corollary/definition/open-problem environments | all identical | identical except one *display layout* (aligned inequality in a lemma) |
+| Other theorem/lemma/proposition/corollary/definition/open-problem environments | all identical | identical except one *math-spacing-only* change in a lemma |
 | Missing LaTeX \ref / \eqref / \pageref / \autoref targets | 0 | 0 |
 | Missing bibliography keys referenced by \cite | 0 | 0 |
 | New/deleted mathematical proof blocks | 0 | 0 |
@@ -39,7 +39,7 @@ The v1-to-v2 `tools/check_port.py` previously failed on Plan1 because `cor:typin
 ## CI runs and PDFs
 
 - **English build:** [GitHub Actions run 43017965112](https://github.com/growupkuriyama-hub/Papers/actions/runs/43017965112), final pdfLaTeX: `Output written on main.pdf (42 pages, 852016 bytes)`; final pass had no undefined-reference, Overfull or Underfull warnings.
-- **Japanese build (before display-reflow adjustment):** [run 43018494983](https://github.com/growupkuriyama-hub/Papers/actions/runs/43018494983), `Output written on main_JP.pdf (49 pages, 1142200 bytes)`. The one reported overfull display was 1.66905 pt; a subsequent commit changed only the display layout and triggered [run 43019020259](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019020259).
+- **Japanese final build:** [run 43019511073](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019511073), `Output written on main_JP.pdf (49 pages, 1142201 bytes)`. Final LuaLaTeX pass had no Overfull, Underfull, or undefined-reference warnings; the initial 1.66905-pt overfull display was resolved with less intersymbol spacing. `python3 tools/check_port.py` passes in the same workflow.
 - The tracked `main.pdf` and `japanese/main_JP.pdf` on the branch were inherited from the older source and **are not the verified Plan2 outputs**. Obtain up-to-date PDFs via the Actions artifacts (until expiration), not those tracked PDF paths.
 
 ## What is and is not validated
