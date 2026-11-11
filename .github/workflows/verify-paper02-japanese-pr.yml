@@ -1,0 +1,33 @@
+name: Verify paper 02 Japanese LaTeX (PR)
+
+on:
+  pull_request:
+    paths:
+      - '02-v2-lg-fanout-boundary/japanese/main_JP.tex'
+      - '.github/workflows/verify-paper02-japanese-pr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  japanese-lualatex:
+    name: 'paper 02 Japanese LuaLaTeX'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout proposed branch
+        uses: actions/checkout@v4
+      - name: Compile Japanese paper
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02-v2-lg-fanout-boundary/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+      - name: Upload built Japanese PDF
+        uses: actions/upload-artifact@v7
+        with:
+          name: paper02-plan2-japanese-pdf
+          path: 02-v2-lg-fanout-boundary/japanese/main_JP.pdf
+          if-no-files-found: error
+          retention-days: 30
