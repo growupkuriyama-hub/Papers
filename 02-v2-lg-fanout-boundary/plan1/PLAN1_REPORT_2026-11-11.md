@@ -4,7 +4,7 @@
 **Working branch:** `paper02-plan1-core-split-2026-11-11` (never edit `main` as part of Plan 1).  
 **Baseline:** commit `22e101c4e3d848c660afe55fba980c12b82427ce`, 46-page English version after 2026-11-08 README (215), original Git blob `629939945aa9fa641eb1a7e4b2ca77d1031acc3d`.  
 **Current 64-page source before split:** Git blob `d7bb4f7d3c51d1a050d9f082e03726f342543621` (2026-11-09 main.tex, with subsequent research-only commits).  
-**Status:** Plan 1 *working candidate*: static checks completed, independent LaTeX/PDF build and mathematical re-audit still required. NOT submission-ready. Plan 2 NOT started.
+**Status:** Plan 1 core English candidate compiled successfully to **45 pages** on GitHub Actions (run `43015227369`, job `130504493594`, produced 891,816-byte PDF). Static checks passed. Mathematical re-audit and Japanese independent build still required; NOT submission-ready. Plan 2 NOT started.
 
 ## Decision and mathematical boundary
 
@@ -43,15 +43,17 @@ Compared full `main.tex` at both refs with paragraph-level LCS: 24 changed regio
 - Formula environments were checked for begin/end count; a real TeX build is still mandatory.
 - The separate small-alphabet source fragment has 33 labels and 1437 lines (not standalone/compilable).
 - No proof has been replaced with “omitted”; moved H/I/J proof source is preserved exactly as a nonincluded fragment.
+- English CI: [Build LaTeX papers — successful 02 MCFG job](https://github.com/growupkuriyama-hub/Papers/actions/runs/43015227369); final pdfLaTeX pass reports `Output written on main.pdf (45 pages, 891816 bytes)`; no final-pass `LaTeX Warning`, `Overfull`, or `Underfull` lines; `Latexmk: All targets (main.pdf) are up-to-date`.
+- Japanese baseline source: restored verbatim from commit `22e101c4` (blob `5a95c714032a0c25b4b2663efe9fd8beb1fcdee9`; historical 52-page baseline). Japanese H/I/J and the later sections preserved in `parked/plan1_small_alphabet_JP_2026-11-11.tex`; static label/reference integrity: 131 labels, 0 undefined references.
 
 ## Risks / safeguards
 
-1. **Build not yet run.** GitHub-source/static validation does not establish a PDF, page count, sound typesetting, bibliographic consistency or mathematical correctness. Run `latexmk -pdf main.tex`; inspect PDF and log. The branch's committed `main.pdf` still belongs to the 64-page version, hence it must not be treated as the Plan 1 PDF.
-2. **Japanese source not yet synchronized.** `japanese/main_JP.tex` on this branch remains at the previous 73-page state; do not distribute as a bilingual matching release until translated and built.
+1. **English CI build passed (45 pages).** The branch's tracked `main.pdf` is still the old 64-page version; use the [Actions artifact](https://github.com/growupkuriyama-hub/Papers/actions/runs/43015227369) for the 45-page candidate. PDF **visual inspection** and final bibliography/claim audit are still required; a green build is not mathematical verification.
+2. **Japanese source restored to historical 52-page baseline**, no longer the 73-page 64-article version. It is NOT fully synchronized with all selected English post-Nov-08 corrections; run LuaLaTeX and a proposition-by-proposition EN/JP consistency review before release.
 3. **Proof check required:** independently read the retained 2026-11-08 corrected claims (including rank/representation scope), the 2026-11-09 clarifications, and new refactoring-induced transitions. Passing LaTeX does not certify a theorem.
 4. A separate small-alphabet article is only a **candidate**, not an automatically viable submission: its \Sigma, typing, theorem statements, dependencies on the core paper, and complete original proofs need an independent introduction and bibliography.
 5. If the semilattice reduction is to remain in the main paper, add its proof explicitly in a later revision (estimated ~1 page), and rework the open-problem paragraph. Do not cite a result placed only in a parked file as though proved in the core.
 
 ## Plan 2 entry criteria
 
-After English TeX build + reference review + Japanese version synchronization (and independent math review), shorten the core by common-counting lemmas, eliminating duplicate qualitative learning explanations, and consolidating introduction/scope/conclusion. Target 40–42 typeset pages **without removing any proofs of A/B/C**.
+After PDF visual review + reference review + Japanese version synchronization and build (and independent math review), shorten the core by common-counting lemmas, eliminating duplicate qualitative learning explanations, and consolidating introduction/scope/conclusion. Target 40–42 typeset pages **without removing any proofs of A/B/C**.
