@@ -1,6 +1,6 @@
 # #2 MCFG — Plan 2 editorial compression report
 
-> **統合後の補足（2026-11-12）**：PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) は2026-11-11に`main`へマージ済みです。現行PDFの固定URL [`../main.pdf`](../main.pdf)・[`../japanese/main_JP.pdf`](../japanese/main_JP.pdf) は42ページ／49ページに更新されました。以下の「ドラフトPR」「ブランチ上のPDFは古い」という記述は作業当時の状態です。最新版は [`../HANDOFF_CURRENT.md`](../HANDOFF_CURRENT.md)。
+> **統合後の補足（2026-11-12）**：PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) は2026-11-11に`main`へマージ済みです。現行PDFの固定URL [`../main.pdf`](../main.pdf)・[`../japanese/main_JP.pdf`](../japanese/main_JP.pdf) は43ページ／50ページに更新されました。以下の「ドラフトPR」「ブランチ上のPDFは古い」という記述は作業当時の状態です。最新版は [`../HANDOFF_CURRENT.md`](../HANDOFF_CURRENT.md)。
 
 **Date:** 2026-11-11 JST  
 **Source:** Plan 1 English 45-page core on `paper02-plan1-core-split-2026-11-11`; Plan 1 Japanese 52-page historical baseline.  
