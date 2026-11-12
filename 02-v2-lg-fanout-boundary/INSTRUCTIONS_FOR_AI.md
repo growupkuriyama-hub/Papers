@@ -5,7 +5,7 @@
 **この節が最新です。以下の2026-10-31〜11-09の記録は当時の履歴であり、現在の編集指示ではありません。**
 
 1. **最初に [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md) を読む。** 次に [PAPER.yaml](PAPER.yaml)、[main.tex](main.tex)、必要に応じて [japanese/main_JP.tex](japanese/main_JP.tex) を直接確認する。古い `HANDOFF_2026-11-02.md` や本書の過去の「現在の状態」を最優先にしない。
-2. **最新の原稿は GitHub `main` 上の英語43ページ、日本語50ページ。** 2026-11-11にPlan1（PR #103）とPlan2（PR #104）の双方をマージし、2026-11-12の独立査読対応（PR #106）で更新した。英語・日本語の改訂版はCIでビルド済みであり、固定URLのPDFはこのPRがmainにマージされてから再生成される：[`main.pdf`](main.pdf)、[`japanese/main_JP.pdf`](japanese/main_JP.pdf)。
+2. **最新の原稿は GitHub `main` 上の英語43ページ、日本語50ページ。** 2026-11-11にPlan1（PR #103）とPlan2（PR #104）の双方をマージし、2026-11-12の独立査読対応（PR #106）で更新した。英語・日本語の改訂版はCIでビルド済みであり、固定URLのPDFも[GitHub Actions run 43186875781](https://github.com/growupkuriyama-hub/Papers/actions/runs/43186875781)の成功によって再生成・公開済みである：[`main.pdf`](main.pdf)、[`japanese/main_JP.pdf`](japanese/main_JP.pdf)。
 3. **主結果は定理A・B・C。** A：局所群上界（すべての固定ファンアウト）。B：線形因子の下界（アルファベットの条件が必要）。C：**ファンアウト1に限る**局所群の擬多様体境界（ランク上限は2以上）。非CFL型付けレジームの分離と `thm:doubling-no-lift` を保持。`op:fanout-two` は未解決。
 4. **2026-11-09の64ページ版に加わった独立成果は退避済みで、最新版の本文には含まれない。** [英語の付録H/I/Jなど](parked/plan1_small_alphabet_2026-11-11.tex)、[日本語の対応部分](parked/plan1_small_alphabet_JP_2026-11-11.tex)、[`prop:zeta-capacity`など](parked/plan1_boundary_extensions_2026-11-11.tex) を、**削除せず**保存している。これらは独立論文の種であり、そのままコンパイルできる原稿ではない。新しい著者指示なしに本文へ戻してはならない。
 5. **fan-out 2の探索は原稿とは別に管理する。** `reviews/STATUS_sl_fanout2_2026-11-01.md` と各報告の研究的な結論を、`main.tex` の掲載済み定理と混同しない。各結果の検証レベルは元の報告に従うこと。

@@ -32,7 +32,7 @@ The purpose of the present changes is to repair exposition, provenance, and iden
 
 - All the original mathematical results parked by Plan1 (formerly Appendices H–J, `prop:zeta-capacity`, related sources) are **unchanged**.
 - Main A/B/C substantive proof arguments are intended to be preserved; the only inserted proof is the short self-contained algebraic equivalence for `thm:lg-characterization`.
-- EN and JP LaTeX CI runs and their page counts **must be confirmed on the final commit**. Do not assume the 42/49 pages of Plan2 will be preserved automatically after these edits.
+- **Confirmed:** English pdfLaTeX PR CI succeeded with **43 pages (857,500 bytes)**; Japanese LuaLaTeX PR CI succeeded with **50 pages (1,151,536 bytes)**; the [post-merge PDF publisher run 43186875781](https://github.com/growupkuriyama-hub/Papers/actions/runs/43186875781) successfully committed both to fixed URLs. The historical Plan2 42/49-page artifacts remain a previous revision.
 - The referee's uploaded Python bundle was separate from the report. If not committed in this PR, the report remains archived here but its companion scripts are not claimed to be hosted by GitHub.
 
 ## Remaining editorial judgments

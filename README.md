@@ -9,7 +9,7 @@ Public source repository for Takayuki Kuriyama's research papers.
 
 ## Latest paper #2 master — **referee-corrected (2026-11-12)**
 
-**[Current paper #2 status and AI handoff](02-v2-lg-fanout-boundary/HANDOFF_CURRENT.md).** The canonical manuscript has **43 English pages and 50 Japanese pages**. The old 41-/46-/64-page drafts are historical; the independent isolated-letter and two-letter results (including former Appendices H/I/J) remain available under `parked/`. The refreshed PDFs are compiled by [English CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942619) and [Japanese CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942736); the fixed URL publisher updates them after the referee revision merges. The fan-out-two boundary remains open.
+**[Current paper #2 status and AI handoff](02-v2-lg-fanout-boundary/HANDOFF_CURRENT.md).** The canonical manuscript has **43 English pages and 50 Japanese pages**. The old 41-/46-/64-page drafts are historical; the independent isolated-letter and two-letter results (including former Appendices H/I/J) remain available under `parked/`. The referee-revised PDFs (43 English / 50 Japanese pages) were compiled in CI and successfully published to the fixed URLs by [GitHub Actions run 43186875781](https://github.com/growupkuriyama-hub/Papers/actions/runs/43186875781). The fan-out-two boundary remains open.
 
 ## Contents
 
