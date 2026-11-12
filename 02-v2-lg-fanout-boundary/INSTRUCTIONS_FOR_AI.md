@@ -5,14 +5,16 @@
 **この節が最新です。以下の2026-10-31〜11-09の記録は当時の履歴であり、現在の編集指示ではありません。**
 
 1. **最初に [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md) を読む。** 次に [PAPER.yaml](PAPER.yaml)、[main.tex](main.tex)、必要に応じて [japanese/main_JP.tex](japanese/main_JP.tex) を直接確認する。古い `HANDOFF_2026-11-02.md` や本書の過去の「現在の状態」を最優先にしない。
-2. **最新の原稿は GitHub `main` 上の英語42ページ、日本語49ページ。** 2026-11-11にPlan1（PR #103）とPlan2（PR #104）の双方をマージ済み。英語・日本語の公開PDFも対応する版で再生成済み：[`main.pdf`](main.pdf)、[`japanese/main_JP.pdf`](japanese/main_JP.pdf)。
+2. **最新の原稿は GitHub `main` 上の英語43ページ、日本語50ページ。** 2026-11-11にPlan1（PR #103）とPlan2（PR #104）の双方をマージし、2026-11-12の独立査読対応（PR #106）で更新した。英語・日本語の改訂版はCIでビルド済みであり、固定URLのPDFはこのPRがmainにマージされてから再生成される：[`main.pdf`](main.pdf)、[`japanese/main_JP.pdf`](japanese/main_JP.pdf)。
 3. **主結果は定理A・B・C。** A：局所群上界（すべての固定ファンアウト）。B：線形因子の下界（アルファベットの条件が必要）。C：**ファンアウト1に限る**局所群の擬多様体境界（ランク上限は2以上）。非CFL型付けレジームの分離と `thm:doubling-no-lift` を保持。`op:fanout-two` は未解決。
 4. **2026-11-09の64ページ版に加わった独立成果は退避済みで、最新版の本文には含まれない。** [英語の付録H/I/Jなど](parked/plan1_small_alphabet_2026-11-11.tex)、[日本語の対応部分](parked/plan1_small_alphabet_JP_2026-11-11.tex)、[`prop:zeta-capacity`など](parked/plan1_boundary_extensions_2026-11-11.tex) を、**削除せず**保存している。これらは独立論文の種であり、そのままコンパイルできる原稿ではない。新しい著者指示なしに本文へ戻してはならない。
 5. **fan-out 2の探索は原稿とは別に管理する。** `reviews/STATUS_sl_fanout2_2026-11-01.md` と各報告の研究的な結論を、`main.tex` の掲載済み定理と混同しない。各結果の検証レベルは元の報告に従うこと。
-6. **検証済みなのはTeX・内部参照・移植監査およびPlan2での定理・証明テキスト保全。** 最終的な独立数学査読、両言語の全主張の突合、PDFの全ページ目視、投稿判断は未完了。主張の条件は必ず `main.tex` を原典として引用する。
+6. **検証済みなのはPR #106での英語43ページ・日本語50ページのビルド、内部参照・移植監査およびPlan2に対する修正箇所の差分照合。** 最終的な独立数学査読、両言語の全主張の突合、PDFの全ページ目視、投稿判断は未完了。主張の条件は必ず `main.tex` を原典として引用する。
 7. **編集する際は原稿・退避資料・歴史的な日付付きログを保護する。** `python3 tools/check_port.py` と英日ビルドを再実行し、変更履歴を最新版の冒頭に記録すること。2016年等の過去の結果と混同せず、特に「ファンアウト2で境界が決着した」と記載しない。
 
-**今回の統合記録：** [Plan1](plan1/PLAN1_REPORT_2026-11-11.md)・[Plan2](plan2/PLAN2_REPORT_2026-11-11.md)。日本語版は存在しており、LuaLaTeXで49ページ。TCSへの投稿はまだ行っていない。
+**2026-11-12査読と対応：** [Claude査読報告](reviews/claude_independent_referee_2026-11-12.md)と[対応記録](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md)。m1の同一ブロック位置、m4のrank条件、m5のIPTtD、m7の定理C数値、m9の最悪時下界、m11のfan-out一様次数などを修正した。**TCSへの投稿はまだ行っていない。**
+
+**従前のPlan1・Plan2統合記録：** [Plan1](plan1/PLAN1_REPORT_2026-11-11.md)・[Plan2](plan2/PLAN2_REPORT_2026-11-11.md)。日本語版は存在しており、LuaLaTeXで50ページ。TCSへの投稿はまだ行っていない。
 
 ---
 
