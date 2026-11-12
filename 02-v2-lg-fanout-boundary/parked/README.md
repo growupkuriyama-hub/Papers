@@ -1,6 +1,6 @@
 # Paper #2 — parked mathematical material (source archive)
 
-> **Current canonical manuscript:** [../HANDOFF_CURRENT.md](../HANDOFF_CURRENT.md) · [../main.tex](../main.tex) (English 42 pp) · [../japanese/main_JP.tex](../japanese/main_JP.tex) (Japanese 49 pp). These are the Plan1+Plan2 versions merged on 2026-11-11. **Files here are preserved research sources, not incorporated theorems of the current main paper.** Do not delete or automatically reintegrate them.
+> **Current canonical manuscript:** [../HANDOFF_CURRENT.md](../HANDOFF_CURRENT.md) · [../main.tex](../main.tex) (English 43 pp) · [../japanese/main_JP.tex](../japanese/main_JP.tex) (Japanese 50 pp). The current manuscripts are the 2026-11-12 referee revisions (PR #106), based on the Plan1+Plan2 merger of 2026-11-11; the mathematical fragments in this archive have not been rewritten. **Files here are preserved research sources, not incorporated theorems of the current main paper.** Do not delete or automatically reintegrate them.
 
 ## 2026-11-11 Plan1 split — authoritative parked copies
 
