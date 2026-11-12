@@ -6,10 +6,10 @@
 
 **Title:** *Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data*.  
 **Target journal:** *Theoretical Computer Science* (not yet submitted; target timing noted in `PAPER.yaml`).  
-**Canonical branch:** `main`. **English source:** [main.tex](main.tex) — **42 pages**. **Japanese source:** [japanese/main_JP.tex](japanese/main_JP.tex) — **49 pages**.  
-**Published PDFs:** [English PDF](main.pdf) and [Japanese PDF](japanese/main_JP.pdf). The existing fixed-URL publisher has rebuilt and committed both; file sizes verified 852,016 and 1,142,201 bytes respectively.
+**Canonical branch:** `main`. **English source:** [main.tex](main.tex) — **43 pages**. **Japanese source:** [japanese/main_JP.tex](japanese/main_JP.tex) — **50 pages**.  
+**PDFs:** [English fixed URL](main.pdf) and [Japanese fixed URL](japanese/main_JP.pdf). The amended manuscripts compiled successfully in [English PR CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942619) (43 pages, 857,500 bytes) and [Japanese PR CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942736) (50 pages, 1,151,536 bytes). Until the post-merge PDF publishing workflow finishes, the fixed URLs may still show the earlier Plan2 PDFs; check the workflow status before asserting that the fixed URLs match.
 
-The current manuscript is the result of **Plan1 (PR [#103](https://github.com/growupkuriyama-hub/Papers/pull/103)) + Plan2 (PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104))**, both merged into `main` on 2026-11-11. Main theorem statements and complete proofs were preserved in Plan2, which compressed supporting discussion and duplicated tables. [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md), [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md). The last full Plan2-source CI checks are [English pdfLaTeX](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019927350) and [Japanese LuaLaTeX / port-check](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019927151). The fixed-URL PDF publication on the merged source completed successfully in [workflow run 43021169918](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918).
+**2026-11-12 referee revision:** [PR #106](https://github.com/growupkuriyama-hub/Papers/pull/106) incorporates the clarified \(t=u\) hypothesis, rank and worst-case qualifications, an explicit upper bound for the theorem-A proof constant, a direct LG-equivalence proof, and the corrected fan-out-uniform degree question. The Japanese Theorem C now matches the English quantitative exponential statement. The model referee report is archived [here](reviews/claude_independent_referee_2026-11-12.md), with the complete [response log](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md). No parked results are reinserted; fan-out-two remains open. The referee's Minor Revision opinion is not an external journal decision.\n\nThe current manuscript is the result of **Plan1 (PR [#103](https://github.com/growupkuriyama-hub/Papers/pull/103)) + Plan2 (PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104))**, both merged into `main` on 2026-11-11. Main theorem statements and complete proofs were preserved in Plan2, which compressed supporting discussion and duplicated tables. [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md), [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md). The earlier Plan2-source CI checks were [English pdfLaTeX](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019927350) and [Japanese LuaLaTeX / port-check](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019927151). The earlier fixed-URL PDF publication completed in [workflow run 43021169918](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918); it predates the referee revisions.
 
 ### Scope of *current* mathematical claims
 
@@ -22,7 +22,7 @@ The current manuscript is the result of **Plan1 (PR [#103](https://github.com/gr
 
 These are summaries only: consult the actual current theorem statements in `main.tex` for all quantifiers, alphabet/rank restrictions and operator variants.
 
-### Parked mathematical results (preserved; NOT part of this 42-page manuscript)
+### Parked mathematical results (preserved; NOT part of this 43-page manuscript)
 
 - [Small-alphabet results, English](parked/plan1_small_alphabet_2026-11-11.tex): isolated letters at fan-out one, individual `U_1` typings, two-letter content/semilattice typings, including the former Appendices H/I/J with their proof sources.
 - [Small-alphabet results, Japanese](parked/plan1_small_alphabet_JP_2026-11-11.tex): Japanese source counterparts of the removed sections and former H/I/J.
@@ -33,11 +33,11 @@ The Nov 9 historical assertions that `thm:two-letter-content` and `prop:zeta-cap
 
 ### Research exploration versus submitted-paper content
 
-Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the exploration status log](reviews/STATUS_sl_fanout2_2026-11-01.md). It contains findings and candidate arguments beyond the present paper. Its latest dated entries must be checked independently; **a research report being present does not mean its theorem has been inserted into the 42-page manuscript or independently verified.** Do not silently equate the research frontier with paper status.
+Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the exploration status log](reviews/STATUS_sl_fanout2_2026-11-01.md). It contains findings and candidate arguments beyond the present paper. Its latest dated entries must be checked independently; **a research report being present does not mean its theorem has been inserted into the 43-page manuscript or independently verified.** Do not silently equate the research frontier with paper status.
 
 ### Validation and remaining tasks
 
-- **Verified:** CI builds for English 42-page and Japanese 49-page manuscripts; published PDF bytes match the final 42-/49-page build artifacts; Plan2 preserved full English formal theorem/lemma/proposition/definition/proof blocks verbatim relative to Plan1 (and Japanese proofs, apart from purely typographic math spacing), with no missing internal references or citation keys; `python3 tools/check_port.py` accounts for parked labels.
+- **Verified:** CI builds for English 43-page and Japanese 50-page manuscripts; published PDF bytes match the final 42-/50-page build artifacts; Plan2 preserved full English formal theorem/lemma/proposition/definition/proof blocks verbatim relative to Plan1 (the subsequent referee fixes explicitly clarified some English/JP statements and added the self-contained LG characterization proof) (and Japanese proofs, apart from purely typographic math spacing), with no missing internal references or citation keys; `python3 tools/check_port.py` accounts for parked labels.
 - **Not yet certified:** an independent mathematical referee audit of the final *combined* manuscript, full PDF visual proofreading, complete English/Japanese claim-by-claim alignment, or journal submission acceptance. The historical Plan1/Plan2 reports capture narrower checks.
 - **Next editorial priority:** referee-level mathematical reading and author PDF inspection, not further indiscriminate compression; preserve all proofs and the separately archived mathematics.
 - **AI assistants:** always fetch `main.tex` (and `japanese/main_JP.tex` if needed), this CURRENT handoff, `PAPER.yaml`, and then consult [README.md](README.md) for *historical* dated changelog entries. **Do not start from the 2026-11-06 41-page focus or the 2026-11-09 64-page expansion when asked for the latest.**
@@ -49,3 +49,5 @@ Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the explo
 - 2026-11-11 Plan1 separation: 45 pp English; archived independent results.
 - 2026-11-11 Plan2 exposition consolidation: **42 pp English / 49 pp Japanese**, merged and published.
 - 2026-11-12: status/metadata synchronization only; mathematical `main.tex`, `japanese/main_JP.tex` and the parked proof fragments are not rewritten.
+
+- **2026-11-12 (referee revisions):** Claude's Nov 12 independent report was checked against the live source, and issues m1--m9 and the newly discovered uniform-degree ambiguity m11 were addressed in both languages (see PR #106 and the response log). English PR CI 43 pages; Japanese PR CI 50 pages; historical Plan2 baseline stays 42/49 pages.
