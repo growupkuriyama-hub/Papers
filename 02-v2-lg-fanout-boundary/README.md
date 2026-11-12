@@ -2,7 +2,7 @@
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
-**Current status (2026-11-12):** **Plan1 + Plan2 merged into `main` on 2026-11-11. English 42 pages, Japanese 49 pages.** The 64-page expansion dated 2026-11-09 and the 41-page focus dated 2026-11-06 are **historical**, not the current master.
+**Current status (2026-11-12):** **Referee-corrected revision (PR #106): English 43 pages, Japanese 50 pages.** Based on Plan1 + Plan2 merged to `main` on 2026-11-11; subsequent 2026-11-12 corrections respond to Claude's independent report. The 64-page expansion dated 2026-11-09 and the 41-page focus dated 2026-11-06 are **historical**, not the current master.
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
@@ -10,10 +10,10 @@
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
 | --- | --- | --- | --- |
-| English | [main.tex](main.tex) | [main.pdf](main.pdf) | **42** (pdfLaTeX) |
-| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **49** (LuaLaTeX) |
+| English | [main.tex](main.tex) | [main.pdf](main.pdf) | **43** (pdfLaTeX) |
+| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **50** (LuaLaTeX) |
 
-Both PDF paths were rebuilt and published successfully by the [GitHub Actions publisher](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) after the merges, and the fixed copies match the final CI outputs in byte count. Main source files and PDFs take precedence over the old page counts in changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document source decisions and validation scope. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) and [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) are both merged.
+The updated manuscript sources passed [English CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942619) (43 pages) and [Japanese CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942736) (50 pages). The fixed PDF links are updated by the publisher after the referee revision is merged; the older [publisher run](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) was for the historical Plan2 baseline (42/49 pages), not this revision. Main source files and PDFs take precedence over the old page counts in changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document source decisions and validation scope. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) and [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) are both merged. The subsequent referee corrections are in [PR #106](https://github.com/growupkuriyama-hub/Papers/pull/106); see the [verbatim referee report](reviews/claude_independent_referee_2026-11-12.md) and [response log](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md).
 
 ## Current mathematical scope
 
@@ -27,7 +27,7 @@ Refer to the complete quantified theorem statements in `main.tex` for precise re
 
 ## Archived / parked mathematics — DO NOT DELETE
 
-These source fragments are retained in the repository for future independent investigations. They are not part of the 42-page current manuscript and are not themselves compilable independent papers:
+These source fragments are retained in the repository for future independent investigations. They are not part of the 43-page current manuscript and are not themselves compilable independent papers:
 
 - [plan1_small_alphabet_2026-11-11.tex](parked/plan1_small_alphabet_2026-11-11.tex) — English isolated-letter, individual `U_1`, and two-letter content results, with the former Appendices H/I/J and proof source.
 - [plan1_small_alphabet_JP_2026-11-11.tex](parked/plan1_small_alphabet_JP_2026-11-11.tex) — corresponding Japanese source excerpts.
@@ -45,6 +45,8 @@ See [reviews/STATUS_sl_fanout2_2026-11-01.md](reviews/STATUS_sl_fanout2_2026-11-
 `python3 tools/check_port.py` checks original v1 labels against current and parked sources. English and Japanese CI build, cross-reference checks, and formal proof-block comparisons passed in Plan2. Publication of fixed PDFs succeeded. Outstanding: independent proof audit, full PDF visual inspection, author review and TCS submission.
 
 ## Change log
+
+- **2026-11-12 (264)** **Independent referee-response revision** (PR [#106](https://github.com/growupkuriyama-hub/Papers/pull/106)): Claude's full report [archived unchanged](reviews/claude_independent_referee_2026-11-12.md) with a [point-by-point response](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md). Both source languages were revised for m1/m4/m5/m7/m8/m9, the LG criterion now has a direct proof (m6), the proof constant is explained as an upper bound (m3), and the f-uniform-degree open question is made precise (m11). Olson--White (1977) is cited as related ordered product-one background (m2); m10 is intentionally left optional. **English pdfLaTeX PR CI: 43 pages; Japanese LuaLaTeX PR CI: 50 pages.** Main A/B/C proof strategies unchanged; parked mathematics preserved. The pre-review 42/49pp Plan2 is now a historical baseline. Fixed-URL PDFs are published on merge, not by the PR compile alone.
 
 - **2026-11-12 (263)** **Metadata/handoff synchronization only.** `main.tex` and `japanese/main_JP.tex` remain the 2026-11-11 **42-page/49-page** Plan2 version. Updated the live `README.md`, `PAPER.yaml`, `INSTRUCTIONS_FOR_AI.md`, root README, and created `HANDOFF_CURRENT.md` so downstream AI agents do not mistake the 2026-11-06 41-page focus or 2026-11-09 64-page expansion for today's manuscript. Historical entries below are preserved verbatim.
 - **2026-11-11 (262)** **Plan1 and Plan2 merged into `main`**: PR [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) restores the A/B/C core and archives the additional H/I/J and semilattice/`prop:zeta-capacity` results; PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) compresses duplicated exposition **without cutting theorem or proof blocks**. English **42 pp**, Japanese **49 pp**, verified and fixed PDF URLs published. [Plan1](plan1/PLAN1_REPORT_2026-11-11.md), [Plan2](plan2/PLAN2_REPORT_2026-11-11.md). These supersede the manuscript status of all earlier changelog entries.
