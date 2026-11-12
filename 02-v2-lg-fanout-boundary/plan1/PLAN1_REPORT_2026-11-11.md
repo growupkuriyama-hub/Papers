@@ -1,5 +1,7 @@
 # #2 MCFG — Plan 1: 46-page core restoration / independent-results split
 
+> **統合後の補足（2026-11-12）**：この文書はPlan1作業時の監査記録です。PR [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) は2026-11-11に`main`へマージ済みで、続いてPlan2のPR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) もマージ済みです。**現行版は英語42ページ／日本語49ページ**、公開PDFも更新済みです。以下の「未マージ」「次にPlan2」等の記述は作業当時の記録として残しています。最新版は [`../HANDOFF_CURRENT.md`](../HANDOFF_CURRENT.md)。
+
 **Date:** 2026-11-11 (JST)  
 **Working branch:** `paper02-plan1-core-split-2026-11-11` (never edit `main` as part of Plan 1).  
 **Baseline:** commit `22e101c4e3d848c660afe55fba980c12b82427ce`, 46-page English version after 2026-11-08 README (215), original Git blob `629939945aa9fa641eb1a7e4b2ca77d1031acc3d`.  

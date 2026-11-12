@@ -1,37 +1,53 @@
 # #2 v2 — Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data
 
-**Author:** Takayuki Kuriyama
-**Target journal:** Theoretical Computer Science (to be submitted after the decision on the companion TCS-D-26-00494)
-**Status:** **A＋A+ revision (2026-11-08, (211), merged into main (212))**: Theorem A and its simultaneous-shortening technique at the centre, with the restored non-context-free targets showing that local groups and noncommutative groups are both needed; Theorem C kept as the fan-out-one benchmark; English 46 pages, Japanese 52 pages. Before: focused version (42 pages after (161); 41 at (157), 2026-11-06): one claim — local groups are the boundary of polynomial characteristic data; all removed material is in [`parked/2026-11-06_focus/`](parked/2026-11-06_focus/). Earlier external reviews (ChatGPT comparison, DeepSeek referee, two ChatGPT TCS-style referee reports) and the citation audit were addressed; an independent reading of the focused version is pending; Japanese version pending.
+**Author:** Takayuki Kuriyama  
+**Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
+**Current status (2026-11-12):** **Plan1 + Plan2 merged into `main` on 2026-11-11. English 42 pages, Japanese 49 pages.** The 64-page expansion dated 2026-11-09 and the 41-page focus dated 2026-11-06 are **historical**, not the current master.
 
-This folder is the restructured ("new-born") version of paper #2. The mathematics is taken from the frozen v1 in [`archive-v1/`](archive-v1/) and is organized around one claim and three main theorems:
+> **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
-- **Theorem A** — local groups: characteristic data $O(\|G\|^2\bar\theta_G)$ at every fan-out.
-- §5.4 — both features of Theorem A are needed on non-context-free targets of fan-out two: `prop:lg-needed-target` (a local-group typing, no window--group typing) and `prop:nonabelian-needed-target` (a window--$S_3$ typing, no window--abelian typing); proofs in the appendix `app:separating-targets`.
-- **Theorem B** — the linear factor: $\Omega(\|G\|\bar\theta_G)$ under every typing at every fan-out (alphabet condition); $\Theta(\|G\|\bar\theta_G)$ for the trivial typing.
-- **Theorem C** — the boundary at fan-out one: pseudovarieties with uniform polynomial data ⇔ contained in $\mathbf{LG}$; outside $\mathbf{LG}$ explicit targets need exponential data.
-- Section 8 — the exponential family does not lift to fan-out two (`thm:doubling-no-lift`). Whether $\mathbf{LG}$ remains the boundary at fan-out two is Open Problem `op:fanout-two`.
+## Canonical sources and published PDFs
 
-**Start here:** [`INSTRUCTIONS_FOR_AI.md`](INSTRUCTIONS_FOR_AI.md) (status, structure, next phases, rules, checklist). Latest handoff: [`HANDOFF_2026-11-02.md`](HANDOFF_2026-11-02.md) (previous: `HANDOFF_2026-11-01.md`).
+| Role | Source of truth | Fixed published PDF | Verified pages |
+| --- | --- | --- | --- |
+| English | [main.tex](main.tex) | [main.pdf](main.pdf) | **42** (pdfLaTeX) |
+| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **49** (LuaLaTeX) |
 
-**Research on `op:fanout-two` (2026-11-01):** see [`reviews/STATUS_sl_fanout2_2026-11-01.md`](reviews/STATUS_sl_fanout2_2026-11-01.md). The two-letter content typing has uniform polynomial data at every fan-out $f\ge2$: `thm:two-letter-content` (§8, proof in Appendix H, added 2026-11-01, extended to all $f\ge2$ on 2026-11-02); fan-out one and three letters open. **2026-11-07:** for languages cut out by one-letter-one-edge paths and abelian cosets per content, $\mu_{\mathtt{ab}}\le\max\{9(r+1)v\theta,226v^3\theta^3\}$ in every presentation (Theorem H, (179)(180)); the general antichain width remains open.
+Both PDF paths were rebuilt and published successfully by the [GitHub Actions publisher](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) after the merges, and the fixed copies match the final CI outputs in byte count. Main source files and PDFs take precedence over the old page counts in changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document source decisions and validation scope. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) and [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) are both merged.
 
-## Files
+## Current mathematical scope
 
-- `main.tex` — English master (64 pages, `prop:zeta-capacity` added 2026-11-09 and generalized to content typings, README (241), (244); before: 63 pages, compressed 2026-11-09, README (236); before: 65 pages, Appendix H rewritten for isolated letters 2026-11-09, README (235); before: 62 pages, parked two-letter and U₁ results restored 2026-11-09, README (229); before: 52 pages, two-letter theorem at fan-out one added 2026-11-09, README (228); before: 46 pages, A＋A+ revision of 2026-11-08, README (211); before: 42 pages, focused version of 2026-11-06, README (157), (159), (161)). Japanese: `japanese/main_JP.tex` (73 pages, LuaLaTeX). Builds with `latexmk -pdf main.tex`, no warnings; `python3 tools/check_port.py` passes.
-- `parked/2026-11-06_focus/` — everything removed by the focused version: the whole 59-page manuscript before the cut (`main_before_focus_59pp.tex`), the removed blocks (`removed_blocks.tex`, read by `check_port.py`) and an index (`README.md`).
-- `parked/2026-11-06_intro/` — the English and Japanese introductions before the rewrite of README (174).
-- `parked/2026-11-06_abstract/` — the English and Japanese abstracts before the rewrite of README (172).
-- `parked/parked_from_v1.tex` — v1 material not used in v2 (one-letter cyclic typing).
-- `parked/parked_fanout2_and_comparison.tex` — material removed by the core-only version (Theorem C(i) on the binary typing at fan-out two with its proof, the comparison appendix and $L_R$ example, the self-contained substitutability proof of the bracketed family, full proofs of polynomial time and Gold identification).
-- `parked/parked_u1_typing_level.tex` — material removed by the 2026-10-31 shortening (typing-level results on $U_1$, constant weight, three-letter linear factor, target separations, rank one); seed of a separate paper on S1/S2.
-- `archive-v1/` — the closed v1 (former `02_fixed-h-mcfg/`, arXiv:2605.11644): English and Japanese sources, its README with the full v1 change log, and `revision/` (all research reports and check scripts up to 2026-10-31). Frozen.
-- `reviews/` — external reviews and audits of v2, and the 2026-11-01 research reports and prompts on fan-out two (summary: `STATUS_sl_fanout2_2026-11-01.md`): ChatGPT comparison v1/v2 (2026-10-30), DeepSeek referee report, ChatGPT re-reading of two proofs, citation audit (all 2026-10-31).
-- `tools/check_singleton.py` — recheck of the former Appendix `app:singleton` (now parked) (Table `tab:singleton-certificates` and `lem:app-singleton-runs`, lengths 7--14); the proofs do not depend on it.
-- `tools/check_port.py` — checks that every v1 label is in v2 or parked, and lists ported statements that differ from v1.
-- `INSTRUCTIONS_FOR_AI.md`, `PAPER.yaml`.
+- **Theorem A:** `LG` upper bound `O(||G||² θ̄_G)` on characteristic-data length at every fixed fan-out and rank, using simultaneous block replacement.
+- **Theorem B:** lower bound `Ω(||G|| θ̄_G)` at every fan-out subject to the *stated alphabet condition*; matching trivial-typing benchmark.
+- **Theorem C:** the exact pseudovariety boundary `LG` **at fan-out one** (rank `r_max ≥ 2`); exponential lower bound outside `LG`.
+- **Non-CFL separations:** `prop:lg-needed-target` and `prop:nonabelian-needed-target` establish different coverage by local-group/window--group/window--abelian typing regimes; full proofs retained.
+- **Fan-out two:** `thm:doubling-no-lift` shows why the three-letter fan-out-one exponential family cannot supply the same obstruction there. The general boundary `op:fanout-two` is **open**, not asserted at every fan-out.
+
+Refer to the complete quantified theorem statements in `main.tex` for precise restrictions. **Independent mathematical referee-level validation is still pending**; successful compilation and proof-block preservation are not proofs of correctness.
+
+## Archived / parked mathematics — DO NOT DELETE
+
+These source fragments are retained in the repository for future independent investigations. They are not part of the 42-page current manuscript and are not themselves compilable independent papers:
+
+- [plan1_small_alphabet_2026-11-11.tex](parked/plan1_small_alphabet_2026-11-11.tex) — English isolated-letter, individual `U_1`, and two-letter content results, with the former Appendices H/I/J and proof source.
+- [plan1_small_alphabet_JP_2026-11-11.tex](parked/plan1_small_alphabet_JP_2026-11-11.tex) — corresponding Japanese source excerpts.
+- [plan1_boundary_extensions_2026-11-11.tex](parked/plan1_boundary_extensions_2026-11-11.tex) — additional semilattice and boundary results, including `prop:zeta-capacity`.
+- [parked/](parked/) — earlier parked material and removed blocks. [archive-v1/](archive-v1/) — frozen earlier arXiv v1 (2605.11644).
+
+In particular, `thm:two-letter-content`, `cor:two-letter-fanout-one` and `prop:zeta-capacity` should **not** be reported as currently proved *inside* the 42-page manuscript. They are still accessible as research sources.
+
+## Exploratory research on `op:fanout-two`
+
+See [reviews/STATUS_sl_fanout2_2026-11-01.md](reviews/STATUS_sl_fanout2_2026-11-01.md) and the dated [reviews/](reviews/) reports (which include investigations through 2026-11-11). These reflect research progress, differing levels of verification and open branches; **they are not a list of additions to the latest manuscript**. Earlier HANDOFF files (`HANDOFF_2026-11-01.md`, `HANDOFF_2026-11-02.md`, `HANDOFF_2026-11-04.md`) and prior notes in `INSTRUCTIONS_FOR_AI.md` remain as date-stamped snapshots, superseded for current source state by [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md).
+
+## Verification
+
+`python3 tools/check_port.py` checks original v1 labels against current and parked sources. English and Japanese CI build, cross-reference checks, and formal proof-block comparisons passed in Plan2. Publication of fixed PDFs succeeded. Outstanding: independent proof audit, full PDF visual inspection, author review and TCS submission.
 
 ## Change log
+
+- **2026-11-12 (263)** **Metadata/handoff synchronization only.** `main.tex` and `japanese/main_JP.tex` remain the 2026-11-11 **42-page/49-page** Plan2 version. Updated the live `README.md`, `PAPER.yaml`, `INSTRUCTIONS_FOR_AI.md`, root README, and created `HANDOFF_CURRENT.md` so downstream AI agents do not mistake the 2026-11-06 41-page focus or 2026-11-09 64-page expansion for today's manuscript. Historical entries below are preserved verbatim.
+- **2026-11-11 (262)** **Plan1 and Plan2 merged into `main`**: PR [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) restores the A/B/C core and archives the additional H/I/J and semilattice/`prop:zeta-capacity` results; PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) compresses duplicated exposition **without cutting theorem or proof blocks**. English **42 pp**, Japanese **49 pp**, verified and fixed PDF URLs published. [Plan1](plan1/PLAN1_REPORT_2026-11-11.md), [Plan2](plan2/PLAN2_REPORT_2026-11-11.md). These supersede the manuscript status of all earlier changelog entries.
 
 - **2026-11-11 (261)** Exploration prompt for **Claude Fable 5.2** on the remaining case of $\mathcal K\cap\mathcal C_{2,c_\Sigma}$ ($t\ge5$ and a stage with two or more letters): `reviews/prompt_fable_five_stages_2026-11-11.md` (self-contained; restates Theorem 1, Cor 1b, Lemmas M*, M2, Cor M*, the skeleton of Theorems A/A$^+$ and the single failing step, Lemma S, Theorem B, N1–N4, the window lemma and the failed designs of (260) §6.2). Task 1 (first candidate, polynomial direction): exclude rigid counts from the grammar side, i.e. bound $p_a(M)\le\mathrm{poly}(\theta)$ or handle $p_a(M)=0$, which by N4 gives a bound independent of $t$. Task 2: close the $t=5$ three-way configuration directly (decompose three-way moves into two-stage moves, or avoid them in the shortening). Task 3 (lower-bound direction): exhaustive search, by criterion (\*) in small boxes, for infinite-index languages whose intermediate faces are all blocked by inner-stage count mismatches. Task 4: an appendix restating Theorems A, A$^+$, B for an independent check by a ChatGPT-based model. Report: `fable_five_stages_2026-11-11.md` (+ `.py`).
 - **2026-11-11 (260)** **Claude Fable 5.2 report on $t\ge3$ stages** (prompt (259)): `reviews/fable_three_stages_2026-11-11.md` (+ `.py`). Checked by this Claude Opus session: all proofs read line by line, the script (identical to the appendix) rerun with identical output apart from timings, and independent checks `reviews/check_claude_verify_fable_three_stages_2026-11-11.py` with no violation. **Lemma M*:** one component may hold two adjacent stages, so a move whose support is covered by $m$ adjacent pairs returns with arity-$m$ substitutability (brute force: 34 621 instances, 21 982 of them across two adjacent stages, no violation). **Theorem A$^+$:** Theorem A holds for $t\le 2f$; for $f=2$, **all-type $\tau$ is polynomial on $\mathcal K\cap\mathcal C_{2,c_\Sigma}$ with $t\le4$** (only step (6) of Theorem A changes). **Cor M*:** finite index and SUB$_{\le d}$ give agreement of face lattices on every $S$ coverable by $d$ adjacent pairs; $t\le2d$ gives all arities; Ex1 ($t=3$) and Ex2 ($t=5$) sit exactly outside (own criterion: 167 cases, all agree; an initial disagreement was a bug in this session's code that compared empty faces). **Theorem B:** if every stage has one letter ($L\subseteq a_1^*\cdots a_k^*$), every good grammar (no $\mathcal K$, no substitutability) gives every typed nonterminal a generation of length $\le 2fkD(1+r)\theta$, $D=v(2^k-1)^f$ (Lemma S: non-inner nodes are few, inner nodes have pure fillers); hence Ex2 and its family Ex2$^0_m$ ($\tau=3m$) are not counterexamples (random stage-respecting CFGs: 2 760, no violation). Lemma M2 and the 'three-way' configuration (needs five stages); necessary conditions N1–N4 for a counterexample in $\mathcal K$: a stage with two or more letters, $t\ge2f+1$, failure of some arity $f<d\le t$, and a letter whose face period is $0$ or superpolynomial (N4: $\tau_X\le k(f-1+\max_a p_a)$); Theorem C (condition (H)). No counterexample; open in $\mathcal K$ for $f=2$: $t\ge5$ with a stage of two or more letters. Theorems A, A$^+$, B are written by Claude Fable and checked by Claude Opus only; a non-Claude check is still to be done.
