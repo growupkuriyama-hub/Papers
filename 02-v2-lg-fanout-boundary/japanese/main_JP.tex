@@ -73,100 +73,93 @@
 \maketitle
 
 \begin{abstract}
-本稿は，前もって固定した型付け（有限半群の上への準同型）の値が一致するときにのみ構成素を比較するという条件の下で，
-多重文脈自由言語の学習に要る正データを調べる．
-極限同定は Yoshinaka の分布的枠組みから従う；本稿は特徴標本の総長を標的の文法の大きさと規則の厚さで評価し，
-どの型付けでこの長さが多項式になるかを問う．
+本稿は，部分語のタプルを互いに代入できるのは，前もって固定した型付け（有限半群の上への準同型）の値が一致するときに限る，という条件の下で，
+正データから多重文脈自由言語を学習することを調べる．
+極限同定は Yoshinaka の分布的枠組みから従う．本稿は，特徴標本の総長が標的の文法の大きさと規則の厚さについて多項式になるのはいつかを問う．
 型付けが局所群，すなわちすべての冪等元 $e$ について $e\mathsf Se$ が群であるような有限半群 $\mathsf S$ の上への写像ならば，
 固定したすべてのファンアウトとランクについて，文法の大きさの2乗と規則の厚さの1乗に比例する長さで足り，
-これらのクラスは多項式時間・厚データ同定可能である．
-証明は，交互に並ぶタプル成分を，非可換群の順序付き積を保ったまま同時に短縮する．
-ファンアウト2の非文脈自由の標的は型付けの領域を分離する：一つは局所群型付けのクラスに入るが，
-有界な窓と群への準同型を組み合わせたどの型付けのクラスにも入らず，もう一つはそのような型付けのクラスに非可換群についてのみ入る．
-十分大きなアルファベット上では，どの型付けの下でも，明示的な有限標的族について最悪の場合に文法の大きさと規則の厚さの積に線形な長さが必要である．
-ファンアウト1かつランク2以上では，局所群がちょうど境界になる：
-擬多様体がそのすべての型付けで多項式のデータを与えるのは，それが局所群からなるとき，かつそのときに限る；
-そうでなければ，クラス全体で特徴標本をもつすべての集合駆動型の学習者について，文法より指数的に長い標本を要する標的が存在する．
-ファンアウト2での境界は未解決である；ファンアウト1の下界の族はそこへ持ち上がらないことが証明される．
+その定数はファンアウト，ランクと $|\mathsf S|$ のみに依存する；したがってこれらのクラスは多項式時間・厚データ同定可能である．
+証明は，交互に並ぶタプル成分を，非可換群での順序付き積を保ったまま同時に短縮する．
+ファンアウト2の非文脈自由の標的により，局所群型付けは有界な窓と群への準同型を組み合わせた型付けよりも多くの標的を覆い，
+非可換群は可換群よりも多くの標的を覆うことが示される．
+十分大きなアルファベット上では，どの型付けの下でも，最悪の場合に文法の大きさと規則の厚さの積に線形な長さが必要である．
+ファンアウト1かつランク2以上では，擬多様体がそのすべての型付けで多項式のデータを与えるのは，それが局所群からなるとき，かつそのときに限る；
+そうでなければ，文法の大きさと規則の厚さについて指数的に長い標本を要する標的が存在する．
+ファンアウト2での境界は未解決である；ファンアウト1の指数的な族はそこへ持ち上がらないことが証明される．
 \end{abstract}
+
+\noindent\textbf{キーワード：}文法推論；多重文脈自由文法；分布学習；特徴標本；
+有限半群；局所群
+\par\medskip
 
 \section{序論}
 \label{sec:introduction}
 
-正データ文法推論は，正例のみからの極限同定を問う
-\cite{Gold1967,Angluin1980}．分布学習は共通文脈に現れる語や
-タプルを構成素とみなし，代入可能 CFG から不連続な依存をもつ
-MCFG に拡張された
-\cite{ClarkEyraud2007,Yoshinaka2008,SekiEtAl1991,Yoshinaka2009,Yoshinaka2011}．
-Yoshinaka の有限シグネチャ理論 \cite{Yoshinaka2015General} は
-多項式個の特徴的な語を保証するが，語の長さは指数的になり得る．
-本稿は厚データの立場 \cite{EyraudHeinzYoshinaka2016} から
-符号化総長 $\|K\|_+=\sum_{w\in K}(|w|+1)$ を評価する．
+分布学習は，共通の文脈に現れることを手がかりに正データから構成素を同定する
+\cite{Gold1967,Angluin1980,ClarkEyraud2007}．Yoshinaka はこれを，
+構成素が不連続な部分語のタプルである多重文脈自由文法（MCFG）
+\cite{SekiEtAl1991} へ拡張した \cite{Yoshinaka2009,Yoshinaka2011}．
+効率的な同定は，標的の文法の大きさと厚さについて多項式の特徴標本を求める
+\cite{Yoshinaka2008,EyraudHeinzYoshinaka2016}．Yoshinaka の有限シグネチャの
+枠組み \cite{Yoshinaka2015General} は多項式個の特徴的な語を与えるが，
+語の長さが多項式であることまでは保証しない．本稿は，固定した有限半群型付けの下で
+構成素を比較するときの特徴標本の総長
+$\|K\|_+=\sum_{w\in K}(|w|+1)$ を調べる．
 
 \paragraph{設定．}
-アルファベット $\Sigma$ に対し，データを観測する前に
-ファンアウト上限 $f$ と全射有限半群型付け
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を固定する．
-$\Cmcf{f}{s}$ は，同じ $s$-型をもつ非空タプル成分について
-代入可能な $f$-MCFL のクラスである
-（定義~\ref{def:class-cmcf}）．このクラス単位のバイアス
-\cite{CosteTyping2004} は制御集合や局所因子に基づく
-バイアスとは異なる
+ファンアウト上限 $f$ と型付け $s:\Sigma^+\twoheadrightarrow\mathsf S$
+（有限半群の上への全射準同型）を固定する．型付けは標的クラス全体に対して
+一度選ぶものであり，データから学習するものではない．クラス $\Cmcf{f}{s}$ は，
+成分ごとの $s$-型が等しく共通の文脈を一つもつ非空語のタプルどうしが
+同じ文脈をもつような $f$-MCFL からなる
+（定義~\ref{def:class-cmcf}）；自明な型付けは \cite{Yoshinaka2011} の型なしの設定を与える．
+このクラス単位のバイアス \cite{CosteTyping2004} は，制御集合や局所因子に
+基づくバイアスとは異なる
 \cite{Takada1988,Takada1995,CosteGaretNicolas2012,CosteNicolas2019}．
-再構成作用素を $\mathcal B_{f,s}$ と，
-規則ランクに上限 $r_{\max}$ を課す
-$\mathcal B^{\le r_{\max}}_{f,s}$ とする
-（定義~\ref{def:reconstruction}）．
-標的は大きさ $\|G\|$，規則の厚さ $\bar\theta_G$ の
-既約な良い文法 $G$ で表示する．後者は各規則を使う最短文の
-長さの最大値であり，非終端の厚さ $t_G$ と
-$t_G\le\theta_G\le2\|G\|\max\{1,t_G\}$ の関係にある
-（補題~\ref{lem:thickness-equivalence}，
-\cite{EyraudHeinzYoshinaka2016,kuriyamaCFG}）．
+標的は，大きさ $\|G\|$ と規則の厚さ $\bar\theta_G$（各規則を使う最短文の長さの最大値）
+をもつ既約な良い MCFG $G$ で表示する
+（定義~\ref{def:grammar-properties}，
+補題~\ref{lem:thickness-equivalence}；\cite{EyraudHeinzYoshinaka2016,kuriyamaCFG} 参照）．
+本稿が評価するのは集合駆動型作用素 $\mathcal B_{f,s}$ とランク上限付きの変種
+$\mathcal B^{\le r_{\max}}_{f,s}$（定義~\ref{def:reconstruction}）の特徴標本であり，
+それらから作る Gold 学習者（定義~\ref{def:conservative-learner}）の収束時点ではない．
+上界はある特徴標本について，下界はすべての特徴標本について述べる；
+各主張の条件は表~\ref{tab:scope} にまとめる．
 
-型付けは学習可能なクラスを広げる．ファンアウト2ですでに
-$\mathbb Z_2$ 型付けにより型なしでは扱えない非 CFL を扱える
-（命題~\ref{prop:typed-separation}）．一方，特徴標本には
-各実現型の語が必要である（命題~\ref{prop:rare-type}）．
+\paragraph{なぜ長さか．}
+細かい型付けほどクラスは大きくなり，ファンアウト2ですでに非文脈自由の標的を得る
+（命題~\ref{prop:typed-separation}）．一方，$f$，ランク，$s$ を固定すれば，
+標的の特徴的な語の個数は $O(\|G\|)$ のままである
+（定理~\ref{thm:data-from-typed-thickness}）．しかし，実現される型はすべて
+どの特徴標本にも現れなければならず（命題~\ref{prop:rare-type}），
+ある型の最短語は，$\|G\|$ と $\bar\theta_G$ が小さくても指数的に長くなり得る
+（定理~\ref{thm:C}(ii)）．型で細分した文法に型なしの評価を適用しても役に立たない．
+細分した文法は指数的に厚くなり得るからである
+（命題~\ref{prop:typed-thickness-exponential}）．
 
 \paragraph{局所群．}
-有限半群 $\mathsf S$ が局所群であるとは，すべてのべき等元
-$e$ について $e\mathsf Se$ が群となることをいう．
-その擬多様体 $\mathbf{LG}$ は，二元半束
-$U_1=\{1,\zeta\}$ を部分半群にもたない有限半群の
-クラスに一致する（定理~\ref{thm:lg-characterization}）．
-$\mathbf{LI}\vee\mathbf{Grp}$ はその真部分クラスであり，
-$\mathtt{ab}$ の出現回数の偶奇は局所群型付けで記録できるが
-窓と任意の有限群の組合せでは決定できない
-（命題~\ref{prop:li-g-strict}）．
+有限半群 $\mathsf S$ が局所群であるとは，すべての冪等元 $e$ について
+$e\mathsf Se$ が群となることをいう．同値な条件として，$\mathsf S$ は
+二元半束 $U_1=\{1,\zeta\}$ と同型な部分半群をもたない
+（定理~\ref{thm:lg-characterization}）；型付けはその上で，ある文字が
+現れたかどうかを記録できる．擬多様体 $\mathbf{LG}$ は，局所自明な半群と群の結び
+$\mathbf{LI}\vee\mathbf{Grp}$ を真に含む．後者への型付けは\emph{窓--群型付け}，
+すなわち接頭辞・接尾辞の窓と有限群への準同型で決まる型付けである
+（補題~\ref{lem:mcfg-li-group-window}，命題~\ref{prop:li-g-strict}）．
 
 \paragraph{主結果．}
-定理~\ref{thm:A} と~\ref{thm:B} ではファンアウト $f$ を固定する．
-学習クラスはアルファベット $\Sigma$ と型付け $s$ を指定して定義するが，
-定理~\ref{thm:A} の定数は，$|\mathsf S|=|s(\Sigma^+)|$ が固定されれば
-$\Sigma,s$ に関して一様である．定理~\ref{thm:B} には
-アルファベットの大きさに関する条件が残る．
 
 \begin{mainthm}[局所群]
 \label{thm:A}
-$r_{\max}\ge1$ とし，$s(\Sigma^+)\in\mathbf{LG}$ と仮定する．すべての
+$f,r_{\max}\ge1$ とし，$s(\Sigma^+)\in\mathbf{LG}$ と仮定する．すべての
 $L\in\Cmcf{f}{s}$ と，既約な良い表示 $G$ であって $L\cap\Sigma^+$ を表し，
 ファンアウト $\le f$ かつランク $\le r_{\max}$ のものすべてについて，作用素
 $\mathcal B^{\le r_{\max}}_{f,s}$ と $\mathcal B_{f,s}$ は，$L$ に対する共通の
 特徴標本であって総長 $O(\|G\|^2\bar\theta_G)$ のものをもつ；
-定数は $f$，$r_{\max}$ および $|\mathsf S|$ のみに依存する
-（$\mathsf S=s(\Sigma^+)$）
+定数は $f$，$r_{\max}$ および $|\mathsf S|$ のみに依存し（ここで
+$\mathsf S=s(\Sigma^+)$），したがって $|\mathsf S|$ を固定すればアルファベットと型付けに関して一様である
 \textup(定理~\ref{thm:local-group-polydata}\textup)．
 \end{mainthm}
-
-定理~\ref{thm:A} の型付けの領域は，すでに非文脈自由の標的の上で異なる．
-ファンアウト2の非文脈自由言語であって，ある局所群型付け $s$ について $\Cmcf{f}{s}$（$f\ge2$）に入るが，
-窓の大きさと群をどう選んでもどの窓--群型付けのクラスにも入らないものがある
-（命題~\ref{prop:lg-needed-target}）；また，$S_3$ 上の窓--群型付けのクラスには入るが，
-どの窓--可換群型付けのクラスにも入らないものがある
-（命題~\ref{prop:nonabelian-needed-target}）．したがって，ファンアウト2の非文脈自由の標的に限っても，
-これらのクラスを覆う結果において，窓--群型付けは局所群型付けの代わりにならず，窓--可換群型付けは窓--群型付けの代わりにならない．
-これらの分離は型付けの領域の範囲についてのものであり，特定の短縮の証明の必要性やその評価の最適性についてのものではない．
 
 \begin{mainthm}[線形因子]
 \label{thm:B}
@@ -175,7 +168,7 @@ $\mathcal B^{\le r_{\max}}_{f,s}$ と $\mathcal B_{f,s}$ は，$L$ に対する�
 $\Sigma$ が少なくとも2文字をもつとする．このとき，すべての型付け $s$ について，
 $\Cmcf{f}{s}$ の有限の標的であって，ランク2の表示 $G$ が最小の既約な良い表示の大きさの
 $7f+17$ 倍以内に収まるものが存在し，その特徴標本はすべて長さ $\Omega(\|G\|\bar\theta_G)$ をもつ．これは
-$\mathcal B^{\le r}_{f,s}$ \textup($r\ge1$\textup) と，クラス全体で特徴標本をもつ
+$\mathcal B_{f,s}$，$\mathcal B^{\le r}_{f,s}$ \textup($r\ge1$\textup) と，クラス全体で特徴標本をもつ
 すべての集合駆動型作用素について成り立つ
 \textup(命題~\ref{prop:linear-factor-all-fanout}\textup)．
 \item 自明な型付けとランク
@@ -200,75 +193,63 @@ $\mathbf{LG}$ に含まれるのは，それが\emph{一様多項式特徴デー
 $\mathcal B^{\le r_{\max}}_{1,s}$ に対する長さ高々 $p(\|G\|,\bar\theta_G)$ の特徴標本を，
 既約な良い表示 $G$ であって $L\cap\Sigma^+$ を表しランク $\le r_{\max}$ のもののそれぞれについてもつ
 \textup(定理~\ref{thm:fanout-one-data}\textup)．
-\item $\mathbf{LG}$ の外では失敗は指数的である：三文字上の型付け $s_U$ で
-$U_1$ の上へのものについて，標的 $L_n\in\Cmcf{1}{s_U}$ であって，大きさと規則の厚さが
-$O(n)$ のランク2の既約な良い表示をもち，その
-特徴標本がすべて長さ $3\cdot2^n-1$ 以上をもつものが存在する．
-具体的に $\|G_n\|=13n+7$，$\bar\theta_{G_n}=4n$ であり，
-$3\cdot2^n-1\ge 2^{(\|G_n\|+\bar\theta_{G_n})/17}$ が成り立つ．これは
-$\mathcal B^{\le r_{\max}}_{1,s_U}$ と，クラス全体で特徴標本をもつすべての集合駆動型作用素について成り立つ
-\textup(定理~\ref{thm:fanout-one-data}\textup)．したがって，擬多様体の水準では
-$\mathbf{LG}$ に対する多項式上界と，その外における指数的下界の間に中間的な増大はない．
+\item $\mathbf{LG}$ の外では失敗は指数的である：三文字のアルファベットから
+$U_1$ の上への型付け $s_U$ で，文字 $\mathtt c$ が現れるかどうかを記録するものについて，
+標的 $L_n\in\Cmcf{1}{s_U}$ であって，大きさと規則の厚さが
+$O(n)$ のランク2の既約な良い表示 $G_n$ をもち，そのすべての特徴標本の長さが少なくとも
+$3\cdot2^n-1\ge2^{(\|G_n\|+\bar\theta_{G_n})/17}$ であるものが存在する．これは
+$\mathcal B^{\le r_{\max}}_{1,s_U}$，$\mathcal B_{1,s_U}$ と，クラス全体で特徴標本をもつ
+すべての集合駆動型作用素について成り立つ
+\textup(定理~\ref{thm:fanout-one-data}\textup)．
 \end{enumerate}
 \end{mainthm}
 
-したがって，$s(\Sigma^+)\in\mathbf{LG}$ ならば，クラス
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$（ファンアウト
-$\le f$ かつ規則ランク $\le r_{\max}$ の MCFG の言語）は，すべてのファンアウトで多項式時間・厚データ同定可能であり
-\cite{Yoshinaka2008,EyraudHeinzYoshinaka2016}，
-ファンアウト1では $\mathbf{LG}$ がちょうどこの性質の擬多様体の境界である
-（系~\ref{cor:iptd}）．ファンアウト1の MCFG は文脈自由文法であるので，
-定理~\ref{thm:C} は文脈自由言語についての主張である；それは
-姉妹原稿の十分条件 $s(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$
-\cite{kuriyamaCFG} を特徴づけに変える．
-本稿はこれを，定理~\ref{thm:A} を測る基準として含める：ファンアウト1では，局所群という十分条件は擬多様体の水準で弱められない．
+定理~\ref{thm:A} は，固定したすべてのファンアウトとランクで多項式時間・厚データ同定を与え
+（系~\ref{cor:iptd}），定理~\ref{thm:B}(i) の最悪の場合を因子 $\|G\|$ 一つ分だけ上回る；
+この因子が必要かどうかは未解決である．ファンアウト1の MCFG は CFG であり，
+そこで定理~\ref{thm:C} は中間的な増大を排除する：擬多様体は，そのすべての型付けで
+長さ $O(\|G\|^2\bar\theta_G)$ をもつか，ある型付けで指数的な長さを要するかのいずれかである．
+ただし個々の型付けは分類しない（注意~\ref{rem:fanout-one-data}）．
+これは姉妹原稿 \cite{kuriyamaCFG} の十分条件
+$\mathbf{LI}\vee\mathbf{Grp}$ を正確な境界 $\mathbf{LG}$ に置き換える．
 
-\paragraph{残る問い．}
-定理~\ref{thm:A} は，定理~\ref{thm:C}(i) の \emph{if} の方向を
-すべてのファンアウトで与える．$\mathbf{LG}$ がファンアウト $f\ge2$ でもなお境界であるかどうか
-は未解決である（未解決問題~\ref{op:fanout-two}）．
-定理~\ref{thm:C}(ii) の族はそれを決定できない：すべての固定した型付けの下で，
-その成員のうち有限個を除くすべてはファンアウト2でクラスを離れる
+\paragraph{多重文脈自由の難しさ．}
+ファンアウト1では，各部分木はただ一つの順序付き積にただ一つの因子を寄与する．
+$f\ge2$ では，部分木は離れた高々 $f$ 個のブロックを寄与し，それらは他の部分木の
+ブロックと任意の，成分ごとに異なりうる順序で交錯する．そのため非可換な積の下では
+部分木を一つずつ独立に短縮できない．本稿では，十分多くの部分木の中から空でない
+集合を選び，すべての成分の順序付き積を保ったまま同時に短縮する
+（命題~\ref{prop:block-replacement-interface}）．その代償として，
+非可換群では定数が $f$ について二重指数的になる．局所群型付けは古典的な
+滑動因子座標 \cite{Straubing1985,Tilson1987,AlmeidaEtAl2009} に帰着する
+（定理~\ref{thm:lg-characterization}）．
+二つの要素はいずれも被覆を広げる：ファンアウト2の非文脈自由の標的で，
+ある局所群型付けのクラスに入るがどの窓--群型付けのクラスにも入らないものと，
+ある窓--$S_3$ 型付けのクラスに入るがどの窓--可換群型付けのクラスにも入らないものがある
+（命題~\ref{prop:lg-needed-target}，
+\ref{prop:nonabelian-needed-target}）．これらはクラスの被覆の分離であり，
+証明手法や指数の必要性を示すものではない．
+
+\paragraph{ファンアウト2の問題．}
+$\mathbf{LG}$ が $f\ge2$ でも境界であるかどうかは未解決である
+（未解決問題~\ref{op:fanout-two}）；十分性の方向は定理~\ref{thm:A} が与える．
+定理~\ref{thm:C}(ii) の族ではこれを決定できない：固定したすべての型付けと
+$f\ge2$ について，その大きな成員は $\Cmcf{f}{s}$ に入らず，また
+$\Cmcf{f}{s}$ のどの成員においても，その稀な語はその型のただ一つの語ではない
 （定理~\ref{thm:doubling-no-lift}）．
 
-\paragraph{方針．}
-型による細分は文法の厚さを指数的に増やし得る
-（命題~\ref{prop:typed-thickness-exponential}）ため，
-元の表示 $G$ を基準とする．ファンアウト2以上では
-部分木が離れた成分へ寄与し，そのブロックの順序が
-他の部分木と交錯する．そこで非可換群の各成分の
-順序付き積を同時に保つブロック置換を用いる
-（命題~\ref{prop:block-replacement-interface}）．
-局所群では境界をまたぐ因子を不変の緩衝文字で保護する
-（補題~\ref{lem:lg-buffered-owners}）．下界は部分集合に閉じた
-有限の標的族と稀な型を用いる
-（命題~\ref{prop:linear-factor-all-fanout},
-\ref{prop:rare-type}）．
-
 \paragraph{先行研究との関係．}
-Yoshinaka は $(k,\ell)$-代入可能な CFG の特徴データを
-厚さのパラメータで評価し \cite{Yoshinaka2008}，多次元
-代入可能な MCFG を正データから学習し \cite{Yoshinaka2009,Yoshinaka2011}，
-有限の証拠の個数をもつ有限シグネチャの学習原理を与えた
-\cite{Yoshinaka2015General}；質的な結果と，ここで用いる
-再構成作用素は彼のものである．有限半群の
-構造理論と局所群の表現は古典的である
-\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}．本稿の寄与は，
-符号化長の解析と上記の境界の結果である．他の
-弱文脈依存の形式体系の正データからの学習は
-\cite{OatesEtAl2006} にあり，質問や双対文脈集合を用いた MCFG の学習は
-\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023} にある；
-\cite{DuncanEtAl2026Substitution} の MCFL の
-代入補題は所属の条件であり，学習の基準ではない．
-
-\paragraph{姉妹 CFG 原稿との関係．}
-姉妹原稿 \cite{kuriyamaCFG} はファンアウト1で
-窓--群型付けの上界と一つの $U_1$ 型付けの下界を扱う．
-本稿は局所群の全ファンアウト上界とファンアウト1の
-正確な擬多様体境界を示す．表~\ref{tab:companion-overlap}
-は寄与を区別する．三文字の倍増族は
-付録~\ref{app:bracketed-family} で独立に証明し，
-姉妹原稿の定理を前提としない．
+再構成，その健全性と完全性，および Gold 同定は Yoshinaka
+\cite{Yoshinaka2011,Yoshinaka2015General} に従うものであり，新規な結果としては主張しない
+（第~\ref{sec:learner}~節）．長さの評価は，すべてのファンアウトでの自明な型付け
+\cite{Yoshinaka2011} と，ファンアウト1での固定窓 \cite{Yoshinaka2008} について
+既知であった；本稿の寄与は，これらを超える長さの解析とその境界である．
+関連する学習モデルは，他の弱文脈依存の形式体系 \cite{OatesEtAl2006} や
+所属性質問 \cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023} を用いる；
+\cite{DuncanEtAl2026Substitution} の代入補題は所属の条件であり，学習の基準ではない．
+表~\ref{tab:companion-overlap} は本稿と姉妹 CFG 原稿 \cite{kuriyamaCFG} を比較する；
+本稿は姉妹原稿の定理を用いず，三文字の倍増族は
+付録~\ref{app:bracketed-family} で独立に証明する．
 
 \begin{table}[htbp]
 \caption{姉妹 CFG 原稿 \cite{kuriyamaCFG} と本稿の関係．}
@@ -290,24 +271,11 @@ MCFG 固有の結果 & CFG の例
  & 非 CFL による型付けの分離（命題~\ref{prop:typed-separation},
  \ref{prop:lg-needed-target}, \ref{prop:nonabelian-needed-target}）\\
 追加の評価 & 全ファンアウト下界なし
- & 線形因子の下界と fan-out 2 の非持上げ
+ & 線形因子の下界とファンアウト2の非持上げ
  （定理~\ref{thm:B}, \ref{thm:doubling-no-lift}）\\
 \hline
 \end{tabularx}
 \end{table}
-
-\paragraph{主張の範囲．}
-上界・下界は，指定された表示と固定型付けに相対的な
-特徴標本の符号化総長について述べる．文法の最小の大きさや
-Gold 同定の収束時点を評価するものではない．
-表~\ref{tab:scope} に適用条件を示す．
-
-\paragraph{構成．}
-第~\ref{sec:prelim}--\ref{sec:char-data}~節で再構成と
-特徴データを準備し，第~\ref{sec:upper}--\ref{sec:fanout-one}~節で
-定理~\ref{thm:A}--\ref{thm:C} を証明する．
-第~\ref{sec:fanout-two}~節と結論で境界問題を扱い，
-技術的な証明は付録に置く．
 
 \section{準備}
 \label{sec:prelim}
