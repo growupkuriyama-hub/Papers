@@ -2,7 +2,7 @@
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
-**Current status (2026-11-12):** **Structural audit and strengthened Theorem A (PR #107): English 43 pages, Japanese 50 pages.** Based on Plan1 + Plan2 merged to `main` on 2026-11-11; subsequent 2026-11-12 corrections respond to Claude's independent report. The 64-page expansion dated 2026-11-09 and the 41-page focus dated 2026-11-06 are **historical**, not the current master.
+**Current status (2026-11-12):** **Independent referee follow-up (PR #108): English 43 pages, Japanese 51 pages.** Based on Plan1 + Plan2 merged to `main` on 2026-11-11; subsequent 2026-11-12 corrections respond to Claude's independent report. The 64-page expansion dated 2026-11-09 and the 41-page focus dated 2026-11-06 are **historical**, not the current master.
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
@@ -11,9 +11,9 @@
 | Role | Source of truth | Fixed published PDF | Verified pages |
 | --- | --- | --- | --- |
 | English | [main.tex](main.tex) | [main.pdf](main.pdf) | **43** (pdfLaTeX) |
-| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **50** (LuaLaTeX) |
+| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **51** (LuaLaTeX) |
 
-The updated manuscript sources passed [English CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942619) (43 pages) and [Japanese CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43185942736) (50 pages). The latest fixed-URL PDFs were committed successfully by [publisher run 43202370280](https://github.com/growupkuriyama-hub/Papers/actions/runs/43202370280): English 43 pages / 859,095 bytes, Japanese 50 pages / 1,152,346 bytes. The older [publisher run](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) is the historical Plan2 baseline (42/49 pages). Main source files and PDFs take precedence over the old page counts in changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document source decisions and validation scope. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) and [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) are both merged. The subsequent referee corrections are in [PR #106](https://github.com/growupkuriyama-hub/Papers/pull/106); see the [verbatim referee report](reviews/claude_independent_referee_2026-11-12.md) and [response log](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md).
+The post-review sources passed [English CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214327984) (43 pages) and [Japanese CI / port check](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214328041) (51 pages). The fixed-URL PDFs were published successfully by [run 43214766355](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214766355): English 43 pages / 871,232 bytes, Japanese 51 pages / 1,155,729 bytes. The older [publisher run](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) is the historical Plan2 baseline (42/49 pages). Main source files and PDFs take precedence over the old page counts in changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document source decisions and validation scope. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) and [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) are both merged. The subsequent referee corrections are in [PR #106](https://github.com/growupkuriyama-hub/Papers/pull/106); see the [verbatim referee report](reviews/claude_independent_referee_2026-11-12.md) and [response log](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md).
 
 ## Current mathematical scope
 
@@ -23,7 +23,7 @@ The updated manuscript sources passed [English CI](https://github.com/growupkuri
 - **Non-CFL separations:** `prop:lg-needed-target` and `prop:nonabelian-needed-target` establish different coverage by local-group/window--group/window--abelian typing regimes; full proofs retained.
 - **Fan-out two:** `thm:doubling-no-lift` shows why the three-letter fan-out-one exponential family cannot supply the same obstruction there. The general boundary `op:fanout-two` is **open**, not asserted at every fan-out.
 
-Refer to the complete quantified theorem statements in `main.tex` for precise restrictions. **Independent mathematical referee-level validation is still pending**; successful compilation and proof-block preservation are not proofs of correctness.
+Refer to the complete quantified theorem statements in `main.tex` for precise restrictions. **Independent human mathematical referee-level validation is still pending**; successful compilation and proof-block preservation are not proofs of correctness.
 
 ## Archived / parked mathematics — DO NOT DELETE
 
@@ -34,7 +34,7 @@ These source fragments are retained in the repository for future independent inv
 - [plan1_boundary_extensions_2026-11-11.tex](parked/plan1_boundary_extensions_2026-11-11.tex) — additional semilattice and boundary results, including `prop:zeta-capacity`.
 - [parked/](parked/) — earlier parked material and removed blocks. [archive-v1/](archive-v1/) — frozen earlier arXiv v1 (2605.11644).
 
-In particular, `thm:two-letter-content`, `cor:two-letter-fanout-one` and `prop:zeta-capacity` should **not** be reported as currently proved *inside* the 42-page manuscript. They are still accessible as research sources.
+In particular, `thm:two-letter-content`, `cor:two-letter-fanout-one` and `prop:zeta-capacity` should **not** be reported as currently proved *inside* the current English manuscript. They are still accessible as research sources.
 
 ## Exploratory research on `op:fanout-two`
 
@@ -45,6 +45,8 @@ See [reviews/STATUS_sl_fanout2_2026-11-01.md](reviews/STATUS_sl_fanout2_2026-11-
 `python3 tools/check_port.py` checks original v1 labels against current and parked sources. English and Japanese CI build, cross-reference checks, and formal proof-block comparisons passed in Plan2. Publication of fixed PDFs succeeded. Outstanding: independent proof audit, full PDF visual inspection, author review and TCS submission.
 
 ## Change log
+
+- **2026-11-12 (independent-review follow-up):** [PR #108](https://github.com/growupkuriyama-hub/Papers/pull/108) merged after a simulated AI Minor Revision (0 Critical/Major). Clarified theorem-A constant dependence, epsilon-free realized labels, unconditional antichain shortening, typed-witness transfer, pseudovariety scope and notation; no changes to mathematical claims A/B/C or the old lambda-shortening lemma. [Response matrix](reviews/RESPONSE_TO_POST_STRUCTURAL_REFEREE_2026-11-12.md). [Publisher 43214766355](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214766355) verified **43 EN / 51 JP pages**. Human peer review remains pending.
 
 - **2026-11-12 (266)** **Conservative structural-audit revision**, merged [PR #107](https://github.com/growupkuriyama-hub/Papers/pull/107): removed eight purely duplicate/unused exposition items in EN and JP; preserved scope table, protected mathematical remarks, all parked work. New separate s-minimal-derivation corollary strengthens Theorem A from alphabet-specific coefficients to O with coefficient depending only on f, rank, and |S|, without weakening the old lambda-preserving short-representative lemma. English 43pp; Japanese 50pp. G1-b and G2-a are [unmerged research candidates](reviews/STRUCTURAL_AUDIT_RESPONSE_2026-11-12.md), not results of this manuscript. The [new fixed-URL publisher](https://github.com/growupkuriyama-hub/Papers/actions/runs/43202370280) succeeded.
 
