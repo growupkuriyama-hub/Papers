@@ -1,8 +1,8 @@
-# #2 v2 — Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data
+# #2 v2 — Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
-**Current status (2026-11-12):** **Independent referee follow-up (PR #108): English 43 pages, Japanese 51 pages.** Based on Plan1 + Plan2 merged to `main` on 2026-11-11; subsequent 2026-11-12 corrections respond to Claude's independent report. The 64-page expansion dated 2026-11-09 and the 41-page focus dated 2026-11-06 are **historical**, not the current master.
+**Current status (2026-11-13):** **Title shortened; TCS front matter finalized after PR #109.** English 43 pages, Japanese 50 pages as in the last successful source build. Only the title is changed in the current revision; the mathematical results and proofs remain unchanged. The Plan1/Plan2 and referee revision timeline below is historical.
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
@@ -11,9 +11,9 @@
 | Role | Source of truth | Fixed published PDF | Verified pages |
 | --- | --- | --- | --- |
 | English | [main.tex](main.tex) | [main.pdf](main.pdf) | **43** (pdfLaTeX) |
-| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **51** (LuaLaTeX) |
+| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **50** (LuaLaTeX) |
 
-The post-review sources passed [English CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214327984) (43 pages) and [Japanese CI / port check](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214328041) (51 pages). The fixed-URL PDFs were published successfully by [run 43214766355](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214766355): English 43 pages / 871,232 bytes, Japanese 51 pages / 1,155,729 bytes. The older [publisher run](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) is the historical Plan2 baseline (42/49 pages). Main source files and PDFs take precedence over the old page counts in changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document source decisions and validation scope. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103) and [#104](https://github.com/growupkuriyama-hub/Papers/pull/104) are both merged. The subsequent referee corrections are in [PR #106](https://github.com/growupkuriyama-hub/Papers/pull/106); see the [verbatim referee report](reviews/claude_independent_referee_2026-11-12.md) and [response log](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md).
+The current pre-title-change PDFs were published by [run 43227898270](https://github.com/growupkuriyama-hub/Papers/actions/runs/43227898270): English 43 pages / 887,809 bytes, Japanese 50 pages / 1,155,063 bytes. The title-only revision will be rebuilt automatically after merge; see [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md) for the latest PDF publication. Earlier runs [43214766355](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214766355) and [43021169918](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918) are historical baselines. Main sources and PDFs take precedence over dated changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document earlier validation. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103), [#104](https://github.com/growupkuriyama-hub/Papers/pull/104), [#106](https://github.com/growupkuriyama-hub/Papers/pull/106), [#108](https://github.com/growupkuriyama-hub/Papers/pull/108), and [#109](https://github.com/growupkuriyama-hub/Papers/pull/109) are merged.
 
 ## Current mathematical scope
 

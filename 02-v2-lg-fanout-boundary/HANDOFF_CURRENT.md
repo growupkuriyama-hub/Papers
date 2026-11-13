@@ -1,13 +1,15 @@
-# Paper #2 — CURRENT HANDOFF (as of 2026-11-12 JST)
+# Paper #2 — CURRENT HANDOFF (as of 2026-11-13 JST)
 
 > **Authoritative status for this repository.** This file supersedes the *current-state* portions of `HANDOFF_2026-11-01.md`, `HANDOFF_2026-11-02.md`, `HANDOFF_2026-11-04.md`, and older status notes in `INSTRUCTIONS_FOR_AI.md`. Those remain historical records, not the manuscript currently on `main`.
 
 ## Current manuscript
 
-**Title:** *Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data*.  
+**Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
 **Target journal:** *Theoretical Computer Science* (not yet submitted; target timing noted in `PAPER.yaml`).  
 **Canonical branch:** `main`. **English source:** [main.tex](main.tex) — **43 pages**. **Japanese source:** [japanese/main_JP.tex](japanese/main_JP.tex) — **50 pages**.  
 **PDFs:** [English fixed URL](main.pdf) and [Japanese fixed URL](japanese/main_JP.pdf). The [post-PR-#109 publisher](https://github.com/growupkuriyama-hub/Papers/actions/runs/43227898270) built, verified and committed the current **43-page English PDF (887,809 bytes)** and **50-page Japanese PDF (1,155,063 bytes)**. The revised sources also passed [English PR CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43227181983) and [Japanese PR CI / port audit](https://github.com/growupkuriyama-hub/Papers/actions/runs/43227182012).
+
+**2026-11-13 title-only refinement:** The EN/JP titles have been shortened to foreground the quantitative contribution, **characteristic-data length**, while retaining the fixed finite-semigroup typing assumption. This is an editorial title change only; the abstract, Introduction, formal mathematics, proofs and all appendices are unchanged from the preceding revision. The original long title remains documented in the 2026-11-12 history.
 
 **2026-11-12 TCS front-matter refinement ([PR #109](https://github.com/growupkuriyama-hub/Papers/pull/109) merged):** Title retained. English and Japanese abstracts, 6 keywords and introductions revised in response to the companion #1 TCS referee lessons. The final English abstract has 234 words under a direct `detex | wc -w` extraction (under the 250-word guideline). The follow-up editorial audit corrected the interpretation of same-type comparisons, the precise two fan-out-two class-coverage separations, the class-wide set-driven rare-type qualification and the fan-out-one pseudovariety-level dichotomy. Theorems A/B/C and all main mathematical proofs remain unchanged; the one-factor gap and distinction from prior Yoshinaka results are stated clearly. The [final audit log](reviews/FRONT_MATTER_REVIEW_2026-11-12.md) records the original AI review and subsequent precision edits. This is not an external journal opinion or proof certificate.
 
