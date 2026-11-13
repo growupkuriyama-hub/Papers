@@ -6,6 +6,8 @@
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
+**Research archive (2026-11-13, not part of the manuscript):** [Local pigeonhole method, counterexample and proposed repair](reviews/STATUS_fanout2_pigeonhole_2026-11-13.md), including original Claude report and scripts; [Fable round-two research prompt](reviews/PROMPT_FABLE_FANOUT2_ROUND2_2026-11-13.md). The original free-node lemma was disproved; the content-typed repair is an *unreviewed proof candidate* and the fan-out-two boundary remains open.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
