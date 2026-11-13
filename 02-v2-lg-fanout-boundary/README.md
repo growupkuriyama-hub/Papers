@@ -2,7 +2,7 @@
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
-**Current status (2026-11-13):** **Shorter EN/JP title merged through [PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110); final PDFs published.** English 43 pages, Japanese 50 pages. This editorial revision changes no abstract, theorem, proof or appendix. The Plan1/Plan2 and earlier referee revisions below are historical.
+**Current status (2026-11-13):** **English and Japanese abstracts condensed after the [title shortening in PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110)**; the English abstract is 167 words. This editorial revision changes no theorem statement, mathematical proof, Introduction, bibliography or appendix. PDF and CI publication details are tracked in [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md); older revision descriptions below are historical.
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
