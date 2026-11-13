@@ -6,6 +6,8 @@
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
+**Opus 5.5 research archive (2026-11-13, NOT manuscript-validated):** [Round-two findings and verification status](reviews/STATUS_opus55_fanout2_round2_2026-11-13.md), with the [full mathematical report](reviews/opus55_fanout2_round2_report_2026-11-13.md) and three test scripts. New proposed *nonalternating-language* Theorem S and renewed typed repair are not independently proof-audited; three bounded checkers were rerun. The exact fan-out-two boundary remains open.
+
 **Research archive (2026-11-13, not part of the manuscript):** [Local pigeonhole method, counterexample and proposed repair](reviews/STATUS_fanout2_pigeonhole_2026-11-13.md), including original Claude report and scripts; [Fable round-two research prompt](reviews/PROMPT_FABLE_FANOUT2_ROUND2_2026-11-13.md). The original free-node lemma was disproved; the content-typed repair is an *unreviewed proof candidate* and the fan-out-two boundary remains open.
 
 ## Canonical sources and published PDFs
