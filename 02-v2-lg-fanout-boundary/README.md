@@ -2,7 +2,7 @@
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
-**Current status (2026-11-13):** **The concise English and Japanese abstracts were merged in [PR #111](https://github.com/growupkuriyama-hub/Papers/pull/111) and the published PDFs updated.** English abstract: 167 whitespace-delimited words. English PDF: 43 pages; Japanese PDF: 50 pages. The revision changes no theorem statement, mathematical proof, Introduction, bibliography, or appendix. The previous [title shortening PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110) is retained in the history.
+**Current status (2026-11-13):** **The English/Japanese Conclusions have been condensed**, retaining the exact fan-out-two Open Problem and the two remaining quantitative gaps. Prior [PR #111](https://github.com/growupkuriyama-hub/Papers/pull/111) condensed the bilingual abstracts (English: 167 words); [PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110) shortened the titles. Formal theorems, proof environments, Abstract, Introduction, references and appendices are unchanged by this Conclusion edit. See [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md) for verified published PDFs once the rebuild completes.
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
