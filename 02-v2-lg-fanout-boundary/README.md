@@ -6,6 +6,8 @@
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
+**Opus ordered-joining round three (2026-11-14, NOT manuscript-validated):** [Research status and reproducibility](reviews/STATUS_ordered_joining_round3_2026-11-14.md), [full report](reviews/claude_ordered_joining_round3_report_2026-11-14.md). The newly proposed Theorem P for directed-walk languages × arbitrary Parikh filters passed its attached bounded tests on rerun; general proof not independently audited. The fan-out-two boundary remains open.
+
 **Independent Theorem S audit and next research brief (2026-11-13):** [Detailed mathematical audit of multi-hole shortening](reviews/audit_theorem_S_independent_2026-11-13.md), [Claude ordered-joining prompt](reviews/claude_ordered_joining_round3_prompt_2026-11-13.md). The audit reconstructs a repaired proof and judges it valid; it is not peer-reviewed or formally verified, and `op:fanout-two` remains OPEN.
 
 **Opus 5.5 research archive (2026-11-13, NOT manuscript-validated):** [Round-two findings and verification status](reviews/STATUS_opus55_fanout2_round2_2026-11-13.md), with the [full mathematical report](reviews/opus55_fanout2_round2_report_2026-11-13.md) and three test scripts. New proposed *nonalternating-language* Theorem S and renewed typed repair are not independently proof-audited; three bounded checkers were rerun. The exact fan-out-two boundary remains open.
