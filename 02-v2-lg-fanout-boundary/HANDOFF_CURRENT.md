@@ -2,6 +2,8 @@
 
 > **Authoritative status for this repository.** This file supersedes the *current-state* portions of `HANDOFF_2026-11-01.md`, `HANDOFF_2026-11-02.md`, `HANDOFF_2026-11-04.md`, and older status notes in `INSTRUCTIONS_FOR_AI.md`. Those remain historical records, not the manuscript currently on `main`.
 
+**2026-11-14 next Claude research prompt (round four, research only):** [Unification and strictly-local extension brief](reviews/PROMPT_CLAUDE_FANOUT2_ROUND4_UNIFICATION_2026-11-14.md) requests adversarial reassessment of proposed Theorems S/P, a rigorous transfer principle, and strictly locally testable/de Bruijn bases with arbitrary Parikh filters, while keeping the general `op:fanout-two` boundary OPEN. No manuscript or PDF changes.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
