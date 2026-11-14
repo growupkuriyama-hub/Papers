@@ -17,6 +17,7 @@
 - [Claude第八段チェックポイント](claude_fanout2_round8_checkpoint1_2026-11-14.md)
 - [Claude第八段最終報告](claude_fanout2_round8_HCIII_report_2026-11-14.md)
 - [独立数学監査（完全版）](audit_claude_fanout2_round8_independent_2026-11-14.md)
+- [第八段の全Python／ログ＋独立検証器（コード抽出可能、元バイトSHA記録）](ROUND8_SOURCE_BUNDLE_2026-11-14.md)
 - 元提出ZIP `新しいフォルダー(20261114-120817).zip` は元の会話添付として保管。Python原コードのSHA256：
   - `check_round8_HCIII_2026-11-14.py`：`4d265cfc8d1f81adf63a7ec71245f1ee5b209f91c51d1ddd38c433a0b5f1d8b1`
   - `hc3_construct.py`：`f5e669b4a1ecebe7464a2568f0de3053183dfc0c9280810816f1ac4ea3c13353`
