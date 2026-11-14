@@ -28,6 +28,8 @@
 
 **Claude seventh-round hostability exploration brief (2026-11-14):** [Research prompt](reviews/PROMPT_CLAUDE_FANOUT2_ROUND7_HOSTABILITY_2026-11-14.md) continues the independently archived round-six synchronization checkpoint, prioritizing the missing common-hole Y/F lemma for overlapping projections. No new theorem or change in manuscript status is claimed.
 
+**Round-seven Claude hostability report (2026-11-14):** [Research outcome and scoped checks](reviews/STATUS_claude_fanout2_round7_intake_2026-11-14.md) with [complete final report](reviews/claude_fanout2_round7_hostability_report_2026-11-14.md) and [6-file reproducible verifier](reviews/round7_hc/). Cases I/II have conditional proof claims and partial independent code reruns; **case III (two deleting components within one root component) is unresolved**. Conjecture U and `op:fanout-two` remain OPEN. No manuscript edits.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
