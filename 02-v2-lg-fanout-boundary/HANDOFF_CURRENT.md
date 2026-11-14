@@ -10,6 +10,8 @@
 
 **2026-11-14 Fable round-five research prompt (research only):** [Focused L^tensor multi-hole audit brief](reviews/PROMPT_FABLE_FANOUT2_ROUND5_HOLES_2026-11-14.md) assigns a minimal fan-out 2/rank 2 counterexample or repair for the blockwise Euler rejoining proof, explicitly accounting for arity e<=f, content typing, arbitrary cross-block Parikh conditions and nonempty separators. No new theorem is claimed and `op:fanout-two` remains OPEN. The paper and PDFs remain unchanged.
 
+**2026-11-14 Fable round-five bundle-hole research (unreviewed):** [Research status and verification](reviews/STATUS_fable_fanout2_round5_2026-11-14.md) archives the full Fable report, checkpoint, Python verifier, and log. An explicit good fan-out-2/rank-2 example proves the *old proof method* can demand **4 holes where f=2**; a new bundle-by-block-rank lemma reduces this to **e'<=f** under independent block projections. ChatGPT reran the verifier with byte-identical output and checked the bundle counting argument; **full general proof of revised L^tensor remains pending**. `op:fanout-two` OPEN. No LaTeX/PDF changes.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
