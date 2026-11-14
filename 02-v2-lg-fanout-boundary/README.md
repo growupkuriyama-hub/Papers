@@ -20,6 +20,8 @@
 
 **2026-11-14 Theorem L independent audit:** [Mathematical audit and exact corrections](reviews/audit_theorem_L_independent_2026-11-14.md), [counterexample / ell=1 checker](reviews/audit_theorem_L_edgecases_2026-11-14.py). The original frequency-gap step and ell=1 nonempty-hole construction each require a repair. Verdict **FIXABLE** for the locally-counting polynomial representative bound. Other fourth-round proposed results remain unestablished; no paper/PDF edits.
 
+**Fable fifth-round blockwise hole bundling (2026-11-14):** [Status, full report and exact executable verification](reviews/STATUS_fable_fanout2_round5_2026-11-14.md). Original L^tensor method genuinely exceeds fan-out in a valid example; a constructive blockwise bundling lemma repairs the arity count, but the full generalized theorem needs independent audit. `op:fanout-two` OPEN.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
