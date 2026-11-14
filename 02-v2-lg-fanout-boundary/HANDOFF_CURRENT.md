@@ -18,6 +18,8 @@
 
 **2026-11-14 Claude round-six checkpoint 1, overlapping projections (research only):** [Independent intake audit](reviews/STATUS_claude_fanout2_round6_checkpoint1_audit_2026-11-14.md) archives Claude's checkpoint, full deterministic synchronization checker, exact rerun stdout, and a separate maximal-free-subtree boundary checker. U1a/U1b give wordwise and holewise shared-projection amalgamation criteria. Example R shows old same-rank bundling fails when projected alphabets overlap, while κ-indexed two-hole repair works in that example. Independent review detected a **vacuous maximality assert** and **nonmaximal η=B_5** in the source case; using η=B_6 remedies this without changing the counterexample. **Hostability (HC), the general proposed unification U, and `op:fanout-two` remain OPEN.** No manuscripts/PDFs modified.
 
+**2026-11-14 Claude round-seven follow-up prompt (research only):** [Focused hostability brief](reviews/PROMPT_CLAUDE_FANOUT2_ROUND7_HOSTABILITY_2026-11-14.md) starts from the archived round-six checkpoint/independent audit (PR #125), targets the unresolved common Y/F hole-word **HC** for overlap A={a,c}, B={b,c} at ell=2, f=2, rank<=2, especially zero shared-c difference with aa/bb circulations, and requests exact proof, full-assumption counterexample, or a nonvacuous restricted lemma. Strictly separates old-method failure from theorem failure, checks maximal free subtree/short-window tags, and requires early checkpoints and reproducible scripts. Conjecture U and general `op:fanout-two` remain OPEN. Paper/PDF unchanged.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  

@@ -26,6 +26,8 @@
 
 **Claude round-six synchronization checkpoint (2026-11-14):** [Checkpoint and independent audit](reviews/STATUS_claude_fanout2_round6_checkpoint1_audit_2026-11-14.md) prove piecewise shared-projection matching conditions and exhibit a same-rank hole-bundling obstruction for overlapping projections. Original finite checker passes; independent correction makes the example's free subtree genuinely maximal. **The crucial shared Y/F hostability lemma and general polynomial bound are still unproven.** No paper/PDF changes.
 
+**Claude seventh-round hostability exploration brief (2026-11-14):** [Research prompt](reviews/PROMPT_CLAUDE_FANOUT2_ROUND7_HOSTABILITY_2026-11-14.md) continues the independently archived round-six synchronization checkpoint, prioritizing the missing common-hole Y/F lemma for overlapping projections. No new theorem or change in manuscript status is claimed.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
