@@ -4,6 +4,8 @@
 
 **2026-11-14 next Claude research prompt (round four, research only):** [Unification and strictly-local extension brief](reviews/PROMPT_CLAUDE_FANOUT2_ROUND4_UNIFICATION_2026-11-14.md) requests adversarial reassessment of proposed Theorems S/P, a rigorous transfer principle, and strictly locally testable/de Bruijn bases with arbitrary Parikh filters, while keeping the general `op:fanout-two` boundary OPEN. No manuscript or PDF changes.
 
+**2026-11-14 Claude fourth-round research (NOT manuscript mathematics):** [Fourth-round status and caveats](reviews/STATUS_fanout2_round4_2026-11-14.md) archives the original report, checkpoint, de Bruijn scripts and outputs for the proposed locally-counting Theorem L, projected-block Theorem L^⊗, and overlapping-projection conjecture U. Theorem L is **not independently fully audited**; gaps identified in the presented L^⊗ argument include fan-out vs number of holes and typing assumptions, and the ell=1 construction of L needs a nonempty-hole repair. Current open problem op:fanout-two remains OPEN. Paper sources and PDFs unchanged.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  

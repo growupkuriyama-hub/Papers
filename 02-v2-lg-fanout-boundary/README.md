@@ -16,6 +16,8 @@
 
 **Research archive (2026-11-13, not part of the manuscript):** [Local pigeonhole method, counterexample and proposed repair](reviews/STATUS_fanout2_pigeonhole_2026-11-13.md), including original Claude report and scripts; [Fable round-two research prompt](reviews/PROMPT_FABLE_FANOUT2_ROUND2_2026-11-13.md). The original free-node lemma was disproved; the content-typed repair is an *unreviewed proof candidate* and the fan-out-two boundary remains open.
 
+**Claude fourth-round research archive (2026-11-14):** [Theorem L and L^⊗ research, initial audit and source checkers](reviews/STATUS_fanout2_round4_2026-11-14.md). Proposed local-counting polynomial bounds are not yet independently established; explicit proof gaps and verification limits are documented. No paper or PDF changes.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
