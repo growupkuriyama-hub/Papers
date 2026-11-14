@@ -22,6 +22,8 @@
 
 **Fable fifth-round blockwise hole bundling (2026-11-14):** [Status, full report and exact executable verification](reviews/STATUS_fable_fanout2_round5_2026-11-14.md). Original L^tensor method genuinely exceeds fan-out in a valid example; a constructive blockwise bundling lemma repairs the arity count, but the full generalized theorem needs independent audit. `op:fanout-two` OPEN.
 
+**Independent review of corrected blockwise locally-counting L^tensor' (2026-11-14):** [Detailed mathematical audit](reviews/audit_Ltensor_prime_independent_2026-11-14.md), [new noncommuting ell=2,3 Euler checker](reviews/audit_fable_round5_debruijn_ell2_ell3_2026-11-14.py). Bundle-count obstruction repaired in the disjoint-alphabet blockwise setting; independent hand-audit verdict VALID WITH CLARIFICATIONS, **not** an expert peer review or a solution to general `op:fanout-two`.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |

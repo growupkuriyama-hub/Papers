@@ -12,6 +12,8 @@
 
 **2026-11-14 Fable round-five bundle-hole research (unreviewed):** [Research status and verification](reviews/STATUS_fable_fanout2_round5_2026-11-14.md) archives the full Fable report, checkpoint, Python verifier, and log. An explicit good fan-out-2/rank-2 example proves the *old proof method* can demand **4 holes where f=2**; a new bundle-by-block-rank lemma reduces this to **e'<=f** under independent block projections. ChatGPT reran the verifier with byte-identical output and checked the bundle counting argument; **full general proof of revised L^tensor remains pending**. `op:fanout-two` OPEN. No LaTeX/PDF changes.
 
+**2026-11-14 ChatGPT independent audit of Fable's corrected L^tensor':** [Full mathematical review](reviews/audit_Ltensor_prime_independent_2026-11-14.md), [noncommuting de Bruijn ell=2,3 checker](reviews/audit_fable_round5_debruijn_ell2_ell3_2026-11-14.py), [log](reviews/out_audit_fable_round5_debruijn_2026-11-14.txt). Conclusion **VALID WITH CLARIFICATIONS** as a mathematical hand-proof, explicitly requiring whole-alphabet span tagging of projected windows, distinguishing Euler edge paths from inserted words, and handling e'=0 and typing. Fable's 4-hole old-method counterexample remains valid; bundle repair e'<=f is confirmed. Noncommuting tests 240 cases passed; Fable's original verifier independently reran with exact SHA256 match. No expert peer review or formal proof system. `op:fanout-two` stays OPEN. Manuscripts/PDFs unchanged.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
