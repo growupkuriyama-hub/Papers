@@ -6,6 +6,8 @@
 
 **2026-11-14 Claude fourth-round research (NOT manuscript mathematics):** [Fourth-round status and caveats](reviews/STATUS_fanout2_round4_2026-11-14.md) archives the original report, checkpoint, de Bruijn scripts and outputs for the proposed locally-counting Theorem L, projected-block Theorem L^⊗, and overlapping-projection conjecture U. Theorem L is **not independently fully audited**; gaps identified in the presented L^⊗ argument include fan-out vs number of holes and typing assumptions, and the ell=1 construction of L needs a nonempty-hole repair. Current open problem op:fanout-two remains OPEN. Paper sources and PDFs unchanged.
 
+**2026-11-14 independent Theorem L audit (research only):** [Full mathematical audit](reviews/audit_theorem_L_independent_2026-11-14.md) and [executable edge-case checks](reviews/audit_theorem_L_edgecases_2026-11-14.py) identify two exact failures of the *literal* fourth-round proof: its W2^ell text says **k+1** frequency intervals where **K+1=k^ell+1** are required (explicit word counterexample), and its ell=1 t/h construction uses an inadmissible **empty h**. The report reconstructs P0^ell, P1^ell, frozen-block Euler rerouting, Y/F, and the polynomial window-count bound after explaining repairs. **Verdict FIXABLE, not unmodified VALID.** Theorem L^tensor and the full fanout-two boundary remain open. No manuscript/PDF changes.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
