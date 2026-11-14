@@ -18,6 +18,8 @@
 
 **Claude fourth-round research archive (2026-11-14):** [Theorem L and L^⊗ research, initial audit and source checkers](reviews/STATUS_fanout2_round4_2026-11-14.md). Proposed local-counting polynomial bounds are not yet independently established; explicit proof gaps and verification limits are documented. No paper or PDF changes.
 
+**2026-11-14 Theorem L independent audit:** [Mathematical audit and exact corrections](reviews/audit_theorem_L_independent_2026-11-14.md), [counterexample / ell=1 checker](reviews/audit_theorem_L_edgecases_2026-11-14.py). The original frequency-gap step and ell=1 nonempty-hole construction each require a repair. Verdict **FIXABLE** for the locally-counting polynomial representative bound. Other fourth-round proposed results remain unestablished; no paper/PDF edits.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
