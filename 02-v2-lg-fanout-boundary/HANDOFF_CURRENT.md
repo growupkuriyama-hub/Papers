@@ -14,6 +14,8 @@
 
 **2026-11-14 ChatGPT independent audit of Fable's corrected L^tensor':** [Full mathematical review](reviews/audit_Ltensor_prime_independent_2026-11-14.md), [noncommuting de Bruijn ell=2,3 checker](reviews/audit_fable_round5_debruijn_ell2_ell3_2026-11-14.py), [log](reviews/out_audit_fable_round5_debruijn_2026-11-14.txt). Conclusion **VALID WITH CLARIFICATIONS** as a mathematical hand-proof, explicitly requiring whole-alphabet span tagging of projected windows, distinguishing Euler edge paths from inserted words, and handling e'=0 and typing. Fable's 4-hole old-method counterexample remains valid; bundle repair e'<=f is confirmed. Noncommuting tests 240 cases passed; Fable's original verifier independently reran with exact SHA256 match. No expert peer review or formal proof system. `op:fanout-two` stays OPEN. Manuscripts/PDFs unchanged.
 
+**2026-11-14 Claude sixth-round exploration brief (research only):** [Overlapping-projection synchronization and automaton-edge-lift prompt](reviews/PROMPT_CLAUDE_FANOUT2_ROUND6_OVERLAPPING_PROJECTIONS_2026-11-14.md). Builds on the independently hand-audited *disjoint-block* L^tensor' result, but does **not** assume overlapping alphabets are covered. Prioritizes the minimal overlap A={a,c}, B={b,c}, ell=2, fan-out 2/rank 2, necessary/sufficient shared-projection compatibility for multiple synchronized holes, counterexamples to naive same-rank bundling, and an alternative finite-automaton edge-lift route with explicit substitutability checks. Includes finite-search protocol and early checkpoint outputs. `op:fanout-two` remains OPEN; no source/PDF modifications.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
