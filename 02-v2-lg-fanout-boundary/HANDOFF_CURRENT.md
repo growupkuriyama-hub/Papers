@@ -16,6 +16,8 @@
 
 **2026-11-14 Claude sixth-round exploration brief (research only):** [Overlapping-projection synchronization and automaton-edge-lift prompt](reviews/PROMPT_CLAUDE_FANOUT2_ROUND6_OVERLAPPING_PROJECTIONS_2026-11-14.md). Builds on the independently hand-audited *disjoint-block* L^tensor' result, but does **not** assume overlapping alphabets are covered. Prioritizes the minimal overlap A={a,c}, B={b,c}, ell=2, fan-out 2/rank 2, necessary/sufficient shared-projection compatibility for multiple synchronized holes, counterexamples to naive same-rank bundling, and an alternative finite-automaton edge-lift route with explicit substitutability checks. Includes finite-search protocol and early checkpoint outputs. `op:fanout-two` remains OPEN; no source/PDF modifications.
 
+**2026-11-14 Claude round-six checkpoint 1, overlapping projections (research only):** [Independent intake audit](reviews/STATUS_claude_fanout2_round6_checkpoint1_audit_2026-11-14.md) archives Claude's checkpoint, full deterministic synchronization checker, exact rerun stdout, and a separate maximal-free-subtree boundary checker. U1a/U1b give wordwise and holewise shared-projection amalgamation criteria. Example R shows old same-rank bundling fails when projected alphabets overlap, while κ-indexed two-hole repair works in that example. Independent review detected a **vacuous maximality assert** and **nonmaximal η=B_5** in the source case; using η=B_6 remedies this without changing the counterexample. **Hostability (HC), the general proposed unification U, and `op:fanout-two` remain OPEN.** No manuscripts/PDFs modified.
+
 ## Current manuscript
 
 **Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
