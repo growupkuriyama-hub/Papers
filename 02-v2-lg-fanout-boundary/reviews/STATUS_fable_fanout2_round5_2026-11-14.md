@@ -1,5 +1,8 @@
 # Fable第五段：ブロック別局所計数の穴数障壁と束ね補題（2026-11-14）
 
+> **独立監査の追記（2026-11-14）：** [ChatGPTによる修復版L^tensor'数学監査](audit_Ltensor_prime_independent_2026-11-14.md) を追加。束ね補題B/C、投影の純／不純窓を全文字spanで定義したP1、Euler再配線Y/F、e'=0・ℓ=1の境界ケース、多項式長評価を再構成し、**VALID WITH CLARIFICATIONS** と評価。新たに [非可換なde Bruijn 2-gram/3-gramの240例検証](audit_fable_round5_debruijn_ell2_ell3_2026-11-14.py) も通過。下記の「独立監査未完了」は当初アーカイブ時点の記録であり、この追記が新しい状態。専門家査読・機械形式化は未実施。元の `op:fanout-two` は未解決。
+
+
 > 研究アーカイブ／未投稿・未査読。Fable自身の「完全証明」とChatGPTが独立に点検した範囲を分けて記録。正式な定理A/B/C、英日LaTeXとPDFを変更しない。一般の op:fanout-two は OPEN。
 
 ## 原資料
