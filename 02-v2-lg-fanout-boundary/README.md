@@ -24,6 +24,8 @@
 
 **Independent review of corrected blockwise locally-counting L^tensor' (2026-11-14):** [Detailed mathematical audit](reviews/audit_Ltensor_prime_independent_2026-11-14.md), [new noncommuting ell=2,3 Euler checker](reviews/audit_fable_round5_debruijn_ell2_ell3_2026-11-14.py). Bundle-count obstruction repaired in the disjoint-alphabet blockwise setting; independent hand-audit verdict VALID WITH CLARIFICATIONS, **not** an expert peer review or a solution to general `op:fanout-two`.
 
+**Claude round-six synchronization checkpoint (2026-11-14):** [Checkpoint and independent audit](reviews/STATUS_claude_fanout2_round6_checkpoint1_audit_2026-11-14.md) prove piecewise shared-projection matching conditions and exhibit a same-rank hole-bundling obstruction for overlapping projections. Original finite checker passes; independent correction makes the example's free subtree genuinely maximal. **The crucial shared Y/F hostability lemma and general polynomial bound are still unproven.** No paper/PDF changes.
+
 ## Canonical sources and published PDFs
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
