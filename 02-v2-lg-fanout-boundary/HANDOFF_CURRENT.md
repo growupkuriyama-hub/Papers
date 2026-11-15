@@ -1,4 +1,6 @@
-# Paper #2 — CURRENT HANDOFF (research updated 2026-11-15 JST; manuscript as of 2026-11-13)
+# Paper #2 — CURRENT HANDOFF (research updated 2026-11-16 JST; manuscript as of 2026-11-13)
+
+**2026-11-16 Fable + Claude rounds 12–14 (research-only, current):** [Archive status, full source bundles, independent mathematical audits and follow-up obligations](reviews/STATUS_FANOUT2_ROUNDS12_TO14_FABLE_2026-11-16.md). Mathematical status: full `op:fanout-two` **OPEN**; Fable-C and R13 T1 / R14 TR are hand-audited scoped results. R13 original X1 **FALSE** (40-word counterexample); R14 original CA **FALSE** (67-word counterexample), requires corrected CA* with additive seed-consistency and room. AB, IH, P_tree and noncommutative U **OPEN**. Four exact source bundles include all submitted Python/logs and SHA-256; PDF/manuscripts and existing main theorems untouched.
 
 > **Authoritative status for this repository.** This file supersedes the *current-state* portions of `HANDOFF_2026-11-01.md`, `HANDOFF_2026-11-02.md`, `HANDOFF_2026-11-04.md`, and older status notes in `INSTRUCTIONS_FOR_AI.md`. Those remain historical records, not the manuscript currently on `main`.
 
