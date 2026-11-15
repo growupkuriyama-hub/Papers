@@ -22,12 +22,15 @@ AB16では枠内`bc/cb`のオフセット付き局所転置と受理語`bbbbcccc
 - [独立数学監査報告](audit_astra_fanout2_round16_independent_2026-11-16.md)
 - [次に残る三つの数学的義務](astra_fanout2_round16_next_obligations_2026-11-16.md)
 - [第十六段Astraへの探索依頼](PROMPT_ASTRA_FANOUT2_ROUND16_NONCYCLIC_AB_DIRECT_PTREE_2026-11-16.md)
+- [元Astra再現ZIP（全証明書・ソース・ログ）](round16/astra_fanout2_round16_reproducibility_2026-11-16.zip)
+- [独立監査補完ZIP（再実行可能）](round16/astra_fanout2_round16_reproducibility_audit_fixed_2026-11-16.zip)
+- [軽量PythonソースZIP](round16/round16_portable_source_2026-11-16.zip)
 - [ZIPの封入漏れ・SHA-256・再現性](round16/REPRODUCIBILITY_PROVENANCE_2026-11-16.md)
 - [全体ハンドオフ](../HANDOFF_CURRENT.md)
 
 ## 正本ZIPの再現性に関する注意
 
-元の再現ZIPの59ファイルのSHA-256照合は全件一致。しかし本来必要な`sources/reviews/round15/SHA256SUMS.txt`が**1ファイル欠落**するため、**元ZIPのままの`code/run_all.py`は途中で停止**。監査用の派生ZIPには固定GitHub原本を補い、全6ジョブ終了コード0、元ログと一致、21,249手の独立replay完了。原ZIPを完全版と呼び直さない。完全ZIPと監査補完ZIPはこのチャットに添付されたものであり、**本GitHub記録は両ZIP全体を転送したものではない**。
+元の再現ZIPの59ファイルのSHA-256照合は全件一致。しかし本来必要な`sources/reviews/round15/SHA256SUMS.txt`が**1ファイル欠落**するため、**元ZIPのままの`code/run_all.py`は途中で停止**。監査用の派生ZIPには固定GitHub原本を補い、全6ジョブ終了コード0、元ログと一致、21,249手の独立replay完了。原ZIPを完全版と呼び直さない。完全ZIPと監査補完ZIPは、このGitHubアーカイブに**原バイト同一で保存した**。Git blob SHAはそれぞれ`f9a56d18d09580a95c7b20e90e4a7bb21465a4b5`と`7e41fa36f9b42a76e2f24a491e5f55146f13781a`で原本と一致する。元ZIPの封入漏れは修復されないので、再実行には補完ZIPを使うこと。
 
 ## 次の研究義務
 
