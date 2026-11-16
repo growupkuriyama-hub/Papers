@@ -61,8 +61,7 @@
 \theoremstyle{plain}
 \newtheorem{mainthm}{定理}
 \renewcommand{\themainthm}{\Alph{mainthm}}
-\title{固定有限半群型付けの下での\\
-多重文脈自由言語の特徴データ長}
+\title{局所群型付けの下での多重文脈自由言語の多項式長特徴データ}
 \author{Takayuki Kuriyama\\
 独立研究者，東京，日本\\
 \texttt{growup.kuriyama@gmail.com}}
@@ -72,29 +71,18 @@
 \maketitle
 
 \begin{abstract}
-本稿では，固定有限半群型付けの下での多重文脈自由言語の正データ学習について，
-特徴標本の総長を研究する．この型付けは，部分語タプルの代入可能性を比較する対象を，
-成分ごとの型が一致するタプルに制限する．
-Yoshinaka の有限シグネチャ枠組みから特徴語の個数の多項式上界は得られるが，
-それらの総長について文法の大きさと厚さによる多項式上界が一般に得られるわけではない．
-
-局所群による型付けでは，任意の固定ファンアウトとランクについて，
-reduced good 文法 $G$ に対し特徴標本の総長が
-$O(\|G\|^2\bar\theta_G)$ で抑えられることを示す．
-定数はファンアウト，ランク，有限半群の位数のみに依存する．
-これにより，多項式時間・厚データ同定可能性が従う．
-十分大きなアルファベット上では，いかなる型付けについても，
-対象クラス全体で特徴標本を持つ任意の集合駆動型演算子に対して，
-総長 $\Omega(\|G\|\bar\theta_G)$ を要する標的が存在する．
-
-ファンアウト1かつランク2以上では，局所群が特徴データ長の多項式上界に関する
-擬多様体レベルの正確な境界をなす．
-擬多様体が $\mathbf{LG}$ に含まれない場合，その中のある型付けに対して
-指数長の標本を必要とする標的が存在し，集合駆動型の枠組みでの
-多項式厚データ同定は不可能となる．
-ファンアウト2では，非文脈自由な標的が局所群型付け，窓--群型付け，
-窓--可換群型付けによる言語クラスの被覆範囲を分離するが，
-対応する多項式データ長の境界は未解決である．
+本稿では，固定有限半群型付けの下での多重文脈自由言語の正データ学習における
+特徴標本の符号化総長を研究する．Yoshinaka の有限シグネチャ枠組みは
+特徴語の個数について多項式上界を与えるが，文法の大きさと厚さによる
+総長の多項式上界までは一般には与えない．
+任意の局所群型付けと固定したファンアウト・規則ランクについて，
+代入可能な標的を表す既約な良い文法 $G$ に対し，
+特徴標本の総長が $O(\|G\|^2\bar\theta_G)$ で抑えられることを示す．
+ここで $\bar\theta_G$ は規則の厚さであり，定数はファンアウト，
+ランクおよび半群の位数のみに依存する．
+これにより多項式時間・厚データ同定可能性が従う．
+証明では非可換であり得る有限群の順序付きブロックの同時短縮と
+局所群の滑動因子座標を組み合わせる．
 \end{abstract}
 
 \noindent\textbf{キーワード：}文法推論；多重文脈自由文法；分布学習；特徴標本；
@@ -103,61 +91,35 @@ $O(\|G\|^2\bar\theta_G)$ で抑えられることを示す．
 
 \section{序論}
 \label{sec:introduction}
-
-分布学習は，共通の文脈に現れることを手がかりに正データから構成素を同定する
-\cite{Gold1967,Angluin1980,ClarkEyraud2007}．Yoshinaka はこれを，
-構成素が不連続な部分語のタプルである多重文脈自由文法（MCFG）
-\cite{SekiEtAl1991} へ拡張した \cite{Yoshinaka2009,Yoshinaka2011}．
-効率的な同定は，標的の文法の大きさと厚さについて多項式の特徴標本を求める
-\cite{Yoshinaka2008,EyraudHeinzYoshinaka2016}．Yoshinaka の有限シグネチャの
-枠組み \cite{Yoshinaka2015General} は多項式個の特徴的な語を与えるが，
-語の長さが多項式であることまでは保証しない．本稿は，固定した有限半群型付けの下で
-構成素を比較するときの特徴標本の総長
-$\|K\|_+=\sum_{w\in K}(|w|+1)$ を調べる．
+分布学習は，共通の文脈によって正例から構成素を同定する
+\cite{Gold1967,Angluin1980,ClarkEyraud2007}．
+多重文脈自由文法（MCFG）では構成素は不連続な部分語のタプルである
+\cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011}．
+Yoshinaka の有限シグネチャ枠組み
+\cite{Yoshinaka2015General} は多項式個の特徴語を与えるが，
+標的文法の大きさと厚さによる符号化総長の多項式上界までは
+一般には与えない．本稿はこの定量的な保証を示す．
 
 \paragraph{設定．}
-ファンアウト上限 $f$ と型付け $s:\Sigma^+\twoheadrightarrow\mathsf S$
-（有限半群の上への全射準同型）を固定する．型付けは標的クラス全体に対して
-一度選ぶものであり，データから学習するものではない．クラス $\Cmcf{f}{s}$ は，
-成分ごとの $s$-型が等しく共通の文脈を一つもつ非空語のタプルどうしが
-同じ文脈をもつような $f$-MCFL からなる
-（定義~\ref{def:class-cmcf}）；自明な型付けは \cite{Yoshinaka2011} の型なしの設定を与える．
-このクラス単位のバイアス \cite{CosteTyping2004} は，制御集合や局所因子に
-基づくバイアスとは異なる
-\cite{Takada1988,Takada1995,CosteGaretNicolas2012,CosteNicolas2019}．
-標的は，大きさ $\|G\|$ と規則の厚さ $\bar\theta_G$（各規則を使う最短文の長さの最大値）
-をもつ既約な良い MCFG $G$ で表示する
-（定義~\ref{def:grammar-properties}，
-補題~\ref{lem:thickness-equivalence}；\cite{EyraudHeinzYoshinaka2016,kuriyamaCFG} 参照）．
-本稿が評価するのは集合駆動型作用素 $\mathcal B_{f,s}$ とランク上限付きの変種
-$\mathcal B^{\le r_{\max}}_{f,s}$（定義~\ref{def:reconstruction}）の特徴標本であり，
-それらから作る Gold 学習者（定義~\ref{def:conservative-learner}）の収束時点ではない．
-上界はある特徴標本について，下界はすべての特徴標本について述べる；
-各主張の条件は表~\ref{tab:scope} にまとめる．
+ファンアウト上限 $f$，規則ランク上限 $r_{\max}$ と，
+標的クラス全体に固定した全射半群準同型
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ を考える．
+型付けはデータから学習されない．
+$\Cmcf{f}{s}$ では，非空語のタプルが成分ごとに同じ型をもち，
+共通の受理文脈があれば，同じ文脈分布をもつ
+（定義~\ref{def:class-cmcf}）．
+標本の長さは $\|K\|_+=\sum_{w\in K}(|w|+1)$ とする．
+既約な良い MCFG $G$ の大きさを $\|G\|$，
+$\bar\theta_G$ を各規則を使用する最短の成功文の長さの最大値
+（少なくとも1）とする．
+集合駆動型再構成の特徴標本を評価し，
+Gold 学習器の収束時点を評価するものではない．
 
-\paragraph{なぜ長さか．}
-細かい型付けほどクラスは大きくなり，ファンアウト2ですでに非文脈自由の標的を得る
-（命題~\ref{prop:typed-separation}）．一方，$f$，ランク，$s$ を固定すれば，
-標的の特徴的な語の個数は $O(\|G\|)$ のままである
-（定理~\ref{thm:data-from-typed-thickness}）．しかし，クラス全体で特徴標本をもつ
-集合駆動型作用素では，実現される型はすべてどの特徴標本にも現れなければならず
-（命題~\ref{prop:rare-type}），
-ある型の最短語は，$\|G\|$ と $\bar\theta_G$ が小さくても指数的に長くなり得る
-（定理~\ref{thm:C}(ii)）．型で細分した文法に型なしの評価を適用しても役に立たない．
-細分した文法は指数的に厚くなり得るからである
-（命題~\ref{prop:typed-thickness-exponential}）．
-
-\paragraph{局所群．}
-有限半群 $\mathsf S$ が局所群であるとは，すべての冪等元 $e$ について
-$e\mathsf Se$ が群となることをいう．同値な条件として，$\mathsf S$ は
-二元半束 $U_1=\{1,\zeta\}$ と同型な部分半群をもたない
-（定理~\ref{thm:lg-characterization}）；型付けはその上で，ある文字が
-現れたかどうかを記録できる．擬多様体 $\mathbf{LG}$ は，局所自明な半群と群の結び
-$\mathbf{LI}\vee\mathbf{Grp}$ を真に含む．後者への型付けは\emph{窓--群型付け}，
-すなわち接頭辞・接尾辞の窓と有限群への準同型で決まる型付けである
-（補題~\ref{lem:mcfg-li-group-window}，命題~\ref{prop:li-g-strict}）．
-
-\paragraph{主結果．}
+\paragraph{主定理．}
+有限半群が\emph{局所群}であるとは，すべての冪等元 $e$ について
+$e\mathsf Se$ が群となることである．その擬多様体を
+$\mathbf{LG}$ と書く．判定するのは新たな単位元を付加した
+半群ではなく，正の像 $\mathsf S=s(\Sigma^+)$ である．
 
 \begin{mainthm}[局所群]
 \label{thm:A}
@@ -171,122 +133,28 @@ $\mathsf S=s(\Sigma^+)$），したがって $|\mathsf S|$ を固定すればア
 \textup(定理~\ref{thm:local-group-polydata}\textup)．
 \end{mainthm}
 
-\begin{mainthm}[線形因子]
-\label{thm:B}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $\Sigma$ が少なくとも $4f+1$ 文字をもつか，または $f=1$ かつ
-$\Sigma$ が少なくとも2文字をもつとする．このとき，すべての型付け $s$ について，
-$\Cmcf{f}{s}$ の有限の標的であって，ランク2の表示 $G$ が最小の既約な良い表示の大きさの
-$7f+17$ 倍以内に収まるものが存在し，その特徴標本はすべて長さ $\Omega(\|G\|\bar\theta_G)$ をもつ．これは
-$\mathcal B_{f,s}$，$\mathcal B^{\le r}_{f,s}$ \textup($r\ge1$\textup) と，クラス全体で特徴標本をもつ
-すべての集合駆動型作用素について成り立つ
-\textup(命題~\ref{prop:linear-factor-all-fanout}\textup)．
-\item 自明な型付けとランク
-$\le r_{\max}$ の既約な良い表示について，作用素 $\mathcal B_{f,s_{\mathrm{triv}}}$ は
-Yoshinaka の上界 $O(\|G\|\bar\theta_G)$ \cite{Yoshinaka2011} を満たす；
-$r_{\max}\ge2$ かつ \textup{(i)} のアルファベットの条件が成り立つならば，この上界は
-\textup{(i)} の標的によって定数倍を除いて達成される
-\textup(系~\ref{cor:trivial-exact}\textup)．
-\end{enumerate}
-\end{mainthm}
+定理~\ref{thm:A} から多項式時間・厚データ同定可能性が従う
+（系~\ref{cor:iptd}）．質的な再構成，健全性，完全性，
+Gold 同定は Yoshinaka の既存の枠組みに従い，
+新規性を主張しない
+\cite{Yoshinaka2011,Yoshinaka2015General}．
+自明な型付けの全ファンアウトの場合
+\cite{Yoshinaka2011} とファンアウト1の固定窓
+\cite{Yoshinaka2008} の長さ評価は既知である．
 
-\begin{mainthm}[ファンアウト1での境界]
-\label{thm:C}
-$f=1$ かつ $r_{\max}\ge2$ とする．
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item 有限半群の擬多様体 $\mathbf V$ が
-$\mathbf{LG}$ に含まれるのは，それが\emph{一様多項式特徴データ長}をもつとき，
-かつそのときに限る \textup(定義~\ref{def:uniform-polydata}\textup)．ここで一様多項式特徴データ長とは次のことである：
-すべての空でないアルファベット $\Sigma$ と，すべての型付け $s$ であって $s(\Sigma^+)\in\mathbf V$ を満たすものについて，
-多項式 $p$ が存在し（それは $s$ と $\Sigma$ には依存してよいが，
-標的には依存しない），すべての $L\in\Cmcf{1}{s}$ が
-$\mathcal B^{\le r_{\max}}_{1,s}$ に対する長さ高々 $p(\|G\|,\bar\theta_G)$ の特徴標本を，
-既約な良い表示 $G$ であって $L\cap\Sigma^+$ を表しランク $\le r_{\max}$ のもののそれぞれについてもつ
-\textup(定理~\ref{thm:fanout-one-data}\textup)．
-\item $\mathbf{LG}$ の外では失敗は指数的である：三文字のアルファベットから
-$U_1$ の上への型付け $s_U$ で，文字 $\mathtt c$ が現れるかどうかを記録するものについて，
-標的 $L_n\in\Cmcf{1}{s_U}$ であって，大きさと規則の厚さが
-$O(n)$ のランク2の既約な良い表示 $G_n$ をもち，そのすべての特徴標本の長さが少なくとも
-$3\cdot2^n-1\ge2^{(\|G_n\|+\bar\theta_{G_n})/17}$ であるものが存在する．これは
-$\mathcal B^{\le r_{\max}}_{1,s_U}$，$\mathcal B_{1,s_U}$ と，クラス全体で特徴標本をもつ
-すべての集合駆動型作用素について成り立つ
-\textup(定理~\ref{thm:fanout-one-data}\textup)．
-\end{enumerate}
-\end{mainthm}
-
-定理~\ref{thm:A} は，固定したすべてのファンアウトとランクで多項式時間・厚データ同定を与える
-（系~\ref{cor:iptd}）．この上界と定理~\ref{thm:B}(i) の下界の次数には
-因子 $\|G\|$ 一つ分の差があり，その必要性は未解決である．
-ファンアウト1では定理~\ref{thm:C} が\emph{擬多様体レベル}の二分法を与える：
-すべての型付けで長さ $O(\|G\|^2\bar\theta_G)$ の特徴データを得られるか，
-ある型付けに指数的な特徴データを要する標的が存在するかのいずれかである．
-個々の型付けは分類しない（注意~\ref{rem:fanout-one-data}）．
-これにより姉妹原稿 \cite{kuriyamaCFG} の十分条件
-$\mathbf{LI}\vee\mathbf{Grp}$ を正確な境界 $\mathbf{LG}$ へ強化する．
-
-\paragraph{多重文脈自由の難しさ．}
-ファンアウト1では，各部分木はただ一つの順序付き積にただ一つの因子を寄与する．
-$f\ge2$ では，部分木は離れた高々 $f$ 個のブロックを寄与し，それらは他の部分木の
-ブロックと任意の，成分ごとに異なりうる順序で交錯する．そのため非可換な積の下では
-部分木を一つずつ独立に短縮できない．本稿では，十分多くの部分木の中から空でない
-集合を選び，すべての成分の順序付き積を保ったまま同時に短縮する
-（命題~\ref{prop:block-replacement-interface}）．その代償として，
-非可換群では定数が $f$ について二重指数的になる．局所群型付けは古典的な
-滑動因子座標 \cite{Straubing1985,Tilson1987,AlmeidaEtAl2009} に帰着する
-（定理~\ref{thm:lg-characterization}）．
-二つの要素はいずれも被覆を広げる：ファンアウト2の非文脈自由の標的で，
-ある局所群型付けのクラスに入るがどの窓--群型付けのクラスにも入らないものと，
-ある窓--$S_3$ 型付けのクラスに入るがどの窓--可換群型付けのクラスにも入らないものがある
-（命題~\ref{prop:lg-needed-target}，
-\ref{prop:nonabelian-needed-target}）．これらはクラスの被覆の分離であり，
-証明手法や指数の必要性を示すものではない．
-
-\paragraph{ファンアウト2の問題．}
-$\mathbf{LG}$ が $f\ge2$ でも境界であるかどうかは未解決である
-（未解決問題~\ref{op:fanout-two}）；十分性の方向は定理~\ref{thm:A} が与える．
-定理~\ref{thm:C}(ii) の族ではこれを決定できない：固定したすべての型付けと
-$f\ge2$ について，その大きな成員は $\Cmcf{f}{s}$ に入らず，また
-$\Cmcf{f}{s}$ のどの成員においても，その稀な語はその型のただ一つの語ではない
-（定理~\ref{thm:doubling-no-lift}）．
-
-\paragraph{先行研究との関係．}
-再構成，その健全性と完全性，および Gold 同定は Yoshinaka
-\cite{Yoshinaka2011,Yoshinaka2015General} に従うものであり，新規な結果としては主張しない
-（第~\ref{sec:learner}~節）．長さの評価は，すべてのファンアウトでの自明な型付け
-\cite{Yoshinaka2011} と，ファンアウト1での固定窓 \cite{Yoshinaka2008} について
-既知であった；本稿の寄与は，これらを超える長さの解析とその境界である．
-関連する学習モデルは，他の弱文脈依存の形式体系 \cite{OatesEtAl2006} や
-所属性質問 \cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023} を用いる；
-\cite{DuncanEtAl2026Substitution} の代入補題は所属の条件であり，学習の基準ではない．
-表~\ref{tab:companion-overlap} は本稿と姉妹 CFG 原稿 \cite{kuriyamaCFG} を比較する；
-本稿は姉妹原稿の定理を用いず，三文字の倍増族は
-付録~\ref{app:bracketed-family} で独立に証明する．
-
-\begin{table}[htbp]
-\caption{姉妹 CFG 原稿 \cite{kuriyamaCFG} と本稿の関係．}
-\label{tab:companion-overlap}
-\centering\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\linewidth}{@{}p{0.21\linewidth}p{0.27\linewidth}X@{}}
-\hline
-主題 & 姉妹原稿（ファンアウト1） & 本稿\\
-\hline
-質的学習 & 型付き CFG の再構成と証拠
- & 型付き MCFG 版；質的な部分は Yoshinaka に帰属\\
-多項式上界 & $\mathbf{LI}\vee\mathbf{Grp}$
- & 全ファンアウトの $\mathbf{LG}$ と非可換群の同時短縮
- （定理~\ref{thm:A}）\\
-指数下界 & 五文字の括弧付き $U_1$ 族
- & 三文字の変種と $f=1$ の擬多様体境界（定理~\ref{thm:C}）\\
-MCFG 固有の結果 & CFG の例
- & 非 CFL による型付けの分離（命題~\ref{prop:typed-separation},
- \ref{prop:lg-needed-target}, \ref{prop:nonabelian-needed-target}）\\
-追加の評価 & 全ファンアウト下界なし
- & 線形因子の下界とファンアウト2の非持上げ
- （定理~\ref{thm:B}, \ref{thm:doubling-no-lift}）\\
-\hline
-\end{tabularx}
-\end{table}
+\paragraph{証明方法と範囲．}
+異なる部分木が寄与する離れたブロックは，
+根の成分ごとに異なる順序で交錯し得る．
+本稿では群の元を可換とみなさずに複数の部分木を同時に置換し，
+すべての順序付き積を保存する
+（命題~\ref{prop:block-replacement-interface}）．
+古典的な滑動因子座標
+（定理~\ref{thm:lg-characterization}；
+\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}）
+と証拠長評価を組み合わせる．
+姉妹 CFG 原稿 \cite{kuriyamaCFG} の定理には依存しない．
+下界，正確な擬多様体境界，および局所群条件の必要性は
+本稿では主張しない．
 
 \section{準備}
 \label{sec:prelim}
@@ -537,41 +405,6 @@ $1$-次元代入可能であるが $2$-次元代入可能でない
 $\widehat{s}^{-1}(\mathsf{Acc})\in\Cmcf{f}{s}$：それは正則であり，
 成分ごとに等しい型は，すべての文脈で等しい全体の型を与える．
 \end{enumerate}
-
-\begin{proposition}[共通部分と可換群によるふるい分け]
-\label{prop:abelian-coset-filter}
-$f$ と $s$ を固定する．
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item $L_1,L_2$ が $(f,s)$-タプル代入可能ならば，$L_1\cap L_2$ もそうである．
-\item $L$ が $(f,s)$-タプル代入可能であり，$\mathsf A$ が可換群，
-$g:\Sigma^*\to\mathsf A$ がモノイド準同型，$\mathsf H\le\mathsf A$ かつ
-$\gamma\in\mathsf A$ ならば，$L\cap g^{-1}(\gamma+\mathsf H)$ は
-$(f,s)$-タプル代入可能である．
-\item $L\in\Cmcf{f}{s}$，$\mathsf{Acc}\subseteq\mathsf S^\sharp$ であり，かつ (ii) において
-$\mathsf A$ が有限ならば，
-$L\cap\widehat{s}^{-1}(\mathsf{Acc})\cap g^{-1}(\gamma+\mathsf H)\in\Cmcf{f}{s}$．
-\end{enumerate}
-無限の $\mathsf A$ については，(ii) の共通部分は
-$\Cmcf{f}{s}$ に属する，それが $f$-MCFL であるときにはいつでも．
-\end{proposition}
-
-\begin{proof}
-(i) 等しい型の $\tuple x,\tuple y$ を $L_1\cap L_2$ において受理する文脈は，
-各 $L_i$ において両方を受理するので，それらの分布は各 $L_i$ において一致し，したがって
-共通部分において一致する．(ii) ある文脈 $E$ が
-$\tuple x,\tuple y$ を $g^{-1}(\gamma+\mathsf H)$ において受理するならば，
-$\delta:=\sum_i(g(y_i)-g(x_i))\in\mathsf H$ であり，可換性により
-$g(E'[\tuple y])-g(E'[\tuple x])=\delta$ がすべての
-$E'\in\mathcal E_d$ について成り立つので，剰余類への所属は両方向に移る．したがって
-$g^{-1}(\gamma+\mathsf H)$ は $(f,s_{\mathrm{triv}})$-，したがって
-$(f,s)$-タプル代入可能である；(i) を適用する．(iii) 言語
-$\widehat{s}^{-1}(\mathsf{Acc})$ は上の項目 (c) により $(f,s)$-タプル代入可能であるので，
-(i) と (ii) により共通部分もそうである；それは $f$-MCFL と
-正則言語の共通部分であるので，$f$-MCFL である \cite{SekiEtAl1991}．
-\end{proof}
-
-(ii) と (iii) の分解は，クラスの成員を構成するための道具である；
-それらは再構成には与えない．
 
 \section{再構成と質的学習}
 \label{sec:learner}
@@ -866,129 +699,11 @@ $\|K\|_+$ について多項式の時間で処理する．ここで $K$ はそ�
 これらの主張のいずれも，特徴データの長さも収束の
 段階も評価しない．
 
-\subsection{型付きのクラスと型なしのクラス}
-\label{subsec:typed-separation}
-
-正則な道の言語は，すべてのクラスの単純な成員を与える．
-
-\begin{lemma}[道の言語]\label{lem:app-lf-path}
-$R$ を，頂点 $p$ から頂点 $p'$ への道のラベルの集合とする．ここで道は
-有限の有向グラフにおけるもので，そのグラフではすべての文字がちょうど一つの辺のラベルである．
-$\tuple x,\tuple y\in(\Sigma^+)^d$ と $E\in\mathcal E_d$ が
-$E[\tuple x],E[\tuple y]\in R$ を満たすならば，$F[\tuple x]\in R\iff F[\tuple y]\in R$ が
-すべての $F\in\mathcal E_d$ について成り立つ．
-\end{lemma}
-
-\begin{proof}
-$\Sigma^+$ の語が $R$ に属するのは，各文字の辺の終点が
-次の文字の辺の始点であり，最初の辺が $p$ から始まり，最後の辺が
-$p'$ で終わるとき，かつそのときに限る．第 $h$ の穴（$E$ の）の直前には
-$v_{h-1}$ の最後の文字があるか，または頂点 $p$ がある（$h=1$ かつ $v_0=\eps$ のとき）．直後についても
-同様である；内部の区切りは空でない．したがって $E$ は各穴の両端の頂点を
-定め，$x_h$ と $y_h$ は同じ二つの頂点の間の道のラベルである．
-したがって，すべての $x_h$ を $y_h$ で $F[\tuple x]$ において置き換えることは
-三つの条件をすべて保ち，逆も同様である．
-\end{proof}
-
-クラスは，すでにファンアウト2において，また
-文脈自由言語の外において，型付けとともに真に大きくなる；そのとき型なしの作用素は過汎化する．
-
-\begin{proposition}[型なしのクラスを超える型付きのクラス]
-\label{prop:typed-separation}
-$\Sigma=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d,\mathtt\#_1,\mathtt\#_2,\mathtt\#_3\}$ とし，
-$s:\Sigma^+\twoheadrightarrow\mathbb Z_2$ を，文字 $\mathtt a$ と $\mathtt c$ を
-$2$ を法として数えるものとし，次のようにおく．
-\[
- L_{\mathrm{sep}}:=\{\mathtt a^m\mathtt\#_1\mathtt b^n\mathtt\#_2\mathtt c^{m'}\mathtt\#_3\mathtt d^n:
- m,n\ge0,\ m'\in\{m,m-1\},\ m'\ge0\}.
-\]
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L_{\mathrm{sep}}$ は規則ランク2の $2$-MCFL であり，文脈自由でない．
-\item $L_{\mathrm{sep}}$ は $(f,s)$-タプル代入可能である，すべての $f\ge1$ について；したがって
-$L_{\mathrm{sep}}\in\Cmcf{f}{s}$ がすべての $f\ge2$ について成り立つ．
-\item $L_{\mathrm{sep}}$ は $(f,s_{\mathrm{triv}})$-タプル代入可能でない，どの $f\ge1$ についても：
-語 $\mathtt a$ と $\mathtt a\mathtt a$ は文脈
-$\blank_1\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3$ を共有するが，文脈
-$\blank_1\mathtt\#_1\mathtt\#_2\mathtt\#_3$ は共有しない．それに応じて，標本
-$K=\{\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3,\
-\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3,\
-\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\}\subseteq L_{\mathrm{sep}}$ の上で，型なしの作用素
-$\mathcal B_{f,s_{\mathrm{triv}}}$ は
-$\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\notin L_{\mathrm{sep}}$ を導出するが，一方
-$\mathcal B_{f,s}$ は $\mathtt a$ を $\mathtt a\mathtt a$ と連結しない．
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-$\psi:\Sigma^*\to\mathbb Z^2$ を，$\psi(\mathtt a)=(1,0)$，
-$\psi(\mathtt c)=(-1,0)$，$\psi(\mathtt b)=(0,1)$，$\psi(\mathtt d)=(0,-1)$ かつ
-$\psi(\mathtt\#_i)=(0,0)$ なる準同型とし，
-$R:=\mathtt a^*\mathtt\#_1\mathtt b^*\mathtt\#_2\mathtt c^*\mathtt\#_3\mathtt d^*$ とする．このとき
-$L_{\mathrm{sep}}=R\cap\psi^{-1}(P)$，ただし $P:=\{(0,0),(1,0)\}$ であり，$R$ は道の言語
-（$0$ から $3$ への）であって，グラフは $\{0,1,2,3\}$ 上のもので，ループ $\mathtt a,\mathtt b,\mathtt c,\mathtt d$
-を $0,1,2,3$ にもち，辺 $\mathtt\#_h:h-1\to h$ をもつ；すべての文字はちょうど一つの辺のラベルである．
-
-(i) 規則 $E\to(\eps,\eps)\mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(E)$，
-$D\to(\eps,\eps)\mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(D)$ および
-\[
- S\to(\xi_1^1\mathtt\#_1\xi_2^1\mathtt\#_2\xi_1^2\mathtt\#_3\xi_2^2)(E,D)\mid
- (\mathtt a\xi_1^1\mathtt\#_1\xi_2^1\mathtt\#_2\xi_1^2\mathtt\#_3\xi_2^2)(E,D)
-\]
-は，ファンアウト2かつ規則ランク2の標準 MCFG であって $L_{\mathrm{sep}}$ を生成するものをなす．なぜなら $E$
-は対 $(\mathtt a^k,\mathtt c^k)$ を導出し，$D$ は対 $(\mathtt b^n,\mathtt d^n)$ を導出するからである．
-$L_{\mathrm{sep}}$ の語のうち，$\mathtt a$ と $\mathtt c$ が合わせて偶数回
-現れるものは，ちょうど $m'=m$ なるものである；これは正則
-言語との共通部分であり，標識を消すと結果は
-$\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n:m,n\ge0\}$ の上に写り，これは文脈自由でない．文脈自由
-言語は両方の操作について閉じている．
-
-(ii) $1\le d\le f$ とし，$\tuple x,\tuple y\in(\Sigma^+)^d$ が成分ごとに等しい
-$s$-型をもつとし，$E\in\mathcal E_d$ が両方を受理するとする．
-$(\delta_1,\delta_2):=\sum_i\bigl(\psi(x_i)-\psi(y_i)\bigr)=\psi(E[\tuple x])-\psi(E[\tuple y])
-\in P-P$ とおく．したがって $\delta_2=0$ かつ $\delta_1\in\{-1,0,1\}$．$\psi$ の第1座標は
-すべての語の上で $s$ と $2$ を法として合同であるので，$\delta_1$ は偶数である；したがって
-$\psi(F[\tuple x])=\psi(F[\tuple y])$ がすべての $F\in\mathcal E_d$ について成り立つ．
-補題~\ref{lem:app-lf-path} により，$F[\tuple x]\in R$ であるのは $F[\tuple y]\in R$ であるとき，かつそのときに限る．したがって $F$ が
-$\tuple x$ を受理するのは，それが $\tuple y$ を受理するとき，かつそのときに限る．(i) と合わせて，$L_{\mathrm{sep}}\in\Cmcf{f}{s}$ が $f\ge2$ について成り立つ．
-
-(iii) 二つの文脈は
-$\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3,\
-\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3\in L_{\mathrm{sep}}$（$m'=m$ と
-$m'=m-1$），$\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\in L_{\mathrm{sep}}$ および
-$\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\notin L_{\mathrm{sep}}$ を与える．$K$ の上で，最初の
-文脈は，自明な型付けについて Link 規則 $[(\mathtt a)]\to[(\mathtt a\mathtt a)]$ を与え，
-$((\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3),(\xi_1^1\mathtt\#_1\mathtt\#_2\mathtt\#_3),
-((\mathtt a)))$ はランク1の合成証拠であるので，
-$\widehat S\to[(\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3)]\to[(\mathtt a)]\mathtt\#_1\mathtt\#_2
-\mathtt\#_3\to[(\mathtt a\mathtt a)]\mathtt\#_1\mathtt\#_2\mathtt\#_3\to
-\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3$ となる．$s$ の下では $\mathtt a$ と
-$\mathtt a\mathtt a$ の型は異なるので，そのような Link 規則は存在しない．
-\end{proof}
-
-$s$ の正の像は群 $\mathbb Z_2$ であり，これは局所群であるので，
-定理~\ref{thm:A} は $L_{\mathrm{sep}}$ に長さ
-$O(\|G\|^2\bar\theta_G)$ の特徴データを，ランクが $r_{\max}$ 以下の既約な良い表示のそれぞれについて，
-固定したすべてのファンアウト $f\ge2$ で与える
-（定数は $f,r_{\max},|\mathsf S|=2$ のみに依存する）．一方 $L_{\mathrm{sep}}$ は，すべてのファンアウトで Yoshinaka の型なしの学習器
-\cite{Yoshinaka2011} のクラスの外にある．
-
 \section{特徴データの評価}
 \label{sec:char-data}
-$f$，$r_{\max}$，$\Sigma$，$s$ を固定し，
-$G=(V,\Sigma,P,S,\fan)$ を既約な良い文法，
-$\widetilde G_0$ を刈り込んだ $\widehat s$-細分とする．
-特徴的な語はすでに $O(\|G\|)$ 個ある
-（定理~\ref{thm:exact-reconstruction}）．
-補題~\ref{lem:witness-length-template} は，同じ型の短い
-非終端産出を特徴標本の総長に変換する．
-第~\ref{subsec:group-invariants}~節では同時短縮と
-重い節点の計数（補題~\ref{lem:heavy-node-count}）を用い，
-局所群では滑動因子の座標に帰着する
-（第~\ref{subsec:algebraic-typed-data}~節）．
-型付き細分は元の $G$ より指数的に厚くなり得るので
-（命題~\ref{prop:typed-thickness-exponential}），
-それを主要な複雑さの尺度とはしない．
-証明は付録~\ref{app:typed-witness-aux-proofs} に置く．
+非終端記号の産出の型を保つ短い代表から，
+元の既約な良い文法の大きさと厚さを用いて特徴標本の総長を評価する．
+補助証明は付録~\ref{app:typed-witness-aux-proofs} に置く．
 
 \subsection{厚さの尺度と証拠の長さ}
 \label{subsec:thickness-contexts}
@@ -1152,142 +867,6 @@ $\widetilde G_0$ に対する補題~\ref{lem:thickness-equivalence}(ii) であ�
 細分した文法の厚さを用いて読むこともできる．
 \end{remark}
 
-\paragraph{稀な型からの表示に依存しない下界．}
-$L\subseteq\Sigma^*$ と $m\in\mathsf S$ について次のようにおく．
-\[
- \mu_m(L):=\min\{|w|:w\in L\cap\Sigma^+,\ s(w)=m\},
- \qquad (\min\emptyset:=\infty).
-\]
-実現型の空でない集合 $\mathsf S_L:=s(L\cap\Sigma^+)$ について，
-$\mu^\star(L,s):=\max_{m\in \mathsf S_L}\mu_m(L)$ とおく；
-$\mu^\star(L,s)=0$ とおく，$\mathsf S_L=\emptyset$ のときは．型付き開始非終端記号
-$S_{(m)}$ が各 $m\in \mathsf S_L$ について存在し，
-$L_{S_{(m)}}=\{(w):w\in L\cap\Sigma^+,\ s(w)=m\}$
-（命題~\ref{prop:output-invariants}）．したがって，
-$L\cap\Sigma^+\ne\emptyset$ であるときにはいつでも，
-\begin{equation}\label{eq:root-thickness}
- \mu^\star(L,s)\le t_{\mathrm{typ}}(G,s)
- \qquad\text{for every reduced good presentation }G.
-\end{equation}
-
-\begin{lemma}[産出型全体の削除]
-\label{lem:type-deletion}
-$L\in\Cmcf{f}{s}$ かつ $m\in\mathsf S$ ならば，
-$L^{\setminus m}:=L\setminus s^{-1}(m)$ も
-$\Cmcf{f}{s}$ に属する．さらに，$L\setminus\{\eps\}\in\Cmcf{f}{s}$．
-\end{lemma}
-
-\begin{proof}
-命題~\ref{prop:abelian-coset-filter}(iii) を，自明な群と
-$\mathsf{Acc}=\mathsf S^\sharp\setminus\{m\}$，それぞれ $\mathsf{Acc}=\mathsf S$ をとって適用する．
-\end{proof}
-
-本稿のすべての下界は一つの原理に基づく．
-
-\begin{lemma}[判別部分標的]
-\label{lem:distinguishing}
-$L,L'\in\Cmcf{f}{s}$ で $L'\subsetneq L$ とする．
-$L$ のすべての特徴標本で $\mathcal B^{\le r}_{f,s}$ $(r\ge1)$ または $\mathcal B_{f,s}$ に対するもの，および，
-$L$ のすべての特徴標本で，集合駆動型作用素であって $L'$ に対しても特徴標本をもつものに対するものは，
-$L\setminus L'$ の語を含む．
-\end{lemma}
-
-\begin{proof}
-$F\subseteq L'$ を有限とする．標準の作用素については，
-標的 $L'$ に適用した命題~\ref{prop:reconstruction-soundness} は
-$L(\mathcal B(F))\subseteq L'\ne L$ を与えるので，$F$ は $L$ に対して特徴的でない．
-もう一方の作用素については，$F'$ を $L'$ に対して特徴的なものとする；このとき
-$F\cup F'\subseteq L'\subseteq L$ であるので，もし $F$ が $L$ に対して特徴的であれば，
-$F\cup F'$ の上の出力は $L$ と $L'$ の両方となってしまう．
-\end{proof}
-
-\begin{proposition}[稀な型は正データを強いる]
-\label{prop:rare-type}
-$L\in\Cmcf{f}{s}$ とし，$m\in \mathsf S_L$ とする．
-$L$ の特徴標本であって
-$\mathcal B^{\le r}_{f,s}$（$r\ge1$）または $\mathcal B_{f,s}$ に対するものはすべて，
-型 $m$ の語を含む．同じことは，任意の集合駆動型
-作用素で，$L$ と
-$L^{\setminus m}$ の両方に対して特徴標本をもつものについて成り立ち，特に，クラス
-$\Cmcf{f}{s}$ 全体に対して特徴標本をもつ作用素について成り立つ．
-$\eps\in L$ ならば，どちらの標準の作用素に対する標本も
-$\eps$ を含まなければならない；同じことは，
-$L\setminus\{\eps\}$ に対しても特徴標本を許す集合駆動型作用素について成り立つ．
-したがって，標準の作用素と，クラス全体の
-集合駆動型作用素について，すべての特徴標本 $F$ は次を満たす．
-\[
- \|F\|_+\ge
- \sum_{m\in \mathsf S_L}\bigl(\mu_m(L)+1\bigr)
- +\mathbf 1_{\{\eps\in L\}}.
-\]
-\end{proposition}
-
-\begin{corollary}[特徴データのはさみうち]
-\label{cor:typed-sandwich}
-$L\in\Cmcf{f}{s}$，$L\cap\Sigma^+\ne\emptyset$ とし，
-$G$ を既約な良いファンアウト $\le f$，ランク $\le r_{\max}$ の
-表示（$L\cap\Sigma^+$ の）とする．
-$\operatorname{cs}^{\le r_{\max}}_{f,s}(L)$ で，
-$\mathcal B^{\le r_{\max}}_{f,s}$ に対する特徴標本の符号化総長の最小値を表す．このとき
-\[
- \sum_{m\in \mathsf S_L}(\mu_m(L)+1)+\mathbf 1_{\{\eps\in L\}}
- \ \le\ \operatorname{cs}^{\le r_{\max}}_{f,s}(L)
- \ \le\ N_{\mathrm{typ}}
-  (1+2\bar\theta_G+r_{\max}t_{\mathrm{typ}}(G,s))
- +\mathbf 1_{\{\eps\in L\}}.
-\]
-下界は表示に依存せず，
-$\Cmcf{f}{s}$ 全体で特徴標本をもつすべての集合駆動型作用素に適用される．
-\end{corollary}
-
-\begin{proposition}[完全な産出型細分の指数的な膨張]
-\label{prop:typed-thickness-exponential}
-$\Sigma=\{\mathtt a,\mathtt c\}$ とし，$s_{\mathtt c}$ を型付けで
-$U_1=\{1,\zeta\}$（$\zeta^2=\zeta$，第~\ref{sec:fanout-one}~節）の上へのものであって，$s_{\mathtt c}(\mathtt a)=1$ かつ
-$s_{\mathtt c}(\mathtt c)=\zeta$ なるものとする．$n\ge1$ について，ファンアウト1，ランク2の文法
-\[
- S\to SS\mid\mathtt a\mid\mathtt c\mid A_0\mid\cdots\mid A_n,\qquad
- A_0\to\mathtt a,\qquad
- A_i\to A_{i-1}A_{i-1}\mid\mathtt c\quad(1\le i\le n)
-\]
-は既約かつ良く，$\Sigma^+$ を生成し，$\|G_n\|=O(n)$ と
-$\theta_{G_n}\le2$ をもつが，$t_{\mathrm{typ}}(G_n,s_{\mathtt c})\ge2^n$ かつ
-$\theta_{\widetilde G_{n,0}}\ge2^n$ である．
-\end{proposition}
-
-
-この膨張は証拠の構成に関わるのであって，データに関わるのではない．なぜなら，
-型付き非終端記号に用いるタプルはその産出である必要はないからである．型付き
-非終端記号 $X$ について，補題~\ref{lem:typed-homogeneity} は $L_X$ を一つの類
-$\operatorname{Cl}_{L,s}(X)$ に置く；\emph{代表長}は次である．
-\[
- \tau_X:=\min\{\|\tuple v\|_1:\tuple v\in\operatorname{Cl}_{L,s}(X)\},\qquad
- \tau(G,s):=\max_X\tau_X\quad(\max\emptyset:=0).
-\]
-
-\begin{corollary}[同値な代表からの特徴データ]
-\label{cor:distribution-representatives}
-定理~\ref{thm:data-from-typed-thickness} の仮定の下で，
-\[
- \mu^\star(L,s)\le\tau(G,s)\le t_{\mathrm{typ}}(G,s),
-\]
-であり，$L$ は特徴標本 $K$ を，
-$\mathcal B^{\le r_{\max}}_{f,s}$ と $\mathcal B_{f,s}$ の両方に対して，次を満たすものとしてもつ．
-\[
- \|K\|_+\le N_{\mathrm{typ}}\bigl(1+2\bar\theta_G+r_{\max}\tau(G,s)\bigr)
- +\mathbf 1_{\{\eps\in L\}}.
-\]
-\end{corollary}
-
-
-命題~\ref{prop:typed-thickness-exponential} では，$L=\Sigma^+$ であり，すべての
-許容文脈がすべてのタプルを受理するので，二つのタプルが同値であるのはちょうど
-それらの型が一致するときである；一文字が両方の型を代表し，
-$\tau(G_n,s_{\mathtt c})=1$ である．それは $t_{\mathrm{typ}}(G_n,s_{\mathtt c})\ge2^n$ であるにもかかわらずである．
-すると系~\ref{cor:distribution-representatives} は長さ $O(\|G_n\|)$ の特徴
-データを与える．この系は $\tau$ そのものを評価しない；以下の
-証明は $t_{\mathrm{typ}}$ を評価し，したがって $G$ の上で働く．
-
 \section{上界：すべてのファンアウトにおける局所群}
 \label{sec:upper}
 
@@ -1420,123 +999,11 @@ $(12)(23)\ne(23)(12)$ である．
 例~\ref{ex:nonabelian-reverse-owner} は，
 所有者の向きが逆の行を保つ置換を示す．
 
-\begin{lemma}[窓--群不変量に対する短い代表]
-\label{lem:marked-heavy-window-group}
-$k,\ell\ge0$，有限群 ${\mathbb G}$（自明でもよい）および準同型
-$g:\Sigma^*\to {\mathbb G}$ を固定する．$\lambda:=(\widehat s_{k,\ell},g):\Sigma^*\to
-\mathsf N:=M_{k,\ell}\times {\mathbb G}$ とおく．このとき $(\mathrm R_\beta^\lambda)$ が次とともに成り立つ．
-\[
- \beta=b_{k,\ell,{\mathbb G}}:=(r_{\max}+1)\,\bar\theta_G\,\bigl(c_{{\mathbb G},f}+f(k+\ell+1)\bigr)\,|V||\mathsf N|^f
- \le(r_{\max}+1)\bigl(c_{{\mathbb G},f}+f(k+\ell+1)\bigr)|\mathsf N|^f\,\|G\|\,\bar\theta_G .
-\]
-\end{lemma}
-
-\begin{proof}
-補題~\ref{lem:heavy-node-count}(ii) の仮定を，
-$c=c_{{\mathbb G},f}$ と $c'=f(k+\ell+1)$ について確かめる；$c+c'\ge1$ かつ $n_\lambda(G)\le|V||\mathsf N|^f$ であるので，それは
-評価を与え，二番目の不等式は $|V|\le\|G\|$ を用いる．$T$ を $\lambda$-極小で，
-重さの閾値が $b=\bar\theta_G$ のものとする．
-長さが少なくとも $m_0=\max\{1,k+\ell\}$ の各根成分において，最初の $k$ 個
-と最後の $\ell$ 個の位置に標識を付け（$k=\ell=0$ ならば任意の一つの位置），
-より短い各成分においてはすべての位置に標識を付ける：標識は高々 $c'$ 個である．$Q$ を
-重い節点の反鎖とする．比較不能な部分木は互いに素な産出をもつので，高々 $c'$ 個の節点
-（$Q$ の）が標識を含む；$Q_0$ を残りのものとする．
-
-$|Q_0|>c_{{\mathbb G},f}$ とする．$v\in Q_0$（非終端記号 $C_v$ をもつ）について，
-$L_{C_v}(G)$ のタプルで総長高々 $\bar\theta_G$ のものを固定する
-（補題~\ref{lem:thickness-equivalence}(ii)）．線形性と非削除性により，各
-$v\in Q_0$ は高々 $f$ 個の互いに素で連続したブロックを根
-成分に与え，各根成分の $g$-値は，固定された部分と
-これらのブロックの $g$-値の順序付き積である．これは
-${\mathbb G}$ 上のブロック置換族で所有者を $Q_0$ とするものであるので，
-命題~\ref{prop:block-replacement-interface} は空でない
-$J\subseteq Q_0$ で，その同時置換がすべての根の $g$-値を保つものを与える．
-置き換えたブロックは標識を含まない：短い根成分には触れず，
-長い成分では，それらは標識付きの接頭辞と接尾辞の真に間にあり，
-それらの接頭辞と接尾辞はその文字と両端からの相対的な位置を保ち，一方，成分は
-その $k+\ell$ 個の標識付きの文字（$k=\ell=0$ ならば少なくとも一つ）を保ち，長いままである．したがって
-根の $\widehat s_{k,\ell}$-ベクトルも保たれ，それとともに根の
-$\lambda$-ベクトルも保たれる．
-\end{proof}
-
-\begin{remark}[窓の代表]
-\label{lem:boundary-short-canonical}
-自明な ${\mathbb G}$ については $c_{{\mathbb G},f}=0$ かつ $\mathsf N\cong M_{k,\ell}$ であるので，
-$(\mathrm R_\beta^{\widehat s_{k,\ell}})$ が
-$\beta=(r_{\max}+1)\bar\theta_G\,f(k+\ell+1)\,|V||M_{k,\ell}|^f$ について，窓型付けに対して成り立つ．
-\end{remark}
-
-\subsection{窓型付けと窓--群型付け：明示的な定数}
-\label{subsec:boundary-polydata}
-
-窓--群型付けは局所群型付けである
-（命題~\ref{prop:li-g-strict}(i)）ので，定理~\ref{thm:A} はそれらを扱う；この
-小節は，置換の議論の基本の場合を明示的な定数とともに与える．
-型付け $s$ が\emph{窓--群型付け}であるとは，$\widehat s\preceq(\widehat s_{k,\ell},g)$ が，ある $k,\ell\ge0$，
-有限群 ${\mathbb G}$ および準同型 $g:\Sigma^*\to{\mathbb G}$ について成り立つことをいう；自明な
-${\mathbb G}$ については，これは $s$ が窓型付けであることを意味する．
-
-\begin{proposition}[窓--群型付けに対する多項式の特徴データ]
-\label{thm:window-group-polydata}
-${\mathbb G}$ を有限群（自明でもよい），$g:\Sigma^*\to {\mathbb G}$ を準同型とし，
-$\widehat s\preceq(\widehat s_{k,\ell},g)$ とする；$L\in\Cmcf{f}{s}$ かつ
-$L(G)=L\cap\Sigma^+$ とする．このとき $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ は
-$\mathcal B^{\le r_{\max}}_{f,s}$ と
-$\mathcal B_{f,s}$ の両方に対する特徴標本であり，$|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$ かつ
-\[
- \begin{gathered}
- \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell,{\mathbb G}}\,\|G\|^2\bar\theta_G,\\
- K_{k,\ell,{\mathbb G}}:=|\mathsf S^\sharp|^{fr_{\max}}
- \bigl(3+r_{\max}(r_{\max}+1)(c_{{\mathbb G},f}+f(k+\ell+1))(|M_{k,\ell}||{\mathbb G}|)^f\bigr).
- \end{gathered}
-\]
-\end{proposition}
-
-\begin{proof}
-補題~\ref{lem:marked-heavy-window-group} と
-補題~\ref{lem:witness-length-template}(i),(ii),(iv) を
-$\lambda=(\widehat s_{k,\ell},g)$ と $b=b_{k,\ell,{\mathbb G}}$ について用いると，標本と
-$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}b_{k,\ell,{\mathbb G}})$ が得られる；ここに
-$C_s(G)\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|$，$1+2\bar\theta_G\le3\|G\|\bar\theta_G$ および
-$|V|\le\|G\|$ を代入する．
-\end{proof}
-
-群は非可換でもよく，そのブロックは成分にまたがって交互に並んでもよい．
-自明な ${\mathbb G}$，すなわち $s\preceq s_{k,\ell}$ については，$c_{{\mathbb G},f}=0$ である．
-
-\begin{remark}[可換群]
-\label{rem:window-abelian}
-${\mathbb G}$ が可換ならば，補題~\ref{lem:block-replacement}(a) は
-$c_{{\mathbb G},f}=\mathsf d({\mathbb G}^f)$ を与え，
-$\mathsf d({\mathbb G}^f)=O(\exp({\mathbb G})\,f\log|{\mathbb G}|)$ である
-（注意~\ref{rem:davenport-size}；$\exp({\mathbb G})$ は
-元の位数の最小公倍数である）．したがって $K_{k,\ell,{\mathbb G}}$ は $f$ について多項式である，因子
-$|\mathsf S^\sharp|^{fr_{\max}}$ と $(|M_{k,\ell}||{\mathbb G}|)^f$ を除いて．これに対し，非可換な
-${\mathbb G}$ と $f\ge2$ については，$c_{{\mathbb G},f}=M_{{\mathbb G},f}-1$ は $f$ について二重指数的に増大する．
-\end{remark}
-
-ファンアウト1では，固定した窓に対する多項式時間・厚データ学習は
-Yoshinaka~\cite[Theorem~1]{Yoshinaka2008} による；上の評価は
-既約な良い表示に相対的なものであり，正規化の後でその結果を改良するとは主張しない．
-新しいのは，窓と順序付きの群の値が，最大 $f$ 個の交互に並ぶ成分にわたって
-\emph{同時に}保たれることである．
-
 \subsection{局所群型付け}
 \label{subsec:algebraic-typed-data}
-
-$\mathbf{LI}$ は，有限半群 $\mathsf T$ で
-$e\mathsf Te=\{e\}$ をすべてのべき等元 $e\in \mathsf T$ について満たすものの擬多様体であり，$\mathbf{Grp}$ は有限
-群のそれであり，$\mathbf{LI}\vee\mathbf{Grp}$ は
-積 $\mathsf T\times {\mathbb G}$（$\mathsf T\in\mathbf{LI}$ かつ ${\mathbb G}$ は有限群）の因子からなる \cite{Costa2002LI,Costa2002LIG}．
-補題~\ref{lem:mcfg-li-group-window}（付録~\ref{app:local-group}）により，
-$\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$ をもつすべての型付けは窓--群型付けであり，$k$，${\mathbb G}$
-および $g$ は $s$ のみに依存するので，命題~\ref{thm:window-group-polydata} がそれに適用される．
-
-有限半群が\emph{局所群}である，$\mathsf T\in\mathbf{LG}$，とは，$e\mathsf Te$ が
-すべてのべき等元 $e\in\mathsf T$ について群であることをいう．型付けが\emph{局所群型付け}であるとは，
-その正の像 $\mathsf S$ が局所群であることをいう；この条件を
-$\mathsf S^\sharp$ の上で調べることは決してない．
-命題~\ref{prop:li-g-strict} により，$\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$．
+局所群型付けの正の像 $\mathsf S$ は $\mathbf{LG}$ に属する：
+すべての冪等元 $e\in\mathsf S$ について $e\mathsf Se$ は群である．
+この条件は $\mathsf S^\sharp$ には課さない．
 
 \begin{definition}[滑動因子準同型]
 \label{def:local-group-typing}
@@ -1551,17 +1018,6 @@ ${\mathbb G}$ における順序付き積）とおく；$\gamma_{k,\nu}(w):=1_{\
 $M_{k,\nu}$ の上への準同型である．型付け $s$ が\emph{局所群決定的}であるとは，
 $\widehat s\preceq\lambda_{k,\nu}$ が，ある $k$，${\mathbb G}$ および $\nu$ について成り立つことをいう．
 \end{definition}
-
-滑動因子準同型は，各文字単独によってではなく，
-滑動因子によって定まる群の寄与を符号化できる．例えば，
-$\lambda_{1,\nu}$ で $\nu(\mathtt{ab})=1\in\mathbb Z_2$ かつ
-他の対の上では零であるものは，$\mathtt{ab}$ の出現の偶奇を記録する．
-$\{\mathtt a,\mathtt b\}$ の上でさえ，これは，
-固定した窓と有限群準同型の組み合わせのどれによっても定まらない
-（命題~\ref{prop:li-g-strict}(ii)）．以下の局所群の
-特徴づけは，新しい学習器も標的に固有の型付けも
-必要とせずに，この追加の能力を表す．
-
 
 \begin{theorem}[局所群型付けに対する多項式の特徴データ]
 \label{thm:local-group-polydata}
@@ -1620,327 +1076,12 @@ $c_{{\mathbb G},f}\le\mathcal P_f
 Rees の座標と滑動因子の座標は古典的である；それらと
 所有者ごとのブロックの短縮との組み合わせが定量的な段階である．
 
-\subsection{非文脈自由の標的の上での型付けの領域の分離}
-\label{subsec:features-needed}
 
-定理~\ref{thm:A} は窓を超える二つの要素をもつ：滑り因子の情報（窓--群型付けではなく局所群）と，
-交互に並ぶ成分にわたる順序付きの（非可換でもよい）群の積である．
-命題~\ref{prop:li-g-strict} は対応する半群を分離する．次の標的はそれらを言語の上で分離する：
-いずれもファンアウト2の非文脈自由言語で，ある型付けのクラスには入り，
-弱い種類のどの型付け（それぞれ，どの窓--群型付け，どの窓--可換群型付け）のクラスにも入らない．したがって，その種類のどの型付けについても，弱い方の定理はそれを扱えない．
-どちらも $\varsigma w\mathtt\$x_\times$ の形をもつ：旗 $\varsigma=\mathtt r$ は $w$ を制約せず，
-$\varsigma=\mathtt l$ は型付けに依る条件を $w$ に課し，
-$x_\times\in C_\times:=\{\mathtt{1}^m\mathtt{2}^n\mathtt{3}^m\mathtt{4}^n:m,n\ge1\}$
-が標的を非文脈自由にする．$\varphi_\times$ を，
-$\mathtt 1,\mathtt 3,\mathtt 2,\mathtt 4$ を $(1,0),(-1,0),(0,1),(0,-1)\in\mathbb Z^2$ に，
-他の文字を $0$ に写すものとし，$\#_{\mathtt{ab}}(w)$ を $w$ における因子 $\mathtt{ab}$ の出現数とする．
-
-\begin{lemma}[旗による分離]
-\label{lem:flag-separation}
-$s'$ を型付け，$u,v\in\Sigma^+$ で $s'(u)=s'(v)$，$z\in\Sigma^*$ とする．$L$ が
-$\mathtt ruz$，$\mathtt rvz$ と $\mathtt luz$ を含み $\mathtt lvz$ を含まないなら，
-すべての $f\ge1$ について $L\notin\Cmcf{f}{s'}$．
-\end{lemma}
-
-\begin{proof}
-$\mathtt r\blank_1z\in\mathcal E_1$ は $u$ と $v$ を受理し，$\mathtt l\blank_1z$ は
-$u$ を受理するが $v$ を受理しない；したがって $\D^{(1)}_L(u)\ne\D^{(1)}_L(v)$ であり，
-すべての $(f,s')$ の条件はアリティ1を含む．
-\end{proof}
-
-\paragraph{標的．}
-$\Sigma_{\mathrm A}=\{\mathtt l,\mathtt r,\mathtt a,\mathtt b,\mathtt c,\mathtt\$,
-\mathtt 1,\mathtt 2,\mathtt 3,\mathtt 4\}$，
-\[
- L_{\mathrm A}:=\{\varsigma w\mathtt\$x_\times:\varsigma\in\{\mathtt l,\mathtt r\},\
- w\in\{\mathtt a,\mathtt b,\mathtt c\}^+,\ x_\times\in C_\times,\
- \varsigma=\mathtt r\text{ または }\#_{\mathtt{ab}}(w)\text{ は偶数}\}
-\]
-とし，$s_{\mathrm A}:=\lambda_{1,\nu}|_{\Sigma_{\mathrm A}^+}$（正の像へ余制限），
-$\nu:\Sigma_{\mathrm A}^2\to\mathbb Z_2$ は $\nu(\mathtt{ab})=1$，それ以外で $\nu=0$
-とする（定義~\ref{def:local-group-typing}）；これは最初と最後の文字と，
-$|w|\ge2$ なら $\#_{\mathtt{ab}}(w)$ の偶奇を記録する．
-$\Sigma_{\mathrm B}=\Sigma_{\mathrm A}\setminus\{\mathtt c\}$，$\alpha=(12)$，
-$\beta=(23)\in S_3$，$g_{\mathrm B}:\Sigma_{\mathrm B}^*\to S_3$ を
-$\mathtt a\mapsto\alpha$，$\mathtt b\mapsto\beta$，他の文字 $\mapsto1$ とし，
-\[
- L_{\mathrm B}:=\{\varsigma w\mathtt\$x_\times:\varsigma\in\{\mathtt l,\mathtt r\},\
- w\in\{\mathtt a,\mathtt b\}^+,\ x_\times\in C_\times,\
- \varsigma=\mathtt r\text{ または }g_{\mathrm B}(w)=1\}，
-\]
-$s_{\mathrm B}:=(\widehat s_{1,1},g_{\mathrm B})|_{\Sigma_{\mathrm B}^+}$（像へ余制限）とする．
-$\mathbf{Ab}$ は有限可換群の擬多様体，
-$\mathbf{LI}\vee\mathbf{Ab}$ は $\mathsf T\in\mathbf{LI}$ と有限可換群 ${\mathbb G}$ による
-$\mathsf T\times {\mathbb G}$ の因子からなる．
-
-\begin{proposition}[局所群を必要とする標的]
-\label{prop:lg-needed-target}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L_{\mathrm A}\in\mathsf{MCFL}(2,2)$ であり，$L_{\mathrm A}$ は文脈自由でない．
-\item すべての $f\ge2$ について $L_{\mathrm A}\in\Cmcf{f}{s_{\mathrm A}}$ であり，
-$s_{\mathrm A}(\Sigma_{\mathrm A}^+)\in\mathbf{LG}$．
-\item ある $k,\ell$ と有限群への準同型 $g'$ について
-$\widehat{s'}\preceq(\widehat s_{k,\ell},g')$ なら（特に
-$s'(\Sigma_{\mathrm A}^+)\in\mathbf{LI}\vee\mathbf{Grp}$ なら），
-すべての $f\ge1$ について $L_{\mathrm A}\notin\Cmcf{f}{s'}$．
-\end{enumerate}
-したがって $s_{\mathrm A}(\Sigma_{\mathrm A}^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$ であり，
-$L_{\mathrm A}$ は定理~\ref{thm:local-group-polydata} で扱えるが，どの型付けについても
-命題~\ref{thm:window-group-polydata} では（補題~\ref{lem:mcfg-li-group-window} を併せても）扱えない．
-\end{proposition}
-
-\begin{proposition}[非可換群を必要とする標的]
-\label{prop:nonabelian-needed-target}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L_{\mathrm B}\in\mathsf{MCFL}(2,2)$ であり，$L_{\mathrm B}$ は文脈自由でない．
-\item すべての $f\ge2$ について $L_{\mathrm B}\in\Cmcf{f}{s_{\mathrm B}}$ であり，$s_{\mathrm B}$ は
-群 $S_3$ による窓--群型付けである．
-\item ある $k,\ell$ と有限\emph{可換}群への準同型 $g'$ について
-$\widehat{s'}\preceq(\widehat s_{k,\ell},g')$ なら（特に
-$s'(\Sigma_{\mathrm B}^+)\in\mathbf{LI}\vee\mathbf{Ab}$ なら），
-すべての $f\ge1$ について $L_{\mathrm B}\notin\Cmcf{f}{s'}$．
-\end{enumerate}
-したがって $L_{\mathrm B}$ は非可換の定数 $c_{S_3,f}=M_{S_3,f}-1$ をもつ
-命題~\ref{thm:window-group-polydata} で扱えるが，どの型付けについても，その自明群や
-可換群の場合（注意~\ref{rem:window-abelian}）では扱えない．
-\end{proposition}
-
-証明は付録~\ref{app:separating-targets} にある．分離する語は明示的である：
-$L_{\mathrm A}$ では，窓の大きさ $\hat k$ と，群の指数の倍数である偶数 $q$ について，
-$\mathtt a^{\hat k}(\mathtt{abc})^q\mathtt a^{\hat k}$ と
-$\mathtt a^{\hat k}(\mathtt{bac})^q\mathtt a^{\hat k}$ は同じ窓と同じ群の値をもつが
-$\#_{\mathtt{ab}}$ の偶奇が異なる；$L_{\mathrm B}$ では，
-$\mathtt a^{\hat k}(\mathtt{ab})^3\mathtt a^{\hat k}$ と
-$\mathtt a^{\hat k}(\mathtt{ab})^2\mathtt{ba}\,\mathtt a^{\hat k}$ は（$\hat k$ が偶数なら）同じ窓と Parikh ベクトルをもつが
-$S_3$ での値は $1$ と $\alpha\beta$ である．どちらの命題もクラスへの所属についてのものであって，データの長さについてのものではない：
-定理~\ref{thm:A} の型付けの領域が非文脈自由の標的の上で異なることを示すのであって，
-その指数が鋭いことを示すのではない．構成はわざと単純にしてある：各標的は正則な旗付きの前半と固定した非文脈自由の後半 $C_\times$ の連結であり，
-分離は前半から，非文脈自由性は $C_\times$ から来る．したがってこれらの例は交差依存と型の情報を絡み合わせてはいない．
-定理~\ref{thm:A} の多重文脈自由に固有の内容は，任意の表示に対するブロック置換の議論にある．
-
-\section{下界：すべてのファンアウトにおける線形因子}
-\label{sec:linear}
-
-この節は定理~\ref{thm:B} を証明する．
-
-系~\ref{cor:typed-sandwich} の上の側は $\|G\|$ とともに増大し，
-下の側は増大しない．それにもかかわらず，積 $\|G\|\bar\theta_G$ は，
-すべてのファンアウトで，少なくとも
-$4f+1$ 文字（ファンアウト1では2文字）のアルファベット上のすべての型付けの下で，かつ，最小のものの定数倍以内の表示について
-必要である．
-
-\begin{proposition}[線形因子はすべてのファンアウトで必要である]
-\label{prop:linear-factor-all-fanout}
-$f\ge1$ とし，$\Sigma$ が $4f+1$ 個の相異なる文字
-$\mathtt a_1,\ldots,\mathtt a_{2f},\mathtt d_1,\ldots,\mathtt d_{2f},\mathtt z$ を含むとし，
-$s$ を任意の型付けとする．整数 $q\ge n\ge1$ について $W:=2fq+2^n+2f$ とおき，
-\[
- w_i:=\mathtt a_1^i\mathtt d_1\mathtt a_2^i\mathtt d_2\cdots\mathtt a_{2f}^i\mathtt d_{2f}
- \mathtt z^{2f(q-i)+2^n}\quad(0\le i\le q),\qquad
- L^{(f)}_{q,n}:=\{w_0,\ldots,w_q\}.
-\]
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L^{(f)}_{q,n}$ のすべての部分集合は
-$\Cmcf{f}{s_{\mathrm{triv}}}\subseteq\Cmcf{f}{s}$ に属する．
-\item $\mathcal B_{f,s}$ について，$\mathcal B^{\le r}_{f,s}$ \textup($r\ge1$\textup) について，
-および，
-$\Cmcf{f}{s}$ 全体で特徴標本をもつすべての集合駆動型作用素について，$L^{(f)}_{q,n}$ の唯一の特徴標本は
-$L^{(f)}_{q,n}$ 自身である．
-\item $L^{(f)}_{q,n}$ は既約な良い表示 $G^{(f)}_{q,n}$ で，ファンアウト
-$f$ かつ規則ランク2であって，
-$\|G^{(f)}_{q,n}\|=(7f+11)q+6n+3f+10\le(7f+17)(q+1)$ かつ
-$\bar\theta_{G^{(f)}_{q,n}}=W$ なるものをもつ．既約な良いファンアウト $\le f$ のすべての表示
-$G$（$L^{(f)}_{q,n}$ の）は $\bar\theta_G=W$ かつ $\|G\|\ge q+1$ をもつ．
-\item $f=1$ については，\textup{(i)}--\textup{(iii)} は，二つの
-文字 $\mathtt a,\mathtt d$ を含む任意のアルファベット上で，語
-$w_i=\mathtt a^i\mathtt d\mathtt a^i\mathtt d\mathtt a^{2(q-i)+2^n}$ について成り立つ．この語は
-$\mathtt a_1,\mathtt a_2,\mathtt z$ を $\mathtt a$ と，
-$\mathtt d_1,\mathtt d_2$ を $\mathtt d$ と同一視して得られ，文法も同じように
-同一視する．
-\end{enumerate}
-したがって，\textup{(ii)} のすべての特徴標本 $F$ は次を満たす．
-\[
- \|F\|_+=(q+1)(W+1)\ \ge\ \tfrac1{7f+17}\,\|G^{(f)}_{q,n}\|\,
- \bar\theta_{G^{(f)}_{q,n}}.
-\]
-\end{proposition}
-
-$w_i$ において，一つの標識 $\mathtt d_h$ の位置，および二つの標識の距離は，
-$i$ を定める．$d$-文脈が二つの異なる語に共有されるとする．その固定部分は
-高々 $d-1$ 個の標識（$2f$ 個の標識のうちの）しか運ばない：
-最も左の固定語にある標識は両方の語で同じ位置をもち，最も右の固定語にある標識は
-末尾から同じ距離をもち（すべての語は一つの長さをもつ），一つの
-固定語にある二つの標識は同じ距離をもつことになる；そのそれぞれが語を定める．したがって穴は少なくとも
-$2f-d+1\ge d+1$ 個の標識を運び，各タプルのある成分は二つを運び，それが
-語を特定する．$q=n$ とすると $\|G^{(f)}_{n,n}\|=\Theta(n)$ かつ
-$\bar\theta_{G^{(f)}_{n,n}}=2^n+\Theta(n)$ である；$n$ を固定すると，
-$\bar\theta_{G^{(f)}_{q,n}}=\Theta(\|G^{(f)}_{q,n}\|)$ である．(iii) により，これらの表示は
-最小の既約な良い表示の定数倍以内にあるので，この下界は
-$G$ に詰め物をして得たものではない；自明な型付けでは，この命題は
-Yoshinaka の上界 $\|K_G\|\le|P|\theta_G$ が定数倍を除いて達成されることを示す．
-$G^{(f)}_{q,n}$ の非終端記号のすべての産出は一つの総長をもつので，
-この族については $t_{\mathrm{typ}}=\bar\theta_G=W$ であり，この族は，
-命題~\ref{thm:window-group-polydata} と
-定理~\ref{thm:local-group-polydata} におけるさらなる因子 $\|G\|$ については何も述べない．証明は
-付録~\ref{app:linear-factor-fanout} にある．
-
-\begin{corollary}[自明な型付け]
-\label{cor:trivial-exact}
-$f$ と $r_{\max}\ge1$ を固定する．自明な型付け，すべての
-$L\in\Cmcf{f}{s_{\mathrm{triv}}}$，およびすべての既約な良いランク $\le r_{\max}$ の
-表示 $G$（$L\cap\Sigma^+$ の）について，作用素 $\mathcal B_{f,s_{\mathrm{triv}}}$ は
-総長 $O(\|G\|\bar\theta_G)$ の特徴標本をもつ．これは Yoshinaka の
-標本 \cite[Lemma~7 and Theorem~1]{Yoshinaka2011} と同様である．さらに，
-$r_{\max}\ge2$ であり，かつ $\Sigma$ が少なくとも $4f+1$ 文字をもつとするか，または
-$r_{\max}\ge2$，$f=1$ であり，かつ $\Sigma$ が少なくとも2文字をもつとする．このとき，この上界は
-定数倍を除いて達成される：
-命題~\ref{prop:linear-factor-all-fanout} の
-標的 $L^{(f)}_{q,n}$ と表示 $G^{(f)}_{q,n}$ について，すべての特徴標本は
-長さ少なくとも $\|G^{(f)}_{q,n}\|\bar\theta_{G^{(f)}_{q,n}}/(7f+17)$ をもつ．
-\end{corollary}
-
-\begin{proof}
-すべての型付き非終端記号は型なしの非終端記号であるので，
-補題~\ref{lem:thickness-equivalence} により $t_{\mathrm{typ}}(G,s_{\mathrm{triv}})\le\bar\theta_G$ であり，
-定理~\ref{thm:data-from-typed-thickness} は $O(\|G\|\bar\theta_G)$ を与える．
-命題~\ref{prop:linear-factor-all-fanout} は二番目の主張を与える；
-表示 $G^{(f)}_{q,n}$ は規則ランク2をもち，それゆえそこでは
-$r_{\max}\ge2$ が必要である．
-\end{proof}
-
-特徴標本は，標的の有限個の語を加えても特徴的なままであるので，
-\emph{最短の}特徴標本の長さだけが意味をもつ；
-この系は，それをすべての標的について上から抑え，その上界が一つの族によって達成されることを示す．
-
-\section{ファンアウト1での境界}
-\label{sec:fanout-one}
-
-この節は定理~\ref{thm:C} を証明する．
-
-\paragraph{三文字の倍増族．}
-$\mathtt a,\mathtt b,\mathtt c$ を相異なる文字とし，$U_1=\{1,\zeta\}$ を，
-単位元 $1$ と $\zeta^2=\zeta$ をもつものとし，
-$s_U:\{\mathtt a,\mathtt b,\mathtt c\}^+\twoheadrightarrow U_1$ を，$\mathtt a,\mathtt b$
-を $1$ に，$\mathtt c$ を $\zeta$ に送るものとする；したがって $s_U(w)=1$ となるのは，ちょうど
-$\mathtt c$ を含まない空でない語である．$n\ge1$ について $G_n$ をファンアウト1の文法
-\[
- S\to E_n,\qquad E_0\to\mathtt a,\qquad
- E_i\to\mathtt bE_{i-1}E_{i-1}\mathtt b\mid\mathtt cE_{i-1}\mathtt c\quad(1\le i\le n),
-\]
-とし，$L^{(i)}:=L_{E_i}(G_n)$ とおく．したがって $L^{(0)}=\{\mathtt a\}$ かつ
-$L^{(i)}=\mathtt bL^{(i-1)}L^{(i-1)}\mathtt b\cup\mathtt cL^{(i-1)}\mathtt c$ である．また
-$L_n:=L^{(n)}=L(G_n)$，$W_0:=\mathtt a$ および $W_i:=\mathtt bW_{i-1}W_{i-1}\mathtt b$ とおく．
-これは
-姉妹 CFG 原稿 \cite[Proposition~6.4]{kuriyamaCFG} の括弧付き倍増族の三文字の変種であり，そこでは
-開き括弧と閉じ括弧が異なる文字である．
-
-\begin{proposition}[三文字の倍増族]
-\label{prop:bracketed-family}
-\label{prop:three-letter-family}
-すべての $n\ge1$ について：
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $G_n$ は既約かつ良く，ファンアウト1かつ規則ランク2であり，
-$\|G_n\|=13n+7$ かつ $\bar\theta_{G_n}=4n$ をもつ．
-\item $L_n$ は Clark--Eyraud の意味で代入可能である：すべての $x,y\in\Sigma^+$ について，
-$\D^{(1)}_{L_n}(x)\cap\D^{(1)}_{L_n}(y)\ne\emptyset$ ならば
-$\D^{(1)}_{L_n}(x)=\D^{(1)}_{L_n}(y)$ である．したがって $L_n\in\Cmcf{1}{s}$ が，すべての
-型付け $s$（すべてのアルファベット $\Sigma\supseteq\{\mathtt a,\mathtt b,\mathtt c\}$ 上の）について成り立つ；
-特に $L_n\in\Cmcf{1}{s_U}$．
-\item $W_n$ は $L_n$ の語で $\mathtt c$ を含まない唯一のものであり，したがって
-$s_U$-型 $1$ の唯一のものであり，$|W_n|=3\cdot2^n-2$．
-\item すべての特徴標本 $F$（$L_n$ の）で，
-$\mathcal B^{\le r}_{1,s_U}$ $(r\ge1)$ または $\mathcal B_{1,s_U}$ に対するもの，あるいは，
-$\Cmcf{1}{s_U}$ 全体で特徴標本をもつ任意の集合駆動型作用素に対するものは，
-$W_n$ を含む；したがって $\|F\|_+\ge3\cdot2^n-1$．
-\end{enumerate}
-\end{proposition}
-
-証明は付録~\ref{app:bracketed-family} にある：(iii) が成り立つのは，
-$\mathtt c$ を含まない導出が完全二分木であるからであり，(iv) は
-(iii) と命題~\ref{prop:rare-type} から従う．
-
-
-\begin{definition}[一様多項式特徴データ長]
-\label{def:uniform-polydata}
-$f,r_{\max}\ge1$ とする．有限半群の擬多様体 $\mathbf V$ が
-\emph{ファンアウト $f$ かつ
-ランク $r_{\max}$ で一様多項式特徴データ長}をもつとは，すべての空でない有限アルファベット $\Sigma$ と，すべての
-全射な型付け $s:\Sigma^+\twoheadrightarrow\mathsf S$ で
-$\mathsf S\in\mathbf V$ なるものについて，ある多項式 $p=p_{f,r_{\max},s,\Sigma}$ が存在して，
-すべての $L\in\Cmcf{f}{s}$ と，すべての既約な良い
-ファンアウト $\le f$，ランク $\le r_{\max}$ の表示 $G$（$L\cap\Sigma^+$ の）について，
-作用素 $\mathcal B^{\le r_{\max}}_{f,s}$ が特徴標本
-$F$ を $L$ に対して $\|F\|_+\le p(\|G\|,\bar\theta_G)$ なるものとしてもつことをいう．
-\end{definition}
-
-量化子は書かれたとおりの順序である：$p$ は $f$，
-$r_{\max}$，$\Sigma$ および型付け $s$ に依存してよいが，標的 $L$ にも
-表示 $G$ にも依存しない．
-
-\begin{theorem}[ファンアウト1：データ長に対する擬多様体の境界]
-\label{thm:fanout-one-data}
-$r_{\max}\ge2$ とし，$\mathbf V$ を有限
-半群の擬多様体とする．
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $\mathbf V$ がファンアウト1かつランク $r_{\max}$ で一様多項式特徴データ長をもつのは，
-$\mathbf V\subseteq\mathbf{LG}$ であるとき，かつそのときに限る．
-\item $\mathbf V\subseteq\mathbf{LG}$ ならば，
-定義~\ref{def:uniform-polydata} において
-$p(\|G\|,\bar\theta_G)=O_{r_{\max},|\mathsf S|}(\|G\|^2\bar\theta_G)$ ととってよい．
-\item $\mathbf V\not\subseteq\mathbf{LG}$ ならば，
-命題~\ref{prop:bracketed-family} の型付け $s_U$ は正の像
-$U_1\in\mathbf V$ をもち，標的 $L_n\in\Cmcf{1}{s_U}$ は既約な良い
-ランク2の表示 $G_n$ で $\|G_n\|=O(n)$ かつ
-$\bar\theta_{G_n}=O(n)$ なるものをもつが，一方 $L_n$ のすべての特徴標本は
-符号化総長少なくとも $3\cdot2^n-1$ をもつ．具体的に
-$\|G_n\|=13n+7$，$\bar\theta_{G_n}=4n$ なので，
-この下界は $2^{(\|G_n\|+\bar\theta_{G_n})/17}$ 以上である．この下界は，
-$\mathcal B^{\le r_{\max}}_{1,s_U}$ について，$\mathcal B_{1,s_U}$ について，および，
-$\Cmcf{1}{s_U}$ 全体で特徴標本をもつすべての集合駆動型作用素について成り立つ．
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-(ii)，したがって (i) の \emph{if} の方向は，
-$f=1$ とした定理~\ref{thm:local-group-polydata} である．なぜならそのとき，すべての
-$\mathsf S\in\mathbf V$ は $\mathbf{LG}$ に属するからである．(iii) については，
-$\mathsf S\in\mathbf V\setminus\mathbf{LG}$ をとる．
-定理~\ref{thm:lg-characterization}(ii) により，$\mathsf S$ は
-$U_1$ と同型な部分半群をもち，擬多様体は部分半群について閉じているので
-$U_1\in\mathbf V$ である．型付け $s_U$ は $U_1$ の上へ写す；
-残りの主張は命題~\ref{prop:bracketed-family}(i) と~(iv) であり，
-$\|G_n\|=O(n)$ と $\theta_{G_n}\le4n$ を用いる．
-$3\cdot2^n-1$ は $\|G_n\|$ と
-$\bar\theta_{G_n}$ のどんな多項式でも抑えられないので，(i) の \emph{only if} の方向が従う．
-\end{proof}
-
-\begin{remark}[定理~\ref{thm:fanout-one-data} の範囲]
-\label{rem:fanout-one-data}
-(a) 下界はランク2を用いる：倍増規則
-$E_i\to\mathtt bE_{i-1}E_{i-1}\mathtt b$ は二分である．
-線形 CFG で表される標的については，姉妹原稿は，すべての固定した型付けについて，
-文法の大きさのみについて多項式の特徴データを与える
-\cite[Theorem~8.3]{kuriyamaCFG}．
-(b) この定理は擬多様体に関するものである；どの個々の型付けが
-多項式のデータをもつかは，ここでは特徴づけない．
-(c) 上界は固定した作用素
-$\mathcal B^{\le r_{\max}}_{1,s}$ に対するものであるが，下界は，クラス全体で特徴標本をもつ
-すべての集合駆動型作用素について成り立つ．
-\end{remark}
-
-\paragraph{多項式時間・厚データ．}
-Eyraud，Heinz および Yoshinaka \cite[Definition~2.12]{EyraudHeinzYoshinaka2016} は，
-\cite{Yoshinaka2008} に従い，クラスが多項式時間・
-厚データ同定可能（IPTtD）であるとは，あるアルゴリズムが，与えられた標本の大きさについて多項式の時間で，
-それと無矛盾な仮説を返し，かつ，標的のすべての表現 $R$
-が，大きさが $R$ の大きさとその厚さについて多項式の特徴標本をもつことをいう，と定める．
-補題~\ref{lem:thickness-equivalence}(ii),(iii) により，彼らの
-厚さ（非終端記号の最短の産出のうち最長のもの，$t_G$）と本稿の規則の
-厚さは，$\|G\|$ を与えたとき多項式的に同値である．標本の大きさ
-$\sum_{w\in K}|w|$ と $\|K\|_+$ は高々語の個数だけ異なる．彼らの
-定義はアルゴリズムに，固定した表現のクラスにおける仮説を返すことを求める；
-$\mathcal B^{\le r_{\max}}_{f,s}$ の生の出力は
-規則 $\widehat S\to\eps$ を含み得るので，まずそれを取り除く．
+\subsection{多項式時間・厚データ同定}
+IPTtD は，固定した表現クラスに属する整合的な仮説を多項式時間で
+返し，多項式長の特徴データを要求する
+\cite[Definition~2.12]{EyraudHeinzYoshinaka2016}．
+$\eps$ の規則は別のビットで表す．
 
 \begin{lemma}[既約な良い仮説]
 \label{lem:reduced-good-hypothesis}
@@ -1971,240 +1112,41 @@ $\widehat S\to[(w)]\to\rho([\tuple x])$ は $[\tuple x]$ に到達する．フ�
 
 \begin{corollary}[多項式時間・厚データ同定]
 \label{cor:iptd}
-$f\ge1$，$r_{\max}\ge1$ および型付け $s$ を固定する．$\mathcal R$ を
-対 $(G,z)$ からなるものとする．ここで対は，ビット $z\in\{0,1\}$ と，既約な良いファンアウト $\le f$，
-ランク $\le r_{\max}$ の MCFG $G$ または規則をもたない固定した文法 $G_\emptyset$ のいずれかとからなる；対は
-$L(G)\cup\{\eps:z=1\}$ を表す．
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ の成員は
-$(G,[\eps\in L])$ で表される．ここで $G$ は既約な良いファンアウト $\le f$，ランク $\le r_{\max}$ の
-表示（$L\cap\Sigma^+$ の）であるか，または $G=G_\emptyset$ である，$L\cap\Sigma^+=\emptyset$ ならば．
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $s(\Sigma^+)\in\mathbf{LG}$ ならば，
-補題~\ref{lem:reduced-good-hypothesis} の $(G^+_K,[\eps\in K])$ を返し，または
-$(G_\emptyset,[\eps\in K])$ を返す（$K\cap\Sigma^+=\emptyset$ ならば）アルゴリズムは，
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ を，クラス $\mathcal R$ について，多項式時間・厚データ同定する．
-\item $f=1$ かつ $r_{\max}\ge2$ ならば，どのアルゴリズムも，その実行
-時間がどうであれ，IPTtD のデータ条件を
-$\Cmcf{1}{s_U}\cap\mathsf{MCFL}(1,r_{\max})$ について満たさない．
-\item したがって，$r_{\max}\ge2$ と擬多様体 $\mathbf V$ について，
-次は同値である：$\mathbf V\subseteq\mathbf{LG}$；すべての型付け $s$
-で $s(\Sigma^+)\in\mathbf V$ なるものについて，クラス
-$\Cmcf{1}{s}\cap\mathsf{MCFL}(1,r_{\max})$ は IPTtD である．
-\end{enumerate}
+$f,r_{\max}\ge1$ と $s(\Sigma^+)\in\mathbf{LG}$ を固定する．
+$\mathcal R$ は対 $(G,z)$ からなり，$z\in\{0,1\}$ で，
+$G$ は既約な良いファンアウト $\le f$，ランク $\le r_{\max}$ の
+MCFG か，規則のない固定文法 $G_\emptyset$ である．
+その言語は $L(G)\cup\{\eps:z=1\}$ とする．
+$K\cap\Sigma^+\ne\emptyset$ ならば
+補題~\ref{lem:reduced-good-hypothesis} の
+$(G^+_K,[\eps\in K])$ を，それ以外では
+$(G_\emptyset,[\eps\in K])$ を返すアルゴリズムは，
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ を
+$\mathcal R$ に関して多項式時間・厚データ同定する．
 \end{corollary}
-
 \begin{proof}
-(i) 補題~\ref{lem:reduced-good-hypothesis} により，仮説は
-$\mathcal R$ に属し，$\|K\|_+$ について多項式の時間で計算され，
-$L(\mathcal B^{\le r_{\max}}_{f,s}(K))$ を表し，これは $K$ を含む（各 $w\in K\cap\Sigma^+$
-はその Start と Const の規則によって導出される）．
-定理~\ref{thm:local-group-polydata} は標本 $F$ で，長さ
-$O(\|G\|^2\bar\theta_G)$ をもち，$L(\mathcal B^{\le r_{\max}}_{f,s}(K))=L$ が
-$F\subseteq K\subseteq L$ であるときにはいつでも成り立つものを与えるので，そのとき仮説は $L$ を表す；また
-$\bar\theta_G\le2\|G\|\max\{1,t_G\}$．
-(ii) \cite[Definition~2.12]{EyraudHeinzYoshinaka2016} では，アルゴリズムは
-標本を読み，標本は文字列の有限集合であるので，それは集合駆動型作用素である．そのような
-アルゴリズムがIPTtDのデータ条件を満たすと仮定すれば，クラスのすべての成員に対して特徴標本をもつことになる．また，すべての成員 $L$ で $L\cap\Sigma^+\ne\emptyset$ なるものは，既約な良い
-表示でランク $\le r_{\max}$ のものをもつ（命題~\ref{prop:good-normalization}）．
-命題~\ref{prop:bracketed-family} の標的 $L_n$ はクラスに属し，
-$L_n\setminus\{W_n\}$ も属する：それは
-補題~\ref{lem:type-deletion} により $\Cmcf{1}{s_U}$ に属し，有限である．
-命題~\ref{prop:rare-type} により，$L_n$ のすべての特徴標本は
-$W_n$ を含み，その長さは $3\cdot2^n-2$ であるが，一方 $\|G_n\|=O(n)$ かつ $t_{G_n}\le\theta_{G_n}\le4n$．
-(iii) は，$f=1$ とした (i) と (ii) から従う．なぜなら，$\mathbf{LG}$ に
-含まれない擬多様体は $U_1$ を含むからである
-（定理~\ref{thm:fanout-one-data}）．
+補題~\ref{lem:reduced-good-hypothesis} と
+定理~\ref{thm:poly} により，仮説は $\mathcal R$ に属し，
+$K$ と整合的で，多項式時間で得られる．
+定理~\ref{thm:local-group-polydata} は，正の部分が空でない標的の
+各既約な良い表示に対して総長
+$O(\|G\|^2\bar\theta_G)$ の特徴標本を与え，
+空の場合は直接扱える．
+補題~\ref{lem:thickness-equivalence} より
+$\bar\theta_G\le2\|G\|\max\{1,t_G\}$ であるので，
+求める多項式データ長の評価を得る．
 \end{proof}
-
-仮説はすべての標本の上で $\mathcal R$ に属する；
-特徴標本を含まない標本の上では，その言語はクラスに属する必要はない．これは
-\cite{Yoshinaka2011} の学習器と同様である．
-
-表~\ref{tab:scope} は，各主な主張について，固定するパラメータ，
-作用素および付帯条件をまとめる．
-
-\begin{table}[htbp]
-\caption{主な主張の範囲．「標準」は
-$\mathcal B^{\le r_{\max}}_{f,s}$ と $\mathcal B_{f,s}$ の両方（一つの共通の標本で）を意味する；
-「クラス全体」は，クラス全体で特徴標本をもつ
-すべての集合駆動型作用素を意味する．$G$ は $L\cap\Sigma^+$ の既約な良い表示であって，
-ファンアウト $\le f$ かつランク $\le r_{\max}$ のものである．}
-\label{tab:scope}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}X@{}}
-\hline
-主張 & 固定するもの & 作用素 & 評価と条件\\
-\hline
-定理~\ref{thm:A}（定理~\ref{thm:local-group-polydata}）
- & $f$，$r_{\max}$，$\Sigma$，$s$ で $s(\Sigma^+)\in\mathbf{LG}$ のもの
- & 標準
- & 上界 $O_{f,r_{\max},|\mathsf S|}(\|G\|^2\bar\theta_G)$，
-    $|\mathsf S|$ 固定の下で $\Sigma,s$ に関して一様；
-    すべての $L\in\Cmcf{f}{s}$ とすべての $G$ について\\
-定理~\ref{thm:B}(i)（命題~\ref{prop:linear-factor-all-fanout}）
- & $f$，任意の $s$
- & 標準（$r\ge1$），クラス全体
- & 有限の標的に対する下界 $\Omega(\|G\|\bar\theta_G)$；$|\Sigma|\ge4f+1$（$|\Sigma|\ge2$，ただし $f=1$ の場合）を要する；
-   ランク2の表示\\
-定理~\ref{thm:B}(ii)（系~\ref{cor:trivial-exact}）
- & $f$，$r_{\max}\ge1$，$s_{\mathrm{triv}}$
- & $\mathcal B_{f,s_{\mathrm{triv}}}$
- & 上界 $O(\|G\|\bar\theta_G)$（Yoshinaka \cite{Yoshinaka2011}）；$r_{\max}\ge2$ かつ $|\Sigma|\ge4f+1$（$\ge2$，ただし $f=1$ の場合）のとき達成される\\
-定理~\ref{thm:C}(i)（定理~\ref{thm:fanout-one-data}）
- & $f=1$，$r_{\max}\ge2$，一つの擬多様体
- & $\mathcal B^{\le r_{\max}}_{1,s}$（定義~\ref{def:uniform-polydata}）
- & 一様多項式データをもつのは $\mathbf V\subseteq\mathbf{LG}$ のとき，かつそのときに限る\\
-定理~\ref{thm:C}(ii)
-  & $f=1$，三文字上の $s_U$
- & 標準，クラス全体
- & 下界 $3\cdot2^n-1$，大きさと厚さが $O(n)$ の表示に対して\\
-系~\ref{cor:iptd}
- & $f$，$r_{\max}$，$s$
- & 集合駆動型
- & $\mathbf{LG}$ について IPTtD，すべての $f$ で；$f=1$ ではちょうど $\mathbf{V}\subseteq\mathbf{LG}$ について\\
-定理~\ref{thm:doubling-no-lift}
- & 任意の $f\ge2$，任意の $s$
- & なし（所属）
-  & 定理~\ref{thm:C}(ii) の族とその文字が互いに素な像は $\Cmcf{f}{s}$ を離れ，その強制された語はそこで決してその型の唯一の語ではない；$f\ge2$ でのデータの評価はない\\
-命題~\ref{prop:lg-needed-target}，\ref{prop:nonabelian-needed-target}
- & 字母と標的 $L_{\mathrm A}$，$L_{\mathrm B}$
- & なし（所属）
- & 非文脈自由，ファンアウト2，ランク2；$f\ge2$ で $\Cmcf{f}{s_{\mathrm A}}$，$\Cmcf{f}{s_{\mathrm B}}$ に入り，すべての $f\ge1$ でそれぞれどの窓--群型付け，どの窓--可換群型付けのクラスにも入らない；データの評価はない\\
-未解決
- & 
- & 
- & $\mathbf{LG}$ が $f\ge2$ で境界であるかどうか（未解決問題~\ref{op:fanout-two}）\\
-\hline
-\end{tabularx}
-\end{table}
-
-\section{ファンアウト2：下界は持ち上がらない}
-\label{sec:fanout-two}
-\label{subsec:power-transfer}
-
-この節は，定理~\ref{thm:C}(ii) の指数的な族と，
-その文字が互いに素な準同型による像が，ファンアウト
-2には持ち越されないことを示す（定理~\ref{thm:doubling-no-lift}）．
-
-\begin{lemma}[二つのタプル成分にわたる冪の移送]
-\label{lem:power-transfer}
-$f\ge2$，$L\in\Cmcf{f}{s}$，$u\in\Sigma^+$ とし，
-$i_0,p\ge1$ を $s(u)$ の最終的な指数と周期とする．すなわち
-$s(u)^{t+p}=s(u)^t$ が $t\ge i_0$ について成り立つとする．
-$i,j\ge i_0$，$\delta\in p\mathbb Z_{>0}$ であり，かつ $L$ のある語が
-因子 $u^{i+\delta+j+1}$ を含むとする．このとき，すべての
-$w_{\mathrm L},w_{\mathrm R}\in\Sigma^*$ と $w_{\mathrm M}\in\Sigma^+$ について，
-\[
- w_{\mathrm L}u^iw_{\mathrm M}u^{\delta+j}w_{\mathrm R}\in L\quad\Longleftrightarrow\quad
- w_{\mathrm L}u^{i+\delta}w_{\mathrm M}u^jw_{\mathrm R}\in L.
-\]
-\end{lemma}
-\begin{proof}
-与えられた語を $yu^{i+\delta+j+1}z$ と書く．
-タプル $\tuple x=(u^i,u^{\delta+j})$ と
-$\tuple x'=(u^{i+\delta},u^j)$ は，最終的な周期性により，成分ごとに同じ $s$-型をもつ．
-それらはまた，共通の許容な
-受理文脈 $E=y\blank_1u\blank_2z$ をもつ．なぜなら
-$E[\tuple x]=E[\tuple x']=yu^{i+\delta+j+1}z\in L$ だからである．
-したがって $(f,s)$-条件はそれらの二成分の分布を等しくする．
-それらを許容文脈 $w_{\mathrm L}\blank_1w_{\mathrm M}\blank_2w_{\mathrm R}$ で試す；
-条件 $w_{\mathrm M}\ne\eps$ は本質的である．
-\end{proof}
-
-\begin{theorem}[倍増族は持ち上がらない]
-\label{thm:doubling-no-lift}
-$s:\Sigma^+\twoheadrightarrow\mathsf S$ を任意の固定した有限半群型付けとし，
-$u_{\mathtt a},u_{\mathtt b},u_{\mathtt c}\in\Sigma^+$ を文字が互いに素なものとし，$\varphi$ を
-準同型 $\mathtt a\mapsto u_{\mathtt a}$，$\mathtt b\mapsto u_{\mathtt b}$，
-$\mathtt c\mapsto u_{\mathtt c}$ とし，$H_n:=\varphi(L_n)$ とする．ここで
-$L_n$ は命題~\ref{prop:three-letter-family} の族である\textup(したがって $H_n=L_n$ である，
-$\varphi$ が恒等写像のときは\textup)．$n\ge2|\mathsf S|+2$ かつ $f\ge2$ とする．
-すべての $L\in\Cmcf{f}{s}$ で $\varphi(W_n)$ を含むものは，同じ
-型，同じ Parikh ベクトルをもち，$u_{\mathtt c}$ の文字を含まない別の語を含む．特に
-$H_n\notin\Cmcf{f}{s}$ であり，$\Cmcf{f}{s}$ のどの成員においても $\varphi(W_n)$ は
-その型の唯一の語ではない．
-\end{theorem}
-\begin{proof}
-準同型 $\varphi$ は単射であり，$H_n$ の語で
-$u_{\mathtt c}$ の文字を含まないものは，$L_n$ の語で $\mathtt c$ を含まないものの像であるので，
-$\varphi(W_n)$ はそのような唯一の語である．最終的な指数 $i_0\ge1$ と周期
-$p\ge1$ を $s(u_{\mathtt b})$ について，$i_0+p\le|\mathsf S|+1$ となるように選ぶ；このとき $n\ge2i_0+p+1$．
-$i=i_0$，$\delta=p$ および $j=n-i-\delta-1\ge i_0$ とおく．語
-$\varphi(W_n)=u_{\mathtt b}\,\varphi(W_{n-1})\,\varphi(W_{n-1})\,u_{\mathtt b}$ は
-$u_{\mathtt b}^nu_{\mathtt a}$ で始まるので，$u_{\mathtt b}^{i+\delta+j+1}$ を含む．
-$u_{\mathtt b}^i$ を，最初のものの後の $i$ 個の $u_{\mathtt b}$ の複製とし，
-$u_{\mathtt b}^{\delta+j}$ を，$\delta+j\le n-1$ 個の複製であって，最初の
-$u_{\mathtt a}$（$\varphi(W_{n-1})$ の二番目の複製の）の直前にあるものとする．そしてそれの前には少なくとも
-$n-1$ 個の $u_{\mathtt b}$ の複製がある．このとき
-\[
- \varphi(W_n)=w_{\mathrm L}u_{\mathtt b}^i w_{\mathrm M}u_{\mathtt b}^{\delta+j}w_{\mathrm R}
-\]
-であり，ここで $w_{\mathrm L}=u_{\mathtt b}$ であり，$w_{\mathrm M}\ne\eps$ は最初の
-$u_{\mathtt a}$ を含む．$L\in\Cmcf{f}{s}$ が $\varphi(W_n)$ を含むとする．
-補題~\ref{lem:power-transfer} により，
-$w':=w_{\mathrm L}u_{\mathtt b}^{i+\delta}w_{\mathrm M}u_{\mathtt b}^jw_{\mathrm R}\in L$．
-二つの埋めたタプルは成分ごとに等しい型をもつので，$s(w')=s(\varphi(W_n))$；$w'$ は
-$\varphi(W_n)$ の Parikh ベクトルをもち，$u_{\mathtt c}$ の文字を含まないが，
-$u_{\mathtt b}^{n+\delta}u_{\mathtt a}$ で始まり，$u_{\mathtt b}^nu_{\mathtt a}$ で始まるのではない．したがって
-$w'\ne\varphi(W_n)$ である．なぜなら $u_{\mathtt a}$ と $u_{\mathtt b}$ は共通の文字をもたないからである．
-$L=H_n$ については，これは上で示した $\varphi(W_n)$ の一意性に反する．
-\end{proof}
-
-\begin{remark}
-冪の移送は語の総長と Parikh ベクトルを保つので，
-稀な型の代表が短いことは示さない；それは
-命題~\ref{prop:three-letter-family} の族とその文字が互いに素な像を，
-語を加えた後でも，排除するだけである．
-\end{remark}
 
 \section{結論}
 \label{sec:conclusion}
-
-局所群型付けの下では，任意の固定ファンアウトとランクについて，
-特徴標本の総長が $O(\|G\|^2\bar\theta_G)$ で抑えられる
-（定理~\ref{thm:A}）．ファンアウト2の非文脈自由な標的は，
-局所群型付け，窓--群型付け，窓--可換群型付けの間で，
-言語クラスの被覆範囲が真に異なることを示す
-（命題~\ref{prop:lg-needed-target} および
-\ref{prop:nonabelian-needed-target}）．
-十分大きなアルファベット上では，どの型付けについても
-総長 $\Omega(\|G\|\bar\theta_G)$ を必要とする標的が存在する
-（定理~\ref{thm:B}）．ファンアウト1では，$\mathbf{LG}$ が
-擬多様体レベルの正確な境界を与える（定理~\ref{thm:C}）．
-
-\begin{openproblem}[ファンアウト2での境界]
-\label{op:fanout-two}
-$f\ge2$ と $r_{\max}\ge2$ を固定する．$\mathbf{LG}$ はファンアウト $f$ における擬多様体の境界であるか．
-すなわち，$\mathbf{LG}$ に含まれない有限半群のすべての擬多様体は，
-ファンアウト $f$ かつランク $r_{\max}$ で一様多項式特徴データ長をもたないか
-（定義~\ref{def:uniform-polydata}）？
-\end{openproblem}
-
-十分性はすべてのファンアウトで成立する
-（定理~\ref{thm:local-group-polydata}）．
-$\mathbf{LG}$ に含まれない擬多様体はすべて $U_1$ を含むので
-（定理~\ref{thm:lg-characterization}），
-$U_1$ への一つの型付けについて，ある実現型の最短代表語が
-$\|G\|$ と $\bar\theta_G$ に関して超多項式的に長い標的族を
-構成できれば，問いへの肯定的な答えが得られる
-（命題~\ref{prop:rare-type}）．
-倍増族はそのような標的には使えない
-（定理~\ref{thm:doubling-no-lift}）．
-
-\paragraph{残された量的な隔たり．}
-局所群型付けに対するデータ長の上界と下界には，
-因子 $\|G\|$ 一つ分の隔たりがある．
-この因子は証拠集合の構成における導出木の経路から生じる
-（補題~\ref{lem:heavy-node-count}）が，
-特徴データ長に本当に必要かどうかは未解決である．
-非可換群については，$M_{\mathbb G,f}$ の現在の上界が
-$f$ に関して二重指数的である
-（補題~\ref{lem:order-homogenize}）．
-群とファンアウトに依存しない絶対定数 $A,B>0$ に対して
-$c_{\mathbb G,f}\le A(|\mathbb G|^f)^B$ が成立するかどうかも未解決である．
+任意の固定ファンアウトとランクについて，局所群型付けは
+総長 $O(\|G\|^2\bar\theta_G)$ の特徴標本を与え，
+多項式時間・厚データ同定可能性が従う
+（定理~\ref{thm:A}；系~\ref{cor:iptd}）．
+証明は非可換なブロックの同時置換と滑動因子座標を組み合わせる．
+定数のファンアウトへの依存性の改善は今後の課題である．
+また，ファンアウト2以上で多項式データ長に局所群が必要かは
+未解決であり，本稿では逆方向を主張しない．
 
 \section*{謝辞}
 著者は，Makoto Kanazawa 氏と Ryo Yoshinaka 氏に，有益な議論と
@@ -2228,7 +1170,7 @@ $c_{\mathbb G,f}\le A(|\mathbb G|^f)^B$ が成立するかどうかも未解決�
 \label{app:group-blocks}
 
 この付録は命題~\ref{prop:block-replacement-interface} を証明する．これは
-補題~\ref{lem:marked-heavy-window-group} と~\ref{lem:local-group-shortest} で用いる．
+補題~\ref{lem:local-group-shortest} と~\ref{lem:local-group-shortest} で用いる．
 可換な場合は零和の議論である．一般の場合は決して
 因子を交換しない；それは三つの部分からなる：均質な点の
 配置に対する順序の分類（補題~\ref{lem:group-block-order}），
@@ -2540,7 +1482,7 @@ $|\mathsf T|$ 個の元のすべての積は $\mathsf T^1E(\mathsf T)\mathsf T^1
 $|\mathsf T|$ 個の接頭辞積のうち二つが一致する，$t_i=t_j$（$i<j$）であって，そのとき
 $t_i=t_ix^\omega$ が積 $x$（因子 $i+1,\ldots,j$ の）について成り立つか；またはこれらの接頭辞
 積が $\mathsf T$ を尽くし，そのうちの一つがべき等であるかのいずれかである．以下の三つの使用はすべて
-（補題~\ref{lem:lg-rees-window-coordinate} と~\ref{lem:mcfg-li-group-window}，
+（補題~\ref{lem:lg-rees-window-coordinate} と~\ref{lem:lg-rees-window-coordinate}，
 定理~\ref{thm:lg-characterization}）この事実に基づく．
 
 \begin{lemma}[滑動因子写像は準同型である]
@@ -2677,65 +1619,6 @@ $(\langle p,q\rangle,\gamma)(\langle p,q\rangle,\gamma')=(\langle p,q\rangle,\ga
 $\Delta:=\Delta_\nu(q,p)$ によって掛け合わされる．この演算は $\{\langle p,q\rangle\}\times {\mathbb G}$ を，
 群で ${\mathbb G}$ と同型なもの（$\gamma\mapsto\gamma\Delta$ を通じて）にし，$e\mathsf Te$ はその有限で空でない
 部分半群であるので，部分群である．
-\end{proof}
-
-\begin{lemma}[局所自明--群型付けは窓--群細分を許す]
-\label{lem:mcfg-li-group-window}
-$\Sigma\ne\emptyset$ とする．$\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$ ならば，
-$k\ge1$，有限群 ${\mathbb G}$ および準同型 $g:\Sigma^*\to {\mathbb G}$ で
-$\widehat s\preceq(\widehat s_{k,k},g)$ なるものが存在する；$\mathsf S\in\mathbf{LI}$ ならば，${\mathbb G}$ は
-自明にとれる．
-\end{lemma}
-
-\begin{proof}
-有限の $\mathsf S'\in\mathbf{LI}$，有限群 ${\mathbb G}$，部分半群
-$\mathsf T\le \mathsf S'\times {\mathbb G}$ および全射準同型 $\vartheta:\mathsf T\to\mathsf S$ を選ぶ（
-$\mathsf S\in\mathbf{LI}$ については $\mathsf S'=\mathsf S$，${\mathbb G}=\{1\}$）．すべての文字について，
-$\mathsf T$ における逆像（その $s$-像の）を一つ選ぶことにより，準同型 $s':\Sigma^+\to\mathsf S'$ と $g$ で
-$\vartheta(s'(w),g(w))=s(w)$ なるものが定まる；$g(\eps)=1_{\mathbb G}$ とおく．部分半群
-$\mathsf S_0:=s'(\Sigma^+)\le \mathsf S'$ は局所自明である；$k:=|\mathsf S_0|$ とする．
-べき等元 $e,e'$（$\mathsf S_0$ の）と $y\in \mathsf S_0^1$ について，
-$eye'=ey(e'ee')=(e(ye')e)e'=ee'$ が成り立つ．
-$|w|\ge2k$ について $w=pxz$ と書く．ただし $|p|=|z|=k$ である．ポンピングにより，
-$s'(p)=y_1ey_2$ かつ $s'(z)=y_3e'y_4$ であって，$y_1,\ldots,y_4\in \mathsf S_0^1$ であり，$e,e'$ は
-べき等である．したがって $s'(w)=y_1e\,(y_2\,s'(x)\,y_3)\,e'y_4=y_1ee'y_4$（$s'(\eps):=1$ とする）であり，これは
-$p=\operatorname{pref}_k(w)$ と $z=\operatorname{suf}_k(w)$ のみに依存する．
-より短い語は $\widehat s_{k,k}$ によって正確に記録され，これは
-$\eps$ も分離する．したがって等しい $(\widehat s_{k,k},g)$-値は等しい $(s',g)$-値と
-等しい $s$-値を導く．
-\end{proof}
-
-\begin{proposition}[窓--群型付けは局所群型付けであり，その包含は真である]
-\label{prop:li-g-strict}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $\widehat s\preceq(\widehat s_{k,\ell},g)$ が有限
-群への準同型 $g$ について成り立つならば，$\widehat s\preceq\lambda_{\hat k,\nu}$ が $\hat k=\max\{k,\ell,1\}$ と
-$\nu(F):=g(\text{last letter of }F)$ について成り立つ．さらに $\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$．
-\item すでに $\Sigma=\{\mathtt a,\mathtt b\}$ と，
-型付け $s_{\mathtt{ab}}:=\lambda_{1,\nu}|_{\Sigma^+}$ で
-$\nu(\mathtt{ab})=1\in\mathbb Z_2$ かつそれ以外では $\nu=0$ なるものについて，
-$s_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$．
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-(i) $|w|\ge2\hat k$ について $g(w)=g(\operatorname{pref}_{\hat k}w)\,\gamma_{\hat k,\nu}(w)$ であり，
-$\operatorname{pref}_{\hat k},\operatorname{suf}_{\hat k}$ は
-$\widehat s_{k,\ell}(w)$ を定める；より短い語は正確に記録される．包含が成り立つのは，
-$\mathbf{LG}$ が $\mathbf{LI}$（$e\mathsf Te=\{e\}$）と
-$\mathbf{Grp}$ を含む擬多様体であるからである．
-(ii) $\mathbf{LG}$ への所属は
-定理~\ref{thm:lg-characterization} から従う．$k,\ell\ge0$ とし，
-$g':\Sigma^*\to {\mathbb G}'$ を任意の有限群への写像とする．
-$m\ge k+\ell+1$ と $n\ge1$ で $g'(\mathtt a)$ の位数で割り切れるものを選び，
-$u=\mathtt b^m\mathtt a^{n}\mathtt b^m$ と
-$v=\mathtt b^{2m}$ とおく．それらは等しい長さ $k$ の接頭辞と
-長さ $\ell$ の接尾辞をもち，$s_{k,\ell}$ について長く，
-$g'(u)=g'(\mathtt b)^{2m}=g'(v)$ を満たすが，
-$\#_{\mathtt{ab}}(u)=1$ かつ $\#_{\mathtt{ab}}(v)=0$ である．
-したがって $s_{\mathtt{ab}}$ は窓--群型付けではなく，
-補題~\ref{lem:mcfg-li-group-window} は
-$\mathbf{LI}\vee\mathbf{Grp}$ を排除する．
 \end{proof}
 
 \begin{lemma}[間引きと詰め物をした所有者]
@@ -2879,88 +1762,6 @@ $n_{\widehat s}(G)\le|V||\mathsf S|^f$ である．
 $\lambda=\widehat s$ として用いれば，
 同じ長さの上界をもつ代表が $L_X$ にあり，
 $t_{\mathrm{typ}}$ もその上界を満たす．
-\end{proof}
-
-\section{分離する標的の証明}
-\label{app:separating-targets}
-
-この付録は命題~\ref{prop:lg-needed-target} と~\ref{prop:nonabelian-needed-target} を証明する．
-言語 $L\subseteq\Sigma^*$ が\emph{狭義2-局所的}であるとは，
-$\Sigma\cup\{\vdash,\dashv\}$ 上の対の集合 $P$ があって，$w\in L$ であることと
-$\vdash w\dashv$ の隣り合う記号の対がすべて $P$ に入ることが同値であることをいう．
-
-\begin{lemma}[狭義2-局所的な言語は境界で型付けされる]
-\label{lem:sl2-boundary-control}
-狭義2-局所的な $L$ はすべての $f$ について $(f,s_{1,1})$-タプル代入可能である；
-特に $L\in\Cmcf{f}{s_{1,1}}$ であり，$\widehat s_{1,1}\preceq\widehat s$ なら $L\in\Cmcf{f}{s}$．
-\end{lemma}
-
-\begin{proof}
-$\tuple x,\tuple y\in(\Sigma^+)^d$ が等しい $s_{1,1}$-型をもつとする．すなわち
-対応する成分は同じ文字であるか，最初と最後の文字を共有する．$E_0[\tuple x],E_0[\tuple y]\in L$ とし，
-$E[\tuple x]\in L$ と仮定する．$E$ の内部の区切りは空でないので，
-$\vdash E[\tuple y]\dashv$ の隣り合う対は，ある $y_i$ の内部にあって $E_0[\tuple y]\in L$ に現れるか，
-ある $y_i$ の最初または最後の文字を $\vdash E\dashv$ の記号につなぐか，
-$\vdash E\dashv$ の中にあるかであり，後の二つは $\vdash E[\tuple x]\dashv$ に現れる．
-よって $E[\tuple y]\in L$；対称性と $\widehat s_{1,1}\preceq\widehat s$ で証明が終わる（正規言語は MCFL である）．
-\end{proof}
-
-\begin{proof}[命題~\ref{prop:lg-needed-target} と~\ref{prop:nonabelian-needed-target} の証明]
-$\diamond\in\{\mathrm A,\mathrm B\}$ と書き，$\Sigma_\diamond^\circ$ を $\{\mathtt a,\mathtt b,\mathtt c\}$
-または $\{\mathtt a,\mathtt b\}$，$P_\diamond(w)$ を「$\#_{\mathtt{ab}}(w)$ は偶数」
-または「$g_{\mathrm B}(w)=1$」とする．
-
-(i) $W$ を正規言語
-$\{\varsigma w:\varsigma\in\{\mathtt l,\mathtt r\},w\in(\Sigma_\diamond^\circ)^+,
-\varsigma=\mathtt r\text{ または }P_\diamond(w)\}$ の右線形（ファンアウト1，ランク1，良い）文法とする；
-それは最後の文字と偶奇，あるいは $S_3$ での値を追跡する．これに
-\[
- C\to(\xi_1^1\mathtt\$\mathtt 1,\mathtt 3)(W)\mid(\xi_1^1\mathtt 1,\xi_1^2\mathtt 3)(C),\quad
- D\to(\mathtt 2,\mathtt 4)\mid(\xi_1^1\mathtt 2,\xi_1^2\mathtt 4)(D),\quad
- S\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(C,D)
-\]
-を加える．すると $L_C=\{(\varsigma w\mathtt\$\mathtt 1^m,\mathtt 3^m)\}$，$L_D=\{(\mathtt 2^n,\mathtt 4^n)\}$ であり，
-$S$ は $L_\diamond$ を生成する；開始の型板で隣り合う変数は異なる子に属するので文法は良い．
-正規言語 $\mathtt{ra\$}\mathtt 1^+\mathtt 2^+\mathtt 3^+\mathtt 4^+$ との交わりを取り
-$\mathtt{ra\$}$ を消すと $C_\times$ が得られ，これは文脈自由でない；
-文脈自由言語は両方の操作で閉じているので，$L_\diamond$ は文脈自由でない．
-
-(ii) $L_\diamond=Q_\diamond\cap\Pi_\diamond\cap\varphi_\times^{-1}(0)$，ここで
-$Q_\diamond=\{\mathtt l,\mathtt r\}(\Sigma_\diamond^\circ)^+\mathtt\$\mathtt 1^+\mathtt 2^+\mathtt 3^+\mathtt 4^+$，
-$\Pi_\diamond$ は $\mathtt r$ で始まるか，$\mathtt l$ で始まり語全体が $P_\diamond$ を満たす空でない語の集合である．
-$Q_\diamond$ の上では語全体の条件 $P_\diamond$ は $w$ のそれである：因子 $\mathtt{ab}$ は
-$\varsigma$，$\mathtt\$$ や数字に触れず，$g_{\mathrm B}$ は他のすべての文字で自明である．
-$Q_\diamond$ は狭義2-局所的であり（その対は $\varsigma\in\{\mathtt l,\mathtt r\}$，$x,y\in\Sigma_\diamond^\circ$ について
-$\vdash\varsigma$，$\varsigma x$，$xy$，$x\mathtt\$$，$\mathtt{\$1}$，
-$\mathtt{11},\mathtt{12},\mathtt{22},\mathtt{23},\mathtt{33},\mathtt{34},\mathtt{44}$，$\mathtt 4\dashv$），
-$\widehat s_{1,1}\preceq\widehat s_\diamond$ なので補題~\ref{lem:sl2-boundary-control} が使える．
-$\Pi_\diamond$ は $s_\diamond$-類の和である：$s_\diamond$ は最初の文字と，長さ2以上の語については
-$\#_{\mathtt{ab}}$ の偶奇，あるいは $g_{\mathrm B}$ の値を記録する（一文字の語 $\mathtt l,\mathtt r$ は $\Pi_\diamond$ に入る）；
-したがって定義~\ref{def:class-cmcf} の後の項目 (c) が使える．
-命題~\ref{prop:abelian-coset-filter} が $\varphi_\times^{-1}(0)$ と交わりを扱う；(i) と合わせて
-$f\ge2$ について $L_\diamond\in\Cmcf{f}{s_\diamond}$．$s_{\mathrm A}$ は局所群で決まるので，
-定理~\ref{thm:lg-characterization} によりその正の像は $\mathbf{LG}$ に入る．
-
-(iii)（$\mathrm A$ の場合）．$\hat k=\max\{k,\ell,1\}$，$q\ge2$ を $g'$ の群の指数の倍数である偶数，
-$u=\mathtt a^{\hat k}(\mathtt{abc})^q\mathtt a^{\hat k}$，
-$v=\mathtt a^{\hat k}(\mathtt{bac})^q\mathtt a^{\hat k}$ とする．どちらも $\widehat s_{k,\ell}$ について長く，
-接頭辞 $\mathtt a^k$ と接尾辞 $\mathtt a^\ell$ をもち，$g'(u)=g'(\mathtt a)^{2\hat k}=g'(v)$；
-したがって $s'(u)=s'(v)$．しかし $\#_{\mathtt{ab}}(u)=q$ は偶数で，$\#_{\mathtt{ab}}(v)=1$
-（$\mathtt a^{\hat k}\mathtt b$ の所だけ）．$z=\mathtt{\$1234}$ として補題~\ref{lem:flag-separation} が使える．
-正の像が $\mathbf{LI}\vee\mathbf{Grp}$ に入る型付けは，補題~\ref{lem:mcfg-li-group-window} により仮定を満たす．
-
-(iii)（$\mathrm B$ の場合）．$\hat k\ge\max\{k,\ell,1\}$ を偶数とし，
-$u=\mathtt a^{\hat k}(\mathtt{ab})^3\mathtt a^{\hat k}$，
-$v=\mathtt a^{\hat k}(\mathtt{ab})^2\mathtt{ba}\,\mathtt a^{\hat k}$ とする．これらは同じ接頭辞 $\mathtt a^k$，
-接尾辞 $\mathtt a^\ell$ と Parikh ベクトルをもつので，可換な $g'$ について $s'(u)=s'(v)$．
-$\alpha^2=\beta^2=1$，$\alpha\beta$ の位数は $3$，$\beta\alpha=(\alpha\beta)^{-1}$ なので，
-$g_{\mathrm B}(u)=(\alpha\beta)^3=1$，$g_{\mathrm B}(v)=(\alpha\beta)^2(\alpha\beta)^{-1}=\alpha\beta\ne1$．
-$z=\mathtt{\$1234}$ として補題~\ref{lem:flag-separation} が使える．
-$\mathbf{LI}\vee\mathbf{Ab}$ については，補題~\ref{lem:mcfg-li-group-window} の証明を可換群の因子で行えば可換な $g'$ が得られる．
-
-\emph{帰結．} $s_{\mathrm A}(\Sigma_{\mathrm A}^+)$ が $\mathbf{LI}\vee\mathbf{Grp}$ に入れば，
-$s'=s_{\mathrm A}$ とした (iii) は (ii) に矛盾する．
-命題~\ref{thm:window-group-polydata} とその自明群・可換群の場合は，除外された種類の型付けを仮定する．
 \end{proof}
 
 \section{質的な再構成の補助的な検証}
@@ -3175,40 +1976,6 @@ $\Wit_\iota\subseteq K\subseteq L$ なるものについて，両方の作用素
 $b=t_{\mathrm{typ}}$ について適用し，上界 $C_s(G)$ を用いる代わりに，開始以外の型付き非終端記号と規則を数える．
 \end{proof}
 
-\begin{proof}[命題~\ref{prop:rare-type} の証明]
-補題~\ref{lem:distinguishing} を $L'=L^{\setminus m}$ に適用する．これは
-補題~\ref{lem:type-deletion} により $\Cmcf{f}{s}$ に属する．また，$\eps\in L$ ならば
-$L'=L\setminus\{\eps\}$ に適用する；標準の作用素は，定理~\ref{thm:exact-reconstruction} により，その
-両方に対して特徴標本をもつ．相異なる正の型は
-相異なる標本の語を要求し，型 $m$ の語の費用は少なくとも $\mu_m(L)+1$ である．
-\end{proof}
-
-\begin{proof}[系~\ref{cor:typed-sandwich} の証明]
-命題~\ref{prop:rare-type} が下界を与える；
-定理~\ref{thm:data-from-typed-thickness} が上界を与える．
-\end{proof}
-
-\begin{proof}[命題~\ref{prop:typed-thickness-exponential} の証明]
-すべての雛形は空でなく，各変数を順に一回ずつ用いるので，$G_n$ は
-良い；それは既約であり，$\Sigma^+$ を $S\to SS\mid\mathtt a\mid\mathtt c$ を通じて生成する．
-各規則は長さ高々 $2$ の成功する使用をもつ：すべての $A_i$ を
-$\mathtt c$（$i\ge1$）または $\mathtt a$（$i=0$）で完成させる．$A_n$ の産出が型 $1$ をもつのは，それが
-$\mathtt c$ を含まないとき，かつそのときに限るので，$(A_n)_{(1)}$ の唯一の産出は $\mathtt a^{2^n}$ であり，
-$t_{\mathrm{typ}}(G_n,s_{\mathtt c})\ge2^n$；型付き規則
-$S_{(1)}\to(A_n)_{(1)}$ は（$S\to A_n$ を通じて）残され，それを用いるすべての成功する
-導出は長さ少なくとも $2^n$ をもつ．
-\end{proof}
-
-\begin{proof}[系~\ref{cor:distribution-representatives} の証明]
-$L_X\subseteq\operatorname{Cl}_{L,s}(X)$ は $\tau\le t_{\mathrm{typ}}$ を与える．
-補題~\ref{lem:witness-length-template}(ii),(iv) を，$\iota(X)$ を最短のタプル（
-$\operatorname{Cl}_{L,s}(X)$ の）とし $b=\tau$ として適用し，
-定理~\ref{thm:data-from-typed-thickness} と同様に数える；$K:=\Wit_\iota\cup(\{\eps\}\cap L)$．
-最後に，$m\in \mathsf S_L$ について，型付き開始非終端記号 $X=S_{(m)}$ は
-$\chi(X)=\blank_1$ をもつので，$\blank_1\in\D_L(\iota(X))$；したがって $\iota(X)=(v)$ で
-$v\in L$ かつ $s(v)=m$ であり，$\tau_X\ge\mu_m(L)$．
-\end{proof}
-
 \section{良い正規化の詳細}
 \label{app:normalization-details}
 
@@ -3308,309 +2075,6 @@ $\|G_{\mathrm{good}}\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$ であり，
 (c) により $L(G_{\mathrm{good}})=L(G_{\mathrm{in}})\setminus\{\eps\}$．この言語が
 空でなければ，最後の刈り込みは既約な文法を残し，刈り込みは良さを保つ．
 \end{proof}
-
-
-\section{三文字の倍増族}
-\label{app:bracketed-family}
-\label{app:three-letter-family}
-
-この付録は命題~\ref{prop:three-letter-family} を証明する；~(ii) の証明は
-\cite[Appendix~C]{kuriyamaCFG} の決定的パーザの議論を手直ししたものである．
-$n\ge1$ を固定し，$x,y\in\Sigma^*$ について $x\equiv y$ と書くのは
-$\{(u,v):uxv\in L_n\}=\{(u,v):uyv\in L_n\}$ であるときとする；これはモノイド合同である．
-
-\paragraph{パーザ．}
-\emph{スタック}とは，$E_0,\ldots,E_n$ と閉じ標識
-$\hat{\mathtt b}_i,\hat{\mathtt c}_i$（$1\le i\le n$）の上の語であり，その頂上を左に置く；$\eps$
-は空のスタックである．すべてのスタック $\mathcal Z$ と $1\le i\le n$ について，遷移は次である．
-\[
-\begin{aligned}
-E_0\mathcal Z&\xrightarrow{\mathtt a}\mathcal Z,&
-E_i\mathcal Z&\xrightarrow{\mathtt b}E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z,&
-E_i\mathcal Z&\xrightarrow{\mathtt c}E_{i-1}\hat{\mathtt c}_i\mathcal Z,\\
-\hat{\mathtt b}_i\mathcal Z&\xrightarrow{\mathtt b}\mathcal Z,&
-\hat{\mathtt c}_i\mathcal Z&\xrightarrow{\mathtt c}\mathcal Z,
-\end{aligned}
-\]
-そして他の遷移はない；特に，どの遷移も $\eps$ から出ない．
-$\mathcal X\xrightarrow{w}\mathcal Y$ と書くのは，$w$ を $\mathcal X$ から読むと
-$\mathcal Y$ で終わるときとする．三つの性質を用いる．
-\begin{enumerate}[label=\textup{(D\arabic*)},leftmargin=2.6em]
-\item \emph{決定性．}頂上の記号と文字が遷移を定めるので，
-すべての語はスタックの上の部分写像として作用する．
-\item \emph{重み．}$E_i$ に重み $4^i$ を，各標識に重み $1$ を与え，
-$\operatorname{wt}(\mathcal X)$ を重みの総和とする．すべての遷移は
-$\operatorname{wt}$ を下げる．$4^i>2\cdot4^{i-1}+1$ だからである；したがって
-$\mathcal X\xrightarrow{w}\mathcal X$ は $w=\eps$ についてのみ成り立つ．
-\item \emph{局所性．}遷移は頂上の記号のみを読み書き換え，標識は
-取り出されるだけである．したがって $\mathcal X\xrightarrow{w}\mathcal Y$ は
-$\mathcal X\mathcal Z\xrightarrow{w}\mathcal Y\mathcal Z$ を導く．逆に，
-$\mathcal X_1\ne\eps$ かつ $\mathcal X_1\mathcal Z\xrightarrow{w}\mathcal Y$ ならば，次のいずれかである：
-\textup{(a)} 実行が $\mathcal Z$ に達する：$w=w_1w_2$ で
-$\mathcal X_1\xrightarrow{w_1}\eps$ かつ $\mathcal Z\xrightarrow{w_2}\mathcal Y$，したがって
-$\operatorname{wt}(\mathcal Y)\le\operatorname{wt}(\mathcal Z)$；または \textup{(b)} それが
-達しない：$\mathcal Y=\mathcal Y_1\mathcal Z$ で $\mathcal X_1\xrightarrow{w}\mathcal Y_1\ne\eps$，
-したがって $\operatorname{wt}(\mathcal Y)>\operatorname{wt}(\mathcal Z)$ であり，$\mathcal Y_1$ は，
-$\mathcal X_1$ の最後の記号が標識であるときにはいつでも，その記号で終わる．
-固定した $\mathcal Z$ について，$\operatorname{wt}(\mathcal Y)$ を
-$\operatorname{wt}(\mathcal Z)$ と比べるとどちらの場合かが決まる．
-\end{enumerate}
-文字 $\mathtt b$ または $\mathtt c$ は開きと閉じの両方を行うので，語は
-すべてのスタックの上で単射に作用する必要はない；単射性は\emph{到達可能な}スタック，
-すなわち $\mathcal X$ で $E_n\xrightarrow{u}\mathcal X$ がある $u$ について成り立つものの上で成り立つ．
-
-\begin{lemma}\label{lem:app-br-recognition}
-\label{lem:app-tl-reachable}
-\textup{(i)} $0\le i\le n$ とすべてのスタック $\mathcal Z$ について，
-$E_i\mathcal Z\xrightarrow{w}\mathcal Z$ であるのは $w\in L^{(i)}$ であるとき，かつそのときに限る．
-
-\textup{(ii)} $\mathcal F_i:=\{E_{i-1}\hat{\mathtt b}_i,\hat{\mathtt b}_i,\hat{\mathtt c}_i\}$ とおく．
-すべての到達可能なスタックは $\eps$ であるか，または $\mathcal YF_{j+1}\cdots F_n$ であって
-$F_i\in\mathcal F_i$ かつ $\mathcal Y\in\{E_j,\hat{\mathtt b}_j,\hat{\mathtt c}_j\}$ なるものである
-\textup($\mathcal Y=E_j$ で $0\le j\le n$，または標識で $1\le j\le n$\textup)．
-すべての語は到達可能なスタックの上で部分単射として作用する．
-\end{lemma}
-
-\begin{proof}
-(i) 実行 $E_i\mathcal Z\xrightarrow{w}\mathcal Z$ は (D3) の場合~(a) にある．なぜなら
-場合~(b) は $\mathcal Y_1\mathcal Z\ne\mathcal Z$ で終わるからである；したがって $w=w_1w_2$ で
-$E_i\xrightarrow{w_1}\eps$ かつ $\mathcal Z\xrightarrow{w_2}\mathcal Z$ であり，(D2) により $w_2=\eps$．
-(D3) における持ち上げとあわせて，$E_i\xrightarrow{w}\eps$ であるのは
-$w\in L^{(i)}$ であるとき，かつそのときに限ることを，$i$ に関する帰納法で示せば十分である．$E_0$ からは $\mathtt a$-遷移のみが適用でき，
-$\eps$ はどの遷移も許さない．$i\ge1$ については最初の文字は $\mathtt b$ または $\mathtt c$ である．
-$\mathtt c$ の後，スタック $E_{i-1}\hat{\mathtt c}_i$ は空にされなければならない；(D3) の場合~(a) を
-$\mathcal X_1=E_{i-1}$，$\mathcal Z=\hat{\mathtt c}_i$ として用いると，残りは $zz'$ と分かれ，
-$E_{i-1}\xrightarrow{z}\eps$ かつ $z'=\mathtt c$ である．$\mathtt b$ の後，
-$E_{i-1}E_{i-1}\hat{\mathtt b}_i$ のそのような二回の分割は $z_1z_2\mathtt b$ で
-$E_{i-1}\xrightarrow{z_j}\eps$ なるものを与える．
-
-(ii) そのようなスタックの集合は $E_n$ を含み，遷移について閉じている：
-$E_jF_{j+1}\cdots F_n$ から，$\mathtt b$ は
-$E_{j-1}(E_{j-1}\hat{\mathtt b}_j)F_{j+1}\cdots F_n$ を与え，$\mathtt c$ は
-$E_{j-1}\hat{\mathtt c}_jF_{j+1}\cdots F_n$ を与える；頂上を取り出すと
-$F_{j+1}\cdots F_n$ が残り，これは $\eps$ であるか，再び述べた形である．ここで最初のフレーム
-$E_j\hat{\mathtt b}_{j+1}$ は，$\mathcal Y=E_j$ にフレーム
-$\hat{\mathtt b}_{j+1}$ が続くものとして読む．
-
-単射性については，文字を考えれば十分である．遷移は到達可能な
-スタックを到達可能なスタックに写すからである．\emph{フレーム積}とはスタック
-$F_{i+1}\cdots F_n$ で $F_k\in\mathcal F_k$ なるものである（$i=n$ ならば空のスタック）．各
-フレーム $F_k$ はちょうど一つの標識を含み，その添字は $k$ であるので，フレーム積は
-$i$ を定める：それは $n$ である（$\eps$ については）．そうでなければ最小の
-標識の添字より一つ小さい．フレーム積において，記号 $E$ の後には常に標識
-$\hat{\mathtt b}$ が続く．到達可能なスタックの上での文字の遷移と，
-その結果の形は次のとおりである：
-\begin{center}
-\footnotesize
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{}llll@{}}
-\hline
-文字 & 遷移（到達可能な元） & 結果の先頭 & 元の復元方法\\
-\hline
-$\mathtt a$ & $E_0\mathcal Z\to\mathcal Z$ & フレーム積 & $\mathcal Z$\\
-$\mathtt b$，開き & $E_i\mathcal Z\to E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z$ & 二つの記号 $E$ & $i$ と $\mathcal Z$ を読み取る\\
-$\mathtt b$，閉じ & $\hat{\mathtt b}_i\mathcal Z\to\mathcal Z$，$\mathcal Z$ はフレーム積 & 標識，$E\hat{\mathtt b}$，または $\eps$ & $i$ を $\mathcal Z$ から\\
-$\mathtt c$，開き & $E_i\mathcal Z\to E_{i-1}\hat{\mathtt c}_i\mathcal Z$ & $E$ の後に $\hat{\mathtt c}$ & $i$ と $\mathcal Z$ を読み取る\\
-$\mathtt c$，閉じ & $\hat{\mathtt c}_i\mathcal Z\to\mathcal Z$，$\mathcal Z$ はフレーム積 & 標識，$E\hat{\mathtt b}$，または $\eps$ & $i$ を $\mathcal Z$ から\\
-\hline
-\end{tabular}
-\end{center}
-閉じの行において $\mathcal Z$ がフレーム積であるのは，到達可能なスタック
-で標識 $\hat{\mathtt b}_i$ または $\hat{\mathtt c}_i$ を頂上にもつものは $\mathcal YF_{i+1}\cdots
-F_n$ で $\mathcal Y$ がその標識であるものだからである．$\mathtt b$ については，開きの結果は
-二つの記号 $E$ で始まり，閉じの結果は決してそうならない．フレーム積においては
-記号 $E$ の後に標識が続くからである；$\mathtt c$ については，開きの結果は
-$E\hat{\mathtt c}$ で始まり，これはフレーム積には決して現れない．したがって一つの文字の開きと
-閉じは互いに素な像をもち，各行はその最後の
-列により単射であり，すべての文字，したがってすべての語は，
-到達可能なスタックの上で部分単射として作用する．
-\end{proof}
-
-\begin{lemma}\label{lem:app-br-exchange}
-\label{lem:app-tl-recognition}
-$\mathcal X$ が到達可能であり，$w\in L^{(i)}$ かつ $\mathcal X\xrightarrow{w}\mathcal Y$ ならば，
-$\mathcal X=E_i\mathcal Y$．したがって $w\equiv w'$ がすべての $w,w'\in L^{(i)}$ について成り立つ．
-\end{lemma}
-
-\begin{proof}
-$i$ に関する帰納法による；$i=0$ については，$\mathtt a$ は $E_0$ を取り出すだけである．$i\ge1$ とする；出会うすべてのスタックは
-到達可能である．$w=\mathtt cv\mathtt c$ で $v\in L^{(i-1)}$ であり，最初の
-$\mathtt c$ が $E_j$ を開くならば，
-$v$ についての帰納法の仮定（$E_{j-1}\hat{\mathtt c}_j\mathcal Z$ における）は $j=i$ を与え，最後の $\mathtt c$ は
-$\hat{\mathtt c}_i$ を取り出す．最初の $\mathtt c$ が標識を取り出すならば，残りは $\eps$ であるか
-フレームの積である；$v$ を読むためには，帰納法の
-仮定によりそれは $E_{i-1}$ で始まらなければならないので，その最初のフレームは $E_{i-1}\hat{\mathtt b}_i$ であり，$v$ の後の頂上
-は $\hat{\mathtt b}_i$ であり，その上で $\mathtt c$ は遷移をもたない．
-$w=\mathtt bv_1v_2\mathtt b$ であり，最初の $\mathtt b$ が $E_j$ を開くならば，帰納法の
-仮定は $j=i$ を与え，語 $v_1,v_2$ は $E_{i-1}$ の二つの複製を取り出し，
-最後の $\mathtt b$ は $\hat{\mathtt b}_i$ を取り出す．最初の $\mathtt b$ が標識を取り出すならば，
-前と同様に $v_1$ は頂上 $\hat{\mathtt b}_i$ を残し，帰納法の仮定により，そこから $v_2$ は
-読めない．帰結については，$uwv\in L_n$ ならば，実行
-$E_n\xrightarrow{u}\mathcal X\xrightarrow{w}\mathcal Y\xrightarrow{v}\eps$ は
-$\mathcal X=E_i\mathcal Y$ をもち，
-補題~\ref{lem:app-br-recognition}(i) により $E_i\mathcal Y\xrightarrow{w'}\mathcal Y$；したがって $uw'v\in L_n$ であり，逆も同様である．
-\end{proof}
-
-\begin{lemma}[分岐の同期]\label{lem:app-br-branch}
-$\mathcal X\xrightarrow{x}\mathcal Y$ かつ $\mathcal X\xrightarrow{y}\mathcal Y$ とし，ここで $x,y$
-は空でなく，異なる文字で始まるとする．このとき $\mathcal X=E_i\mathcal Z$ が
-ある $1\le i\le n$ とスタック $\mathcal Z$ について成り立ち，$x=wx'$，$y=w'y'$ であって，
-$w,w'\in L^{(i)}$，$\mathcal Z\xrightarrow{x'}\mathcal Y$ かつ $\mathcal Z\xrightarrow{y'}\mathcal Y$ である．
-\end{lemma}
-
-\begin{proof}
-頂上 $E_i$（$i\ge1$）だけが二つの異なる文字，すなわち $\mathtt b$ と
-$\mathtt c$ を許す．$x=\mathtt cx_0$ かつ $y=\mathtt by_0$ とする．したがって
-$E_{i-1}\hat{\mathtt c}_i\mathcal Z\xrightarrow{x_0}\mathcal Y$ かつ
-$E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z\xrightarrow{y_0}\mathcal Y$．(D3) により，両方の実行
-は同じ場合にある．場合~(b) は不可能である：それは
-$\mathcal Y=\mathcal Y_1\mathcal Z=\mathcal Y_2\mathcal Z$ で，$\mathcal Y_1$ が
-$\hat{\mathtt c}_i$ で終わり $\mathcal Y_2$ が $\hat{\mathtt b}_i$ で終わるものを与えるからである．場合~(a) では，
-$x_0=x_1x'$ で $E_{i-1}\hat{\mathtt c}_i\xrightarrow{x_1}\eps$ かつ
-$\mathcal Z\xrightarrow{x'}\mathcal Y$ であるので，$w:=\mathtt cx_1$ は $E_i\xrightarrow{w}\eps$ を満たし，
-補題~\ref{lem:app-br-recognition}(i) により $w\in L^{(i)}$．同じ議論が
-$y=w'y'$ を与える．
-\end{proof}
-
-\begin{proposition}\label{prop:app-br-congruence}
-\label{prop:app-tl-congruence}
-$\mathcal X\xrightarrow{x}\mathcal Y$ かつ $\mathcal X\xrightarrow{y}\mathcal Y$ ならば，$x\equiv y$．
-したがって $L_n$ は Clark--Eyraud の意味で代入可能である．
-\end{proposition}
-
-\begin{proof}
-$|x|+|y|$ に関する帰納法による．$x$ または $y$ が空ならば，$\mathcal X=\mathcal Y$ であり，
-(D2) により他方も空である．$x=cx'$ かつ $y=cy'$ が文字 $c$ について成り立つならば，(D1) は
-$\mathcal X\xrightarrow{c}\mathcal X'$ で $\mathcal X'\xrightarrow{x'}\mathcal Y$ かつ
-$\mathcal X'\xrightarrow{y'}\mathcal Y$ なるものを与え，帰納法が適用できる．そうでなければ，
-補題~\ref{lem:app-br-branch} は $x=wx'$，$y=w'y'$ を与える；帰納法は
-$x'\equiv y'$ を与え，補題~\ref{lem:app-br-exchange} は $w\equiv w'$ を与え，$\equiv$ は
-合同である．
-
-帰結については，$x,y\in\Sigma^+$ で $uxv,uyv\in L_n$ とする．(D1) と
-補題~\ref{lem:app-br-recognition}(i) により，実行
-$E_n\xrightarrow{u}\mathcal X\xrightarrow{x}\mathcal Y\xrightarrow{v}\eps$ と
-$E_n\xrightarrow{u}\mathcal X\xrightarrow{y}\mathcal Y'\xrightarrow{v}\eps$ がある；$\mathcal Y$ と
-$\mathcal Y'$ は到達可能であるので，補題~\ref{lem:app-br-recognition}(ii) は
-$\mathcal Y=\mathcal Y'$ を与え，$x\equiv y$．$\{\mathtt a,\mathtt b,\mathtt c\}$ の外の文字は
-空の分布しかもたない．
-\end{proof}
-
-\begin{proof}[命題~\ref{prop:three-letter-family} の証明]
-(i) すべての雛形は空でなく，各変数を一回ずつ用いる；ファンアウト1では，
-非置換性と非併合性は自動的に成り立つ．文法は既約である．なぜなら
-$E_i\Rightarrow^*\mathtt c^i\mathtt a\mathtt c^i$ だからである．それは $n+2$ 個の非終端記号と，
-大きさ $3$（開始），$2$（基底），$7$ と $5$（各水準の二つの規則）の規則をもつ
-（定義~\ref{def:standard-mcfg}）．これより $\|G_n\|=13n+7$．
-$E_i$ の最短の産出は長さ $2i+1$ をもち，$E_i$ より上の水準は少なくとも $2(n-i)$ 個の
-文字を加え，それは規則 $E_j\to\mathtt cE_{j-1}\mathtt c$ によって達成される．したがって開始，基底
-および単項の規則は規則の厚さ $2n+1$ をもち，水準 $i$ の二分の規則は
-$2(n-i)+2+2(2i-1)=2n+2i$ をもつ；したがって $\bar\theta_{G_n}=4n$．
-
-(ii) 最初の主張は命題~\ref{prop:app-br-congruence} である．それは，
-自明な型付けについての $f=1$ における定義~\ref{def:tuple-substitutable} の条件であり，
-有限言語 $L_n$ は $1$-MCFL である；
-定義~\ref{def:class-cmcf} の後の項目~(a) は $L_n\in\Cmcf{1}{s}$ を与える．
-
-(iii) 導出が $\mathtt c$ を含まない語を産出するのは，それが規則
-$E_i\to\mathtt cE_{i-1}\mathtt c$ を用いないとき，かつそのときに限る．そのような導出（$E_i$ からの）は，
-高さ $i$ の完全二分木であり，$W_i$ を産出し，$|W_i|=2|W_{i-1}|+2$，$|W_0|=1$ である．
-
-(iv) (ii) により $L_n\in\Cmcf{1}{s_U}$ であり，(iii) により $1\in \mathsf S_{L_n}$ で
-$\mu_1(L_n)=|W_n|$ である．$m=1$ とした命題~\ref{prop:rare-type} は
-型 $1$ の語を強いるが，それは $W_n$ でしかあり得ない．
-\end{proof}
-
-\section{すべてのファンアウトにおける線形因子}
-\label{app:linear-factor-fanout}
-
-この付録は命題~\ref{prop:linear-factor-all-fanout} を証明する．$\Psi$ は Parikh 写像を表す．
-
-\begin{proof}[命題~\ref{prop:linear-factor-all-fanout} の証明]
-$t:=2f$ かつ $L:=L^{(f)}_{q,n}$ とおく．
-
-(i) 言語 $R:=\mathtt a_1^*\mathtt d_1\mathtt a_2^*\mathtt d_2\cdots
-\mathtt a_t^*\mathtt d_t\mathtt z^*$ は道の言語（$0$ から $t$ への）であって，グラフは
-$\{0,\ldots,t\}$ 上のもので，辺 $\mathtt a_h:h-1\to h-1$，$\mathtt d_h:h-1\to h$ および
-$\mathtt z:t\to t$ をもち，$R$ の語はその Parikh ベクトルによって定まる．
-$w_i$ において標識 $\mathtt d_h$ は一回，位置 $h(i+1)$ に現れるので，
-一つの標識の位置，および二つの標識の距離 $(h'-h)(i+1)$ は $i$ を定める；すべての語は
-長さ $W$ をもつ．
-
-$J\subseteq L$ かつ $1\le d\le f$ とし，$\tuple x,\tuple y$ を空でない
-$d$-タプルとし，$E=(v_0,\ldots,v_d)$ を $d$-文脈で $E[\tuple x]=w_i\in J$ かつ
-$E[\tuple y]=w_j\in J$ なるものとし，$F$ を $d$-文脈で $F[\tuple x]\in J$ なるものとする．
-$F[\tuple y]\in J$ を示す；逆は対称である．
-補題~\ref{lem:app-lf-path} により $F[\tuple y]\in R$．$i=j$ ならば，
-$\sum_h\Psi(x_h)=\sum_h\Psi(y_h)$ であるので，$F[\tuple y]$ は
-$F[\tuple x]$ の Parikh ベクトルをもち，それに等しい．$i\ne j$ とする．$v_0$ にある標識は，
-$w_i$ と $w_j$ で同じ位置をもち，$v_d$ にある標識は末尾から同じ距離をもち，
-一つの $v_h$ にある二つの標識は同じ距離をもつことになる；そのそれぞれが $i=j$ を強いる．したがって
-$E$ の固定部分は高々 $d-1$ 個の標識を運び，$\tuple x$ は少なくとも
-$t-d+1\ge d+1$ 個の標識を運ぶ．ある成分 $x_h$ は二つを運び，$L$ の語で
-因子 $x_h$ をもつものはすべて $w_i$ である．したがって $F[\tuple x]=w_i=E[\tuple x]$ であり，
-$F$ と $E$ の固定部分は等しい Parikh ベクトルをもち，$\Psi(F[\tuple y])=\Psi(E[\tuple y])$ であり，
-$F[\tuple y]=w_j\in J$．有限言語は文脈自由であり，包含は
-定義~\ref{def:class-cmcf} の後の項目~(a) である．
-
-(ii) 各 $i$ について，(i) により $L\setminus\{w_i\}\in\Cmcf{f}{s}$ であるので，すべての
-特徴標本は，補題~\ref{lem:distinguishing} により $w_i$ を含む．したがって
-$F=L$．逆に，
-$K=L$ は有限の $K$ で $L\subseteq K\subseteq L$ なる唯一のものであり，標準の
-作用素は，標本無矛盾性と健全性により，その上で $L$ を返す．
-
-(iii) 非終端記号 $P_0,\ldots,P_q$（ファンアウト $f$）と $S_0,\ldots,S_q$，
-$C_0,\ldots,C_n$（ファンアウト1），開始記号 $S_q$，および次の規則をとる．
-\[
-\begin{aligned}
- &P_0\to(\mathtt d_1,\mathtt d_3,\ldots,\mathtt d_{2f-1}),\qquad
- C_0\to(\mathtt z),\qquad
- C_h\to(\xi_1^1\xi_2^1)(C_{h-1},C_{h-1})\ (1\le h\le n),\\
- &P_i\to(\mathtt a_1\xi_1^1\mathtt a_2,\ \mathtt a_3\xi_1^2\mathtt a_4,\ \ldots,\
- \mathtt a_{2f-1}\xi_1^f\mathtt a_{2f})(P_{i-1})\ (1\le i\le q),\\
- &S_j\to(\xi_1^1\mathtt d_2\xi_1^2\mathtt d_4\cdots\xi_1^f\mathtt d_{2f}\xi_2^1)(P_j,C_n)
- \ (0\le j\le q),\qquad
- S_j\to(\xi_1^1\mathtt z^{2f})(S_{j-1})\ (1\le j\le q).
-\end{aligned}
-\]
-帰納法により $L(C_h)=\{\mathtt z^{2^h}\}$，
-\[
- L(P_i)=\{(\mathtt a_1^i\mathtt d_1\mathtt a_2^i,\ldots,
- \mathtt a_{2f-1}^i\mathtt d_{2f-1}\mathtt a_{2f}^i)\},\qquad
- L(S_j)=\{\mathtt a_1^i\mathtt d_1\cdots\mathtt a_{2f}^i\mathtt d_{2f}
- \mathtt z^{2f(j-i)+2^n}:0\le i\le j\},
-\]
-したがって $L(S_q)=L$．すべての変数は一回ずつ
-順に現れ，$P_j$ の連続する成分は
-$\mathtt d_2,\mathtt d_4,\ldots$ によって区切られ，どの成分も空でない；したがって文法は良く，
-既約である．それは $2q+n+3$ 個の非終端記号と，$1,q,q+1,q,1,n$ 個の規則で
-大きさ $f+1$，$3f+2$，$2f+4$，$2f+3$，$2$，$5$ のものを，それぞれ $P_0$，$P_i$，$S_j$ の最初と
-二番目の規則，$C_0$ および $C_h$ についてもつ（定義~\ref{def:standard-mcfg}）；
-これは述べた大きさを与え，$n\le q$ は $(7f+17)(q+1)$ を与える．既約な
-表示ではすべての規則はある成功する導出に現れ，すべての語は
-長さ $W$ をもつので，$\bar\theta_G=W$．最後に $G$ を任意の既約な良い
-ファンアウト $\le f$ の表示（$L$ の）とする．自明な型付けについて，
-定理~\ref{thm:exact-reconstruction} は $\Wit(\widetilde G_0)$ を
-$\mathcal B_{f,s_{\mathrm{triv}}}$ に対して特徴的にし，それは高々
-$|V|+|P|\le\|G\|$ 個の語をもつ（定義~\ref{def:witness-set} と，
-定理~\ref{thm:data-from-typed-thickness} の後の注意）；$s_{\mathrm{triv}}$ についての (ii) により，それは
-$q+1$ 個の語をもつ．最後の評価は (ii)，(iii) と $|w_i|=W$ から従う．
-
-(iv) 同一視はどの長さもどの雛形の形も変えないので，文法は
-同じ大きさと厚さで既約かつ良いままであり，
-(ii) と (iii) の議論は，(i) を示せばそのまま適用できる．(i) については，$J\subseteq L$ とし，
-$u\,x\,v=w_i\in J$ かつ $u\,y\,v=w_j\in J$ で $x,y\in\Sigma^+$ とする；$i=j$ ならば
-$x=y$．$i\ne j$ とする．すべての語は長さ $W$ をもつ．$u$ が $\mathtt d$ を含むならば，
-最初の $\mathtt d$ は位置 $i+1$ を $w_i$ において，$j+1$ を $w_j$ においてもつことになる；$v$ が
-$\mathtt d$ を含むならば，最後の $\mathtt d$ の後には $2(q-i)+2^n$ 個と
-$2(q-j)+2^n$ 個の文字が続くことになる．したがって $x$ は両方の文字 $\mathtt d$（$w_i$ の）を含み，
-因子 $\mathtt d\mathtt a^i\mathtt d$ をもち，それは $L$ の他のどの語にも現れず，$w_i$ には
-一回だけ現れる．したがって $p\,x\,q'\in J$ は $(p,q')=(u,v)$ を強い，そのとき
-$p\,y\,q'=w_j\in J$；逆は対称である．
-\end{proof}
-
-
-
 
 
 \section*{原稿作成過程における生成 AI および AI 支援技術の使用に関する申告}
