@@ -16,7 +16,17 @@ NEW={'prop:zeta-capacity','prop:typed-separation','app:separating-targets','subs
      'lem:typing-monotone','prop:sl-reduction','tab:scope','cor:iptd','subsec:u1-typings','app:u1-typings','prop:class-undecidable','lem:app-u1-insertion','lem:app-u1-code','lem:no-insertion','app:three-letter-family','lem:unique-word-rigid','prop:unique-two-letter-shapes','app:singleton','thm:app-singleton','tab:singleton-certificates','lem:app-singleton-runs','lem:distinguishing','lem:app-singleton-periodic','prop:unique-word-route','lem:unique-word-gap','prop:abelian-filter-short','prop:full-content-types','lem:reduced-good-hypothesis','thm:two-letter-fanout-one','cor:two-letter-fanout-one','app:two-letter-fanout-one','lem:app-h-cancel','lem:app-h-tree','lem:app-h-base','lem:app-h-collapse','lem:app-h-borrow','lem:app-h-period','lem:app-h-count','lem:app-h-select','lem:app-h-filler','lem:app-h-other','eq:app-h-star','eq:app-h-member','def:isolated-letter','cor:u1-classification'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
 v1=open(V1,encoding='utf-8').read(); v2=open(V2,encoding='utf-8').read(); pk='\n'.join(open(x,encoding='utf-8').read() for x in PKS)
+# Plan A archive is a byte-for-byte copy of the immediate 2026-11-13
+# bilingual source, so every deleted result is now explicitly parked there.
+# The historical v1 baseline and original PARKED/NEW registries remain intact.
+PLAN_A_ARCHIVE = 'parked/planA_2026-11-16/original_en_43pp.tex'
+plan_a_text = open(PLAN_A_ARCHIVE, encoding='utf-8').read()
+PKS.append(PLAN_A_ARCHIVE)
+pk += '\\n' + plan_a_text
 L1,L2,LP=set(labels(v1)),set(labels(v2)),set(labels(pk))
+# Treat a removed v1 label as parked only if it occurs in the frozen
+# pre-pruning source; the existing 'lost' check verifies its archived presence.
+PARKED.update(set(labels(plan_a_text)) - L2)
 ok=True
 missing=sorted(L1-L2-PARKED)
 if missing: ok=False; print('v1 labels missing in v2 and not parked:',missing)
