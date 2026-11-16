@@ -1,5 +1,7 @@
 # 02-v2 指示書（AI 向け）— 新生 #2 論文の作り方と、次にやること
 
+> **2026-11-16: 著者の明示指示によりfan-out 2／LG境界の新規研究を一時停止。** 正式`op:fanout-two`は **OPEN**。再開前に [停止時入口](RESEARCH_PAUSED_2026-11-16.md) → [最新判定台帳](reviews/PAUSE_PROOF_STATUS_LEDGER_2026-11-16.md) → [未解決義務](reviews/PAUSE_OPEN_OBLIGATIONS_2026-11-16.md) → [証明依存](reviews/PAUSE_PROOF_DEPENDENCIES_2026-11-16.md) → [失敗・反例](reviews/PAUSE_FALSE_ROUTES_2026-11-16.md) → [一次資料・再現索引](reviews/PAUSE_SOURCE_AND_REPLAY_INDEX_2026-11-16.md) を実査。過去のAI研究結果を自動で論文に追加しない。研究再開・論文改訂・新たな検証は別の著者指示がある場合のみ。以下の2026-11-12現在の節は**当時の原稿編集指示**として保持し、研究停止状態を上書きしない。
+
 ## 最優先：現行版の正本（2026-11-12現在）
 
 **この節が最新です。以下の2026-10-31〜11-09の記録は当時の履歴であり、現在の編集指示ではありません。**

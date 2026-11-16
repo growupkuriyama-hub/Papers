@@ -1,5 +1,7 @@
 # #2 v2 — Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing
 
+> **Research temporarily paused by author (2026-11-16):** The fan-out-two `op:fanout-two` is **OPEN**. **[Start here for the frozen research record and later resumption](RESEARCH_PAUSED_2026-11-16.md)** (full status ledger, proof dependencies, known counterexamples, original sources/replay index, next obligations and a future-use AI resume prompt). The manuscript, PDFs and `PAPER.yaml` are not changed by this documentation-only freeze. Do not interpret historical OPEN/PROVED claims below as overriding the newer audited status ledger.
+
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
 **Current status (2026-11-13):** **English/Japanese Conclusions condensed in [PR #112](https://github.com/growupkuriyama-hub/Papers/pull/112), merged to main; updated PDFs published successfully.** The exact fan-out-two Open Problem and the two quantitative gaps remain. The [abstract refinement PR #111](https://github.com/growupkuriyama-hub/Papers/pull/111) (English abstract: 167 words) and [title refinement PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110) remain part of the current manuscript. Formal theorems, proof text, abstracts, Introduction, acknowledgments and appendices are unchanged by PR #112.
