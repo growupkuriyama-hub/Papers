@@ -67,8 +67,8 @@ Independent Researcher, Tokyo, Japan\\
 We study the total encoded length of characteristic samples for positive-data
 learning of multiple context-free languages under a fixed finite-semigroup
 typing. Yoshinaka's finite-signature framework supplies polynomially many
-characteristic words, but does not generally bound their total length
-polynomially in grammar size and thickness.
+characteristic words, but does not itself provide a general polynomial
+bound on their total encoded length in grammar size and thickness.
 For every local-group typing, fixed fan-out and rank, and reduced good
 presentation $G$ of a substitutable target, we obtain a characteristic
 sample of length $O(\|G\|^2\bar\theta_G)$, where $\bar\theta_G$ is
@@ -91,9 +91,9 @@ their contexts \cite{Gold1967,Angluin1980,ClarkEyraud2007}. Multiple
 context-free grammars (MCFGs) permit constituents that are tuples of
 discontinuous substrings \cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011}.
 Yoshinaka's finite-signature framework \cite{Yoshinaka2015General}
-supplies polynomially many characteristic words, but not generally a
-polynomial bound on their total encoded length in the size and thickness
-of a target grammar. Here we establish such a quantitative guarantee.
+supplies polynomially many characteristic words, but does not itself give
+a general polynomial bound on their total encoded length in the size and
+thickness of a target grammar. Here we establish such a quantitative guarantee.
 
 \paragraph{Setting.}
 Fix fan-out $f$, rank $r_{\max}$ and a surjective morphism
@@ -127,12 +127,30 @@ $|\mathsf S|$ fixed \textup(Theorem~\ref{thm:local-group-polydata}\textup).
 \end{mainthm}
 
 Theorem~\ref{thm:A} yields polynomial-time identification in thick
-data (Corollary~\ref{cor:iptd}). Qualitative reconstruction,
-soundness, completeness and Gold identification follow Yoshinaka
+data (Corollary~\ref{cor:iptd}).  Qualitative reconstruction,
+soundness, completeness and Gold identification build on Yoshinaka
 \cite{Yoshinaka2011,Yoshinaka2015General} and are not claimed as new.
-Data-length bounds for trivial typing at every fan-out
-\cite{Yoshinaka2011} and fixed windows at fan-out one
-\cite{Yoshinaka2008} are known.
+Polynomial data-length bounds are already known for trivial typing at
+every fan-out \cite{Yoshinaka2011} and fixed windows at fan-out one
+\cite{Yoshinaka2008}.  The companion CFG manuscript
+\cite{kuriyamaCFG}, currently under review, additionally establishes
+polynomial thick-data bounds at fan-out one for typings whose positive
+image belongs to the join $\mathbf{LI}\vee\mathbf{Grp}$ of the locally
+trivial semigroups and the finite groups.  This is a proper
+subpseudovariety of $\mathbf{LG}$
+\cite{CostaNogueiraTeixeira2021}.  The present theorem permits every
+local-group typing and applies at arbitrary fixed fan-out and rank;
+the CFG manuscript uses a different normal form and thickness parameter
+and no result from it is used in our proofs.
+
+The author's earlier MCFG preprint \cite{KuriyamaMCFGpreprint}
+introduced a closely related observation-guarded tuple class and
+set-driven reconstruction, and proves polynomial-data statements
+under additional exposure or single-spine hypotheses.  Those
+qualitative and conditional results are not claimed again here.
+The present contribution is the uniform local-group upper bound in
+terms of the ordinary rule thickness of any reduced good
+presentation, via ordered simultaneous block replacement.
 
 \paragraph{Proof method and scope.}
 At fan-out greater than one, different subtrees contribute
@@ -144,9 +162,64 @@ Classical sliding-factor coordinates
 (Theorem~\ref{thm:lg-characterization};
 \cite{Straubing1985,Tilson1987,AlmeidaEtAl2009})
 and a witness-length bound then establish the theorem.
-The companion CFG paper \cite{kuriyamaCFG} supplies no theorem
-used here. We do not claim lower bounds, exact pseudovariety
+We do not claim lower bounds, exact pseudovariety
 boundaries or necessity of the local-group assumption.
+
+\paragraph{A non-context-free example.}
+The upper-bound theorem applies to genuinely discontinuous
+constituents.  For $\Sigma=\{\mathtt1,\mathtt2,\mathtt3,\mathtt4\}$ let
+\[
+ L_\times=\{\mathtt1^m\mathtt2^n\mathtt3^m\mathtt4^n:m,n\ge1\}.
+\]
+This standard non-context-free language has a good fan-out-two,
+rank-two MCFG: $A$ derives $(\mathtt1^m,\mathtt3^m)$ by
+$A\to(\mathtt1,\mathtt3)$ and
+$A\to(\mathtt1\xi_1^1,\mathtt3\xi_1^2)(A)$;
+similarly $B$ derives $(\mathtt2^n,\mathtt4^n)$; the start
+rule is $S\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(A,B)$.
+Take the nontrivial first--last-letter typing
+$s=s_{1,1}|_{\Sigma^+}$ (Definition~\ref{def:prefix-suffix-typing}),
+whose positive image is locally trivial and hence a local group.
+Indeed, write $L_\times=Q\cap\varphi^{-1}(0)$, where
+$Q=\mathtt1^+\mathtt2^+\mathtt3^+\mathtt4^+$ is strictly $2$-local
+and the additive morphism $\varphi:\Sigma^*\to\mathbb Z^2$
+sends $\mathtt1,\mathtt3$ to $(1,0),(-1,0)$ and
+$\mathtt2,\mathtt4$ to $(0,1),(0,-1)$.
+If two nonempty tuples of equal $s$-type are both accepted by
+one context, their total $\varphi$-values coincide.  For any
+other context, membership in $Q$ transfers by the same boundary
+letters (and the common successful context certifies the tuples'
+internal adjacent pairs), while the equality of total
+$\varphi$-values transfers the zero-sum condition.
+Thus $L_\times\in\Cmcf{2}{s}$.  This example illustrates class
+coverage, not the sharper distinction between
+$\mathbf{LI}\vee\mathbf{Grp}$ and $\mathbf{LG}$.
+
+\paragraph{Why ordered replacement is needed.}
+In Fig.~\ref{fig:interleaved-blocks}, two owners contribute blocks to
+the same two root components, but in opposite orders.
+Deleting or replacing one owner's blocks can change a noncommutative
+product.  Proposition~\ref{prop:block-replacement-interface}
+selects a common nonempty set of owners preserving \emph{both} rows.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[every node/.style={font=\small},baseline=(current bounding box.center)]
+\node at (0,0.9) {row 1:};
+\node[draw,rounded corners] (aa) at (1.4,0.9) {$A_1$};
+\node at (2.5,0.9) {$g_1$};
+\node[draw,rounded corners] (ba) at (3.6,0.9) {$B_1$};
+\node at (0,-0.35) {row 2:};
+\node[draw,rounded corners] (bb) at (1.4,-0.35) {$B_2$};
+\node at (2.5,-0.35) {$g_2$};
+\node[draw,rounded corners] (ab) at (3.6,-0.35) {$A_2$};
+\draw[densely dashed] (aa.south) -- (ab.north);
+\draw[dotted] (ba.south) -- (bb.north);
+\end{tikzpicture}
+\caption{Two owners $A,B$ contribute interleaving blocks to two
+root components.  The order $A_1,B_1$ in row 1 is reversed as
+$B_2,A_2$ in row 2; all row products must be preserved simultaneously.}
+\label{fig:interleaved-blocks}
+\end{figure}
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -162,8 +235,7 @@ an arbitrary input grammar; $\|G\|$, $\theta_G$ and $t_G$ denote
 its encoding size, rule thickness and nonterminal thickness.
 The fresh-identity completion of $s$ is $\widehat s$.
 Section~\ref{sec:char-data} defines the shortest typed yield
-$t_{\mathrm{typ}}$, representative length $\tau$ and shortest
-realized type length $\mu_m$, none of which is rule thickness.
+$t_{\mathrm{typ}}$, which is distinct from rule thickness.
 
 \subsection{Positive-Data Learning}
 
@@ -836,7 +908,6 @@ $N_{\mathrm{typ}}=|V|+|P|\le\|G\|$.  The theorem recovers the
 $O(\|G\|\bar\theta_G)$ untyped scale, although Yoshinaka's original
 sample has the sharper bounds $|K_G|\le|P|$ and
 $\|K_G\|\le|P|\theta_G$ \cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.
-A nontrivial typing may instead make $t_{\mathrm{typ}}$ exponential.
 
 \section{Upper Bound: Local Groups at Every Fan-Out}
 \label{sec:upper}
