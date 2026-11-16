@@ -54,8 +54,7 @@
 \theoremstyle{plain}
 \newtheorem{mainthm}{Theorem}
 \renewcommand{\themainthm}{\Alph{mainthm}}
-\title{Characteristic-Data Length for Multiple Context-Free Languages
-under Fixed Finite-Semigroup Typing}
+\title{Polynomial-Length Characteristic Data for Multiple Context-Free Languages\\under Local-Group Typing}
 \author{Takayuki Kuriyama\\
 Independent Researcher, Tokyo, Japan\\
 \texttt{growup.kuriyama@gmail.com}}
@@ -65,28 +64,19 @@ Independent Researcher, Tokyo, Japan\\
 \maketitle
 
 \begin{abstract}
-We study the total length of characteristic samples for positive-data learning
-of multiple context-free languages under fixed finite-semigroup typing, which
-restricts substitutability comparisons to tuples with matching componentwise
-types. Yoshinaka's finite-signature framework yields polynomially many
+We study the total encoded length of characteristic samples for positive-data
+learning of multiple context-free languages under a fixed finite-semigroup
+typing. Yoshinaka's finite-signature framework supplies polynomially many
 characteristic words, but does not generally bound their total length
 polynomially in grammar size and thickness.
-
-For local-group typings, at every fixed fan-out and rank we establish a
-characteristic-sample bound $O(\|G\|^2\bar\theta_G)$ for reduced good grammars
-$G$, with a constant depending only on fan-out, rank, and semigroup size.
-This yields identification in polynomial time and thick data. Over sufficiently
-large alphabets, every typing admits targets requiring total length
-$\Omega(\|G\|\bar\theta_G)$ for every class-wide set-driven operator
-admitting characteristic samples.
-
-At fan-out one and rank at least two, local groups form the exact
-pseudovariety boundary for polynomial characteristic-data length: outside
-$\mathbf{LG}$, some typing has targets requiring exponentially long samples,
-precluding polynomial-thick-data identification in the set-driven model.
-At fan-out two, non-context-free targets separate the class coverage of
-local-group, window--group, and window--abelian typings; the corresponding
-boundary remains open.
+For every local-group typing, fixed fan-out and rank, and reduced good
+presentation $G$ of a substitutable target, we obtain a characteristic
+sample of length $O(\|G\|^2\bar\theta_G)$, where $\bar\theta_G$ is
+rule thickness. The constant depends only on fan-out, rank and semigroup
+size. This gives identification in polynomial time and thick data.
+The proof combines simultaneous ordered-block shortening in finite
+possibly noncommutative groups with sliding-factor coordinates for
+local groups, accommodating interleaved tuple components.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Grammatical inference; Multiple context-free
@@ -96,65 +86,33 @@ semigroups; Local groups
 
 \section{Introduction}
 \label{sec:introduction}
-
-Distributional learning identifies constituents from positive data by their
-shared contexts \cite{Gold1967,Angluin1980,ClarkEyraud2007}; Yoshinaka
-extended it to multiple context-free grammars (MCFGs) \cite{SekiEtAl1991},
-whose constituents are tuples of discontinuous substrings
-\cite{Yoshinaka2009,Yoshinaka2011}.  Efficient identification asks for
-characteristic samples polynomial in the size and thickness of the target
-grammar \cite{Yoshinaka2008,EyraudHeinzYoshinaka2016}.  Yoshinaka's
-finite-signature framework \cite{Yoshinaka2015General} provides polynomially
-many characteristic words, but not necessarily words of polynomial length.  We study the
-total length $\|K\|_+=\sum_{w\in K}(|w|+1)$ of characteristic samples when
-constituents are compared under a fixed finite-semigroup typing.
+Distributional learning identifies constituents from positive examples by
+their contexts \cite{Gold1967,Angluin1980,ClarkEyraud2007}. Multiple
+context-free grammars (MCFGs) permit constituents that are tuples of
+discontinuous substrings \cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011}.
+Yoshinaka's finite-signature framework \cite{Yoshinaka2015General}
+supplies polynomially many characteristic words, but not generally a
+polynomial bound on their total encoded length in the size and thickness
+of a target grammar. Here we establish such a quantitative guarantee.
 
 \paragraph{Setting.}
-Fix a fan-out bound $f$ and a typing $s:\Sigma^+\twoheadrightarrow\mathsf S$,
-a surjective morphism onto a finite semigroup chosen for the whole target
-class rather than learned.  The class $\Cmcf{f}{s}$ consists of the
-$f$-MCFLs in which tuples of nonempty words with equal componentwise
-$s$-types and a common context have the same contexts
-(Definition~\ref{def:class-cmcf}); the trivial typing gives the untyped
-setting of \cite{Yoshinaka2011}.  This class-level bias
-\cite{CosteTyping2004} differs from control-set and factor-local biases
-\cite{Takada1988,Takada1995,CosteGaretNicolas2012,CosteNicolas2019}.  Targets
-are presented by reduced good MCFGs $G$ of size $\|G\|$ and rule thickness
-$\bar\theta_G$, the maximum over rules of the shortest sentence using that
-rule (Definition~\ref{def:grammar-properties},
-Lemma~\ref{lem:thickness-equivalence}; cf.~\cite{EyraudHeinzYoshinaka2016,kuriyamaCFG}).
-We bound characteristic samples of the set-driven operator $\mathcal B_{f,s}$
-and its rank-capped variant $\mathcal B^{\le r_{\max}}_{f,s}$
-(Definition~\ref{def:reconstruction}), not the convergence stage of the Gold
-learner built from them (Definition~\ref{def:conservative-learner}).  Upper
-bounds concern some characteristic sample, lower bounds every one;
-Table~\ref{tab:scope} lists the conditions of each main claim.
+Fix fan-out $f$, rank $r_{\max}$ and a surjective morphism
+$s:\Sigma^+\twoheadrightarrow\mathsf S$, fixed for the target class
+rather than learned from data. In $\Cmcf{f}{s}$, tuples of nonempty
+strings with matching componentwise types and a common accepting context
+have the same distributions (Definition~\ref{def:class-cmcf}).
+For samples put $\|K\|_+=\sum_{w\in K}(|w|+1)$.
+A reduced good MCFG $G$ has encoding size $\|G\|$ and rule thickness
+$\bar\theta_G$: the maximum (at least one) of the shortest successful
+sentence lengths using its rules. We bound characteristic samples of
+set-driven reconstruction operators, not the convergence stage
+of a sequential Gold learner.
 
-\paragraph{Why length.}
-A finer typing gives a larger class, which gains non-context-free targets
-already at fan-out two (Proposition~\ref{prop:typed-separation}), while a
-target still has
-$O(\|G\|)$ characteristic words for fixed $f$, rank and $s$
-(Theorem~\ref{thm:data-from-typed-thickness}).  For class-wide set-driven operators, every realized type must occur in
-each characteristic sample (Proposition~\ref{prop:rare-type}), and
-the shortest word of a type may be exponentially long although $\|G\|$ and
-$\bar\theta_G$ are small (Theorem~\ref{thm:C}(ii)).  Nor do untyped bounds for the
-type-refined grammar help, since it may be exponentially thicker
-(Proposition~\ref{prop:typed-thickness-exponential}).
-
-\paragraph{Local groups.}
-A finite semigroup $\mathsf S$ is a \emph{local group} if $e\mathsf Se$ is a
-group for every idempotent $e$; equivalently, $\mathsf S$ has no subsemigroup
-isomorphic to the two-element semilattice $U_1=\{1,\zeta\}$, onto which a
-typing can record whether a letter occurs
-(Theorem~\ref{thm:lg-characterization}).  The pseudovariety $\mathbf{LG}$
-properly contains the join $\mathbf{LI}\vee\mathbf{Grp}$ of locally trivial
-semigroups and groups, whose typings are
-\emph{window--group typings}, determined by a prefix--suffix window and a
-finite-group morphism (Lemma~\ref{lem:mcfg-li-group-window},
-Proposition~\ref{prop:li-g-strict}).
-
-\paragraph{Main results.}
+\paragraph{Main theorem.}
+A finite semigroup is a \emph{local group} when $e\mathsf Se$
+is a group for each idempotent $e$; write $\mathbf{LG}$
+for this pseudovariety. The positive image $\mathsf S=s(\Sigma^+)$,
+rather than its fresh-identity completion, is tested.
 
 \begin{mainthm}[Local groups]
 \label{thm:A}
@@ -168,136 +126,27 @@ $\mathsf S=s(\Sigma^+)$, and is thus uniform over alphabets and typings with
 $|\mathsf S|$ fixed \textup(Theorem~\ref{thm:local-group-polydata}\textup).
 \end{mainthm}
 
-\begin{mainthm}[The linear factor]
-\label{thm:B}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item Suppose that $\Sigma$ has at least $4f+1$ letters, or that $f=1$ and
-$\Sigma$ has at least two letters.  Then for every typing $s$ there are finite
-targets in $\Cmcf{f}{s}$, with rank-two presentations $G$ within a factor
-$7f+17$ of the size of the smallest reduced good ones, whose characteristic
-samples all have length $\Omega(\|G\|\bar\theta_G)$ for $\mathcal B_{f,s}$, for
-$\mathcal B^{\le r}_{f,s}$ \textup($r\ge1$\textup) and for every set-driven
-operator with characteristic samples throughout the class
-\textup(Proposition~\ref{prop:linear-factor-all-fanout}\textup).
-\item For the trivial typing and reduced good presentations of rank
-$\le r_{\max}$, the operator $\mathcal B_{f,s_{\mathrm{triv}}}$ satisfies
-Yoshinaka's bound $O(\|G\|\bar\theta_G)$ \cite{Yoshinaka2011}; if
-$r_{\max}\ge2$ and the alphabet condition of \textup{(i)} holds, the bound is
-attained up to a constant factor by the targets of \textup{(i)}
-\textup(Corollary~\ref{cor:trivial-exact}\textup).
-\end{enumerate}
-\end{mainthm}
+Theorem~\ref{thm:A} yields polynomial-time identification in thick
+data (Corollary~\ref{cor:iptd}). Qualitative reconstruction,
+soundness, completeness and Gold identification follow Yoshinaka
+\cite{Yoshinaka2011,Yoshinaka2015General} and are not claimed as new.
+Data-length bounds for trivial typing at every fan-out
+\cite{Yoshinaka2011} and fixed windows at fan-out one
+\cite{Yoshinaka2008} are known.
 
-\begin{mainthm}[The boundary at fan-out one]
-\label{thm:C}
-Let $f=1$ and $r_{\max}\ge2$.
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item A pseudovariety $\mathbf V$ of finite semigroups is contained in
-$\mathbf{LG}$ if and only if it has \emph{uniform polynomial
-characteristic-data length} \textup(Definition~\ref{def:uniform-polydata}\textup):
-for every nonempty alphabet $\Sigma$ and every typing $s$ with $s(\Sigma^+)\in\mathbf V$
-there is a polynomial $p$, which may depend on $s$ and $\Sigma$ but not on the
-target, such that every $L\in\Cmcf{1}{s}$ has a characteristic sample for
-$\mathcal B^{\le r_{\max}}_{1,s}$ of length at most $p(\|G\|,\bar\theta_G)$ for
-each reduced good presentation $G$ of $L\cap\Sigma^+$ of rank $\le r_{\max}$
-\textup(Theorem~\ref{thm:fanout-one-data}\textup).
-\item Outside $\mathbf{LG}$ the failure is exponential: for the typing $s_U$
-of a three-letter alphabet onto $U_1$ that records whether the letter
-$\mathtt c$ occurs, there are targets $L_n\in\Cmcf{1}{s_U}$ with reduced good
-rank-two presentations $G_n$ of size and rule thickness $O(n)$ whose
-characteristic samples all have length at least
-$3\cdot2^n-1\ge2^{(\|G_n\|+\bar\theta_{G_n})/17}$, for
-$\mathcal B^{\le r_{\max}}_{1,s_U}$, for $\mathcal B_{1,s_U}$ and for every
-set-driven operator with characteristic samples throughout the class
-\textup(Theorem~\ref{thm:fanout-one-data}\textup).
-\end{enumerate}
-\end{mainthm}
-
-Theorem~\ref{thm:A} yields identification in polynomial time and thick data
-at every fixed fan-out and rank (Corollary~\ref{cor:iptd}).  Its upper bound
-and the lower-bound scale in Theorem~\ref{thm:B}(i) differ by one factor
-$\|G\|$; whether this gap is necessary is open.  At fan-out one,
-Theorem~\ref{thm:C} gives a \emph{pseudovariety-level} dichotomy:
-all typings admit $O(\|G\|^2\bar\theta_G)$ data, or some typing has targets
-requiring exponentially long data; individual typings are not classified
-(Remark~\ref{rem:fanout-one-data}).  This strengthens the companion paper's
-sufficient condition $\mathbf{LI}\vee\mathbf{Grp}$ \cite{kuriyamaCFG}
-to the exact boundary $\mathbf{LG}$.
-
-\paragraph{The multiple context-free difficulty.}
-At fan-out one, each subtree contributes a single factor to a single ordered
-product.  For $f\ge2$ it contributes up to $f$ separated blocks, interleaved with those of
-other subtrees in arbitrary and possibly different orders, so noncommutative
-products forbid shortening subtrees independently.  Among sufficiently many
-subtrees we instead shorten a nonempty set simultaneously, keeping the
-ordered product of every component
-(Proposition~\ref{prop:block-replacement-interface}), at the price of a
-constant doubly exponential in $f$ for nonabelian groups.  Local-group typings
-reduce to classical sliding-factor coordinates
-\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009}
-(Theorem~\ref{thm:lg-characterization}).  Both ingredients enlarge coverage: a
-non-context-free target of fan-out two lies in the class of a local-group
-typing but of no window--group typing, another in that of a window--$S_3$
-typing but of no window--abelian typing
-(Propositions~\ref{prop:lg-needed-target},
-\ref{prop:nonabelian-needed-target}).  These separate class coverage, not
-proof methods or exponents.
-
-\paragraph{The fan-out-two question.}
-Whether $\mathbf{LG}$ is the boundary also for $f\ge2$ is open (Open
-Problem~\ref{op:fanout-two}); Theorem~\ref{thm:A} gives the sufficient
-direction.  The family of Theorem~\ref{thm:C}(ii) cannot settle it: for every
-fixed typing and $f\ge2$, its large members leave $\Cmcf{f}{s}$, and in no
-member of $\Cmcf{f}{s}$ is their rare word the only word of its type
-(Theorem~\ref{thm:doubling-no-lift}).
-
-\paragraph{Relation to prior work.}
-Reconstruction, its soundness and completeness, and Gold identification
-follow Yoshinaka \cite{Yoshinaka2011,Yoshinaka2015General} and are not
-claimed as new (Section~\ref{sec:learner}).  Length bounds were known for the
-trivial typing at every fan-out \cite{Yoshinaka2011} and for fixed windows at
-fan-out one \cite{Yoshinaka2008}; our contribution is the length analysis
-beyond these cases and its boundary.  Related models use other mildly
-context-sensitive formalisms \cite{OatesEtAl2006} or membership queries
-\cite{Yoshinaka2010,ClarkYoshinaka2014,KanazawaYoshinaka2023}; the
-substitution lemma of \cite{DuncanEtAl2026Substitution} is a membership, not
-a learning, criterion.  Table~\ref{tab:companion-overlap} compares this paper
-with the companion CFG paper \cite{kuriyamaCFG}; we use none of its theorems,
-and the three-letter doubling family is proved independently in
-Appendix~\ref{app:bracketed-family}.
-
-\begin{table}[htbp]
-\caption{Relation to the companion CFG paper \cite{kuriyamaCFG}.}
-\label{tab:companion-overlap}
-\centering\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\linewidth}{@{}p{0.23\linewidth}p{0.27\linewidth}X@{}}
-\hline
-Topic & Companion (fan-out one) & Present paper\\
-\hline
-Qualitative learning
- & Typed CFG reconstruction and witnesses
- & Typed MCFG reconstruction; qualitative parts credited to Yoshinaka\\
-Positive upper bound
- & $\mathbf{LI}\vee\mathbf{Grp}$
- & All-fan-out $\mathbf{LG}$ and simultaneous
-   noncommutative shortening (Theorem~\ref{thm:A})\\
-Exponential lower bound
- & Five-letter bracketed $U_1$ family
- & Three-letter variant and the exact $f=1$
-   pseudovariety boundary (Theorem~\ref{thm:C})\\
-MCFG-specific results
- & CFG examples
- & Non-CFL typing separations
-   (Propositions~\ref{prop:typed-separation},
-   \ref{prop:lg-needed-target}, \ref{prop:nonabelian-needed-target})\\
-Additional bounds
- & No all-fan-out linear factor
- & All-fan-out linear factor and fan-out-two non-lifting
-   (Theorems~\ref{thm:B}, \ref{thm:doubling-no-lift})\\
-\hline
-\end{tabularx}
-\end{table}
+\paragraph{Proof method and scope.}
+At fan-out greater than one, different subtrees contribute
+separated blocks which may interleave in different orders.
+We simultaneously replace multiple subtrees while preserving
+all ordered products, without commuting group elements
+(Proposition~\ref{prop:block-replacement-interface}).
+Classical sliding-factor coordinates
+(Theorem~\ref{thm:lg-characterization};
+\cite{Straubing1985,Tilson1987,AlmeidaEtAl2009})
+and a witness-length bound then establish the theorem.
+The companion CFG paper \cite{kuriyamaCFG} supplies no theorem
+used here. We do not claim lower bounds, exact pseudovariety
+boundaries or necessity of the local-group assumption.
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -549,41 +398,6 @@ $1$- but not $2$-dimensionally substitutable
 $\widehat{s}^{-1}(\mathsf{Acc})\in\Cmcf{f}{s}$: it is regular, and
 componentwise equal types give equal total types in every context.
 \end{enumerate}
-
-\begin{proposition}[Intersection and abelian filtering]
-\label{prop:abelian-coset-filter}
-Fix $f$ and $s$.
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-\item If $L_1,L_2$ are $(f,s)$-tuple-substitutable, so is $L_1\cap L_2$.
-\item If $L$ is $(f,s)$-tuple-substitutable, $\mathsf A$ is an abelian group,
-$g:\Sigma^*\to\mathsf A$ a monoid morphism, $\mathsf H\le\mathsf A$ and
-$\gamma\in\mathsf A$, then $L\cap g^{-1}(\gamma+\mathsf H)$ is
-$(f,s)$-tuple-substitutable.
-\item If $L\in\Cmcf{f}{s}$, $\mathsf{Acc}\subseteq\mathsf S^\sharp$ and, in (ii),
-$\mathsf A$ is finite, then
-$L\cap\widehat{s}^{-1}(\mathsf{Acc})\cap g^{-1}(\gamma+\mathsf H)\in\Cmcf{f}{s}$.
-\end{enumerate}
-For infinite $\mathsf A$ the intersection in (ii) belongs to $\Cmcf{f}{s}$ whenever
-it is an $f$-MCFL.
-\end{proposition}
-
-\begin{proof}
-(i) A context accepting equal-type $\tuple x,\tuple y$ in $L_1\cap L_2$ accepts
-both in each $L_i$, so their distributions agree in each $L_i$, hence in the
-intersection.  (ii) If some context $E$ accepts $\tuple x,\tuple y$ in
-$g^{-1}(\gamma+\mathsf H)$, then
-$\delta:=\sum_i(g(y_i)-g(x_i))\in\mathsf H$, and by commutativity
-$g(E'[\tuple y])-g(E'[\tuple x])=\delta$ for every
-$E'\in\mathcal E_d$, so coset membership transfers in both directions.  Thus
-$g^{-1}(\gamma+\mathsf H)$ is $(f,s_{\mathrm{triv}})$-, hence
-$(f,s)$-tuple-substitutable; apply (i).  (iii) The language
-$\widehat{s}^{-1}(\mathsf{Acc})$ is $(f,s)$-tuple-substitutable by item (c) above,
-so the intersection is, by (i) and (ii); it is the intersection of an $f$-MCFL with
-a regular language, hence an $f$-MCFL \cite{SekiEtAl1991}.
-\end{proof}
-
-The factorizations in (ii) and (iii) are a tool for constructing members of the
-class; they are not supplied to the reconstruction.
 
 \section{Reconstruction and Qualitative Learning}
 \label{sec:learner}
@@ -875,130 +689,12 @@ Proofs are in Appendix~\ref{app:qualitative-construction-details}
 None of these statements bounds the length of characteristic data or the
 stage of convergence.
 
-\subsection{Typed versus Untyped Classes}
-\label{subsec:typed-separation}
-
-Regular path languages give simple members of every class.
-
-\begin{lemma}[Path languages]\label{lem:app-lf-path}
-Let $R$ be the set of labels of paths from a vertex $p$ to a vertex $p'$ in a
-finite directed graph in which every letter labels exactly one edge.  If
-$\tuple x,\tuple y\in(\Sigma^+)^d$ and $E\in\mathcal E_d$ satisfy
-$E[\tuple x],E[\tuple y]\in R$, then $F[\tuple x]\in R\iff F[\tuple y]\in R$ for
-every $F\in\mathcal E_d$.
-\end{lemma}
-
-\begin{proof}
-A word of $\Sigma^+$ lies in $R$ iff the target of the edge of each letter is the
-source of the edge of the next one, the first edge starts at $p$ and the last
-ends at $p'$.  The $h$-th hole of $E$ is preceded by the last letter of
-$v_{h-1}$, or by the vertex $p$ when $h=1$ and $v_0=\eps$, and is followed
-likewise; internal separators are nonempty.  So $E$ determines the vertices at
-both ends of each hole, and $x_h$ and $y_h$ label paths between the same two
-vertices.  Replacing every $x_h$ by $y_h$ in $F[\tuple x]$ therefore preserves
-all three conditions, and conversely.
-\end{proof}
-
-The class grows strictly with the typing already at fan-out two, and outside the
-context-free languages; the untyped operator then over-generalizes.
-
-\begin{proposition}[A typed class beyond the untyped one]
-\label{prop:typed-separation}
-Let $\Sigma=\{\mathtt a,\mathtt b,\mathtt c,\mathtt d,\mathtt\#_1,\mathtt\#_2,\mathtt\#_3\}$, let
-$s:\Sigma^+\twoheadrightarrow\mathbb Z_2$ count the letters $\mathtt a$ and $\mathtt c$
-modulo $2$, and let
-\[
- L_{\mathrm{sep}}:=\{\mathtt a^m\mathtt\#_1\mathtt b^n\mathtt\#_2\mathtt c^{m'}\mathtt\#_3\mathtt d^n:
- m,n\ge0,\ m'\in\{m,m-1\},\ m'\ge0\}.
-\]
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L_{\mathrm{sep}}$ is a $2$-MCFL of rule rank two and is not context-free.
-\item $L_{\mathrm{sep}}$ is $(f,s)$-tuple-substitutable for every $f\ge1$; hence
-$L_{\mathrm{sep}}\in\Cmcf{f}{s}$ for every $f\ge2$.
-\item $L_{\mathrm{sep}}$ is not $(f,s_{\mathrm{triv}})$-tuple-substitutable for any $f\ge1$:
-the words $\mathtt a$ and $\mathtt a\mathtt a$ share the context
-$\blank_1\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3$ but not the context
-$\blank_1\mathtt\#_1\mathtt\#_2\mathtt\#_3$.  Accordingly, on the sample
-$K=\{\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3,\
-\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3,\
-\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\}\subseteq L_{\mathrm{sep}}$ the untyped operator
-$\mathcal B_{f,s_{\mathrm{triv}}}$ derives
-$\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\notin L_{\mathrm{sep}}$, whereas
-$\mathcal B_{f,s}$ does not link $\mathtt a$ with $\mathtt a\mathtt a$.
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-Let $\psi:\Sigma^*\to\mathbb Z^2$ be the morphism with $\psi(\mathtt a)=(1,0)$,
-$\psi(\mathtt c)=(-1,0)$, $\psi(\mathtt b)=(0,1)$, $\psi(\mathtt d)=(0,-1)$ and
-$\psi(\mathtt\#_i)=(0,0)$, and let
-$R:=\mathtt a^*\mathtt\#_1\mathtt b^*\mathtt\#_2\mathtt c^*\mathtt\#_3\mathtt d^*$.  Then
-$L_{\mathrm{sep}}=R\cap\psi^{-1}(P)$ with $P:=\{(0,0),(1,0)\}$, and $R$ is the path language
-from $0$ to $3$ of the graph on $\{0,1,2,3\}$ with loops $\mathtt a,\mathtt b,\mathtt c,\mathtt d$
-at $0,1,2,3$ and edges $\mathtt\#_h:h-1\to h$; every letter labels exactly one edge.
-
-(i) The rules $E\to(\eps,\eps)\mid(\mathtt a\xi_1^1,\mathtt c\xi_1^2)(E)$,
-$D\to(\eps,\eps)\mid(\mathtt b\xi_1^1,\mathtt d\xi_1^2)(D)$ and
-\[
- S\to(\xi_1^1\mathtt\#_1\xi_2^1\mathtt\#_2\xi_1^2\mathtt\#_3\xi_2^2)(E,D)\mid
- (\mathtt a\xi_1^1\mathtt\#_1\xi_2^1\mathtt\#_2\xi_1^2\mathtt\#_3\xi_2^2)(E,D)
-\]
-form a standard MCFG of fan-out two and rule rank two generating $L_{\mathrm{sep}}$, since $E$
-derives the pairs $(\mathtt a^k,\mathtt c^k)$ and $D$ the pairs $(\mathtt b^n,\mathtt d^n)$.
-The words of $L_{\mathrm{sep}}$ in which $\mathtt a$ and $\mathtt c$ occur an even number of
-times altogether are exactly those with $m'=m$; this is an intersection with a regular
-language, and erasing the markers maps the result onto
-$\{\mathtt a^m\mathtt b^n\mathtt c^m\mathtt d^n:m,n\ge0\}$, which is not context-free.  Context-free
-languages are closed under both operations.
-
-(ii) Let $1\le d\le f$, let $\tuple x,\tuple y\in(\Sigma^+)^d$ have equal componentwise
-$s$-types, and let $E\in\mathcal E_d$ accept both.  Put
-$(\delta_1,\delta_2):=\sum_i\bigl(\psi(x_i)-\psi(y_i)\bigr)=\psi(E[\tuple x])-\psi(E[\tuple y])
-\in P-P$, so $\delta_2=0$ and $\delta_1\in\{-1,0,1\}$.  The first coordinate of $\psi$ is
-congruent to $s$ modulo $2$ on every word, so $\delta_1$ is even; hence
-$\psi(F[\tuple x])=\psi(F[\tuple y])$ for every $F\in\mathcal E_d$.  By
-Lemma~\ref{lem:app-lf-path}, $F[\tuple x]\in R$ iff $F[\tuple y]\in R$.  So $F$ accepts
-$\tuple x$ iff it accepts $\tuple y$.  With (i), $L_{\mathrm{sep}}\in\Cmcf{f}{s}$ for $f\ge2$.
-
-(iii) The two contexts give
-$\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3,\
-\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt c\mathtt\#_3\in L_{\mathrm{sep}}$ ($m'=m$ and
-$m'=m-1$), $\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\in L_{\mathrm{sep}}$ and
-$\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3\notin L_{\mathrm{sep}}$.  On $K$, the first
-context gives the Link rule $[(\mathtt a)]\to[(\mathtt a\mathtt a)]$ for the trivial typing,
-and $((\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3),(\xi_1^1\mathtt\#_1\mathtt\#_2\mathtt\#_3),
-((\mathtt a)))$ is a composition witness of rank one, so
-$\widehat S\to[(\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3)]\to[(\mathtt a)]\mathtt\#_1\mathtt\#_2
-\mathtt\#_3\to[(\mathtt a\mathtt a)]\mathtt\#_1\mathtt\#_2\mathtt\#_3\to
-\mathtt a\mathtt a\mathtt\#_1\mathtt\#_2\mathtt\#_3$.  Under $s$ the types of $\mathtt a$ and
-$\mathtt a\mathtt a$ differ, so no such Link rule exists.
-\end{proof}
-
-The positive image of $s$ is the group $\mathbb Z_2$, a local group, so
-Theorem~\ref{thm:A} gives $L_{\mathrm{sep}}$ characteristic data of length
-$O(\|G\|^2\bar\theta_G)$ for each of its reduced good presentations
-of rank at most $r_{\max}$, at every fixed fan-out $f\ge2$ (with the
-constant depending only on $f$, $r_{\max}$ and $|\mathsf S|=2$),
-while $L_{\mathrm{sep}}$ lies outside the class of Yoshinaka's untyped learner
-\cite{Yoshinaka2011} at every fan-out.
-
 \section{Characteristic-Data Bounds}
 \label{sec:char-data}
-Fix $f$, $r_{\max}$, $\Sigma$ and $s$, and a reduced good MCFG
-$G=(V,\Sigma,P,S,\fan)$ with trimmed $\widehat s$-refinement
-$\widetilde G_0$.  The reconstruction already has $O(\|G\|)$
-characteristic words (Theorem~\ref{thm:exact-reconstruction});
-we bound their total length in terms of $G$.
-Lemma~\ref{lem:witness-length-template} converts short
-same-type substitutes of nonterminal yields into a sample-length
-bound.  Section~\ref{subsec:group-invariants} obtains the substitutes
-by simultaneous shortening and heavy-node counting
-(Lemma~\ref{lem:heavy-node-count}); local-group typings reduce to
-sliding-factor coordinates (Section~\ref{subsec:algebraic-typed-data}).
-The full type-refined grammar may be exponentially thicker than $G$
-(Proposition~\ref{prop:typed-thickness-exponential}), so it is not
-our complexity parameter.  Auxiliary proofs are in
-Appendix~\ref{app:typed-witness-aux-proofs}.
+We use short type-preserving representatives of nonterminal yields
+to bound the total length of characteristic samples, measured with
+the size and thickness of the original reduced good grammar.
+Auxiliary proofs are in Appendix~\ref{app:typed-witness-aux-proofs}.
 
 \subsection{Thickness Scales and Witness Length}
 \label{subsec:thickness-contexts}
@@ -1142,122 +838,6 @@ sample has the sharper bounds $|K_G|\le|P|$ and
 $\|K_G\|\le|P|\theta_G$ \cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.
 A nontrivial typing may instead make $t_{\mathrm{typ}}$ exponential.
 
-\paragraph{Presentation-independent lower bounds from rare types.}
-For $L\subseteq\Sigma^*$ and $m\in\mathsf S$ put
-\[
- \mu_m(L):=\min\{|w|:w\in L\cap\Sigma^+,\ s(w)=m\},
- \qquad (\min\emptyset:=\infty).
-\]
-For a nonempty set of realized types $\mathsf S_L:=s(L\cap\Sigma^+)$, put
-$\mu^\star(L,s):=\max_{m\in \mathsf S_L}\mu_m(L)$; set
-$\mu^\star(L,s)=0$ when $\mathsf S_L=\emptyset$.  A typed start nonterminal
-$S_{(m)}$ exists for each $m\in \mathsf S_L$, and
-$L_{S_{(m)}}=\{(w):w\in L\cap\Sigma^+,\ s(w)=m\}$
-(Proposition~\ref{prop:output-invariants}). Thus, whenever
-$L\cap\Sigma^+\ne\emptyset$,
-\begin{equation}\label{eq:root-thickness}
- \mu^\star(L,s)\le t_{\mathrm{typ}}(G,s)
- \qquad\text{for every reduced good presentation }G.
-\end{equation}
-
-\begin{lemma}[Deleting an entire yield type]
-\label{lem:type-deletion}
-If $L\in\Cmcf{f}{s}$ and $m\in\mathsf S$, then
-$L^{\setminus m}:=L\setminus s^{-1}(m)$ also belongs to
-$\Cmcf{f}{s}$. Moreover, $L\setminus\{\eps\}\in\Cmcf{f}{s}$.
-\end{lemma}
-
-\begin{proof}
-Apply Proposition~\ref{prop:abelian-coset-filter}(iii) with the trivial group and
-$\mathsf{Acc}=\mathsf S^\sharp\setminus\{m\}$, respectively $\mathsf{Acc}=\mathsf S$.
-\end{proof}
-
-All lower bounds of this paper rest on one principle.
-
-\begin{lemma}[Distinguishing sub-targets]
-\label{lem:distinguishing}
-Let $L,L'\in\Cmcf{f}{s}$ with $L'\subsetneq L$.  Every characteristic sample of
-$L$ for $\mathcal B^{\le r}_{f,s}$ $(r\ge1)$ or $\mathcal B_{f,s}$, and every
-characteristic sample of $L$ for a set-driven operator having one for $L'$ as
-well, contains a word of $L\setminus L'$.
-\end{lemma}
-
-\begin{proof}
-Let $F\subseteq L'$ be finite.  For the canonical operators,
-Proposition~\ref{prop:reconstruction-soundness} applied to the target $L'$ gives
-$L(\mathcal B(F))\subseteq L'\ne L$, so $F$ is not characteristic for $L$.  For the
-other operator, let $F'$ be characteristic for $L'$; then
-$F\cup F'\subseteq L'\subseteq L$, so if $F$ were characteristic for $L$, the output
-on $F\cup F'$ would be both $L$ and $L'$.
-\end{proof}
-
-\begin{proposition}[Rare types force positive data]
-\label{prop:rare-type}
-Let $L\in\Cmcf{f}{s}$, and let $m\in \mathsf S_L$.
-Every characteristic sample of $L$ for
-$\mathcal B^{\le r}_{f,s}$ ($r\ge1$) or for $\mathcal B_{f,s}$
-contains a word of type $m$. The same is true for any set-driven
-operator having characteristic samples for both $L$ and
-$L^{\setminus m}$, in particular for an operator having
-characteristic samples for the entire class $\Cmcf{f}{s}$.
-If $\eps\in L$, its sample for either canonical operator must
-also contain $\eps$; the same holds for a set-driven operator admitting
-a characteristic sample for $L\setminus\{\eps\}$ as well.
-Consequently, for the canonical operators and for class-wide
-set-driven operators, every characteristic sample $F$ satisfies
-\[
- \|F\|_+\ge
- \sum_{m\in \mathsf S_L}\bigl(\mu_m(L)+1\bigr)
- +\mathbf 1_{\{\eps\in L\}}.
-\]
-\end{proposition}
-
-\begin{proposition}[Exponential blow-up of full yield-type refinement]
-\label{prop:typed-thickness-exponential}
-Let $\Sigma=\{\mathtt a,\mathtt c\}$ and let $s_{\mathtt c}$ be the typing onto
-$U_1=\{1,\zeta\}$ ($\zeta^2=\zeta$, Section~\ref{sec:fanout-one}) with $s_{\mathtt c}(\mathtt a)=1$ and
-$s_{\mathtt c}(\mathtt c)=\zeta$.  For $n\ge1$ the fan-out-one, rank-two grammar
-\[
- S\to SS\mid\mathtt a\mid\mathtt c\mid A_0\mid\cdots\mid A_n,\qquad
- A_0\to\mathtt a,\qquad
- A_i\to A_{i-1}A_{i-1}\mid\mathtt c\quad(1\le i\le n)
-\]
-is reduced and good, generates $\Sigma^+$, and has $\|G_n\|=O(n)$ and
-$\theta_{G_n}\le2$, but $t_{\mathrm{typ}}(G_n,s_{\mathtt c})\ge2^n$ and
-$\theta_{\widetilde G_{n,0}}\ge2^n$.
-\end{proposition}
-
-This blow-up concerns the witness construction, not the data, because the
-tuples used for a typed nonterminal need not be its yields.  For a typed
-nonterminal $X$, Lemma~\ref{lem:typed-homogeneity} places $L_X$ in one class
-$\operatorname{Cl}_{L,s}(X)$; the \emph{representative length} is
-\[
- \tau_X:=\min\{\|\tuple v\|_1:\tuple v\in\operatorname{Cl}_{L,s}(X)\},\qquad
- \tau(G,s):=\max_X\tau_X\quad(\max\emptyset:=0).
-\]
-
-\begin{corollary}[Characteristic data from equivalent representatives]
-\label{cor:distribution-representatives}
-Under the hypotheses of Theorem~\ref{thm:data-from-typed-thickness},
-\[
- \mu^\star(L,s)\le\tau(G,s)\le t_{\mathrm{typ}}(G,s),
-\]
-and $L$ has a characteristic sample $K$ for both
-$\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ with
-\[
- \|K\|_+\le N_{\mathrm{typ}}\bigl(1+2\bar\theta_G+r_{\max}\tau(G,s)\bigr)
- +\mathbf 1_{\{\eps\in L\}}.
-\]
-\end{corollary}
-
-In Proposition~\ref{prop:typed-thickness-exponential}, $L=\Sigma^+$ and every
-admissible context accepts every tuple, so two tuples are equivalent exactly
-when their types agree; single letters represent both types, and
-$\tau(G_n,s_{\mathtt c})=1$ although $t_{\mathrm{typ}}(G_n,s_{\mathtt c})\ge2^n$.
-Corollary~\ref{cor:distribution-representatives} then gives characteristic
-data of length $O(\|G_n\|)$.  The corollary does not bound $\tau$ itself; the
-proofs below bound $t_{\mathrm{typ}}$ and therefore work on $G$.
-
 \section{Upper Bound: Local Groups at Every Fan-Out}
 \label{sec:upper}
 
@@ -1388,116 +968,11 @@ $(12)(23)\ne(23)(12)$.
 Example~\ref{ex:nonabelian-reverse-owner} shows a replacement preserving rows of
 opposite owner orientation.
 
-\begin{lemma}[Short representatives for window--group invariants]
-\label{lem:marked-heavy-window-group}
-Fix $k,\ell\ge0$, a finite group ${\mathbb G}$ (possibly trivial) and a morphism
-$g:\Sigma^*\to {\mathbb G}$.  Put $\lambda:=(\widehat s_{k,\ell},g):\Sigma^*\to
-\mathsf N:=M_{k,\ell}\times {\mathbb G}$.  Then $(\mathrm R_\beta^\lambda)$ holds with
-\[
- \beta=b_{k,\ell,{\mathbb G}}:=(r_{\max}+1)\,\bar\theta_G\,\bigl(c_{{\mathbb G},f}+f(k+\ell+1)\bigr)\,|V||\mathsf N|^f
- \;\le\;(r_{\max}+1)\bigl(c_{{\mathbb G},f}+f(k+\ell+1)\bigr)|\mathsf N|^f\,\|G\|\,\bar\theta_G .
-\]
-\end{lemma}
-
-\begin{proof}
-We verify the hypothesis of Lemma~\ref{lem:heavy-node-count}(ii) with
-$c=c_{{\mathbb G},f}$ and $c'=f(k+\ell+1)$; since $c+c'\ge1$ and $n_\lambda(G)\le|V||\mathsf N|^f$, it gives the
-bound, and the second inequality uses $|V|\le\|G\|$.  Let $T$ be $\lambda$-minimal
-with heavy threshold $b=\bar\theta_G$.  In
-each root component of length at least $m_0=\max\{1,k+\ell\}$ mark the first $k$
-and the last $\ell$ positions (one arbitrary position if $k=\ell=0$), and in each
-shorter component mark all positions: at most $c'$ marks.  Let $Q$ be an antichain
-of heavy nodes.  Incomparable subtrees have disjoint yields, so at most $c'$ nodes
-of $Q$ contain a mark; let $Q_0$ be the others.
-
-Let $|Q_0|>c_{{\mathbb G},f}$.  For $v\in Q_0$ with nonterminal $C_v$ fix a tuple of
-$L_{C_v}(G)$ of total length at most $\bar\theta_G$
-(Lemma~\ref{lem:thickness-equivalence}(ii)).  By linearity and nondeletion each
-$v\in Q_0$ contributes at most $f$ disjoint contiguous blocks to the root
-components, and the $g$-value of each root component is the ordered product of
-the $g$-values of fixed material and of these blocks.  This is a
-block-replacement family over ${\mathbb G}$ with owners $Q_0$, so
-Proposition~\ref{prop:block-replacement-interface} gives a nonempty
-$J\subseteq Q_0$ whose simultaneous replacement preserves every root $g$-value.
-The replaced blocks contain no mark: short root components are untouched, and in
-a long component they lie strictly between the marked prefix and suffix, which
-keep their letters and positions relative to the ends, while the component keeps
-its $k+\ell$ marked letters (at least one if $k=\ell=0$) and stays long.  So the
-root $\widehat s_{k,\ell}$-vector is preserved as well, and with it the root
-$\lambda$-vector.
-\end{proof}
-
-\subsection{Window and Window--Group Typings: Explicit Constants}
-\label{subsec:boundary-polydata}
-
-Window--group typings are local-group typings
-(Proposition~\ref{prop:li-g-strict}(i)), so Theorem~\ref{thm:A} covers them; this
-subsection is the base case of the replacement argument, with explicit constants.
-A typing $s$ is a \emph{window--group typing} if $\widehat s\preceq(\widehat s_{k,\ell},g)$ for some $k,\ell\ge0$, a
-finite group ${\mathbb G}$ and a morphism $g:\Sigma^*\to{\mathbb G}$; for trivial
-${\mathbb G}$ this means that $s$ is a window typing.
-
-\begin{proposition}[Polynomial characteristic data for window--group typings]
-\label{thm:window-group-polydata}
-Let ${\mathbb G}$ be a finite group (possibly trivial), $g:\Sigma^*\to {\mathbb G}$ a morphism, and
-$\widehat s\preceq(\widehat s_{k,\ell},g)$; let $L\in\Cmcf{f}{s}$ and
-$L(G)=L\cap\Sigma^+$.  Then $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a
-characteristic sample for both $\mathcal B^{\le r_{\max}}_{f,s}$ and
-$\mathcal B_{f,s}$ with $|\Wit(\widetilde G_0)|\le C_s(G)=O(\|G\|)$ and
-\[
- \begin{gathered}
- \|\Wit(\widetilde G_0)\|_+\le K_{k,\ell,{\mathbb G}}\,\|G\|^2\bar\theta_G,\\
- K_{k,\ell,{\mathbb G}}:=|\mathsf S^\sharp|^{fr_{\max}}
- \bigl(3+r_{\max}(r_{\max}+1)(c_{{\mathbb G},f}+f(k+\ell+1))(|M_{k,\ell}||{\mathbb G}|)^f\bigr).
- \end{gathered}
-\]
-\end{proposition}
-
-\begin{proof}
-Lemma~\ref{lem:marked-heavy-window-group} and
-Lemma~\ref{lem:witness-length-template}(i),(ii),(iv) with
-$\lambda=(\widehat s_{k,\ell},g)$ and $b=b_{k,\ell,{\mathbb G}}$ give the sample and
-$\|\Wit\|_+\le C_s(G)(1+2\bar\theta_G+r_{\max}b_{k,\ell,{\mathbb G}})$; insert
-$C_s(G)\le|\mathsf S^\sharp|^{fr_{\max}}\|G\|$, $1+2\bar\theta_G\le3\|G\|\bar\theta_G$ and
-$|V|\le\|G\|$.
-\end{proof}
-
-The group may be noncommutative and its blocks may interleave across components.
-For trivial ${\mathbb G}$, i.e.\ $s\preceq s_{k,\ell}$, one has $c_{{\mathbb G},f}=0$.
-
-\begin{remark}[Abelian groups]
-\label{rem:window-abelian}
-If ${\mathbb G}$ is abelian, Lemma~\ref{lem:block-replacement}(a) gives
-$c_{{\mathbb G},f}=\mathsf d({\mathbb G}^f)$, and
-$\mathsf d({\mathbb G}^f)=O(\exp({\mathbb G})\,f\log|{\mathbb G}|)$
-(Remark~\ref{rem:davenport-size}; $\exp({\mathbb G})$ is the least common multiple of
-the element orders), so $K_{k,\ell,{\mathbb G}}$ is polynomial in $f$ apart from the factors
-$|\mathsf S^\sharp|^{fr_{\max}}$ and $(|M_{k,\ell}||{\mathbb G}|)^f$.  For nonabelian
-${\mathbb G}$ and $f\ge2$, by contrast, $c_{{\mathbb G},f}=M_{{\mathbb G},f}-1$ grows doubly exponentially in $f$.
-\end{remark}
-
-At fan-out one, polynomial time and thick-data learning for fixed windows is due
-to Yoshinaka~\cite[Theorem~1]{Yoshinaka2008}; the bounds above are relative to a
-reduced good presentation and are not claimed to improve on that result after
-normalization.  What is new is that window and ordered group values are preserved
-\emph{simultaneously} across up to $f$ interleaved components.
-
 \subsection{Local-Group Typings}
 \label{subsec:algebraic-typed-data}
-
-$\mathbf{LI}$ is the pseudovariety of finite semigroups $\mathsf T$ satisfying
-$e\mathsf Te=\{e\}$ for every idempotent $e\in \mathsf T$, $\mathbf{Grp}$ that of finite
-groups, and $\mathbf{LI}\vee\mathbf{Grp}$ consists of the divisors of
-products $\mathsf T\times {\mathbb G}$ with $\mathsf T\in\mathbf{LI}$ and ${\mathbb G}$ a finite group \cite{Costa2002LI,Costa2002LIG}.
-By Lemma~\ref{lem:mcfg-li-group-window} (Appendix~\ref{app:local-group}), every typing
-with $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$ is a window--group typing, with $k$, ${\mathbb G}$
-and $g$ depending only on $s$, so Proposition~\ref{thm:window-group-polydata} applies to it.
-
-A finite semigroup is a \emph{local group}, $\mathsf T\in\mathbf{LG}$, if $e\mathsf Te$ is a
-group for every idempotent $e\in\mathsf T$.  A typing is a \emph{local-group typing} if
-its positive image $\mathsf S$ is a local group; the condition is never tested on
-$\mathsf S^\sharp$.  By
-Proposition~\ref{prop:li-g-strict}, $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$.
+A local-group typing has a positive image $\mathsf S\in\mathbf{LG}$:
+$e\mathsf Se$ is a group for each idempotent $e\in\mathsf S$.
+The condition is not imposed on $\mathsf S^\sharp$.
 
 \begin{definition}[Sliding-factor morphism]
 \label{def:local-group-typing}
@@ -1512,16 +987,6 @@ Lemma~\ref{lem:local-group-morphism} it is a morphism onto a finite monoid
 $M_{k,\nu}$.  The typing $s$ is \emph{local-group-determined} if
 $\widehat s\preceq\lambda_{k,\nu}$ for some $k$, ${\mathbb G}$ and $\nu$.
 \end{definition}
-
-A sliding-factor morphism can encode a group contribution determined by a
-sliding factor, rather than by each letter alone.  For example,
-$\lambda_{1,\nu}$ with $\nu(\mathtt{ab})=1\in\mathbb Z_2$ and zero on
-other pairs records the parity of occurrences of $\mathtt{ab}$.
-Even on $\{\mathtt a,\mathtt b\}$ this is not determined by any
-fixed window combined with a finite-group morphism
-(Proposition~\ref{prop:li-g-strict}(ii)).  The local-group
-characterization below expresses this additional power without
-requiring a new learner or a target-specific typing.
 
 \begin{theorem}[Polynomial characteristic data for local-group typings]
 \label{thm:local-group-polydata}
@@ -1576,324 +1041,12 @@ labelling.  It is not a lower bound on the best possible coefficient.
 The Rees and sliding-factor coordinates are classical; their combination with
 owner-wise block shortening is the quantitative step.
 
-\subsection{Separating Typing Regimes on Non-Context-Free Targets}
-\label{subsec:features-needed}
 
-Theorem~\ref{thm:A} has two ingredients beyond windows: sliding-factor
-information (local groups rather than window--group typings) and ordered,
-possibly noncommutative, group products across interleaved components.
-Proposition~\ref{prop:li-g-strict} separates the corresponding semigroups.  The
-following targets separate them on languages: each is a non-context-free
-language of fan-out two that lies in the class of one typing and in the class of
-no typing of the weaker kind (no window--group typing, respectively no
-window--abelian typing), so the weaker theorem does not cover it under any
-typing of that kind.  Both have the form $\varsigma w\mathtt\$x_\times$: a flag
-$\varsigma=\mathtt r$ leaves $w$ unconstrained, $\varsigma=\mathtt l$ imposes a
-typing-dependent condition on $w$, and
-$x_\times\in C_\times:=\{\mathtt{1}^m\mathtt{2}^n\mathtt{3}^m\mathtt{4}^n:m,n\ge1\}$
-makes the target non-context-free.  Let $\varphi_\times$ map
-$\mathtt 1,\mathtt 3,\mathtt 2,\mathtt 4$ to $(1,0),(-1,0),(0,1),(0,-1)\in\mathbb Z^2$
-and all other letters to $0$, and let $\#_{\mathtt{ab}}(w)$ be the number of
-occurrences of the factor $\mathtt{ab}$ in $w$.
-
-\begin{lemma}[Flag separation]
-\label{lem:flag-separation}
-Let $s'$ be a typing, $u,v\in\Sigma^+$ with $s'(u)=s'(v)$, and $z\in\Sigma^*$.  If $L$
-contains $\mathtt ruz$, $\mathtt rvz$ and $\mathtt luz$ but not $\mathtt lvz$, then
-$L\notin\Cmcf{f}{s'}$ for every $f\ge1$.
-\end{lemma}
-
-\begin{proof}
-$\mathtt r\blank_1z\in\mathcal E_1$ accepts $u$ and $v$, while $\mathtt l\blank_1z$
-accepts $u$ but not $v$; so $\D^{(1)}_L(u)\ne\D^{(1)}_L(v)$, and every $(f,s')$
-condition includes arity one.
-\end{proof}
-
-\paragraph{The targets.}
-Let $\Sigma_{\mathrm A}=\{\mathtt l,\mathtt r,\mathtt a,\mathtt b,\mathtt c,\mathtt\$,
-\mathtt 1,\mathtt 2,\mathtt 3,\mathtt 4\}$,
-\[
- L_{\mathrm A}:=\{\varsigma w\mathtt\$x_\times:\varsigma\in\{\mathtt l,\mathtt r\},\
- w\in\{\mathtt a,\mathtt b,\mathtt c\}^+,\ x_\times\in C_\times,\
- \varsigma=\mathtt r\text{ or }\#_{\mathtt{ab}}(w)\text{ even}\},
-\]
-and $s_{\mathrm A}:=\lambda_{1,\nu}|_{\Sigma_{\mathrm A}^+}$, corestricted to its positive image, with
-$\nu:\Sigma_{\mathrm A}^2\to\mathbb Z_2$, $\nu(\mathtt{ab})=1$ and $\nu=0$ otherwise
-(Definition~\ref{def:local-group-typing}); it records the first and last letters and,
-for $|w|\ge2$, the parity of $\#_{\mathtt{ab}}(w)$.  Let
-$\Sigma_{\mathrm B}=\Sigma_{\mathrm A}\setminus\{\mathtt c\}$, $\alpha=(12)$,
-$\beta=(23)\in S_3$, $g_{\mathrm B}:\Sigma_{\mathrm B}^*\to S_3$ with
-$\mathtt a\mapsto\alpha$, $\mathtt b\mapsto\beta$ and all other letters $\mapsto1$,
-\[
- L_{\mathrm B}:=\{\varsigma w\mathtt\$x_\times:\varsigma\in\{\mathtt l,\mathtt r\},\
- w\in\{\mathtt a,\mathtt b\}^+,\ x_\times\in C_\times,\
- \varsigma=\mathtt r\text{ or }g_{\mathrm B}(w)=1\},
-\]
-and $s_{\mathrm B}:=(\widehat s_{1,1},g_{\mathrm B})|_{\Sigma_{\mathrm B}^+}$, corestricted.
-$\mathbf{Ab}$ is the pseudovariety of finite abelian groups, and
-$\mathbf{LI}\vee\mathbf{Ab}$ consists of the divisors of $\mathsf T\times {\mathbb G}$ with
-$\mathsf T\in\mathbf{LI}$ and ${\mathbb G}$ finite abelian.
-
-\begin{proposition}[A target that needs a local group]
-\label{prop:lg-needed-target}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L_{\mathrm A}\in\mathsf{MCFL}(2,2)$ and $L_{\mathrm A}$ is not context-free.
-\item $L_{\mathrm A}\in\Cmcf{f}{s_{\mathrm A}}$ for every $f\ge2$, and
-$s_{\mathrm A}(\Sigma_{\mathrm A}^+)\in\mathbf{LG}$.
-\item If $\widehat{s'}\preceq(\widehat s_{k,\ell},g')$ for some $k,\ell$ and a
-morphism $g'$ into a finite group (in particular if
-$s'(\Sigma_{\mathrm A}^+)\in\mathbf{LI}\vee\mathbf{Grp}$), then
-$L_{\mathrm A}\notin\Cmcf{f}{s'}$ for all $f\ge1$.
-\end{enumerate}
-Hence $s_{\mathrm A}(\Sigma_{\mathrm A}^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$,
-and $L_{\mathrm A}$ is covered by Theorem~\ref{thm:local-group-polydata} but, for no
-typing, by Proposition~\ref{thm:window-group-polydata}, even with
-Lemma~\ref{lem:mcfg-li-group-window}.
-\end{proposition}
-
-\begin{proposition}[A target that needs a noncommutative group]
-\label{prop:nonabelian-needed-target}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $L_{\mathrm B}\in\mathsf{MCFL}(2,2)$ and $L_{\mathrm B}$ is not context-free.
-\item $L_{\mathrm B}\in\Cmcf{f}{s_{\mathrm B}}$ for every $f\ge2$, and $s_{\mathrm B}$ is
-a window--group typing with group $S_3$.
-\item If $\widehat{s'}\preceq(\widehat s_{k,\ell},g')$ for some $k,\ell$ and a
-morphism $g'$ into a finite \emph{abelian} group (in particular if
-$s'(\Sigma_{\mathrm B}^+)\in\mathbf{LI}\vee\mathbf{Ab}$), then
-$L_{\mathrm B}\notin\Cmcf{f}{s'}$ for all $f\ge1$.
-\end{enumerate}
-Hence $L_{\mathrm B}$ is covered by Proposition~\ref{thm:window-group-polydata} with the
-nonabelian constant $c_{S_3,f}=M_{S_3,f}-1$, but for no typing by its trivial-group or
-abelian-group cases (Remark~\ref{rem:window-abelian}).
-\end{proposition}
-
-The proofs, with the explicit separating words, are in
-Appendix~\ref{app:separating-targets}.  Both propositions concern class
-membership, not data length: they show that the typing regimes of
-Theorem~\ref{thm:A} differ on non-context-free targets, not that its exponent is
-sharp.  Each target is a regular flagged prefix followed by the fixed
-non-context-free part $C_\times$; the separation comes from the prefix.  The multiple context-free content of Theorem~\ref{thm:A} lies in
-the block-replacement argument for arbitrary presentations.
-
-\section{Lower Bound: The Linear Factor at Every Fan-Out}
-\label{sec:linear}
-
-This section proves Theorem~\ref{thm:B}.
-
-The upper bound of Theorem~\ref{thm:data-from-typed-thickness} grows with
-$\|G\|$, and the rare-type lower bound of Proposition~\ref{prop:rare-type} does not.  Nevertheless the product $\|G\|\bar\theta_G$ is
-necessary at every fan-out, under every typing over an alphabet of at least
-$4f+1$ letters (two at fan-out one) and for presentations within a constant factor
-of the smallest.
-
-\begin{proposition}[The linear factor is necessary at every fan-out]
-\label{prop:linear-factor-all-fanout}
-Let $f\ge1$, let $\Sigma$ contain $4f+1$ distinct letters
-$\mathtt a_1,\ldots,\mathtt a_{2f},\mathtt d_1,\ldots,\mathtt d_{2f},\mathtt z$, and let
-$s$ be any typing.  For integers $q\ge n\ge1$ put $W:=2fq+2^n+2f$ and
-\[
- w_i:=\mathtt a_1^i\mathtt d_1\mathtt a_2^i\mathtt d_2\cdots\mathtt a_{2f}^i\mathtt d_{2f}
- \mathtt z^{2f(q-i)+2^n}\quad(0\le i\le q),\qquad
- L^{(f)}_{q,n}:=\{w_0,\ldots,w_q\}.
-\]
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item Every subset of $L^{(f)}_{q,n}$ belongs to
-$\Cmcf{f}{s_{\mathrm{triv}}}\subseteq\Cmcf{f}{s}$.
-\item For $\mathcal B_{f,s}$, for $\mathcal B^{\le r}_{f,s}$ \textup($r\ge1$\textup),
-and for every set-driven operator with characteristic samples throughout
-$\Cmcf{f}{s}$, the only characteristic sample of $L^{(f)}_{q,n}$ is
-$L^{(f)}_{q,n}$ itself.
-\item $L^{(f)}_{q,n}$ has a reduced good presentation $G^{(f)}_{q,n}$ of fan-out
-$f$ and rule rank two with
-$\|G^{(f)}_{q,n}\|=(7f+11)q+6n+3f+10\le(7f+17)(q+1)$ and
-$\bar\theta_{G^{(f)}_{q,n}}=W$.  Every reduced good fan-out-$\le f$ presentation
-$G$ of $L^{(f)}_{q,n}$ has $\bar\theta_G=W$ and $\|G\|\ge q+1$.
-\item For $f=1$, \textup{(i)}--\textup{(iii)} hold over any alphabet containing two
-letters $\mathtt a,\mathtt d$, for the words
-$w_i=\mathtt a^i\mathtt d\mathtt a^i\mathtt d\mathtt a^{2(q-i)+2^n}$ obtained by
-identifying $\mathtt a_1,\mathtt a_2,\mathtt z$ with $\mathtt a$ and
-$\mathtt d_1,\mathtt d_2$ with $\mathtt d$, and the grammar identified in the same
-way.
-\end{enumerate}
-Consequently every characteristic sample $F$ in~\textup{(ii)} satisfies
-\[
- \|F\|_+=(q+1)(W+1)\ \ge\ \tfrac1{7f+17}\,\|G^{(f)}_{q,n}\|\,
- \bar\theta_{G^{(f)}_{q,n}}.
-\]
-\end{proposition}
-
-Each word $w_i$ is determined by the position of one marker and by the
-distance of two, which gives~(i) (Appendix~\ref{app:linear-factor-fanout}).  With $q=n$ one has $\|G^{(f)}_{n,n}\|=\Theta(n)$ and
-$\bar\theta_{G^{(f)}_{n,n}}=2^n+\Theta(n)$; with $n$ fixed,
-$\bar\theta_{G^{(f)}_{q,n}}=\Theta(\|G^{(f)}_{q,n}\|)$.  By (iii) the presentations
-are within a constant factor of the smallest reduced good ones, so the bound is
-not obtained by padding $G$; with the trivial typing the proposition shows that
-Yoshinaka's bound $\|K_G\|\le|P|\theta_G$ is attained up to a constant factor.
-All yields of a nonterminal of $G^{(f)}_{q,n}$ have one total length, so
-$t_{\mathrm{typ}}=\bar\theta_G=W$ for this family, and it says nothing about the
-further factor $\|G\|$ in Proposition~\ref{thm:window-group-polydata} and
-Theorem~\ref{thm:local-group-polydata}.  The proof is in
-Appendix~\ref{app:linear-factor-fanout}.
-
-\begin{corollary}[The trivial typing]
-\label{cor:trivial-exact}
-Fix $f$ and $r_{\max}\ge1$.  For the trivial typing, every
-$L\in\Cmcf{f}{s_{\mathrm{triv}}}$ and every reduced good rank-$\le r_{\max}$
-presentation $G$ of $L\cap\Sigma^+$, the operator $\mathcal B_{f,s_{\mathrm{triv}}}$ has
-a characteristic sample of total length $O(\|G\|\bar\theta_G)$, as for Yoshinaka's
-sample \cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.  Suppose moreover
-that $r_{\max}\ge2$ and that $\Sigma$ has at least $4f+1$ letters, or that
-$r_{\max}\ge2$, $f=1$ and $\Sigma$ has at least two letters.  Then this bound is attained
-up to a constant factor: for the
-targets $L^{(f)}_{q,n}$ and presentations $G^{(f)}_{q,n}$ of
-Proposition~\ref{prop:linear-factor-all-fanout}, every characteristic sample has
-length at least $\|G^{(f)}_{q,n}\|\bar\theta_{G^{(f)}_{q,n}}/(7f+17)$.
-\end{corollary}
-
-\begin{proof}
-Every typed nonterminal is an untyped one, so
-$t_{\mathrm{typ}}(G,s_{\mathrm{triv}})\le\bar\theta_G$ by
-Lemma~\ref{lem:thickness-equivalence}, and
-Theorem~\ref{thm:data-from-typed-thickness} gives $O(\|G\|\bar\theta_G)$.
-Proposition~\ref{prop:linear-factor-all-fanout} gives the second assertion;
-the presentations $G^{(f)}_{q,n}$ have rule rank two, which is why
-$r_{\max}\ge2$ is needed there.
-\end{proof}
-
-A characteristic sample stays characteristic when finitely many words of the
-target are added, so only the length of a \emph{shortest} characteristic sample
-is meaningful; the corollary bounds it from above for every target and shows
-that the bound is attained by one family.
-
-\section{The Boundary at Fan-Out One}
-\label{sec:fanout-one}
-
-This section proves Theorem~\ref{thm:C}.
-
-\paragraph{A three-letter doubling family.}
-Let $\mathtt a,\mathtt b,\mathtt c$ be distinct letters, let $U_1=\{1,\zeta\}$ with
-identity $1$ and $\zeta^2=\zeta$, and let
-$s_U:\{\mathtt a,\mathtt b,\mathtt c\}^+\twoheadrightarrow U_1$ send $\mathtt a,\mathtt b$
-to $1$ and $\mathtt c$ to $\zeta$; thus $s_U(w)=1$ exactly for the nonempty words
-without $\mathtt c$.  For $n\ge1$ let $G_n$ be the fan-out-one grammar
-\[
- S\to E_n,\qquad E_0\to\mathtt a,\qquad
- E_i\to\mathtt bE_{i-1}E_{i-1}\mathtt b\mid\mathtt cE_{i-1}\mathtt c\quad(1\le i\le n),
-\]
-put $L^{(i)}:=L_{E_i}(G_n)$, so $L^{(0)}=\{\mathtt a\}$ and
-$L^{(i)}=\mathtt bL^{(i-1)}L^{(i-1)}\mathtt b\cup\mathtt cL^{(i-1)}\mathtt c$, put
-$L_n:=L^{(n)}=L(G_n)$, $W_0:=\mathtt a$ and $W_i:=\mathtt bW_{i-1}W_{i-1}\mathtt b$.
-This is a three-letter variant of the bracketed doubling family of the
-companion CFG manuscript \cite[Proposition~6.4]{kuriyamaCFG}, in which the
-opening and closing brackets are different letters.
-
-\begin{proposition}[Three-letter doubling family]
-\label{prop:bracketed-family}
-\label{prop:three-letter-family}
-For every $n\ge1$:
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $G_n$ is reduced and good, of fan-out one and rule rank two, with
-$\|G_n\|=13n+7$ and $\bar\theta_{G_n}=4n$.
-\item $L_n$ is Clark--Eyraud substitutable: for all $x,y\in\Sigma^+$,
-$\D^{(1)}_{L_n}(x)\cap\D^{(1)}_{L_n}(y)\ne\emptyset$ implies
-$\D^{(1)}_{L_n}(x)=\D^{(1)}_{L_n}(y)$. Hence $L_n\in\Cmcf{1}{s}$ for every
-typing $s$ on every alphabet $\Sigma\supseteq\{\mathtt a,\mathtt b,\mathtt c\}$; in
-particular $L_n\in\Cmcf{1}{s_U}$.
-\item $W_n$ is the only word of $L_n$ without $\mathtt c$, hence the only one of
-$s_U$-type $1$, and $|W_n|=3\cdot2^n-2$.
-\item Every characteristic sample $F$ of $L_n$ for
-$\mathcal B^{\le r}_{1,s_U}$ $(r\ge1)$ or $\mathcal B_{1,s_U}$, or for any
-set-driven operator having characteristic samples throughout
-$\Cmcf{1}{s_U}$, contains $W_n$; hence $\|F\|_+\ge3\cdot2^n-1$.
-\end{enumerate}
-\end{proposition}
-
-The proof is in Appendix~\ref{app:bracketed-family}: (iii) holds because a
-derivation without $\mathtt c$ is the complete binary tree, and (iv) follows from
-(iii) and Proposition~\ref{prop:rare-type}.
-
-\begin{definition}[Uniform polynomial characteristic-data length]
-\label{def:uniform-polydata}
-Let $f,r_{\max}\ge1$.  A pseudovariety $\mathbf V$ of finite semigroups
-has \emph{uniform polynomial characteristic-data length at fan-out $f$ and
-rank $r_{\max}$} if for every nonempty finite alphabet $\Sigma$ and every
-surjective typing $s:\Sigma^+\twoheadrightarrow\mathsf S$ with
-$\mathsf S\in\mathbf V$ there is a polynomial $p=p_{f,r_{\max},s,\Sigma}$
-such that for every $L\in\Cmcf{f}{s}$ and every reduced good
-fan-out-$\le f$, rank-$\le r_{\max}$ presentation $G$ of $L\cap\Sigma^+$,
-the operator $\mathcal B^{\le r_{\max}}_{f,s}$ has a characteristic sample
-$F$ for $L$ with $\|F\|_+\le p(\|G\|,\bar\theta_G)$.
-\end{definition}
-
-The quantifiers are ordered as written: $p$ may depend on $f$,
-$r_{\max}$, $\Sigma$ and the typing $s$, but not on the target $L$ or the
-presentation $G$.
-
-\begin{theorem}[Fan-out one: a pseudovariety boundary for data length]
-\label{thm:fanout-one-data}
-Let $r_{\max}\ge2$ and let $\mathbf V$ be a pseudovariety of finite
-semigroups.
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item $\mathbf V$ has uniform polynomial characteristic-data length at
-fan-out one and rank $r_{\max}$ if and only if
-$\mathbf V\subseteq\mathbf{LG}$.
-\item If $\mathbf V\subseteq\mathbf{LG}$, one may take
-$p(\|G\|,\bar\theta_G)=O_{r_{\max},|\mathsf S|}(\|G\|^2\bar\theta_G)$ in
-Definition~\ref{def:uniform-polydata}.
-\item If $\mathbf V\not\subseteq\mathbf{LG}$, the typing $s_U$ of
-Proposition~\ref{prop:bracketed-family} has positive image
-$U_1\in\mathbf V$, and the targets $L_n\in\Cmcf{1}{s_U}$ have reduced good
-rank-two presentations $G_n$ with $\|G_n\|=13n+7$ and
-$\bar\theta_{G_n}=4n$, while every characteristic sample of $L_n$ has
-total encoded length at least
-$3\cdot2^n-1\ge2^{(\|G_n\|+\bar\theta_{G_n})/17}$.  This lower bound holds for
-$\mathcal B^{\le r_{\max}}_{1,s_U}$, for $\mathcal B_{1,s_U}$, and for every
-set-driven operator having characteristic samples throughout
-$\Cmcf{1}{s_U}$.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-(ii), and hence the \emph{if} direction of (i), is
-Theorem~\ref{thm:local-group-polydata} with $f=1$, since every
-$\mathsf S\in\mathbf V$ then lies in $\mathbf{LG}$.  For (iii), pick
-$\mathsf S\in\mathbf V\setminus\mathbf{LG}$.  By
-Theorem~\ref{thm:lg-characterization}(ii), $\mathsf S$ has a subsemigroup
-isomorphic to $U_1$, and $U_1\in\mathbf V$ because pseudovarieties are
-closed under subsemigroups.  The typing $s_U$ maps onto $U_1$; the
-remaining claims are Proposition~\ref{prop:bracketed-family}(i) and~(iv),
-using $\|G_n\|=O(n)$ and $\theta_{G_n}\le4n$.  Since
-$3\cdot2^n-1$ is not bounded by any polynomial in $\|G_n\|$ and
-$\bar\theta_{G_n}$, the \emph{only if} direction of (i) follows.
-\end{proof}
-
-\begin{remark}[Scope of Theorem~\ref{thm:fanout-one-data}]
-\label{rem:fanout-one-data}
-(a) The lower bound uses rank two: the doubling rules
-$E_i\to\mathtt bE_{i-1}E_{i-1}\mathtt b$ are binary.  For targets represented by
-linear CFGs the companion manuscript gives, for every fixed typing,
-characteristic data polynomial in the grammar size alone
-\cite[Theorem~8.3]{kuriyamaCFG}.
-(b) The theorem concerns pseudovarieties; which individual typings have
-polynomial data is not characterized here.
-(c) The upper bound is for the fixed operator
-$\mathcal B^{\le r_{\max}}_{1,s}$, whereas the lower bound holds for every
-set-driven operator with characteristic samples throughout the class.
-\end{remark}
-
-\paragraph{Polynomial time and thick data.}
-Eyraud, Heinz and Yoshinaka \cite[Definition~2.12]{EyraudHeinzYoshinaka2016},
-following \cite{Yoshinaka2008}, call a class identifiable in polynomial time and
-thick data (IPTtD) if some algorithm returns, in time polynomial in the size of
-a given sample, a hypothesis consistent with it, and every representation $R$
-of a target has a characteristic sample of size polynomial in the size of $R$
-and its thickness.  By Lemma~\ref{lem:thickness-equivalence}(ii),(iii), their
-thickness (the longest shortest yield of a nonterminal, $t_G$) and our rule
-thickness are polynomially equivalent given $\|G\|$.  The sample sizes
-$\sum_{w\in K}|w|$ and $\|K\|_+$ differ by at most the number of words.  Their
-definition asks the algorithm to return a hypothesis in a fixed class of
-representations; the raw output of $\mathcal B^{\le r_{\max}}_{f,s}$ may contain
-the rule $\widehat S\to\eps$, so we first remove it.
+\subsection{Identification in Polynomial Time and Thick Data}
+The IPTtD criterion requires polynomial-time consistent hypotheses in
+a fixed representation class and polynomial characteristic data
+\cite[Definition~2.12]{EyraudHeinzYoshinaka2016}.
+We represent the optional $\eps$-production separately by a bit.
 
 \begin{lemma}[Reduced good hypotheses]
 \label{lem:reduced-good-hypothesis}
@@ -1924,240 +1077,42 @@ running time are those of Theorem~\ref{thm:poly}.
 
 \begin{corollary}[Identification in polynomial time and thick data]
 \label{cor:iptd}
-Fix $f\ge1$, $r_{\max}\ge1$ and a typing $s$.  Let $\mathcal R$ consist of the
-pairs $(G,z)$ of a bit $z\in\{0,1\}$ and either a reduced good fan-out-$\le f$,
-rank-$\le r_{\max}$ MCFG $G$ or a fixed grammar $G_\emptyset$ without rules; the pair
-represents $L(G)\cup\{\eps:z=1\}$.  The members of
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ are represented by
-$(G,[\eps\in L])$ with $G$ a reduced good fan-out-$\le f$, rank-$\le r_{\max}$
-presentation of $L\cap\Sigma^+$, or $G=G_\emptyset$ if $L\cap\Sigma^+=\emptyset$.
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item If $s(\Sigma^+)\in\mathbf{LG}$, the algorithm returning
-$(G^+_K,[\eps\in K])$ of Lemma~\ref{lem:reduced-good-hypothesis}, or
-$(G_\emptyset,[\eps\in K])$ if $K\cap\Sigma^+=\emptyset$, identifies
-$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$ in polynomial time and thick data for
-the class $\mathcal R$.
-\item If $f=1$ and $r_{\max}\ge2$, no algorithm, whatever its running
-time, satisfies the data condition of IPTtD for
-$\Cmcf{1}{s_U}\cap\mathsf{MCFL}(1,r_{\max})$ with respect to the class
-$\mathcal R$.
-\item Consequently, for $r_{\max}\ge2$ and a pseudovariety $\mathbf V$, the
-following are equivalent: $\mathbf V\subseteq\mathbf{LG}$; for every typing $s$
-with $s(\Sigma^+)\in\mathbf V$, the class
-$\Cmcf{1}{s}\cap\mathsf{MCFL}(1,r_{\max})$ is IPTtD for the class $\mathcal R$.
-\end{enumerate}
+Fix $f,r_{\max}\ge1$ and $s$ with $s(\Sigma^+)\in\mathbf{LG}$.
+Let $\mathcal R$ consist of pairs $(G,z)$ with $z\in\{0,1\}$
+and $G$ a reduced good fan-out-$\le f$, rank-$\le r_{\max}$
+MCFG or a fixed rule-free grammar $G_\emptyset$; the pair
+represents $L(G)\cup\{\eps:z=1\}$.
+Return $(G^+_K,[\eps\in K])$ of
+Lemma~\ref{lem:reduced-good-hypothesis} if
+$K\cap\Sigma^+\ne\emptyset$, and
+$(G_\emptyset,[\eps\in K])$ otherwise.
+This algorithm identifies
+$\Cmcf{f}{s}\cap\mathsf{MCFL}(f,r_{\max})$
+in polynomial time and thick data relative to $\mathcal R$.
 \end{corollary}
-
 \begin{proof}
-(i) By Lemma~\ref{lem:reduced-good-hypothesis} the hypothesis lies in
-$\mathcal R$, is computed in time polynomial in $\|K\|_+$, and represents
-$L(\mathcal B^{\le r_{\max}}_{f,s}(K))$, which contains $K$ (each $w\in K\cap\Sigma^+$
-is derived by its Start and Const rules).
-Theorem~\ref{thm:local-group-polydata} gives a sample $F$ of length
-$O(\|G\|^2\bar\theta_G)$ with $L(\mathcal B^{\le r_{\max}}_{f,s}(K))=L$ whenever
-$F\subseteq K\subseteq L$, so the hypothesis then represents $L$; and
-$\bar\theta_G\le2\|G\|\max\{1,t_G\}$.
-(ii) In \cite[Definition~2.12]{EyraudHeinzYoshinaka2016} an algorithm reads a
-sample, which is a finite set of strings, so it is a set-driven operator.  If
-such an algorithm satisfied the IPTtD data condition, it would have a
-characteristic sample for every member of the class; every member $L$
-with $L\cap\Sigma^+\ne\emptyset$ has a reduced good
-presentation of rank $\le r_{\max}$ (Proposition~\ref{prop:good-normalization}).
-The targets $L_n$ of Proposition~\ref{prop:bracketed-family} belong to the class,
-and so does $L_n\setminus\{W_n\}$: it lies in $\Cmcf{1}{s_U}$ by
-Lemma~\ref{lem:type-deletion} and is finite.  By
-Proposition~\ref{prop:rare-type}, every characteristic sample of $L_n$ contains
-$W_n$, of length $3\cdot2^n-2$, while $\|G_n\|=O(n)$ and $t_{G_n}\le\theta_{G_n}\le4n$.
-(iii) follows from (i) with $f=1$ and from (ii), since a pseudovariety not
-contained in $\mathbf{LG}$ contains $U_1$
-(Theorem~\ref{thm:fanout-one-data}).
+By Lemma~\ref{lem:reduced-good-hypothesis} and
+Theorem~\ref{thm:poly}, the hypothesis belongs to $\mathcal R$,
+is consistent with $K$, and is constructed in polynomial time.
+Theorem~\ref{thm:local-group-polydata} supplies a characteristic
+sample of length $O(\|G\|^2\bar\theta_G)$ for each reduced good
+representation of a nonempty positive target; the empty case is
+immediate.  Lemma~\ref{lem:thickness-equivalence} gives
+$\bar\theta_G\le2\|G\|\max\{1,t_G\}$, hence the claimed
+polynomial data bound.
 \end{proof}
-
-The hypotheses lie in $\mathcal R$ on every sample; on samples that contain no
-characteristic sample their languages need not belong to the class, as for the
-learner of \cite{Yoshinaka2011}.
-
-Table~\ref{tab:scope} collects, for each main claim, the fixed parameters,
-the operators and the side conditions.
-
-\begin{table}[htbp]
-\caption{Scope of the main claims.  ``Canonical'' means both
-$\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ (with one common sample);
-``class-wide'' means every set-driven operator with characteristic samples
-throughout the class.  $G$ is a reduced good presentation of $L\cap\Sigma^+$ of
-fan-out $\le f$ and rank $\le r_{\max}$.}
-\label{tab:scope}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.04}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}X@{}}
-\hline
-Claim & Fixed & Operators & Bound and conditions\\
-\hline
-Theorem~\ref{thm:A} (Theorem~\ref{thm:local-group-polydata})
- & $f$, $r_{\max}$, $\Sigma$, $s$ with $s(\Sigma^+)\in\mathbf{LG}$
- & canonical
- & upper $O_{f,r_{\max},|\mathsf S|}(\|G\|^2\bar\theta_G)$, uniformly
-    in $\Sigma,s$ at fixed $|\mathsf S|$; every $L\in\Cmcf{f}{s}$ and every $G$\\
-Theorem~\ref{thm:B}(i) (Proposition~\ref{prop:linear-factor-all-fanout})
- & $f$, any $s$
- & canonical ($r\ge1$), class-wide
- & lower $\Omega(\|G\|\bar\theta_G)$ for finite targets; needs $|\Sigma|\ge4f+1$ ($|\Sigma|\ge2$ if $f=1$);
-   presentations of rank two\\
-Theorem~\ref{thm:B}(ii) (Corollary~\ref{cor:trivial-exact})
- & $f$, $r_{\max}\ge1$, $s_{\mathrm{triv}}$
- & $\mathcal B_{f,s_{\mathrm{triv}}}$
- & upper $O(\|G\|\bar\theta_G)$ (Yoshinaka \cite{Yoshinaka2011}); attained if $r_{\max}\ge2$ and $|\Sigma|\ge4f+1$ ($\ge2$ if $f=1$)\\
-Theorem~\ref{thm:C}(i) (Theorem~\ref{thm:fanout-one-data})
- & $f=1$, $r_{\max}\ge2$, a pseudovariety
- & $\mathcal B^{\le r_{\max}}_{1,s}$ (Definition~\ref{def:uniform-polydata})
- & uniform polynomial data iff $\mathbf V\subseteq\mathbf{LG}$\\
-Theorem~\ref{thm:C}(ii)
-  & $f=1$, $s_U$ on three letters
- & canonical, class-wide
- & lower $3\cdot2^n-1$ for presentations of size and thickness $O(n)$\\
-Corollary~\ref{cor:iptd}
- & $f$, $r_{\max}$, $s$
- & set-driven
- & IPTtD for $\mathbf{LG}$ at every $f$; at $f=1$ exactly for $\mathbf{V}\subseteq\mathbf{LG}$\\
-Theorem~\ref{thm:doubling-no-lift}
- & any $f\ge2$, any $s$
- & none (membership)
-  & the family of Theorem~\ref{thm:C}(ii) and its letter-disjoint images leave $\Cmcf{f}{s}$, and their forced word is never the only one of its type there; no data bound at $f\ge2$\\
-Propositions~\ref{prop:lg-needed-target}, \ref{prop:nonabelian-needed-target}
- & the alphabets and targets $L_{\mathrm A}$, $L_{\mathrm B}$
- & none (membership)
- & non-context-free, fan-out two, rank two; in $\Cmcf{f}{s_{\mathrm A}}$, $\Cmcf{f}{s_{\mathrm B}}$ for $f\ge2$, and for every $f\ge1$ outside the class of every window--group, respectively window--abelian, typing; no data bound\\
-\hline
-\end{tabularx}
-\end{table}
-
-\section{Fan-Out Two: The Lower Bound Does Not Lift}
-\label{sec:fanout-two}
-\label{subsec:power-transfer}
-
-This section shows that the exponential family of Theorem~\ref{thm:C}(ii),
-and its images under letter-disjoint morphisms, do not carry over to fan-out
-two (Theorem~\ref{thm:doubling-no-lift}).
-
-\begin{lemma}[Power transfer across two tuple components]
-\label{lem:power-transfer}
-Let $f\ge2$, $L\in\Cmcf{f}{s}$, $u\in\Sigma^+$, and let
-$i_0,p\ge1$ be an eventual index and period of $s(u)$, i.e.\
-$s(u)^{t+p}=s(u)^t$ for $t\ge i_0$. Suppose
-$i,j\ge i_0$, $\delta\in p\mathbb Z_{>0}$, and some word of $L$
-contains the factor $u^{i+\delta+j+1}$. Then for all
-$w_{\mathrm L},w_{\mathrm R}\in\Sigma^*$ and $w_{\mathrm M}\in\Sigma^+$,
-\[
- w_{\mathrm L}u^iw_{\mathrm M}u^{\delta+j}w_{\mathrm R}\in L\quad\Longleftrightarrow\quad
- w_{\mathrm L}u^{i+\delta}w_{\mathrm M}u^jw_{\mathrm R}\in L.
-\]
-\end{lemma}
-\begin{proof}
-Write the given word as $yu^{i+\delta+j+1}z$.
-The tuples $\tuple x=(u^i,u^{\delta+j})$ and
-$\tuple x'=(u^{i+\delta},u^j)$ have the same componentwise $s$-types
-by eventual periodicity. They also have the common admissible
-accepting context $E=y\blank_1u\blank_2z$, since
-$E[\tuple x]=E[\tuple x']=yu^{i+\delta+j+1}z\in L$.
-The $(f,s)$-condition thus equates their two-component distributions.
-Test them in the admissible context $w_{\mathrm L}\blank_1w_{\mathrm M}\blank_2w_{\mathrm R}$;
-the condition $w_{\mathrm M}\ne\eps$ is essential.
-\end{proof}
-
-\begin{theorem}[The doubling families do not lift]
-\label{thm:doubling-no-lift}
-Let $s:\Sigma^+\twoheadrightarrow\mathsf S$ be any fixed finite-semigroup typing, let
-$u_{\mathtt a},u_{\mathtt b},u_{\mathtt c}\in\Sigma^+$ be letter-disjoint, let $\varphi$ be the
-morphism $\mathtt a\mapsto u_{\mathtt a}$, $\mathtt b\mapsto u_{\mathtt b}$,
-$\mathtt c\mapsto u_{\mathtt c}$, and let $H_n:=\varphi(L_n)$
-for the family $L_n$ of Proposition~\ref{prop:three-letter-family} \textup(so $H_n=L_n$
-when $\varphi$ is the identity\textup).  Let $n\ge2|\mathsf S|+2$ and $f\ge2$.
-Every $L\in\Cmcf{f}{s}$ containing $\varphi(W_n)$ contains another word with the same
-type, the same Parikh vector and no letter of $u_{\mathtt c}$.  In particular
-$H_n\notin\Cmcf{f}{s}$, and in no member of $\Cmcf{f}{s}$ is $\varphi(W_n)$ the only
-word of its type.
-\end{theorem}
-\begin{proof}
-The morphism $\varphi$ is injective, and a word of $H_n$ without the
-letters of $u_{\mathtt c}$ is the image of a word of $L_n$ without $\mathtt c$, so
-$\varphi(W_n)$ is the only such word.  Choose an eventual index $i_0\ge1$ and period
-$p\ge1$ for $s(u_{\mathtt b})$ with $i_0+p\le|\mathsf S|+1$; then $n\ge2i_0+p+1$.  Put
-$i=i_0$, $\delta=p$ and $j=n-i-\delta-1\ge i_0$.  The word
-$\varphi(W_n)=u_{\mathtt b}\,\varphi(W_{n-1})\,\varphi(W_{n-1})\,u_{\mathtt b}$ starts with
-$u_{\mathtt b}^nu_{\mathtt a}$, so it contains $u_{\mathtt b}^{i+\delta+j+1}$.  Let
-$u_{\mathtt b}^i$ be the $i$ copies of $u_{\mathtt b}$ after the first one, and let
-$u_{\mathtt b}^{\delta+j}$ be the $\delta+j\le n-1$ copies immediately before the first
-$u_{\mathtt a}$ of the second copy of $\varphi(W_{n-1})$, which is preceded by at least
-$n-1$ copies of $u_{\mathtt b}$.  Then
-\[
- \varphi(W_n)=w_{\mathrm L}u_{\mathtt b}^i w_{\mathrm M}u_{\mathtt b}^{\delta+j}w_{\mathrm R}
-\]
-with $w_{\mathrm L}=u_{\mathtt b}$ and $w_{\mathrm M}\ne\eps$ containing the first
-$u_{\mathtt a}$.  Let $L\in\Cmcf{f}{s}$ contain $\varphi(W_n)$.  By
-Lemma~\ref{lem:power-transfer},
-$w':=w_{\mathrm L}u_{\mathtt b}^{i+\delta}w_{\mathrm M}u_{\mathtt b}^jw_{\mathrm R}\in L$.  The
-two filled tuples have equal componentwise types, so $s(w')=s(\varphi(W_n))$; $w'$ has
-the Parikh vector of $\varphi(W_n)$ and no letter of $u_{\mathtt c}$, but begins with
-$u_{\mathtt b}^{n+\delta}u_{\mathtt a}$, not $u_{\mathtt b}^nu_{\mathtt a}$, so
-$w'\ne\varphi(W_n)$ since $u_{\mathtt a}$ and $u_{\mathtt b}$ have no common letter.  For
-$L=H_n$ this contradicts the uniqueness of $\varphi(W_n)$ shown above.
-\end{proof}
-
-\begin{remark}
-Power transfer preserves the total length and Parikh vector of the word, so it
-does not show that rare-type representatives are short; it only excludes the
-family of Proposition~\ref{prop:three-letter-family} and its letter-disjoint images,
-also after words are added.
-\end{remark}
 
 \section{Conclusion}
 \label{sec:conclusion}
-
-Local-group typings admit characteristic samples of total length
-$O(\|G\|^2\bar\theta_G)$ at every fixed fan-out and rank
-(Theorem~\ref{thm:A}). Non-context-free fan-out-two targets
-strictly separate the class coverage of local-group,
-window--group, and window--abelian typings
-(Propositions~\ref{prop:lg-needed-target}
-and~\ref{prop:nonabelian-needed-target}).
-Over sufficiently large alphabets, every typing admits
-targets requiring length $\Omega(\|G\|\bar\theta_G)$
-(Theorem~\ref{thm:B}). At fan-out one, $\mathbf{LG}$ is
-the exact pseudovariety boundary (Theorem~\ref{thm:C}).
-
-\begin{openproblem}[The boundary at fan-out two]
-\label{op:fanout-two}
-Fix $f\ge2$ and $r_{\max}\ge2$.  Is $\mathbf{LG}$ the pseudovariety boundary at
-fan-out $f$, that is, does every pseudovariety of finite semigroups not
-contained in $\mathbf{LG}$ fail to have uniform polynomial characteristic-data
-length at fan-out $f$ and rank $r_{\max}$
-(Definition~\ref{def:uniform-polydata})?
-\end{openproblem}
-
-Sufficiency holds at every fan-out
-(Theorem~\ref{thm:local-group-polydata}).
-Since every pseudovariety outside $\mathbf{LG}$
-contains $U_1$ (Theorem~\ref{thm:lg-characterization}),
-a positive answer would follow from a single
-$U_1$-typing with targets whose shortest representatives
-of some realized type have superpolynomial length
-(Proposition~\ref{prop:rare-type}).
-The doubling family cannot provide such targets
-(Theorem~\ref{thm:doubling-no-lift}).
-
-\paragraph{Remaining gaps.}
-The upper and lower data bounds for local-group
-typings differ by one factor $\|G\|$. This factor
-arises from derivation paths in the witness construction
-(Lemma~\ref{lem:heavy-node-count}), but its necessity
-for characteristic-data length remains open.
-For noncommutative groups, the current bound on
-$M_{\mathbb G,f}$ is doubly exponential in $f$
-(Lemma~\ref{lem:order-homogenize}).
-Whether $c_{\mathbb G,f}\le A(|\mathbb G|^f)^B$
-for absolute constants $A,B>0$ remains open.
+At every fixed fan-out and rank, local-group typings permit
+characteristic samples of total encoded length
+$O(\|G\|^2\bar\theta_G)$ and identification in polynomial
+time and thick data (Theorem~\ref{thm:A};
+Corollary~\ref{cor:iptd}). The proof combines simultaneous
+noncommutative block replacement with sliding-factor coordinates.
+Improving the dependence of the constants on fan-out remains open.
+Whether local groups are necessary for polynomial data length
+at fan-out at least two remains open; we claim no converse.
 
 \section*{Acknowledgments}
 The author thanks Makoto Kanazawa and Ryo Yoshinaka for valuable discussions
@@ -2181,7 +1136,7 @@ are given in full.
 \label{app:group-blocks}
 
 This appendix proves Proposition~\ref{prop:block-replacement-interface}, used in
-Lemmas~\ref{lem:marked-heavy-window-group} and~\ref{lem:local-group-shortest}.
+Lemma~\ref{lem:local-group-shortest}.
 The abelian case is a zero-sum argument.  The general case never commutes
 factors; it has three parts: an order classification for homogeneous point
 configurations (Lemma~\ref{lem:group-block-order}), an interval selection by
@@ -2469,8 +1424,8 @@ $|\mathsf T|$ elements lies in $\mathsf T^1E(\mathsf T)\mathsf T^1$
 \cite[Lemma~2.2]{AlmeidaEtAl2009}, \cite{Pin1986}: either two of its first
 $|\mathsf T|$ prefix products coincide, $t_i=t_j$ with $i<j$, and then
 $t_i=t_ix^\omega$ for the product $x$ of the factors $i+1,\ldots,j$; or these prefix
-products exhaust $\mathsf T$ and one of them is idempotent.  All three uses below
-(Lemmas~\ref{lem:lg-rees-window-coordinate} and~\ref{lem:mcfg-li-group-window},
+products exhaust $\mathsf T$ and one of them is idempotent.  Both uses below
+(Lemma~\ref{lem:lg-rees-window-coordinate} and
 Theorem~\ref{thm:lg-characterization}) rest on this fact.
 
 \begin{lemma}[Sliding-factor maps are morphisms]
@@ -2606,65 +1561,6 @@ $(\langle p,q\rangle,\gamma)(\langle p,q\rangle,\gamma')=(\langle p,q\rangle,\ga
 $\Delta:=\Delta_\nu(q,p)$.  This operation makes $\{\langle p,q\rangle\}\times {\mathbb G}$ a group
 isomorphic to ${\mathbb G}$ via $\gamma\mapsto\gamma\Delta$, and $e\mathsf Te$ is a finite nonempty
 subsemigroup of it, hence a subgroup.
-\end{proof}
-
-\begin{lemma}[Locally trivial--group typings admit window--group refinements]
-\label{lem:mcfg-li-group-window}
-Let $\Sigma\ne\emptyset$.  If $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$, there are
-$k\ge1$, a finite group ${\mathbb G}$ and a morphism $g:\Sigma^*\to {\mathbb G}$ with
-$\widehat s\preceq(\widehat s_{k,k},g)$; if $\mathsf S\in\mathbf{LI}$, ${\mathbb G}$ can be
-trivial.
-\end{lemma}
-
-\begin{proof}
-Choose a finite $\mathsf S'\in\mathbf{LI}$, a finite group ${\mathbb G}$, a subsemigroup
-$\mathsf T\le \mathsf S'\times {\mathbb G}$ and a surjective morphism $\vartheta:\mathsf T\to\mathsf S$ (for
-$\mathsf S\in\mathbf{LI}$: $\mathsf S'=\mathsf S$, ${\mathbb G}=\{1\}$).  Choosing for every letter a preimage in $\mathsf T$
-of its $s$-image defines morphisms $s':\Sigma^+\to\mathsf S'$ and $g$ with
-$\vartheta(s'(w),g(w))=s(w)$; put $g(\eps)=1_{\mathbb G}$.  The subsemigroup
-$\mathsf S_0:=s'(\Sigma^+)\le \mathsf S'$ is locally trivial; let $k:=|\mathsf S_0|$.  For
-idempotents $e,e'$ of $\mathsf S_0$ and $y\in \mathsf S_0^1$ one has
-$eye'=ey(e'ee')=(e(ye')e)e'=ee'$.
-For $|w|\ge2k$ write $w=pxz$ with $|p|=|z|=k$.  By pumping,
-$s'(p)=y_1ey_2$ and $s'(z)=y_3e'y_4$ with $y_1,\ldots,y_4\in \mathsf S_0^1$ and $e,e'$
-idempotent, so $s'(w)=y_1e\,(y_2\,s'(x)\,y_3)\,e'y_4=y_1ee'y_4$ (with $s'(\eps):=1$), which
-depends only on $p=\operatorname{pref}_k(w)$ and $z=\operatorname{suf}_k(w)$.
-Shorter words are recorded exactly by $\widehat s_{k,k}$, which also separates
-$\eps$.  Hence equal $(\widehat s_{k,k},g)$-values imply equal $(s',g)$-values and
-equal $s$-values.
-\end{proof}
-
-\begin{proposition}[Window--group typings are local-group typings, strictly]
-\label{prop:li-g-strict}
-\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item If $\widehat s\preceq(\widehat s_{k,\ell},g)$ for a morphism $g$ into a finite
-group, then $\widehat s\preceq\lambda_{\hat k,\nu}$ with $\hat k=\max\{k,\ell,1\}$ and
-$\nu(F):=g(\text{last letter of }F)$.  Moreover $\mathbf{LI}\vee\mathbf{Grp}\subseteq\mathbf{LG}$.
-\item Already for $\Sigma=\{\mathtt a,\mathtt b\}$ and
-the typing $s_{\mathtt{ab}}:=\lambda_{1,\nu}|_{\Sigma^+}$ with
-$\nu(\mathtt{ab})=1\in\mathbb Z_2$ and $\nu=0$ otherwise,
-$s_{\mathtt{ab}}(\Sigma^+)\in\mathbf{LG}\setminus(\mathbf{LI}\vee\mathbf{Grp})$.
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-(i) For $|w|\ge2\hat k$, $g(w)=g(\operatorname{pref}_{\hat k}w)\,\gamma_{\hat k,\nu}(w)$,
-and $\operatorname{pref}_{\hat k},\operatorname{suf}_{\hat k}$ determine
-$\widehat s_{k,\ell}(w)$; shorter words are recorded exactly.  The inclusion holds because
-$\mathbf{LG}$ is a pseudovariety containing $\mathbf{LI}$ ($e\mathsf Te=\{e\}$) and
-$\mathbf{Grp}$.
-(ii) Membership in $\mathbf{LG}$ follows from
-Theorem~\ref{thm:lg-characterization}.  Let $k,\ell\ge0$ and let
-$g':\Sigma^*\to {\mathbb G}'$ map into an arbitrary finite group.  Choose
-$m\ge k+\ell+1$ and $n\ge1$ divisible by the order of $g'(\mathtt a)$,
-and put $u=\mathtt b^m\mathtt a^{n}\mathtt b^m$ and
-$v=\mathtt b^{2m}$.  They have equal length-$k$ prefix and
-length-$\ell$ suffix, are long for $s_{k,\ell}$, and satisfy
-$g'(u)=g'(\mathtt b)^{2m}=g'(v)$, but
-$\#_{\mathtt{ab}}(u)=1$ and $\#_{\mathtt{ab}}(v)=0$.
-Thus $s_{\mathtt{ab}}$ is not a window--group typing, and
-Lemma~\ref{lem:mcfg-li-group-window} excludes
-$\mathbf{LI}\vee\mathbf{Grp}$.
 \end{proof}
 
 \begin{lemma}[Thinned and padded owners]
@@ -2812,101 +1708,6 @@ corresponding $\widehat s$-type is realized by a tuple in $L_X$
 Lemma~\ref{lem:witness-length-template}(i) with
 $\lambda=\widehat s$ gives a representative of that type in $L_X$
 within the same bound, and therefore bounds $t_{\mathrm{typ}}$.
-\end{proof}
-
-\section{Proofs for the Separating Targets}
-\label{app:separating-targets}
-
-This appendix proves Propositions~\ref{prop:lg-needed-target}
-and~\ref{prop:nonabelian-needed-target}.  A language $L\subseteq\Sigma^*$ is
-\emph{strictly 2-local} if there is a set $P$ of pairs over
-$\Sigma\cup\{\vdash,\dashv\}$ such that $w\in L$ if and only if every pair of
-adjacent symbols of $\vdash w\dashv$ lies in $P$.
-
-\begin{lemma}[Strictly 2-local languages are boundary typed]
-\label{lem:sl2-boundary-control}
-Every strictly 2-local $L$ is $(f,s_{1,1})$-tuple-substitutable for every $f$; in
-particular $L\in\Cmcf{f}{s_{1,1}}$, and $L\in\Cmcf{f}{s}$ whenever
-$\widehat s_{1,1}\preceq\widehat s$.
-\end{lemma}
-
-\begin{proof}
-Let $\tuple x,\tuple y\in(\Sigma^+)^d$ have equal $s_{1,1}$-types, so
-corresponding components are identical letters or share first and last letters,
-and let $E_0[\tuple x],E_0[\tuple y]\in L$.  Suppose $E[\tuple x]\in L$.  Since the
-internal separators of $E$ are nonempty, every adjacent pair of
-$\vdash E[\tuple y]\dashv$ either lies inside some $y_i$, and then occurs in
-$E_0[\tuple y]\in L$, or joins a first or last letter of some $y_i$ to a symbol of
-$\vdash E\dashv$, or lies in $\vdash E\dashv$, and then occurs in
-$\vdash E[\tuple x]\dashv$.  So $E[\tuple y]\in L$; symmetry and
-$\widehat s_{1,1}\preceq\widehat s$ finish the proof (regular languages are MCFLs).
-\end{proof}
-
-\begin{proof}[Proof of Propositions~\ref{prop:lg-needed-target}
-and~\ref{prop:nonabelian-needed-target}]
-Write $\diamond\in\{\mathrm A,\mathrm B\}$, let $\Sigma_\diamond^\circ$ be $\{\mathtt a,\mathtt b,
-\mathtt c\}$ or $\{\mathtt a,\mathtt b\}$, and let $P_\diamond(w)$ be ``$\#_{\mathtt{ab}}(w)$
-even'' or ``$g_{\mathrm B}(w)=1$''.
-
-(i) Let $W$ be a right-linear (fan-out-one, rank-one, good) grammar for the regular
-language $\{\varsigma w:\varsigma\in\{\mathtt l,\mathtt r\},w\in(\Sigma_\diamond^\circ)^+,
-\varsigma=\mathtt r\text{ or }P_\diamond(w)\}$; it tracks the last letter and the parity,
-respectively the value in $S_3$.  Add
-\[
- C\to(\xi_1^1\mathtt\$\mathtt 1,\mathtt 3)(W)\mid(\xi_1^1\mathtt 1,\xi_1^2\mathtt 3)(C),\quad
- D\to(\mathtt 2,\mathtt 4)\mid(\xi_1^1\mathtt 2,\xi_1^2\mathtt 4)(D),\quad
- S\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(C,D).
-\]
-Then $L_C=\{(\varsigma w\mathtt\$\mathtt 1^m,\mathtt 3^m)\}$, $L_D=\{(\mathtt 2^n,\mathtt 4^n)\}$,
-and $S$ generates $L_\diamond$; the grammar is good (adjacent variables in the start
-template belong to different children).  Intersecting with the regular language
-$\mathtt{ra\$}\mathtt 1^+\mathtt 2^+\mathtt 3^+\mathtt 4^+$ and erasing $\mathtt{ra\$}$
-gives $C_\times$, which is not context-free; context-free languages are closed
-under both operations, so $L_\diamond$ is not context-free.
-
-(ii) $L_\diamond=Q_\diamond\cap\Pi_\diamond\cap\varphi_\times^{-1}(0)$ with
-$Q_\diamond=\{\mathtt l,\mathtt r\}(\Sigma_\diamond^\circ)^+\mathtt\$\mathtt 1^+\mathtt 2^+\mathtt 3^+
-\mathtt 4^+$ and $\Pi_\diamond$ the set of nonempty words that begin with $\mathtt r$, or begin
-with $\mathtt l$ and satisfy $P_\diamond$ for the whole word.  On $Q_\diamond$ the condition $P_\diamond$ of
-the whole word is that of $w$: no factor $\mathtt{ab}$ meets $\varsigma$, $\mathtt\$$ or
-the digits, and $g_{\mathrm B}$ is trivial on all other letters.  $Q_\diamond$ is strictly
-2-local (its pairs are $\vdash\varsigma$, $\varsigma x$, $xy$, $x\mathtt\$$, $\mathtt{\$1}$,
-$\mathtt{11},\mathtt{12},\mathtt{22},\mathtt{23},\mathtt{33},\mathtt{34},\mathtt{44}$,
-$\mathtt 4\dashv$ for $\varsigma\in\{\mathtt l,\mathtt r\}$, $x,y\in\Sigma_\diamond^\circ$) and
-$\widehat s_{1,1}\preceq\widehat s_\diamond$, so Lemma~\ref{lem:sl2-boundary-control} applies.
-$\Pi_\diamond$ is a union of $s_\diamond$-classes: $s_\diamond$ records the first letter, and for words
-of length at least two the parity of $\#_{\mathtt{ab}}$, respectively the value of
-$g_{\mathrm B}$ (the one-letter words $\mathtt l,\mathtt r$ lie in $\Pi_\diamond$); so item~(c)
-after Definition~\ref{def:class-cmcf} applies.  Proposition~\ref{prop:abelian-coset-filter}
-handles $\varphi_\times^{-1}(0)$ and the intersection; with (i),
-$L_\diamond\in\Cmcf{f}{s_\diamond}$ for $f\ge2$.  $s_{\mathrm A}$ is local-group-determined, so its
-positive image lies in $\mathbf{LG}$ by Theorem~\ref{thm:lg-characterization}.
-
-(iii) for $\mathrm A$.  Let $\hat k=\max\{k,\ell,1\}$, $q\ge2$ an even multiple of the
-exponent of the group of $g'$, $u=\mathtt a^{\hat k}(\mathtt{abc})^q\mathtt a^{\hat k}$
-and $v=\mathtt a^{\hat k}(\mathtt{bac})^q\mathtt a^{\hat k}$.  Both are long for
-$\widehat s_{k,\ell}$ with prefix $\mathtt a^k$ and suffix $\mathtt a^\ell$, and
-$g'(u)=g'(\mathtt a)^{2\hat k}=g'(v)$; so $s'(u)=s'(v)$.  But $\#_{\mathtt{ab}}(u)=q$ is
-even and $\#_{\mathtt{ab}}(v)=1$ (only at $\mathtt a^{\hat k}\mathtt b$).  With
-$z=\mathtt{\$1234}$, Lemma~\ref{lem:flag-separation} applies.  A typing with positive
-image in $\mathbf{LI}\vee\mathbf{Grp}$ satisfies the hypothesis by
-Lemma~\ref{lem:mcfg-li-group-window}.
-
-(iii) for $\mathrm B$.  Let $\hat k\ge\max\{k,\ell,1\}$ be even,
-$u=\mathtt a^{\hat k}(\mathtt{ab})^3\mathtt a^{\hat k}$ and
-$v=\mathtt a^{\hat k}(\mathtt{ab})^2\mathtt{ba}\,\mathtt a^{\hat k}$.  They have the same
-prefix $\mathtt a^k$, suffix $\mathtt a^\ell$ and Parikh vector, so $s'(u)=s'(v)$ for abelian
-$g'$.  Since $\alpha^2=\beta^2=1$, $\alpha\beta$ has order $3$ and
-$\beta\alpha=(\alpha\beta)^{-1}$, we get $g_{\mathrm B}(u)=(\alpha\beta)^3=1$ and
-$g_{\mathrm B}(v)=(\alpha\beta)^2(\alpha\beta)^{-1}=\alpha\beta\ne1$.  With
-$z=\mathtt{\$1234}$, Lemma~\ref{lem:flag-separation} applies.  For
-$\mathbf{LI}\vee\mathbf{Ab}$, the proof of Lemma~\ref{lem:mcfg-li-group-window} with
-an abelian group factor gives an abelian $g'$.
-
-\emph{Consequences.}  If $s_{\mathrm A}(\Sigma_{\mathrm A}^+)$ were in
-$\mathbf{LI}\vee\mathbf{Grp}$, (iii) with $s'=s_{\mathrm A}$ would contradict (ii).
-Proposition~\ref{thm:window-group-polydata} and its trivial-group and abelian cases
-assume a typing of the excluded kind.
 \end{proof}
 
 \section{Auxiliary Verification of Qualitative Reconstruction}
@@ -3121,35 +1922,6 @@ $b=t_{\mathrm{typ}}$, counting the non-start typed nonterminals and rules instea
 using the upper bound $C_s(G)$.
 \end{proof}
 
-\begin{proof}[Proof of Proposition~\ref{prop:rare-type}]
-Apply Lemma~\ref{lem:distinguishing} to $L'=L^{\setminus m}$, which lies in
-$\Cmcf{f}{s}$ by Lemma~\ref{lem:type-deletion}, and, if $\eps\in L$, to
-$L'=L\setminus\{\eps\}$; the canonical operators have characteristic samples for
-both by Theorem~\ref{thm:exact-reconstruction}.  Distinct positive types demand
-distinct sample words, and a word of type $m$ costs at least $\mu_m(L)+1$.
-\end{proof}
-
-\begin{proof}[Proof of Proposition~\ref{prop:typed-thickness-exponential}]
-All templates are nonempty and use each variable once in order, so $G_n$ is
-good; it is reduced and generates $\Sigma^+$ via $S\to SS\mid\mathtt a\mid\mathtt c$.
-Each rule has a successful use of length at most $2$: complete every $A_i$ by
-$\mathtt c$ ($i\ge1$) or $\mathtt a$ ($i=0$).  A yield of $A_n$ has type $1$ iff it
-contains no $\mathtt c$, so the unique yield of $(A_n)_{(1)}$ is $\mathtt a^{2^n}$,
-and $t_{\mathrm{typ}}(G_n,s_{\mathtt c})\ge2^n$; the typed rule
-$S_{(1)}\to(A_n)_{(1)}$ is retained (via $S\to A_n$), and every successful
-derivation using it has length at least $2^n$.
-\end{proof}
-
-\begin{proof}[Proof of Corollary~\ref{cor:distribution-representatives}]
-$L_X\subseteq\operatorname{Cl}_{L,s}(X)$ gives $\tau\le t_{\mathrm{typ}}$.  Apply
-Lemma~\ref{lem:witness-length-template}(ii),(iv) with $\iota(X)$ a shortest tuple of
-$\operatorname{Cl}_{L,s}(X)$ and $b=\tau$, counting as in
-Theorem~\ref{thm:data-from-typed-thickness}; $K:=\Wit_\iota\cup(\{\eps\}\cap L)$.
-Finally, for $m\in \mathsf S_L$ the typed start nonterminal $X=S_{(m)}$ has
-$\chi(X)=\blank_1$, so $\blank_1\in\D_L(\iota(X))$; thus $\iota(X)=(v)$ with
-$v\in L$ and $s(v)=m$, and $\tau_X\ge\mu_m(L)$.
-\end{proof}
-
 \section{Details of the Good Normalization}
 \label{app:normalization-details}
 
@@ -3227,305 +1999,6 @@ factor depending only on $f,r_{\max}$, so
 $\|G_{\mathrm{good}}\|=O_{f,r_{\max}}(\|G_{\mathrm{in}}\|)$, and
 $L(G_{\mathrm{good}})=L(G_{\mathrm{in}})\setminus\{\eps\}$ by (c).  If this language is
 nonempty, the final trimming leaves a reduced grammar, and trimming preserves goodness.
-\end{proof}
-
-\section{The Three-Letter Doubling Family}
-\label{app:bracketed-family}
-\label{app:three-letter-family}
-
-This appendix proves Proposition~\ref{prop:three-letter-family}; the proof of~(ii)
-adapts the deterministic-parser argument of \cite[Appendix~C]{kuriyamaCFG}.  Fix
-$n\ge1$, and for $x,y\in\Sigma^*$ write $x\equiv y$ if
-$\{(u,v):uxv\in L_n\}=\{(u,v):uyv\in L_n\}$; this is a monoid congruence.
-
-\paragraph{The parser.}
-A \emph{stack} is a word over $E_0,\ldots,E_n$ and the closing markers
-$\hat{\mathtt b}_i,\hat{\mathtt c}_i$ ($1\le i\le n$), with its top on the left; $\eps$
-is the empty stack.  For every stack $\mathcal Z$ and $1\le i\le n$ the moves are
-\[
-\begin{aligned}
-E_0\mathcal Z&\xrightarrow{\mathtt a}\mathcal Z,&
-E_i\mathcal Z&\xrightarrow{\mathtt b}E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z,&
-E_i\mathcal Z&\xrightarrow{\mathtt c}E_{i-1}\hat{\mathtt c}_i\mathcal Z,\\
-\hat{\mathtt b}_i\mathcal Z&\xrightarrow{\mathtt b}\mathcal Z,&
-\hat{\mathtt c}_i\mathcal Z&\xrightarrow{\mathtt c}\mathcal Z,
-\end{aligned}
-\]
-and there are no others; in particular no move leaves $\eps$.  Write
-$\mathcal X\xrightarrow{w}\mathcal Y$ if reading $w$ from $\mathcal X$ ends in
-$\mathcal Y$.  Three properties are used.
-\begin{enumerate}[label=\textup{(D\arabic*)},leftmargin=2.6em]
-\item \emph{Determinism.} The top symbol and the letter determine the move, so
-every word acts as a partial map on stacks.
-\item \emph{Weight.} Give $E_i$ weight $4^i$ and each marker weight $1$, and let
-$\operatorname{wt}(\mathcal X)$ be the total weight.  Every move lowers
-$\operatorname{wt}$, since $4^i>2\cdot4^{i-1}+1$; hence
-$\mathcal X\xrightarrow{w}\mathcal X$ only for $w=\eps$.
-\item \emph{Locality.} Moves read and rewrite only the top symbol, and markers
-are only popped.  Hence $\mathcal X\xrightarrow{w}\mathcal Y$ implies
-$\mathcal X\mathcal Z\xrightarrow{w}\mathcal Y\mathcal Z$.  Conversely, if
-$\mathcal X_1\ne\eps$ and $\mathcal X_1\mathcal Z\xrightarrow{w}\mathcal Y$, then either
-\textup{(a)} the run reaches $\mathcal Z$: $w=w_1w_2$ with
-$\mathcal X_1\xrightarrow{w_1}\eps$ and $\mathcal Z\xrightarrow{w_2}\mathcal Y$, so
-$\operatorname{wt}(\mathcal Y)\le\operatorname{wt}(\mathcal Z)$; or \textup{(b)} it
-does not: $\mathcal Y=\mathcal Y_1\mathcal Z$ with $\mathcal X_1\xrightarrow{w}\mathcal Y_1\ne\eps$,
-so $\operatorname{wt}(\mathcal Y)>\operatorname{wt}(\mathcal Z)$, and $\mathcal Y_1$ ends
-with the last symbol of $\mathcal X_1$ whenever that symbol is a marker.  For
-fixed $\mathcal Z$, comparing $\operatorname{wt}(\mathcal Y)$ with
-$\operatorname{wt}(\mathcal Z)$ decides the case.
-\end{enumerate}
-A letter $\mathtt b$ or $\mathtt c$ both opens and closes, so a word need not act
-injectively on all stacks; injectivity holds on the \emph{reachable} stacks,
-those $\mathcal X$ with $E_n\xrightarrow{u}\mathcal X$ for some $u$.
-
-\begin{lemma}\label{lem:app-br-recognition}
-\label{lem:app-tl-reachable}
-\textup{(i)} For $0\le i\le n$ and every stack $\mathcal Z$,
-$E_i\mathcal Z\xrightarrow{w}\mathcal Z$ if and only if $w\in L^{(i)}$.
-
-\textup{(ii)} Put $\mathcal F_i:=\{E_{i-1}\hat{\mathtt b}_i,\hat{\mathtt b}_i,\hat{\mathtt c}_i\}$.
-Every reachable stack is $\eps$ or $\mathcal YF_{j+1}\cdots F_n$ with
-$F_i\in\mathcal F_i$ and $\mathcal Y\in\{E_j,\hat{\mathtt b}_j,\hat{\mathtt c}_j\}$
-\textup($\mathcal Y=E_j$ with $0\le j\le n$, or a marker with $1\le j\le n$\textup).
-Every word acts as a partial injection on reachable stacks.
-\end{lemma}
-
-\begin{proof}
-(i) A run $E_i\mathcal Z\xrightarrow{w}\mathcal Z$ is in case~(a) of (D3), since
-case~(b) ends in $\mathcal Y_1\mathcal Z\ne\mathcal Z$; so $w=w_1w_2$ with
-$E_i\xrightarrow{w_1}\eps$ and $\mathcal Z\xrightarrow{w_2}\mathcal Z$, and $w_2=\eps$ by
-(D2).  With the lifting in (D3), it suffices to show $E_i\xrightarrow{w}\eps$ iff
-$w\in L^{(i)}$, by induction on $i$.  From $E_0$ only the $\mathtt a$-move applies,
-and $\eps$ admits none.  For $i\ge1$ the first letter is $\mathtt b$ or $\mathtt c$.
-After $\mathtt c$, the stack $E_{i-1}\hat{\mathtt c}_i$ must be emptied; case~(a) of
-(D3) with $\mathcal X_1=E_{i-1}$, $\mathcal Z=\hat{\mathtt c}_i$ splits the rest as $zz'$
-with $E_{i-1}\xrightarrow{z}\eps$ and $z'=\mathtt c$.  After $\mathtt b$, two such
-splittings of $E_{i-1}E_{i-1}\hat{\mathtt b}_i$ give $z_1z_2\mathtt b$ with
-$E_{i-1}\xrightarrow{z_j}\eps$.
-
-(ii) The set of such stacks contains $E_n$ and is closed under the moves: from
-$E_jF_{j+1}\cdots F_n$, $\mathtt b$ gives
-$E_{j-1}(E_{j-1}\hat{\mathtt b}_j)F_{j+1}\cdots F_n$ and $\mathtt c$ gives
-$E_{j-1}\hat{\mathtt c}_jF_{j+1}\cdots F_n$; popping the top leaves
-$F_{j+1}\cdots F_n$, which is $\eps$ or again of the stated form, a first frame
-$E_j\hat{\mathtt b}_{j+1}$ being read as $\mathcal Y=E_j$ followed by the frame
-$\hat{\mathtt b}_{j+1}$.
-
-For injectivity it suffices to consider letters, since moves map reachable
-stacks to reachable stacks.  A \emph{frame product} is a stack
-$F_{i+1}\cdots F_n$ with $F_k\in\mathcal F_k$ (the empty stack if $i=n$).  Each
-frame $F_k$ contains exactly one marker, of index $k$, so a frame product
-determines $i$: it is $n$ for $\eps$ and otherwise one less than the least
-marker index.  In a frame product a symbol $E$ is always followed by a marker
-$\hat{\mathtt b}$.  The moves of a letter on reachable stacks, and the shape of
-their results, are:
-\begin{center}
-\footnotesize
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{}llll@{}}
-\hline
-Letter & Move (reachable source) & Result begins with & Source recovered from\\
-\hline
-$\mathtt a$ & $E_0\mathcal Z\to\mathcal Z$ & a frame product & $\mathcal Z$\\
-$\mathtt b$, opening & $E_i\mathcal Z\to E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z$ & two symbols $E$ & $i$ and $\mathcal Z$ read off\\
-$\mathtt b$, closing & $\hat{\mathtt b}_i\mathcal Z\to\mathcal Z$, $\mathcal Z$ a frame product & a marker, $E\hat{\mathtt b}$, or $\eps$ & $i$ from $\mathcal Z$\\
-$\mathtt c$, opening & $E_i\mathcal Z\to E_{i-1}\hat{\mathtt c}_i\mathcal Z$ & $E$ followed by $\hat{\mathtt c}$ & $i$ and $\mathcal Z$ read off\\
-$\mathtt c$, closing & $\hat{\mathtt c}_i\mathcal Z\to\mathcal Z$, $\mathcal Z$ a frame product & a marker, $E\hat{\mathtt b}$, or $\eps$ & $i$ from $\mathcal Z$\\
-\hline
-\end{tabular}
-\end{center}
-In the closing rows $\mathcal Z$ is a frame product because a reachable stack
-with a marker $\hat{\mathtt b}_i$ or $\hat{\mathtt c}_i$ on top is $\mathcal YF_{i+1}\cdots
-F_n$ with $\mathcal Y$ that marker.  For $\mathtt b$, an opening result begins with
-two symbols $E$ and a closing result never does, since in a frame product a
-symbol $E$ is followed by a marker; for $\mathtt c$, an opening result begins with
-$E\hat{\mathtt c}$, which never occurs in a frame product.  So the openings and the
-closings of one letter have disjoint images, each row is injective by its last
-column, and every letter, hence every word, acts as a partial injection on
-reachable stacks.
-\end{proof}
-
-\begin{lemma}\label{lem:app-br-exchange}
-\label{lem:app-tl-recognition}
-If $\mathcal X$ is reachable, $w\in L^{(i)}$ and $\mathcal X\xrightarrow{w}\mathcal Y$, then
-$\mathcal X=E_i\mathcal Y$.  Consequently $w\equiv w'$ for all $w,w'\in L^{(i)}$.
-\end{lemma}
-
-\begin{proof}
-Induct on $i$; for $i=0$, $\mathtt a$ only pops $E_0$.  Let $i\ge1$; all stacks met
-are reachable.  If $w=\mathtt cv\mathtt c$ with $v\in L^{(i-1)}$ and the first
-$\mathtt c$ opens $E_j$, the induction hypothesis for $v$ at
-$E_{j-1}\hat{\mathtt c}_j\mathcal Z$ gives $j=i$, and the last $\mathtt c$ pops
-$\hat{\mathtt c}_i$.  If the first $\mathtt c$ pops a marker, the rest is $\eps$ or a
-product of frames; to read $v$ it must begin with $E_{i-1}$ by the induction
-hypothesis, so its first frame is $E_{i-1}\hat{\mathtt b}_i$, and after $v$ the top
-is $\hat{\mathtt b}_i$, on which $\mathtt c$ has no move.  If
-$w=\mathtt bv_1v_2\mathtt b$ and the first $\mathtt b$ opens $E_j$, the induction
-hypothesis gives $j=i$, the words $v_1,v_2$ pop the two copies of $E_{i-1}$, and
-the last $\mathtt b$ pops $\hat{\mathtt b}_i$.  If the first $\mathtt b$ pops a marker,
-then as before $v_1$ leaves the top $\hat{\mathtt b}_i$, from which $v_2$ cannot be
-read by the induction hypothesis.  For the consequence, if $uwv\in L_n$, the run
-$E_n\xrightarrow{u}\mathcal X\xrightarrow{w}\mathcal Y\xrightarrow{v}\eps$ has
-$\mathcal X=E_i\mathcal Y$, and $E_i\mathcal Y\xrightarrow{w'}\mathcal Y$ by
-Lemma~\ref{lem:app-br-recognition}(i); so $uw'v\in L_n$, and conversely.
-\end{proof}
-
-\begin{lemma}[Branch synchronization]\label{lem:app-br-branch}
-Let $\mathcal X\xrightarrow{x}\mathcal Y$ and $\mathcal X\xrightarrow{y}\mathcal Y$, where $x,y$
-are nonempty and begin with different letters.  Then $\mathcal X=E_i\mathcal Z$ for
-some $1\le i\le n$ and stack $\mathcal Z$, and $x=wx'$, $y=w'y'$ with
-$w,w'\in L^{(i)}$, $\mathcal Z\xrightarrow{x'}\mathcal Y$ and $\mathcal Z\xrightarrow{y'}\mathcal Y$.
-\end{lemma}
-
-\begin{proof}
-Only a top $E_i$ with $i\ge1$ admits two different letters, namely $\mathtt b$ and
-$\mathtt c$.  Say $x=\mathtt cx_0$ and $y=\mathtt by_0$, so
-$E_{i-1}\hat{\mathtt c}_i\mathcal Z\xrightarrow{x_0}\mathcal Y$ and
-$E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z\xrightarrow{y_0}\mathcal Y$.  By (D3) both runs
-are in the same case.  Case~(b) is impossible: it would give
-$\mathcal Y=\mathcal Y_1\mathcal Z=\mathcal Y_2\mathcal Z$ with $\mathcal Y_1$ ending in
-$\hat{\mathtt c}_i$ and $\mathcal Y_2$ in $\hat{\mathtt b}_i$.  In case~(a),
-$x_0=x_1x'$ with $E_{i-1}\hat{\mathtt c}_i\xrightarrow{x_1}\eps$ and
-$\mathcal Z\xrightarrow{x'}\mathcal Y$, so $w:=\mathtt cx_1$ satisfies $E_i\xrightarrow{w}\eps$
-and $w\in L^{(i)}$ by Lemma~\ref{lem:app-br-recognition}(i).  The same argument
-gives $y=w'y'$.
-\end{proof}
-
-\begin{proposition}\label{prop:app-br-congruence}
-\label{prop:app-tl-congruence}
-If $\mathcal X\xrightarrow{x}\mathcal Y$ and $\mathcal X\xrightarrow{y}\mathcal Y$, then $x\equiv y$.
-Consequently $L_n$ is Clark--Eyraud substitutable.
-\end{proposition}
-
-\begin{proof}
-Induct on $|x|+|y|$.  If $x$ or $y$ is empty, then $\mathcal X=\mathcal Y$, and the
-other is empty by (D2).  If $x=cx'$ and $y=cy'$ for a letter $c$, (D1) gives
-$\mathcal X\xrightarrow{c}\mathcal X'$ with $\mathcal X'\xrightarrow{x'}\mathcal Y$ and
-$\mathcal X'\xrightarrow{y'}\mathcal Y$, and induction applies.  Otherwise
-Lemma~\ref{lem:app-br-branch} gives $x=wx'$, $y=w'y'$; induction gives
-$x'\equiv y'$, Lemma~\ref{lem:app-br-exchange} gives $w\equiv w'$, and $\equiv$ is a
-congruence.
-
-For the consequence, let $x,y\in\Sigma^+$ with $uxv,uyv\in L_n$.  By (D1) and
-Lemma~\ref{lem:app-br-recognition}(i) there are runs
-$E_n\xrightarrow{u}\mathcal X\xrightarrow{x}\mathcal Y\xrightarrow{v}\eps$ and
-$E_n\xrightarrow{u}\mathcal X\xrightarrow{y}\mathcal Y'\xrightarrow{v}\eps$; $\mathcal Y$ and
-$\mathcal Y'$ are reachable, so Lemma~\ref{lem:app-br-recognition}(ii) gives
-$\mathcal Y=\mathcal Y'$, and $x\equiv y$.  Letters outside $\{\mathtt a,\mathtt b,\mathtt c\}$
-only have empty distributions.
-\end{proof}
-
-\begin{proof}[Proof of Proposition~\ref{prop:three-letter-family}]
-(i) Every template is nonempty and uses each variable once; at fan-out one,
-nonpermutation and nonmerging are automatic.  The grammar is reduced since
-$E_i\Rightarrow^*\mathtt c^i\mathtt a\mathtt c^i$.  It has $n+2$ nonterminals and
-rules of sizes $3$ (start), $2$ (base), $7$ and $5$ (the two rules of each level)
-(Definition~\ref{def:standard-mcfg}), whence $\|G_n\|=13n+7$.  A shortest yield
-of $E_i$ has length $2i+1$, and the levels above $E_i$ add at least $2(n-i)$
-letters, attained by the rules $E_j\to\mathtt cE_{j-1}\mathtt c$.  So the start, base
-and unary rules have rule thickness $2n+1$, and the binary rule of level $i$ has
-$2(n-i)+2+2(2i-1)=2n+2i$; hence $\bar\theta_{G_n}=4n$.
-
-(ii) The first claim is Proposition~\ref{prop:app-br-congruence}.  It is the
-condition of Definition~\ref{def:tuple-substitutable} at $f=1$ for the trivial
-typing, and the finite language $L_n$ is a $1$-MCFL; item~(a) after
-Definition~\ref{def:class-cmcf} gives $L_n\in\Cmcf{1}{s}$.
-
-(iii) A derivation yields a word without $\mathtt c$ iff it uses no rule
-$E_i\to\mathtt cE_{i-1}\mathtt c$.  Such a derivation from $E_i$ is the complete binary
-tree of height $i$ and yields $W_i$, and $|W_i|=2|W_{i-1}|+2$ with $|W_0|=1$.
-
-(iv) By (ii), $L_n\in\Cmcf{1}{s_U}$, and by (iii), $1\in \mathsf S_{L_n}$ with
-$\mu_1(L_n)=|W_n|$.  Proposition~\ref{prop:rare-type} with $m=1$ forces a word of
-type $1$, which can only be $W_n$.
-\end{proof}
-
-\section{The Linear Factor at Every Fan-Out}
-\label{app:linear-factor-fanout}
-
-This appendix proves Proposition~\ref{prop:linear-factor-all-fanout}.  $\Psi$ denotes the Parikh map.
-
-\begin{proof}[Proof of Proposition~\ref{prop:linear-factor-all-fanout}]
-Put $t:=2f$ and $L:=L^{(f)}_{q,n}$.
-
-(i) The language $R:=\mathtt a_1^*\mathtt d_1\mathtt a_2^*\mathtt d_2\cdots
-\mathtt a_t^*\mathtt d_t\mathtt z^*$ is the path language from $0$ to $t$ of the graph
-on $\{0,\ldots,t\}$ with edges $\mathtt a_h:h-1\to h-1$, $\mathtt d_h:h-1\to h$ and
-$\mathtt z:t\to t$, and a word of $R$ is determined by its Parikh vector.  In
-$w_i$ the marker $\mathtt d_h$ occurs once, at position $h(i+1)$, so the position
-of one marker, and the distance $(h'-h)(i+1)$ of two, determine $i$; all words
-have length $W$.
-
-Let $J\subseteq L$ and $1\le d\le f$, let $\tuple x,\tuple y$ be nonempty
-$d$-tuples and $E=(v_0,\ldots,v_d)$ a $d$-context with $E[\tuple x]=w_i\in J$ and
-$E[\tuple y]=w_j\in J$, and let $F$ be a $d$-context with $F[\tuple x]\in J$.  We
-show $F[\tuple y]\in J$; the converse is symmetric.  By
-Lemma~\ref{lem:app-lf-path}, $F[\tuple y]\in R$.  If $i=j$, then
-$\sum_h\Psi(x_h)=\sum_h\Psi(y_h)$, so $F[\tuple y]$ has the Parikh vector of
-$F[\tuple x]$ and equals it.  Let $i\ne j$.  A marker in $v_0$ would have the same
-position in $w_i$ and $w_j$, a marker in $v_d$ the same distance from the end,
-and two markers in one $v_h$ the same distance; each forces $i=j$.  So the fixed
-part of $E$ carries at most $d-1$ markers, and $\tuple x$ carries at least
-$t-d+1\ge d+1$ of them.  Some component $x_h$ carries two, and every word of $L$
-with factor $x_h$ is $w_i$.  Hence $F[\tuple x]=w_i=E[\tuple x]$, the fixed parts
-of $F$ and $E$ have equal Parikh vectors, $\Psi(F[\tuple y])=\Psi(E[\tuple y])$, and
-$F[\tuple y]=w_j\in J$.  Finite languages are context-free, and the inclusion is
-item~(a) after Definition~\ref{def:class-cmcf}.
-
-(ii) For each $i$, $L\setminus\{w_i\}\in\Cmcf{f}{s}$ by (i), so every
-characteristic sample contains $w_i$ by Lemma~\ref{lem:distinguishing}.  Hence
-$F=L$.  Conversely,
-$K=L$ is the only finite $K$ with $L\subseteq K\subseteq L$, and the canonical
-operators return $L$ on it by sample consistency and soundness.
-
-(iii) Take nonterminals $P_0,\ldots,P_q$ of fan-out $f$ and $S_0,\ldots,S_q$,
-$C_0,\ldots,C_n$ of fan-out one, start symbol $S_q$, and the rules
-\[
-\begin{aligned}
- &P_0\to(\mathtt d_1,\mathtt d_3,\ldots,\mathtt d_{2f-1}),\qquad
- C_0\to(\mathtt z),\qquad
- C_h\to(\xi_1^1\xi_2^1)(C_{h-1},C_{h-1})\ (1\le h\le n),\\
- &P_i\to(\mathtt a_1\xi_1^1\mathtt a_2,\ \mathtt a_3\xi_1^2\mathtt a_4,\ \ldots,\
- \mathtt a_{2f-1}\xi_1^f\mathtt a_{2f})(P_{i-1})\ (1\le i\le q),\\
- &S_j\to(\xi_1^1\mathtt d_2\xi_1^2\mathtt d_4\cdots\xi_1^f\mathtt d_{2f}\xi_2^1)(P_j,C_n)
- \ (0\le j\le q),\qquad
- S_j\to(\xi_1^1\mathtt z^{2f})(S_{j-1})\ (1\le j\le q).
-\end{aligned}
-\]
-By induction $L(C_h)=\{\mathtt z^{2^h}\}$,
-\[
- L(P_i)=\{(\mathtt a_1^i\mathtt d_1\mathtt a_2^i,\ldots,
- \mathtt a_{2f-1}^i\mathtt d_{2f-1}\mathtt a_{2f}^i)\},\qquad
- L(S_j)=\{\mathtt a_1^i\mathtt d_1\cdots\mathtt a_{2f}^i\mathtt d_{2f}
- \mathtt z^{2f(j-i)+2^n}:0\le i\le j\},
-\]
-so $L(S_q)=L$.  Every variable occurs once
-and in order, consecutive components of $P_j$ are separated by
-$\mathtt d_2,\mathtt d_4,\ldots$, and no component is empty; so the grammar is good,
-and it is reduced.  It has $2q+n+3$ nonterminals and $1,q,q+1,q,1,n$ rules of
-sizes $f+1$, $3f+2$, $2f+4$, $2f+3$, $2$, $5$ for $P_0$, $P_i$, the first and
-second rules of $S_j$, $C_0$ and $C_h$ (Definition~\ref{def:standard-mcfg});
-this gives the stated size, and $n\le q$ gives $(7f+17)(q+1)$.  In a reduced
-presentation every rule occurs in a successful derivation and all words have
-length $W$, so $\bar\theta_G=W$.  Finally let $G$ be any reduced good
-fan-out-$\le f$ presentation of $L$.  For the trivial typing,
-Theorem~\ref{thm:exact-reconstruction} makes $\Wit(\widetilde G_0)$
-characteristic for $\mathcal B_{f,s_{\mathrm{triv}}}$, and it has at most
-$|V|+|P|\le\|G\|$ words (Definition~\ref{def:witness-set} and the remark after
-Theorem~\ref{thm:data-from-typed-thickness}); by (ii) for $s_{\mathrm{triv}}$, it
-has $q+1$ words.  The final estimate follows from (ii), (iii) and $|w_i|=W$.
-
-(iv) The identification changes no length and no template shape, so the grammar
-stays reduced and good with the same size and thickness, and the arguments for
-(ii) and (iii) apply unchanged once (i) is shown.  For (i), let $J\subseteq L$, and
-let $u\,x\,v=w_i\in J$ and $u\,y\,v=w_j\in J$ with $x,y\in\Sigma^+$; if $i=j$ then
-$x=y$.  Let $i\ne j$.  All words have length $W$.  If $u$ contained $\mathtt d$, the
-first $\mathtt d$ would have position $i+1$ in $w_i$ and $j+1$ in $w_j$; if $v$
-contained $\mathtt d$, the last $\mathtt d$ would be followed by $2(q-i)+2^n$ and by
-$2(q-j)+2^n$ letters.  So $x$ contains both letters $\mathtt d$ of $w_i$ and has the
-factor $\mathtt d\mathtt a^i\mathtt d$, which occurs in no other word of $L$ and only
-once in $w_i$.  Hence $p\,x\,q'\in J$ forces $(p,q')=(u,v)$, and then
-$p\,y\,q'=w_j\in J$; the converse is symmetric.
 \end{proof}
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
