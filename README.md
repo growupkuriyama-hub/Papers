@@ -9,6 +9,8 @@ Public source repository for Takayuki Kuriyama's research papers.
 
 ## Latest paper #2 master — **independent-review-polished (2026-11-12)**
 
+> **Fan-out-two LG-boundary investigation paused by author (2026-11-16):** [Research stop-state / restart entry](02-v2-lg-fanout-boundary/RESEARCH_PAUSED_2026-11-16.md) · [current proof ledger](02-v2-lg-fanout-boundary/reviews/PAUSE_PROOF_STATUS_LEDGER_2026-11-16.md). The formal question is still **OPEN**. Only research index/handoff documents were updated; manuscripts and PDFs are unchanged.
+
 **[Current paper #2 status and AI handoff](02-v2-lg-fanout-boundary/HANDOFF_CURRENT.md).** The canonical manuscript has **43 English pages and 51 Japanese pages**. The old 41-/46-/64-page drafts are historical; the independent isolated-letter and two-letter results (including former Appendices H/I/J) remain available under `parked/`. The post-review PDFs (43 English / 51 Japanese pages) were published by [GitHub Actions run 43214766355](https://github.com/growupkuriyama-hub/Papers/actions/runs/43214766355) after [PR #108](https://github.com/growupkuriyama-hub/Papers/pull/108). Theorem A now has a coefficient depending only on fan-out, rank, and the size of the positive typing image. The fan-out-two boundary remains open.
 
 ## Contents
