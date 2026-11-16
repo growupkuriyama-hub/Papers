@@ -67,13 +67,14 @@ Independent Researcher, Tokyo, Japan\\
 We study the total encoded length of characteristic samples for positive-data
 learning of multiple context-free languages under a fixed finite-semigroup
 typing. Yoshinaka's finite-signature framework supplies polynomially many
-characteristic words, but does not itself provide a general polynomial
-bound on their total encoded length in grammar size and thickness.
+characteristic words, but does not state a general polynomial bound on
+their total encoded length in grammar size and thickness.
 For every local-group typing, fixed fan-out and rank, and reduced good
 presentation $G$ of a substitutable target, we obtain a characteristic
 sample of length $O(\|G\|^2\bar\theta_G)$, where $\bar\theta_G$ is
 rule thickness. The constant depends only on fan-out, rank and semigroup
-size. This gives identification in polynomial time and thick data.
+size (doubly exponentially in fan-out in our explicit estimate).
+This gives identification in polynomial time and thick data.
 The proof combines simultaneous ordered-block shortening in finite
 possibly noncommutative groups with sliding-factor coordinates for
 local groups, accommodating interleaved tuple components.
@@ -90,8 +91,9 @@ Distributional learning identifies constituents from positive examples by
 their contexts \cite{Gold1967,Angluin1980,ClarkEyraud2007}. Multiple
 context-free grammars (MCFGs) permit constituents that are tuples of
 discontinuous substrings \cite{SekiEtAl1991,Yoshinaka2009,Yoshinaka2011}.
-Yoshinaka's finite-signature framework \cite{Yoshinaka2015General}
-supplies polynomially many characteristic words, but does not itself give
+Yoshinaka's finite-signature framework
+\cite[Theorem~1 and Lemmas~2--3]{Yoshinaka2015General}
+supplies polynomially many characteristic words, but does not state
 a general polynomial bound on their total encoded length in the size and
 thickness of a target grammar. Here we establish such a quantitative guarantee.
 
@@ -136,12 +138,22 @@ every fan-out \cite{Yoshinaka2011} and fixed windows at fan-out one
 \cite{kuriyamaCFG}, currently under review, additionally establishes
 polynomial thick-data bounds at fan-out one for typings whose positive
 image belongs to the join $\mathbf{LI}\vee\mathbf{Grp}$ of the locally
-trivial semigroups and the finite groups.  This is a proper
-subpseudovariety of $\mathbf{LG}$
-\cite{CostaNogueiraTeixeira2021}.  The present theorem permits every
-local-group typing and applies at arbitrary fixed fan-out and rank;
-the CFG manuscript uses a different normal form and thickness parameter
-and no result from it is used in our proofs.
+trivial semigroups and the finite groups.  Both
+$\mathbf{LI}$ and $\mathbf{Grp}$ are contained in $\mathbf{LG}$,
+but their join is a proper subpseudovariety
+\cite{CostaNogueiraTeixeira2021}.  Indeed, both satisfy the
+pseudoidentity $x^\omega y^\omega x^\omega=x^\omega$ and hence so
+does their join; the local-group typing exhibited below has
+idempotents violating this identity.
+The present theorem permits every local-group typing and applies
+at arbitrary fixed fan-out and rank.
+At fan-out one, the available presentation-relative estimates
+do not directly subsume one another: the companion treats arbitrary
+reduced CFG presentations through a thickness-controlled normal
+form, whereas the present bound is relative to reduced \emph{good}
+presentations and is not transferred through good normalization
+(Section~\ref{sec:completeness}).  No theorem from the companion
+is used in our proofs.
 
 The author's earlier MCFG preprint \cite{KuriyamaMCFGpreprint}
 introduced a closely related observation-guarded tuple class and
@@ -180,20 +192,52 @@ rule is $S\to(\xi_1^1\xi_2^1\xi_1^2\xi_2^2)(A,B)$.
 Take the nontrivial first--last-letter typing
 $s=s_{1,1}$ (Definition~\ref{def:prefix-suffix-typing}),
 whose positive image is locally trivial and hence a local group.
-Indeed, write $L_\times=Q\cap\varphi^{-1}(0)$, where
+Indeed, write $L_\times=Q\cap\varphi^{-1}(0)$ (compare the
+balance argument of \cite[Proposition~3.1]{KuriyamaMCFGpreprint}), where
 $Q=\mathtt1^+\mathtt2^+\mathtt3^+\mathtt4^+$ is strictly $2$-local
 and the additive morphism $\varphi:\Sigma^*\to\mathbb Z^2$
 sends $\mathtt1,\mathtt3$ to $(1,0),(-1,0)$ and
 $\mathtt2,\mathtt4$ to $(0,1),(0,-1)$.
-If two nonempty tuples of equal $s$-type are both accepted by
-one context, their total $\varphi$-values coincide.  For any
-other context, membership in $Q$ transfers by the same boundary
-letters (and the common successful context certifies the tuples'
-internal adjacent pairs), while the equality of total
-$\varphi$-values transfers the zero-sum condition.
-Thus $L_\times\in\Cmcf{2}{s}$.  This example illustrates class
-coverage, not the sharper distinction between
-$\mathbf{LI}\vee\mathbf{Grp}$ and $\mathbf{LG}$.
+Suppose $E$ accepts both $\tuple x$ and $\tuple y$ of the same
+$s$-type.  Because $\varphi(E[\tuple x])=\varphi(E[\tuple y])=0$,
+the total $\varphi$-values of $\tuple x$ and $\tuple y$ agree.
+If a second context $E'$ accepts $\tuple x$, every adjacent pair
+of $E'[\tuple y]$ either crosses a component boundary (where the
+first--last-letter types make it the corresponding pair of
+$E'[\tuple x]$), lies inside a component of $\tuple y$ (and hence
+occurs in $E[\tuple y]\in Q$), or lies wholly inside $E'$.
+The initial and final letters also agree, so
+$E'[\tuple y]\in Q$, and the additive balance gives
+$\varphi(E'[\tuple y])=\varphi(E'[\tuple x])=0$.
+Interchanging $\tuple x$ and $\tuple y$ proves
+$L_\times\in\Cmcf{2}{s}$.
+In contrast, $L_\times\notin\Cmcf{2}{s_{\mathrm{triv}}}$:
+the words $\mathtt{234}$ and $\mathtt3$ share the accepting context
+$\mathtt{12}\blank_1\mathtt4$, but
+$\mathtt1\blank_1$ accepts only the former.
+This illustrates the role of a nontrivial typing, not the
+strictness of $\mathbf{LI}\vee\mathbf{Grp}\subsetneq\mathbf{LG}$.
+
+\paragraph{A typing outside $\mathbf{LI}\vee\mathbf{Grp}$.}
+For $\Sigma'=\{\mathtt a,\mathtt b\}$, let $s'$ record a
+one-letter word verbatim and, on words of length at least two,
+record the first letter, last letter, and the parity of occurrences
+of the adjacent factor $\mathtt{ab}$.  More precisely,
+$s'=\lambda_{1,\nu}|_{\Sigma'^+}$, corestricted to its positive
+image, where $\nu(\mathtt{ab})$ is the nonidentity element of
+$C_2$ and $\nu$ is the identity on the other pairs
+(Definition~\ref{def:local-group-typing}).  Its positive image
+has ten elements and lies in $\mathbf{LG}$ by
+Theorem~\ref{thm:lg-characterization}.
+The idempotents $e=s'(\mathtt{aa})$ and
+$d=s'(\mathtt{bb})$ nevertheless satisfy
+$ede=s'(\mathtt{aabbaa})\ne e$.
+Thus the pseudoidentity displayed above fails and
+$s'(\Sigma'^+)\notin\mathbf{LI}\vee\mathbf{Grp}$.
+Theorem~\ref{thm:A} covers every target of
+$\Cmcf{f}{s'}$, but this semigroup example does not claim
+a separation of target-language classes under all alternative
+$\mathbf{LI}\vee\mathbf{Grp}$ typings.
 
 \paragraph{Why ordered replacement is needed.}
 In Fig.~\ref{fig:interleaved-blocks}, two owners contribute blocks to
@@ -784,8 +828,8 @@ For a rule $R$ of $G$ let
 the length of the derived \emph{sentence}, not of the derivation.  Put
 $\theta_G:=\max_{R\in P}\theta_G(R)$, $\bar\theta_G:=\max\{1,\theta_G\}$ and
 $t_G:=\max_{A\in V}\min\{\|\tuple w\|_1:\tuple w\in L_A(G)\}$ (rule and
-nonterminal thickness; $\theta_G$ is the thickness of
-\cite[Section~4.3]{Yoshinaka2011}).
+nonterminal thickness; $\theta_G$ is related to the rule-thickness parameter of
+\cite{Yoshinaka2011}).
 
 If a target $L$ contains $\eps$, every statement below is applied to
 $L\cap\Sigma^+$ and the datum $\eps$ is added, as in
@@ -912,8 +956,9 @@ For the trivial typing, every nonterminal of the $\eps$-free $G$ has one
 realized type vector, so $t_{\mathrm{typ}}=t_G$ and
 $N_{\mathrm{typ}}=|V|+|P|\le\|G\|$.  The theorem recovers the
 $O(\|G\|\bar\theta_G)$ untyped scale, although Yoshinaka's original
-sample has the sharper bounds $|K_G|\le|P|$ and
-$\|K_G\|\le|P|\theta_G$ \cite[Lemma~7 and Theorem~1]{Yoshinaka2011}.
+approach also provides polynomial characteristic data
+\cite{Yoshinaka2011}; the present estimate uses the specific
+witness set and size measure defined above.
 
 \section{Upper Bound: Local Groups at Every Fan-Out}
 \label{sec:upper}
@@ -1070,14 +1115,16 @@ $\widehat s\preceq\lambda_{k,\nu}$ for some $k$, ${\mathbb G}$ and $\nu$.
 
 \begin{theorem}[Polynomial characteristic data for local-group typings]
 \label{thm:local-group-polydata}
-Let $\mathsf S\in\mathbf{LG}$.  Every reduced good fan-out-$\le f$,
+Let $s:\Sigma^+\twoheadrightarrow\mathsf S$ be a typing with
+$\mathsf S=s(\Sigma^+)\in\mathbf{LG}$, and fix $f,r_{\max}\ge1$.
+Every reduced good fan-out-$\le f$,
 rank-$\le r_{\max}$ grammar $G$ satisfies
 $t_{\mathrm{typ}}(G,s)=O_{f,r_{\max},|\mathsf S|}(\|G\|\bar\theta_G)$.  If moreover
 $L\in\Cmcf{f}{s}$ and $L(G)=L\cap\Sigma^+$, then
 $\Wit(\widetilde G_0)\cup(\{\eps\}\cap L)$ is a characteristic sample for both
 $\mathcal B^{\le r_{\max}}_{f,s}$ and $\mathcal B_{f,s}$ with
 \[
- |\Wit(\widetilde G_0)|=O(\|G\|),\qquad
+ |\Wit(\widetilde G_0)|=O_{f,r_{\max},|\mathsf S|}(\|G\|),\qquad
  \|\Wit(\widetilde G_0)\|_+=O_{f,r_{\max},|\mathsf S|}(\|G\|^2\bar\theta_G).
 \]
 \end{theorem}
@@ -1228,7 +1275,7 @@ are given in full.
 \label{app:group-blocks}
 
 This appendix proves Proposition~\ref{prop:block-replacement-interface}, used in
-Lemma~\ref{lem:local-group-shortest}.
+Lemma~\ref{lem:lg-unconditional-shortening}.
 The abelian case is a zero-sum argument.  The general case never commutes
 factors; it has three parts: an order classification for homogeneous point
 configurations (Lemma~\ref{lem:group-block-order}), an interval selection by
@@ -1739,7 +1786,8 @@ Proposition~\ref{prop:block-replacement-interface} gives a nonempty $J\subseteq 
 preserving every root $\gamma_{k,\nu}$-value.
 
 Replace the subtrees at the nodes of $J$ by derivations of the chosen tuples.
-This is a derivation from $B$ because $J$ is an antichain, and by
+This is a derivation from the root nonterminal of $T$ because
+$J$ is an antichain, and by
 Lemma~\ref{lem:lg-buffered-owners}(c) its root components are those of the
 enlarged-block replacement.  Short root components contain no replaced letter
 and are unchanged; long ones keep their marked first and last $k$ letters and
@@ -2089,7 +2137,7 @@ and induction gives the image identity (merging need not be injective, so no
 inverse-image claim is made).  Concatenating nonempty components yields nonempty
 components, and each merged block of a child is used once and in order, so
 $\eps$-freeness, nondeletion and nonpermutation persist.  The size is linear for fixed $f,r_{\max}$
-\cite[Section~2.3, after Example~2]{Yoshinaka2011}.
+\cite{Yoshinaka2011}.
 \end{proof}
 
 \begin{proof}[Proof of Proposition~\ref{prop:good-normalization}]
