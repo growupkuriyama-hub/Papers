@@ -16,6 +16,7 @@ NEW={'prop:zeta-capacity','prop:typed-separation','app:separating-targets','subs
      'lem:lg-unconditional-shortening','fig:interleaved-blocks',
      # Added for the light fan-out-one Theorem C (2026-11-17), citing kuriyamaCFG Prop. 6.4:
      'lem:fanout-one-classes','prop:fanout-one-lower',
+     'rem:typed-thickness-equivalence',
      'sec:upper','sec:linear','sec:fanout-one','sec:fanout-two',
      'lem:typing-monotone','prop:sl-reduction','tab:scope','cor:iptd','subsec:u1-typings','app:u1-typings','prop:class-undecidable','lem:app-u1-insertion','lem:app-u1-code','lem:no-insertion','app:three-letter-family','lem:unique-word-rigid','prop:unique-two-letter-shapes','app:singleton','thm:app-singleton','tab:singleton-certificates','lem:app-singleton-runs','lem:distinguishing','lem:app-singleton-periodic','prop:unique-word-route','lem:unique-word-gap','prop:abelian-filter-short','prop:full-content-types','lem:reduced-good-hypothesis','thm:two-letter-fanout-one','cor:two-letter-fanout-one','app:two-letter-fanout-one','lem:app-h-cancel','lem:app-h-tree','lem:app-h-base','lem:app-h-collapse','lem:app-h-borrow','lem:app-h-period','lem:app-h-count','lem:app-h-select','lem:app-h-filler','lem:app-h-other','eq:app-h-star','eq:app-h-member','def:isolated-letter','cor:u1-classification'}
 def labels(s): return re.findall(r'\\label\{([^}]*)\}',s)
