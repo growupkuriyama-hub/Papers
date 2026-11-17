@@ -1,6 +1,16 @@
 # Paper #2 — parked mathematical material (source archive)
 
-> **Current canonical manuscript:** [../HANDOFF_CURRENT.md](../HANDOFF_CURRENT.md) · [../main.tex](../main.tex) (English 43 pp) · [../japanese/main_JP.tex](../japanese/main_JP.tex) (Japanese 50 pp). The current manuscripts are the 2026-11-12 referee revisions (PR #106), based on the Plan1+Plan2 merger of 2026-11-11; the mathematical fragments in this archive have not been rewritten. **Files here are preserved research sources, not incorporated theorems of the current main paper.** Do not delete or automatically reintegrate them.
+> **Current canonical manuscript (2026-11-17):** the **Plan A** version (Theorem A and the IPTtD corollary only): [../main.tex](../main.tex) (English 27 pp) · [../japanese/main_JP.tex](../japanese/main_JP.tex) (Japanese 31 pp), page counts of the fixed-URL PDFs published from `main` after PR #138 (commit `9d618c2`). Start from [../HANDOFF_CURRENT.md](../HANDOFF_CURRENT.md). **Files here are preserved research sources, not incorporated theorems of the current main paper.** Do not delete or automatically reintegrate them.
+
+## 2026-11-16 Plan A pruning — the complete pre-Plan-A manuscript (most recent archive)
+
+| File | Contents | Status |
+| --- | --- | --- |
+| [planA_2026-11-16/original_en_43pp.tex](planA_2026-11-16/original_en_43pp.tex) | **Complete** English source of the 43-page manuscript as of 2026-11-13 (after PR #112): Theorems A, B, C, the non-CFL typing-regime separations, `thm:doubling-no-lift`, all appendices and bibliography. Git blob `b299a04baefe1313eb61b010d478b28033a42fbf`. | Byte-for-byte copy; compiles on its own (43 pp, local pdfLaTeX check 2026-11-17) |
+| [planA_2026-11-16/original_jp_50pp.tex](planA_2026-11-16/original_jp_50pp.tex) | Complete Japanese counterpart (50 pages). Git blob `8dfffaa23fd63a9ff0a6656df45b20bdb4c9fbc1`. | Byte-for-byte copy; compiles on its own (50 pp, local LuaLaTeX check 2026-11-17) |
+| [planA_2026-11-16/README.md](planA_2026-11-16/README.md) | Archive notes, reconstruction instructions and **links to the earlier referee reports on Theorems B and C**. | Index |
+
+Result-by-result locations (labels and appendices in the 43-page source) are tabulated in [../PLAN_A_2026-11-16.md](../PLAN_A_2026-11-16.md). Plan A is a scope decision, **not** a retraction: the parked results were removed from the submission draft, not refuted.
 
 ## 2026-11-11 Plan1 split — authoritative parked copies
 
