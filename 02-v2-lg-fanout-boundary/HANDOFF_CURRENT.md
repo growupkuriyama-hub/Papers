@@ -1,4 +1,4 @@
-# Paper #2 — CURRENT HANDOFF (research updated 2026-11-16 JST; manuscript as of 2026-11-13)
+# Paper #2 — CURRENT HANDOFF (manuscript as of 2026-11-17: Plan A, PR #138 merged; fan-out-two research paused 2026-11-16)
 
 **2026-11-16 — RESEARCH PAUSED BY AUTHOR (authoritative stop marker):** The fan-out-two LG-boundary investigation is **on hold**; `op:fanout-two` remains **OPEN**, not solved or abandoned. Before any future research or AI task, begin at [the frozen-state restart entry](RESEARCH_PAUSED_2026-11-16.md), then [proof-status ledger](reviews/PAUSE_PROOF_STATUS_LEDGER_2026-11-16.md), [open obligations](reviews/PAUSE_OPEN_OBLIGATIONS_2026-11-16.md), [dependency map](reviews/PAUSE_PROOF_DEPENDENCIES_2026-11-16.md), [failed routes](reviews/PAUSE_FALSE_ROUTES_2026-11-16.md), [exact-source/replay index](reviews/PAUSE_SOURCE_AND_REPLAY_INDEX_2026-11-16.md), and [future-use resume prompt](reviews/PAUSE_RESUME_PROMPT_2026-11-16.md). Read this stop marker before the dated progress entries below. No manuscript/PDF/PAPER.yaml edits; no autonomous resumption. **Snapshot base before archive PR:** `7f1e609bd02ef7108554a1ab7a84b9a729606814`; formal research statements anchored to `main.tex`.
 
@@ -40,11 +40,31 @@
 
 **2026-11-14 Claude round-seven final hostability report (research only, conditional):** [Intake audit/status](reviews/STATUS_claude_fanout2_round7_intake_2026-11-14.md), [complete final report](reviews/claude_fanout2_round7_hostability_report_2026-11-14.md), [checkpoint](reviews/claude_fanout2_round7_checkpoint1_2026-11-14.md), [runnable 6-file Python suite and logs](reviews/round7_hc/). Claude claims **HC_I (sole nonzero deleting component)** and **HC_II (second deleting component in a different root component)** proved conditional on quoted prior P1/DFS/window lemmas; **HC_III (two deleting η components in same root component) remains OPEN**. F-side local placement and compatible Y/F hole order are still unproved for case III. Original suite reports 459-second all-pass; ChatGPT separately reran six targeted subtests (37 Case-II configurations, 7956 state/hole constructions, plus I/III searches), all successful, but did NOT rerun the 459s suite or independently validate every quantified proof step. Overlapping-projection conjecture U, conditional polynomial bound U_2 and general `op:fanout-two` remain OPEN; no manuscript/PDF changes.
 
-## Current manuscript
+## Current manuscript (authoritative, 2026-11-17)
 
-**Title:** *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*.  
-**Target journal:** *Theoretical Computer Science* (not yet submitted; target timing noted in `PAPER.yaml`).  
-**Canonical branch:** `main`. **English source:** [main.tex](main.tex) — **43 pages**. **Japanese source:** [japanese/main_JP.tex](japanese/main_JP.tex) — **50 pages**.  
+**Version:** **Plan A** — local-group upper bound only. Plan A was merged by [PR #137](https://github.com/growupkuriyama-hub/Papers/pull/137) (2026-11-16); the two Fable referee rounds were addressed and merged by [PR #138](https://github.com/growupkuriyama-hub/Papers/pull/138) (2026-11-17).  
+**Title:** *Polynomial-Length Characteristic Data for Multiple Context-Free Languages under Local-Group Typing*.  
+**Target journal:** *Theoretical Computer Science* (not yet submitted; timing in `PAPER.yaml`).  
+**Canonical branch:** `main`. **English source:** [main.tex](main.tex) — **27 pages**. **Japanese source:** [japanese/main_JP.tex](japanese/main_JP.tex) — **31 pages**.  
+**PDFs:** [English fixed URL](main.pdf) (27 pp, 687,801 bytes) and [Japanese fixed URL](japanese/main_JP.pdf) (31 pp, 890,830 bytes), refreshed from the merged sources in commit `a13ac9d` (after the JP alignment `004a97df`). Page counts are those of these CI-built PDFs; local builds can differ by about one page because of fonts (the Japanese source at `592b72c` gave 30 pp in CI but 31 pp in a local TeX Live 2023 build).
+
+**Scope of the current claims** (summaries only; the theorem statements in `main.tex` are authoritative):
+
+- **Theorem A** (`thm:A`, `thm:local-group-polydata`): if `s(Σ⁺) ∈ LG`, every reduced good presentation of fan-out `≤ f` and rank `≤ r_max` has a common characteristic sample of total length `O(‖G‖² θ̄_G)`; the constant depends only on `f`, `r_max`, `|s(Σ⁺)|` (doubly exponentially on `f` in the explicit estimate).
+- **Corollary** `cor:iptd`: identification in polynomial time and thick data.
+- Illustrations only: the non-CFL example `L_×` and a ten-element typing in `LG \ (LI ∨ Grp)`; no class separation and **no lower bound or necessity of LG** is claimed.
+- **`op:fanout-two` remains open** and its research is paused; it is not discussed as a result of the paper.
+
+**Latest reviews of this version:** [Fable round-1 response](reviews/RESPONSE_TO_FABLE_PLAN_A_2026-11-16.md) and [Fable round-2 response](reviews/RESPONSE_TO_FABLE_ROUND2_2026-11-17.md) (round 2: simulated Minor Revision, 0 Critical, 0 Major). These are AI referee assessments, not journal decisions.
+
+**Removed by Plan A (preserved, not refuted):** Theorem B, Theorem C, the non-CFL typing-regime separations and `thm:doubling-no-lift`. The complete 43-page English / 50-page Japanese sources are in [parked/planA_2026-11-16/](parked/planA_2026-11-16/) (byte-for-byte copies, with links to the earlier B/C referee reports); the result-by-result index is [PLAN_A_2026-11-16.md](PLAN_A_2026-11-16.md).
+
+## History of the pre-Plan-A 43-page manuscript (2026-11-12 to 2026-11-14; historical)
+
+Everything in this section, including "current" and "43 pages", describes the manuscript **before** Plan A and is kept as a record.
+
+**Former header (as of 2026-11-13):** title *Characteristic-Data Length for Multiple Context-Free Languages under Fixed Finite-Semigroup Typing*; English 43 pages, Japanese 50 pages.
+
 **PDFs:** [English fixed URL](main.pdf) and [Japanese fixed URL](japanese/main_JP.pdf). The [post-PR-#112 publisher](https://github.com/growupkuriyama-hub/Papers/actions/runs/43394948457) **successfully compiled, verified and committed** the concise-Conclusion **43-page English PDF (888,083 bytes)** and **50-page Japanese PDF (1,163,170 bytes)**. [English PR CI](https://github.com/growupkuriyama-hub/Papers/actions/runs/43394704406) and [Japanese PR CI and port check](https://github.com/growupkuriyama-hub/Papers/actions/runs/43394704524) both passed.
 
 **2026-11-14 ChatGPT independent mathematical audit of proposed Theorem P:** [Full proof-audit note](reviews/audit_theorem_P_independent_2026-11-14.md) reconstructs the path-language polynomial representative bound using an explicit **frozen-block Euler rerouting lemma**, covering P1 circulation, the Y/F exposure constructions, anchor order, positive hole separators, and the original grammar-thickness parameter. The mathematical audit judges the proof **VALID with clarifying details**, but is not expert peer review or machine formalization. General `op:fanout-two` remains OPEN. Paper LaTeX and PDFs unchanged.
@@ -71,7 +91,7 @@
 
 **2026-11-12 referee revision:** [PR #106](https://github.com/growupkuriyama-hub/Papers/pull/106) incorporates the clarified \(t=u\) hypothesis, rank and worst-case qualifications, an explicit upper bound for the theorem-A proof constant, a direct LG-equivalence proof, and the corrected fan-out-uniform degree question. The Japanese Theorem C now matches the English quantitative exponential statement. The model referee report is archived [here](reviews/claude_independent_referee_2026-11-12.md), with the complete [response log](reviews/RESPONSE_TO_CLAUDE_REFEREE_2026-11-12.md). No parked results are reinserted; fan-out-two remains open. The referee's Minor Revision opinion is not an external journal decision.\n\nThe current manuscript is the result of **Plan1 (PR [#103](https://github.com/growupkuriyama-hub/Papers/pull/103)) + Plan2 (PR [#104](https://github.com/growupkuriyama-hub/Papers/pull/104))**, both merged into `main` on 2026-11-11. Main theorem statements and complete proofs were preserved in Plan2, which compressed supporting discussion and duplicated tables. [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md), [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md). The earlier Plan2-source CI checks were [English pdfLaTeX](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019927350) and [Japanese LuaLaTeX / port-check](https://github.com/growupkuriyama-hub/Papers/actions/runs/43019927151). The earlier fixed-URL PDF publication completed in [workflow run 43021169918](https://github.com/growupkuriyama-hub/Papers/actions/runs/43021169918); it predates the referee revisions.
 
-### Scope of *current* mathematical claims
+### Scope of the pre-Plan-A 43-page manuscript (historical)
 
 - **Theorem A:** local-group typings give characteristic sample length `O(||G||^2 θ̄_G)` for every fixed fan-out, rank and typing; proof uses owner-wise simultaneous block shortening.
 - **Theorem B:** a linear-factor lower bound `Ω(||G|| θ̄_G)` at every fan-out **under the alphabet side conditions stated in the theorem**, plus the exact trivial-typing benchmark.
@@ -82,8 +102,9 @@
 
 These are summaries only: consult the actual current theorem statements in `main.tex` for all quantifiers, alphabet/rank restrictions and operator variants.
 
-### Parked mathematical results (preserved; NOT part of this 43-page manuscript)
+### Parked mathematical results (preserved; NOT part of the current Plan A manuscript)
 
+- [Plan A archive](parked/planA_2026-11-16/): complete pre-Plan-A 43-page English / 50-page Japanese sources (Theorems B and C, separations, `thm:doubling-no-lift`) and [links to their earlier referee reports](parked/planA_2026-11-16/README.md). Index: [PLAN_A_2026-11-16.md](PLAN_A_2026-11-16.md).
 - [Small-alphabet results, English](parked/plan1_small_alphabet_2026-11-11.tex): isolated letters at fan-out one, individual `U_1` typings, two-letter content/semilattice typings, including the former Appendices H/I/J with their proof sources.
 - [Small-alphabet results, Japanese](parked/plan1_small_alphabet_JP_2026-11-11.tex): Japanese source counterparts of the removed sections and former H/I/J.
 - [Boundary extensions](parked/plan1_boundary_extensions_2026-11-11.tex): semilattice reductions / additional boundary investigations, including `prop:zeta-capacity`.
@@ -93,9 +114,17 @@ The Nov 9 historical assertions that `thm:two-letter-content` and `prop:zeta-cap
 
 ### Research exploration versus submitted-paper content
 
-Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the exploration status log](reviews/STATUS_sl_fanout2_2026-11-01.md). It contains findings and candidate arguments beyond the present paper. Its latest dated entries must be checked independently; **a research report being present does not mean its theorem has been inserted into the 43-page manuscript or independently verified.** Do not silently equate the research frontier with paper status.
+Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the exploration status log](reviews/STATUS_sl_fanout2_2026-11-01.md). It contains findings and candidate arguments beyond the present paper. Its latest dated entries must be checked independently; **a research report being present does not mean its theorem has been inserted into the current manuscript or independently verified.** Do not silently equate the research frontier with paper status.
 
-### Validation and remaining tasks
+### Validation and remaining tasks (current)
+
+- **Verified for the current version:** CI-published 27/31-page PDFs from the merged sources (`a13ac9d`); Fable round-2 independent referee audit of `592b72c` (no proof gap found; 14 minor/editorial items, addressed in PR #138); EN/JP labels and theorem-like environments identical; a local rebuild of `9d618c2` (EN 27 pp, JP 31 pp) shows no undefined references and no overfull boxes.
+- The Japanese normalization paragraph was aligned with the English attribution in commit `004a97df` (no remaining Section 2.3 size-bound claim).
+- **Not yet certified:** human mathematical refereeing, author PDF visual proofreading, author sign-off and journal submission.
+- **AI assistants:** always fetch `main.tex` (and `japanese/main_JP.tex` if needed), this handoff and `PAPER.yaml`. Do not start from the 43-page (2026-11-13), 41-page (2026-11-06) or 64-page (2026-11-09) versions when asked for the latest.
+
+### Validation of the pre-Plan-A 43-page manuscript (historical)
+
 
 - **Verified:** CI builds for English 43-page and Japanese 50-page manuscripts; published PDF bytes and page counts match the final 43-/50-page source builds (publisher run 43227898270); Plan2 preserved full English formal theorem/lemma/proposition/definition/proof blocks verbatim relative to Plan1 (the subsequent referee fixes explicitly clarified some English/JP statements and added the self-contained LG characterization proof) (and Japanese proofs, apart from purely typographic math spacing), with no missing internal references or citation keys; `python3 tools/check_port.py` accounts for parked labels.
 - **Not yet certified:** a human mathematical referee audit of the final *combined* manuscript, full PDF visual proofreading, complete English/Japanese claim-by-claim alignment, or journal submission acceptance. An additional AI-only independent review (simulated Minor Revision) and response are documented below; neither is a proof certificate. The historical Plan1/Plan2 reports capture narrower checks.
@@ -114,3 +143,5 @@ Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the explo
 - 2026-11-12 (PR #109): final English/Japanese front matter, new keywords, independent precision audit and published 43/50-page PDFs; formal mathematics and parked proof sources unchanged.
 
 - **2026-11-12 (referee revisions):** Claude's Nov 12 independent report was checked against the live source, and issues m1--m9 and the newly discovered uniform-degree ambiguity m11 were addressed in both languages (see PR #106 and the response log). English PR CI 43 pages; Japanese PR CI 50 pages; historical Plan2 baseline stays 42/49 pages.
+- 2026-11-16 (PR #137): **Plan A** — local-group upper bound only, 26 EN / 30 JP pp in CI; full 43/50-page sources parked in `parked/planA_2026-11-16/`.
+- 2026-11-17 (PR #138): Fable referee rounds 1–2 addressed; published PDFs 27 EN / 31 JP pp (`9d618c2`).

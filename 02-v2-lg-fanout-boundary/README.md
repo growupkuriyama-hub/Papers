@@ -1,4 +1,4 @@
-> **Plan A merged into `main` (2026-11-16, [PR #137](https://github.com/growupkuriyama-hub/Papers/pull/137)):** The active English/Japanese TeX is the upper-bound-only version (Theorem A and IPTtD corollary); PR CI compiled **26/30 pages**. The full former **43/50 page** EN/JP sources and all deleted results are preserved in [parked/planA_2026-11-16/](parked/planA_2026-11-16/), indexed in [PLAN_A_2026-11-16.md](PLAN_A_2026-11-16.md). Independently verify the **fixed-URL PDFs** are refreshed from these sources; the mathematical referee audit, bilingual semantic review and PDF visual inspection are still pending. The separate fan-out-two boundary investigation remains paused and OPEN.
+> **Current version (2026-11-17): Plan A, merged** ([PR #137](https://github.com/growupkuriyama-hub/Papers/pull/137) on 2026-11-16; Fable referee rounds 1–2 addressed in [PR #138](https://github.com/growupkuriyama-hub/Papers/pull/138) on 2026-11-17). The active English/Japanese TeX is the upper-bound-only version (Theorem A and the IPTtD corollary); the fixed-URL PDFs published from `main` (`a13ac9d`) have **27 English / 31 Japanese pages**. The full former **43/50-page** EN/JP sources and all removed results are preserved in [parked/planA_2026-11-16/](parked/planA_2026-11-16/) (with links to the earlier referee reports on Theorems B and C), indexed in [PLAN_A_2026-11-16.md](PLAN_A_2026-11-16.md). Human refereeing and author PDF proofreading are still pending. The separate fan-out-two boundary investigation remains paused and OPEN.
 
 # #2 Plan A — Polynomial-Length Characteristic Data for Multiple Context-Free Languages under Local-Group Typing
 
@@ -6,7 +6,7 @@
 
 **Author:** Takayuki Kuriyama  
 **Target journal:** *Theoretical Computer Science* (submission planned; not yet submitted).  
-**Current status (2026-11-13):** **English/Japanese Conclusions condensed in [PR #112](https://github.com/growupkuriyama-hub/Papers/pull/112), merged to main; updated PDFs published successfully.** The exact fan-out-two Open Problem and the two quantitative gaps remain. The [abstract refinement PR #111](https://github.com/growupkuriyama-hub/Papers/pull/111) (English abstract: 167 words) and [title refinement PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110) remain part of the current manuscript. Formal theorems, proof text, abstracts, Introduction, acknowledgments and appendices are unchanged by PR #112.
+**Current status (2026-11-17):** Plan A manuscript on `main` after PR #138; not yet submitted. *Historical (2026-11-13, pre-Plan-A 43-page version):* **English/Japanese Conclusions condensed in [PR #112](https://github.com/growupkuriyama-hub/Papers/pull/112), merged to main; updated PDFs published successfully.** The exact fan-out-two Open Problem and the two quantitative gaps remain. The [abstract refinement PR #111](https://github.com/growupkuriyama-hub/Papers/pull/111) (English abstract: 167 words) and [title refinement PR #110](https://github.com/growupkuriyama-hub/Papers/pull/110) remain part of the current manuscript. Formal theorems, proof text, abstracts, Introduction, acknowledgments and appendices are unchanged by PR #112.
 
 > **Start here (current authoritative handoff): [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)**. For AI agents, use [INSTRUCTIONS_FOR_AI.md](INSTRUCTIONS_FOR_AI.md) only after its new current-state header. The dated entries below preserve a historical research log; an old statement like “added to manuscript” describes the state *on that date*, not necessarily the present contents.
 
@@ -40,12 +40,21 @@
 
 | Role | Source of truth | Fixed published PDF | Verified pages |
 | --- | --- | --- | --- |
-| English | [main.tex](main.tex) | [main.pdf](main.pdf) | **43** (pdfLaTeX) |
-| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **50** (LuaLaTeX) |
+| English | [main.tex](main.tex) | [main.pdf](main.pdf) | **27** (pdfLaTeX, published from `a13ac9d`) |
+| Japanese | [japanese/main_JP.tex](japanese/main_JP.tex) | [japanese/main_JP.pdf](japanese/main_JP.pdf) | **31** (LuaLaTeX, published from `a13ac9d`) |
 
-The [current concise-Conclusion PDFs](https://github.com/growupkuriyama-hub/Papers/actions/runs/43394948457) were built, verified and published: English **43 pages / 888,083 bytes**, Japanese **50 pages / 1,163,170 bytes**. The pre-Conclusion [abstract publisher 43391204555](https://github.com/growupkuriyama-hub/Papers/actions/runs/43391204555), previous [title-only run 43387931614](https://github.com/growupkuriyama-hub/Papers/actions/runs/43387931614) and older runs are historical. Canonical sources and fixed PDFs take precedence over dated changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document earlier validation. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103), [#104](https://github.com/growupkuriyama-hub/Papers/pull/104), [#106](https://github.com/growupkuriyama-hub/Papers/pull/106), [#108](https://github.com/growupkuriyama-hub/Papers/pull/108), [#109](https://github.com/growupkuriyama-hub/Papers/pull/109), [#110](https://github.com/growupkuriyama-hub/Papers/pull/110), [#111](https://github.com/growupkuriyama-hub/Papers/pull/111) and [#112](https://github.com/growupkuriyama-hub/Papers/pull/112) are merged.
+Page counts are those of the CI-built fixed-URL PDFs (English 687,801 bytes, Japanese 890,830 bytes). Local builds can differ by about one page because of fonts; for example, the Japanese source at `592b72c` gave 30 pages in CI and 31 pages in a local TeX Live 2023 build.
 
-## Current mathematical scope
+*Historical (pre-Plan-A):* The [concise-Conclusion PDFs of the 43-page version](https://github.com/growupkuriyama-hub/Papers/actions/runs/43394948457) were built, verified and published: English **43 pages / 888,083 bytes**, Japanese **50 pages / 1,163,170 bytes**. The pre-Conclusion [abstract publisher 43391204555](https://github.com/growupkuriyama-hub/Papers/actions/runs/43391204555), previous [title-only run 43387931614](https://github.com/growupkuriyama-hub/Papers/actions/runs/43387931614) and older runs are historical. Canonical sources and fixed PDFs take precedence over dated changelog entries. The [Plan1 report](plan1/PLAN1_REPORT_2026-11-11.md) and [Plan2 report](plan2/PLAN2_REPORT_2026-11-11.md) document earlier validation. PRs [#103](https://github.com/growupkuriyama-hub/Papers/pull/103), [#104](https://github.com/growupkuriyama-hub/Papers/pull/104), [#106](https://github.com/growupkuriyama-hub/Papers/pull/106), [#108](https://github.com/growupkuriyama-hub/Papers/pull/108), [#109](https://github.com/growupkuriyama-hub/Papers/pull/109), [#110](https://github.com/growupkuriyama-hub/Papers/pull/110), [#111](https://github.com/growupkuriyama-hub/Papers/pull/111) and [#112](https://github.com/growupkuriyama-hub/Papers/pull/112) are merged.
+
+## Current mathematical scope (Plan A)
+
+- **Theorem A** (`thm:A`, `thm:local-group-polydata`): if `s(Σ⁺) ∈ LG`, every reduced good presentation of fan-out `≤ f` and rank `≤ r_max` has a common characteristic sample of total length `O(‖G‖² θ̄_G)`; the constant depends only on `f`, `r_max` and `|s(Σ⁺)|` (doubly exponentially on `f` in the explicit estimate).
+- **Corollary** `cor:iptd`: identification in polynomial time and thick data.
+- Illustrations: the non-CFL example `L_×` and a ten-element typing in `LG` but outside `LI ∨ Grp`. No lower bound, necessity of `LG`, or class separation is claimed.
+- **`op:fanout-two`** is open and paused; it is not a result of this paper.
+
+### Scope of the pre-Plan-A 43-page manuscript (historical; now parked)
 
 - **Theorem A:** `LG` upper bound `O(||G||² θ̄_G)` on characteristic-data length at every fixed fan-out and rank, using simultaneous block replacement.
 - **Theorem B:** lower bound `Ω(||G|| θ̄_G)` at every fan-out subject to the *stated alphabet condition*; matching trivial-typing benchmark.
@@ -53,12 +62,14 @@ The [current concise-Conclusion PDFs](https://github.com/growupkuriyama-hub/Pape
 - **Non-CFL separations:** `prop:lg-needed-target` and `prop:nonabelian-needed-target` establish different coverage by local-group/window--group/window--abelian typing regimes; full proofs retained.
 - **Fan-out two:** `thm:doubling-no-lift` shows why the three-letter fan-out-one exponential family cannot supply the same obstruction there. The general boundary `op:fanout-two` is **open**, not asserted at every fan-out.
 
+
 Refer to the complete quantified theorem statements in `main.tex` for precise restrictions. **Independent human mathematical referee-level validation is still pending**; successful compilation and proof-block preservation are not proofs of correctness.
 
 ## Archived / parked mathematics — DO NOT DELETE
 
-These source fragments are retained in the repository for future independent investigations. They are not part of the 43-page current manuscript and are not themselves compilable independent papers:
+These source fragments are retained in the repository for future independent investigations. They are not part of the current Plan A manuscript. Apart from the two complete Plan A copies (which compile on their own: 43 EN / 50 JP pages, checked locally on 2026-11-17), they are not themselves compilable independent papers:
 
+- [parked/planA_2026-11-16/](parked/planA_2026-11-16/) — **complete** pre-Plan-A 43-page English / 50-page Japanese sources (Theorems B and C, non-CFL separations, `thm:doubling-no-lift`, all appendices), byte-for-byte; its README links the earlier referee reports on Theorems B and C. Index: [PLAN_A_2026-11-16.md](PLAN_A_2026-11-16.md).
 - [plan1_small_alphabet_2026-11-11.tex](parked/plan1_small_alphabet_2026-11-11.tex) — English isolated-letter, individual `U_1`, and two-letter content results, with the former Appendices H/I/J and proof source.
 - [plan1_small_alphabet_JP_2026-11-11.tex](parked/plan1_small_alphabet_JP_2026-11-11.tex) — corresponding Japanese source excerpts.
 - [plan1_boundary_extensions_2026-11-11.tex](parked/plan1_boundary_extensions_2026-11-11.tex) — additional semilattice and boundary results, including `prop:zeta-capacity`.
