@@ -1,6 +1,6 @@
 # Paper #2 — parked mathematical material (source archive)
 
-> **Current canonical manuscript (2026-11-17):** the **Plan A** version (Theorem A and the IPTtD corollary only): [../main.tex](../main.tex) (English 27 pp) · [../japanese/main_JP.tex](../japanese/main_JP.tex) (Japanese 31 pp), page counts of the fixed-URL PDFs published from `main` after PR #138 (commit `9d618c2`). Start from [../HANDOFF_CURRENT.md](../HANDOFF_CURRENT.md). **Files here are preserved research sources, not incorporated theorems of the current main paper.** Do not delete or automatically reintegrate them.
+> **Current canonical manuscript (2026-11-17):** the **Plan A** version (Theorem A and the IPTtD corollary only): [../main.tex](../main.tex) (English 27 pp) · [../japanese/main_JP.tex](../japanese/main_JP.tex) (Japanese 31 pp), page counts of the fixed-URL PDFs published from `main` after PR #138 (commit `a13ac9d`). Start from [../HANDOFF_CURRENT.md](../HANDOFF_CURRENT.md). **Files here are preserved research sources, not incorporated theorems of the current main paper.** Do not delete or automatically reintegrate them.
 
 ## 2026-11-16 Plan A pruning — the complete pre-Plan-A manuscript (most recent archive)
 

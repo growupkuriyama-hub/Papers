@@ -46,7 +46,7 @@
 **Title:** *Polynomial-Length Characteristic Data for Multiple Context-Free Languages under Local-Group Typing*.  
 **Target journal:** *Theoretical Computer Science* (not yet submitted; timing in `PAPER.yaml`).  
 **Canonical branch:** `main`. **English source:** [main.tex](main.tex) — **27 pages**. **Japanese source:** [japanese/main_JP.tex](japanese/main_JP.tex) — **31 pages**.  
-**PDFs:** [English fixed URL](main.pdf) (27 pp, 687,801 bytes) and [Japanese fixed URL](japanese/main_JP.pdf) (31 pp, 890,832 bytes), refreshed from the merged sources in commit `9d618c2`. Page counts are those of these CI-built PDFs; local builds can differ by about one page because of fonts (the Japanese source at `592b72c` gave 30 pp in CI but 31 pp in a local TeX Live 2023 build).
+**PDFs:** [English fixed URL](main.pdf) (27 pp, 687,801 bytes) and [Japanese fixed URL](japanese/main_JP.pdf) (31 pp, 890,830 bytes), refreshed from the merged sources in commit `a13ac9d` (after the JP alignment `004a97df`). Page counts are those of these CI-built PDFs; local builds can differ by about one page because of fonts (the Japanese source at `592b72c` gave 30 pp in CI but 31 pp in a local TeX Live 2023 build).
 
 **Scope of the current claims** (summaries only; the theorem statements in `main.tex` are authoritative):
 
@@ -118,8 +118,8 @@ Active work on `op:fanout-two` is kept under [reviews/](reviews/) and [the explo
 
 ### Validation and remaining tasks (current)
 
-- **Verified for the current version:** CI-published 27/31-page PDFs from the merged sources (`9d618c2`); Fable round-2 independent referee audit of `592b72c` (no proof gap found; 14 minor/editorial items, addressed in PR #138); EN/JP labels and theorem-like environments identical; a local rebuild of `9d618c2` (EN 27 pp, JP 31 pp) shows no undefined references and no overfull boxes.
-- **Known open item:** the Japanese normalization paragraph (`main_JP.tex`, around line 2142) still cites `[Section~2.3]{Yoshinaka2011}` as stating the size bound without proof, whereas the English text no longer makes that pinpoint claim.
+- **Verified for the current version:** CI-published 27/31-page PDFs from the merged sources (`a13ac9d`); Fable round-2 independent referee audit of `592b72c` (no proof gap found; 14 minor/editorial items, addressed in PR #138); EN/JP labels and theorem-like environments identical; a local rebuild of `9d618c2` (EN 27 pp, JP 31 pp) shows no undefined references and no overfull boxes.
+- The Japanese normalization paragraph was aligned with the English attribution in commit `004a97df` (no remaining Section 2.3 size-bound claim).
 - **Not yet certified:** human mathematical refereeing, author PDF visual proofreading, author sign-off and journal submission.
 - **AI assistants:** always fetch `main.tex` (and `japanese/main_JP.tex` if needed), this handoff and `PAPER.yaml`. Do not start from the 43-page (2026-11-13), 41-page (2026-11-06) or 64-page (2026-11-09) versions when asked for the latest.
 
