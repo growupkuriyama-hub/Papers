@@ -28,6 +28,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 ## Change log
 
+- 2026-11-20: addressed the Astra round-2 report (Minor Revision); Theorem C(i) strengthened to two letters; see [reviews/RESPONSE_TO_ASTRA_ROUND2_2026-11-20.md](reviews/RESPONSE_TO_ASTRA_ROUND2_2026-11-20.md).
+
 - 2026-11-20: addressed the Astra referee report (Major Revision; 5 Major, several Minor); see [reviews/RESPONSE_TO_ASTRA_2026-11-20.md](reviews/RESPONSE_TO_ASTRA_2026-11-20.md).
 
 - 2026-11-20: introduction and Section 6 explain why the typing-level classification starts with U₁ (the minimal obstruction outside LG).
