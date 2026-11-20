@@ -2,7 +2,7 @@
 
 **Working title:** *Which Fixed Typings Give Polynomial Characteristic Data? A Classification for Substitutable Context-Free Languages*
 **Author:** Takayuki Kuriyama
-**Status:** started 2026-11-20 — skeleton with draft bridge lemmas (framework of #1), not submitted, no result of this directory has been re-audited in its new form.
+**Status:** submission preparation (2026-11-20). Two AI referee rounds (Astra) addressed; Section 4 rewritten after round 2. Not submitted.
 
 ## Concept
 
@@ -19,7 +19,7 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 - [`OUTLINE.md`](OUTLINE.md) — design decisions, section plan and **source map** (which label of which archived file each part comes from). Start here.
 - [`PAPER.yaml`](PAPER.yaml) — metadata and status.
-- [`main.tex`](main.tex) — English manuscript (skeleton: front matter, introduction draft, main-theorem statements, section stubs with source comments).
+- [`main.tex`](main.tex) — English manuscript (27 pp). Source-mapping comments were removed for submission; see OUTLINE.md and git history for provenance.
 
 ## Relation to other directories
 
@@ -27,6 +27,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 - `01_fixed-h-cfg/` (#1) is under review at TCS; cite it by arXiv:1409.6247v5 numbering.
 
 ## Change log
+
+- 2026-11-20: submission cleanup — removed draft date and all source/status comments, added the generative-AI declaration (wording as in #1).
 
 - 2026-11-20: Section 4 rewritten with the direct proof supplied by Astra (reviews/astra_lg_quadratic_proof_2026-11-20.txt): typed thickness O(N(τ+1)) for BUNF and characteristic data O(‖G_*‖² max{1,τ}) for every reduced CFG; the gap to the linear-factor lower bound is now one factor of symbol size. Not yet independently audited.
 
