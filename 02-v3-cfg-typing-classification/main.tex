@@ -399,36 +399,126 @@ $L^{\setminus m}\ne L$.  By \ref{q:exact} this applies to $\Rec_s$.
 %======================================================================
 \section{Local Groups Suffice}
 \label{sec:lg}
-% TODO(port: O app:local-group -- thm:lg-characterization, sliding-factor
-%   coordinates lambda_{k,nu}; O cor:lg-type-level-shortest at f=1, which gives
-%   ttyp(H,s) <= 3 bar-theta_H C^buf |V_H| |S| for rank <= 2; O app:group-blocks
-%   restricted to one context, i.e. two blocks).
+% Ported 2026-11-20 from O Section 5.1 (lem:heavy-node-count), 5.3
+% (thm:local-group-polydata) and app:local-group (lem:local-group-shortest,
+% cor:lg-type-level-shortest), specialized to fan-out one.  At fan-out one every
+% subtree contributes one contiguous block of the root word, so the order
+% homogenization of O app:group-blocks is not needed: a prefix-product pigeonhole
+% suffices (Lemma~\ref{lem:group-interval}).  DRAFT-PORT: to be audited.
+
+Throughout this section $H=(V_H,\Sigma,P_H,S)$ is a reduced good CFG of rank at
+most $r$.  By Lemma~\ref{lem:measures} every $C\in V_H$ derives a word of length
+at most $\bar\theta_H$, and every production writes at most $\bar\theta_H$
+terminals explicitly (they occur in every sentence using it).
+
+\paragraph{Minimal derivations and heavy nodes.}
+Let $\lambda:\Sigma^*\to\mathsf N$ be a morphism onto a finite monoid with
+$\widehat s\preceq\lambda$, i.e.\ $\lambda(w)=\lambda(w')$ implies
+$\widehat s(w)=\widehat s(w')$.  For $B\in V_H$ and a realized type
+$\mu\in s(L_H(B))$, an \emph{$s$-minimal derivation} for $(B,\mu)$ is a derivation
+tree from $B$ whose yield has type $\mu$ and which minimizes first the length of
+the yield and then the number of nodes.  A node is \emph{heavy} if its yield is
+longer than $\bar\theta_H$.
+
+\begin{lemma}[Heavy antichains bound the yield]
+\label{lem:heavy}
+Let $T$ be $s$-minimal for $(B,\mu)$ and suppose every antichain of heavy nodes
+of $T$ has at most $c$ elements.  Then the yield of $T$ has length at most
+$(r+1)\,\bar\theta_H\max\{1,c\,|V_H|\,|\mathsf S|\}$.
+\end{lemma}
+
+\begin{proof}
+Label every node by its nonterminal and the $s$-type of its \textup(nonempty\textup)
+yield; at most $|V_H||\mathsf S|$ labels occur.  If an ancestor and a proper
+descendant had the same label, grafting the descendant's subtree at the
+ancestor would keep the root type, not lengthen the yield and remove nodes,
+contradicting minimality; so every path has at most $|V_H||\mathsf S|$ nodes.  If
+the root is not heavy we are done.  Otherwise the heavy nodes form an
+ancestor-closed subtree, whose leaves form an antichain; hence there are at most
+$c|V_H||\mathsf S|$ heavy nodes.  Every letter of the yield is written by a heavy
+node \textup(at most $\bar\theta_H$ each\textup) or lies in a non-heavy child of a
+heavy node \textup(at most $r$ children, of length at most $\bar\theta_H$ each\textup).
+\end{proof}
+
+\begin{proposition}[Short representatives for local-group typings]
+\label{prop:lg-short}
+Suppose $\mathsf S=s(\Sigma^+)\in\LG$, let $k:=|\mathsf S|$ and let $\mathbb G$ be a
+maximal subgroup of the minimal ideal of $\mathsf S$.  For every $B\in V_H$ and
+$w\in L_H(B)$ there is $w'\in L_H(B)$ with $s(w')=s(w)$ and
+\[
+ |w'|\le(r+1)\,\bar\theta_H\,C_k\,|V_H|\,|\mathsf S|,\qquad
+ C_k:=2k+(4k+1)(|\mathbb G|-1).
+\]
+In particular $\ttyp(H,s)\le(r+1)(4|\mathsf S|+1)|\mathsf S|^2\,|V_H|\,\bar\theta_H$.
+\end{proposition}
+
+\begin{proof}
+By Theorem~\ref{thm:lg-characterization}, $\widehat s\preceq\lambda:=\lambda_{k,\nu}$ for
+a sliding-factor labelling $\nu:\Sigma^{k+1}\to\mathbb G$.  Let $T$ be
+$s$-minimal for $(B,s(w))$, with yield $y$.  By Lemma~\ref{lem:heavy} it
+suffices to show that every antichain $Q$ of heavy nodes has at most $C_k$
+elements.  The yields of the nodes of $Q$ are disjoint nonempty factors of $y$, so
+$|Q|\le|y|\le2k-1\le C_k$ if $y$ is short.  Otherwise mark the first and the last
+$k$ letters of $y$.  The yields of the nodes of $Q$ are disjoint nonempty
+factors of $y$, so at most $2k$ of them contain a mark; let $Q_0$ be the others
+and suppose $|Q_0|>(4k+1)(|\mathbb G|-1)$.
+
+By Lemma~\ref{lem:buffered} there is $Q_1\subseteq Q_0$ with
+$|Q_1|>|\mathbb G|-1$ whose intervals can be enlarged to pairwise disjoint
+\emph{enlarged blocks} $\mathfrak b_v$ $(v\in Q_1)$, each containing the interval of
+$v$ and no other interval of $Q_1$, such that, for every choice of nonempty
+replacement words, replacing the interval of $v$ inside $\mathfrak b_v$ gives a
+word $\mathfrak b'_v$ of length at least $2k+1$ with the same first and last $k$
+letters as $\mathfrak b_v$.  For $v\in Q_1$ with label $C_v$ choose
+$x_v\in L_H(C_v)$ with $|x_v|\le\bar\theta_H$ as replacement.  By
+Lemma~\ref{lem:blocks}, for every $J\subseteq Q_1$ the word $y_J$ obtained by
+replacing the intervals of the nodes in $J$ satisfies
+$\widehat s_{k,k}(y_J)=\widehat s_{k,k}(y)$ and
+\[
+ \gamma_{k,\nu}(y_J)=z_0\,\gamma_1^{J}\,z_1\cdots\gamma_m^{J}\,z_m,
+ \qquad
+ \gamma_i^{J}=\begin{cases}\gamma_{k,\nu}(\mathfrak b'_{v_i})&v_i\in J,\\
+ \gamma_{k,\nu}(\mathfrak b_{v_i})&v_i\notin J,\end{cases}
+\]
+where $v_1,\ldots,v_m$ enumerate $Q_1$ from left to right and the $z_i\in\mathbb G$
+do not depend on $J$.  As $m>|\mathbb G|-1$, Lemma~\ref{lem:group-interval} gives a
+nonempty interval $J=\{v_{i+1},\ldots,v_j\}$ with
+$\gamma_{k,\nu}(y_J)=\gamma_{k,\nu}(y)$.  Replacing the subtrees at the nodes of
+$J$ by derivations of the $x_v$ yields a derivation from $B$ \textup($J$ is an
+antichain\textup) with yield $y_J$, $\lambda(y_J)=\lambda(y)$ and hence
+$s(y_J)=s(y)$, and $|y_J|<|y|$ since every replaced yield was longer than
+$\bar\theta_H\ge|x_v|$.  This contradicts minimality.  Hence
+$|Q|\le2k+(4k+1)(|\mathbb G|-1)=C_k$.  The final estimate uses
+$|\mathbb G|\le|\mathsf S|$.
+\end{proof}
 
 \begin{theorem}[Local-group typings]
 \label{thm:lg-sufficiency}
-Suppose $s(\Sigma^+)\in\LG$, and put $\mathsf S=s(\Sigma^+)$.  There is a
-constant $c_{|\mathsf S|}$ such that:
+Suppose $s(\Sigma^+)\in\LG$ and put $\mathsf S=s(\Sigma^+)$ and
+$c_{\mathsf S}:=9(4|\mathsf S|+1)|\mathsf S|^2$.
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item every reduced good CFG $H$ of rank at most two satisfies
-$\ttyp(H,s)\le c_{|\mathsf S|}|V_H|\,\bar\theta_H$;
-\item every reduced BUNF grammar $G$ with $N$ nonterminals satisfies
-$\tau^{\mathrm{typ}}_s(G)\le c_{|\mathsf S|}N^2(\tau_G+1)$ \todo{constant};
-\item every nonempty $L\in\Ccf{s}$ represented by a reduced CFG $G_*$ has a
-characteristic sample for $\Rec_s$ of encoded size at most
-$p(|G_*|)(\tau_{G_*}+1)$ for a polynomial $p$ depending only on $s$.
+\item Every reduced good CFG $H$ of rank at most two satisfies
+$\ttyp(H,s)\le\tfrac13c_{\mathsf S}|V_H|\,\bar\theta_H$.
+\item Every reduced BUNF grammar $G$ with $N$ nonterminals satisfies
+$\tau^{\mathrm{typ}}_s(G)\le c_{\mathsf S}N^2(\tau_G+1)$.
+\item Every nonempty $L\in\Ccf{s}$ represented by a reduced CFG $G_*$ has a
+characteristic sample for $\Rec_s$ of encoded size polynomial in $|G_*|$ and
+$\tau_{G_*}+1$; for reduced BUNF presentations $G$ it is at most
+$p_s(|G|)\,(\tau_G+1)$ for a polynomial $p_s$.
 \end{enumerate}
 In particular \cite[Corollary~7.5]{kuriyamaCFG} extends from
 $\mathbf{LI}\vee\mathbf{Grp}$ to $\LG$.
 \end{theorem}
 
 \begin{proof}
-(i) is the fan-out-one case of O \texttt{cor:lg-type-level-shortest}
-\todo{port with proof, Appendix~\ref{app:lg}}.  (ii) follows from (i),
-Lemmas~\ref{lem:lambda-elimination} and~\ref{lem:typed-transfer}.  (iii)
-follows from (ii), \ref{q:data} and \ref{q:bunf}.
-\todo{check that the linear dependence on $\tau$ survives \ref{q:bunf}; if
-$q_{\mathrm{thick}}$ is not linear in $\tau_{G_*}$, state (iii) for BUNF
-presentations and the general polynomial statement separately.}
+(i) is Proposition~\ref{prop:lg-short} with $r=2$.  (ii) If
+$L(G)\subseteq\{\lambda\}$ the bound is trivial.  Otherwise
+Lemmas~\ref{lem:typed-transfer} and~\ref{lem:lambda-elimination}(iii) give
+$\tau^{\mathrm{typ}}_s(G)\le\max\{1,\ttyp(G^+,s)\}\le
+\tfrac13c_{\mathsf S}N\cdot3N(\tau_G+1)$.  (iii) The first claim is
+Corollary~\ref{cor:master}; the second follows from (ii) and \ref{q:data}.
+\todo{if \cite[Proposition~7.3]{kuriyamaCFG} is linear in $\tau_{G_*}$, state the
+linear bound for arbitrary reduced presentations too.}
 \end{proof}
 
 %======================================================================
@@ -526,14 +616,200 @@ No data were used.
 
 \section{Local-Group Coordinates and Shortening}
 \label{app:lg}
+% Ported 2026-11-20 from O app:local-group (lem:local-group-morphism,
+% lem:local-group-blocks, lem:lg-rees-window-coordinate, thm:lg-characterization,
+% lem:lg-buffered-owners) at fan-out one; Lemma A.6 replaces O app:group-blocks.
+
+$\LG$ is tested on the positive image $\mathsf S=s(\Sigma^+)$.  The classical
+identity $\LG=\mathbf{Grp}*\mathbf D$ places it within the delay theory
+\cite{Straubing1985,Tilson1987}, and the exclusion of $U_1$ is
+\cite[Proposition~2.3]{AlmeidaEtAl2009}; we give the self-contained form used
+above.  Fix $k\ge1$.  A word is \emph{short} if $|w|<2k$ and \emph{long}
+otherwise.  Let $\widehat s_{k,k}(w):=w$ for short $w$ and
+$\widehat s_{k,k}(w):=\langle\mathrm{pref}_k w,\mathrm{suf}_k w\rangle$ for long $w$;
+this is a morphism onto a finite monoid \todo{align with the window typings
+$s_{k,\ell}$ of \cite{kuriyamaCFG}}.
+
+\begin{definition}[Sliding-factor morphism]
+\label{def:sliding}
+Let $\mathbb G$ be a finite group and $\nu:\Sigma^{k+1}\to\mathbb G$.  For long $w$ let
+$F_1,\ldots,F_{|w|-k}$ be its factors of length $k+1$ in order of their starting
+positions and $\gamma_{k,\nu}(w):=\nu(F_1)\cdots\nu(F_{|w|-k})$; for short $w$
+put $\gamma_{k,\nu}(w):=1_{\mathbb G}$.  Let
+$\lambda_{k,\nu}(w):=(\widehat s_{k,k}(w),\gamma_{k,\nu}(w))$.  The typing $s$ is
+\emph{local-group-determined} if $\widehat s\preceq\lambda_{k,\nu}$ for some
+$k,\mathbb G,\nu$.
+\end{definition}
+
+For $x,y\in\Sigma^k$ let $\Delta_\nu(x,y)$ be the ordered product of $\nu$ over the
+$k$ factors of length $k+1$ of $xy$ that start in $x$.
+
+\begin{lemma}[Sliding-factor maps are morphisms]
+\label{lem:sliding-morphism}
+$\lambda_{k,\nu}(uv)$ is determined by $\lambda_{k,\nu}(u)$ and $\lambda_{k,\nu}(v)$, so
+$\lambda_{k,\nu}$ is a morphism onto a finite monoid.  For long $u,v$,
+$\gamma_{k,\nu}(uv)=\gamma_{k,\nu}(u)\,\Delta_\nu(\mathrm{suf}_ku,\mathrm{pref}_kv)\,\gamma_{k,\nu}(v)$.
+\end{lemma}
+
+\begin{proof}
+For long $u,v$ the factors of length $k+1$ of $uv$ are, in order, those of $u$,
+the $k$ factors starting in the last $k$ positions of $u$, and those of $v$.  If
+$u$ is short and $v$ long, the factors starting in $u$ lie in $u\,\mathrm{pref}_kv$
+and the others are those of $v$; the remaining cases are symmetric or exact.
+\end{proof}
+
+\begin{lemma}[Block decomposition]
+\label{lem:blocks}
+Let $y=x_0\mathfrak b_1x_1\cdots\mathfrak b_mx_m$ and
+$y'=x_0\mathfrak b'_1x_1\cdots\mathfrak b'_mx_m$ with
+$\widehat s_{k,k}(\mathfrak b'_i)=\widehat s_{k,k}(\mathfrak b_i)$ for all $i$.  Then
+$\widehat s_{k,k}(y')=\widehat s_{k,k}(y)$, and if $y$ is long there are
+$z_0,\ldots,z_m\in\mathbb G$, depending only on the $x_i$ and the
+$\widehat s_{k,k}$-types of the $\mathfrak b_i$, with
+$\gamma_{k,\nu}(y)=z_0\gamma_{k,\nu}(\mathfrak b_1)z_1\cdots\gamma_{k,\nu}(\mathfrak b_m)z_m$ and
+the same identity for $y'$ and the $\mathfrak b'_i$.
+\end{lemma}
+
+\begin{proof}
+The first claim holds because $\widehat s_{k,k}$ is a morphism.  A short block
+equals its replacement and can be absorbed into the fixed words, so let all
+blocks be long.  A factor of length $k+1$ either lies inside a block or meets
+each block it touches in at most its first or last $k$ letters; factors of the
+second kind are spelled by the fixed words and the windows of the blocks, so
+they coincide in $y$ and $y'$ and occur in the same order.  Ordered by starting
+position, the factors inside $\mathfrak b_i$ form one run with product
+$\gamma_{k,\nu}(\mathfrak b_i)$; let $z_i$ be the product of the factors between
+consecutive runs.
+\end{proof}
+
+\emph{Pumping.}  Write $x^\omega$ for the idempotent power of an element $x$ of a
+finite semigroup and $E(\mathsf T)$ for the set of idempotents.  For a finite
+semigroup $\mathsf T$, every product of at least $|\mathsf T|$ elements lies in
+$\mathsf T^1E(\mathsf T)\mathsf T^1$ \cite[Lemma~2.2]{AlmeidaEtAl2009}, \cite{Pin1986}:
+either two of its first $|\mathsf T|$ prefix products coincide, $t_i=t_j$ with
+$i<j$, and then $t_i=t_ix^\omega$ for the product $x$ of the factors
+$i+1,\ldots,j$; or these prefix products exhaust $\mathsf T$ and one of them is
+idempotent.
+
+\begin{lemma}[Sliding-factor coordinates]
+\label{lem:rees}
+Suppose every idempotent of $\mathsf S$ lies in its minimal ideal
+$\mathsf K=\mathcal M(\mathbb G;I,\Lambda;\mathsf P)$, and let $k\ge1$ satisfy
+$\mathsf S^k\subseteq\mathsf K$.  There is $\nu:\Sigma^{k+1}\to\mathbb G$ such that every
+long $w$ satisfies
+$s(w)=\bigl(\mathrm{row}(s(\mathrm{pref}_kw)),\,\mathrm{grp}(s(\mathrm{pref}_kw))\,\gamma_{k,\nu}(w),\,
+\mathrm{col}(s(\mathrm{suf}_kw))\bigr)$.
+\end{lemma}
+
+\begin{proof}
+\emph{(1) Coordinates.}  Fix $i_0\in I$; for $j\in\Lambda$ the element
+$r_j:=(i_0,p_{ji_0}^{-1},j)$ is a right identity for the elements of $\mathsf K$ with
+$\Lambda$-coordinate $j$.  For $y\in \mathsf S$ write $r_jy=(i',\gamma',j')$ and
+$\operatorname{act}(j,y):=p_{ji'}\gamma'$; then
+$(i,\gamma,j)y=(i,\gamma\operatorname{act}(j,y),j')$, so right multiplication fixes the
+$I$-coordinate.  Dually, left multiplication fixes the $\Lambda$-coordinate of an
+element of $\mathsf K$: for any $j''\in\Lambda$ the idempotent
+$e':=(i,p_{j''i}^{-1},j'')\in\mathsf K$ satisfies $e'(i,\gamma,j)=(i,\gamma,j)$, so
+$y(i,\gamma,j)=(ye')(i,\gamma,j)$ with $ye'\in\mathsf K$, and the Rees product of two
+elements of $\mathsf K$ has the $\Lambda$-coordinate of its right factor.
+
+\emph{(2) Group coordinate.}  Let $w=a_1\cdots a_m$ with letters $a_t$, $m\ge2k$, and
+$s(a_1\cdots a_k)=(i,\gamma,j_k)$.  For $t\ge k$ the $\Lambda$-coordinate $j_t$
+of $s(a_1\cdots a_t)$ equals that of $s(a_{t-k+1}\cdots a_t)$ by $\mathsf S^k\subseteq\mathsf K$
+and (1).  Put
+$\nu(F):=\operatorname{act}\bigl(\operatorname{col}(s(F[1..k])),s(F[k+1])\bigr)$.  Applying the
+right-action identity for $t=k,\ldots,m-1$ in order gives
+$s(w)=(i,\,\gamma\prod_{t=k}^{m-1}\nu(a_{t-k+1}\cdots a_{t+1}),\,j_m)$, and the
+product is $\gamma_{k,\nu}(w)$.
+\end{proof}
+
 \begin{theorem}[Local-group criteria]
 \label{thm:lg-characterization}
-\todo{port: O thm:lg-characterization: for a typing with positive image
-$\mathsf S$, (i) $\mathsf S\in\LG$; (ii) no subsemigroup isomorphic to $U_1$;
-(iii) every idempotent lies in the minimal ideal; (iv) sliding-factor
-coordinates.}
+For a typing $s$ with positive image $\mathsf S$ the following are equivalent:
+\textup{(i)} $\mathsf S\in\LG$; \textup{(ii)} $\mathsf S$ has no subsemigroup isomorphic
+to $U_1$; \textup{(iii)} every idempotent of $\mathsf S$ lies in the minimal ideal
+$\mathsf K$; \textup{(iv)} $s$ is local-group-determined, with $k=|\mathsf S|$ and
+$\mathbb G$ a maximal subgroup of $\mathsf K$.
 \end{theorem}
-\todo{port: O app:local-group and app:group-blocks, restricted to fan-out one.}
+
+\begin{proof}
+For completeness, we verify the classical equivalences (cf.\
+\cite[Proposition~2.3]{AlmeidaEtAl2009}).  If $\mathsf S\in\LG$
+then $\mathsf S$ cannot contain $U_1=\{e,z\}$, since $z$ would be an idempotent
+distinct from the identity $e$ of the group $e\mathsf Se$.
+Conversely, if some $e\mathsf Se$ is not a group, choose a nonunit $x$ therein;
+$x^\omega\ne e$ (otherwise $x$ is a unit), and
+$\{e,x^\omega\}$ is a copy of $U_1$.  Thus (i) and (ii) are equivalent.
+If (i) holds, choose an idempotent $v\in\mathsf K$.
+For any idempotent $e\in\mathsf S$, the element $eve$ lies in
+$e\mathsf Se\cap\mathsf K$, and invertibility in $e\mathsf Se$ gives
+$e=(eve)(eve)^{-1}\in\mathsf K$.  Conversely, if every idempotent
+$e$ lies in $\mathsf K$, then $e\mathsf Se=e\mathsf Ke$ is a group,
+since $\mathsf K$ is completely simple.  This proves (i)--(iii).
+Moreover, if $E(\mathsf S)\subseteq\mathsf K$ then
+$\mathsf S^k\subseteq\mathsf S^1E(\mathsf S)\mathsf S^1\subseteq\mathsf K$
+for $k=|\mathsf S|$ by pumping, while $\mathsf K\subseteq\mathsf S^k$
+by ideality; hence $\mathsf S^k=\mathsf K$.
+
+(iii)$\Rightarrow$(iv): Lemma~\ref{lem:rees} with
+$k=|\mathsf S|$ (or any $k$ with $\mathsf S^k=\mathsf K$) determines $s(w)$ for $|w|\ge2k$ from
+$\lambda_{k,\nu}(w)$, and $\widehat s_{k,k}$ records shorter words and $\lambda$ exactly;
+so $\widehat s\preceq\lambda_{k,\nu}$.
+
+(iv)$\Rightarrow$(i): $\mathsf S$ is a homomorphic image of $\mathsf T:=\lambda_{k,\nu}(\Sigma^+)$ and
+$\LG$ is closed under homomorphic images, so it suffices that $\mathsf T\in\LG$.
+No short element is idempotent (squaring changes the exactly recorded word or makes
+it long).  Let $e=(\langle p,q\rangle,\gamma_e)$ be idempotent.  By
+Lemma~\ref{lem:sliding-morphism}, every element of $e\mathsf Te$ has window
+$\langle p,q\rangle$, and long elements with this window multiply by
+$(\langle p,q\rangle,\gamma)(\langle p,q\rangle,\gamma')=(\langle p,q\rangle,\gamma\Delta\gamma')$,
+$\Delta:=\Delta_\nu(q,p)$.  This operation makes $\{\langle p,q\rangle\}\times \mathbb G$ a group
+isomorphic to $\mathbb G$ via $\gamma\mapsto\gamma\Delta$, and $e\mathsf Te$ is a finite nonempty
+subsemigroup of it, hence a subgroup.
+Here the group $\mathbb G$ of Lemma~\ref{lem:rees} is the structure group of $\mathsf K$, a maximal subgroup.
+\end{proof}
+
+\begin{lemma}[Buffered owners]
+\label{lem:buffered}
+Let $y$ be a word and let $I_1,\ldots,I_m$ be pairwise disjoint nonempty
+intervals of positions of $y$, none meeting the first or the last $k$ letters.
+There is a set $Q_1$ of at least $m/(4k+1)$ of these intervals and pairwise
+disjoint intervals $\mathfrak b_I\supseteq I$ $(I\in Q_1)$, each containing no other
+interval of $Q_1$, such that for all nonempty words $x_I$ the word obtained from
+$\mathfrak b_I$ by replacing $I$ with $x_I$ has length at least $2k+1$ and the same
+first and last $k$ letters as $\mathfrak b_I$, which also has length at least
+$2k+1$.
+\end{lemma}
+
+\begin{proof}
+Call two intervals \emph{neighbours} if fewer than $2k$ letters lie between them.
+An interval has at most $2k$ neighbours on each side, since disjoint nonempty
+intervals start at distinct positions.  Choosing intervals greedily and
+discarding their neighbours gives $Q_1$ with $|Q_1|\ge m/(4k+1)$ and with at
+least $2k$ letters between any two members.  Let $\mathfrak b_I$ extend $I$ by $k$
+letters on each side; it stays inside $y$ by the boundary hypothesis, the
+enlargements are disjoint, and the first and last $k$ letters of $\mathfrak b_I$ lie
+outside $I$, so they survive the replacement; the replaced word has length at
+least $2k+|x_I|\ge2k+1$.
+\end{proof}
+
+\begin{lemma}[An interval of owners preserving an ordered product]
+\label{lem:group-interval}
+Let $\mathbb G$ be a finite group, $z_0,\ldots,z_m,g_1,\ldots,g_m,g'_1,\ldots,g'_m\in\mathbb G$
+with $m\ge|\mathbb G|$.  There are $0\le i<j\le m$ such that
+\[
+ z_0g_1z_1\cdots g_mz_m=
+ z_0g_1z_1\cdots g_iz_i\;g'_{i+1}z_{i+1}\cdots g'_jz_j\;g_{j+1}z_{j+1}\cdots g_mz_m .
+\]
+\end{lemma}
+
+\begin{proof}
+For $0\le t\le m$ put $O_t:=z_0g_1z_1\cdots g_tz_t$, $R_t:=z_0g'_1z_1\cdots g'_tz_t$ and
+$\pi_t:=R_tO_t^{-1}$.  Among the $m+1>|\mathbb G|$ values two coincide,
+$\pi_i=\pi_j$ with $i<j$.  Writing $O_j=O_iS$ and $R_j=R_iS'$ for the segment
+products $S=g_{i+1}z_{i+1}\cdots g_jz_j$ and $S'=g'_{i+1}z_{i+1}\cdots g'_jz_j$, the
+equality $R_iO_i^{-1}=R_iS'S^{-1}O_i^{-1}$ gives $S'=S$, which is the claim.
+\end{proof}
 
 \section{The Three-Letter Doubling Family}
 \label{app:three-letter}
