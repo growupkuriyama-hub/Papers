@@ -75,8 +75,8 @@ levels.  For pseudovarieties, polynomial data hold for every typing into the
 pseudovariety, with a polynomial depending on the alphabet and the typing,
 exactly for subpseudovarieties of the local groups $\LG$; for local-group typings the
 typed thickness of every binary normal form with $N$ nonterminals is
-$O(N^2(\tau_G+1))$ in its ordinary thickness $\tau_G$, and characteristic data
-are polynomial for every reduced presentation.  For individual typings onto $U_1$, polynomial data hold
+$O(N(\tau_G+1))$ in its ordinary thickness $\tau_G$, and characteristic data
+are $O(\|G\|^2(\tau_G+1))$ for every reduced presentation.  For individual typings onto $U_1$, polynomial data hold
 exactly when a single letter has type~$1$.  Such typings lie outside $\LG$,
 and their data are polynomial but not linear in thickness for any
 polynomial dependence on grammar size, whereas local-group typings are.
@@ -138,7 +138,9 @@ finite groups \textup(Remark~\ref{rem:scope}(e)\textup).
 More precisely:
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
 \item if $s(\Sigma^+)\in\LG$, every reduced BUNF grammar $G$ with $N$
-nonterminals satisfies $\tau^{\mathrm{typ}}_s(G)\le c_{|s(\Sigma^+)|}N^2(\tau_G+1)$
+nonterminals satisfies $\tau^{\mathrm{typ}}_s(G)\le c_{|s(\Sigma^+)|}N(\tau_G+1)$, and every
+reduced CFG $G_*$ has a characteristic sample of size
+$O_s(\|G_*\|^2\max\{1,\tau_{G_*}\})$
 \textup(Theorem~\ref{thm:lg-sufficiency}\textup);
 \item if $\mathbf V\not\subseteq\LG$, then $U_1\in\mathbf V$, and the typing
 $s_{\mathrm U}$ of \cite[Proposition~6.4]{kuriyamaCFG} has targets with
@@ -181,11 +183,12 @@ smallest in symbol size, such that every characteristic sample for $\Rec_s$, and
 for every set-driven operator with characteristic samples throughout $\Ccf{s}$,
 has encoded size at least $\tfrac1{23}\|G\|\,\tau_G$
 \textup(Proposition~\ref{prop:linear-factor}\textup).
-\item For local-group typings, characteristic data are bounded by
-$p(|G_*|)\,(\tau_{G_*}+1)$ for a polynomial $p$ \textup(Theorem~\ref{thm:lg-sufficiency}\textup).
+\item For local-group typings, characteristic data are
+$O_s(\|G_*\|^2\max\{1,\tau_{G_*}\})$, so the lower bound of \textup{(i)} is attained
+up to one factor of the symbol size \textup(Theorem~\ref{thm:lg-sufficiency}\textup).
 For the binary typing $s_{U,2}$ \textup($\mathtt a\mapsto1$, $\mathtt b\mapsto\zeta$\textup),
 whose image $U_1$ is not a local group, characteristic data are polynomial,
-but there is no such bound for any polynomial $p$
+but there is no bound $p(|G_*|)(\tau_{G_*}+1)$ for any polynomial $p$
 \textup(Proposition~\ref{prop:binary-quadratic}\textup).
 \end{enumerate}
 \end{mainthm}
@@ -196,13 +199,14 @@ linearity in thickness.
 
 \paragraph{Method.}
 The companion reduces every upper bound to an estimate of typed thickness.
-We prove such estimates for reduced \emph{good} ($\lambda$-free) grammars and
-transfer them to the companion's binary normal form through a
-$\lambda$-elimination that controls rule thickness by ordinary thickness
-(Section~\ref{sec:bridge}).  The estimates use sliding-factor coordinates for
-local groups and a simultaneous group-preserving shortening
-(Section~\ref{sec:lg}), and heavy-path periodicity and counting for isolated
-letters (Appendix~\ref{app:isolated}).  All lower bounds rest on
+For local groups we prove it directly on an arbitrary reduced presentation,
+by sliding-factor coordinates and a group-preserving simultaneous replacement
+of heavy subtrees by shortest, possibly empty, yields (Section~\ref{sec:lg}).
+For isolated letters the available estimate, by heavy-path periodicity and
+counting (Appendix~\ref{app:isolated}), is proved for $\lambda$-free grammars and
+bounds representatives rather than yields; we transfer it to the companion's
+binary normal form through a $\lambda$-elimination that controls rule thickness
+and through witnesses built from representatives (Section~\ref{sec:bridge}).  All lower bounds rest on
 distinguishing the target from a suitable sublanguage in the same class: removing
 a whole type fiber forces a shortest word of that type into every
 characteristic sample (Proposition~\ref{prop:rare-type}), and removing single
@@ -599,126 +603,141 @@ below the sum $4$.
 %======================================================================
 \section{Local Groups Suffice}
 \label{sec:lg}
-% Ported 2026-11-20 from O Section 5.1 (lem:heavy-node-count), 5.3
-% (thm:local-group-polydata) and app:local-group (lem:local-group-shortest,
-% cor:lg-type-level-shortest), specialized to fan-out one.  At fan-out one every
-% subtree contributes one contiguous block of the root word, so the order
-% homogenization of O app:group-blocks is not needed: a prefix-product pigeonhole
-% suffices (Lemma~\ref{lem:group-interval}).  DRAFT-PORT: to be audited.
+% 2026-11-20: direct proof on the original reduced CFG, following the argument
+% supplied by the round-2 referee (Astra); it replaces the earlier route through
+% Lemma lem:lambda-elimination and improves N^2 to N.  DRAFT: to be audited.
 
-Throughout this section $H=(V_H,\Sigma,P_H,S)$ is a reduced good CFG of rank at
-most $r$.  By Lemma~\ref{lem:measures} every $C\in V_H$ derives a word of length
-at most $\bar\theta_H$, and every production writes at most $\bar\theta_H$
-terminals explicitly (they occur in every sentence using it).
+Throughout this section $s(\Sigma^+)=\mathsf S\in\LG$, and we fix, by
+Theorem~\ref{thm:lg-characterization}, $k:=|\mathsf S|$, a maximal subgroup
+$\mathbb G$ of the minimal ideal of $\mathsf S$ with $g:=|\mathbb G|\le|\mathsf S|$, and
+$\nu:\Sigma^{k+1}\to\mathbb G$ with $\widehat s\preceq\lambda_{k,\nu}$.  Put
+\[
+ h:=|\mathsf S^\sharp|=|\mathsf S|+1,\qquad C:=2k+(4k+1)(g-1).
+\]
+Let $G_*=(V,\Sigma,P,S_0)$ be a reduced CFG, $M:=\|G_*\|$ and
+$T:=\max\{1,\tau_{G_*}\}$; recall that $\tau_{G_*}$ allows empty shortest yields.
+For $A\in V$ let $d_A:=\max\{|\alpha|:(A\to\alpha)\in P\}$ and $H:=\sum_{A\in V}d_A$;
+then $H\le\sum_{(A\to\alpha)\in P}|\alpha|\le M$.
 
-\paragraph{Minimal derivations and heavy nodes.}
-Let $\lambda:\Sigma^*\to\mathsf N$ be a morphism onto a finite monoid with
-$\widehat s\preceq\lambda$, i.e.\ $\lambda(w)=\lambda(w')$ implies
-$\widehat s(w)=\widehat s(w')$.  For $B\in V_H$ and a realized type
-$\mu\in s(L_H(B))$, an \emph{$s$-minimal derivation} for $(B,\mu)$ is a derivation
-tree from $B$ whose yield has type $\mu$ and which minimizes first the length of
-the yield and then the number of nodes.  A node is \emph{heavy} if its yield is
-longer than $\bar\theta_H$.
+For a string $\beta\in(V\cup\Sigma)^*$ we regard derivations from $\beta$ as trees
+whose root is a \emph{pseudo-root} with children $\beta$.  An occurrence of a
+nonterminal in such a tree is \emph{heavy} if its yield is longer than $T$.
 
-\begin{lemma}[Heavy antichains bound the yield]
+\begin{lemma}[Heavy antichains]
 \label{lem:heavy}
-Let $T$ be $s$-minimal for $(B,\mu)$ and suppose every antichain of heavy nodes
-of $T$ has at most $c$ elements.  Then the yield of $T$ has length at most
-$(r+1)\,\bar\theta_H\max\{1,c\,|V_H|\,|\mathsf S|\}$.
+Let $\beta\in(V\cup\Sigma)^*$ and $\mu\in\widehat s(L_{G_*}(\beta))$, and let a
+derivation from $\beta$ of a word $y$ with $\widehat s(y)=\mu$ minimize $|y|$.  Then
+every antichain $Q$ of heavy occurrences has at most $C$ elements.
 \end{lemma}
 
 \begin{proof}
-Label every node by its nonterminal and the $s$-type of its \textup(nonempty\textup)
-yield; at most $|V_H||\mathsf S|$ labels occur.  If an ancestor and a proper
-descendant had the same label, grafting the descendant's subtree at the
-ancestor would keep the root type, not lengthen the yield and remove nodes,
-contradicting minimality; so every path has at most $|V_H||\mathsf S|$ nodes.  If
-the root is not heavy we are done.  Otherwise the heavy nodes form an
-ancestor-closed subtree, whose leaves form an antichain; hence there are at most
-$c|V_H||\mathsf S|$ heavy nodes.  Every letter of the yield is written by a heavy
-node \textup(at most $\bar\theta_H$ each\textup) or lies in a non-heavy child of a
-heavy node \textup(at most $r$ children, of length at most $\bar\theta_H$ each\textup).
+The yields of the occurrences in $Q$ are disjoint nonempty factors of $y$, so
+$|Q|\le|y|\le2k-1\le C$ if $|y|<2k$.  Let $|y|\ge2k$.  At most $2k$ of these
+factors meet the first or the last $k$ letters of $y$; let $Q_0$ be the others and
+suppose $|Q_0|>(4k+1)(g-1)$.  By Lemma~\ref{lem:buffered} there are $m\ge g$
+members $v_1,\ldots,v_m$ of $Q_0$, listed from left to right, with pairwise
+disjoint enlarged blocks $\mathfrak b_{v_i}$ such that replacing the yield of $v_i$
+inside $\mathfrak b_{v_i}$ by an arbitrary, possibly empty, word keeps the first
+and the last $k$ letters of the block and leaves a word of length at least $2k$.
+For $v_i$ with label $A_i$ let $x_i$ be a shortest word of $L_{G_*}(A_i)$; then
+$|x_i|\le\tau_{G_*}\le T$ is smaller than the length of the yield of $v_i$.
+By Lemma~\ref{lem:blocks}, for every $J\subseteq\{1,\ldots,m\}$ the word $y_J$
+obtained by replacing the yields of the $v_i$, $i\in J$, by the $x_i$ has
+$\widehat s_{k,k}(y_J)=\widehat s_{k,k}(y)$ and
+$\gamma_{k,\nu}(y_J)=z_0\gamma^J_1z_1\cdots\gamma^J_mz_m$ with $z_i$ independent
+of $J$.  Lemma~\ref{lem:group-interval} gives a nonempty interval $J$ with
+$\gamma_{k,\nu}(y_J)=\gamma_{k,\nu}(y)$, hence $\lambda_{k,\nu}(y_J)=\lambda_{k,\nu}(y)$
+and $\widehat s(y_J)=\mu$.  Since $Q$ is an antichain, $y_J$ is derived from
+$\beta$, and $|y_J|<|y|$, a contradiction.  So $|Q|\le2k+(4k+1)(g-1)=C$.
 \end{proof}
 
-\begin{proposition}[Short representatives for local-group typings]
-\label{prop:lg-short}
-Suppose $\mathsf S=s(\Sigma^+)\in\LG$, let $k:=|\mathsf S|$ and let $\mathbb G$ be a
-maximal subgroup of the minimal ideal of $\mathsf S$.  For every $B\in V_H$ and
-$w\in L_H(B)$ there is $w'\in L_H(B)$ with $s(w')=s(w)$ and
+\begin{lemma}[Short typed yields of strings]
+\label{lem:typed-strings}
+For every $\beta\in(V\cup\Sigma)^*$ and every $\mu\in\widehat s(L_{G_*}(\beta))$,
 \[
- |w'|\le(r+1)\,\bar\theta_H\,C_k\,|V_H|\,|\mathsf S|,\qquad
- C_k:=2k+(4k+1)(|\mathbb G|-1).
+ \min\{|y|:\beta\Rightarrow_{G_*}^*y,\ \widehat s(y)=\mu\}\le(|\beta|+ChH)\,T.
 \]
-In particular $\ttyp(H,s)\le(r+1)(4|\mathsf S|+1)|\mathsf S|^2\,|V_H|\,\bar\theta_H$.
-\end{proposition}
+\end{lemma}
 
 \begin{proof}
-By Theorem~\ref{thm:lg-characterization}, $\widehat s\preceq\lambda:=\lambda_{k,\nu}$ for
-a sliding-factor labelling $\nu:\Sigma^{k+1}\to\mathbb G$.  Let $T$ be
-$s$-minimal for $(B,s(w))$, with yield $y$.  By Lemma~\ref{lem:heavy} it
-suffices to show that every antichain $Q$ of heavy nodes has at most $C_k$
-elements.  The yields of the nodes of $Q$ are disjoint nonempty factors of $y$, so
-$|Q|\le|y|\le2k-1\le C_k$ if $y$ is short.  Otherwise mark the first and the last
-$k$ letters of $y$.  The yields of the nodes of $Q$ are disjoint nonempty
-factors of $y$, so at most $2k$ of them contain a mark; let $Q_0$ be the others
-and suppose $|Q_0|>(4k+1)(|\mathbb G|-1)$.
-
-By Lemma~\ref{lem:buffered} there is $Q_1\subseteq Q_0$ with
-$|Q_1|>|\mathbb G|-1$ whose intervals can be enlarged to pairwise disjoint
-\emph{enlarged blocks} $\mathfrak b_v$ $(v\in Q_1)$, each containing the interval of
-$v$ and no other interval of $Q_1$, such that, for every choice of nonempty
-replacement words, replacing the interval of $v$ inside $\mathfrak b_v$ gives a
-word $\mathfrak b'_v$ of length at least $2k+1$ with the same first and last $k$
-letters as $\mathfrak b_v$.  For $v\in Q_1$ with label $C_v$ choose
-$x_v\in L_H(C_v)$ with $|x_v|\le\bar\theta_H$ as replacement.  By
-Lemma~\ref{lem:blocks}, for every $J\subseteq Q_1$ the word $y_J$ obtained by
-replacing the intervals of the nodes in $J$ satisfies
-$\widehat s_{k,k}(y_J)=\widehat s_{k,k}(y)$ and
-\[
- \gamma_{k,\nu}(y_J)=z_0\,\gamma_1^{J}\,z_1\cdots\gamma_m^{J}\,z_m,
- \qquad
- \gamma_i^{J}=\begin{cases}\gamma_{k,\nu}(\mathfrak b'_{v_i})&v_i\in J,\\
- \gamma_{k,\nu}(\mathfrak b_{v_i})&v_i\notin J,\end{cases}
-\]
-where $v_1,\ldots,v_m$ enumerate $Q_1$ from left to right and the $z_i\in\mathbb G$
-do not depend on $J$.  As $m>|\mathbb G|-1$, Lemma~\ref{lem:group-interval} gives a
-nonempty interval $J=\{v_{i+1},\ldots,v_j\}$ with
-$\gamma_{k,\nu}(y_J)=\gamma_{k,\nu}(y)$.  Replacing the subtrees at the nodes of
-$J$ by derivations of the $x_v$ yields a derivation from $B$ \textup($J$ is an
-antichain\textup) with yield $y_J$, $\lambda(y_J)=\lambda(y)$ and hence
-$s(y_J)=s(y)$, and $|y_J|<|y|$ since every replaced yield was longer than
-$\bar\theta_H\ge|x_v|$.  This contradicts minimality.  Hence
-$|Q|\le2k+(4k+1)(|\mathbb G|-1)=C_k$.  The final estimate uses
-$|\mathbb G|\le|\mathsf S|$.
+Among derivations from $\beta$ of words of type $\mu$ of least length, choose one
+with the fewest nonterminal occurrences.  Label each occurrence by its
+nonterminal and the $\widehat s$-type of its yield.  If one label occurred twice on
+a path below the pseudo-root, grafting the lower subtree at the upper occurrence
+would keep the type of $y$ (since $\widehat s$ is a morphism), not lengthen $y$, and
+remove occurrences; so each nonterminal $A$ occurs at most $h$ times on every
+such path.  The parent of a heavy occurrence, if it is not the pseudo-root, is
+heavy, so the heavy occurrences form a forest whose leaves form an antichain;
+by Lemma~\ref{lem:heavy} it has at most $C$ leaves, so all heavy occurrences lie
+on at most $C$ paths from the pseudo-root.  Assign to a heavy occurrence using a
+production $A\to\alpha$ the letters it writes directly and the yields of its
+non-heavy children: at most $|\alpha|T\le d_AT$ letters.  Along one path this
+gives at most $\sum_{A\in V}h\,d_AT=hHT$.
+The pseudo-root writes or receives from non-heavy children at most $|\beta|T$
+letters.  Every letter of $y$ is counted, so $|y|\le|\beta|T+ChHT$.
 \end{proof}
 
 \begin{theorem}[Local-group typings]
 \label{thm:lg-sufficiency}
-Suppose $s(\Sigma^+)\in\LG$ and put $\mathsf S=s(\Sigma^+)$ and
-$c_{\mathsf S}:=9(4|\mathsf S|+1)|\mathsf S|^2$.
+Suppose $s(\Sigma^+)\in\LG$, and let $h,C$ be as above.
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item Every reduced good CFG $H$ of rank at most two satisfies
-$\ttyp(H,s)\le\tfrac13c_{\mathsf S}|V_H|\,\bar\theta_H$.
+\item Let $B$ be the reduced BUNF normalization of $G_*$ of
+\cite[Proposition~7.3 and Appendix~A.2]{kuriyamaCFG}.  Every retained typed
+symbol $X$ of $\widetilde B$ satisfies $|\omega(X)|\le(1+Ch)MT$, and its canonical
+reaching context satisfies $|u_X|+|v_X|\le2MT$.
+\item If $L(G_*)\in\Ccf{s}$ is nonempty, then $F:=\WitnessSet(\widetilde B)$ is a
+characteristic sample for $\Rec_s$ with
+\[
+ \|F\|\le2(h+h^2)(5+2Ch)\,\|G_*\|^2\max\{1,\tau_{G_*}\}.
+\]
 \item Every reduced BUNF grammar $G$ with $N$ nonterminals satisfies
-$\tau^{\mathrm{typ}}_s(G)\le c_{\mathsf S}N^2(\tau_G+1)$.
-\item Every nonempty $L\in\Ccf{s}$ represented by a reduced CFG $G_*$ has a
-characteristic sample for $\Rec_s$ of encoded size polynomial in $|G_*|$ and
-$\tau_{G_*}+1$, indeed at most $p_s(|G_*|)\,(\tau_{G_*}+1)$ for a polynomial $p_s$.
+$\tau^{\mathrm{typ}}_s(G)\le(1+2ChN)\max\{1,\tau_G\}$.
 \end{enumerate}
 In particular \cite[Corollary~7.5]{kuriyamaCFG} extends from
-$\mathbf{LI}\vee\mathbf{Grp}$ to $\LG$.
+$\mathbf{LI}\vee\mathbf{Grp}$ to $\LG$, with a bound quadratic in symbol size and
+linear in thickness.
 \end{theorem}
 
 \begin{proof}
-(i) is Proposition~\ref{prop:lg-short} with $r=2$.  (ii) If
-$L(G)\subseteq\{\lambda\}$ the bound is trivial.  Otherwise
-Lemmas~\ref{lem:typed-transfer} and~\ref{lem:lambda-elimination}(iii) give
-$\tau^{\mathrm{typ}}_s(G)\le\max\{1,\ttyp(G^+,s)\}\le
-\tfrac13c_{\mathsf S}N\cdot3N(\tau_G+1)$.  (iii) The first claim is
-Corollary~\ref{cor:master}; the second follows from (ii) and \ref{q:data}.
-Since \ref{q:bunf} is linear in $\tau_{G_*}+1$, the same form
-$p_s(|G_*|)(\tau_{G_*}+1)$ holds for arbitrary reduced presentations $G_*$.
+(i) $B$ isolates terminals by wrappers $W_a\to a$ and binarizes each long right
+side through fresh auxiliary nonterminals, keeping nullable and unit
+productions.  Every nonterminal $D$ of $B$ is an original nonterminal $A$, with
+$L_B(A)=L_{G_*}(A)$; an auxiliary symbol, whose language is that of a contiguous
+block $\beta$ of one original right side, $|\beta|\le M$; or a wrapper, with the
+single yield $a$.  By \ref{q:typed-core}, $\omega(D_\mu)$ is a shortest word of type
+$\mu$ in $L_B(D)$, so Lemma~\ref{lem:typed-strings} with $\beta=A$, respectively the
+block, and $H\le M$ gives $|\omega(D_\mu)|\le(M+ChM)T$.
+
+For contexts, take a simple path from $S_0$ to an original $A$ in the dependency
+graph of $G_*$ and expand every off-path position of the productions used by a
+shortest yield (at most $T$ letters) or by its terminal.  A step from $D$ adds at
+most $d_DT$ letters and no $D$ repeats, so $A$ has a reaching context of length at
+most $HT\le MT$; it is also one in $B$.  An auxiliary symbol for a block of
+$A\to\alpha$ gets at most $|\alpha|T\le MT$ further letters, and a wrapper is
+handled in the same way; so every symbol $D$ of $B$ has an untyped reaching
+context of length at most $2MT$.  For a retained $D_\mu$, any untyped reaching
+context $(u,v)$ of $D$ is also a typed one: fill the hole with a yield of type
+$\mu$, annotate the completed successful derivation by its yield types, start
+from the typed start copy of the completed word, and leave $D_\mu$ unexpanded.
+Hence $|u_X|+|v_X|\le2MT$.
+
+(ii) A witness is $u_X\omega(X)v_X$ or $u_Xt_\rho v_X$, and $t_\rho$ consists of at
+most two canonical yields or one terminal, so every $w\in F$ has
+$|w|+1\le2MT+2(1+Ch)MT+1\le(5+2Ch)MT$.  The binarization adds at most
+$R:=\sum_{(A\to\alpha)\in P}|\alpha|\le M$ wrappers and at most $R$ auxiliary
+symbols, each with one new production, so $B$ has at most $|V|+2R\le2M$
+nonterminals and $|P|+2R\le2M$ productions.  There are at most $h$ typed copies
+per nonterminal and at most $h^2$ typed productions per production, so
+$|F|\le2(h+h^2)M$.  Multiply; $F$ is characteristic by \ref{q:exact}, since
+$L(B)=L(G_*)$.
+
+(iii) Apply Lemma~\ref{lem:typed-strings} to $G_*:=G$ with $\beta$ a single
+nonterminal; in BUNF $d_A\le2$, so $H\le2N$.
 \end{proof}
+
+The route through Section~\ref{sec:bridge} is not needed for local groups; it
+is used for isolated letters (Corollary~\ref{cor:isolated-data}), whose bound
+concerns representatives rather than yields.
 
 %======================================================================
 \section{The Pseudovariety Boundary}
@@ -1101,8 +1120,8 @@ beyond $U_1$: the obstruction of Corollary~\ref{cor:typing-level-obstruction}
 needs letter-disjoint words of an idempotent type, and we do not know whether
 two non-commuting such words always suffice.  Second, the degree in grammar
 size: Proposition~\ref{prop:linear-factor} and Theorem~\ref{thm:lg-sufficiency}
-leave, for local-group typings, a gap of a polynomial factor in grammar size
-between $\|G\|\tau_G$ and $p_s(|G|)(\tau_G+1)$.  Third, multiple context-free grammars, where subtrees contribute several
+leave, for local-group typings, a gap of one factor of the symbol size between
+$\|G\|\tau_G$ and $\|G\|^2\max\{1,\tau_G\}$.  Third, multiple context-free grammars, where subtrees contribute several
 interleaved blocks, are not addressed here.
 
 \section*{Declaration of competing interest}
@@ -1275,9 +1294,9 @@ Let $y$ be a word and let $I_1,\ldots,I_m$ be pairwise disjoint nonempty
 intervals of positions of $y$, none meeting the first or the last $k$ letters.
 There is a set $Q_1$ of at least $m/(4k+1)$ of these intervals and pairwise
 disjoint intervals $\mathfrak b_I\supseteq I$ $(I\in Q_1)$, each containing no other
-interval of $Q_1$, such that for all nonempty words $x_I$ the word obtained from
-$\mathfrak b_I$ by replacing $I$ with $x_I$ has length at least $2k+1$ and the same
-first and last $k$ letters as $\mathfrak b_I$, which also has length at least
+interval of $Q_1$, such that for all words $x_I$, possibly empty, the word obtained from
+$\mathfrak b_I$ by replacing $I$ with $x_I$ has length at least $2k$ and the same
+first and last $k$ letters as $\mathfrak b_I$, which itself has length at least
 $2k+1$.
 \end{lemma}
 
@@ -1289,8 +1308,8 @@ discarding their neighbours gives $Q_1$ with $|Q_1|\ge m/(4k+1)$ and with at
 least $2k$ letters between any two members.  Let $\mathfrak b_I$ extend $I$ by $k$
 letters on each side; it stays inside $y$ by the boundary hypothesis, the
 enlargements are disjoint, and the first and last $k$ letters of $\mathfrak b_I$ lie
-outside $I$, so they survive the replacement; the replaced word has length at
-least $2k+|x_I|\ge2k+1$.
+outside $I$, so they survive the replacement; the replaced word has length
+$2k+|x_I|\ge2k$, so it is long and has the window of $\mathfrak b_I$.
 \end{proof}
 
 \begin{lemma}[An interval of owners preserving an ordered product]
