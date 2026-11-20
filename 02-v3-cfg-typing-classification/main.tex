@@ -1,0 +1,381 @@
+% 02-v3-cfg-typing-classification — manuscript skeleton (started 2026-11-20).
+% Source map and design decisions: OUTLINE.md.  Text marked TODO(port: ...) is to be
+% copied from the archived 02-v2 sources named there and specialized to fan-out one.
+% Abbreviations in source comments:
+%   O  = 02-v2-lg-fanout-boundary/parked/planA_2026-11-16/original_en_43pp.tex
+%   P1 = 02-v2-lg-fanout-boundary/parked/plan1_small_alphabet_2026-11-11.tex
+%   PU = 02-v2-lg-fanout-boundary/parked/parked_u1_typing_level.tex
+%   M  = 02-v2-lg-fanout-boundary/main.tex (Plan A, 2026-11-17)
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\numberwithin{equation}{section}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\hypersetup{hidelinks}
+\setlength{\emergencystretch}{3em}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{openproblem}[theorem]{Open Problem}
+\theoremstyle{plain}
+\newtheorem{mainthm}{Theorem}
+\renewcommand{\themainthm}{\Alph{mainthm}}
+
+% Notation (aligned with the companion paper #1 where possible).
+\newcommand{\Ccf}[1]{\mathcal{C}^{\mathrm{cf}}_{#1}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\LG}{\mathbf{LG}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\title{Which Fixed Typings Give Polynomial Characteristic Data?\\
+A Classification for Substitutable Context-Free Languages}
+\author{Takayuki Kuriyama\\
+\texttt{growup.kuriyama@gmail.com}}
+\date{Draft skeleton, \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% DRAFT (2026-11-20). Target <= 200 words.
+We study the total length of characteristic samples for positive-data
+learning of context-free languages whose substitutability comparisons are
+restricted by a fixed morphism $s$ from nonempty words onto a finite
+semigroup.  A companion paper shows that such samples are polynomial in
+grammar size and thickness when the image of $s$ lies in the join of the
+locally trivial semigroups and the finite groups, and that the two-element
+semilattice $U_1$ is an obstruction; it claims no necessity.
+We determine where polynomial characteristic data ends, at two levels.
+At the level of pseudovarieties, for rank cap at least two, polynomial
+characteristic data holds uniformly exactly for subpseudovarieties of the
+local groups $\LG$; local-group typings admit samples of length
+$O(\|G\|^2\bar\theta_G)$, and outside $\LG$ some typing forces exponential
+length.  At the level of individual typings onto $U_1$, polynomial data
+holds exactly when a single letter has type~$1$; such typings lie outside
+$\LG$ and still have polynomial data, but only at a cost quadratic in
+thickness.  Finally, the product $\|G\|\bar\theta_G$ is necessary for every
+typing, and is attained by the trivial typing.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Grammatical inference; Context-free languages;
+Distributional learning; Characteristic samples; Finite semigroups; Local groups
+
+%======================================================================
+\section{Introduction}
+\label{sec:introduction}
+% DRAFT. Sources: M Section 1 (setting, Yoshinaka comparison), O Section 1.
+
+\paragraph{Background.}
+Distributional learning identifies constituents from positive examples by
+their contexts \cite{Gold1967,Angluin1980,ClarkEyraud2007}.  Substitutable
+context-free languages are identifiable in the limit from positive data
+\cite{ClarkEyraud2007}, and fixed-window variants admit polynomial
+characteristic samples \cite{Yoshinaka2008}.  The companion paper
+\cite{kuriyamaCFG} replaces windows by a fixed morphism
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ onto a finite semigroup: two nonempty
+factors are compared only when their $s$-types agree.  It proves exact
+reconstruction and Gold identification for every fixed $s$, polynomial
+characteristic data in terms of a typed thickness parameter, and polynomial
+data in ordinary thickness when $\mathsf S\in\mathbf{LI}\vee\mathbf{Grp}$.
+For the two-element semilattice $U_1$ it exhibits targets whose
+characteristic samples are exponentially long, and it explicitly leaves open
+whether the algebraic hypothesis is necessary.
+
+\paragraph{Question.}
+\emph{For which fixed typings is the total length of characteristic samples
+bounded polynomially in grammar size and thickness?}  We answer this question
+at two levels, and we determine the shape of the bound.
+
+\paragraph{Setting.}
+Fix $s$ and a rank cap $r_{\max}$.  The target class $\Ccf{s}$ consists of the
+context-free languages in which factors with the same type and a common
+accepting context have the same distribution; it coincides with the class of
+\cite{kuriyamaCFG} (Lemma~\ref{lem:classes-agree}).  Data length is
+$\|K\|_+=\sum_{w\in K}(|w|+1)$, measured against the size $\|G\|$ and the rule
+thickness $\bar\theta_G$ of reduced good presentations $G$ of the target.
+\todo{one paragraph on the reconstruction operators $\B_s$, $\B_s^{\le r}$ and on
+set-driven operators; port from M Section 1 ``Setting''.}
+
+\paragraph{Main results.}
+A finite semigroup is a \emph{local group} if $e\mathsf Se$ is a group for every
+idempotent $e$; write $\LG$ for this pseudovariety.  It contains
+$\mathbf{LI}\vee\mathbf{Grp}$ properly \cite{CostaNogueiraTeixeira2021}.
+
+\begin{mainthm}[Pseudovariety level]
+\label{thm:A}
+Let $r_{\max}\ge2$ and let $\mathbf V$ be a pseudovariety of finite semigroups.
+Then $\mathbf V$ has uniform polynomial characteristic-data length
+\textup(Definition~\ref{def:uniform-polydata}\textup) if and only if
+$\mathbf V\subseteq\LG$.  More precisely:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item if $s(\Sigma^+)\in\LG$, every target has a characteristic sample of total
+length $O(\|G\|^2\bar\theta_G)$, with a constant depending only on $r_{\max}$
+and $|s(\Sigma^+)|$ \textup(Theorem~\ref{thm:lg-sufficiency}\textup);
+\item if $\mathbf V\not\subseteq\LG$, then $U_1\in\mathbf V$, and a typing onto
+$U_1$ of a three-letter alphabet has targets with reduced good rank-two
+presentations of size and thickness $O(n)$ whose characteristic samples all
+have length at least $3\cdot2^n-1$ \textup(Theorem~\ref{thm:pseudovariety-boundary}\textup).
+\end{enumerate}
+\end{mainthm}
+
+\begin{mainthm}[Typing level]
+\label{thm:B}
+Let $r_{\max}\ge2$ and let $s:\Sigma^+\twoheadrightarrow U_1$ be a typing.
+Then $s$ admits polynomial characteristic-data length if and only if exactly
+one letter has type~$1$ \textup(Corollary~\ref{cor:u1-classification}\textup).
+More generally, an isolated letter \textup(Definition~\ref{def:isolated-letter}\textup)
+has polynomially short representatives over any alphabet
+\textup(Theorem~\ref{thm:isolated-letter}\textup), whereas letter-disjoint words
+realizing a copy of $U_1$ force exponential data
+\textup(Corollary~\ref{cor:typing-level-obstruction}\textup).
+\end{mainthm}
+
+\begin{mainthm}[Shape of the bound]
+\label{thm:C}
+Let $r_{\max}\ge2$.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item For every typing over an alphabet with at least two letters there are
+finite targets, with presentations within a constant factor of the smallest,
+whose characteristic samples all have length $\Omega(\|G\|\bar\theta_G)$; for the
+trivial typing this bound is attained \textup(Proposition~\ref{prop:linear-factor},
+Corollary~\ref{cor:trivial-exact}\textup).
+\item For the binary typing $s_{U,2}$ \textup($\mathtt a\mapsto1$, $\mathtt b\mapsto\zeta$\textup),
+whose image $U_1$ is not a local group, data are polynomial but not bounded by
+$p(\|G\|)\,\bar\theta_G$ for any polynomial $p$: there are targets needing length
+greater than $\bar\theta_G^{\,2}/4$ with $\|G\|=O(\log\bar\theta_G)$
+\textup(Proposition~\ref{prop:binary-quadratic}\textup).
+\end{enumerate}
+\end{mainthm}
+
+Thus the two levels genuinely differ: $\LG$ is the exact boundary for
+pseudovarieties, while individual typings outside $\LG$ can still be
+polynomial, at the price of a superlinear dependence on thickness.
+
+\paragraph{Relation to the companion paper.}
+\todo{state precisely what is taken from \cite{kuriyamaCFG} (framework, class,
+qualitative reconstruction) and what is new here (LG sufficiency, the two
+classifications, the shape results); explain that the companion's
+bracketed family and our three-letter family are variants; port the
+presentation-relative comparison from M Section 1.}
+
+\paragraph{Proof methods.}
+\todo{sliding-factor coordinates for $\LG$ and simultaneous shortening
+(Section~\ref{sec:lg}); rare-type and distinguishing-pair lower bounds
+(Section~\ref{sec:data}); heavy-path periodicity and counting for isolated
+letters (Appendix~\ref{app:isolated}).}
+
+\paragraph{Organization.}
+\todo{one paragraph.}
+
+%======================================================================
+\section{Preliminaries}
+\label{sec:prelim}
+% TODO(port: O Section 2 — def:characteristic-sample, def:semigroup-typing,
+%   def:h-refinement, def:prefix-suffix-typing, def:standard-mcfg [rewrite for CFG],
+%   def:grammar-properties, def:class-cmcf [rewrite as \Ccf{s}]; drop tuple contexts).
+\todo{positive-data learning and characteristic samples; typings and the
+fresh-identity extension; CFG size $\|G\|$, good and reduced presentations, rule
+thickness $\bar\theta_G$; the class $\Ccf{s}$.}
+
+\begin{lemma}[Agreement with the companion class]
+\label{lem:classes-agree}
+For every typing $s$, the class $\Ccf{s}$ and the notion of characteristic
+sample coincide, up to notation, with those of
+\cite[Definition~2.1 and Section~3]{kuriyamaCFG}.
+\end{lemma}
+\begin{proof}
+\todo{port: M lem:fanout-one-classes.}
+\end{proof}
+
+%======================================================================
+\section{Reconstruction and Characteristic Data}
+\label{sec:data}
+% TODO(port: O Sections 3--4 — def:reconstruction, prop:reconstruction-soundness,
+%   prop:completeness, prop:good-normalization, thm:exact-reconstruction,
+%   def:witness-set, thm:data-from-typed-thickness, lem:distinguishing,
+%   prop:rare-type, prop:typed-thickness-exponential).
+% Qualitative parts (soundness, completeness, Gold) are Yoshinaka / companion
+% material: cite, do not re-prove at length.
+\todo{reconstruction operators, typed witnesses, typed thickness and data length.}
+
+\begin{lemma}[Distinguishing sub-targets]
+\label{lem:distinguishing}
+\todo{port statement and proof: O lem:distinguishing (f=1).}
+\end{lemma}
+
+\begin{proposition}[Rare types force positive data]
+\label{prop:rare-type}
+\todo{port statement and proof: O prop:rare-type (f=1).}
+\end{proposition}
+
+%======================================================================
+\section{Local Groups Suffice}
+\label{sec:lg}
+% TODO(port: O Section 5.1 and 5.3; O app:local-group (thm:lg-characterization,
+%   cor:lg-type-level-shortest); O app:group-blocks restricted to one context).
+% Follow-up task: replace the multi-block argument by a direct two-block
+% (left/right context) argument at fan-out one.
+
+\begin{theorem}[Polynomial characteristic data for local-group typings]
+\label{thm:lg-sufficiency}
+Let $r_{\max}\ge1$ and suppose $s(\Sigma^+)\in\LG$.  For every $L\in\Ccf{s}$ and
+every reduced good presentation $G$ of $L\cap\Sigma^+$ of rank $\le r_{\max}$, the
+operators $\B^{\le r_{\max}}_s$ and $\B_s$ have a common characteristic sample
+for $L$ of total length $O(\|G\|^2\bar\theta_G)$, with a constant depending only
+on $r_{\max}$ and $|s(\Sigma^+)|$.
+\end{theorem}
+\begin{proof}
+\todo{port: O thm:local-group-polydata with $f=1$.}
+\end{proof}
+
+%======================================================================
+\section{The Pseudovariety Boundary}
+\label{sec:pseudovariety}
+% TODO(port: O Section 7 — prop:three-letter-family, def:uniform-polydata,
+%   thm:fanout-one-data; M rem:fanout-one-data for the scope remark).
+
+\begin{definition}[Uniform polynomial characteristic-data length]
+\label{def:uniform-polydata}
+Let $r_{\max}\ge1$.  A pseudovariety $\mathbf V$ of finite semigroups has
+\emph{uniform polynomial characteristic-data length at rank $r_{\max}$} if for
+every nonempty finite alphabet $\Sigma$ and every surjective typing
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ with $\mathsf S\in\mathbf V$ there is a
+polynomial $p=p_{r_{\max},s,\Sigma}$ such that for every $L\in\Ccf{s}$ and every
+reduced good rank-$\le r_{\max}$ presentation $G$ of $L\cap\Sigma^+$, the
+operator $\B^{\le r_{\max}}_s$ has a characteristic sample $F$ for $L$ with
+$\|F\|_+\le p(\|G\|,\bar\theta_G)$.  A single typing $s$ \emph{admits polynomial
+characteristic-data length} if the same holds for that $s$.
+\end{definition}
+
+\begin{proposition}[Three-letter doubling family]
+\label{prop:three-letter-family}
+\todo{port: O prop:three-letter-family; proof in Appendix~\ref{app:three-letter}.}
+\end{proposition}
+
+\begin{theorem}[Pseudovariety boundary]
+\label{thm:pseudovariety-boundary}
+\todo{port: O thm:fanout-one-data, with the operator quantification of M
+thm:fanout-one-data(iii).}
+\end{theorem}
+
+%======================================================================
+\section{Individual Typings}
+\label{sec:typings}
+% TODO(port: P1 Part 1 — cor:typing-level-obstruction, prop:binary-u1-quadratic,
+%   def:isolated-letter, thm:two-letter-fanout-one, cor:two-letter-fanout-one,
+%   cor:u1-classification; PU prop:binary-u1-weight-slice for the sharp
+%   constant-weight bound).
+
+\begin{corollary}[A typing-level obstruction]
+\label{cor:typing-level-obstruction}
+\todo{port: P1 cor:typing-level-obstruction.}
+\end{corollary}
+
+\begin{definition}[Isolated letter]
+\label{def:isolated-letter}
+A letter $\mathtt a\in\Sigma$ is \emph{isolated} for a typing $s$ if
+$s^{-1}(s(\mathtt a))=\mathtt a^+$ and all words that contain $\mathtt a$ but do
+not lie in $\mathtt a^+$ have one common type.
+\end{definition}
+
+\begin{theorem}[Isolated letters have short pure representatives]
+\label{thm:isolated-letter}
+\todo{port: P1 thm:two-letter-fanout-one (bound $C(\|G\|+2)^{22}\bar\theta_G^{\,8}$,
+$C<10^{43}$); proof in Appendix~\ref{app:isolated}.}
+\end{theorem}
+
+\begin{corollary}[Polynomial data from isolated letters]
+\label{cor:isolated-data}
+\todo{port: P1 cor:two-letter-fanout-one.}
+\end{corollary}
+
+\begin{corollary}[Typings onto $U_1$]
+\label{cor:u1-classification}
+\todo{port: P1 cor:u1-classification.}
+\end{corollary}
+
+\begin{proposition}[Quadratic data for the binary typing]
+\label{prop:binary-quadratic}
+\todo{port: P1 prop:binary-u1-quadratic and PU prop:binary-u1-weight-slice;
+proof in Appendix~\ref{app:u1}.}
+\end{proposition}
+
+%======================================================================
+\section{The Linear Factor and Rank One}
+\label{sec:shape}
+% TODO(port: O prop:linear-factor-all-fanout(iv) at f=1 over two letters,
+%   O cor:trivial-exact; optional PU thm:rankone-polydata at f=1).
+
+\begin{proposition}[The linear factor is necessary]
+\label{prop:linear-factor}
+\todo{port: O prop:linear-factor-all-fanout, two-letter fan-out-one case.}
+\end{proposition}
+
+\begin{corollary}[The trivial typing]
+\label{cor:trivial-exact}
+\todo{port: O cor:trivial-exact at $f=1$.}
+\end{corollary}
+
+%======================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+\todo{summary; open: classification of individual typings beyond $U_1$
+(two non-commuting words of an idempotent type without letter-disjointness);
+the factor $\|G\|$ between $\|G\|\bar\theta_G$ and $\|G\|^2\bar\theta_G$;
+remark that local-group sufficiency extends to multiple context-free grammars
+of every fixed fan-out (not claimed here).}
+
+\section*{Declaration of competing interest}
+The author declares no competing interests.
+
+\section*{Data availability}
+No data were used.
+
+\appendix
+
+\section{Local-Group Coordinates and Shortening}
+\label{app:lg}
+\todo{port: O app:local-group and app:group-blocks, restricted to fan-out one.}
+
+\section{The Three-Letter Doubling Family}
+\label{app:three-letter}
+\todo{port: O app:three-letter-family.}
+
+\section{Isolated Letters}
+\label{app:isolated}
+\todo{port: P1 app:two-letter-fanout-one, with the 2026-11-09 review corrections
+(lem:app-h-tree(d) only for $k\ge1$; empty products and zero exponents explicit).}
+
+\section{Typings onto \texorpdfstring{$U_1$}{U1}}
+\label{app:u1}
+\todo{port: P1 app:u1-typings.}
+
+\section{The Linear-Factor Family}
+\label{app:linear}
+\todo{port: O app:linear-factor-fanout at fan-out one.}
+
+\section{Auxiliary Proofs for Typed Witnesses and Normalization}
+\label{app:aux}
+\todo{port: O app:typed-witness-aux-proofs, app:normalization-details.}
+
+\input{references}
+
+\end{document}
