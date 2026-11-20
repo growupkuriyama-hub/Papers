@@ -28,6 +28,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 ## Change log
 
+- 2026-11-20: Section 4 rewritten with the direct proof supplied by Astra (reviews/astra_lg_quadratic_proof_2026-11-20.txt): typed thickness O(N(τ+1)) for BUNF and characteristic data O(‖G_*‖² max{1,τ}) for every reduced CFG; the gap to the linear-factor lower bound is now one factor of symbol size. Not yet independently audited.
+
 - 2026-11-20: addressed the Astra round-2 report (Minor Revision); Theorem C(i) strengthened to two letters; see [reviews/RESPONSE_TO_ASTRA_ROUND2_2026-11-20.md](reviews/RESPONSE_TO_ASTRA_ROUND2_2026-11-20.md).
 
 - 2026-11-20: addressed the Astra referee report (Major Revision; 5 Major, several Minor); see [reviews/RESPONSE_TO_ASTRA_2026-11-20.md](reviews/RESPONSE_TO_ASTRA_2026-11-20.md).
