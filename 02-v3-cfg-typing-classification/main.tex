@@ -79,8 +79,8 @@ presentation.  For individual typings onto $U_1$, polynomial data hold
 exactly when a single letter has type~$1$.  Such typings lie outside $\LG$,
 and their data are polynomial but not linear in thickness for any
 polynomial dependence on grammar size, whereas local-group typings are.
-Finally, the product of grammar size and thickness is necessary for every
-typing.
+Finally, over at least three letters, the product of grammar size and
+thickness is necessary for every typing.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Grammatical inference; Context-free languages;
@@ -159,7 +159,7 @@ realizing a copy of $U_1$ force exponential data
 \begin{mainthm}[Shape of the bound]
 \label{thm:C}
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
-\item For every typing over an alphabet with at least two letters there are
+\item For every typing over an alphabet with at least three letters there are
 finite targets with reduced presentations $G$ such that every characteristic
 sample has length at least $c\,\|G\|\,\tau_G$ \textup(Proposition~\ref{prop:linear-factor}\textup).
 \item For local-group typings, characteristic data are bounded by
@@ -391,16 +391,18 @@ For every retained nonempty-type symbol $X=A_\mu$ fix a shortest
 $\rho(X)\equiv_L\omega(X)$ of type $\mu$; put $\rho(X):=\lambda$ for empty-type
 $X$.  Repeat the construction of $\WitnessSet(\widetilde G)$
 \cite[\S5.1, eq.~(5.1)]{kuriyamaCFG} with $\rho$ in place of $\omega$ throughout:
-the reaching contexts $\chi'(X)=(u'_X,v'_X)$ are obtained from the same
-shortest dependency path that defines $\chi(X)$, with every off-path child $Y$
-expanded by $\rho(Y)$ instead of $\omega(Y)$, and
+the reaching context $\chi'(X)=(u'_X,v'_X)$ is read off a shortest path from a typed
+start copy to $X$ in the dependency graph of $\widetilde G$, as in the proof of
+\cite[Lemma~6.2]{kuriyamaCFG}, with every off-path child $Y$ expanded by
+$\rho(Y)$, and
 $t'_R:=u_0\rho(Y_1)u_1\cdots\rho(Y_r)u_r$ for a typed production
-$R:X\to u_0Y_1u_1\cdots Y_ru_r$.  Since $\equiv_L$ is a congruence, each of
-$u'_X$, $v'_X$, $t'_R$ is $\equiv_L$-equivalent factor by factor to the
-corresponding word built from $\omega$, and $t_R\equiv_L\omega(X)$ by
-Lemma~\ref{lem:homogeneity} \textup(applied to the typed refinement, whose
-nonterminal languages are the typed fibers by \ref{q:typed-core}\textup).  Hence
-$u'_X\rho(X)v'_X$ and $u'_Xt'_Rv'_X$ lie in $L$, and $\rho(X)$, $t'_R$ are nonempty
+$R:X\to u_0Y_1u_1\cdots Y_ru_r$.  Let $(u_X,v_X)$ be the context read off the same path with $\omega$ in place of
+$\rho$; it is a reaching context of $A$ in $G$.  Since $\equiv_L$ is a
+congruence, $u'_X\equiv_Lu_X$, $v'_X\equiv_Lv_X$ and $t'_R\equiv_Lt_R$ factor by
+factor.  The words $t_R$ and $\omega(X)$ are nonempty yields of $A$ in $G$ of the
+same type $\mu$ \ref{q:typed-core}, and both occur in the reaching context
+$(u_X,v_X)$, so $t_R\equiv_L\omega(X)$ by fixed-$s$ substitutability.  Hence
+$u'_X\rho(X)v'_X\equiv_Lu_X\omega(X)v_X$ and $u'_Xt'_Rv'_X\equiv_Lu_Xt_Rv_X$ lie in $L$, and $\rho(X)$, $t'_R$ are nonempty
 words of type $\mu$ sharing the context $\chi'(X)$.  The proof of
 \cite[Theorem~5.2]{kuriyamaCFG} now goes through verbatim with
 $\widehat X:=\NT{\rho(X)}$: Rule~(U) gives $\widehat X\to\NT{t'_R}$, Rule~(B) splits
@@ -414,6 +416,9 @@ $t_R$ in $K$, and the identity $\widehat Y_i=\NT{z_j}$ for the entry of a child;
 all four hold for $\rho$.  The start copies have context $(\lambda,\lambda)$, and
 $\rho((S_0)_\mu)\in L$ because $\rho((S_0)_\mu)\equiv_L\omega((S_0)_\mu)\in L$.
 \end{proof}
+
+A CFG is in \emph{$\lambda$-free BUNF} if all its productions have the forms
+$A\to BC$, $A\to B$ and $A\to a$; such a grammar is good and of rank at most two.
 
 \begin{lemma}[$\lambda$-elimination with thickness control]
 \label{lem:lambda-elimination}
@@ -431,7 +436,7 @@ $A\to C$ for $(A\to BC)\in P$ with $C\in V^+$ and $\lambda\in L_G(B)$.
 Then:
 \begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
 \item $L_{G^+}(A)=L_G(A)\setminus\{\lambda\}$ for every $A\in V^+$;
-\item $G^+$ is reduced, good and of rank at most two, with $|P^+|\le3|P|$ and
+\item $G^+$ is reduced and in $\lambda$-free BUNF, with $|P^+|\le3|P|$ and
 $\|G^+\|\le3\|G\|$;
 \item every $A\in V^+$ has a word of length at most $(N-1)\tau_G+1$ in
 $L_{G^+}(A)$, and $\bar\theta_{G^+}\le3N(\tau_G+1)$.
@@ -512,19 +517,19 @@ Lower bounds involving a linear factor are stated with $\|\cdot\|$.
 
 \begin{corollary}[Master transfer]
 \label{cor:master}
-Let $s$ be a typing and $q$ a polynomial such that
-$\trep(H,s)\le q(\|H\|,\bar\theta_H)$ for every reduced good CFG $H$ of rank at
-most two with $L(H)=L\cap\Sigma^+$ for some $L\in\Ccf{s}$.  Then every
+Let $s$ be a typing and $q$ a polynomial, nondecreasing in both arguments,
+such that $\trep(H,s)\le q(\|H\|,\bar\theta_H)$ for every reduced CFG $H$ in
+$\lambda$-free BUNF with $L(H)=L\cap\Sigma^+$ for some $L\in\Ccf{s}$.  Then every
 nonempty $L\in\Ccf{s}$ represented by a reduced CFG $G_*$ has a
 characteristic sample for $\Rec_s$ of encoded size polynomial in $|G_*|$ and
-$\tau_{G_*}+1$.  If $q(x,y)\le q_0(x)\,y$, every reduced BUNF grammar $G$ with
+$\tau_{G_*}+1$.  If $q(x,y)\le q_0(x)\,y$ with $q_0$ nondecreasing, every reduced BUNF grammar $G$ with
 $N$ nonterminals and $L(G)\in\Ccf{s}$ satisfies
 $\tau^{\mathrm{rep}}_s(G)\le\max\{1,3N\,q_0(3\|G\|)(\tau_G+1)\}$.
 \end{corollary}
 
 \begin{proof}
 Let $G$ be the BUNF normalization of $G_*$ given by \ref{q:bunf}.  If
-$L\subseteq\{\lambda\}$, then $\tau^{\mathrm{typ}}_s(G)\le1$.  Otherwise apply
+$L=\{\lambda\}$, then $\{\lambda\}$ is a characteristic sample.  Otherwise apply
 Lemma~\ref{lem:lambda-elimination} to obtain $G^+$; it satisfies the
 hypothesis with $L(G^+)=L\setminus\{\lambda\}$, and
 Lemmas~\ref{lem:typed-transfer} and~\ref{lem:lambda-elimination}(ii),(iii) bound
@@ -540,7 +545,7 @@ $L^{\setminus m}:=\{w\in L:\widehat s(w)\ne m\}$.  Then
 $L^{\setminus m}\in\Ccf{s}$.  Consequently every characteristic sample of $L$
 for $\Rec_s$, and for every set-driven operator having characteristic samples
 for both $L$ and $L^{\setminus m}$, contains a word of type $m$, and has length
-at least $\sum_{m}(\mu_m(L)+1)$, where $\mu_m(L)$ is the length of a shortest
+at least $\sum_{m\in s(L\cap\Sigma^+)}(\mu_m(L)+1)$, where $\mu_m(L)$ is the length of a shortest
 word of $L$ of type $m$.
 \end{proposition}
 
@@ -818,7 +823,7 @@ $(|u|+2|v|)2^n-2|v|$ by $|h(W_i)|=2|h(W_{i-1})|+2|v|$, and
 Proposition~\ref{prop:rare-type} forces it into every such sample.
 \end{proof}
 
-
+With $u,v,w$ letters this is the case of two letters of type $e$; in
 particular it applies to every typing onto $U_1$ with at least two letters of
 type $1$, since surjectivity gives a letter of type $\zeta$.  It also applies
 when no letter has type $e$: for $\mathsf S=\{1,g,z\}$ with identity $1$,
@@ -874,8 +879,10 @@ The proof is in Appendix~\ref{app:isolated}.  The bound concerns
 representatives: a pure word $\equiv_L$-equivalent to the pure yields of $A$,
 not necessarily a yield of $A$; this is why Lemma~\ref{lem:rep-witness} is
 needed.  The assumption that all $\mathtt a$-mixed words have one type is
-essential: it fails for the content typing over three or more letters, where
-the data can be exponential.
+essential: it fails for the content typing $c$ over three or more letters, and
+there the data can be exponential, since $L_n\in\Ccf{c}$ by
+Proposition~\ref{prop:three-letter-family}(ii) and $W_n$ is its only word of
+content $\{\mathtt a,\mathtt b\}$, so Proposition~\ref{prop:rare-type} applies.
 
 \begin{corollary}[Polynomial data from isolated letters]
 \label{cor:isolated-data}
@@ -895,8 +902,9 @@ $\tau_{G_*}+1$.
 
 \begin{proof}
 % DRAFT-NEW adaptation of the proof of P1 cor:two-letter-fanout-one.
-Let $G^+$ be as in Lemma~\ref{lem:lambda-elimination}; its productions have the
-forms required in Theorem~\ref{thm:isolated-letter}, $k_V\le N$ and
+Let $G^+$ be as in Lemma~\ref{lem:lambda-elimination}; it is a reduced
+$\lambda$-free BUNF grammar for $L\setminus\{\lambda\}\in\Ccf{s}$, as required in
+Theorem~\ref{thm:isolated-letter}, $k_V\le N$ and
 $\bar\theta_{G^+}\le3N(\tau_G+1)$.  By Lemma~\ref{lem:typed-transfer} it suffices
 to bound $\trep(G^+,s)$ by $C_0k_V^{22}\bar\theta_{G^+}^{\,8}$.
 
@@ -906,8 +914,10 @@ Lemma~\ref{lem:app-h-other}(i), which gives $(k_V-1)\bar\theta_{G^+}+1$.
 
 (i) The positive image of $s$ is generated by $s(\mathtt a)$ and $s(\mathtt b)$ in a
 semilattice, so $s(w)$ depends only on the content $c(w)$; thus $c$ is finer
-than $s$, $\Ccf{s}\subseteq\Ccf{c}$, and $\equiv_L$-equivalent words of one
-$c$-type have one $s$-type.  Hence $\trep(G^+;A,\mu)\le\tau^{c}_{\mathrm{rep}}(G^+;A,t')$ for the
+than $s$ and $\Ccf{s}\subseteq\Ccf{c}$.  Let $y\in L_{G^+}(A)$ have $s$-type $\mu$
+and $c$-type $t'$.  A representative $x\equiv_L y$ of $c$-type $t'$ has
+$s$-type $\mu$, and the yields of $A$ of $s$-type $\mu$ are all $\equiv_L y$ by
+Lemma~\ref{lem:homogeneity} for $s$.  Hence $\trep(G^+;A,\mu)\le\tau^{c}_{\mathrm{rep}}(G^+;A,t')$ for the
 $c$-type $t'$ of a yield of $A$ of $s$-type $\mu$, where $\tau^{c}_{\mathrm{rep}}$ refers to $c$.
 Both letters are isolated for $c$, so Theorem~\ref{thm:isolated-letter},
 applied to $c$ with $\mathtt a$ and with $\mathtt b$, and
@@ -979,8 +989,6 @@ Consequently every characteristic sample $F$ in~\textup{(ii)} satisfies
 \]
 \end{proposition}
 
-The proof is in Appendix~\ref{app:linear}.
-
 With $q=k=n$ one has $\|G_{n,n}\|=23n+13$ and $\bar\theta_{G_{n,n}}=2^n+2n+2$;
 with $k$ fixed, $\bar\theta_{G_{q,k}}=\Theta(\|G_{q,k}\|)$.  By (iii) the
 presentations are within a constant factor of the smallest, so the bound is not
@@ -1014,11 +1022,6 @@ $L_{m,n}$, so the proposition holds verbatim for every typing onto $U_1$ in
 which $\mathtt a$ is the only letter of type $1$ and $\mathtt b$ has type $\zeta$.
 The data for these typings are nevertheless polynomial
 (Corollary~\ref{cor:isolated-data} below).
-
-\paragraph{Isolated letters and two letters.}
-The family of Appendix~\ref{app:three-letter} uses three letters, two of them
-of type $1$.  A letter whose type is realized only by its own powers
-already yields polynomial data, over any alphabet.
 
 
 Rank one is different: for linear grammars characteristic data are polynomial
@@ -1169,8 +1172,9 @@ product is $\gamma_{k,\nu}(w)$.
 For a typing $s$ with positive image $\mathsf S$ the following are equivalent:
 \textup{(i)} $\mathsf S\in\LG$; \textup{(ii)} $\mathsf S$ has no subsemigroup isomorphic
 to $U_1$; \textup{(iii)} every idempotent of $\mathsf S$ lies in the minimal ideal
-$\mathsf K$; \textup{(iv)} $s$ is local-group-determined, with $k=|\mathsf S|$ and
-$\mathbb G$ a maximal subgroup of $\mathsf K$.
+$\mathsf K$; \textup{(iv)} $s$ is local-group-determined \textup(Definition~\ref{def:sliding}, for
+some $k\ge1$, finite group and labelling\textup).  Moreover, under
+\textup{(iii)} one may take $k=|\mathsf S|$ and $\mathbb G$ a maximal subgroup of $\mathsf K$.
 \end{theorem}
 
 \begin{proof}
@@ -1893,7 +1897,6 @@ This is the theorem.  Letting $\eta\to0$ shows that the exponents can be taken
 arbitrarily close to $2+11\gamma<20.99$ and $1+4\gamma<7.91$.\qed
 
 
-\subsection{Other Types}
 \subsection{Other Types and Proof of Corollary~\ref{cor:isolated-data}}
 
 \begin{lemma}
@@ -2039,7 +2042,9 @@ $C_j$; so $\bar\theta_{G_{m,n}}=2^m+2^n-1$.
 Proposition~\ref{prop:rare-type} every characteristic sample contains it and
 $\|F\|\ge kM+1>2^{m+n}$.  For $m=n$, $\bar\theta_{G_{n,n}}<2^{n+1}$ gives
 $\bar\theta_{G_{n,n}}^{\,2}/4<4^n<\|F\|$.  A bound $p(\|G\|)\bar\theta_G$ would give
-$4^n\le p(12n+9)\,2^{n+1}$ for all $n$, which fails for every polynomial $p$.
+$4^n\le p(12n+9)\,2^{n+1}$ for all $n$, which fails for every polynomial $p$.  Likewise, since $\tau_{G_{n,n}}\le\bar\theta_{G_{n,n}}<2^{n+1}$
+(Lemma~\ref{lem:measures}) and $|G_{n,n}|$ is polynomial in $\|G_{n,n}\|=12n+9$, a
+bound $p(|G|)(\tau_G+1)$ would give $4^n\le p'(n)\,2^{n+1}$ for a polynomial $p'$.
 \end{proof}
 
 
@@ -2049,7 +2054,7 @@ $4^n\le p(12n+9)\,2^{n+1}$ for all $n$, which fails for every polynomial $p$.
 % Ported from PU (proof of prop:linear-factor-sharp).
 \begin{proof}[Proof of Proposition~\ref{prop:linear-factor}]
 (i) Let $J\subseteq L_{q,k}$ and $x,y\in\Sigma^+$ with $uxv,uyv\in J$.  For
-trivial typing and $d=f=1$ we must show $\D_J(x)=\D_J(y)$.  All
+the trivial typing we must show $\D_J(x)=\D_J(y)$.  All
 words of $L_{q,k}$ have length $W$, so $|x|=|y|$.  The two occurrences of
 $\mathtt d$ in $w_i$ are at positions $i+1\in[1,q+1]$ and
 $W-i\in[W-q,W]$; these ranges are disjoint since $W-q=M+q+2$, so the

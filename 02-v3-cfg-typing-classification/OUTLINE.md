@@ -42,7 +42,7 @@
 |---|---|---|
 | Theorem A | r_max ≥2 を前提に、擬多様体 V が一様な多項式特性データ長を持つ ⇔ V ⊆ LG。(i) LG なら reduced BUNF で τ^typ_s(G) ≤ c_{\|S\|}\|V\|²(τ_G+1)。よって任意の reduced CFG で Rec_s のデータは poly(\|G_*\|)·(τ_{G_*}+1)（#1 Cor. 7.5 の LI∨Grp を LG へ一般化）。(ii) LG 外：#1 Prop. 6.4 と Cor. 6.6 | 02-v2 `cor:lg-type-level-shortest`（f=1）＋主系。代数は 02-v2 `thm:lg-characterization` |
 | Theorem B | U₁ への型付け s：多項式 ⇔ 型 1 の文字がちょうど1つ。一般の型付けでは、孤立文字は多項式、文字が互いに素な e,e,z 語は指数 | 02-v2 の `thm:two-letter-fanout-one`、`lem:app-h-other`（t_typ の上界）＋主系。障害は三文字族（`cor:typing-level-obstruction`）＋Lemma 3.3 |
-| Theorem C | (i) どの型付けでも（2文字以上）データ ≥ c·\|G\|·τ_G となる標的がある。(ii) LG 型付けは厚さについて線形 poly(\|G\|)(τ_G+1) だが、二文字 U₁ 型付け s_{U,2} は多項式であってもどんな p についても p(\|G\|)·(τ_G+1) では抑えられない | 02-v2 `prop:linear-factor-all-fanout`(iv)、`prop:binary-u1-quadratic`、Lemma 3.3 |
+| Theorem C | (i) どの型付けでも（3文字以上）データ ≥ c·\|G\|·τ_G となる標的がある。(ii) LG 型付けは厚さについて線形 poly(\|G\|)(τ_G+1) だが、二文字 U₁ 型付け s_{U,2} は多項式であってもどんな p についても p(\|G\|)·(τ_G+1) では抑えられない | 02-v2 `prop:linear-factor-all-fanout`(iv)、`prop:binary-u1-quadratic`、Lemma 3.3 |
 
 **見どころ：** 擬多様体レベルの境界は LG である。一方、個々の型付けでは LG 外でも多項式になりうる（s_{U,2}）。ただしそのときは厚さについて線形な上界が崩れる。
 
@@ -91,3 +91,18 @@
 - 線形因子族の「表示は最小に近い」という主張を、任意の reduced CFG（BUNF）について示し直すか：要検討。
 - 02-v2 のファイルは編集しない。fan-out 2 の研究結果は持ち込まない。
 - #1 は審査中。引用番号は R1 のビルドに基づく。採択を前提にした記述はしない。
+
+## 5. 独立監査（2026-11-20）
+
+別エージェントによる監査報告は [reviews/audit_v3_2026-11-20.md](reviews/audit_v3_2026-11-20.md)。致命的な誤りはなし。Major は2件で、どちらも修正済み。
+
+- **M1：** 主系の仮定を「λ-free BUNF」（X→YZ, X→Y, X→a）に限定した。孤立文字定理の適用範囲に合わせるため。
+- **M2：** Theorem C(i) を「3文字以上」に直した。二文字版は計算機による小さな検証（q≤6, k≤3）だけで、証明はまだない。
+
+ほかに修正したもの：
+- rep-witness の文脈 χ′ を、型付き精密化での最短の道として定義し直した。
+- homogeneity は G の中で直接論じる形にした。
+- LG の特徴付け (iv) を任意の k で述べた。
+- isolated-data (i) の論拠を直した。
+- 二文字 U₁ についての τ 形の一文を追加した。
+- 編集上の重複・断片を整理した。
