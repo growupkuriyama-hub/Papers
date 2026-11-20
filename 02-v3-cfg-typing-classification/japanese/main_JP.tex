@@ -1,0 +1,2338 @@
+\documentclass[11pt,a4paper]{ltjsarticle}
+
+% 日本語版．英語正本：02-v3-cfg-typing-classification/main.tex
+% LuaLaTeX でコンパイルする：lualatex main_JP.tex（2回）
+\usepackage{amsmath,amssymb,amsthm,mathtools,stmaryrd}
+\numberwithin{equation}{section}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\hypersetup{hidelinks}
+\setlength{\emergencystretch}{3em}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{corollary}[theorem]{系}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定義}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注意}
+\newtheorem{openproblem}[theorem]{未解決問題}
+\theoremstyle{plain}
+\newtheorem{mainthm}{定理}
+\renewcommand{\themainthm}{\Alph{mainthm}}
+\renewcommand{\proofname}{証明}
+% ltjsarticle の \appendix は \thesection に「付録」を含めるので，英語版と同じ番号（A, A.6 など）になるよう戻す．
+\makeatletter
+\g@addto@macro\appendix{\gdef\thesection{\@Alph\c@section}}
+\makeatother
+
+\newcommand{\cf}{\mathrm{cf}}
+\newcommand{\Ccf}[1]{\mathcal C_{#1}^{\cf}}
+\newcommand{\Rec}{\mathsf{Rec}}
+\newcommand{\WitnessSet}{\mathsf{Wit}}
+\newcommand{\NT}[1]{\llbracket #1\rrbracket}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\LG}{\mathbf{LG}}
+\newcommand{\ttyp}{t_{\mathrm{typ}}}
+\newcommand{\eps}{\lambda}
+\newcommand{\trep}{\tau_{\mathrm{rep}}}
+
+\title{どの固定型付けが多項式長の特徴データを与えるか：\\
+代入可能な文脈自由言語に対する分類}
+\author{Takayuki Kuriyama\\
+\texttt{growup.kuriyama@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+非空語から有限半群への固定準同型 $s$ によって代入可能性の比較を
+制限した文脈自由言語について，正例データからの学習の研究を続ける．
+姉妹論文は，$s$ の像が局所自明半群と有限群の結びに属するとき，
+その再構成作用素に対する特徴データが文法サイズと通常の厚みについて
+多項式であること，および二元半束 $U_1$ が障害であることを示したが，
+必要性は主張していない．本稿では，多項式長の特徴データが成り立つ範囲の
+境界を二つの水準で決定する．擬多様体については，その擬多様体に値をとる
+すべての型付けに対して（アルファベットと型付けに依存する多項式で）
+多項式長のデータが成り立つのは，ちょうど局所群の擬多様体 $\LG$ の
+部分擬多様体の場合である；局所群型付けについては，$N$ 個の非終端記号を
+もつすべての二分標準形の型付き厚みはその通常の厚み $\tau_G$ に関して
+$O(N(\tau_G+1))$ であり，すべての縮約済み表示について特徴データは
+$O(\|G\|^2(\tau_G+1))$ である．$U_1$ への個々の型付けについては，
+多項式長のデータが成り立つのは，ちょうど型~$1$ をもつ文字が一つだけの
+ときである．このような型付けは $\LG$ の外にあり，そのデータは多項式で
+あるが，文法サイズへの依存をどのような多項式にとっても厚みについて
+線形にはならない．一方，局所群型付けのデータは線形である．
+最後に，二文字以上のアルファベット上では，すべての型付けについて，
+文法の記号サイズと厚みの積が必要である．
+\end{abstract}
+
+\noindent\textbf{キーワード：}文法推論；文脈自由言語；
+分布学習；特徴標本；有限半群；局所群
+
+\section{序論}
+\label{sec:introduction}
+
+\paragraph{背景．}
+分布学習は，正例から構成素をその文脈によって同定する
+\cite{Gold1967,Angluin1980,ClarkEyraud2007}．代入可能な
+文脈自由言語は正例データから極限同定可能であり
+\cite{ClarkEyraud2007}，固定窓による変種は多項式長の
+特徴標本をもつ \cite{Yoshinaka2008}．姉妹論文
+\cite{kuriyamaCFG} は窓を有限半群への固定準同型
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ で置き換える：二つの非空
+因子は，その $s$-型が一致するときにのみ比較される．こうして得られる
+クラス $\Ccf{s}$ に対し，姉妹論文は多項式時間の集合駆動の再構成
+作用素 $\Rec_s$ を与え，その特徴データが二分標準形のサイズとその
+\emph{型付き厚み}について多項式であることを示す
+\cite[系~6.3]{kuriyamaCFG}．型付き厚みは通常の厚みについて
+指数的になり得るが \cite[命題~6.4，系~6.6]{kuriyamaCFG}，
+$s(\Sigma^+)\in\mathbf{LI}\vee\mathbf{Grp}$ のときには多項式である
+\cite[補題~7.1，系~7.5]{kuriyamaCFG}．姉妹論文は，この代数的条件が
+必要であることも，個々の型付けの分類も，明示的には主張していない．
+
+\paragraph{問題．}
+\emph{どの固定型付け $s$ について，すべての縮約済み表示に対し，
+特徴標本が文法サイズと通常の厚みについて多項式となるか？}
+本稿は擬多様体と $U_1$ への型付けについてこの問いに答え，
+さらに上界の形を決定する．すべての結果は \cite{kuriyamaCFG} の
+枠組みで述べられ，定義・作用素・尺度は一切変更しない．
+
+\paragraph{主結果．}
+有限半群が\emph{局所群}であるとは，すべての冪等元 $e$ について
+$e\mathsf Se$ が群であることをいう；この擬多様体を $\LG$ と書く．
+これは $\mathbf{LI}\vee\mathbf{Grp}$ を真に含む
+\cite{CostaNogueiraTeixeira2021}．
+文法の符号長を $|G|$，その通常の厚みを $\tau_G$，
+型付き厚みを $\tau^{\mathrm{typ}}_s(G)$ と書く．いずれも
+\cite{kuriyamaCFG} のとおりである．
+
+\begin{mainthm}[擬多様体の水準]
+\label{thm:A}
+$\mathbf V$ を有限半群の擬多様体とする．次が成り立つのは
+$\mathbf V\subseteq\LG$ であるとき，かつそのときに限る：
+各有限アルファベット $\Sigma$ と $s(\Sigma^+)\in\mathbf V$ を満たす
+各型付け $s$ について，多項式 $p_{\Sigma,s}$ が存在して，縮約済み CFG
+$G_*$ で表される $\Ccf{s}$ の任意の非空標的は，サイズ高々
+$p_{\Sigma,s}(|G_*|,\tau_{G_*}+1)$ の $\Rec_s$ に対する特徴標本をもつ．
+アルファベットは型付けとともに変わる；すべての型付けについて一様な
+多項式は主張せず，そのようなものは有限群に対してさえ存在しない
+\textup(注意~\ref{rem:scope}(e)\textup)．
+より詳しくは次のとおりである：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $s(\Sigma^+)\in\LG$ ならば，$N$ 個の非終端記号をもつ任意の
+縮約済み BUNF 文法 $G$ は
+$\tau^{\mathrm{typ}}_s(G)\le c_{|s(\Sigma^+)|}N(\tau_G+1)$ を満たし，
+任意の縮約済み CFG $G_*$ はサイズ
+$O_s(\|G_*\|^2\max\{1,\tau_{G_*}\})$ の特徴標本をもつ
+\textup(定理~\ref{thm:lg-sufficiency}\textup)；
+\item $\mathbf V\not\subseteq\LG$ ならば $U_1\in\mathbf V$ であり，
+\cite[命題~6.4]{kuriyamaCFG} の型付け $s_{\mathrm U}$ は，
+$\|G_n\|=O(n)$，$\tau_{G_n}=O(n)$，したがって
+$|G_n|$ が $n$ の多項式となる縮約済み表示 $G_n$ をもつ標的であって，
+その特徴標本のサイズが少なくとも $3\cdot2^n-1$ となるものをもつ
+\textup(定理~\ref{thm:pseudovariety-boundary}\textup)．
+\end{enumerate}
+\end{mainthm}
+
+\begin{mainthm}[型付けの水準]
+\label{thm:B}
+$s:\Sigma^+\twoheadrightarrow U_1$ を型付けとする．このとき $s$ が，
+すべての縮約済み表示について $|G_*|$ と $\tau_{G_*}+1$ の多項式となる
+$\Rec_s$ に対する特徴データをもつのは，型~$1$ をもつ文字がちょうど
+一つであるとき，かつそのときに限る
+\textup(系~\ref{cor:u1-classification}\textup)．より一般に，孤立文字
+\textup(定義~\ref{def:isolated-letter}\textup) は任意のアルファベット上で
+多項式的に短い代表元をもつ
+\textup(定理~\ref{thm:isolated-letter}\textup)．一方，
+$s(u)=s(v)=e$，$s(w)=z$ が $ez=ze=z$ を満たす相異なる冪等元である
+ような三つの語 $u,v,w$ であって，$uvw$ においてどの文字も高々一回しか
+現れないものは，指数長のデータを強制する
+\textup(系~\ref{cor:typing-level-obstruction}\textup)．
+\end{mainthm}
+
+$U_1$ への型付けは，型付けの水準の問いの自然な最初の場合である．
+$\LG$ の外にあるすべての有限半群は $U_1$ と同型な部分半群を含み
+（定理~\ref{thm:lg-characterization}），$U_1$ 自身は局所群ではない．
+$1\cdot U_1\cdot1=U_1$ が群でないからである．したがって $U_1$ は
+$\LG$ の外の最小の障害であり，定理~\ref{thm:B} はこの最小の障害への
+個々の型付けを分類する；$\LG$ の外にあるより大きな半群への型付けは
+その複製を含み，未解決として残す
+\textup(第~\ref{sec:conclusion}~節\textup)．
+
+\begin{mainthm}[上界の形]
+\label{thm:C}
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item 二文字以上のアルファベット上のすべての型付けについて，記号サイズが
+最小のものの定数倍以内である縮約済み表示 $G$ をもつ有限標的であって，
+$\Rec_s$ に対する，また $\Ccf{s}$ 全体で特徴標本をもつ任意の集合駆動の
+作用素に対する，すべての特徴標本の符号長が少なくとも
+$\tfrac1{23}\|G\|\,\tau_G$ となるものが存在する
+\textup(命題~\ref{prop:linear-factor}\textup)．
+\item 局所群型付けについては特徴データは
+$O_s(\|G_*\|^2\max\{1,\tau_{G_*}\})$ であり，したがって \textup{(i)} の
+下界は記号サイズの因子一つの違いを除いて達成される
+\textup(定理~\ref{thm:lg-sufficiency}\textup)．
+像 $U_1$ が局所群でない二文字型付け（binary typing）$s_{U,2}$
+\textup($\mathtt a\mapsto1$，$\mathtt b\mapsto\zeta$\textup) については，
+特徴データは多項式であるが，どのような多項式 $p$ についても
+$p(|G_*|)(\tau_{G_*}+1)$ という上界は存在しない
+\textup(命題~\ref{prop:binary-quadratic}\textup)．
+\end{enumerate}
+\end{mainthm}
+
+このように，$\LG$ は擬多様体に対する正確な境界である一方，$\LG$ の外の
+個々の型付けでも，厚みについての線形性を失うことと引き換えに，
+なお多項式となり得る．
+
+\paragraph{手法．}
+姉妹論文は，すべての上界を型付き厚みの評価に帰着させる．局所群については，
+滑動因子座標と，重い部分木を（空でもよい）最短生成語で同時に置き換える
+群を保つ置換とによって，任意の縮約済み表示の上で直接これを示す
+（第~\ref{sec:lg}~節）．孤立文字については，重い経路の周期性と数え上げに
+よる利用可能な評価（付録~\ref{app:isolated}）は $\lambda$ を含まない
+文法に対して証明されたもので，生成語ではなく代表元を抑える；これを，
+規則厚みを制御する $\lambda$ 除去と，代表元から作られる証人とによって，
+姉妹論文の二分標準形へ移す（第~\ref{sec:bridge}~節）．すべての下界は，
+標的を同じクラスの適切な部分言語から区別することに基づく：型ファイバー
+全体を取り除くことで，その型の最短語がすべての特徴標本に入ることが
+強制され（命題~\ref{prop:rare-type}），単一の語を取り除くことで，
+適切な有限標的のすべての語が強制される（命題~\ref{prop:linear-factor}）．
+
+\paragraph{姉妹論文との関係．}
+\cite{kuriyamaCFG} から，標的クラス $\Ccf{s}$，作用素 $\Rec_s$ と
+その健全性および正確な再構成，型付き細分と証人集合を伴う二分標準形
+BUNF，型付き厚みによる特徴データの上界，厚みを保つ正規化，および
+括弧付き倍増族を，変更せずに用いる；これらは第~\ref{sec:prelim}~節で
+振り返る．新しいのは，良い文法から BUNF への移行
+（第~\ref{sec:bridge}~節．生成語ではなく代表元から作る証人を含む），
+局所群の評価（第~\ref{sec:lg}~節），二つの分類
+（第~\ref{sec:pseudovariety}~節と第~\ref{sec:typings}~節），
+および上界の形に関する結果（第~\ref{sec:shape}~節）である．
+付録~\ref{app:three-letter} の三文字族は姉妹論文の括弧付き族の
+変種である；その文字ごとの像が型付けの水準の障害を与えるので，
+これが必要となる．
+
+$\mathbf{LI}\vee\mathbf{Grp}$ から $\LG$ への拡張は，二文字の場合に
+すでに真である．$s'$ を $\{\mathtt a,\mathtt b\}^+$ の型付けで，
+長さ1の語はそのまま記録し，より長い語については先頭文字，末尾文字，
+および因子 $\mathtt{ab}$ の出現回数の偶奇を記録するものとする；
+定義~\ref{def:sliding} の記法では，これは $\lambda_{1,\nu}$ を
+非空語に制限したものであり，$\nu(\mathtt{ab})$ は $C_2$ の生成元，
+$\nu$ は他の因子上で自明である．その正の像は10個の元をもち，
+定理~\ref{thm:lg-characterization} により $\LG$ に属するが，冪等元
+$e=s'(\mathtt{aa})$ と $d=s'(\mathtt{bb})$ は
+$ede=s'(\mathtt{aabbaa})\ne e$ を満たす．$\mathbf{LI}$ と
+$\mathbf{Grp}$ はともに擬恒等式 $x^\omega y^\omega x^\omega=x^\omega$
+を満たすので，その結びもこれを満たし，
+$s'(\Sigma^+)\notin\mathbf{LI}\vee\mathbf{Grp}$ である．
+
+\paragraph{構成．}
+第~\ref{sec:prelim}~節では \cite{kuriyamaCFG} の枠組みを振り返る．
+第~\ref{sec:bridge}~節では上界を良い文法から二分標準形へ移し，
+下界の原理を述べる．第~\ref{sec:lg}~節で局所群の上界を，
+第~\ref{sec:pseudovariety}~節で擬多様体の境界を，
+第~\ref{sec:typings}~節で型付けの水準の結果を，
+第~\ref{sec:shape}~節で上界の形に関する結果を示す．
+長い証明は付録に置く．
+
+\section{姉妹論文の枠組み}
+\label{sec:prelim}
+\cite[第~2~節]{kuriyamaCFG} に従う；番号はその arXiv 第~5~版
+（arXiv:1409.6247v5）による．$\Sigma$ を有限アルファベット，
+$\lambda$ を空語とし，$\Sigma^+=\Sigma^*\setminus\{\lambda\}$ とする．
+$L$ における $x$ の\emph{分布}は $\D_L(x)=\{(u,v):uxv\in L\}$ であり，
+$x\equiv_L y$ は $\D_L(x)=\D_L(y)$ を意味する；これはモノイド合同である．
+
+\paragraph{型付け．}
+\emph{型付け}とは，有限半群への全射半群準同型
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ であり，その有限半群を
+型付けの\emph{正の像}という．その\emph{新しい単位元による完備化}
+$\widehat s:\Sigma^*\twoheadrightarrow\mathsf S^\sharp=\mathsf S\cup\{1_\sharp\}$
+は，$\lambda$ を新しい単位元 $1_\sharp$ に送る
+\cite[補題~2.2]{kuriyamaCFG}．$\mathsf S\in\LG$ のような代数的条件は
+常に正の像の上で判定する．言語 $L$ が
+\emph{$\sim_s$-代入可能}であるとは，すべての $x,y\in\Sigma^+$ について，
+$s(x)=s(y)$ かつ $\D_L(x)\cap\D_L(y)\ne\emptyset$ ならば
+$\D_L(x)=\D_L(y)$ となることをいう \cite[定義~2.1]{kuriyamaCFG}；
+$\Ccf{s}$ は $\sim_s$-代入可能な文脈自由言語のクラスである．
+一元型付け $s_0$ についてはこれは Clark--Eyraud の代入可能性であり，
+より細かい型付けほど比較する対が少ないので，すべての $s$ について
+$\Ccf{s_0}\subseteq\Ccf{s}$ である．$\Sigma^*$ 上の準同型 $\lambda$ に
+ついて，$\lambda(x)=\lambda(y)$ ならば $\widehat s(x)=\widehat s(y)$
+となるとき，$s\preceq\lambda$ と書く．
+
+\paragraph{標本と作用素．}
+有限集合 $\mathcal F\subseteq L$ が集合駆動の作用素 $\mathsf{Op}$ に
+対する $L$ の\emph{特徴標本}であるとは，任意の有限集合 $K$ について
+$\mathcal F\subseteq K\subseteq L$ ならば $L(\mathsf{Op}(K))=L$
+となることをいい，そのサイズは
+$\|\mathcal F\|=\sum_{w\in\mathcal F}(|w|+1)$ である
+\cite[第~2.1~節]{kuriyamaCFG}．\cite[第~4.1~節]{kuriyamaCFG} の
+作用素 $\Rec_s$ は，標本 $K$ の各非空因子 $x$ に一つの非終端記号
+$\NT{x}$ をもち，二項規則 $\NT{xy}\to\NT{x}\NT{y}$，$x,y$ が同じ型を
+もち $K$ において文脈を共有するときの単項規則 $\NT{x}\to\NT{y}$，
+語彙規則，および開始規則をもつ；これは任意の $\sim_s$-代入可能な
+標的に対して健全である \cite[定理~4.2]{kuriyamaCFG}．
+
+\paragraph{文法と厚み．}
+CFG $G=(V,\Sigma,P,S)$ について，$|G|$ は固定した妥当な符号化の長さで
+あり，定義~\ref{def:symbol-size} の記号サイズ $\|G\|$ と多項式的に
+同値である；すべての非終端記号が到達可能かつ生産的であるとき $G$ は
+\emph{縮約済み}であるといい，その\emph{厚み}は
+$\tau_G:=\max_{A\in V}\min\{|w|:A\Rightarrow_G^*w\}$ である．
+ここで $w$ は空でもよい．すべての生成規則が $A\to BC$，$A\to B$，
+$A\to a$，$A\to\lambda$ のいずれかであるとき，CFG は
+\emph{二分・単位・空語標準形}（BUNF）にあるという
+\cite[定義~6.1]{kuriyamaCFG}．\emph{型付き細分} $\widetilde G$ は，
+生成語の型を記録する記号 $A_\mu$（$\mu\in\mathsf S^\sharp$）をもち，
+トリムされている；残存する各型付き記号 $X$ について，$\omega(X)$ は
+標準最短生成語，$\chi(X)=(u_X,v_X)$ は標準最短到達文脈である；
+証人集合 $\WitnessSet(\widetilde G)$ は，語 $u_X\omega(X)v_X$ と
+$u_Xt_Rv_X$ からなる．ここで $t_R$ は $X$ に対する型付き生成規則 $R$ の
+右辺の標準生成語である \cite[\S5.1]{kuriyamaCFG}．\emph{型付き厚み}は，
+残存する非開始型付き記号にわたって
+$\tau^{\mathrm{typ}}_s(G):=\max(\{1\}\cup\{|\omega(X)|\})$ と定める
+\cite[\S6]{kuriyamaCFG}．
+
+\cite{kuriyamaCFG} の次の結果を用いる．
+
+\begin{enumerate}[label=(Q\arabic*),leftmargin=*]
+\item\label{q:exact} \emph{正確な再構成} \cite[定理~5.3]{kuriyamaCFG}：
+非空な $L\in\Ccf{s}$ と $L$ に対する任意の CFG $G$ について，
+$\WitnessSet(\widetilde G)\subseteq K\subseteq L$ を満たす任意の $K$ は
+$L(\Rec_s(K))=L$ を満たす．特に $\Rec_s$ は $\Ccf{s}$ のすべての
+非空な元に対して特徴標本をもつ．
+\item\label{q:typed-core} \emph{型付きファイバー}
+\cite[命題~5.1]{kuriyamaCFG}：$\widetilde G$ の残存する各型付き記号
+$A_\mu$ について，$L_{\widetilde G}(A_\mu)=L_G(A)\cap\widehat s^{-1}(\mu)$
+である．したがって，縮約済みの $G$ について
+$\tau^{\mathrm{typ}}_s(G)=\max(\{1\}\cup\{\min\{|w|:w\in L_G(A),\
+\widehat s(w)=\mu\}:A\in V,\ \mu\in\widehat s(L_G(A))\})$ である．
+縮約済みの $G$ について，$\mu\in\widehat s(L_G(A))$ を満たすすべての
+$A_\mu$ は残存する：$A$ の出現を通り，生成語の型が $\mu$ である注釈付きの
+成功導出がそれを用いるからである．
+\item\label{q:data} \emph{型付き厚みからのデータ}
+\cite[補題~6.2，系~6.3]{kuriyamaCFG}：$N$ 個の非終端記号と生成規則集合
+$P$ をもつ縮約済み BUNF 文法 $G$ について，
+$P_{\mathrm{ter}},P_{\mathrm{unit}},P_{\mathrm{bin}}$ をその終端・単位・
+二項生成規則とすると，次が成り立つ：
+\[
+ \|\WitnessSet(\widetilde G)\|\le
+ \bigl(N|\mathsf S^\sharp|+|P_{\mathrm{ter}}|+|P_{\mathrm{unit}}||\mathsf S^\sharp|
+ +|P_{\mathrm{bin}}||\mathsf S^\sharp|^2\bigr)
+ \bigl((N|\mathsf S^\sharp|+1)\tau^{\mathrm{typ}}_s(G)+1\bigr),
+\]
+また，標準到達文脈の長さは高々
+$(N|\mathsf S^\sharp|-1)\tau^{\mathrm{typ}}_s(G)$ である．
+\item\label{q:bunf} \emph{厚みを保つ正規化}
+\cite[命題~7.3]{kuriyamaCFG}：非空言語をもつ任意の縮約済み CFG $G_*$ は，
+$|G|\le q_{\mathrm{size}}(|G_*|)$ かつ
+$\tau_G\le q_{\mathrm{thick}}(|G_*|,\tau_{G_*}+1)$ を満たす同値な
+縮約済み BUNF 文法 $G$ をもつ；その証明
+\cite[付録~A.2]{kuriyamaCFG} により，$q_{\mathrm{thick}}$ は
+$\tau_{G_*}+1$ について線形にとれる．すなわち
+$\tau_G=O(|G_*|(\tau_{G_*}+1))$ である．
+\item\label{q:bracket} \emph{括弧付き倍増族}
+\cite[命題~6.4，系~6.6]{kuriyamaCFG}：五文字の括弧アルファベットと
+$U_1$ への型付け $s_{\mathrm U}$ の上で，サイズと厚みが $n$ の多項式で
+ある縮約済み BUNF 表示をもつ有限の Clark--Eyraud 代入可能な標的 $L_n$
+であって，型 $1$ の唯一の語の長さが $3\cdot2^n-2$ であるもの；
+したがって $\Rec_{s_{\mathrm U}}$ に対する，また $L_n$ と
+$L_n\setminus\{w_n^*\}$ に対して特徴標本をもつ任意の集合駆動の作用素に
+対する，すべての特徴標本はサイズ少なくとも $3\cdot2^n-1$ をもつ．
+\item\label{q:linear} \emph{線形標的} \cite[定理~8.3]{kuriyamaCFG}：
+各固定 $s$ について，線形 CFG で表される $\Ccf{s}$ の標的は，
+線形文法のサイズの多項式となる $\Rec_s$ に対する特徴標本をもつ．
+\end{enumerate}
+
+\section{良い文法から二分標準形へ}
+\label{sec:bridge}
+
+生成規則 $A\to\lambda$ をもたないとき，CFG は\emph{良い}という；
+このときすべての非終端記号の言語は $\Sigma^+$ に含まれる．
+縮約済みの良い文法 $H=(V_H,\Sigma,P_H,S)$ と生成規則 $R\in P_H$ について，
+$\theta_H(R)$ を，$R$ を用いる導出をもつ $L(H)$ の最短語の長さとし，
+$\bar\theta_H:=\max\{1,\max_{R}\theta_H(R)\}$ とおく
+\emph{（規則厚み）}．
+\begin{definition}[記号サイズ]
+\label{def:symbol-size}
+CFG $G=(V,\Sigma,P,S)$ について
+$\|G\|:=|V|+\sum_{(A\to\alpha)\in P}(1+r_\alpha+|\alpha|)$ と定める．
+ここで $|\alpha|$ は $\alpha$ の長さ，$r_\alpha$ はその中の非終端記号の
+出現の個数である．
+\end{definition}
+
+$H$ の\emph{型付き規則厚みパラメータ}（typed rule-thickness parameter）
+を次で定める：
+\[
+ \ttyp(H,s):=\max_{A\in V_H}\ \max_{\mu\in s(L_H(A))}\
+ \min\{|w|:w\in L_H(A),\ s(w)=\mu\}.
+\]
+
+$L\in\Ccf{s}$ について，$\D_L(x)=\D_L(y)$ のとき $x\equiv_L y$ と書く．
+
+\begin{lemma}[型付き均質性（typed homogeneity）]
+\label{lem:homogeneity}
+$H$ を，ある $L\in\Ccf{s}$ について $L(H)=L\cap\Sigma^+$ を満たす
+縮約済みの良い CFG とする．各 $A\in V_H$ について，同じ $s$-型をもつ
+$L_H(A)$ の任意の二つの語は $\equiv_L$-同値である．
+\end{lemma}
+
+\begin{proof}
+両者は $S\Rightarrow_H^*lAr$ を満たすすべての文脈 $(l,r)$ に現れ，
+$H$ は縮約済みなのでそのような文脈は存在する；固定 $s$ 代入可能性を
+適用すればよい．
+\end{proof}
+
+そこで，$A\in V_H$ と実現される型 $\mu\in s(L_H(A))$ について，
+$s(x)=\mu$ を満たし，型 $\mu$ の語 $y\in L_H(A)$ に対して
+$x\equiv_L y$ となる語 $x\in\Sigma^+$ の最小の長さを
+$\trep(H;A,\mu)$ とし，これらの数の最大値を $\trep(H,s)$ とする
+\emph{（代表元型付き厚み）}．明らかに $\trep(H,s)\le\ttyp(H,s)$ である．
+$L$ に対する縮約済み BUNF 文法 $G$ の類似のパラメータ
+$\tau^{\mathrm{rep}}_s(G)\le\tau^{\mathrm{typ}}_s(G)$ は，
+$\widetilde G$ の残存する非空型の記号 $A_\mu$ にわたる，
+$\widehat s(x)=\mu$ かつ $x\equiv_L\omega(A_\mu)$ を満たす非空語 $x$ の
+最小の長さと，$1$ との最大値である．
+
+\begin{lemma}[代表元による証人]
+\label{lem:rep-witness}
+$L\in\Ccf{s}$ を非空とし，$G$ を $L$ に対する縮約済み BUNF 文法とする．
+このとき $\Rec_s$ は，\ref{q:data} の上界において
+$\tau^{\mathrm{typ}}_s(G)$ を $\tau^{\mathrm{rep}}_s(G)$ で置き換えた
+もの以下の符号長をもつ，$L$ に対する特徴標本をもつ．
+\end{lemma}
+
+\begin{proof}
+残存する非空型の各記号 $X=A_\mu$ について，型 $\mu$ をもつ最短の
+$\rho(X)\equiv_L\omega(X)$ を固定する；空語型の $X$ については
+$\rho(X):=\lambda$ とおく．$\WitnessSet(\widetilde G)$ の構成
+\cite[\S5.1，式~(2)]{kuriyamaCFG} を，全体を通じて $\omega$ の代わりに
+$\rho$ を用いて繰り返す：到達文脈 $\chi'(X)=(u'_X,v'_X)$ は，
+\cite[補題~6.2]{kuriyamaCFG} の証明と同様に，$\widetilde G$ の依存
+グラフにおける型付き開始コピーから $X$ への最短路から読み取り，経路外の
+各子 $Y$ を $\rho(Y)$ で展開する．また型付き生成規則
+$R:X\to u_0Y_1u_1\cdots Y_ru_r$ に対して
+$t'_R:=u_0\rho(Y_1)u_1\cdots\rho(Y_r)u_r$ とおく．同じ経路から
+$\rho$ の代わりに $\omega$ を用いて読み取った文脈を $(\bar u_X,\bar v_X)$ とする；
+これは $G$ における $A$ の到達文脈である．$\equiv_L$ は合同なので，
+因子ごとに $u'_X\equiv_L\bar u_X$，$v'_X\equiv_L\bar v_X$，$t'_R\equiv_Lt_R$ が
+成り立つ．非空型の $X$ について，語 $t_R$ と $\omega(X)$ は $G$ に
+おける $A$ の同じ型 $\mu$ の非空生成語であり \ref{q:typed-core}，ともに
+到達文脈 $(\bar u_X,\bar v_X)$ に現れるので，固定 $s$ 代入可能性により
+$t_R\equiv_L\omega(X)$ である．したがって
+$u'_X\rho(X)v'_X\equiv_L\bar u_X\omega(X)\bar v_X$ と
+$u'_Xt'_Rv'_X\equiv_L\bar u_Xt_R\bar v_X$ は $L$ に属し，$\rho(X)$ と $t'_R$ は
+文脈 $\chi'(X)$ を共有する型 $\mu$ の非空語である．これで
+\cite[定理~5.2]{kuriyamaCFG} の証明が $\widehat X:=\NT{\rho(X)}$ として
+そのまま通る：規則~(U) が $\widehat X\to\NT{t'_R}$ を与え，規則~(B) が
+$t'_R$ をその成分に分け，子についての帰納法が適用できる．健全性
+\cite[定理~4.2]{kuriyamaCFG} により等号が得られる．
+\cite[補題~6.2]{kuriyamaCFG} のサイズ評価は，型付き記号に代入される
+語の長さだけを用いており，それは今や $\tau^{\mathrm{rep}}_s(G)$ で
+抑えられる．\cite[定理~5.2]{kuriyamaCFG} の証明は，$\omega(X)$ を，
+その型，非空型の $X$ に対する非空性，$K$ における $t_R$ との共通文脈，
+および子の成分に対する等式 $\widehat Y_i=\NT{z_j}$ を通してのみ用いる；
+これら四つはすべて $\rho$ についても成り立つ．開始コピーは文脈
+$(\lambda,\lambda)$ をもち，
+$\rho((S_0)_\mu)\equiv_L\omega((S_0)_\mu)\in L$ であるから
+$\rho((S_0)_\mu)\in L$ である．
+\end{proof}
+
+すべての生成規則が $A\to BC$，$A\to B$，$A\to a$ の形であるとき，
+CFG は\emph{$\lambda$ を含まない BUNF} にあるという；このような文法は
+良く，ランクは高々2である．
+
+\begin{lemma}[厚みを制御した $\lambda$ 除去]
+\label{lem:lambda-elimination}
+$G=(V,\Sigma,P,S_0)$ を $L(G)\cap\Sigma^+\ne\emptyset$ を満たす縮約済み
+BUNF 文法とし，$N:=|V|$ とする．
+$V^+:=\{A\in V:L_G(A)\cap\Sigma^+\ne\emptyset\}$ とし，
+$G^+=(V^+,\Sigma,P^+,S_0)$ は次の生成規則をもつとする：
+\begin{itemize}[leftmargin=*,nosep]
+\item $(A\to a)\in P$ に対する $A\to a$；
+\item $B\in V^+$ である $(A\to B)\in P$ に対する $A\to B$；
+\item $B,C\in V^+$ である $(A\to BC)\in P$ に対する $A\to BC$；
+\item $B\in V^+$ かつ $\lambda\in L_G(C)$ である $(A\to BC)\in P$ に
+対する $A\to B$，および $C\in V^+$ かつ $\lambda\in L_G(B)$ である
+$(A\to BC)\in P$ に対する $A\to C$．
+\end{itemize}
+このとき次が成り立つ：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item すべての $A\in V^+$ について $L_{G^+}(A)=L_G(A)\setminus\{\lambda\}$；
+\item $G^+$ は縮約済みで $\lambda$ を含まない BUNF にあり，
+$|P^+|\le3|P|$ かつ $\|G^+\|\le3\|G\|$；
+\item すべての $A\in V^+$ は $L_{G^+}(A)$ に長さ高々
+$(N-1)\tau_G+1$ の語をもち，$\bar\theta_{G^+}\le3N(\tau_G+1)$．
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) これは通常の $\lambda$ 除去である．$A\Rightarrow_{G^+}^*w$ ならば，
+新しい各単位生成規則をその元の生成規則で置き換え，削除された子から
+$\lambda$ を導出すれば $A\Rightarrow_G^*w$ が得られ，$G^+$ は
+$\lambda$-生成規則をもたないので $w\ne\lambda$ である．逆に，
+$w\in L_G(A)\setminus\{\lambda\}$ の導出木 $T$ について帰納法を用いる：
+根の生成規則 $A\to BC$ において子は $w=w_Bw_C$ を生成する；両方が非空
+なら $A\to BC$ を用い，そうでなければ空の子は空語導出可能で他方は $V^+$
+に属するので，新しい単位生成規則が適用できる．単位生成規則と終端生成規則
+の場合は直ちに従う．
+
+(ii) $P$ の各生成規則は高々三つの生成規則に寄与し，それぞれはもとより
+大きくない．生産性は (i) から従う．到達可能性については，
+$S_0=A_0,A_1,\ldots,A_m=A\in V^+$ を $G$ における鎖で，$A_{i+1}$ が
+$A_i$ に対するある生成規則の子であるものとする．各 $A_i$ は $V^+$ に
+属する．終端語 $x,y$ について $A_i\Rightarrow_G^*xAy$ であり
+\textup($G$ は縮約済み\textup)，$A$ は非空語を導出するからである．
+生成規則が $A_i\to A_{i+1}C$\textup(または対称な形\textup) ならば，
+$C\in V^+$ でその生成規則が保たれるか，$L_G(C)=\{\lambda\}$ であって
+$C$ は空語導出可能で $A_i\to A_{i+1}$ が $P^+$ に属するかのいずれかで
+ある．単位生成規則は保たれる．よって $A$ は $G^+$ において到達可能である．
+
+(iii) $A\in V^+$ とし，$A$ からの非空語の導出木をとる．終端記号を
+ラベルとする葉を一つ固定し，根からその親への経路 $\pi$ をとる．$\pi$
+から垂れ下がるすべての部分木を，その根のラベルの最短語（長さ高々
+$\tau_G$）の導出で置き換える．$\pi$ の二つの節点が同じラベルをもつなら，
+下の節点の部分木を上の節点に接ぎ木する；選んだ終端の葉は残る．得られる
+経路は高々 $N$ 個の非終端節点をもち，したがって経路外の子をもつ二項
+生成規則は高々 $N-1$ 個であり，生成語の長さは高々 $(N-1)\tau_G+1$
+である；(i) によりそれは $L_{G^+}(A)$ に属する．
+
+規則厚みについては，$R\in P^+$ の左辺を $A$ とする．上と同様に，$G$ に
+おける $S_0$ から $A$ の出現への最短路で，経路外のすべての部分木を最短
+導出で置き換えたものから，$|uv|\le(N-1)\tau_G$ を満たす
+$S_0\Rightarrow_G^*uAv$ が得られる；(ii) の到達可能性の議論により，
+同じ文形式は $G^+$ でも導出可能である\textup(最短生成語が空である
+経路外の子は新しい単位生成規則によって取り除かれ，その他は $V^+$ に
+属する\textup)．$R$ を適用し，$V^+$ に属する高々二つの子のそれぞれを
+長さ高々 $(N-1)\tau_G+1$ の語で導出すれば，$R$ を用いる $L(G^+)$ の語で
+長さ高々 $(N-1)\tau_G+2(N-1)\tau_G+2\le3N(\tau_G+1)$ のものが得られる．
+\end{proof}
+
+\begin{lemma}[型付き厚みの移行]
+\label{lem:typed-transfer}
+補題~\ref{lem:lambda-elimination} の状況で，すべての型付け $s$ について
+$\tau^{\mathrm{typ}}_s(G)\le\max\{1,\ttyp(G^+,s)\}$ である．
+$L(G)\in\Ccf{s}$ ならば
+$\tau^{\mathrm{rep}}_s(G)\le\max\{1,\trep(G^+,s)\}$ も成り立つ．
+\end{lemma}
+
+\begin{proof}
+\ref{q:typed-core} により，$\tau^{\mathrm{typ}}_s(G)$ は，$1$ と，
+実現される与えられた $\widehat s$-型 $\mu$ をもつ $L_G(A)$ の最短語の
+長さとの最大値である．$\mu=1_\sharp$ については最短語は $\lambda$ で
+ある．$\mu\in\mathsf S$ については型 $\mu$ の語は非空であるから
+$A\in V^+$ であり，補題~\ref{lem:lambda-elimination}(i) により，それらは
+ちょうど $s$-型 $\mu$ をもつ $L_{G^+}(A)$ の語である．
+$L(G^+)=L(G)\setminus\{\lambda\}$ は非空因子について $L(G)$ と同じ分布を
+もつので，同じ同一視から第二の主張が得られる．
+\end{proof}
+
+\begin{lemma}[尺度の比較]
+\label{lem:measures}
+任意の縮約済みの良い CFG $H$ について $\tau_H\le\bar\theta_H$ であり，
+$|H|$ と $\|H\|$ は多項式的に同値である．
+\end{lemma}
+
+\begin{proof}
+$A\in V_H$ について $A$ に対する生成規則 $R$ を選ぶ；$R$ を用いる
+$L(H)$ の最短語は，$A$ のその出現から導出される語を因子として含む．
+第二の主張は \cite[\S2]{kuriyamaCFG} の規約である．
+線形因子を含む下界は $\|\cdot\|$ で述べる．
+\end{proof}
+
+\begin{corollary}[基本移行（master transfer）]
+\label{cor:master}
+$s$ を型付け，$q$ を両引数について非減少な多項式とし，ある
+$L\in\Ccf{s}$ について $L(H)=L\cap\Sigma^+$ を満たす $\lambda$ を
+含まない BUNF の任意の縮約済み CFG $H$ について
+$\trep(H,s)\le q(\|H\|,\bar\theta_H)$ が成り立つとする．このとき，
+縮約済み CFG $G_*$ で表される任意の非空な $L\in\Ccf{s}$ は，符号長が
+$|G_*|$ と $\tau_{G_*}+1$ の多項式である $\Rec_s$ に対する特徴標本を
+もつ．非減少な $q_0$ について $q(x,y)\le q_0(x)\,y$ ならば，$N$ 個の
+非終端記号をもち $L(G)\in\Ccf{s}$ を満たす任意の縮約済み BUNF 文法
+$G$ は
+$\tau^{\mathrm{rep}}_s(G)\le\max\{1,3N\,q_0(3\|G\|)(\tau_G+1)\}$ を
+満たす．
+\end{corollary}
+
+\begin{proof}
+$G$ を \ref{q:bunf} による $G_*$ の BUNF 正規化とする．
+$L=\{\lambda\}$ ならば $\{\lambda\}$ が特徴標本である．そうでなければ
+補題~\ref{lem:lambda-elimination} を適用して $G^+$ を得る；これは
+$L(G^+)=L\setminus\{\lambda\}$ として仮定を満たし，
+補題~\ref{lem:typed-transfer} および
+補題~\ref{lem:lambda-elimination}(ii)，(iii) により
+$\tau^{\mathrm{rep}}_s(G)$ は $|G|$ と $\tau_G+1$ の多項式で抑えられる．
+補題~\ref{lem:rep-witness} と \ref{q:bunf} により結論が得られる．
+\end{proof}
+
+\paragraph{下界．}
+\begin{proposition}[希少型は正例データを強制する]
+\label{prop:rare-type}
+$L\in\Ccf{s}$，$m\in s(L\cap\Sigma^+)$ とし，
+$L^{\setminus m}:=\{w\in L:\widehat s(w)\ne m\}$ とおく．このとき
+$L^{\setminus m}\in\Ccf{s}$ である．したがって，$\Rec_s$ に対する，
+また $L$ と $L^{\setminus m}$ の両方に特徴標本をもつ任意の集合駆動の
+作用素に対する，$L$ のすべての特徴標本は型 $m$ の語を含み，ゆえに
+サイズ少なくとも $\mu_m(L)+1$ をもつ．ここで $\mu_m(L)$ は型 $m$ を
+もつ $L$ の最短語の長さである．作用素が $\Rec_s$ であるか，または $L$
+と，$m\in M\subseteq s(L\cap\Sigma^+)$ を満たすすべての $L^{\setminus m}$
+とに特徴標本をもつならば，$L$ のすべての特徴標本はサイズ少なくとも
+$\sum_{m\in M}(\mu_m(L)+1)$ をもつ
+\textup($\Rec_s$ については $M=s(L\cap\Sigma^+)$ とする\textup)．
+\end{proposition}
+
+\begin{proof}
+非空因子 $x$ について $\D_{L^{\setminus m}}(x)=\{(u,v)\in\D_L(x):
+\widehat s(u)s(x)\widehat s(v)\ne m\}$ であり，このフィルタは $s(x)$ を
+通してのみ $x$ に依存する．$s(x)=s(y)$ で $x,y$ が $L^{\setminus m}$ に
+おいて文脈を共有するなら，それは $L$ においても共有されるので
+$\D_L(x)=\D_L(y)$，したがって
+$\D_{L^{\setminus m}}(x)=\D_{L^{\setminus m}}(y)$ である；よって
+$L^{\setminus m}\in\Ccf{s}$．さらに
+$L^{\setminus m}=L\cap\widehat s^{-1}(\mathsf S^\sharp\setminus\{m\})$ は
+文脈自由である．有限の $F\subseteq L^{\setminus m}$ が $\Rec_s$ の下で
+$L$ に対して特徴的であったとすると，標的 $L^{\setminus m}$ に対する
+健全性 \cite[定理~4.2]{kuriyamaCFG} により
+$L(\Rec_s(F))\subseteq L^{\setminus m}\ne L$ となる．$L^{\setminus m}$ に
+対する特徴標本 $F'$ をもつ作用素については，標本 $F\cup F'$ は両方の
+標本と両方の標的の間にあるので，出力は $L$ と $L^{\setminus m}$ の両方で
+なければならない．これを各 $m\in M$ に適用すれば和の下界が得られる．
+すべての $L^{\setminus m}$ に対する特徴標本がなければ和の下界は
+成り立たないことがある：$s(\mathtt a)=1$，$s(\mathtt b)=\zeta$，
+$L=\{\mathtt a,\mathtt b\}$ と作用素 $K\mapsto K\cup\{\mathtt b\}$ に
+ついて，標本 $\{\mathtt a\}$ は $L$ に対して，$\emptyset$ は
+$L^{\setminus1}=\{\mathtt b\}$ に対して特徴的であるが，
+$L^{\setminus\zeta}=\{\mathtt a\}$ は特徴標本をもたない；サイズ $2$ は
+和 $4$ より小さい．
+\end{proof}
+
+\section{局所群で十分である}
+\label{sec:lg}
+
+本節を通じて $s(\Sigma^+)=\mathsf S\in\LG$ とし，
+定理~\ref{thm:lg-characterization} により，$k:=|\mathsf S|$，
+$g:=|\mathbb G|\le|\mathsf S|$ を満たす $\mathsf S$ の極小イデアルの
+極大部分群 $\mathbb G$，および $\widehat s\preceq\lambda_{k,\nu}$ を
+満たす $\nu:\Sigma^{k+1}\to\mathbb G$ を固定する．次のようにおく：
+\[
+ h:=|\mathsf S^\sharp|=|\mathsf S|+1,\qquad C:=2k+(4k+1)(g-1).
+\]
+$G_*=(V,\Sigma,P,S_0)$ を縮約済み CFG とし，$M:=\|G_*\|$，
+$T:=\max\{1,\tau_{G_*}\}$ とおく；$\tau_{G_*}$ では最短生成語が空で
+あってもよいことを思い出しておく．$A\in V$ について
+$d_A:=\max\{|\alpha|:(A\to\alpha)\in P\}$，$H:=\sum_{A\in V}d_A$ と
+おく；このとき $H\le\sum_{(A\to\alpha)\in P}|\alpha|\le M$ である．
+
+記号列 $\beta\in(V\cup\Sigma)^*$ について，$\beta$ からの導出を，根が
+子 $\beta$ をもつ\emph{仮根}である木とみなす．このような木における
+非終端記号の出現が\emph{重い}とは，その生成語が $T$ より長いことをいう．
+
+\begin{lemma}[重い反鎖]
+\label{lem:heavy}
+$\beta\in(V\cup\Sigma)^*$，$\mu\in\widehat s(L_{G_*}(\beta))$ とし，
+$\widehat s(y)=\mu$ を満たす語 $y$ の $\beta$ からの導出が $|y|$ を最小に
+するとする．このとき重い出現のすべての反鎖 $Q$ は高々 $C$ 個の元をもつ．
+\end{lemma}
+
+\begin{proof}
+$Q$ の出現の生成語は $y$ の互いに素な非空因子であるから，$|y|<2k$ ならば
+$|Q|\le|y|\le2k-1\le C$ である．$|y|\ge2k$ とする．これらの因子のうち
+$y$ の最初または最後の $k$ 文字と交わるものは高々 $2k$ 個である；それ
+以外のものを $Q_0$ とし，$|Q_0|>(4k+1)(g-1)$ と仮定する．
+補題~\ref{lem:buffered} により，左から右に並べた $Q_0$ の $m\ge g$ 個の
+元 $v_1,\ldots,v_m$ と，対ごとに互いに素な広げたブロック
+$\mathfrak b_{v_i}$ であって，$\mathfrak b_{v_i}$ の内部で $v_i$ の生成語を
+任意の（空でもよい）語で置き換えても，ブロックの最初と最後の $k$ 文字が
+保たれ，長さ少なくとも $2k$ の語が残るものが存在する．ラベル $A_i$ を
+もつ $v_i$ について，$x_i$ を $L_{G_*}(A_i)$ の最短語とする；このとき
+$|x_i|\le\tau_{G_*}\le T$ は $v_i$ の生成語の長さより小さい．
+補題~\ref{lem:blocks} により，任意の $J\subseteq\{1,\ldots,m\}$ について，
+$i\in J$ に対する $v_i$ の生成語を $x_i$ で置き換えて得られる語 $y_J$ は
+$\widehat s_{k,k}(y_J)=\widehat s_{k,k}(y)$ と，$J$ に依存しない $z_i$
+による $\gamma_{k,\nu}(y_J)=z_0\gamma^J_1z_1\cdots\gamma^J_mz_m$ を
+満たす．ここで，$\mathfrak b'_{v_i}$ を置き換え後のブロック $\mathfrak b_{v_i}$ として，
+$i\in J$ については $\gamma^J_i:=\gamma_{k,\nu}(\mathfrak b'_{v_i})$，
+$i\notin J$ については $\gamma^J_i:=\gamma_{k,\nu}(\mathfrak b_{v_i})$ とする．
+$g_i:=\gamma_{k,\nu}(\mathfrak b_{v_i})$，$g'_i:=\gamma_{k,\nu}(\mathfrak b'_{v_i})$ とした
+補題~\ref{lem:group-interval} により，
+$\gamma_{k,\nu}(y_J)=\gamma_{k,\nu}(y)$ となる空でない区間 $J$ が存在し，
+したがって $\lambda_{k,\nu}(y_J)=\lambda_{k,\nu}(y)$ かつ
+$\widehat s(y_J)=\mu$ である．$Q$ は反鎖なので $y_J$ は $\beta$ から
+導出され，$|y_J|<|y|$ となって矛盾する．よって
+$|Q|\le2k+(4k+1)(g-1)=C$ である．
+\end{proof}
+
+\begin{lemma}[記号列の短い型付き生成語]
+\label{lem:typed-strings}
+任意の $\beta\in(V\cup\Sigma)^*$ と任意の
+$\mu\in\widehat s(L_{G_*}(\beta))$ について次が成り立つ：
+\[
+ \min\{|y|:\beta\Rightarrow_{G_*}^*y,\ \widehat s(y)=\mu\}\le(|\beta|+ChH)\,T.
+\]
+\end{lemma}
+
+\begin{proof}
+型 $\mu$ の語の $\beta$ からの導出で長さが最小のもののうち，非終端記号の
+出現が最も少ないものを選ぶ．各出現に，その非終端記号と生成語の
+$\widehat s$-型をラベルとして付ける．仮根より下の経路上で一つのラベルが
+二度現れるなら，下の部分木を上の出現に接ぎ木すると，$y$ の型は保たれ
+（$\widehat s$ は準同型であるから），$y$ は長くならず，出現が減る；
+したがって，そのような各経路上で各非終端記号 $A$ は高々 $h$ 回しか
+現れない．重い出現の親は，仮根でなければ重いので，重い出現は森をなし，
+その葉は反鎖をなす；補題~\ref{lem:heavy} によりその葉は高々 $C$ 個で
+あるから，すべての重い出現は仮根からの高々 $C$ 本の経路上にある．
+生成規則 $A\to\alpha$ を用いる重い出現に，それが直接書く文字と，重くない
+子の生成語とを割り当てる：高々 $|\alpha|T\le d_AT$ 文字である．一本の
+経路に沿って，これは高々 $\sum_{A\in V}h\,d_AT=hHT$ となる．仮根が
+直接書く文字と重くない子から受け取る文字は高々 $|\beta|T$ 個である．
+$y$ のすべての文字が数えられるので，$|y|\le|\beta|T+ChHT$ である．
+\end{proof}
+
+\begin{theorem}[局所群型付け]
+\label{thm:lg-sufficiency}
+$s(\Sigma^+)\in\LG$ と仮定し，$h,C$ を上のとおりとする．
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $B$ を \cite[命題~7.3 および付録~A.2]{kuriyamaCFG} による
+$G_*$ の縮約済み BUNF 正規化とする．$\widetilde B$ の残存するすべての
+型付き記号 $X$ は $|\omega(X)|\le(1+Ch)MT$ を満たし，その標準到達文脈は
+$|u_X|+|v_X|\le2MT$ を満たす．
+\item $L(G_*)\in\Ccf{s}$ が非空ならば，$F:=\WitnessSet(\widetilde B)$ は
+$\Rec_s$ に対する特徴標本であり，次を満たす：
+\[
+ \|F\|\le2(h+h^2)(5+2Ch)\,\|G_*\|^2\max\{1,\tau_{G_*}\}.
+\]
+\item $N$ 個の非終端記号をもつ任意の縮約済み BUNF 文法 $G$ は
+$\tau^{\mathrm{typ}}_s(G)\le(1+2ChN)\max\{1,\tau_G\}$ を満たす．
+\end{enumerate}
+特に \cite[系~7.5]{kuriyamaCFG} は $\mathbf{LI}\vee\mathbf{Grp}$ から
+$\LG$ へ拡張され，その上界は記号サイズについて二次，厚みについて
+線形である．
+\end{theorem}
+
+\begin{proof}
+(i) $B$ はラッパー（wrapper）$W_a\to a$ によって終端記号を分離し，
+新しい補助非終端記号を通して長い右辺をそれぞれ二分化し，空語導出可能な
+生成規則と単位生成規則は保つ．$B$ の各非終端記号 $D$ は，
+$L_B(A)=L_{G_*}(A)$ を満たす元の非終端記号 $A$ であるか；その言語が
+元の一つの右辺の連続したブロック $\beta$（$|\beta|\le M$）の言語である
+補助記号であるか；または唯一の生成語 $a$ をもつラッパーである．
+\ref{q:typed-core} により $\omega(D_\mu)$ は $L_B(D)$ における型 $\mu$ の
+最短語であるから，$\beta=A$（あるいはそのブロック）とした
+補題~\ref{lem:typed-strings} と $H\le M$ から
+$|\omega(D_\mu)|\le(M+ChM)T$ が得られる．
+
+文脈については，$G_*$ の依存グラフにおける $S_0$ から元の $A$ への
+単純路をとり，用いる生成規則の経路外のすべての位置を最短生成語（高々 $T$
+文字）またはその終端記号で展開する．$D$ からの一歩は高々 $d_DT$ 文字を
+加え，どの $D$ も繰り返されないので，$A$ は長さ高々 $HT\le MT$ の
+到達文脈をもつ；これは $B$ における到達文脈でもある．$A\to\alpha$ の
+ブロックに対する補助記号はさらに高々 $|\alpha|T\le MT$ 文字を得，
+ラッパーも同様に扱える；したがって $B$ のすべての記号 $D$ は長さ高々
+$2MT$ の型なし到達文脈をもつ．残存する $D_\mu$ について，$D$ の任意の
+型なし到達文脈 $(u,v)$ は型付きの到達文脈でもある：穴を型 $\mu$ の
+生成語で埋め，完成した成功導出にその生成語の型を注釈し，完成した語の
+型付き開始コピーから出発して，$D_\mu$ を展開せずに残せばよい．よって
+$|u_X|+|v_X|\le2MT$ である．
+
+(ii) 証人は $u_X\omega(X)v_X$ または $u_Xt_Rv_X$ であり，$t_R$ は
+高々二つの標準生成語または一つの終端記号からなるので，すべての $w\in F$
+は $|w|+1\le2MT+2(1+Ch)MT+1\le(5+2Ch)MT$ を満たす．二分化は高々
+$R:=\sum_{(A\to\alpha)\in P}|\alpha|\le M$ 個のラッパーと高々 $R$ 個の
+補助記号を加え，それぞれが新しい生成規則を一つもつので，$B$ の
+非終端記号は高々 $|V|+2R\le2M$ 個，生成規則は高々 $|P|+2R\le2M$ 個で
+ある．非終端記号あたりの型付きコピーは高々 $h$ 個，生成規則あたりの
+型付き生成規則は高々 $h^2$ 個であるから $|F|\le2(h+h^2)M$ である．
+これらを掛け合わせればよい；$L(B)=L(G_*)$ であるから，\ref{q:exact} に
+より $F$ は特徴的である．
+
+(iii) $G_*:=G$ とし，$\beta$ を単一の非終端記号として
+補題~\ref{lem:typed-strings} を適用する；BUNF では $d_A\le2$ であるから
+$H\le2N$ である．
+\end{proof}
+
+第~\ref{sec:bridge}~節を経由する道筋は局所群には必要ない；それは孤立文字
+（系~\ref{cor:isolated-data}）に用いられ，その上界は生成語ではなく
+代表元に関するものである．
+
+\section{擬多様体の境界}
+\label{sec:pseudovariety}
+
+\begin{theorem}[擬多様体の境界]
+\label{thm:pseudovariety-boundary}
+擬多様体 $\mathbf V$ について次は同値である：
+\textup{(a)} $\mathbf V\subseteq\LG$；
+\textup{(b)} 各有限アルファベット $\Sigma$ と $s(\Sigma^+)\in\mathbf V$ を
+満たす各型付け $s$ について，多項式 $p_{\Sigma,s}$ が存在して，縮約済み
+CFG $G_*$ で表される $\Ccf{s}$ の任意の非空標的は，サイズ高々
+$p_{\Sigma,s}(|G_*|,\tau_{G_*}+1)$ の $\Rec_s$ に対する特徴標本をもつ．
+\end{theorem}
+
+\begin{proof}
+(a)$\Rightarrow$(b) は定理~\ref{thm:lg-sufficiency} である．
+$\mathbf V\not\subseteq\LG$ ならば，$\mathbf V\setminus\LG$ のある元は
+$U_1$ と同型な部分半群をもつので（定理~\ref{thm:lg-characterization}），
+$U_1\in\mathbf V$ であり，\ref{q:bracket} の型付け $s_{\mathrm U}$ は
+正の像 $U_1$ をもつ．その標的は \cite[命題~6.4(iii)]{kuriyamaCFG} に
+より (b) に反する．
+\end{proof}
+
+\begin{remark}[範囲]
+\label{rem:scope}
+(a) 下界の族とその区別対の議論は \cite[命題~6.4]{kuriyamaCFG} のもので
+あり，そこでは通常の厚みが型付き厚みの代わりにならないことを示すために
+用いられている；ここで新しいのは，すべての局所群型付けに対する対応する
+十分性であり，これにより姉妹論文の十分条件 $\mathbf{LI}\vee\mathbf{Grp}$
+と障害 $U_1$ の間の隙間が閉じる．
+(b) この族は二項生成規則を用いる；線形文法についてはすべての型付けが
+多項式である \ref{q:linear}．
+(c) この定理は擬多様体に関するものである．$\LG$ の外の個々の型付けが
+多項式長のデータをもつことはあり得る（系~\ref{cor:isolated-data}）；
+$U_1$ への型付けについての正確な答えは系~\ref{cor:u1-classification}
+である．
+(d) 上界は $\Rec_s$ に関するものである；下界は，$L_n$ と
+$L_n\setminus\{w_n^*\}$ に対して特徴標本をもつ任意の集合駆動の作用素に
+ついて成り立つ．
+(e) 多項式はアルファベットと型付けに依存し，アルファベットは型付けと
+ともに変わる．すべての型付けに同時に通用する多項式は，巡回群に対して
+さえ存在しない：$S\to SS\mid\mathtt a$，$L=\mathtt a^+$ と型付け
+$s_h(\mathtt a)=1\in\mathbb Z/h\mathbb Z$ について，文法サイズと厚みは
+定数であるが，すべての特徴標本は $h$ 個の型のそれぞれの語を含み
+（命題~\ref{prop:rare-type}），したがってサイズ少なくとも $h(h+3)/2$ を
+もつ．アルファベットを先に固定すると事情も変わる：二文字上では，半束への
+すべての型付けは多項式である（系~\ref{cor:isolated-data}(i)）．半束は
+$U_1$ を含む擬多様体をなすにもかかわらずである．
+\end{remark}
+
+\section{個々の型付け}
+\label{sec:typings}
+
+定理~\ref{thm:pseudovariety-boundary} は擬多様体に関するものである．
+$U_1$ は $\LG$ の外の最小の半群である（$\LG$ の外のすべての有限半群は
+その複製を含む）から，個々の型付けの分類をまず $U_1$ への型付けについて
+行う．個々の型付けについて重要なのは，どの語が $U_1$ の複製 $\{e,z\}$
+を実現するかである：型 $e$ の，文字が互いに素な語は指数長のデータを
+強制し，一方，その型が自分自身の冪によってのみ実現される孤立文字は，
+自身の純粋な型について多項式的に短い代表元をもつ
+（定理~\ref{thm:isolated-letter}）．これだけではすべての型について
+データは抑えられない：$\{\mathtt a,\mathtt b,\mathtt c\}$ 上で，
+$\mathtt a,\mathtt b\mapsto\{0\}$，$\mathtt c\mapsto\{1\}$ で与えられる
+三元和半束への型付けについて，文字 $\mathtt c$ は孤立しているが，
+命題~\ref{prop:three-letter-family} の族は $W_n$ を型 $\{0\}$ の唯一の
+語としてもつので，命題~\ref{prop:rare-type} によりサイズ
+$3\cdot2^n-1$ が強制される．代表元がすべての型にわたるデータの上界を
+実際に与えるのはいつかを系~\ref{cor:isolated-data} で述べる；$U_1$ への
+型付けについては，上の二つの場合で尽くされる
+（系~\ref{cor:u1-classification}）．
+
+\paragraph{三文字の倍増族．}
+$\mathtt a,\mathtt b,\mathtt c$ を相異なる文字とし，$U_1=\{1,\zeta\}$ を
+単位元 $1$ と $\zeta^2=\zeta$ をもつものとし，
+$s_{U,3}:\{\mathtt a,\mathtt b,\mathtt c\}^+\twoheadrightarrow U_1$ は
+$\mathtt a,\mathtt b$ を $1$ に，$\mathtt c$ を $\zeta$ に送るとする；
+したがって $s_{U,3}(w)=1$ となるのはちょうど $\mathtt c$ を含まない非空語で
+ある．$n\ge1$ について $G_n$ を次の文法とする：
+\[
+ S\to E_n,\qquad E_0\to\mathtt a,\qquad
+ E_i\to\mathtt bE_{i-1}E_{i-1}\mathtt b\mid\mathtt cE_{i-1}\mathtt c\quad(1\le i\le n),
+\]
+また $L^{(i)}:=L_{E_i}(G_n)$ とおく．したがって $L^{(0)}=\{\mathtt a\}$，
+$L^{(i)}=\mathtt bL^{(i-1)}L^{(i-1)}\mathtt b\cup\mathtt cL^{(i-1)}\mathtt c$
+である．さらに $L_n:=L^{(n)}=L(G_n)$，$W_0:=\mathtt a$，
+$W_i:=\mathtt bW_{i-1}W_{i-1}\mathtt b$ とおく．これは
+\cite[命題~6.4]{kuriyamaCFG} の括弧付き倍増族の三文字による変種であり，
+二種類の括弧がそれぞれ単一の文字になっている．
+
+\begin{proposition}[三文字の倍増族]
+\label{prop:bracketed-family}
+\label{prop:three-letter-family}
+任意の $n\ge1$ について次が成り立つ：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $G_n$ は縮約済みで良く，ランク2であり，
+$\|G_n\|=13n+7$，$\bar\theta_{G_n}=4n$ である．
+\item $L_n$ は Clark--Eyraud 代入可能である：すべての $x,y\in\Sigma^+$ に
+ついて，$\D_{L_n}(x)\cap\D_{L_n}(y)\ne\emptyset$ ならば
+$\D_{L_n}(x)=\D_{L_n}(y)$．したがって，
+任意のアルファベット
+$\Sigma\supseteq\{\mathtt a,\mathtt b,\mathtt c\}$ 上の任意の型付け $s$ について $L_n\in\Ccf{s}$
+であり，特に $L_n\in\Ccf{s_{U,3}}$ である．
+\item $W_n$ は $\mathtt c$ を含まない $L_n$ の唯一の語であり，したがって
+$s_{U,3}$-型 $1$ をもつ唯一の語で，$|W_n|=3\cdot2^n-2$ である．
+\item $\Rec_{s_{U,3}}$ に対する，また $\Ccf{s_{U,3}}$ 全体で特徴標本をもつ任意の
+集合駆動の作用素に対する，$L_n$ のすべての特徴標本 $F$ は $W_n$ を
+含む；したがって $\|F\|\ge3\cdot2^n-1$．
+\end{enumerate}
+\end{proposition}
+
+証明は付録~\ref{app:three-letter} にある：(iii) は $\mathtt c$ を含まない
+導出が完全二分木であることから成り立ち，(iv) は (iii) と
+命題~\ref{prop:rare-type} から従う．
+
+\begin{corollary}[型付けの水準の障害]
+\label{cor:typing-level-obstruction}
+$s:\Sigma^+\twoheadrightarrow\mathsf S$ を型付けとする．相異なる冪等元
+$e,z\in\mathsf S$ が $ez=ze=z$ を満たし，語 $u,v,w\in\Sigma^+$ が
+$s(u)=s(v)=e$，$s(w)=z$ を満たして\emph{文字が互いに素}である，すなわち
+$uvw$ においてどの文字も二度現れないとする．$h$ を三つの新しい文字からの準同型
+$\mathtt a\mapsto u$，$\mathtt b\mapsto v$，$\mathtt c\mapsto w$ とし，
+$H_n:=h(L_n)$ を命題~\ref{prop:three-letter-family} の言語 $L_n$ の像とし，$G''_n$ を，規則 $S\to E_n$，$E_0\to u$，
+$E_i\to vE_{i-1}E_{i-1}v\mid wE_{i-1}w$ をもつ $G_n$ の像とする．
+このとき $H_n\in\Ccf{s}$ であり，$G''_n$ は $H_n$ の縮約済みで良い
+ランク2の表示であって，次が成り立つ：
+\[
+ \|G''_n\|=(2|v|+2|w|+9)n+|u|+6,\qquad
+ \bar\theta_{G''_n}\le2|u|+2|v|+4n|w|,
+\]
+さらに，$\Rec_s$ に対する，あるいは $\Ccf{s}$ 全体で特徴標本をもつ任意の
+集合駆動の作用素に対する，$H_n$ のすべての特徴標本はサイズが
+$(|u|+2|v|)2^n-2|v|$ より大きい．$\tau_{G''_n}\le\bar\theta_{G''_n}$
+（補題~\ref{lem:measures}）であるから，この単一の型付けについて，
+$\Rec_s$ に対する特徴データは文法サイズと厚みについて多項式ではない．
+\end{corollary}
+
+\begin{proof}
+$L_n$ は有限で Clark--Eyraud 代入可能であるから
+（命題~\ref{prop:three-letter-family}），補題~\ref{lem:app-u1-code} により
+$H_n$ は Clark--Eyraud 代入可能である；これは有限であるから，
+付録~\ref{app:three-letter} と同様に $H_n\in\Ccf{s}$ である．この文法は
+良く，$E_i\Rightarrow^*w^iuw^i$ であるから縮約済みである．サイズは
+定義~\ref{def:symbol-size} から従う：開始規則のサイズは $3$，基底規則は
+$1+|u|$，各段の二つの規則は $2|v|+5$ と $2|w|+3$ である．他のすべての
+選択を規則 $E_j\to wE_{j-1}w$ で補完すると，各規則は長さ高々
+$|u|+2n|w|$（開始規則，基底規則，単項規則）または $2|u|+2|v|+(2n+2i-4)|w|$
+（第 $i$ 段の二項規則）の成功する使用をもつことがわかる．$\{e,z\}$ に
+おいて $e$ は単位元で $z$ は吸収元であるから，$H_n$ の語が型 $e$ を
+もつのは，それが $\mathtt c$ を含まない $L_n$ の語，すなわち $W_n$ の
+像であるとき，かつそのときに限る．像 $h(W_n)$ の長さは，
+$|h(W_i)|=2|h(W_{i-1})|+2|v|$ により $(|u|+2|v|)2^n-2|v|$ であり，
+命題~\ref{prop:rare-type} によりそれはそのようなすべての標本に入ることが
+強制される．
+\end{proof}
+
+$u,v,w$ が文字の場合，これは型 $e$ の文字が二つある場合である；特に，
+全射性により型 $\zeta$ の文字が存在するので，型 $1$ の文字を少なくとも
+二つもつ $U_1$ へのすべての型付けに適用できる．これは型 $e$ をもつ文字が
+ない場合にも適用できる：単位元 $1$，$g^2=1$，零元 $z$ をもつ
+$\mathsf S=\{1,g,z\}$ と，型付け
+$\mathtt a,\mathtt b,\mathtt c,\mathtt d\mapsto g$，$\mathtt t\mapsto z$
+について，$u=\mathtt{ab}$，$v=\mathtt{cd}$，$w=\mathtt t$，$e=1$ と
+とればよい．文字が互いに素であることを仮定せずに，型 $e$ の可換でない
+二つの語が常に十分であるかどうかは，一般には未解決である；二つの語が
+可換であるのはそれらが一つの語の冪であるとき，かつそのときに限るので，
+そのような二語が存在しないことは，型 $e$ のすべての語が一つの原始語の
+冪であることを意味する．$U_1$ への型付けについてはこの問題は生じない：
+型 $1$ の文字が二つあれば系が適用でき，一つ（たとえば $\mathtt a$）
+ならば，型 $1$ の語は $\mathtt a$ の冪であり，データは多項式である
+（系~\ref{cor:u1-classification}）．
+
+$\Sigma=\{\mathtt a,\mathtt b\}$ とし，
+$s_{U,2}:\Sigma^+\twoheadrightarrow U_1$ は $\mathtt a$ を $1$ に，
+$\mathtt b$ を $\zeta$ に送るとする（二文字型付け）．型 $1$ の文字が
+一つしかないこの型付けには系~\ref{cor:typing-level-obstruction} は
+適用できない；それでも，そのデータは対数サイズの表示について
+$\bar\theta_G$ の二次になり得る．
+
+\begin{definition}[孤立文字]
+\label{def:isolated-letter}
+文字 $\mathtt a\in\Sigma$ が型付け $s$ について\emph{孤立している}とは，
+$s^{-1}(s(\mathtt a))=\mathtt a^+$ であり，$\mathtt a$ を含むが
+$\mathtt a^+$ に属さないすべての語が共通の一つの型をもつことをいう．
+\end{definition}
+
+例えば，$\Sigma=\{\mathtt a,\mathtt b\}$ とし，$c$ を，和についての
+三元半束 $\{\{\mathtt a\},\{\mathtt b\},\Sigma\}$ への
+\emph{内容型付け}，すなわち $c(w)$ を $w$ の文字の集合とする型付けとする；
+$\mathtt a$ を含み $\mathtt a^+$ の外にある語は内容 $\Sigma$ をもつので，
+両方の文字は $c$ について孤立している．
+$s:\Sigma^+\twoheadrightarrow U_1$ で $\mathtt a$ が型 $1$ の唯一の文字
+ならば，$s^{-1}(1)=\mathtt a^+$ であり，他のすべての語は型 $\zeta$ を
+もつので，任意のアルファベット上で $\mathtt a$ は孤立している．三文字
+以上の上では，$\mathtt{ab}$ と $\mathtt{ac}$ の内容が異なるので，内容
+型付けについて孤立している文字はない．
+
+\begin{theorem}[孤立文字は短い純粋な代表元をもつ]
+\label{thm:isolated-letter}
+$\mathtt a$ が $s$ について孤立しているとし，$\lambda\notin L$ を満たす
+$L\in\Ccf{s}$ をとり，$H$ を，生成規則が $X\to YZ$，$X\to Y$，
+$X\to\mathtt x$\textup($\mathtt x\in\Sigma$\textup) の形である $L$ に
+対する縮約済みの良い文法とする．$k_V:=|V_H|$，$\theta:=\bar\theta_H$
+とおく．$\mathtt a^+$ に属する生成語をもつすべての $A\in V_H$ は次を
+満たす：
+\[
+ \trep(H;A,s(\mathtt a))\le C_0\,k_V^{22}\,\theta^{8},
+\]
+ここで $C_0<10^{36}$ は $\Sigma$ と $s$ に依存しない絶対定数である．
+\end{theorem}
+
+証明は付録~\ref{app:isolated} にある．この上界は代表元に関するもの，
+すなわち $A$ の純粋な生成語と $\equiv_L$-同値な純粋な語であって，必ずしも
+$A$ の生成語ではない；これが補題~\ref{lem:rep-witness} が必要となる
+理由である．$\mathtt a$-混合のすべての語が一つの型をもつという仮定は，
+三文字以上の上の内容型付け $c$ では成り立たず，その型付けについては
+すべての型にわたる多項式長のデータの上界が成り立たない：
+命題~\ref{prop:three-letter-family}(ii) により $L_n\in\Ccf{c}$ であり，
+$W_n$ は内容 $\{\mathtt a,\mathtt b\}$ をもつその唯一の語であるから，
+命題~\ref{prop:rare-type} が適用できる．これは混合型
+$\{\mathtt a,\mathtt b\}$ に関するものであり，
+定理~\ref{thm:isolated-letter} が制御する純粋な型に関するものではない；
+混合型についての仮定が定理そのものに必要であるとは主張しない．
+
+\begin{corollary}[孤立文字からの多項式長のデータ]
+\label{cor:isolated-data}
+$s$ を次のいずれかとする：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item 正の像が半束である $\Sigma=\{\mathtt a,\mathtt b\}$ 上の型付け
+\textup(たとえば内容型付け $c$ や $s_{U,2}$\textup)，または
+\item 任意の有限アルファベット上の型付け
+$s:\Sigma^+\twoheadrightarrow U_1$ で，型 $1$ をもつ文字がちょうど一つで
+あるもの．
+\end{enumerate}
+このとき，$N$ 個の非終端記号をもち $L(G)\in\Ccf{s}$ を満たす任意の
+縮約済み BUNF 文法 $G$ は
+$\tau^{\mathrm{rep}}_s(G)\le3^8C_0N^{30}(\tau_G+1)^8$ を満たし，
+縮約済み CFG $G_*$ で表される任意の非空な $L\in\Ccf{s}$ は，符号長が
+$|G_*|$ と $\tau_{G_*}+1$ の多項式である $\Rec_s$ に対する特徴標本を
+もつ．
+\end{corollary}
+
+\begin{proof}
+$L(G)=\{\lambda\}$ ならば $\tau^{\mathrm{rep}}_s(G)=1$ であり，
+$\{\lambda\}$ が特徴標本である．そうでなければ $G^+$ を
+補題~\ref{lem:lambda-elimination} のとおりとする；これは
+定理~\ref{thm:isolated-letter} で要求されるとおり
+$L\setminus\{\lambda\}\in\Ccf{s}$ に対する縮約済みの $\lambda$ を含まない
+BUNF 文法であり，$k_V\le N$，$\bar\theta_{G^+}\le3N(\tau_G+1)$ である．
+補題~\ref{lem:typed-transfer} により，$\trep(G^+,s)$ を
+$C_0k_V^{22}\bar\theta_{G^+}^{\,8}$ で抑えれば十分である．
+
+(ii) 実現される型は $1=s(\mathtt a)$ と $\zeta$ である．$1$ については
+定理~\ref{thm:isolated-letter} を，$\zeta$ については
+補題~\ref{lem:app-h-other}(i) を用いる．後者は
+$(k_V-1)\bar\theta_{G^+}+1$ を与える．
+
+(i) $s$ の正の像は半束において $s(\mathtt a)$ と $s(\mathtt b)$ によって
+生成されるので，$s(w)$ は内容 $c(w)$ のみに依存する；したがって $c$ は
+$s$ より細かく，$\Ccf{s}\subseteq\Ccf{c}$ である．
+$y\in L_{G^+}(A)$ が $s$-型 $\mu$ と $c$-型 $t'$ をもつとする．$c$-型
+$t'$ をもつ代表元 $x\equiv_L y$ は $s$-型 $\mu$ をもち，$s$-型 $\mu$ を
+もつ $A$ の生成語は，$s$ についての補題~\ref{lem:homogeneity} により
+すべて $\equiv_L y$ である．したがって，$s$-型 $\mu$ をもつ $A$ の
+生成語の $c$-型 $t'$ について
+$\trep(G^+;A,\mu)\le\tau^{c}_{\mathrm{rep}}(G^+;A,t')$ である．ここで
+$\tau^{c}_{\mathrm{rep}}$ は $c$ についてのものを表す．両方の文字は $c$
+について孤立しているので，$\mathtt a$ および $\mathtt b$ とともに $c$ に
+適用した定理~\ref{thm:isolated-letter} と，
+補題~\ref{lem:app-h-other}(ii) によって，これらの数が抑えられる．
+
+第二の主張は系~\ref{cor:master} である．
+\end{proof}
+
+\begin{corollary}[$U_1$ への型付け]
+\label{cor:u1-classification}
+$s:\Sigma^+\twoheadrightarrow U_1$ を型付けとする．$\Ccf{s}$ の標的の
+すべての縮約済み表示 $G_*$ について，$\Rec_s$ に対する特徴データが
+$|G_*|$ と $\tau_{G_*}+1$ の多項式であるのは，型 $1$ の文字がちょうど
+一つであるとき，すなわちある文字 $\mathtt a$ について
+$s^{-1}(1)=\mathtt a^+$ であるとき，かつそのときに限る．より詳しくは
+次のとおりである：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item 型 $1$ の文字がちょうど一つならば，データは多項式であり
+\textup(系~\ref{cor:isolated-data}\textup)，
+命題~\ref{prop:binary-quadratic} により，どのような多項式 $p$ についても
+$p(|G|)(\tau_G+1)$ では抑えられない；
+\item 型 $1$ の文字が少なくとも二つあれば，
+系~\ref{cor:typing-level-obstruction} の標的は，その縮約済み表示の
+$\|G\|$ と $\tau_G$ について指数長のデータを必要とし，したがって $|G|$
+と $\tau_G$ について多項式ではない．
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+$s$ は全射であり $U_1$ は文字の型によって生成されるので，型 $1$ の文字と
+型 $\zeta$ の文字が存在する．(i) は系~\ref{cor:isolated-data}(ii) に，
+命題~\ref{prop:binary-quadratic} とその直後の注記を，$\mathtt b$ を
+型 $\zeta$ の文字として適用したものを合わせたものである．(ii) について
+は，$\mathtt a\ne\mathtt b$ が型 $1$，$\mathtt c$ が型 $\zeta$ をもつと
+する；冪等元 $e:=1$ と $z:=\zeta$ は相異なり $ez=ze=z$ を満たし，
+$u:=\mathtt a$，$v:=\mathtt b$，$w:=\mathtt c$ は文字が互いに素で
+$s(u)=s(v)=e$，$s(w)=z$ を満たすので，
+系~\ref{cor:typing-level-obstruction} が適用できる．
+\end{proof}
+
+\section{上界の形}
+\label{sec:shape}
+
+\begin{proposition}[線形因子は必要である]
+\label{prop:linear-factor}
+$\mathtt a,\mathtt d\in\Sigma$ を相異なる文字とし，$s$ を任意の型付けと
+する．整数 $q\ge k\ge1$ について $M:=2^k$，$W:=M+2q+2$ とし，次の
+ようにおく：
+\[
+ w_i:=\mathtt a^i\mathtt d\,\mathtt a^{M+2(q-i)}\mathtt d\,
+ \mathtt a^i\quad(0\le i\le q),\qquad L_{q,k}:=\{w_0,\ldots,w_q\}.
+\]
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $L_{q,k}$ のすべての部分集合は
+$\Ccf{s_0}\subseteq\Ccf{s}$ に属する．
+\item $\Rec_s$ について，また $\Ccf{s}$ 全体で特徴標本をもつ任意の
+集合駆動の作用素について，$L_{q,k}$ の唯一の特徴標本は $L_{q,k}$ 自身で
+ある．
+\item $L_{q,k}$ は，$\|G_{q,k}\|=17q+6k+13\le23(q+1)$ かつ
+$\tau_{G_{q,k}}=\bar\theta_{G_{q,k}}=W$ を満たすランク2の縮約済みで良い
+表示 $G_{q,k}$ をもつ．$L_{q,k}$ のすべての縮約済みで良い表示 $G$ は
+$\bar\theta_G=W$ を満たし，$N$ 個の非終端記号と生成規則集合 $P$ をもつ
+すべての縮約済み BUNF 表示は $2N+4|P|\ge q+1$ を満たす．
+\end{enumerate}
+したがって~\textup{(ii)} のすべての特徴標本 $F$ は次を満たす：
+\[
+ \|F\|=(q+1)(W+1)\ \ge\ \tfrac1{23}\,\|G_{q,k}\|\,\bar\theta_{G_{q,k}}
+ \ \ge\ \tfrac1{23}\,\|G_{q,k}\|\,\tau_{G_{q,k}}.
+\]
+\end{proposition}
+
+$q=k=n$ とすると $\|G_{n,n}\|=23n+13$，$\bar\theta_{G_{n,n}}=2^n+2n+2$
+である；$k$ を固定すると $\bar\theta_{G_{q,k}}=\Theta(\|G_{q,k}\|)$ で
+ある．$L_{q,k}$ のすべての縮約済み表示 $G$ は $q+1\le12\|G\|$ を満たす：
+その BUNF 正規化 \ref{q:bunf} は，定理~\ref{thm:lg-sufficiency}(ii) の証明
+（$s$ についての仮定を用いない）で数えたとおり，高々 $2\|G\|$ 個の
+非終端記号と高々 $2\|G\|$ 個の生成規則をもち，これに (iii) が適用できる．
+したがって $\|G_{q,k}\|\le23(q+1)\le276\|G\|$ であり，これらの表示は
+最小のものの定数倍以内にあるので，この下界は $G$ を水増しすることで得られたものではない．
+
+証明は付録~\ref{app:linear} にある．
+
+\begin{proposition}[二文字型付けに対する二次の特徴データ]
+\label{prop:binary-quadratic}
+$m,n\ge1$ について，$L_{m,n}\subseteq\{\mathtt a,\mathtt b\}^+$ を
+$\{\mathtt a^{2^m},\mathtt b\}$ の語 $2^n$ 個の連接全体の集合とする．
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $L_{m,n}\in\Ccf{s_{U,2}}$．
+\item $L_{m,n}$ は $\|G_{m,n}\|=6m+6n+9$ かつ
+$\bar\theta_{G_{m,n}}=2^m+2^n-1$ を満たすランク2の縮約済みで良い表示
+$G_{m,n}$ をもつ．
+\item $\Rec_{s_{U,2}}$ について，また $\Ccf{s_{U,2}}$ 全体で特徴標本を
+もつ任意の集合駆動の作用素について，$L_{m,n}$ のすべての特徴標本 $F$ は
+$\|F\|>2^{m+n}$ を満たす．
+\end{enumerate}
+したがって，$m=n$ のとき $\|G_{n,n}\|=12n+9$，
+$\bar\theta_{G_{n,n}}=2^{n+1}-1$ かつ
+$\|F\|>\bar\theta_{G_{n,n}}^{\,2}/4$ である；特に，
+定理~\ref{thm:lg-sufficiency} とは対照的に，この型付けについては，
+$p$ を多項式とする $p(\|G\|)\,\bar\theta_G$ の形の上界も，
+$p(|G|)(\tau_G+1)$ の形の上界も存在しない．
+\end{proposition}
+
+証明は付録~\ref{app:u1} にある．純粋な語 $\mathtt a^{2^{m+n}}$ の長さは
+ブロックの長さとブロックの個数の積であるが，$\bar\theta_G$ はおおよそ
+それらの和である．長いブロックを用いる最短の文は，他のすべての位置を
+$\mathtt b$ で埋めるからである．$\mathtt a$ と $\mathtt b$ 以外の文字を
+含む語は $L_{m,n}$ において空の分布をもつので，この命題は，$\mathtt a$
+が型 $1$ の唯一の文字で $\mathtt b$ が型 $\zeta$ をもつ $U_1$ への
+すべての型付けについて，そのまま成り立つ．それでも，これらの型付けに
+対するデータは多項式である（系~\ref{cor:isolated-data}）．
+
+ランク1では事情が異なる：線形文法については，すべての固定型付けについて
+特徴データは多項式である \cite[第~8~節]{kuriyamaCFG}；上の倍増族は
+二項生成規則を用いる．
+
+\section{結論}
+\label{sec:conclusion}
+\cite{kuriyamaCFG} の再構成作用素と通常の厚みについて，擬多様体に値を
+とる各固定型付けに対して（アルファベットと型付けに依存する多項式で）
+多項式長の特徴データが成り立つのは，ちょうどその擬多様体が局所群から
+なるときであり，そのとき厚みへの依存は線形である．$U_1$ への型付けに
+ついては，それが成り立つのはちょうど一つの文字が型 $1$ をもつときであり，
+そのとき厚みへの依存は必然的に超線形である．このように，擬多様体に
+対する代数的な境界と個々の型付けに対する組合せ的な境界は異なり，それらは
+異なる量によって検出される．
+
+三つの問題が残る．第一に，$U_1$ を超えた個々の型付けの分類である：
+系~\ref{cor:typing-level-obstruction} の障害は冪等な型をもつ文字が
+互いに素な語を必要とし，そのような可換でない二つの語が常に十分であるか
+どうかはわからない．第二に，文法サイズについての次数である：
+命題~\ref{prop:linear-factor} と定理~\ref{thm:lg-sufficiency} は，
+局所群型付けについて，$\|G\|\tau_G$ と $\|G\|^2\max\{1,\tau_G\}$ の
+間に記号サイズの因子一つ分の隙間を残す．第三に，部分木が交錯する複数の
+ブロックを寄与する多重文脈自由文法は，本稿では扱わない．
+
+\section*{利益相反の申告}
+著者は利益相反がないことを申告する．
+
+\section*{データの利用可能性}
+データは用いていない．
+
+\section*{原稿作成過程における生成 AI および AI 支援技術の使用に関する申告}
+本原稿の準備中，著者は，言語面の編集，原稿の構成，および数学的議論の
+検討の補助として，OpenAI の ChatGPT と Anthropic の Claude を用いた．
+著者は AI の支援を受けた内容を確認・編集し，本論文で示した結果と証明に
+ついて全責任を負う．
+
+\appendix
+
+\section{局所群の座標と短縮}
+\label{app:lg}
+
+$\LG$ は正の像 $\mathsf S=s(\Sigma^+)$ の上で判定する．古典的な恒等式
+$\LG=\mathbf{Grp}*\mathbf D$ はこれを遅延の理論の中に位置づけ
+\cite{Straubing1985,Tilson1987}，$U_1$ の排除は
+\cite[命題~2.3]{AlmeidaEtAl2009} である；ここでは上で用いた自己完結的な
+形を与える．$k\ge1$ を固定する．語が\emph{短い}とは $|w|<2k$ である
+ことをいい，そうでないとき\emph{長い}という．短い $w$ については
+$\widehat s_{k,k}(w):=w$，長い $w$ については
+$\widehat s_{k,k}(w):=\langle\mathrm{pref}_k w,\mathrm{suf}_k w\rangle$ と
+おく；これは \cite[命題~3.3]{kuriyamaCFG} の窓型付け $s_{k,k}$ の
+完備化であり，有限モノイドの上への準同型である．
+
+\begin{definition}[滑動因子準同型]
+\label{def:sliding}
+$\mathbb G$ を有限群とし，$\nu:\Sigma^{k+1}\to\mathbb G$ とする．長い $w$
+について，$F_1,\ldots,F_{|w|-k}$ を開始位置の順に並べたその長さ $k+1$ の
+因子とし，$\gamma_{k,\nu}(w):=\nu(F_1)\cdots\nu(F_{|w|-k})$ とおく；
+短い $w$ については $\gamma_{k,\nu}(w):=1_{\mathbb G}$ とおく．
+$\lambda_{k,\nu}(w):=(\widehat s_{k,k}(w),\gamma_{k,\nu}(w))$ とする．
+ある $k,\mathbb G,\nu$ について $\widehat s\preceq\lambda_{k,\nu}$ となる
+とき，型付け $s$ は\emph{局所群決定的}であるという．
+\end{definition}
+
+$x,y\in\Sigma^k$ について，$\Delta_\nu(x,y)$ を，$xy$ の長さ $k+1$ の
+因子のうち $x$ の中で始まる $k$ 個にわたる $\nu$ の順序付き積とする．
+
+\begin{lemma}[滑動因子写像は準同型である]
+\label{lem:sliding-morphism}
+$\lambda_{k,\nu}(uv)$ は $\lambda_{k,\nu}(u)$ と $\lambda_{k,\nu}(v)$ に
+よって定まるので，$\lambda_{k,\nu}$ は有限モノイドの上への準同型である．
+長い $u,v$ について
+$\gamma_{k,\nu}(uv)=\gamma_{k,\nu}(u)\,\Delta_\nu(\mathrm{suf}_ku,\mathrm{pref}_kv)\,\gamma_{k,\nu}(v)$
+である．
+\end{lemma}
+
+\begin{proof}
+長い $u,v$ について，$uv$ の長さ $k+1$ の因子は，順に，$u$ の因子，
+$u$ の最後の $k$ 個の位置で始まる $k$ 個の因子，および $v$ の因子である．
+$u$ が短く $v$ が長いならば，$u$ の中で始まる因子は
+$u\,\mathrm{pref}_kv$ の内部にあり，その他は $v$ の因子である；残りの
+場合は対称であるか，あるいは正確に定まる．
+\end{proof}
+
+\begin{lemma}[ブロック分解]
+\label{lem:blocks}
+$y=x_0\mathfrak b_1x_1\cdots\mathfrak b_mx_m$ と
+$y'=x_0\mathfrak b'_1x_1\cdots\mathfrak b'_mx_m$ が，すべての $i$ に
+ついて $\widehat s_{k,k}(\mathfrak b'_i)=\widehat s_{k,k}(\mathfrak b_i)$
+を満たすとする．このとき $\widehat s_{k,k}(y')=\widehat s_{k,k}(y)$ で
+あり，$y$ が長いならば，$x_i$ と $\mathfrak b_i$ の
+$\widehat s_{k,k}$-型のみに依存する $z_0,\ldots,z_m\in\mathbb G$ で
+あって，
+$\gamma_{k,\nu}(y)=z_0\gamma_{k,\nu}(\mathfrak b_1)z_1\cdots\gamma_{k,\nu}(\mathfrak b_m)z_m$
+を満たし，$y'$ と $\mathfrak b'_i$ についても同じ等式を満たすものが
+存在する．
+\end{lemma}
+
+\begin{proof}
+第一の主張は $\widehat s_{k,k}$ が準同型であることから成り立つ．短い
+ブロックはその置換と等しく，固定された語に吸収できるので，すべての
+ブロックは長いとしてよい．長さ $k+1$ の因子は，あるブロックの内部に
+あるか，または，それが触れる各ブロックとその最初または最後の高々 $k$
+文字で交わる；二番目の種類の因子は固定された語とブロックの窓によって
+綴られるので，$y$ と $y'$ で一致し，同じ順序で現れる．開始位置の順に
+並べると，$\mathfrak b_i$ の内部の因子は一つの連なりをなし，その積は
+$\gamma_{k,\nu}(\mathfrak b_i)$ である；$z_i$ を連続する連なりの間の
+因子の積とする．
+\end{proof}
+
+\emph{ポンピング．}有限半群の元 $x$ の冪等な冪を $x^\omega$ と書き，
+冪等元の集合を $E(\mathsf T)$ と書く．有限半群 $\mathsf T$ について，
+少なくとも $|\mathsf T|$ 個の元のすべての積は
+$\mathsf T^1E(\mathsf T)\mathsf T^1$ に属する
+\cite[補題~2.2]{AlmeidaEtAl2009}，\cite{Pin1986}：その最初の
+$|\mathsf T|$ 個の接頭辞積のうち二つが一致する，すなわち $i<j$ について
+$t_i=t_j$ となり，このとき因子 $i+1,\ldots,j$ の積 $x$ について
+$t_i=t_ix^\omega$ となるか；あるいはこれらの接頭辞積が $\mathsf T$ を
+尽くし，そのうちの一つが冪等であるかのいずれかである．
+
+\begin{lemma}[滑動因子座標]
+\label{lem:rees}
+$\mathsf S$ のすべての冪等元がその極小イデアル
+$\mathsf K=\mathcal M(\mathbb G;I,\Lambda;\mathsf P)$ に属するとし，
+$k\ge1$ が $\mathsf S^k\subseteq\mathsf K$ を満たすとする．このとき
+$\nu:\Sigma^{k+1}\to\mathbb G$ が存在して，すべての長い $w$ は
+$s(w)=\bigl(\mathrm{row}(s(\mathrm{pref}_kw)),\,\mathrm{grp}(s(\mathrm{pref}_kw))\,\gamma_{k,\nu}(w),\,
+\mathrm{col}(s(\mathrm{suf}_kw))\bigr)$ を満たす．
+\end{lemma}
+
+\begin{proof}
+\emph{(1) 座標．}$i_0\in I$ を固定する；$j\in\Lambda$ について，元
+$r_j:=(i_0,p_{ji_0}^{-1},j)$ は $\Lambda$-座標 $j$ をもつ $\mathsf K$ の
+元に対する右単位元である．$y\in \mathsf S$ について
+$r_jy=(i',\gamma',j')$ と書き，$\operatorname{act}(j,y):=p_{ji'}\gamma'$
+とおく；このとき $(i,\gamma,j)y=(i,\gamma\operatorname{act}(j,y),j')$
+であるから，右からの乗法は $I$-座標を固定する．双対的に，左からの乗法は
+$\mathsf K$ の元の $\Lambda$-座標を固定する：任意の $j''\in\Lambda$ に
+ついて，冪等元 $e':=(i,p_{j''i}^{-1},j'')\in\mathsf K$ は
+$e'(i,\gamma,j)=(i,\gamma,j)$ を満たすので，$ye'\in\mathsf K$ として
+$y(i,\gamma,j)=(ye')(i,\gamma,j)$ であり，$\mathsf K$ の二つの元の
+Rees 積はその右の因子の $\Lambda$-座標をもつ．
+
+\emph{(2) 群の座標．}$w=a_1\cdots a_m$ を文字 $a_t$ からなり $m\ge2k$
+を満たす語とし，$s(a_1\cdots a_k)=(i,\gamma,j_k)$ とする．$t\ge k$ に
+ついて，$\mathsf S^k\subseteq\mathsf K$ と (1) により，$s(a_1\cdots a_t)$
+の $\Lambda$-座標 $j_t$ は $s(a_{t-k+1}\cdots a_t)$ のそれに等しい．
+$\nu(F):=\operatorname{act}\bigl(\operatorname{col}(s(F[1..k])),s(F[k+1])\bigr)$
+とおく．右作用の等式を $t=k,\ldots,m-1$ について順に適用すると
+$s(w)=(i,\,\gamma\prod_{t=k}^{m-1}\nu(a_{t-k+1}\cdots a_{t+1}),\,j_m)$
+が得られ，その積は $\gamma_{k,\nu}(w)$ である．
+\end{proof}
+
+\begin{theorem}[局所群の判定条件]
+\label{thm:lg-characterization}
+正の像 $\mathsf S$ をもつ型付け $s$ について次は同値である：
+\textup{(i)} $\mathsf S\in\LG$；\textup{(ii)} $\mathsf S$ は $U_1$ と
+同型な部分半群をもたない；\textup{(iii)} $\mathsf S$ のすべての冪等元は
+極小イデアル $\mathsf K$ に属する；\textup{(iv)} $s$ は局所群決定的で
+ある\textup(定義~\ref{def:sliding}，ある $k\ge1$，有限群および
+ラベル付けについて\textup)．さらに \textup{(iii)} の下で，
+$k=|\mathsf S|$，$\mathbb G$ を $\mathsf K$ の極大部分群ととってよい．
+\end{theorem}
+
+\begin{proof}
+完全を期して，古典的な同値性を確かめる（\cite[命題~2.3]{AlmeidaEtAl2009}
+参照）．$\mathsf S\in\LG$ ならば，$\mathsf S$ は $U_1=\{e,z\}$ を
+含み得ない．$z$ は群 $e\mathsf Se$ の単位元 $e$ と異なる冪等元となる
+からである．逆に，ある $e\mathsf Se$ が群でなければ，その中の非単元 $x$
+を選ぶ；$x^\omega\ne e$ であり（そうでなければ $x$ は単元である），
+$\{e,x^\omega\}$ は $U_1$ の複製である．よって (i) と (ii) は同値で
+ある．(i) が成り立つならば，冪等元 $v\in\mathsf K$ を選ぶ．任意の冪等元
+$e\in\mathsf S$ について，元 $eve$ は $e\mathsf Se\cap\mathsf K$ に属し，
+$e\mathsf Se$ における可逆性から $e=(eve)(eve)^{-1}\in\mathsf K$ が
+得られる．逆に，すべての冪等元 $e$ が $\mathsf K$ に属するならば，
+$\mathsf K$ は完全単純であるから $e\mathsf Se=e\mathsf Ke$ は群である．
+これで (i)--(iii) が示された．さらに $E(\mathsf S)\subseteq\mathsf K$
+ならば，ポンピングにより $k=|\mathsf S|$ について
+$\mathsf S^k\subseteq\mathsf S^1E(\mathsf S)\mathsf S^1\subseteq\mathsf K$
+であり，一方，完全単純半群 $\mathsf K$ は $\mathsf K^2=\mathsf K$ を満たすので
+$\mathsf K=\mathsf K^k\subseteq\mathsf S^k$ である；
+よって $\mathsf S^k=\mathsf K$ である．
+
+(iii)$\Rightarrow$(iv)：$k=|\mathsf S|$（または $\mathsf S^k=\mathsf K$
+を満たす任意の $k$）とした補題~\ref{lem:rees} は，$|w|\ge2k$ について
+$s(w)$ を $\lambda_{k,\nu}(w)$ から定め，$\widehat s_{k,k}$ はより短い語と
+$\lambda$ を正確に記録する；したがって $\widehat s\preceq\lambda_{k,\nu}$
+である．
+
+(iv)$\Rightarrow$(i)：$\mathsf S$ は $\mathsf T:=\lambda_{k,\nu}(\Sigma^+)$
+の準同型像であり，$\LG$ は準同型像について閉じているので，
+$\mathsf T\in\LG$ を示せば十分である．短い元はどれも冪等でない（二乗すると，
+正確に記録された語が変わるか，長くなる）．
+$e=(\langle p,q\rangle,\gamma_e)$ を冪等元とする．
+補題~\ref{lem:sliding-morphism} により，$e\mathsf Te$ のすべての元は窓
+$\langle p,q\rangle$ をもち，この窓をもつ長い元は，
+$\Delta:=\Delta_\nu(q,p)$ として
+$(\langle p,q\rangle,\gamma)(\langle p,q\rangle,\gamma')=(\langle p,q\rangle,\gamma\Delta\gamma')$
+によって掛け合わされる．この演算により $\{\langle p,q\rangle\}\times \mathbb G$
+は $\gamma\mapsto\gamma\Delta$ を通じて $\mathbb G$ と同型な群となり，
+$e\mathsf Te$ はその有限で空でない部分半群であるから，部分群である．
+ここで補題~\ref{lem:rees} の群 $\mathbb G$ は $\mathsf K$ の構造群であり，
+極大部分群である．
+\end{proof}
+
+\begin{lemma}[緩衝つき所有者]
+\label{lem:buffered}
+$y$ を語とし，$I_1,\ldots,I_m$ を $y$ の位置の対ごとに互いに素な空でない
+区間で，どれも最初または最後の $k$ 文字と交わらないものとする．これらの
+区間のうち少なくとも $m/(4k+1)$ 個からなる集合 $Q_1$ と，対ごとに互いに
+素な区間 $\mathfrak b_I\supseteq I$ $(I\in Q_1)$ であって，それぞれ
+$Q_1$ の他の区間を含まず，（空でもよい）すべての語 $x_I$ について，
+$\mathfrak b_I$ において $I$ を $x_I$ で置き換えて得られる語が長さ
+少なくとも $2k$ をもち，$\mathfrak b_I$ と同じ最初と最後の $k$ 文字を
+もつものが存在する；ここでこの区間自身の長さは少なくとも
+$2k+1$ である．
+\end{lemma}
+
+\begin{proof}
+二つの区間の間にある文字が $2k$ 個未満のとき，それらを\emph{隣}である
+という．互いに素な空でない区間は相異なる位置で始まるので，区間は各側に
+高々 $2k$ 個の隣をもつ．区間を貪欲に選び，その隣を捨てていけば，
+$|Q_1|\ge m/(4k+1)$ であり，どの二つの元の間にも少なくとも $2k$ 文字が
+ある $Q_1$ が得られる．$\mathfrak b_I$ を $I$ を両側に $k$ 文字ずつ
+広げたものとする；境界の仮定によりそれは $y$ の内部にとどまり，広げた
+ものは互いに素であり，$\mathfrak b_I$ の最初と最後の $k$ 文字は $I$ の外
+にあるので，置換後も残る；置き換えた語の長さは $2k+|x_I|\ge2k$ である
+から，それは長く，$\mathfrak b_I$ の窓をもつ．
+\end{proof}
+
+\begin{lemma}[順序付き積を保つ所有者の区間]
+\label{lem:group-interval}
+$\mathbb G$ を有限群とし，
+$z_0,\ldots,z_m,g_1,\ldots,g_m,g'_1,\ldots,g'_m\in\mathbb G$ とする．
+ここで $m\ge|\mathbb G|$ である．$0\le i<j\le m$ が存在して次が
+成り立つ：
+\[
+ z_0g_1z_1\cdots g_mz_m=
+ z_0g_1z_1\cdots g_iz_i\;g'_{i+1}z_{i+1}\cdots g'_jz_j\;g_{j+1}z_{j+1}\cdots g_mz_m .
+\]
+\end{lemma}
+
+\begin{proof}
+$0\le t\le m$ について $O_t:=z_0g_1z_1\cdots g_tz_t$，
+$R_t:=z_0g'_1z_1\cdots g'_tz_t$，$\pi_t:=R_tO_t^{-1}$ とおく．
+$m+1>|\mathbb G|$ 個の値のうち二つが一致する：$i<j$ について
+$\pi_i=\pi_j$．区分の積 $S=g_{i+1}z_{i+1}\cdots g_jz_j$ と
+$S'=g'_{i+1}z_{i+1}\cdots g'_jz_j$ を用いて $O_j=O_iS$，$R_j=R_iS'$ と
+書くと，等式 $R_iO_i^{-1}=R_iS'S^{-1}O_i^{-1}$ から $S'=S$ が得られ，
+これが主張である．
+\end{proof}
+
+\section{三文字の倍増族}
+\label{app:three-letter}
+この付録では命題~\ref{prop:three-letter-family} を証明する；(ii) の証明は
+\cite[付録~C]{kuriyamaCFG} の決定性構文解析器による議論を改変したもので
+ある．$n\ge1$ を固定し，$x,y\in\Sigma^*$ について
+$\{(u,v):uxv\in L_n\}=\{(u,v):uyv\in L_n\}$ のとき $x\equiv y$ と書く；
+これはモノイド合同である．
+
+\paragraph{構文解析器．}
+\emph{スタック}とは，$E_0,\ldots,E_n$ と閉じ標識（closing marker）
+$\hat{\mathtt b}_i,\hat{\mathtt c}_i$\textup($1\le i\le n$\textup) の
+上の語であり，その頂上（top）を左端とする；$\eps$ は空スタックである．
+すべてのスタック $\mathcal Z$ と $1\le i\le n$ について，動作は次の
+とおりである：
+\[
+\begin{aligned}
+E_0\mathcal Z&\xrightarrow{\mathtt a}\mathcal Z,&
+E_i\mathcal Z&\xrightarrow{\mathtt b}E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z,&
+E_i\mathcal Z&\xrightarrow{\mathtt c}E_{i-1}\hat{\mathtt c}_i\mathcal Z,\\
+\hat{\mathtt b}_i\mathcal Z&\xrightarrow{\mathtt b}\mathcal Z,&
+\hat{\mathtt c}_i\mathcal Z&\xrightarrow{\mathtt c}\mathcal Z,
+\end{aligned}
+\]
+これら以外の動作はない；特に $\eps$ から出る動作はない．$\mathcal X$ から
+$w$ を読むと $\mathcal Y$ で終わるとき $\mathcal X\xrightarrow{w}\mathcal Y$
+と書く．三つの性質を用いる．
+\begin{enumerate}[label=\textup{(D\arabic*)},leftmargin=2.6em]
+\item \emph{決定性．}頂上の記号と文字が動作を決めるので，すべての語は
+スタック上の部分写像として作用する．
+\item \emph{重み．}$E_i$ に重み $4^i$，各標識に重み $1$ を与え，
+$\operatorname{wt}(\mathcal X)$ を重みの総和とする．
+$4^i>2\cdot4^{i-1}+1$ であるから，すべての動作は $\operatorname{wt}$ を
+減少させる；したがって $\mathcal X\xrightarrow{w}\mathcal X$ となるのは
+$w=\eps$ のときに限る．
+\item \emph{局所性．}動作は頂上の記号だけを読んで書き換え，標識は
+取り出される（pop）だけである．したがって
+$\mathcal X\xrightarrow{w}\mathcal Y$ ならば
+$\mathcal X\mathcal Z\xrightarrow{w}\mathcal Y\mathcal Z$ である．逆に，
+$\mathcal X_1\ne\eps$ かつ $\mathcal X_1\mathcal Z\xrightarrow{w}\mathcal Y$
+ならば，次のいずれかである：\textup{(a)} 走行（run）が $\mathcal Z$ に
+達する：$w=w_1w_2$ で $\mathcal X_1\xrightarrow{w_1}\eps$ かつ
+$\mathcal Z\xrightarrow{w_2}\mathcal Y$，したがって
+$\operatorname{wt}(\mathcal Y)\le\operatorname{wt}(\mathcal Z)$；あるいは
+\textup{(b)} 達しない：$\mathcal Y=\mathcal Y_1\mathcal Z$ で
+$\mathcal X_1\xrightarrow{w}\mathcal Y_1\ne\eps$，したがって
+$\operatorname{wt}(\mathcal Y)>\operatorname{wt}(\mathcal Z)$ であり，
+$\mathcal X_1$ の最後の記号が標識であるときには $\mathcal Y_1$ はその
+記号で終わる．$\mathcal Z$ を固定すると，$\operatorname{wt}(\mathcal Y)$
+と $\operatorname{wt}(\mathcal Z)$ を比較することでどちらの場合かが
+決まる．
+\end{enumerate}
+文字 $\mathtt b$ や $\mathtt c$ は開きと閉じの両方を行うので，語はすべての
+スタック上で単射に作用するとは限らない；単射性は\emph{到達可能な}
+スタック，すなわちある $u$ について $E_n\xrightarrow{u}\mathcal X$ となる
+$\mathcal X$ の上で成り立つ．
+
+\begin{lemma}\label{lem:app-br-recognition}
+\label{lem:app-tl-reachable}
+\textup{(i)} $0\le i\le n$ と任意のスタック $\mathcal Z$ について，
+$E_i\mathcal Z\xrightarrow{w}\mathcal Z$ となるのは $w\in L^{(i)}$ で
+あるとき，かつそのときに限る．
+
+\textup{(ii)} $\mathcal F_i:=\{E_{i-1}\hat{\mathtt b}_i,\hat{\mathtt b}_i,\hat{\mathtt c}_i\}$
+とおく．到達可能なスタックはすべて $\eps$ であるか，$F_i\in\mathcal F_i$
+と $\mathcal Y\in\{E_j,\hat{\mathtt b}_j,\hat{\mathtt c}_j\}$ による
+$\mathcal YF_{j+1}\cdots F_n$ である
+\textup($0\le j\le n$ の $\mathcal Y=E_j$，または $1\le j\le n$ の
+標識\textup)．すべての語は到達可能なスタック上で部分単射として作用する．
+\end{lemma}
+
+\begin{proof}
+(i) 走行 $E_i\mathcal Z\xrightarrow{w}\mathcal Z$ は (D3) の場合~(a) で
+ある．場合~(b) は $\mathcal Y_1\mathcal Z\ne\mathcal Z$ で終わるから
+である；したがって $E_i\xrightarrow{w_1}\eps$ かつ
+$\mathcal Z\xrightarrow{w_2}\mathcal Z$ となる $w=w_1w_2$ があり，(D2)
+により $w_2=\eps$ である．(D3) の持ち上げにより，
+$E_i\xrightarrow{w}\eps$ と $w\in L^{(i)}$ の同値性を $i$ についての
+帰納法で示せば十分である．$E_0$ からは $\mathtt a$-動作だけが適用でき，
+$\eps$ はどの動作も許さない．$i\ge1$ については最初の文字は $\mathtt b$
+か $\mathtt c$ である．$\mathtt c$ の後，スタック
+$E_{i-1}\hat{\mathtt c}_i$ を空にしなければならない；
+$\mathcal X_1=E_{i-1}$，$\mathcal Z=\hat{\mathtt c}_i$ とした (D3) の
+場合~(a) により，残りは $E_{i-1}\xrightarrow{z}\eps$ かつ $z'=\mathtt c$
+を満たす $zz'$ に分かれる．$\mathtt b$ の後は，
+$E_{i-1}E_{i-1}\hat{\mathtt b}_i$ についてのそのような分割を二回行うと，
+$E_{i-1}\xrightarrow{z_j}\eps$ を満たす $z_1z_2\mathtt b$ が得られる．
+
+(ii) このようなスタックの集合は $E_n$ を含み，動作について閉じている：
+$E_jF_{j+1}\cdots F_n$ から，$\mathtt b$ は
+$E_{j-1}(E_{j-1}\hat{\mathtt b}_j)F_{j+1}\cdots F_n$ を与え，$\mathtt c$
+は $E_{j-1}\hat{\mathtt c}_jF_{j+1}\cdots F_n$ を与える；頂上を取り出すと
+$F_{j+1}\cdots F_n$ が残り，これは $\eps$ であるか再び上述の形である．
+最初のフレームが $E_j\hat{\mathtt b}_{j+1}$ の場合は，$\mathcal Y=E_j$ に
+フレーム $\hat{\mathtt b}_{j+1}$ が続くものと読む．
+
+単射性については，動作は到達可能なスタックを到達可能なスタックに写すので，
+文字を考えれば十分である．\emph{フレーム積}（frame product）とは，
+$F_k\in\mathcal F_k$ によるスタック $F_{i+1}\cdots F_n$ である
+（$i=n$ ならば空スタック）．各フレーム $F_k$ はちょうど一つの標識
+（添字 $k$）を含むので，フレーム積は $i$ を定める：$\eps$ については $n$
+であり，それ以外では最小の標識の添字より一つ小さい．フレーム積において，
+記号 $E$ の後には常に標識 $\hat{\mathtt b}$ が続く．到達可能なスタック上
+での文字の動作とその結果の形は次のとおりである：
+\begin{center}
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}llll@{}}
+\hline
+文字 & 動作（到達可能な元のスタック） & 結果の先頭 & 元のスタックの復元\\
+\hline
+$\mathtt a$ & $E_0\mathcal Z\to\mathcal Z$ & フレーム積 & $\mathcal Z$\\
+$\mathtt b$，開き & $E_i\mathcal Z\to E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z$ & 二つの記号 $E$ & $i$ と $\mathcal Z$ を読み取る\\
+$\mathtt b$，閉じ & $\hat{\mathtt b}_i\mathcal Z\to\mathcal Z$，$\mathcal Z$ はフレーム積 & 標識，$E\hat{\mathtt b}$，または $\eps$ & $\mathcal Z$ から $i$\\
+$\mathtt c$，開き & $E_i\mathcal Z\to E_{i-1}\hat{\mathtt c}_i\mathcal Z$ & $\hat{\mathtt c}$ が続く $E$ & $i$ と $\mathcal Z$ を読み取る\\
+$\mathtt c$，閉じ & $\hat{\mathtt c}_i\mathcal Z\to\mathcal Z$，$\mathcal Z$ はフレーム積 & 標識，$E\hat{\mathtt b}$，または $\eps$ & $\mathcal Z$ から $i$\\
+\hline
+\end{tabular}
+\end{center}
+閉じの行で $\mathcal Z$ がフレーム積であるのは，頂上に標識
+$\hat{\mathtt b}_i$ または $\hat{\mathtt c}_i$ をもつ到達可能なスタックは，
+$\mathcal Y$ をその標識として $\mathcal YF_{i+1}\cdots F_n$ であるから
+である．$\mathtt b$ については，開きの結果は二つの記号 $E$ で始まり，
+閉じの結果は決してそうならない．フレーム積において記号 $E$ の後には
+標識が続くからである；$\mathtt c$ については，開きの結果は
+$E\hat{\mathtt c}$ で始まるが，これはフレーム積には決して現れない．
+したがって一つの文字の開きと閉じの像は互いに素であり，各行は最後の列に
+よって単射であって，すべての文字，したがってすべての語は到達可能な
+スタック上で部分単射として作用する．
+\end{proof}
+
+\begin{lemma}\label{lem:app-br-exchange}
+\label{lem:app-tl-exchange}
+$\mathcal X$ が到達可能で，$w\in L^{(i)}$ かつ
+$\mathcal X\xrightarrow{w}\mathcal Y$ ならば，$\mathcal X=E_i\mathcal Y$
+である．したがってすべての $w,w'\in L^{(i)}$ について $w\equiv w'$ で
+ある．
+\end{lemma}
+
+\begin{proof}
+$i$ についての帰納法による；$i=0$ では $\mathtt a$ は $E_0$ を取り出す
+だけである．$i\ge1$ とする；出会うすべてのスタックは到達可能である．
+$w=\mathtt cv\mathtt c$（$v\in L^{(i-1)}$）で最初の $\mathtt c$ が $E_j$
+を開くならば，$E_{j-1}\hat{\mathtt c}_j\mathcal Z$ における $v$ について
+の帰納法の仮定から $j=i$ が得られ，最後の $\mathtt c$ は
+$\hat{\mathtt c}_i$ を取り出す．最初の $\mathtt c$ が標識を取り出すならば，
+残りは $\eps$ かフレームの積である；$v$ を読むためには帰納法の仮定に
+よりそれは $E_{i-1}$ で始まらなければならないので，その最初のフレームは
+$E_{i-1}\hat{\mathtt b}_i$ であり，$v$ の後の頂上は $\hat{\mathtt b}_i$
+であって，その上では $\mathtt c$ は動作をもたない．
+$w=\mathtt bv_1v_2\mathtt b$ で最初の $\mathtt b$ が $E_j$ を開くならば，
+帰納法の仮定から $j=i$ が得られ，語 $v_1,v_2$ は $E_{i-1}$ の二つの
+コピーを取り出し，最後の $\mathtt b$ は $\hat{\mathtt b}_i$ を取り出す．
+最初の $\mathtt b$ が標識を取り出すならば，前と同様に $v_1$ は頂上
+$\hat{\mathtt b}_i$ を残し，帰納法の仮定によりそこからは $v_2$ を
+読めない．帰結については，$uwv\in L_n$ ならば，走行
+$E_n\xrightarrow{u}\mathcal X\xrightarrow{w}\mathcal Y\xrightarrow{v}\eps$
+は $\mathcal X=E_i\mathcal Y$ を満たし，
+補題~\ref{lem:app-br-recognition}(i) により
+$E_i\mathcal Y\xrightarrow{w'}\mathcal Y$ である；したがって
+$uw'v\in L_n$ であり，逆も同様である．
+\end{proof}
+
+\begin{lemma}[分岐の同期]\label{lem:app-br-branch}
+$\mathcal X\xrightarrow{x}\mathcal Y$ かつ
+$\mathcal X\xrightarrow{y}\mathcal Y$ で，$x,y$ は空でなく異なる文字で
+始まるとする．このとき，ある $1\le i\le n$ とスタック $\mathcal Z$ に
+ついて $\mathcal X=E_i\mathcal Z$ であり，$w,w'\in L^{(i)}$，
+$\mathcal Z\xrightarrow{x'}\mathcal Y$，
+$\mathcal Z\xrightarrow{y'}\mathcal Y$ を満たす $x=wx'$，$y=w'y'$ が
+存在する．
+\end{lemma}
+
+\begin{proof}
+二つの異なる文字，すなわち $\mathtt b$ と $\mathtt c$ を許すのは，
+$i\ge1$ の頂上 $E_i$ だけである．$x=\mathtt cx_0$，$y=\mathtt by_0$ と
+すると，$E_{i-1}\hat{\mathtt c}_i\mathcal Z\xrightarrow{x_0}\mathcal Y$ かつ
+$E_{i-1}E_{i-1}\hat{\mathtt b}_i\mathcal Z\xrightarrow{y_0}\mathcal Y$ で
+ある．(D3) により両方の走行は同じ場合にある．場合~(b) は不可能である：
+それは $\mathcal Y_1$ が $\hat{\mathtt c}_i$ で終わり $\mathcal Y_2$ が
+$\hat{\mathtt b}_i$ で終わる
+$\mathcal Y=\mathcal Y_1\mathcal Z=\mathcal Y_2\mathcal Z$ を与えるから
+である．場合~(a) では，
+$E_{i-1}\hat{\mathtt c}_i\xrightarrow{x_1}\eps$ かつ
+$\mathcal Z\xrightarrow{x'}\mathcal Y$ を満たす $x_0=x_1x'$ があるので，
+$w:=\mathtt cx_1$ は $E_i\xrightarrow{w}\eps$ を満たし，
+補題~\ref{lem:app-br-recognition}(i) により $w\in L^{(i)}$ である．
+同じ議論により $y=w'y'$ が得られる．
+\end{proof}
+
+\begin{proposition}\label{prop:app-br-congruence}
+\label{prop:app-tl-congruence}
+$\mathcal X\xrightarrow{x}\mathcal Y$ かつ
+$\mathcal X\xrightarrow{y}\mathcal Y$ ならば $x\equiv y$ である．
+したがって $L_n$ は Clark--Eyraud 代入可能である．
+\end{proposition}
+
+\begin{proof}
+$|x|+|y|$ についての帰納法による．$x$ または $y$ が空ならば
+$\mathcal X=\mathcal Y$ であり，(D2) により他方も空である．ある文字 $c$
+について $x=cx'$，$y=cy'$ ならば，(D1) により
+$\mathcal X'\xrightarrow{x'}\mathcal Y$ かつ
+$\mathcal X'\xrightarrow{y'}\mathcal Y$ を満たす
+$\mathcal X\xrightarrow{c}\mathcal X'$ が得られ，帰納法が適用できる．
+そうでなければ，補題~\ref{lem:app-br-branch} により $x=wx'$，$y=w'y'$
+が得られる；帰納法により $x'\equiv y'$，補題~\ref{lem:app-br-exchange}
+により $w\equiv w'$ であり，$\equiv$ は合同である．
+
+帰結については，$x,y\in\Sigma^+$ が $uxv,uyv\in L_n$ を満たすとする．
+(D1) と補題~\ref{lem:app-br-recognition}(i) により，走行
+$E_n\xrightarrow{u}\mathcal X\xrightarrow{x}\mathcal Y\xrightarrow{v}\eps$ と
+$E_n\xrightarrow{u}\mathcal X\xrightarrow{y}\mathcal Y'\xrightarrow{v}\eps$
+が存在する；$\mathcal Y$ と $\mathcal Y'$ は到達可能であるから，
+補題~\ref{lem:app-br-recognition}(ii) により $\mathcal Y=\mathcal Y'$
+であり，$x\equiv y$ である．$\{\mathtt a,\mathtt b,\mathtt c\}$ の外の
+文字は空の分布しかもたない．
+\end{proof}
+
+\begin{proof}[命題~\ref{prop:three-letter-family} の証明]
+(i) どの生成規則も空の右辺をもたない．
+$E_i\Rightarrow^*\mathtt c^i\mathtt a\mathtt c^i$ であるから文法は縮約済み
+である．非終端記号は $n+2$ 個であり，規則のサイズは $3$（開始），
+$2$（基底），$7$ と $5$（各段の二つの規則）である
+（定義~\ref{def:symbol-size}）．よって $\|G_n\|=13n+7$ である．$E_i$ の
+最短生成語の長さは $2i+1$ であり，$E_i$ より上の段は少なくとも
+$2(n-i)$ 文字を加え，これは規則 $E_j\to\mathtt cE_{j-1}\mathtt c$ に
+よって達成される．したがって開始規則，基底規則，単項規則の規則厚みは
+$2n+1$ であり，第 $i$ 段の二項規則の規則厚みは
+$2(n-i)+2+2(2i-1)=2n+2i$ である；よって $\bar\theta_{G_n}=4n$ である．
+
+(ii) 第一の主張は命題~\ref{prop:app-br-congruence} である．Clark--Eyraud
+代入可能性は，型にかかわらず文脈を共有するすべての非空因子の分布を
+同一視するので，すべての $s$ について固定 $s$ 代入可能性を導く；有限言語
+$L_n$ は文脈自由であるから $L_n\in\Ccf{s}$ である．
+
+(iii) 導出が $\mathtt c$ を含まない語を生成するのは，それが規則
+$E_i\to\mathtt cE_{i-1}\mathtt c$ を用いないとき，かつそのときに限る．
+$E_i$ からのそのような導出は高さ $i$ の完全二分木であり，$W_i$ を生成
+する．また $|W_0|=1$ として $|W_i|=2|W_{i-1}|+2$ である．
+
+(iv) (ii) により $L_n\in\Ccf{s_{U,3}}$ であり，(iii) により
+$\mu_1(L_n)=|W_n|$ として $1\in s(L_n)$ である．$m=1$ とした
+命題~\ref{prop:rare-type} により型 $1$ の語が強制され，それは $W_n$ で
+しかあり得ない．
+\end{proof}
+
+\section{孤立文字}
+\label{app:isolated}
+
+この付録では定理~\ref{thm:isolated-letter} と系~\ref{cor:isolated-data} を
+証明する．全体を通じて，$s:\Sigma^+\twoheadrightarrow\mathsf S$ は型付け，
+$\mathtt a\in\Sigma$ は $s$ について孤立している文字
+（定義~\ref{def:isolated-letter}），$L\in\Ccf{s}$ とする；
+$\eps\notin L$ と仮定してよい．$\Sigma^+$ の語は，$\mathtt a^+$ に属する
+とき\emph{純粋}であるといい，$\mathtt a$ を含まないとき
+\emph{$\mathtt a$ を含まない}といい，それ以外のとき，すなわち $\mathtt a$
+と他の文字を含むとき\emph{$\mathtt a$-混合}であるという．孤立性は次の
+二つの事実を通してのみ用いる：
+\begin{enumerate}[label=\textup{(I\arabic*)},leftmargin=*]
+\item すべての純粋な語は型 $s(\mathtt a)$ をもち，この型の語はちょうど
+純粋な語である；
+\item すべての $\mathtt a$-混合の語は一つの型をもつ．
+\end{enumerate}
+$x\in\Sigma^+$ について $\D(x):=\D_L(x)$ と書き，$\D(x)=\D(y)$ のとき
+$x\sim y$ と書く；これは $\Sigma^+$ 上の合同であり，空の分布をもつ語
+どうしは $\sim$-同値である．$x\sim y$ かつ $s(x)=s(y)$ のとき
+$x\equiv_{L,s}y$ と書く；代表元（第~\ref{sec:bridge}~節）は
+$\equiv_{L,s}$ を法としてとる．
+
+\subsection{準備}
+
+\begin{lemma}[簡約（cancellation）]
+\label{lem:app-h-cancel}
+$x,y\in\Sigma^+$ が同じ型をもち，$z\in\Sigma^+$，$\D(zx)\ne\emptyset$，
+$zx\sim zy$ とする．このとき $x\sim y$ である．右側についても同様である．
+\end{lemma}
+
+\begin{proof}
+$(l,r)\in\D(zx)$ について $lzyr\in L$ が得られるので，$x$ と $y$ は文脈
+$(lz,r)$ を共有する．
+\end{proof}
+
+この補題は，純粋な $x,y$ か $\mathtt a$-混合の $x,y$ にのみ適用する．
+これらはそれぞれ (I1)，(I2) により同じ型をもつ．非終端記号 $X$ が
+導出文脈（derivational context）$(l,r)$ をもつならば，同じ型をもつ $X$
+の二つの生成語は $(l,r)$ を共有し，$\sim$-同値である
+（補題~\ref{lem:homogeneity}）．$X$ が実現する型 $t$ について，型付き
+非終端記号 $X_t$ の代表元の長さ，すなわち型 $t$ をもつ $X$ の生成語と
+$\sim$-同値である型 $t$ の語の最小の長さを $\tau(X,t)$ と書く．
+
+\paragraph{文法．}
+$G'=(V',\Sigma,P',S)$ を，$L(G')=L$ を満たし，すべての生成規則が
+$X\to YZ$，$X\to Y$，$X\to\mathtt x$（$\mathtt x\in\Sigma$）の形である
+縮約済みの良い文法とする；たとえば補題~\ref{lem:lambda-elimination} の
+$G^+$ である．$k_V:=|V'|$，$\theta:=\bar\theta_{G'}$ とおく．$G'$ の
+すべての非終端記号は長さ $\le\theta$ の生成語と，$|l|+|r|\le\theta$ を
+満たす導出文脈 $(l,r)$ をもつ：それぞれ，その非終端記号を左辺にもつ
+生成規則，右辺にもつ生成規則を通る最短の文をとればよい．
+
+\subsection{木と基底}
+
+純粋な生成語をもつ $G'$ の非終端記号 $A$ を固定する；その最短のものを
+$\mathtt a^n$ とし，$T$ を節点数が最小である $A$ からの $\mathtt a^n$ の
+導出木，$(l,r)$ を $|l|+|r|\le\theta$ を満たす $A$ の導出文脈とする．
+$T$ の部分木を同じラベルからの導出で置き換えると $A$ の生成語 $w$ が
+得られ，したがって $lwr\in L$ である．生成語が $\theta$ より長い節点を
+\emph{重い}といい，重い子をもたない重い節点を\emph{種}（seed）という．
+
+\begin{lemma}
+\label{lem:app-h-tree}
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item $T$ の根から葉への経路上でラベルは繰り返さない；そのような経路は
+高々 $k_V$ 個の非終端節点をもつ．
+\item 同じラベル $Y$ をもつ $T$ のすべての節点は同じ生成語
+$\mathtt a^{n_Y}$ をもつ．
+\item 重い節点のすべてのラベル $Y$ は，長さ $\le\theta$ の生成語
+$\omega_Y\notin\mathtt a^+$ をもつ．
+\item 種の生成語の長さは $\le2\theta$ である；種どうしは対ごとに互いに素
+である；$k\ge1$ 個の種を含む部分木の生成語の長さは $\le k(k_V+2)\theta$
+である；連続する二つの種の左端の差は高々 $2k_V\theta$ である．
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) 祖先と子孫がラベルを共有するなら，祖先の部分木を子孫の部分木で
+置き換えると，$A$ のより短い純粋な生成語かより小さな木が得られる．
+(b) そうでなければ，長い方の部分木を短い方で置き換える．(c) ラベル $Y$
+をもつ重い節点における規則を $\rho$ とする．$\rho$ を用いる長さ
+$\le\theta$ の文は $|y|\le\theta<n_Y$ を満たす $Y$ の生成語 $y$ を含む；
+$y\in\mathtt a^+$ ならば，それを $T$ に挿入すると $A$ のより短い純粋な
+生成語が得られる．(d) 種は単位節点ではなく，二つの軽い（light）子をもつ．
+種 $v$ が種 $u$ の下にあるなら，$v$ の上にある $u$ の子は重いことになる．
+$k$ 個の種をもつ部分木の重い節点は種への経路上にあるので，高々 $kk_V$
+個であり，種でないものはそれぞれ高々一つの軽い子をもつ．連続する種
+$u,v$ の間には，それらの最小共通祖先からの二本の経路から垂れ下がる
+部分木の生成語があり，その個数は高々 $2(k_V-1)$ である；それぞれは軽い．
+重いものがあれば $u$ と $v$ の間に種を含むことになるからである．
+\end{proof}
+
+$X_0$ を $T$ の根とし，$X_{i+1}$ を $X_i$ の子のうち生成語の長い方と
+する；したがって $n_{X_i}\le2n_{X_{i+1}}$ である．根の部分木が種を
+もたなければ，根は軽く $n\le\theta$ である；種を一つ以上 $k_V$ 個以下
+もつならば $n\le k_V(k_V+2)\theta$ である．そうでなければ，部分木が
+少なくとも $k_V+1$ 個の種を含む最大の添字を $i^*$ とする；このとき
+$X_{i^*+1}$ は存在し，補題~\ref{lem:app-h-tree}(a) により
+$i^*\le k_V-2$ であり，$B_0:=n_{X_{i^*}}\le2k_V(k_V+2)\theta$ である；
+$n_{X_{i^*}}<n$ と仮定してよく，また $T$ は二分節点をもつので
+$k_V\ge2$ である．$X_{i^*}$ より下の種は $T$ において連続している；
+連続する $k_V+1$ 個の種のうち二つは同じラベル $Y$ をもち，その位置
+$x_1<x_2$ は $d:=x_2-x_1\le2k_V^2\theta$ を満たす．$g_0:=d-n_Y\ge0$，
+$\omega:=\omega_Y$，$x:=x_1$，$y:=n-x_2-n_Y$，$y_1:=n-x_1-n_Y=d+y$
+とおく．二つの種の両方，最初のもの，あるいは二番目のものを $\omega$ で
+置き換えると，$A$ の生成語
+\[
+ W_1=\mathtt a^x\omega\mathtt a^{g_0}\omega\mathtt a^y,\qquad
+ W_2=\mathtt a^x\omega\mathtt a^{d+y},\qquad
+ W_3=\mathtt a^{x+d}\omega\mathtt a^y
+\]
+が得られる．ここで $x+g_0+y\ge1$ である：そうでなければ二つの種が根の
+生成語を覆うことになるが，根の生成語は少なくとも $k_V+1\ge3$ 個の種を
+含む．$d\ge n_Y\ge1$ かつ $\omega\notin\mathtt a^+$ であるから，語
+$W_1,W_2,W_3$ は $\mathtt a$-混合である．
+
+\begin{lemma}[基底]
+\label{lem:app-h-base}
+$g_0\ge1$ であるか $\omega$ が $\mathtt a$-混合であるときは
+$z_0:=\omega\mathtt a^{g_0}$，$c_0:=d$ とおき，$g_0=0$ かつ $\omega$ が
+$\mathtt a$ を含まないときは $z_0:=\omega\mathtt a^d$，$c_0:=2d$ とおく．
+このとき $z_0$ は $\mathtt a$-混合であり，$\D(z_0)\ne\emptyset$，
+$d\mid c_0$ であって，次が成り立つ：
+\[
+ \mathtt a^dz_0\sim z_0\mathtt a^d\qquad\text{and}\qquad z_0z_0\sim\mathtt a^{c_0}z_0.
+\]
+\end{lemma}
+
+\begin{proof}
+(I2) により $W_1,W_2,W_3$ は一つの型をもつ；これらは $(l,r)$ を共有する
+ので $\sim$-同値である．$W_2\sim W_3$ の左の $\mathtt a^x$ と右の
+$\mathtt a^y$ を簡約すると（補題~\ref{lem:app-h-cancel}；残る語は
+$\mathtt a^d$ と $\omega$ を含むので $\mathtt a$-混合であり，簡約の対象と
+なる語は $W_2$ の因子であるからその分布は空でない），
+$\omega\mathtt a^d\sim\mathtt a^d\omega$ が得られる．$g_0\ge1$ であるか
+$\omega$ が $\mathtt a$-混合であるならば，$W_1\sim W_2$ における同じ簡約
+（ここで $\omega\mathtt a^{g_0}\omega$ は $\mathtt a$-混合である）に
+より $\omega\mathtt a^{g_0}\omega\sim\omega\mathtt a^d$ が得られ，
+したがって $z_0z_0\sim\omega\mathtt a^{d+g_0}=z_0\mathtt a^d$ かつ
+$\mathtt a^dz_0\sim z_0\mathtt a^d$ である．$g_0=0$ かつ $\omega$ が
+$\mathtt a$ を含まないならば，$n_Y=d$ かつ $x+y\ge1$ である．$y\ge1$ の
+とき，$\mathtt a^x$ と $\mathtt a^{y-1}$ を簡約すると
+$\omega\omega\mathtt a\sim\omega\mathtt a^{d+1}$ が得られるので，
+$z_0z_0\sim\omega\omega\mathtt a^{2d}\sim\omega\mathtt a^{3d}=z_0\mathtt a^{2d}$
+である；$y=0$ のとき，$\mathtt a^{x-1}$ を簡約すると
+$\mathtt a\omega\omega\sim\mathtt a\omega\mathtt a^d$ が得られるので，
+$\omega\omega$ の前に文字 $\mathtt a$ を一つ残したまま，
+$z_0z_0\sim\mathtt a^{2d}\omega\omega=\mathtt a^{2d-1}(\mathtt a\omega\omega)\sim\mathtt a^{2d-1}(\mathtt a\omega\mathtt a^d)=\mathtt a^{2d}z_0$
+である；$\mathtt a$ を含まない語 $\omega\omega$ が何かと比較されることは
+決してない．ここで比較される語は $\mathtt a$ と $\omega$ を含むので
+$\mathtt a$-混合であり，簡約の対象となる語は $W_1$ の因子である．どちらの
+場合も $z_0\mathtt a^{2d}\sim\mathtt a^{2d}z_0$ かつ
+$\mathtt a^dz_0\sim z_0\mathtt a^d$ である．最後に，$z_0$ は $W_1$ または
+$W_2$ の因子である．
+\end{proof}
+
+$\mathtt a$ が型 $1$ の唯一の文字である $U_1$ への型付けについては，
+$\mathtt a$ を含まない語は $\mathtt a$-混合の語と同じ型をもち，二番目の
+場合は避けることができる；本稿ではこれを用いない．
+
+\emph{注釈付き符号}（annotated code）とは，$e\ge0$，$d\mid e$，
+$z\sim\mathtt a^ez_0$ を満たす対 $(z,e)$ であり，その\emph{値}は
+$e+c_0$ である．$d\mid R$ を満たす純粋なブロック $\mathtt a^R$ は値 $R$
+をもつ．注釈付き符号とそのようなブロックの指定された積（specified
+product）$u$ について，$\operatorname{val}(u)$ をその因子の値の和とする．
+（指数 $e$ は一般に $z$ から定まらないので，値は注釈に付随させる．）
+
+\begin{lemma}
+\label{lem:app-h-collapse}
+$u$ が少なくとも一つの符号を含むならば
+$u\sim\mathtt a^{\operatorname{val}(u)-c_0}z_0$ である．
+\end{lemma}
+
+\begin{proof}
+各符号を $\mathtt a^ez_0$ で置き換え，$\mathtt a^dz_0\sim z_0\mathtt a^d$
+を用いてすべてのブロックを左へ移し，
+$z_0^t\sim\mathtt a^{(t-1)c_0}z_0$ を用いる．これは
+$z_0z_0\sim\mathtt a^{c_0}z_0$ と $d\mid c_0$ から帰納法で従う．
+\end{proof}
+
+\subsection{重い経路に沿った符号}
+
+$n_{X_i}<n$ を満たす最小の添字を $i_0$ とする；このとき
+$1\le i_0\le i^*$ である．$i_0\le i\le i^*$ について，
+$(\mathtt a^{p_i},\mathtt a^{q_i})$ を $T$ の内部での $X_i$ の文脈とする．
+したがって $p_i+q_i\ge1$ である；$X_i$ の部分木は二つの種の両方を含む；
+その内部で最初の種の左と右にある文字の個数を $L_i,R_i$ とする．
+したがって $R_i\ge g_0+n_Y\ge1$ である．
+$\Omega_i:=\mathtt a^{L_i}\omega\mathtt a^{R_i}$ とおく．これは $X_i$ の
+$\mathtt a$-混合の生成語である．
+
+\begin{lemma}
+\label{lem:app-h-borrow}
+$\omega_{X_i}$ が $\mathtt a$-混合ならば $\omega_{X_i}\sim\Omega_i$ で
+ある．$\omega_{X_i}$ が $\mathtt a$ を含まず $p_i\ge1$ ならば
+$\mathtt a\omega_{X_i}\sim\mathtt a\Omega_i$ である；$\omega_{X_i}$ が
+$\mathtt a$ を含まず $p_i=0$ ならば
+$\omega_{X_i}\mathtt a\sim\Omega_i\mathtt a$ である．
+\end{lemma}
+
+\begin{proof}
+$l\mathtt a^{p_i}\omega_{X_i}\mathtt a^{q_i}r$ と
+$l\mathtt a^{p_i}\Omega_i\mathtt a^{q_i}r$ はともに $L$ に属する．第一の
+場合，$\omega_{X_i}$ と $\Omega_i$ は $\mathtt a$-混合で文脈
+$(l\mathtt a^{p_i},\mathtt a^{q_i}r)$ を共有する．第二の場合，
+$\mathtt a\omega_{X_i}$ と $\mathtt a\Omega_i$ は $\mathtt a$-混合で文脈
+$(l\mathtt a^{p_i-1},\mathtt a^{q_i}r)$ を共有する；第三の場合は
+$q_i\ge1$ として対称である．(I2) により結論が得られる．
+\end{proof}
+
+$d\mid L_i+s'_i$ を満たし，補題~\ref{lem:app-h-base} の第一の場合には
+$R_i+s_i\equiv g_0\pmod d$，第二の場合には $R_i+s_i\equiv0\pmod d$ を
+満たし，さらに補題~\ref{lem:app-h-borrow} で文字を借りるときにはそれぞれ
+$s'_i\ge1$，$s_i\ge1$ を満たすように，$s_i',s_i\in[0,d]$ を選ぶ．
+$\hat z_i:=\mathtt a^{s'_i}\omega_{X_i}\mathtt a^{s_i}$ とおく．
+補題~\ref{lem:app-h-borrow} により
+$\hat z_i\sim\mathtt a^{s'_i+L_i}\omega\mathtt a^{R_i+s_i}$ である．
+$R_i\ge g_0+n_Y$ であるから，第一の場合には $k\ge0$ として
+$R_i+s_i=g_0+kd$，第二の場合には $k\ge0$ として $R_i+s_i=d+kd$ である；
+したがって $e_i:=s'_i+L_i+kd$ として $\hat z_i\sim\mathtt a^{e_i}z_0$
+であり，$(\hat z_i,e_i)$ は注釈付き符号である．その値と長さに
+ついて，どちらの場合にも次が成り立つ（$n_{X_i}=L_i+n_Y+R_i$ と，第一の
+場合には $d-g_0=n_Y$，第二の場合には $n_Y=d$ を用いる）：
+\[
+ v_i=n_{X_i}+s_i+s'_i,\qquad|\hat z_i|\le\theta+2d,
+\]
+$i<i_0$ については $v_i:=n$ とおく（符号はない）．$X_i$ は，生成語が
+二つの種を含む $X_{i^*}$ の祖先であるから，$i\le i^*$ について
+$n_{X_i}\ge d+n_Y$ である．したがって，すべての $i\le i^*$ について
+\begin{equation}
+\label{eq:app-h-star}
+ v_i\ge n_{X_i}>d,\qquad v_i\le2v_{i+1}+2d\ \ (i<i^*),
+\end{equation}
+が成り立ち，$v_{i^*}\le B_0+2d$ である；さらに
+$n\le2n_{X_{i_0}}\le2v_{i_0}$ である．
+
+$A$ の生成語 $\mathtt a^{x_1}\omega\mathtt a^{y_1}$ は，$h:=y_1-g_0$
+（第二の場合には $h:=y_1-d$）として $\mathtt a^{x_1}z_0\mathtt a^{h}$ に
+等しい．$0\le\rho,\rho'<d$，$d\mid e^*$ として $h=qd+\rho$，
+$x_1+qd=e^*+\rho'$ と書くと，$l_\circ:=l\mathtt a^{\rho'}$，
+$r_\circ:=\mathtt a^\rho r$ について $l_\circ\mathtt a^{e^*}z_0r_\circ\in L$
+が得られ，$V^*:=e^*+c_0=n-\rho-\rho'$ である．
+
+\subsection{周期性と所属}
+
+\begin{lemma}
+\label{lem:app-h-period}
+$P_0:=\{p\ge0:\mathtt a^pz_0\sim z_0\}$ とおく．
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $P_0=\{0\}$ であるか，ある $p_0\ge1$ について
+$P_0=p_0\mathbb Z_{\ge0}$ である．
+\item ある $f$ について $l'\mathtt a^fz_0r'\in L$ ならば，
+$\{f\ge0:l'\mathtt a^fz_0r'\in L\}$ は，$P_0=\{0\}$ のとき一点であり，
+そうでないとき $p_0$ を法とする一つの剰余類全体である．
+\item $P_0\ne\{0\}$ ならば $\mathtt a\sim\mathtt a^{1+p_0}$ であり，
+したがってすべての $\mathtt a^k$ は $1\le k'\le p_0$ を満たすある
+$\mathtt a^{k'}$ と $\equiv_{L,s}$-同値である．
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+すべての語 $\mathtt a^fz_0$ は $\mathtt a$-混合であるから，(I2) により
+一つの型をもつ．(i) $P_0$ は和について閉じている．$P_0$ の $q>p>0$ に
+ついて，$\D(\mathtt a^pz_0)=\D(z_0)\ne\emptyset$ であるから，
+$\mathtt a^p(\mathtt a^{q-p}z_0)\sim\mathtt a^pz_0$ に
+補題~\ref{lem:app-h-cancel} を適用して，差 $q-p$ についても閉じている；
+$p=0$ の場合は自明である．(ii) 二つの元 $f<f'$ は
+$\mathtt a^fz_0\sim\mathtt a^{f'}z_0$ を与えるので，
+補題~\ref{lem:app-h-cancel} により $f'-f\in P_0$ である；逆に，この集合は
+加えることについて閉じており，また
+$\mathtt a^{p_0}z_0\sim z_0$ により $p_0$ を引くことについても閉じている．
+(iii) $(l',r')\in\D(z_0)$ について，$l'\mathtt a^{p_0}z_0r'$ と
+$l'\mathtt a^{2p_0}z_0r'$ はともに $L$ に属するので，(I1) により一つの型を
+もつ純粋な語 $\mathtt a$ と $\mathtt a^{1+p_0}$ は文脈
+$(l'\mathtt a^{p_0-1},z_0r')$ を共有する．
+\end{proof}
+
+$D:=\operatorname{lcm}(d,p_0)$ とし，$P_0=\{0\}$ ならば $D:=\infty$ と
+する．補題~\ref{lem:app-h-collapse} と補題~\ref{lem:app-h-period}(ii)
+により，符号を含む上のような指定された積 $u$ のすべてについて
+\begin{equation}
+\label{eq:app-h-member}
+ l_\circ ur_\circ\in L\iff\operatorname{val}(u)\equiv V^*\pmod D,
+\end{equation}
+が成り立つ．ここで $D=\infty$ のときは等号とする；値と $V^*$ は $d$ の
+倍数である．この同値性は注釈のあらゆる選び方について成り立つ．さらに
+$\D(z)\ne\emptyset$ ならば，同じ語の二つの注釈 $(z,e)$，$(z,e')$ は
+$D$ の倍数だけ異なる：空でない分布をもつ
+$\mathtt a^ez_0\sim\mathtt a^{e'}z_0$ から補題~\ref{lem:app-h-cancel} に
+より $|e-e'|\in P_0$ が得られ，両者は $d$ の倍数である．
+$\D(z)\ne\emptyset$ がなければこれは成り立たないことがある．空の分布を
+もつ二つの語は常に $\sim$-同値だからである．
+
+\subsection{数え上げ}
+
+\begin{lemma}
+\label{lem:app-h-count}
+$(z_1,e_1),\ldots,(z_M,e_M)$ を，$M\ge6$，$|z_j|\le\ell_z$ を満たし，
+部分和が対ごとに相異なる値 $w_j$ をもち，$\Sigma_w:=\sum_jw_j<D$ を
+満たす注釈付き符号とし，$Q$ を $\Sigma_w+\operatorname{val}(Q)=V^*$ を
+満たす符号とブロックの固定された指定された積とする．
+$m:=|l_\circ|+|r_\circ|+|Q|+\sum_j|z_j|$ とおく．このとき次が成り立つ：
+\[
+ (27/4)^{\lfloor M/3\rfloor}\le(M+1)^2k_V(m+1)^2(M\ell_z+1)^2.
+\]
+\end{lemma}
+
+\begin{proof}
+置換 $\pi$ について，語
+$w_\pi:=l_\circ z_{\pi(1)}\cdots z_{\pi(M)}Qr_\circ$ は
+\eqref{eq:app-h-member} により $L$ に属する．$G'$ における $w_\pi$ の
+導出木をとり，単位節点を縮め，各節点に「その生成語の中に最初の文字がある
+符号 $z_{\pi(1)},\ldots,z_{\pi(M)}$ の個数」という重みを与える．葉の
+重みは $\le1$，根の重みは $M$ である；重みの大きい方の子へと下っていくと，
+重み $\kappa\in(M/3,2M/3]$，ラベル $X$，生成語の区間 $[p,q)$ をもつ節点
+$u$ に到達する．$z_j$ が $[p,q)$ の内部にあるような添字 $j$ の集合を
+$I(\pi)$ とする；このとき $\kappa-1\le|I(\pi)|\le\kappa$ である．$\pi$ の
+\emph{記録}（record）は，$X$，$p$，$q$，および $M$ 個の符号のいずれかの
+真に内部にある $[p,q)$ の各端点についての，その符号の添字とオフセット
+からなる；記録は高々 $k_V(m+1)^2(M\ell_z+1)^2$ 通りである．三つの
+ブロック $l_\circ$，$z_{\pi(1)}\cdots z_{\pi(M)}$，$Qr_\circ$ はすべての
+$\pi$ について同じ位置を占める．最初の文字が $[p,q)$ にある符号は，
+$I(\pi)$ の符号と，内部で始まり $q$ の後で終わる高々一つの符号である；
+$p$ を通る符号は $p$ より前で始まる．これにより $\kappa-1\le|I(\pi)|$
+が得られる．$[p,q)$ の各端点は，$l_\circ$ の中，$Qr_\circ$ の中，二つの
+符号の境界上，あるいはある符号の真に内部のいずれかにある；最後の場合に
+のみ符号がそこで切断され，そのときその添字とオフセットは記録の一部で
+ある．したがって記録は，各端点でこれら四つの場合のどれが起こるかも
+定める．どの符号も両端で切断されることはない．そうであれば $[p,q)$ は
+一つの符号の内部にあり，$\kappa\le1$ となるからである．符号は対ごとに
+相異なる語である：各符号は語 $w_\pi\in L$ の因子であるから空でない分布を
+もち，$z_j=z_k$ ならばそれらの注釈は $D$ の倍数だけ異なるので
+$w_j\equiv w_k\pmod D$ であり，両者は $[0,D)$ に属するので $w_j=w_k$，
+部分和が相異なるので $j=k$ である．（以下の継ぎ合わせは位置について
+行うので，このことは必要としない．）
+
+$\pi,\pi'$ が同じ記録をもつとする．$w_\pi$ の木における $u$ の部分木を
+$w_{\pi'}$ の対応する部分木で置き換えると，
+$w_\pi[0,p)\,w_{\pi'}[p,q)\,w_\pi[q,|w_\pi|)\in L$ の導出が得られる．
+符号の内部にある端点は両側で同じ添字とオフセットをもつので，断片は同じ
+符号の完全なコピーへとつながり，その語は $l_\circ u''Qr_\circ$ となる．
+ここで $u''$ は完全な符号の積であり，$z_j$ はその中に
+$1-\mathbf 1[j\in I(\pi)]+\mathbf 1[j\in I(\pi')]$ 回現れる；これは
+$l_\circ$ や $Qr_\circ$ の中にある端点も扱い，$\kappa\ge2$ であるから
+両端点が $Qr_\circ$ の中にあることはない．\eqref{eq:app-h-member} により
+$\sum_{I(\pi')}w_j\equiv\sum_{I(\pi)}w_j\pmod D$ である；両方の和は
+$[0,\Sigma_w)\subseteq[0,D)$ に属するので等しく，$I(\pi')=I(\pi)$ である．
+
+したがって，記録と $I=I(\pi)$（$|I|=j$）は，内部の順序（$\le j!$ 通り）
+と，このブロックのまわりの残りの符号の配置（$\le(M-j+1)!$ 通り）を除いて
+$\pi$ を定める．$j\in\{\kappa-1,\kappa\}$ かつ $M/3<\kappa\le2M/3$ で
+あるから，$j$ は $J:=[\lfloor M/3\rfloor,\lfloor2M/3\rfloor]$ に属し，
+ある $j\in J$ について
+$\binom{M+1}{j}\le(M+1)k_V(m+1)^2(M\ell_z+1)^2$ である．
+$k:=\lfloor M/3\rfloor$ とおく．$\binom{M+1}{\cdot}$ は対称かつ単峰であり，
+$\lfloor M/3\rfloor+\lfloor2M/3\rfloor\le M$ であるから，すべての
+$j\in J$ は $\binom{M+1}{j}\ge\binom{M+1}{k}\ge\binom{3k}{k}$ を満たす．
+最後に，数 $t_i:=\binom{3k}{i}3^{-i}(2/3)^{3k-i}$（$0\le i\le3k$）の和は
+$1$ であり，$t_{i+1}/t_i=(3k-i)/(2i+2)$ が $1$ 以上であるのは
+$i\le k-1$ のとき，かつそのときに限る；したがって $t_k$ はそれらのうち
+最大であり，$t_k\ge1/(3k+1)\ge1/(M+1)$ である．
+$t_k=\binom{3k}{k}4^k/27^k$ であるから，これより
+$\binom{3k}{k}\ge(27/4)^k/(M+1)$ が得られ，補題が従う．
+\end{proof}
+
+\subsection{選択と充填}
+
+$\Lambda:=\min(V^*,D)$ とおく．したがって $\Lambda\le V^*\le n$ である．
+
+\begin{lemma}[選択]
+\label{lem:app-h-select}
+添字 $i^*=j_1>j_2>\cdots>j_M\ge i_0$ が $M\ge0$ 個存在して，その値
+$w_t:=v_{j_t}$ は超増加的（superincreasing）
+\textup($w_t>w_1+\cdots+w_{t-1}$\textup) であり，
+$w_1+\cdots+w_M<\Lambda$ かつ $\Lambda\le3^M(v_{i^*}+d)$ を満たす．
+\end{lemma}
+
+\begin{proof}
+$v_{i^*}\ge\Lambda$ ならば $M:=0$ とする．そうでなければ $j_1:=i^*$ と
+する．$j_t$ と $S_t:=w_1+\cdots+w_t<\Lambda$ が与えられたとき，$j_t$ より
+小さい添字で $v_i>S_t$ を満たす最大のものを $i$ とする；
+$v_0=n\ge\Lambda$ であるからこれは存在する（$i_0\ge1$ であったことを
+思い出す）．$S_t+v_i\ge\Lambda$ ならば $M:=t$ として停止する；そうで
+なければ $j_{t+1}:=i$ とする．構成により，値は超増加的であり，その和は
+$\Lambda$ より小さい．採られた値は $\Lambda\le n$ より小さいが，$i<i_0$
+については $v_i=n$ である；したがって採られた添字はすべて $i_0$ 以上で
+ある．$i$ の選び方により $v_{i+1}\le S_t$ である：$i+1<j_t$ のときは
+最大性により，$i+1=j_t$ のときは $v_{j_t}=w_t$ であることによる．
+\eqref{eq:app-h-star} により $v_i\le2S_t+2d$ である．したがって，$i$ が
+採られるときには常に $S_{t+1}+d\le3(S_t+d)$ であり，過程が停止するとき
+には $\Lambda\le S_M+v_i<3(S_M+d)$ である．$S_1=v_{i^*}$ とあわせて
+$\Lambda<3^M(v_{i^*}+d)$ が得られる．
+\end{proof}
+
+\begin{lemma}[充填（filler）]
+\label{lem:app-h-filler}
+$0<X<n$ を $d$ の倍数とする．$\hat z_{i_0},\ldots,\hat z_{i^*}$ の中から
+とった高々 $3k_V$ 個の符号と，$d\mid X'$ かつ $X'<v_{i^*}$ を満たす
+高々一つの純粋なブロック $\mathtt a^{X'}$ からなる指定された積 $Q$ で
+あって，$\operatorname{val}(Q)=X$ かつ $|Q|\le(3k_V+2)\ell_z$ を満たす
+ものが存在する．ここで $\ell_z:=5k_V^2\theta$ である．
+\end{lemma}
+
+\begin{proof}
+$i=i_0,\ldots,i^*$ について順に，$\hat z_i$ のコピーを
+$q_i:=\lfloor X/v_i\rfloor$ 個付け加え，$X$ を $X-q_iv_i$ で置き換える．
+$X<n\le2v_{i_0}$ であるから $q_{i_0}\le1$ である．$i>i_0$ については現在の
+$X$ は $v_{i-1}$ より小さく，\eqref{eq:app-h-star} により
+$v_{i-1}\le2v_i+2d<4v_i$ であるから $q_i\le3$ である．最後の余り
+$X'<v_{i^*}$ は，すべての値がそうであるから $d$ の倍数であり，
+ブロックとして付け加える．$i^*-i_0\le k_V-3$ であるから，符号は高々
+$1+3(k_V-3)<3k_V$ 個であり，それぞれの長さは $\le\theta+2d\le\ell_z$
+であって，$X'<v_{i^*}\le B_0+2d\le(6k_V^2+4k_V)\theta\le2\ell_z$ である．
+\end{proof}
+
+\subsection{定理~\ref{thm:isolated-letter} の証明}
+
+$A$ が純粋な生成語をもつとする．(I1) により型 $s(\mathtt a)$ をもつ $A$
+の生成語はその純粋な生成語であるから $\tau(A,s(\mathtt a))\le n$ であり，
+$\tau(A,s(\mathtt a))\le11\cdot3^{M^*}k_V^2\theta$ を示せば十分である．
+ここで
+\[
+ M^*:=\max\bigl(\{5\}\cup\{M\ge6:(27/4)^{\lfloor M/3\rfloor}
+ \le(M+1)^4k_V(3k_V+M+4)^2\ell_z^{\,4}\}\bigr),
+\]
+であり，左辺は $M$ について指数的に増大するので，これは有限の数である．
+根の部分木の種が高々 $k_V$ 個であるか，$n_{X_{i^*}}=n$ ならば，
+$n\le2k_V(k_V+2)\theta$ である．そうでなければ
+補題~\ref{lem:app-h-select} の添字をとる．
+
+\emph{数え上げ．}$M\ge6$ と仮定する．$X:=V^*-\sum_tw_t$ とおく；
+$\sum_tw_t<\Lambda\le V^*\le n$ かつ $w_1>0$ であるから $0<X<n$ であり，
+$X$ は $d$ の倍数である．$Q$ を補題~\ref{lem:app-h-filler} で与えられる
+ものとする．符号 $\hat z_{j_1},\ldots,\hat z_{j_M}$ は長さ $\le\ell_z$ と
+超増加的な値をもつので，その部分和は相異なり，$\sum_tw_t<\Lambda\le D$
+である．$|l_\circ|+|r_\circ|\le\theta+2d\le\ell_z$ により
+$m\le(3k_V+M+3)\ell_z$ が得られ，
+$(m+1)^2(M\ell_z+1)^2\le(3k_V+M+4)^2(M+1)^2\ell_z^{\,4}$ とした
+補題~\ref{lem:app-h-count} により $M\le M^*$ が得られる．したがって
+どの場合にも $M\le M^*$ であり，補題~\ref{lem:app-h-select} により次が
+得られる：
+\[
+ \Lambda\le3^{M^*}(v_{i^*}+d)\le3^{M^*}(B_0+3d)\le10\cdot3^{M^*}k_V^2\theta .
+\]
+
+\emph{結論．}$\Lambda=V^*$ ならば $n=V^*+\rho+\rho'<\Lambda+2d$ であり，
+$\tau(A,s(\mathtt a))\le n$ である．$\Lambda=D<V^*$ ならば $P_0\ne\{0\}$
+であり，補題~\ref{lem:app-h-period}(iii) により
+$\mathtt a^n\equiv_{L,s}\mathtt a^{n'}$（ただし $n'\le p_0\le D$）であるから，
+$\tau(A,s(\mathtt a))\le n'$ である．小さい場合とあわせて，
+$\tau(A,s(\mathtt a))\le\max\{2k_V(k_V+2)\theta,\,10\cdot3^{M^*}k_V^2\theta+4k_V^2\theta\}
+\le11\cdot3^{M^*}k_V^2\theta$ である．
+
+\emph{指数．}$\mu:=(27/4)^{1/3}$，$\gamma:=\ln3/\ln\mu<1.7260$，
+$\eta:=1/80$，$C_\eta:=\sup_{M\ge0}(M+1)^6\mu^{-\eta M}<e^{34}$ とおく
+（$x>0$ における $6\ln x-(x-1)\eta\ln\mu$ の最大値は
+$x=6/(\eta\ln\mu)$ で達成される）．$M^*$ を定める集合に属する $M\ge6$
+について，$\mu^{M-2}\le(27/4)^{\lfloor M/3\rfloor}$ と
+$3k_V+M+4\le5k_V(M+1)$ から次が得られる：
+\[
+ \mu^M\le15625\,\mu^2(M+1)^6k_V^{11}\theta^4,\qquad\text{hence}\qquad
+ \mu^{(1-\eta)M}\le15625\,\mu^2C_\eta k_V^{11}\theta^4,
+\]
+また $3^M=\mu^{\gamma M}\le(15625\,\mu^2C_\eta k_V^{11}\theta^4)^{\gamma/(1-\eta)}$
+である；これは $M=5$ についても成り立つ．$\gamma/(1-\eta)=80\gamma/79<1.7479$
+であるから，次が得られる：
+\[
+ \tau(A,s(\mathtt a))\le11\cdot3^{M^*}k_V^2\theta\le C_0k_V^{2+19.23}\theta^{1+6.992}
+ \le C_0k_V^{22}\theta^8,\qquad C_0:=11(15625\,\mu^2C_\eta)^{80\gamma/79}<10^{36}.
+\]
+これが定理である．$\eta\to0$ とすると，指数は $2+11\gamma<20.99$ と
+$1+4\gamma<7.91$ にいくらでも近くとれることがわかる．\qed
+
+\subsection{その他の型と系~\ref{cor:isolated-data} の証明}
+
+\begin{lemma}
+\label{lem:app-h-other}
+$G'$ を上のとおりとし，$A$ を $G'$ の非終端記号とする．
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $s:\Sigma^+\twoheadrightarrow U_1$ で $\mathtt a$ が型 $1$ の唯一の
+文字であり，$A$ が型 $\zeta$ の生成語をもつならば，
+$\tau(A,\zeta)\le(k_V-1)\theta+1$ である．
+\item $\Sigma=\{\mathtt a,\mathtt b\}$，$s=c$ で，$A$ が内容 $\Sigma$ の
+生成語をもつならば，$\tau(A,\Sigma)\le3k_V\theta+2$ である．
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) 型 $\zeta$ をもつ $A$ の生成語の導出で節点数が最小のものをとり，
+文字が $\mathtt a$ でない葉に印をつける．根から印のついた葉への経路上の
+節点の部分木を，同じ経路上で同じラベルをもつより下の節点の部分木で
+置き換えても，印のついた葉，したがって型は保たれる；したがってこの経路
+上でラベルは繰り返さず，経路は高々 $k_V$ 個の非終端節点をもつ．そこから
+垂れ下がる高々 $k_V-1$ 個の部分木を長さ $\le\theta$ の生成語で置き換える
+と，型 $\zeta$ で長さ $\le(k_V-1)\theta+1$ の $A$ の生成語が得られる．
+(ii) 内容 $\Sigma$ の生成語の導出で節点数が最小のものをとり，
+$\mathtt a$-葉と $\mathtt b$-葉に印をつける．根，分岐節点，二つの葉の間の
+三つの経路区間のそれぞれの内部で同じ置き換えを行うと（異なる区間の間では
+決して行わない），骨格は高々 $3k_V$ 個の節点をもつ；そこから垂れ下がる
+高々 $3k_V$ 個の部分木を長さ $\le\theta$ の生成語で置き換えると，長さ
+$\le3k_V\theta+2$ で内容 $\Sigma$ の生成語が得られる．どちらの場合も
+新しい語は同じ型をもつ $A$ の生成語であり，したがって同じ類に属する
+（補題~\ref{lem:homogeneity}）．
+\end{proof}
+
+\section{\texorpdfstring{$U_1$}{U1} への型付け}
+\label{app:u1}
+
+\subsection{有限代入可能言語の文字が互いに素な像}
+
+\begin{lemma}\label{lem:app-u1-insertion}
+$L\subseteq\Delta^+$ を有限で Clark--Eyraud 代入可能な言語とする．
+$PQ\in L$ かつ $PTQ\in L$ を満たす $P,Q\in\Delta^*$ と $T\in\Delta^+$ は
+存在しない．
+\end{lemma}
+
+\begin{proof}
+そうでないと仮定する．$P\ne\eps$ ならば，語 $P$ と $PT$ は文脈
+$(\eps,Q)$ を共有するので $\D_L(P)=\D_L(PT)$ である；すると
+$PT^jQ\in L$ ならば $PT^{j+1}Q\in L$ となり，$L$ はあらゆる長さの語
+$PT^jQ$ を含むことになって，有限性に反する．$P=\eps$ ならば，文脈 $(\eps,\eps)$ を共有する $Q$ と
+$TQ$ について同様に議論する．
+\end{proof}
+
+\begin{lemma}\label{lem:app-u1-code}
+$h:\Delta^*\to\Sigma^*$ を準同型で，すべての $h(\delta)$
+（$\delta\in\Delta$）が空でなく，すべての $h(\delta)$ の連接において
+どの文字も二度現れないものとする．$L\subseteq\Delta^+$ が有限で
+Clark--Eyraud 代入可能ならば，$h(L)$ もそうである．
+\end{lemma}
+
+\begin{proof}
+ある $h(\delta)$ に現れる各文字は，$\delta$ と $h(\delta)$ におけるその
+位置を定める．したがって $h$ は単射であり，語 $h(D)$ において各文字の
+出現は符号語（codeword）$h(\delta)$ の定まった出現に属する；隣接する
+二つの文字が一つの符号語の出現の中にあるかどうか，また文字が符号語の
+出現を始めるか終えるかは，文字そのものから読み取れる．
+
+$x\ne y$ である $x,y\in\Sigma^+$ が，$h(L)$ において $pxq=h(D_1)$，
+$pyq=h(D_2)$ を満たすとする．$p$ の内部にある符号語の出現と $q$ の内部に
+あるものは両方の語で同じである；したがって $D_i=PM_iQ$ であり，ここで
+$M_i$ は，それぞれ $x$，$y$ と交わる符号語の出現からなる．$p$ が符号語の
+出現 $h(\delta)$ の内部で終わるならば，$M_1$ と $M_2$ はともに $\delta$
+で始まり，$q$ が符号語の出現 $h(\delta')$ の内部で始まるならば，両者は
+ともに $\delta'$ で終わる．
+
+$x$ が一つの符号語の出現 $h(\delta)$ の内部にあり，その全体ではないと
+する；たとえば $p$ がその内部で終わるとする（他の場合は対称である）．
+このとき $M_1=\delta$ であり，$M_2$ は $\delta$ で始まる；$M_2\ne M_1$ である（そうでなければ $y=x$ となる）
+ので，$T\in\Delta^+$ に
+ついて $M_2=\delta T$ となり，$D_1=P\delta Q$，$D_2=P\delta TQ$ は
+補題~\ref{lem:app-u1-insertion} に反する．$x$ と $y$ を入れ替えても同じ
+ことが成り立つ．したがって，どちらも符号語全体でない限り一つの符号語の
+出現の内部にはない．このとき $M_1=[\delta]X[\delta']$，
+$M_2=[\delta]Y[\delta']$ である．ここで $X,Y\in\Delta^*$ はそれぞれ $x$，
+$y$ の内部にある符号語であり，括弧で囲んだ文字は，対応する切れ目が
+符号語の内部にあるとき，かつそのときに限り現れる．$X=\eps\ne Y$ または
+$Y=\eps\ne X$ ならば再び補題~\ref{lem:app-u1-insertion} に反し，
+$X=Y=\eps$ ならば $x=y$ となる．したがって $X,Y\in\Delta^+$ であり，
+\[
+ x=\alpha\,h(X)\,\beta,\qquad y=\alpha\,h(Y)\,\beta,
+\]
+ここで $\alpha$ は $p$ の後の $h(\delta)$ の部分（または $\eps$），$\beta$
+は $q$ の前の $h(\delta')$ の部分（または $\eps$）である．語 $X$ と $Y$
+は $L$ において文脈を共有するので，$\D_L(X)=\D_L(Y)$ である．
+
+いま $p'xq'\in h(L)$ とする．$\alpha$ と $h(X)$ の間の切れ目，および
+$h(X)$ と $\beta$ の間の切れ目は符号語の出現の境界であり，それは $x$ の
+文字から読み取れる；したがってある $P',Q'$ について $p'\alpha=h(P')$，
+$\beta q'=h(Q')$ であり，$P'XQ'\in L$ である．すると $P'YQ'\in L$ で
+あり，$h(P'YQ')=p'yq'$ である．対称性により
+$\D_{h(L)}(x)=\D_{h(L)}(y)$ である．
+\end{proof}
+
+\subsection{二文字型付けに対する二次の特徴データ}
+
+命題~\ref{prop:binary-quadratic} を証明する．$k:=2^m$，$M:=2^n$，
+$\psi(w):=|w|_{\mathtt b}+|w|_{\mathtt a}/k$ とおく；これは加法的である．
+語 $w$ について，$\ell(w)$ と $\varrho(w)$ を，$\mathtt a^*$ に属する
+その最長の接尾辞と最長の接頭辞の長さとする．
+
+\begin{proof}[命題~\ref{prop:binary-quadratic} の証明]
+(i) $\Sigma^+$ の語が $L_{m,n}$ に属するのは，$\mathtt a$ のすべての
+極大な連なりの長さが $k$ で割り切れ，かつ $\psi(w)=M$ であるとき，かつ
+そのときに限る：そのような語はブロック $\mathtt a^k$ と $\mathtt b$ に
+一意に分解され，$\psi$ はブロックを数える．$x,y\in\Sigma^+$ が同じ型を
+もち，$uxv,uyv\in L_{m,n}$ とする．加法性により $\psi(x)=\psi(y)$ で
+ある．$x,y$ が純粋ならば，これから $x=y$ が得られる．そうでなければ，
+$x'$ が $\mathtt b$ で始まりかつ終わるように
+$x=\mathtt a^{\alpha}x'\mathtt a^{\beta}$ と書き，同様に
+$y=\mathtt a^{\alpha'}y'\mathtt a^{\beta'}$ と書く．$x'$ と $y'$ の内部の
+$\mathtt a$ の極大な連なりは $uxv$ と $uyv$ の極大な連なりであるから，
+その長さは $k$ で割り切れる；$x$ の両端を通る連なりの長さは
+$\ell(u)+\alpha$ と $\beta+\varrho(v)$ であるから，
+$\alpha\equiv\alpha'$ かつ $\beta\equiv\beta'\pmod k$ である．任意の文脈
+$(p,q)$ について，$pxq$ の $\mathtt a$ の極大な連なりは，末尾にない
+$p$ の連なり，長さ $\ell(p)+\alpha$ の連なり，$x'$ の内部の連なり，
+長さ $\beta+\varrho(q)$ の連なり，および先頭にない $q$ の連なりで
+ある；$\alpha',\beta',y'$ についても $pyq$ に対して同じことが成り立つ．
+したがって割り切れる条件は一致し，$\psi(pxq)=\psi(pyq)$ であって，
+$pxq\in L_{m,n}\iff pyq\in L_{m,n}$ である．有限言語は文脈自由である．
+
+(ii) 非終端記号 $C_0,\ldots,C_m$，$A_0,\ldots,A_n$，開始記号 $A_n$ と，
+規則 $C_0\to\mathtt a$，$C_j\to C_{j-1}C_{j-1}$（$1\le j\le m$），
+$A_0\to C_m\mid\mathtt b$，$A_i\to A_{i-1}A_{i-1}$（$1\le i\le n$）を
+とる．このとき $L(C_j)=\{\mathtt a^{2^j}\}$，
+$L(A_0)=\{\mathtt a^k,\mathtt b\}$ であり，$L(A_i)$ は $L(A_0)$ の $2^i$
+個の語の連接全体の集合であるから，$L(A_n)=L_{m,n}$ である；この文法は
+良く，縮約済みである．非終端記号は $m+n+2$ 個であり，規則のサイズは
+$2$，$5$（$m$ 個の規則），$3$，$2$，$5$（$n$ 個の規則）である
+（定義~\ref{def:symbol-size}）から，$6m+6n+9$ が得られる．非終端記号の
+出現 $B_1,\ldots,B_q$ をもつ生成規則 $R:B\to\alpha$ を用いる最短の文の
+長さは $\theta_G(R)=o_B+c_R+\sum_jd_{B_j}$ である．ここで $d_C$ は $C$
+の最短生成語の長さ，$o_C$ は文における $C$ の出現のまわりの文字数の
+最小値，$c_R$ は $R$ が書く終端記号の個数である；ここでは
+$d_{A_0}=1$，$d_{A_i}=2^i$，$d_{C_j}=2^j$，$o_{A_i}=M-2^i$，
+$o_{A_0}=o_{C_m}=M-1$，$o_{C_j}=M-1+k-2^j$ である．これにより，$A_i$ の
+規則と $A_0\to\mathtt b$ については $\theta_G(R)=M$，$A_0\to C_m$ と
+$C_j$ の規則については $\theta_G(R)=M+k-1$ が得られる；したがって
+$\bar\theta_{G_{m,n}}=2^m+2^n-1$ である．
+
+(iii) $L_{m,n}$ の唯一の純粋な語は $\mathtt a^{kM}$ であるから，
+命題~\ref{prop:rare-type} によりすべての特徴標本はそれを含み，
+$\|F\|\ge kM+1>2^{m+n}$ である．$m=n$ のとき，
+$\bar\theta_{G_{n,n}}<2^{n+1}$ から
+$\bar\theta_{G_{n,n}}^{\,2}/4<4^n<\|F\|$ が得られる．
+$p(\|G\|)\bar\theta_G$ という上界があれば，すべての $n$ について
+$4^n\le p(12n+9)\,2^{n+1}$ となるが，これはどの多項式 $p$ についても
+成り立たない．同様に，$\tau_{G_{n,n}}\le\bar\theta_{G_{n,n}}<2^{n+1}$
+（補題~\ref{lem:measures}）であり，$|G_{n,n}|$ は
+$\|G_{n,n}\|=12n+9$ の多項式であるから，$p(|G|)(\tau_G+1)$ という
+上界があれば，ある多項式 $p'$ について $4^n\le p'(n)\,2^{n+1}$ となる．
+\end{proof}
+
+\section{線形因子族}
+\label{app:linear}
+\begin{proof}[命題~\ref{prop:linear-factor} の証明]
+(i) $J\subseteq L_{q,k}$ とし，$x,y\in\Sigma^+$ が $uxv,uyv\in J$ を
+満たすとする．一元型付け $s_0$ について $\D_J(x)=\D_J(y)$ を示さなければ
+ならない．$L_{q,k}$ のすべての語の長さは $W$ であるから $|x|=|y|$ で
+ある．$w_i$ における $\mathtt d$ の二つの出現は位置 $i+1\in[1,q+1]$ と
+$W-i\in[W-q,W]$ にある；$W-q=M+q+2$ であるからこれらの範囲は互いに素
+であり，したがって $\mathtt d$ の一つの出現の位置が $i$ を定める．$u$
+または $v$ が $\mathtt d$ を含むならば，その出現は $uxv$ と $uyv$ で同じ
+位置にあるので $uxv=uyv$ であり，$x=y$ である．そうでなければ
+$\mathtt d$ の二つの出現はともに $x$ の中にある；その距離 $W-2i-1$ が
+$i$ を定め，$x$ における最初の $\mathtt d$ のオフセットが $x$ の位置を
+定める．したがって $x$ は $L_{q,k}$ の語の中にちょうど一回現れ，
+$\D_J(x)=\{(u,v)\}$ である；同様に $\D_J(y)=\{(u,v)\}$ である．有限言語
+は文脈自由であり，Clark--Eyraud 代入可能性はすべての $s$ について固定
+$s$ 代入可能性を導く．
+
+(ii) $F$ を $w_i\notin F$ である特徴標本とする．このとき
+$F\subseteq L':=L_{q,k}\setminus\{w_i\}$ であり，(i) により
+$L'\in\Ccf{s}$ である．標的 $L'$ に対する $\Rec_s$ の健全性
+\cite[定理~4.2]{kuriyamaCFG} により
+$L(\Rec_s(F))\subseteq L'\subsetneq L_{q,k}$ となる．クラス全体の集合
+駆動の作用素については，$L'$ の特徴標本 $F'$ により有限集合
+$F\cup F'\subseteq L'$ が得られ，その上で出力は，
+命題~\ref{prop:rare-type} の証明と同様に，$L_{q,k}$ と $L'$ の両方に
+等しくなければならない．したがって $F=L_{q,k}$ である．逆に，
+\ref{q:exact} により $L_{q,k}$ は $\Rec_s$ に対して特徴的である．
+
+(iii) 非終端記号 $A_0,\ldots,A_q$，$H_0,\ldots,H_q$，$C_0,\ldots,C_k$，
+開始記号 $A_q$ と次の規則をとる：
+\[
+\begin{array}{lll}
+ A_j\to\mathtt d H_j\mathtt d\ (0\le j\le q), &
+ A_j\to\mathtt a A_{j-1}\mathtt a\ (1\le j\le q), &
+ H_0\to C_k,\\
+ H_j\to\mathtt a H_{j-1}\mathtt a\ (1\le j\le q), &
+ C_0\to\mathtt a, &
+ C_t\to C_{t-1}C_{t-1}\ (1\le t\le k).
+\end{array}
+\]
+帰納法により $L(C_t)=\{\mathtt a^{2^t}\}$，
+$L(H_j)=\{\mathtt a^{M+2j}\}$，
+$L(A_j)=\{\mathtt a^i\mathtt d\,\mathtt a^{M+2(j-i)}\mathtt d\,\mathtt a^i:0\le i\le j\}$
+であるから $L(G_{q,k})=L_{q,k}$ である；この文法は良く，縮約済みである．
+非終端記号は $2q+k+3$ 個であり，列挙した順に $q+1,q,1,q,1,k$ 個の規則が
+あり，そのサイズは $5,5,3,5,2,5$ である（定義~\ref{def:symbol-size}）
+から，$\|G_{q,k}\|=17q+6k+13$ が得られる；$k\le q$ から上界 $23(q+1)$
+が得られる．縮約済み表示ではすべての規則が成功導出に現れ，$L_{q,k}$ の
+すべての語の長さは $W$ であるから $\bar\theta_G=W$ である．
+補題~\ref{lem:measures} により $\tau_{G_{q,k}}\le W$ であり，開始記号は
+長さ $W$ の生成語しかもたないので $\tau_{G_{q,k}}=W$ である．最後に，
+$G$ を $L_{q,k}$ の縮約済み BUNF 表示とし，$\mathsf S^\sharp$ が二元と
+なる一元型付け $s_0$ をとる．\ref{q:exact} により
+$\WitnessSet(\widetilde G)$ は $\Rec_{s_0}$ に対して特徴的で
+ある；それは型付き記号あたり，および型付き生成規則あたり高々一つの語を
+もつので，高々 $2N+4|P|$ 個の語をもち \cite[補題~6.2]{kuriyamaCFG}，
+(ii) により $q+1$ 個の語をもつ．
+
+最後の評価は (ii)，(iii) と $|w_i|=W$ から従う．
+\end{proof}
+
+\input{../references}
+
+\end{document}

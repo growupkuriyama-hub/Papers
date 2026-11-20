@@ -20,6 +20,7 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 - [`OUTLINE.md`](OUTLINE.md) — design decisions, section plan and **source map** (which label of which archived file each part comes from). Start here.
 - [`PAPER.yaml`](PAPER.yaml) — metadata and status.
 - [`main.tex`](main.tex) — English manuscript (27 pp). Source-mapping comments were removed for submission; see OUTLINE.md and git history for provenance.
+- [`japanese/main_JP.tex`](japanese/main_JP.tex) — Japanese translation (ltjsarticle, LuaLaTeX, 31 pp); labels, references and all math are kept identical to `main.tex`.
 
 ## Relation to other directories
 
@@ -27,6 +28,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 - `01_fixed-h-cfg/` (#1) is under review at TCS; cite it by arXiv:1409.6247v5 numbering.
 
 ## Change log
+
+- 2026-11-21: Japanese translation added. Corrections found while translating, applied to both `main.tex` and `japanese/main_JP.tex`: Theorem A.5 proof (`K = K^k ⊆ S^k` by complete simplicity, not by ideality); Lemma 4.1 proof (`γ^J_i`, `g_i`, `g'_i` defined); Lemma 3.3 proof (path-read context renamed `(ū_X, v̄_X)`, no clash with the canonical `χ(X)`); Theorem 4.3(ii) proof (`t_ρ` → `t_R`); Corollary 6.2 (morphism `h` defined, “length” → “size”, base rule added to the rule-thickness count); after Proposition 7.1 (the constant-factor claim is now proved for every reduced presentation: `q+1 ≤ 12‖G‖`, `‖G_{q,k}‖ ≤ 276‖G‖`); three-letter typing renamed `s_{U,3}` (was `s_U`, too close to `s_{\mathrm U}` of #1); `s_triv` replaced by the one-element typing `s_0`; `≡_{L,s}` defined explicitly in Appendix C; `λ(w)` → `ℓ(w)` in Appendix D; unused alias label `lem:app-tl-recognition` on Lemma B.2 renamed `lem:app-tl-exchange`.
 
 - 2026-11-20: submission cleanup — removed draft date and all source/status comments, added the generative-AI declaration (wording as in #1).
 
