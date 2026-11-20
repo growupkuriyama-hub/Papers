@@ -2,7 +2,7 @@
 
 **Working title:** *Which Fixed Typings Give Polynomial Characteristic Data? A Classification for Substitutable Context-Free Languages*
 **Author:** Takayuki Kuriyama
-**Status:** started 2026-11-20 — skeleton only, not submitted, no result of this directory has been re-audited in its new form.
+**Status:** started 2026-11-20 — skeleton with draft bridge lemmas (framework of #1), not submitted, no result of this directory has been re-audited in its new form.
 
 ## Concept
 
@@ -29,3 +29,4 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 ## Change log
 
 - 2026-11-20: directory created; outline, metadata and manuscript skeleton.
+- 2026-11-20: switched to the framework of #1 (arbitrary reduced CFGs, BUNF, `Rec_s`, `tau_G`, typed thickness). Added draft bridge lemmas (lambda-elimination with thickness control, typed-thickness transfer, master transfer corollary, rare-type principle for `Rec_s`); restated Theorems A–C in #1's measures. New mathematics is marked DRAFT-NEW and is not yet audited.
