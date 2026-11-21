@@ -29,7 +29,7 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 ## Change log
 
-- 2026-11-21: abstract rewritten (EN and JP) to read as a standalone paper: opens with the question rather than with the companion paper, the prior result is reduced to one sentence ("only a sufficient algebraic condition was known"), and the BUNF typed-thickness estimate is left to Theorem A(i). Claims unchanged.
+- 2026-11-21: abstract rewritten (EN and JP) to read as a standalone paper: opens with the question rather than with the companion paper, no reference to the prior result, and the BUNF typed-thickness estimate is left to Theorem A(i). Claims unchanged.
 
 - 2026-11-21: Japanese translation added. Corrections found while translating, applied to both `main.tex` and `japanese/main_JP.tex`: Theorem A.5 proof (`K = K^k ⊆ S^k` by complete simplicity, not by ideality); Lemma 4.1 proof (`γ^J_i`, `g_i`, `g'_i` defined); Lemma 3.3 proof (path-read context renamed `(ū_X, v̄_X)`, no clash with the canonical `χ(X)`); Theorem 4.3(ii) proof (`t_ρ` → `t_R`); Corollary 6.2 (morphism `h` defined, “length” → “size”, base rule added to the rule-thickness count); after Proposition 7.1 (the constant-factor claim is now proved for every reduced presentation: `q+1 ≤ 12‖G‖`, `‖G_{q,k}‖ ≤ 276‖G‖`); three-letter typing renamed `s_{U,3}` (was `s_U`, too close to `s_{\mathrm U}` of #1); `s_triv` replaced by the one-element typing `s_0`; `≡_{L,s}` defined explicitly in Appendix C; `λ(w)` → `ℓ(w)` in Appendix D; unused alias label `lem:app-tl-recognition` on Lemma B.2 renamed `lem:app-tl-exchange`.
 
