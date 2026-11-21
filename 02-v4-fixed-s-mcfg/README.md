@@ -5,12 +5,12 @@ Created 2026-11-21 by merging the former folders `02-v2-lg-fanout-boundary/` and
 
 | Path | Content |
 |---|---|
-| [`main.tex`](main.tex) / [`main.pdf`](main.pdf) | **Compendium (English, pdfLaTeX, 138 pp.)**: every result of v1 and v2 in one document, regardless of length |
+| [`main.tex`](main.tex) / [`main.pdf`](main.pdf) | **Compendium (English, pdfLaTeX, 139 pp.)**: every result of v1 and v2 in one document, regardless of length |
 | [`research/`](research/) | **live research ledger since the resumption of 2026-11-21**: one folder per round (prompt, original report, replay code and log, check note) |
 | [`v2/`](v2/) | former `02-v2-lg-fanout-boundary/` (frozen): Plan A paper (EN 30 / JA 33 pp.), all parked sources, `reviews/` research archive, fan-out-two research stop-state |
 | [`v1/`](v1/) | former `02_fixed-h-mcfg/` (frozen v1, arXiv:2605.11644; moved first to `02-v2-lg-fanout-boundary/archive-v1/` on 2026-10-31) |
 
-The submission-oriented paper #2 is now [`../02-v3-cfg-typing-classification/`](../02-v3-cfg-typing-classification/) (fan-out one). Open Problem `op:fanout-two` (is **LG** the boundary at fan-out ≥ 2?) remains **OPEN**. Its research was paused on 2026-11-16 ([stop-state](v2/RESEARCH_PAUSED_2026-11-16.md)) and **resumed on 2026-11-21** ([ledger](research/README.md)); Rounds R1–R2 (Astra) proved no-go theorems for doubling-type families with one or several, stationary or level-dependent escapes, strictly containing the R12 search space, and refuted strict shortening (read-through checked by Claude, not independently reconstructed); R3 (internal classes) is requested.
+The submission-oriented paper #2 is now [`../02-v3-cfg-typing-classification/`](../02-v3-cfg-typing-classification/) (fan-out one). Open Problem `op:fanout-two` (is **LG** the boundary at fan-out ≥ 2?) remains **OPEN**. Its research was paused on 2026-11-16 ([stop-state](v2/RESEARCH_PAUSED_2026-11-16.md)) and **resumed on 2026-11-21** ([ledger](research/README.md)); Rounds R1–R2 (Astra) proved no-go theorems for doubling-type families with one or several, stationary or level-dependent escapes, strictly containing the R12 search space, and refuted strict shortening; R3 isolated Conjecture IC on internal classes, which by `cor:distribution-representatives` would give a negative answer at fan-out two, and proved it under componentwise conservation laws (all read-through checked by Claude, not independently reconstructed). R4 (does IC fail at fan-out two?) is requested.
 
 ## Structure of `main.tex`
 
