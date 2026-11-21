@@ -29,6 +29,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 ## Change log
 
+- 2026-11-21: introduction now states the definitions of substitutability (with the distribution D_L) and of ∼_s-substitutability (EN and JP), in the notation of Section 2.
+
 - 2026-11-21: Conclusion shortened to one paragraph in the style of #1 (EN and JP): the two criteria, the price outside LG, learner-independence, three open problems.
 
 - 2026-11-21: introduction rewritten to be readable without #1 (EN and JP): self-contained explanation of substitutability, typings, characteristic samples and thickness; a worked example (three-letter doubling family under s_{U,3}: size 13n+7, thickness 2n+1, one word of type 1 of length 3·2^n−2) with the group / single-letter contrast; “Answer in brief” paragraph (pseudovariety boundary algebraic, typing boundary combinatorial, lower bounds learner-independent, upper bounds by Rec_s of #1). The summary sentence after Theorem C, now redundant, was removed. Method and Relation paragraphs unchanged.
