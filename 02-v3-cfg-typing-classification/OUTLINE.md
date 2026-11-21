@@ -49,9 +49,9 @@
 ## 2. 節構成と出典
 
 `C1` = `01_fixed-h-cfg/main.tex`（#1 R1。番号は R1 のビルドによる。投稿時には arXiv 版の番号と照合する）
-`O` = `02-v2-lg-fanout-boundary/parked/planA_2026-11-16/original_en_43pp.tex`
-`P1` = `02-v2-lg-fanout-boundary/parked/plan1_small_alphabet_2026-11-11.tex`
-`PU` = `02-v2-lg-fanout-boundary/parked/parked_u1_typing_level.tex`
+`O` = `02-v4-fixed-s-mcfg/v2/parked/planA_2026-11-16/original_en_43pp.tex`
+`P1` = `02-v4-fixed-s-mcfg/v2/parked/plan1_small_alphabet_2026-11-11.tex`
+`PU` = `02-v4-fixed-s-mcfg/v2/parked/parked_u1_typing_level.tex`
 
 | 節 | 内容 | 出典 | 見込み |
 |---|---|---|---|

@@ -59,7 +59,7 @@ Thesis role: foundational reconstruction chapter.
 
 ### Core B — #2 fixed-h MCFG
 
-Directory: `../02-v2-lg-fanout-boundary/` (v1, arXiv:2605.11644, archived in `archive-v1/`)
+Directory: `../02-v4-fixed-s-mcfg/v2/` (v1, arXiv:2605.11644, archived in `archive-v1/`)
 
 Title: *Distributional Learning of Multiple Context-Free Languages under Fixed Finite-Semigroup Typing: Local Groups and the Length of Characteristic Data*
 
