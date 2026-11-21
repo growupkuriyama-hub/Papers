@@ -29,6 +29,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 ## Change log
 
+- 2026-11-21: introduction motivates typing (EN and JP): a^+ is substitutable but {a,aa} is not; under the length-parity typing {a,aa} is ∼_s-substitutable.
+
 - 2026-11-21: introduction now states the definitions of substitutability (with the distribution D_L) and of ∼_s-substitutability (EN and JP), in the notation of Section 2.
 
 - 2026-11-21: Conclusion shortened to one paragraph in the style of #1 (EN and JP): the two criteria, the price outside LG, learner-independence, three open problems.
