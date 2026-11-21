@@ -5,11 +5,12 @@ Created 2026-11-21 by merging the former folders `02-v2-lg-fanout-boundary/` and
 
 | Path | Content |
 |---|---|
-| [`main.tex`](main.tex) / [`main.pdf`](main.pdf) | **Compendium (English, pdfLaTeX, 135 pp.)**: every result of v1 and v2 in one document, regardless of length |
+| [`main.tex`](main.tex) / [`main.pdf`](main.pdf) | **Compendium (English, pdfLaTeX, 137 pp.)**: every result of v1 and v2 in one document, regardless of length |
+| [`research/`](research/) | **live research ledger since the resumption of 2026-11-21**: one folder per round (prompt, original report, replay code and log, check note) |
 | [`v2/`](v2/) | former `02-v2-lg-fanout-boundary/` (frozen): Plan A paper (EN 30 / JA 33 pp.), all parked sources, `reviews/` research archive, fan-out-two research stop-state |
 | [`v1/`](v1/) | former `02_fixed-h-mcfg/` (frozen v1, arXiv:2605.11644; moved first to `02-v2-lg-fanout-boundary/archive-v1/` on 2026-10-31) |
 
-The submission-oriented paper #2 is now [`../02-v3-cfg-typing-classification/`](../02-v3-cfg-typing-classification/) (fan-out one). Open Problem `op:fanout-two` (is **LG** the boundary at fan-out ≥ 2?) remains **OPEN**; its research is paused ([stop-state](v2/RESEARCH_PAUSED_2026-11-16.md)).
+The submission-oriented paper #2 is now [`../02-v3-cfg-typing-classification/`](../02-v3-cfg-typing-classification/) (fan-out one). Open Problem `op:fanout-two` (is **LG** the boundary at fan-out ≥ 2?) remains **OPEN**. Its research was paused on 2026-11-16 ([stop-state](v2/RESEARCH_PAUSED_2026-11-16.md)) and **resumed on 2026-11-21** ([ledger](research/README.md)); Round R1 (Astra) proved a no-go theorem for stationary doubling-with-one-escape families, which strictly contain the R12 search space (read-through checked by Claude, not independently reconstructed).
 
 ## Structure of `main.tex`
 
@@ -18,7 +19,7 @@ The submission-oriented paper #2 is now [`../02-v3-cfg-typing-classification/`](
 | I. Main paper | fullest version of the v2 paper: Theorem A (LG upper bound `O(‖G‖²θ̄_G)` at every fan-out), Theorem B (linear factor), Theorem C (fan-out-one LG boundary), the U₁ classification and isolated letters at fan-out one, two-letter/semilattice results and the SL reduction at fan-out two, non-lifting, non-CFL separations, all appendices | complete proofs, not peer reviewed |
 | II. Further results of v2 | everything parked on 2026-10-31, 11-06, 11-09: sandwich bound, undecidability of membership, unique words, full-content types, the S1 programme (S1 later solved), three-letter linear factor, constant weight, rank one, binary U₁ at fan-out two, unary cyclic typing, single words with two holes, comparison with multidimensional substitutability, bracketed-family substitutability, earlier proofs | complete proofs |
 | III. Results of v1 | ic-slim parked results (2026-10-29), structural separations, the rare-type conjecture (M3), and the results of the pre-trim v82 (2026-10-18) that are in no later version (semilattice-indexed cosets, Yoshinaka 2015 embedding, early window-abelian / window-group / local-group appendices) | complete proofs (v1 notation) |
-| IV. Fan-out-two research record | v1-era U₁ results, semilattices at fan-out two (2026-11-01–11), special-class upper bounds (Theorems S, P, L, L⊗′, U₂, Fable-C), the P_tree programme, refuted claims, open questions, source index | **research results with verification status; not manuscript theorems** |
+| IV. Fan-out-two research record | v1-era U₁ results, semilattices at fan-out two (2026-11-01–11), special-class upper bounds (Theorems S, P, L, L⊗′, U₂, Fable-C), the P_tree programme, the rounds after the 2026-11-21 resumption (`sec:p4-resume-*`), refuted claims, open questions, source index | **research results with verification status; not manuscript theorems** |
 
 Precedence when a statement exists in several versions: Plan A `v2/main.tex` (2026-11-17) > 43-page v2 (2026-11-13) > 64-page v2 (2026-11-11) > parked v2 blocks > v1. Sections of Parts II–III begin with a provenance note; their text is verbatim except for section levels, label suffixes (`-foc`, `-cmp`, `-u1`, `-f2`, `-br5`, `-v1s`, `-v1r`, `-v82`) and notes marked *Compendium note*.
 
@@ -43,6 +44,6 @@ v1 states older than v82 (2026-09-28 – 10-18, and the arXiv versions) were not
 
 - `main.tex` is now the master and is edited directly (it is no longer generated).
 - English only for now; there is no Japanese compendium yet. `v2/` and `v1/` keep their bilingual sources.
-- `v1/` and `v2/` are frozen archives; do not delete parked material.
+- `v1/` and `v2/` are frozen archives; do not delete parked material. New research goes to `research/` and is summarized in Part IV of `main.tex`.
 - Research results enter Parts I–III only after an independent proof check and the author's decision.
 - The PDF at the fixed URL is rebuilt by `.github/workflows/publish-02-v4-pdfs.yml` after a push to `main`.
