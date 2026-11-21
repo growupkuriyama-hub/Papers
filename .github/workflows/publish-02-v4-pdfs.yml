@@ -1,0 +1,83 @@
+name: Publish 02-v4 (#2 MCFG research compendium) PDF to a fixed URL
+
+# Builds the English PDF of the #2 MCFG research compendium
+# (02-v4-fixed-s-mcfg/main.tex) and commits it to a fixed path on main:
+#   02-v4-fixed-s-mcfg/main.pdf
+# The frozen v2 (Plan A) and v1 PDFs under 02-v4-fixed-s-mcfg/v2 and /v1 are
+# kept as they are and are no longer rebuilt here.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "02-v4-fixed-s-mcfg/main.tex"
+      - ".github/workflows/publish-02-v4-pdfs.yml"
+  schedule:
+    - cron: "17 18 * * *"   # daily at 03:17 JST, as a safety net
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stable-paper-pdf-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Decide whether the PDF is out of date
+        id: stale
+        shell: bash
+        run: |
+          set -euo pipefail
+          d=02-v4-fixed-s-mcfg
+          src=$(git log -1 --format=%ct -- "$d/main.tex" .github/workflows/publish-02-v4-pdfs.yml)
+          pdf=$(git log -1 --format=%ct -- "$d/main.pdf" || true)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ -f "$d/main.pdf" ] && [ -n "$pdf" ] && [ "$pdf" -ge "$src" ]; then
+            echo "PDF is newer than its source; nothing to do."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compile English PDF (pdfLaTeX)
+        if: steps.stale.outputs.run == 'true'
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: 02-v4-fixed-s-mcfg
+          root_file: main.tex
+
+      - name: Verify PDF
+        if: steps.stale.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pdf=02-v4-fixed-s-mcfg/main.pdf
+          test -s "$pdf"
+          test "$(head -c 4 "$pdf")" = "%PDF"
+          echo "Verified $pdf ($(wc -c < "$pdf") bytes)"
+
+      - name: Commit PDF to fixed URL
+        if: steps.stale.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- 02-v4-fixed-s-mcfg/main.pdf
+          if git diff --cached --quiet; then
+            echo "The PDF already matches the current source."
+            exit 0
+          fi
+          git commit -m "Refresh 02-v4 (#2 MCFG research compendium) PDF from main.tex"
+          git pull --rebase origin main
+          git push origin HEAD:main
