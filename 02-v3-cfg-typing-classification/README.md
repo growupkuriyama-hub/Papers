@@ -29,6 +29,8 @@ It answers the question left open by #1 (TCS-D-26-00494), which proves sufficien
 
 ## Change log
 
+- 2026-11-21: notation clash fixed (EN and JP): the morphism written λ (s ⪯ λ, λ_{k,ν}) is now φ (s ⪯ φ, φ_{k,ν}); λ is reserved for the empty word.
+
 - 2026-11-21: worked example in the introduction now points to Prop. three-letter-family and to [#1, Prop. 6.4] for the doubling construction, and to Theorems A and B for the polynomial cases (EN and JP).
 
 - 2026-11-21: introduction motivates typing (EN and JP): a^+ is substitutable but {a,aa} is not; under the length-parity typing {a,aa} is ∼_s-substitutable.
