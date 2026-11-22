@@ -9029,6 +9029,10 @@ Lemma~\ref{lem:normalization-stages} was not re-derived.  The unused markers mus
 given nonempty images.  Bounded certified finite checks (Lemma~1 on short words, the
 construction for $L_M$ with $M=3$, the fan-out-one instance $P_3$).  This replaces the
 bounded-context reduction of Result~\ref{rr:R3-ic-rare}.
+\emph{Audit (Round RV1, Section~\ref{sec:p4-resume-RV1}):} re-derived by Astra, with an explicit
+boundary convention for the pattern automaton (states ``unread''/``read'' at each hole) that the
+original sketch lacked; the bounds of (iii) and both arrows of Result~\ref{rr:R4-equivalence}
+survive, and the construction preserves well-nestedness.
 
 \begin{rresult}[Three equivalent statements; Claude R4]
 \label{rr:R4-equivalence}
@@ -9366,7 +9370,11 @@ Result~\ref{rr:R8-weights}(iii) holds on every host; on Thue--Morse hosts the fo
 not follow from the frame lemma (a token-level example with $n=3$ forces nothing).
 \end{rresult}
 \noindent\emph{Status:} (i), (ii) and the first half of (iii) valid, read-through checked; the
-Thue--Morse part certified finite for $n=3$ only.
+Thue--Morse part certified finite for $n=3$ only.  \emph{Audit (Round RV1):} the pair-placement
+step (P5 of the R9 report) used for~(ii) is false as written; one accepted pair placement does
+not give all placements with $s+g+t=N-p_v-p_w$, since sliding preserves the number of
+$\mathtt a$.  It holds when the placement satisfies this additivity condition, as native pairs of
+non-crossing one-component replacements do (Result~\ref{rr:RV1-audit}(ii)).
 
 \begin{rresult}[Abstract grammar-size bound and its applications; Claude R9]
 \label{rr:R9-bounds}
@@ -9381,7 +9389,10 @@ $\Lambda_{\{\mathtt a\}}\le(|V|\bar\theta_G)^{O(qr\log r\log(|V|r))}$, a quasi-p
 it becomes polynomial if the chain class has a good pair.
 \end{rresult}
 \noindent\emph{Status:} (i)--(iii) valid, read-through checked, the polynomial form of (iii)
-conditional; (i) is the most important item for an independent audit.  Part~(iii) is the first
+conditional; (i) is the most important item for an independent audit.  \emph{Audit (Round
+RV1):} (i) re-derived by Astra for additive dissolving pairs; one sentence of the greedy prototype
+argument is wrong, the prototype bound survives with a polynomial error
+(Result~\ref{rr:RV1-audit}).  Part~(iii) is the first
 bound on $\mu_{\mathtt a}$ for general presentations under such a hypothesis; the special-class
 bounds of the $P_{\mathrm{tree}}$ programme (Section~\ref{sec:p4-ptree}) concerned restricted
 classes.
@@ -9429,7 +9440,10 @@ a usable pair of that class would contradict the grammar-size bound
 nodes of that class are comparable, so the largest side branch avoids the class and the length
 is controlled by one fewer class.  \emph{Status:} valid, read-through checked, conditional on
 Result~\ref{rr:R9-bounds}(i); it replaces the quasi-polynomial bound of
-Result~\ref{rr:R9-bounds}(iii).
+Result~\ref{rr:R9-bounds}(iii).  \emph{Audit (Round RV1):} the quantification of ``usable'' does
+not bound the prototype and anchor lengths used in the proof; with anchors chosen as concrete
+components the polynomial conclusion is recovered, the stated constants are not
+(Result~\ref{rr:RV1-audit}(iii)).
 
 \begin{rresult}[What remains for $\{\mathtt a\}$; Claude R10]
 \label{rr:R10-remaining}
@@ -9507,6 +9521,103 @@ Open Problem~\ref{op:fanout-two}, Conjecture~\ref{conj:rare-types} and Conjectur
 For $\{\mathtt a\}$, only classes with two or more letters besides $\mathtt a$ remain, in crossing
 positions with non-commuting projections or with contents split over components; the only known
 example, the language $L_{N,d}$ of round R15, has $N=O(\bar\theta_G^2)$.
+\end{remark}
+
+\section{Resumption, Round RV1: Audit and the Well-Nested Split (2026-11-22)}
+\label{sec:p4-resume-RV1}
+
+\provenance{\path{research/2026-11-22_RV1_astra_step_back/}: the prompt, the delivered archive
+unpacked in \path{deliverable/} (report by ChatGPT, ``Astra'', \path{run_all.py} with its log and
+a byte-identical rerun log) and the check note \path{claude_check_RV1_2026-11-22.md}.  Round R12
+(Claude) stopped at its resource limit without a report
+(\path{research/2026-11-22_R12_claude_multiletter/R12_STOPPED_2026-11-22.md}); the author inserted
+this review round instead.  \emph{Status label of this section:} ``re-derived by Astra'' means a
+reconstruction from the statements by a model family different from that of Rounds R4--R11;
+``hand-checked'' marks the items Claude verified step by step; neither is a peer review.}
+
+Well-nestedness follows Kanazawa (2009): a rule is \emph{well-nested} if its flattened variable
+sequence contains no subsequence $x_{ij}\,x_{i'j'}\,x_{ik}\,x_{i'k'}$ with $i\ne i'$, $j<k$,
+$j'<k'$; at fan-out two this excludes the pattern $X_1Y_1X_2Y_2$.  A grammar is well-nested (WN) if
+all its rules are.
+
+\begin{rresult}[Crossings and well-nestedness; Astra RV1]
+\label{rr:RV1-crossing}
+(i) In a successful derivation of a reduced good grammar of fan-out $\le2$, if the component
+intervals of two incomparable nodes $u,v$ occur in the order $u_1<v_1<u_2<v_2$, then the rule
+used at their least common ancestor is ill-nested.  Hence the crossing obstruction (R1\textsuperscript{*})
+of round R11 cannot occur in a WN presentation.  (ii) In the two presentations of the language
+$L_{N,d}$ of round R15, the rules $B_i\to(X_1Y_1,X_2Y_2)$ of $G^{\mathrm{cross}}$ are ill-nested and
+the rules $B_i\to(X_1Y_1,Y_2X_2)$ of $G^{\mathrm{nest}}$ are well-nested; all other rules are WN.
+The split obstruction (R2\textsuperscript{*}) occurs in the node-minimal tree of
+$G^{\mathrm{nest}}$, so it survives in WN presentations (with $N=O(\bar\theta_G^{\,2})$).
+(iii) The four normalization stages of Lemma~\ref{lem:normalization-stages} and the trimming step
+preserve well-nestedness, so Propositions~\ref{prop:good-normalization}
+and~\ref{prop:pattern-thickness-transfer} hold within WN grammars.
+\end{rresult}
+\noindent\emph{Status:} re-derived by Astra; (i), (ii) and the subsequence argument of (iii)
+hand-checked.  Conversely, an ill-nested rule makes its two children cross in some successful
+derivation, but a heavy pair of one class need not cross in the minimal tree of a shortest word.
+
+\begin{rresult}[Audit of the reduction and of the grammar-size chain; Astra RV1]
+\label{rr:RV1-audit}
+(i) Result~\ref{rr:R4-reduction} holds once the pattern automaton distinguishes, at each hole, an
+unread and a read state; with a single looping vertex the endpoints of a run do not determine its
+support (fixed prefix $\mathtt{ab}$: the runs reading $\mathtt b$ and $\mathtt{bx}$ share
+endpoints).  The bounds and both arrows of Result~\ref{rr:R4-equivalence} survive.
+(ii) The pair-placement step of R9 is false as written: in
+$L=\{w\in\{\mathtt a,\mathtt b\}^+:\#_{\mathtt a}(w)+3\#_{\mathtt b}(w)=12+[\mathtt b\in c(w)]\}$,
+which satisfies every one- and two-hole condition under the content typing, $W=\mathtt a^{12}$,
+$p_v=p_w=2$ for the escape $\mathtt b$, the word $\mathtt{abab}\,\mathtt a^5$ is in $L$, but no
+placement with $s+g+t=8$ is.  The grammar-size bound of Result~\ref{rr:R9-bounds}(i) holds for
+pairs satisfying the additivity condition $s+g+t=N-p_v-p_w$, and its form with a general
+dissolving word (used in round R10) assumes dissolution directly.
+(iii) The greedy prototype argument of R9 contains a false sentence (``if all children of the
+first overflowing piece fit, so does the piece''; the piece's own terminals are not counted), and
+the definition of a usable pair in R10 bounds neither the prototype nor the anchor lengths.  A
+prototype lemma with error $O(hr\theta)$ and anchors chosen as concrete components of the nodes
+recover the polynomial conclusions of Results~\ref{rr:R10-elimination} and~\ref{rr:R11-pairs}(iii)
+asymptotically; the constants stated there are not verified.
+\end{rresult}
+\noindent\emph{Status:} re-derived by Astra; the counterexample of (ii) and the false sentence
+of (iii) hand-checked, the language of (ii) also checked exhaustively.  The boundary convention of
+(i), the prototype lemma and the recovery argument of (iii) were not hand-checked.  None of the
+three defects had been found by the read-through checks of Rounds R4--R11.
+
+\begin{rresult}[The well-nested problem; Astra RV1]
+\label{rr:RV1-wn}
+(i) Define the WN version of Open Problem~\ref{op:fanout-two} by restricting
+Definition~\ref{def:uniform-polydata} to targets with a reduced good WN presentation of fan-out
+$\le2$ and measuring $\|G\|,\bar\theta_G$ over all such presentations (the learner is unchanged).
+By Result~\ref{rr:RV1-crossing}(iii) and the WN preservation of (i) in
+Result~\ref{rr:RV1-audit}, Result~\ref{rr:R4-equivalence} holds within WN presentations: the WN
+version has a negative answer if and only if, for every $\Sigma$, the content typing satisfies a
+polynomial rare-type bound over WN presentations.  A WN family with superpolynomial rare types
+would give a positive answer to the general problem as well; a negative WN answer leaves the
+general problem open.
+(ii) If a shortest word of content $m$ has a derivation of Strahler number $\le b$, then
+$\mu_m\le\theta\sum_{i<|V|2^{|m|}}\sum_{j\le\min(i,b)}\binom ij(r-1)^j$, polynomial for fixed
+$b,r,\Sigma$.  Well-nestedness alone does not bound the Strahler number.
+(iii) Kanazawa's pumping lemmas give no polynomial bound in $(\|G\|,\bar\theta_G)$ on the
+exceptional words; the doubling family $A_i\to A_{i-1}A_{i-1}\mid\mathtt b$, $A_0\to z$, is WN but
+violates a two-hole condition for every root type.
+(iv) A crossing family with non-commuting component projections $(\mathtt{bc})^D$ and
+$(\mathtt{cb})^D$, all one- and two-hole conditions, an ill-nested rule and heavy incomparable
+nodes has $N=\Theta(\bar\theta_G^{\,2})$: these three features do not force superpolynomial
+growth.
+\end{rresult}
+\noindent\emph{Status:} re-derived by Astra; the Strahler argument of (ii) hand-checked; (iii),
+(iv) and the literature statements not hand-checked.
+
+\begin{remark}[State after Round RV1]
+\label{rem:RV1-state}
+Open Problem~\ref{op:fanout-two}, its WN version, Conjecture~\ref{conj:rare-types} and Conjecture
+IC remain open.  The reduction of round R4 and the polynomial bounds of rounds R10--R11 for
+$\{\mathtt a\}$ survive the first independent reconstruction, with corrected hypotheses.  The
+problem now splits along well-nestedness: in WN presentations only split configurations
+(R2\textsuperscript{*}) remain for $\{\mathtt a\}$.  The next target is the WN case of $\{\mathtt a\}$
+with split nested pairs kept in their original component order, starting from the pair
+$(\mathtt{bb},\mathtt{cc})$ of $G^{\mathrm{nest}}$; root types with $|m|\ge2$ remain untouched.
+Astra recommends this route with moderate confidence and gives no lean on the answer.
 \end{remark}
 
 \section{Open Questions at the Pause}
