@@ -10,6 +10,8 @@
 \usepackage{geometry}
 \geometry{margin=1in}
 \usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \usepackage{cite}
 \usepackage{hyperref}
 \usepackage{url}
@@ -40,7 +42,6 @@
 \newcommand{\eps}{\varepsilon}
 \newcommand{\alphset}{\operatorname{alph}}
 \newcommand{\Imp}{\operatorname{Imp}}
-\newcommand{\fan}{\operatorname{fan}}
 \newcommand{\LG}{\mathbf{LG}}
 \newcommand{\LI}{\mathbf{LI}}
 \newcommand{\SL}{\mathbf{SL}}
@@ -54,6 +55,7 @@
 \newcommand{\Com}{\mathbf{Com}}
 \newcommand{\ttyp}{t_{\mathrm{typ}}}
 \newcommand{\bth}{\bar\theta}
+\newcommand{\Kocc}{K_L}
 
 \title{どの正則な骨格が多重文脈自由言語に\\
 多項式の特性データを与えるか}
@@ -76,9 +78,9 @@
 \label{sec:intro}
 
 \paragraph{背景．}
-吉仲 \cite{Yoshinaka2011} は，多次元の代入可能性を持つ多重文脈自由言語（MCFL）\cite{SekiEtAl1991} が，正データから極限同定可能であり，更新は多項式時間，特性標本の要素数は多項式であることを示した．先行研究 \cite{KuriyamaTCS1,KuriyamaMCFGpreprint,KuriyamaCompendium} では，学習器を固定した有限半群型付け $s:\Sigma^+\to\mathsf S$ で偏らせる．二つの組は，成分の $s$-型が等しいときだけ比べられる．$(f,s)$-組代入可能な $f$-MCFL のクラス $\Cmcf{f}{s}$ は，$s$ が認識するすべての正則言語を含み，$s$ とともに大きくなる．
+分布学習は，文字列が現れる文脈から文法を推定する．Clark と Eyraud \cite{ClarkEyraud2007} は，代入可能な文脈自由言語が正データから多項式の資源で極限同定可能であることを示し，吉仲 \cite{Yoshinaka2011} はこれを多次元の代入可能性を持つ多重文脈自由言語（MCFL）\cite{SekiEtAl1991} に拡張した．概説と拡張は \cite{ClarkYoshinaka2014,ClarkYoshinaka2016}，一般的な代数的視点は \cite{Yoshinaka2015General} を参照．こうした学習器の効率は，更新時間と特性標本の大きさで測られる \cite{deLaHiguera1997,EyraudHeinzYoshinaka2016}．
 
-この一般性の代償は，特性データの総長で測られる．標的の reduced good な表示 $G$ には\emph{代表長} $\tau(G,s)$ がある．実現された型付き非終端 $X$ ごとに，$X$ の生成組と同値な（同じ型・同じ分布の）最短の組の長さを取り，$X$ について最大を取ったものである．総長 $O(N_{\mathrm{typ}}(1+\bth_G+r\tau(G,s)))$ の特性データが存在する（事実~\ref{fact:char-data}）ので，$\tau$ を $G$ の大きさと厚さの多項式で抑えれば，特性データは多項式になる．
+先行研究 \cite{KuriyamaTCS1,KuriyamaMCFGpreprint,KuriyamaCompendium} では，学習器を固定した有限半群型付け $s:\Sigma^+\to\mathsf S$ で偏らせる．二つの組は，成分の $s$-型が等しいときだけ比べられる．$(f,s)$-組代入可能な $f$-MCFL のクラス $\Cmcf{f}{s}$ は，$s$ が認識するすべての正則言語を含み，$s$ とともに大きくなる．この一般性の代償は，特性データの総長で測られる．標的の reduced good な表示 $G$ には\emph{代表長} $\tau(G,s)$ がある．実現された型付き非終端 $X$ ごとに，$X$ の生成組と同値な（同じ型・同じ分布の）最短の組の長さを取り，$X$ について最大を取ったものである．総長 $O(N_{\mathrm{typ}}(1+\bth_G+r\tau(G,s)))$ の特性データが存在する（事実~\ref{fact:char-data}）ので，$\tau$ を $G$ の大きさと厚さの多項式で抑えれば，特性データは多項式になる．
 
 \emph{型付け}の側の状況は次のとおりである．$s(\Sigma^+)$ が局所群（どの局所モノイド $e\mathsf Se$ も群，擬多様体 $\LG$）なら，型付き生成組そのものが全 fan-out で短い \cite{KuriyamaCompendium}．fan-out 1 では $\LG$ がちょうど擬多様体の境界である．$\LG$ の外の半群への型付けには，特性データが指数になる標的がある \cite{KuriyamaTCS1,KuriyamaTypingClass}．fan-out 2 以上で $\LG$ がなお境界かどうかは未解決である（未解決問題~\ref{op:fanout-two}）．
 
@@ -94,16 +96,37 @@ $R\subseteq\Sigma^+$ を正則とし，その統語半群が $\LECom$ に入る�
 が成り立つ．ここで $v$ は非終端の数で，次数は $R,\Sigma,\ell,f$ だけで決まる．したがって $L$ は総長が多項式の特性データを持つ．
 \end{mainthm}
 
-ここで $c_\Sigma$ は内容の型付け，$b_\ell$ は最初と最後の $\ell-1$ 文字を記録する窓の型付けである．定理~\ref{thm:A} の型付けは，$|\Sigma|\ge2$ ならすでに $\LG$ の外にある（補題~\ref{lem:window-not-lg}）．$R$ の仮定は，たとえば，すべての局所閾値テスト可能言語，すべての群言語，そして極大な $\mathtt a$-run の長さがすべて偶数である語の言語で満たされる．最後のものの統語半群は対称逆モノイド $I_2\notin\LG$ である（例~\ref{ex:even-runs}）．
+ここで $c_\Sigma$ は内容の型付け，$b_\ell$ は最初と最後の $\ell-1$ 文字を記録する窓の型付けである．定理~\ref{thm:A} の型付けは，$|\Sigma|\ge2$ ならすでに $\LG$ の外にある（補題~\ref{lem:window-not-lg}）．$R$ の仮定は，たとえば，すべての局所閾値テスト可能言語，すべての群言語，そして極大な $\mathtt a$-run の長さがすべて偶数である語の言語で満たされる．最後のものの統語半群は対称逆モノイド $I_2\notin\LG$ である（例~\ref{ex:running}．本論文を通して用いる例）．
 
 \paragraph{方法．}
-証明は三層からなる．
+証明は三層からなる（図~\ref{fig:layers}）．
 \begin{enumerate}[label=(\arabic*),leftmargin=*]
 \item \emph{局所計数の標的}（定理~\ref{thm:L}）．所属が窓の型と因子の個数だけで決まるなら，de Bruijn グラフの辺の頻度についての鳩の巣，深さ優先の走査に沿った不純な窓の色，凍結ブロック付きの Euler 再配線から，短い同値な代表元が得られる．
 \item \emph{装飾}（定理~\ref{thm:B}）．固定したオートマトンの状態で各文字を装飾すると，骨格は大きなアルファベット上の局所計数言語になる．装飾後の表示はまた reduced good で，オートマトンの遷移半群が局所群なら厚さは多項式のままである．元の分布は射影で回復する．
 \item \emph{骨格の代数}（定理~\ref{thm:C}）．どの入口からでも統語値全体を読み取れる局所群の装飾を骨格が持つのは，統語半群が $\SL*\LG$ に入るときに限り，しかも $\SL*\LG=\LECom$ である．
 \end{enumerate}
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,align=center,inner sep=5pt,font=\small},
+  arr/.style={-{Stealth[length=2.2mm]},thick},
+  lab/.style={font=\footnotesize,align=center}]
+\node[box] (L) {$\Sigma$ 上の標的 $L$\\ 所属は $(\rho_R,N_\ell)$ で決まる\\ $S_R\in\LECom$};
+\node[box,right=3.3cm of L] (Ld) {$Q\times\Sigma$ 上の装飾した標的 $L^\#$\\ 所属は $(b_m,N_m)$ で決まる\\（$m$-局所計数）};
+\node[box,below=1.7cm of Ld] (Y) {装飾した型と分布が同じ\\短い組 $\tuple Y$};
+\node[box,below=1.7cm of L] (y) {短い組 $\pi\tuple Y\equiv_{L,s}\tuple x$};
+\draw[arr] (L) -- node[lab,above]{$\LG$ のオートマトン\\ で装飾}
+  node[lab,below]{（補題~\ref{lem:trace-local}--\ref{lem:dec-grammar}）} (Ld);
+\draw[arr] (Ld) -- node[lab,right]{定理~\ref{thm:L}} (Y);
+\draw[arr] (Y) -- node[lab,above]{射影 $\pi$} node[lab,below]{（定理~\ref{thm:transfer}）} (y);
+\draw[arr,dashed] (L) -- node[lab,left]{復元があるのは\\ $S_R\in\SL*\LG=\LECom$\\ のとき（定理~\ref{thm:C}）} (y);
+\end{tikzpicture}
+\caption{定理~\ref{thm:A} の証明の三層．}
+\label{fig:layers}
+\end{figure}
+
+\setcounter{mainthm}{3}% 定理 D
 \begin{mainthm}[方法の限界；定理~\ref{thm:limits}]
 \label{thm:D}
 正則な骨格 $R$ の統語半群のある局所モノイドに，非可換な二つの冪等元があるとする．このとき，遷移半群が局所群である任意の固定オートマトン，任意の幅 $m$，装飾語の端の窓と因子の個数についての任意の条件について，それらのデータでは $R$ への所属は決まらない．最小の三例は，最後の $\mathtt a$-run の長さが偶数であるもの，中立な文字を持つ散在パターン $\mathtt a\cdots\mathtt b$，恒等の文字を持つ二状態の flip-flop である．
@@ -120,10 +143,10 @@ $R\subseteq\Sigma^+$ を正則とし，その統語半群が $\LECom$ に入る�
 \bottomrule
 \end{tabular}
 \end{center}
-$\LG\subsetneq\LECom$ なので，後者は前者から従わない．どちらも，型付けのすべての標的について問う未解決問題~\ref{op:fanout-two} には答えない．関係は第~\ref{sec:limits}節で述べる．
+$\LG\subsetneq\LECom$ なので，後者は前者から従わない．定理~\ref{thm:D} は方法の限界であって $\tau$ の下界ではない．どちらの定理も，型付けのすべての標的について問う未解決問題~\ref{op:fanout-two} には答えない．関係は第~\ref{sec:limits}節で述べる．
 
 \paragraph{構成．}
-第~\ref{sec:prelim}節で記法を定める．第~\ref{sec:L}節で局所計数の標的についての定理，第~\ref{sec:decoration}節で移送定理，第~\ref{sec:algebra}節で代数的な特徴づけ，第~\ref{sec:main}節で主定理と系を示す．第~\ref{sec:limits}節で方法の限界を論じ，第~\ref{sec:conclusion}節で結ぶ．
+第~\ref{sec:prelim}節で記法を定め，通しの例を導入する．第~\ref{sec:L}節で局所計数の標的についての定理，第~\ref{sec:decoration}節で移送定理，第~\ref{sec:algebra}節で代数的な特徴づけ，第~\ref{sec:main}節で主定理と系を示す．第~\ref{sec:limits}節で方法の限界を論じ，第~\ref{sec:conclusion}節で結ぶ．付録~\ref{app:constants} に定理~\ref{thm:L} の明示的な定数をまとめる．
 
 %======================================================================
 \section{準備}
@@ -162,14 +185,17 @@ $s\preceq s'$ なら $\Cmcf{f}{s}\subseteq\Cmcf{f}{s'}$ である．このクラ
 \]
 とおく．最小を与える組は $A$ から生成される必要はない．\emph{型付き厚さ} $\ttyp(G,s)$ は，$\tuple y$ を $X$ の生成組に限って同様に定める．したがって $\tau\le\ttyp$ である．
 
+\paragraph{学習器．}
+\cite{KuriyamaMCFGpreprint,KuriyamaCompendium} の学習器は，吉仲の有限シグネチャによる再構成 \cite{Yoshinaka2015General} を，$s$ で精密化した組の種類について具体化したものである．有限の標本 $K$ から，arity $f$ 以下の観測された組とその成分の型を非終端とし，観測された組を観測された組に good に分解するものを規則とし，型が等しく観測された文脈を共有する二つの観測された組を同一視する．定性的な保証（健全性，完全性，正確な再構成，Gold の同定）は \cite{Yoshinaka2011,Yoshinaka2015General} の類似である．本論文では次の定量的な事実だけを使う．
+
 \begin{fact}[{\cite[定理 \textit{data-from-typed-thickness}，系 \textit{distribution-representatives}]{KuriyamaCompendium}}]
 \label{fact:char-data}
-$L\in\Cmcf{f}{s}$ とし，$G$ を $L\cap\Sigma^+$ の reduced good，fan-out $\le f$，rank $\le r$ の表示とする．このとき $L$ は，\cite{KuriyamaMCFGpreprint,KuriyamaCompendium} の学習器について，$\|K\|_+\le N_{\mathrm{typ}}\bigl(1+2\bth_G+r\,\tau(G,s)\bigr)+\mathbf 1_{\{\eps\in L\}}$ の特性標本 $K$ を持つ．ここで $N_{\mathrm{typ}}\le|\mathsf S^\sharp|^{fr}\|G\|$ である．
+$L\in\Cmcf{f}{s}$ とし，$G$ を $L\cap\Sigma^+$ の reduced good，fan-out $\le f$，rank $\le r$ の表示とする．このとき $L$ は，学習器について，$\|K\|_+\le N_{\mathrm{typ}}\bigl(1+2\bth_G+r\,\tau(G,s)\bigr)+\mathbf 1_{\{\eps\in L\}}$ の特性標本 $K$ を持つ．ここで $N_{\mathrm{typ}}\le|\mathsf S^\sharp|^{fr}\|G\|$ である．
 \end{fact}
 
 \subsection{擬多様体}
 
-\emph{擬多様体}とは，割り算と有限直積で閉じた有限半群（またはモノイド）のクラスである．次を用いる：$\Gp$（群），$\SL$（半束），$\Com$ と $\ACom$（可換モノイド，可換で非周期的なモノイド），$\Dd$（冪等元が右零元である半群），$\LI$（局所自明），$\LT$ と $\LTT$（局所テスト可能言語と局所閾値テスト可能言語の統語半群），$\ECom$（冪等元が可換なモノイド）．モノイドの擬多様体 $\mathbf V$ について，$\mathbf L\mathbf V$ はすべての局所モノイド $e\mathsf Se$（$e=e^2$）が $\mathbf V$ に入る有限半群のクラスである．したがって $\LG=\mathbf L\Gp$ であり，$\LECom$ はすべての局所モノイドで冪等元が可換な有限半群，すなわち擬恒等式
+\emph{擬多様体}とは，割り算と有限直積で閉じた有限半群（またはモノイド）のクラスである \cite{Pin1986}．次を用いる：$\Gp$（群），$\SL$（半束），$\Com$ と $\ACom$（可換モノイド，可換で非周期的なモノイド），$\Dd$（冪等元が右零元である半群），$\LI$（局所自明），$\LT$ と $\LTT$（局所テスト可能言語と局所閾値テスト可能言語の統語半群），$\ECom$（冪等元が可換なモノイド）．モノイドの擬多様体 $\mathbf V$ について，$\mathbf L\mathbf V$ はすべての局所モノイド $e\mathsf Se$（$e=e^2$）が $\mathbf V$ に入る有限半群のクラスである．したがって $\LG=\mathbf L\Gp$ であり，$\LECom$ はすべての局所モノイドで冪等元が可換な有限半群，すなわち擬恒等式
 \[
   (exe)^\omega(eye)^\omega=(eye)^\omega(exe)^\omega\qquad(e=z^\omega)
 \]
@@ -186,72 +212,160 @@ $k\ge2$，$\ell\ge1$ なら，$(c_\Sigma,b_\ell)$ の像は $\LG$ に入らな�
 $\mathtt a\ne\mathtt b$ を文字とし，$e$ を $\mathtt a^{2\ell}$ の型とする．$e$ と $e\,s(\mathtt b)\,e$ は局所モノイド $e\mathsf Se$ の相異なる冪等元である．端の窓は同じで内容が違う．群の冪等元は一つしかない．
 \end{proof}
 
+\subsection{通しの例}
+
+\begin{example}[偶数 run]
+\label{ex:running}
+$E\subseteq\{\mathtt a,\mathtt b\}^+$ を，極大な $\mathtt a$-run の長さがすべて偶数である語の集合とする．その最小オートマトンは二つの生きた状態 $0,1$（今の run の偶奇）と死状態を持ち，$\mathtt a$ は生きた状態を入れ替え，$\mathtt b$ は $0$ を固定して $1$ を殺す．正の統語半群は，$\{0,1\}$ の部分単射七個からなる対称逆モノイド $I_2$ で，代表元は $\mathtt{aa},\mathtt a,\mathtt b,\mathtt{ba},\mathtt{ab},\mathtt{aba},\mathtt{bab}$ である（恒等，入れ替え，四つの一点写像，空写像）．$\mathtt bI_2\mathtt b=\{\mathtt b,0\}\cong U_1$ は群でないので $I_2\notin\LG$．この例には例~\ref{ex:running-decoration} と例~\ref{ex:running-algebra} で戻る．
+\end{example}
+
 %======================================================================
 \section{局所計数の標的}
 \label{sec:L}
 
-この節では $\ell\ge1$，$q=\ell-1$，$V=k^q$，$K=k^\ell$，$b=b_\ell$，$N=N_\ell$，$c=c_\Sigma$，$T=|b(\Sigma^+)|$ とする．
+この節では $\ell\ge1$，$q=\ell-1$，$V=k^q$，$b=b_\ell$，$N=N_\ell$，$c=c_\Sigma$，$T=|b(\Sigma^+)|$ とする．
 
 \begin{definition}
-正の語の所属が $(b_\ell(w),N_\ell(w))$ だけで決まるとき，$L$ は \emph{$\ell$-局所計数}であるという．
+正の語の所属が $(b_\ell(w),N_\ell(w))$ だけで決まるとき，$L$ は \emph{$\ell$-局所計数}であるという．$L\cap\Sigma^+$ の語の因子として現れる長さ $\ell$ の語の数を $\Kocc$ と書く．したがって $\Kocc\le k^\ell$ である．
 \end{definition}
 
 位数 $\ell$ の厳密局所テスト可能・局所テスト可能・局所閾値テスト可能な言語に，文字の個数についての任意の条件を交わらせたものは $\ell$-局所計数である．文字の個数は，最初の頂点と辺の最後の文字から読み取れる．
 
 \begin{theorem}[局所計数の標的]
 \label{thm:L}
-$L\in\Cmcf{f}{s}$ を $\ell$-局所計数とし，$s\preceq(c,b)$ とする．
+$L\in\Cmcf{f}{s}$ を $\ell$-局所計数とし，$s\preceq(c,b)$ とする．このとき $L\cap\Sigma^+$ の reduced good，fan-out $\le f$，rank $\le r$，非終端数 $v$，$\theta=\bth_G$ の任意の表示 $G$ について
 \[
- \lambda=K(2V-1),\quad B=2q\lambda,\quad c_1=1,\quad c_{i+1}=Kc_i+f+B+2
- \ (1\le i\le K+1),\quad c_*=c_{K+2}
+ \tau(G,s)=O_{k,\ell,f,r}\bigl(v^{\Kocc f+2}\theta^{\Kocc f+1}\bigr)
 \]
-とおき，$L\cap\Sigma^+$ の reduced good，fan-out $\le f$，rank $\le r$，非終端数 $v$，$\theta=\bth_G$ の表示 $G$ について
-\[
- H=v\bigl((2^k-1)T+1\bigr)^f,\quad N_{\rm sk}=\ell c_*KfH,\quad
- C_L=T^f\bigl(1+rH(\theta+f\ell)\bigr)^{Kf}
-\]
-とおく．このとき
-\[
- \tau(G,s)\le f\ell+\ell N_{\rm sk}\theta+2\ell frN_{\rm sk}
- +\ell rN_{\rm sk}C_LH\theta
- =O_{k,\ell,f,r}\bigl(v^{Kf+2}\theta^{Kf+1}\bigr).
-\]
+が成り立つ．明示的な上界は付録~\ref{app:constants} の \eqref{eq:L-explicit} である．
 \end{theorem}
 
+証明はこの節の残りを占め，六つの補題からなる：文脈の不変量（補題~\ref{lem:context}），頻度の隙間（補題~\ref{lem:gap}），印付き文字の骨格（補題~\ref{lem:skeleton}），切り口と色（補題~\ref{lem:colours}），Euler 再配線（補題~\ref{lem:euler}），一回の削除（補題~\ref{lem:deletion}）．定数 $K$，$\lambda$，$B$，$c_i$，$c_*$，$H$，$N_{\rm sk}$，$C_L$ は付録~\ref{app:constants} のもので，$K=\Kocc$ とする．
+
+\subsection{文脈の不変量}
+
+\begin{lemma}[文脈の不変量]
+\label{lem:context}
+$\tuple x,\tuple y\in(\Sigma^+)^d$ がすべての $i$ で $b(x_i)=b(y_i)$，$c(x_i)=c(y_i)$ を満たし，$\sum_iN(x_i)=\sum_iN(y_i)$ とする．このとき任意の許容文脈 $E$ について，さらに一般に成分を固定片と交互に並べる任意のやり方について，$b(E[\tuple x])=b(E[\tuple y])$，$N(E[\tuple x])=N(E[\tuple y])$ である．特に $\tuple x\equiv_{L,s}\tuple y$．
+\end{lemma}
+
 \begin{proof}
-\emph{文脈の不変量．}
-文脈 $E[\tuple x]$ の境界をまたぐ窓は，最初に触れる片の接尾辞，最後に触れる片の接頭辞，その間のすべての空でない片からなる．間の片は長さ $q-1$ 以下なので，印で決まる．したがって，成分の $(b,c)$-型が等しく，内部の $N$ の和が等しければ，任意の許容文脈 $E$ について $E[\tuple x]$ の $(b,N)$ は等しく，分布も等しい．固定した任意の片についても同じ恒等式が成り立つ．
+$b$ は準同型なので端の窓は一致する．$E[\tuple x]$ の窓は，一つの片の中にあるか境界をまたぐ．またぐ窓は，最初に触れる片の接尾辞，最後に触れる片の接頭辞，その間のすべての空でない片からなる．間の片は長さ $q-1$ 以下なので，印で決まる．したがってまたぐ窓の多重集合は片の型の列で決まり，内部の窓は $\sum_iN(x_i)$ と固定片の窓を寄与する．$(b,N)$ が等しければ所属が等しく，$s\preceq(c,b)$ から成分の型も等しい．
+\end{proof}
 
-\emph{木と位置．}
-実現された型付き非終端 $X$ を固定し，出力ラベルが $X$ の導出のうち節点数が最小のものを選び，その組を $\tuple x$ とする．記号と出力の $(c,b)$-型が等しい祖先と真の子孫があれば縮められるので，節点で数えた高さは $H$ 以下である．位置はつねにこの元の組について言う．部分木の各成分は一つの根成分の中の連続した区間に写り，比較不能な部分木の像は交わらない．
+\subsection{頻度の隙間}
 
-長さ $\ell$ 以上の根成分 $x_i$ ごとに，辺の頻度の $K+1$ 個の区間のうち空のもの $[c_g,c_{g+1})$ を一つ選ぶ．頻度 $c_{g+1}$ 以上の辺を\emph{頻出}，それ以外を\emph{稀}と呼ぶ．頻出の辺があれば，稀な出現は $R=(K-1)(c_g-1)$ 個以下である．頻出の辺の弱連結成分 $J$ はどれも強連結である．戻れない辺があれば，その終点から頻出の辺で到達できる集合はその始点を含まず，その集合に $c_{g+1}$ 回以上入るには $R$ 個を超える稀な出口が要るからである．頻出の辺の極大区間はどれも一つの $J$ に入り，各 $J$ の区間は $R+1$ 個以下である．
+実現された型付き非終端 $X$，出力ラベルが $X$ の導出のうち節点数が最小のもの，その組 $\tuple x$ を固定する．記号と出力の $(c,b)$-型が等しい祖先と真の子孫があれば縮められるので，この導出の節点で数えた高さは $H$ 以下である．位置はつねに $\tuple x$ について言う．部分木の各成分は一つの根成分の中の連続した区間に写り，比較不能な部分木の像は交わらない．
 
-$x_i$ の各辺 $e$ について，最初の $\min(c_*,N(x_i)(e))$ 個の出現のすべての文字に印を付ける．印付きの文字を書く節点とその祖先を\emph{骨格}と呼ぶ．骨格の節点は $N_{\rm sk}$ 個以下である．骨格が空なら窓はなく $\|\tuple x\|_1\le fq$ である．そうでなければ，骨格の外の極大部分木は $rN_{\rm sk}$ 個以下である．それらの成分の内部の窓はどれも印に触れず，すべて一つの頻出区間に入る．短い印を持つ根成分は，すべての窓が選ばれていて，変更しない．
+\begin{lemma}[頻度の隙間]
+\label{lem:gap}
+$w$ を長さ $\ell$ 以上の語で，その $\ell$-因子がすべて $L$ に現れるものとする．$w$ のどの辺の頻度も $[c_g,c_{g+1})$ に入らない $g\in\{1,\ldots,K+1\}$ がある．頻度が $c_{g+1}$ 以上の辺を\emph{頻出}，それ以外を\emph{稀}と呼ぶ．$w$ が頻出の辺を持つなら：
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item 稀な出現は $R=(K-1)(c_g-1)$ 個以下である．
+\item 頻出の辺の弱連結成分 $J$ はどれも強連結である．
+\item $w$ の頻出の辺の極大区間はどれも一つの $J$ に入り，各 $J$ のそうした区間は $R+1$ 個以下である．
+\end{enumerate}
+\end{lemma}
 
-\emph{切り口と色．}
-骨格の外の極大部分木 $\eta$（成分 $z_\kappa$）を固定し，その葉を深さ優先で並べる．最初の $j$ 枚の葉のあとで，葉がすべてそれらに含まれる極大部分木の集合を $I_j$ とする．$|I_j|\le rH$ で，その元の終端位置は増大列 $U_j$ をなし，一歩で増える位置は $H\theta$ 個以下である．$I_j$ の各元を，それ自身の記号から生成される長さ $\theta$ 以下の組の導出で置き換える．新しい成分を $z^j_\kappa$，得られる文を $W_j$ と書く．$W_j$ は生成される．挿入した文字すべてに印を付け，$j$ に\emph{色} $(b(z^j_\kappa),\Imp_\kappa(j))_\kappa$ を与える．$\Imp_\kappa(j)$ は，$z^j_\kappa$ の内部の窓のうち挿入文字に触れるもののベクトルである．置き換える片はすべて正なので，挿入文字を含まない窓は一つの残った区間の中にあり，位置によって $U_j$ を避ける元の内部の窓と一対一に対応する．色は $C_L$ 種類以下である．$j<j'$ の色が等しければ
+\begin{proof}
+$w$ に現れる辺の種類は $K$ 個以下で，その頻度は $1=c_1$ 以上である．よって $K+1$ 個の区間 $[c_g,c_{g+1})$ のどれかは空である．(i) 稀な辺の種類は $K-1$ 個以下で，それぞれ出現は $c_g$ 個未満である．(ii) $p$ から $p'$ への頻出の辺が頻出の辺で戻る路を持たないとし，$p'$ から頻出の辺で到達できる頂点の集合を $P$ とする．$p\notin P$ である．$w$ の路は $P$ に $c_{g+1}$ 回以上入るので，$c_{g+1}-1$ 回以上出なければならず，そのたびに稀な辺を通る．$c_i$ の漸化式から $c_{g+1}-1>R$ なので (i) に反する．(iii) 頻出の辺の極大区間はつながった歩道であり，区間どうしは稀な出現で隔てられる．
+\end{proof}
+
+\subsection{骨格}
+
+長さ $\ell$ 以上の各根成分 $x_i$ について，補題~\ref{lem:gap} の $g$ を選ぶ．$x_i$ の各辺 $e$ について，最初の $\min(c_*,N(x_i)(e))$ 個の出現のすべての文字に印を付ける．印付きの文字を書く導出の節点とその祖先を\emph{骨格}と呼ぶ．
+
+\begin{lemma}[骨格]
+\label{lem:skeleton}
+骨格の節点は $N_{\rm sk}$ 個以下で，その外の極大部分木（\emph{自由部分木}）は $rN_{\rm sk}$ 個以下である．稀な出現はすべて全体が印付きである．自由部分木の成分の内部の窓は印付きの文字を含まず，一つの成分のそうした窓はすべて一つの $J$ の一つの頻出区間に入る．短い印を持つ根成分は，すべての窓が印付きである．
+\end{lemma}
+
+\begin{proof}
+高々 $f$ 個の根成分のそれぞれで印付きの文字は $\ell c_*K$ 個以下で，それぞれの祖先は $H$ 個以下なので，最初の上界が出る．自由部分木は骨格の節点の子である．稀な辺の出現は $c_g\le c_*$ 個未満で，すべて印付きである．自由成分の内部の窓は印付きの文字を含まないので稀な出現ではない．一つの成分の連続する内部の窓は頻出の辺の区間をなし，補題~\ref{lem:gap}(iii) から一つの $J$ に入る．短い成分の窓は $q$ 個未満で，$c_*>q$ である．
+\end{proof}
+
+骨格が空なら窓はなく $\|\tuple x\|_1\le fq$ である．
+
+\subsection{切り口と色}
+
+成分 $z_\kappa$ を持つ自由部分木 $\eta$ を固定し，子の順序を固定した深さ優先でその葉を並べる．最初の $j$ 枚の葉のあとで，葉がすべてそれらに含まれる $\eta$ の極大部分木の集合を $I_j$ とする．$I_j$ の各元を，それ自身の記号から生成される総長 $\theta$ 以下の組の導出で置き換える．得られる $\eta$ の成分を $z^j_\kappa$，得られる文を $W_j$ と書く．挿入した文字すべてに印を付け，$j$ に\emph{色}
 \[
- Z_\kappa=N(z^j_\kappa)-N(z^{j'}_\kappa)\ge0
+  \operatorname{col}(j)=\bigl(b(z^j_\kappa),\Imp_\kappa(j)\bigr)_\kappa
 \]
-は，$(j,j']$ の間に初めて触れられた元の内部の窓を数える．端の印が等しいので $Z_\kappa$ は一つの $J$ に台を持つ循環流であり，文脈の不変量から $b(W_j)=b(W_{j'})$，$N(W_j)-N(W_{j'})=\sum_\kappa Z_\kappa$ である．訪れた各添字から，同じ色の最後の添字へ跳び，その間の初接触を削除し，次の添字への増分一つだけを残して続ける．跳躍の窓は互いに交わらない．
+を与える．$\Imp_\kappa(j)$ は，$z^j_\kappa$ の内部の窓のうち挿入文字に触れるもののベクトルである．
 
-\emph{Euler 再配線．}
-強連結な $J$ の中で，$m$ 本の指定された路が端点 $p_l,q_l$ を持ち，合計の目標個数 $M$ が $\partial M=\sum_l(\mathbf e_{q_l}-\mathbf e_{p_l})$ を満たすとする．指定された主路の中の頂点 $u$ に閉歩道 $g_0$ を露出させるには，$J$ 上で $M(e)\ge m+1+N(g_0)(e)$ であれば足りる．主路以外の枠と，主路の始点から $u$ までに単純路を選び，それらと $g_0$ を引く．残りはすべての辺で正で，$u$ から主路の終点へ釣り合っているので Euler 路を持つ．指定された路の間の凍結された辺は，端点が保たれるので本物の窓のまま残る．
+\begin{lemma}[切り口と色]
+\label{lem:colours}
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item $|I_j|\le rH$ である．$I_j$ が覆う元の終端位置は増大列 $U_j$ をなし，$|U_{j+1}\setminus U_j|\le H\theta$．
+\item $W_j$ は $G$ で生成されるので $L$ に入る．
+\item 色は $C_L$ 種類以下である．
+\item $j<j'$ の色が等しければ，$Z_\kappa=N(z^j_\kappa)-N(z^{j'}_\kappa)\ge0$ は $(j,j']$ の間に初めて触れられた $z_\kappa$ の元の内部の窓をちょうど数える．各 $Z_\kappa$ は一つの $J$ に台を持つ循環流であり，$b(W_j)=b(W_{j'})$，$N(W_j)-N(W_{j'})=\sum_\kappa Z_\kappa$ である．
+\end{enumerate}
+\end{lemma}
 
-\emph{一回の削除．}
-各根成分について，元の $(b,c)$ と，それまでの跳躍を引いた現在のベクトル $M_i$ を保ち，実現する組が存在してそのすべてが $\tuple x$ と同値である，という不変量を保つ．零でない $Z_\kappa$ を根成分と頻出成分ごとにまとめて溜まり $Z_{i,J}$ とする．活動中の溜まりは $f$ 個以下である．$W_{j'}$ では，$\eta$ の区間の外にある $x_i$ の内部の頻出の窓だけを動かしてよいとし，ほかの辺はすべて凍結する．柔軟な連は $R+1+f$ 本以下で，頻出の辺はどれも $c_{g+1}$ 個以上の柔軟な出現を持つ（選ばれた出現はすべて印付きなので $\eta$ の外にある）．活動中の各溜まりについて，柔軟な窓を含む最初の元の頻出区間を錨とする．
+\begin{proof}
+(i) 完成する前の $I_j$ の元は，次の葉の祖先の路の上の完成した兄弟である．新しく覆われる位置は，新しく完成する葉の路の上に書かれる．(ii) 部分木を同じ記号からの導出で置き換えても導出である．(iii) 長さ $n$ の置き換える片は不純な窓を $n+q$ 個以下しか生まず，長さ $\theta$ 以下の片は $rH$ 個以下である．不純な窓はすべて $L$ の語の因子である．(iv) 置き換える片はすべて正なので，挿入文字を含まない窓は一つの残った区間の中にあり，位置によって $U_j$ を避ける元の内部の窓と一対一に対応する．不純な窓のベクトルが等しいことから最初の主張が出る．端の印が等しいので端の不均衡が等しく，$Z_\kappa$ は循環流である．その台は $z_\kappa$ の内部の窓からなり，補題~\ref{lem:skeleton} から一つの $J$ に入る．最後の主張は，$W_j$ と $W_{j'}$ の固定片に補題~\ref{lem:context} を当てれば出る．
+\end{proof}
 
-$u\in J$ と，$u$ から出て $J$ のすべての辺を通る長さ $\lambda$ 以下の巡回 $D$ を固定する．$q>0$ なら $D_0=D^q$，$h=D_0D_0$，$t=D_0\operatorname{Euler}_u(N(D_0)+Z_{i,J})$ とし，$q=0$ なら $h$ は $J$ の各ループを一回ずつ通り，$t$ は $N(h)+Z_{i,J}$ を通るとする．出力される語 $h,t$ は正で，内容も窓の型も等しく，$N(t)-N(h)=Z_{i,J}$ である．
+\paragraph{計画．}
+$\eta$ の訪れた各添字 $j$ から，同じ色の最後の添字 $j'$ へ行き，$(j,j']$ の初接触を削除し（\emph{跳躍}），$j'+1$ への増分一つだけを残してそこから続ける．出発の色は繰り返さないので，$\eta$ について残す増分は $C_L$ 個以下である．違う跳躍，違う自由部分木で削除される窓は互いに交わらない．
 
-代表元の側では，活動中の各溜まりを再配線して錨に $t$ を露出させ，$\tuple y$ を得る．$t$ を $h$ に替えると，個数がちょうど跳躍の分だけ減った $\tuple y'$ が得られる．文の側では，錨の柔軟な連に $h$ を露出させ，$W_{j'}$ の個数を持つ $F[h]$ と，$W_j$ の個数を持つ $F[t]$ を得る．個数の条件は，辺ごとに $m\le R+1+f$ と
+\subsection{Euler 再配線}
+
+\begin{lemma}[凍結ブロック付きの Euler 再配線]
+\label{lem:euler}
+$J$ を de Bruijn グラフの強連結な部分グラフとする．$m$ 本の指定された歩道が端点 $p_l\to q_l$ を持ち，凍結された辺列で隔てられているとし，$M\in\mathbb N^{E(J)}$ が $\partial M=\sum_l(\mathbf e_{q_l}-\mathbf e_{p_l})$ を満たすとする．主歩道 $l^*$，$J$ の頂点 $u$，$u$ での $J$ の閉歩道 $g_0$ を固定する．$J$ のすべての辺 $e$ で $M(e)\ge m+1+N(g_0)(e)$ なら，指定された歩道を，端点が同じで全体として各辺をちょうど $M(e)$ 回使い，主歩道が $g_0$ を因子として含む歩道に置き換えられる．凍結された辺は新しい語でも窓のままである．
+\end{lemma}
+
+\begin{proof}
+主歩道以外の各枠に単純路を，主歩道の枠の始点から $u$ への単純路を選び，それらと $g_0$ を $M$ から引く．残りは $J$ のすべての辺で正であり（単純路は各辺を高々一回しか使わない），不均衡は $u$ から主歩道の枠の終点への歩道のものである．台は強連結なので Euler 路を持つ．主歩道は，$u$ への路，$g_0$，この Euler 路の順とする．指定された各歩道の端点は保たれるので，凍結された辺はどれも入る頂点と出る頂点を保ち，本物の窓のままである．
+\end{proof}
+
+\subsection{一回の削除}
+
+各根成分 $x_i$ について，元の $(b,c)$ と，初めは $N(x_i)$ でそれまでの跳躍を引いた現在のベクトル $M_i$ を保つ．次の不変量を考える．
+\begin{itemize}[leftmargin=*]
+\item[(Inv)] 成分が元の $(b,c)$-型を持ち個数が $M_i$ である正の組が存在し，そうした組はどれも $\equiv_{L,s}\tuple x$ である．
+\end{itemize}
+初めは補題~\ref{lem:context} から成り立つ．
+
+\begin{lemma}[一回の削除]
+\label{lem:deletion}
+(Inv) が成り立ち，$j<j'$ が自由部分木 $\eta$ の色の等しい添字であるとする．$\eta$ の成分 $z_\kappa$ のうち $x_i$ に入るものの $Z_\kappa$ を各 $M_i$ から引いたあとでも (Inv) は成り立つ．
+\end{lemma}
+
+\begin{proof}
+零でない $Z_\kappa$ を根成分と頻出成分ごとにまとめて\emph{溜まり} $Z_{i,J}$ とする．活動中の溜まりは $f$ 個以下である．
+
+\emph{柔軟性．}$W_{j'}$ では，位置が $\eta$ の区間の外にある $x_i$ の内部の頻出の窓だけを動かしてよいとし，ほかの辺はすべて凍結する．柔軟な連の数 $m$ は $R+1+f$ 以下で，頻出の辺はどれも $c_{g+1}$ 個以上の柔軟な出現を持つ．印付きの出現はすべて $\eta$ の外にあるからである．活動中の各溜まりについて，柔軟な窓を含む最初の元の頻出区間を\emph{錨}とする．
+
+\emph{対 $(t,h)$．}$u\in J$ と，$u$ から出て $J$ のすべての辺を通る長さ $\lambda$ 以下の巡回 $D$ を固定する．$q>0$ なら $D_0=D^q$，$h=D_0D_0$，$t=D_0\,\mathrm{Euler}_u(N(D_0)+Z_{i,J})$ とし，$q=0$ なら $h$ は $J$ の各ループを一回ずつ通り，$t$ は $N(h)+Z_{i,J}$ を通るとする．出力される語 $h,t$ は正で，内容（$J$ のラベル）も窓の型（共通の最初の $q$ 文字と終点 $u$）も等しく，$N(t)-N(h)=Z_{i,J}$ である．
+
+\emph{補題~\ref{lem:euler} の二回の適用．}代表元の側では，現在の個数を実現し，活動中の各溜まりの錨に $t$ を露出させて $\tuple y$ を得る．$t$ を $h$ に替えると，個数がちょうど跳躍の分だけ減った $\tuple y'$ が得られる．文の側では，錨の柔軟な連に $h$ を露出させ，$W_{j'}$ の個数を持つ語 $F[h]$ を得る．補題~\ref{lem:colours}(iv) から $F[t]$ は $W_j$ の個数を持つ．補題~\ref{lem:euler} の個数の仮定は，辺ごとに $m\le R+1+f$，$N(h)(e)\le B$ と
 \[
  c_{g+1}-(R+1+f+B+1)=c_g+K-1\qquad(q>0)
 \]
-から従う．$N(h)(e)\le B$ であり，代表元の側では $Z_{i,J}(e)$ が $t$ の分を払う．$q=0$ なら余裕は 1 以上である．$F[h]$ と $F[t]$ はともに $L$ に入る．一つの根成分の中の穴は凍結された稀な辺で，違う成分の穴は正の文脈片で隔てられるので，$F$ と $F_E$ は任意の許容文脈 $E$ について許容である．比べる組は $t$ と $h$，共有文脈は $F$，試験文脈は $F_E$ で，四つの語は $F[t],F[h],F_E[t]=E[\tuple y],F_E[h]=E[\tuple y']$ である．代入可能性から，すべての $E$ について $E[\tuple y]\in L\iff E[\tuple y']\in L$ となり，文脈の不変量でこれを新しいデータのすべての実現に広げる．
+から従う．代表元の側では $Z_{i,J}(e)$ が $t$ の分を払い，$q=0$ なら余裕は 1 以上である．
 
-\emph{長さ．}
-一つの自由成分の内部にない残った窓は，骨格が書く終端記号に触れる（始点は $\ell N_{\rm sk}\theta$ 個以下）か，自由成分の端をまたぐ（$2\ell frN_{\rm sk}$ 個以下）．ほかの残った窓は，その初接触の増分に割り当てる．自由部分木ごとに残す増分は $C_L$ 個以下で，それぞれが触れる窓は $\ell H\theta$ 個以下である．各成分の長さは $q$ と窓の数の和以下である．
+\emph{長方形．}補題~\ref{lem:context} から，$F[h]$ と $F[t]$ は $W_{j'}$ と $W_j$ のデータを持つので $L$ に入る．一つの根成分の中の穴は凍結された稀な辺で，違う成分の穴は正の文脈片で隔てられる．したがって $F$ と，任意の許容文脈 $E$ について $E[\tuple y]$ から $t$ を切り出した文脈 $F_E$ は許容である．比べる組は $t$ と $h$，共有文脈は $F$，試験文脈は $F_E$ で，四つの語は
+\[
+F[t],\quad F[h],\quad F_E[t]=E[\tuple y],\quad F_E[h]=E[\tuple y']
+\]
+である．$L\in\Cmcf{f}{s}$ で $t,h$ の型が等しいので，すべての $E$ について $E[\tuple y]\in L\iff E[\tuple y']\in L$，すなわち $\tuple y'\equiv_{L,s}\tuple y$．(Inv) から $\tuple y\equiv_{L,s}\tuple x$ であり，補題~\ref{lem:context} でこれを新しいデータを持つすべての組に広げる．
+\end{proof}
+
+\subsection{定理~\ref{thm:L} の証明}
+
+すべての自由部分木の計画に沿って補題~\ref{lem:deletion} を適用する．(Inv) から，最後の個数を実現する $\tuple y\equiv_{L,s}\tuple x$ がある．一つの自由成分の内部にない残った窓は，骨格が書く終端記号に触れる（始点は $\ell N_{\rm sk}\theta$ 個以下）か，自由成分の端をまたぐ（$2\ell frN_{\rm sk}$ 個以下）．ほかの残った窓は，その初接触の増分に割り当てる．自由部分木ごとに残す増分は $C_L$ 個以下で，補題~\ref{lem:colours}(i) からそれぞれが触れる窓は $\ell H\theta$ 個以下である．各成分の長さは $q$ と窓の数の和以下である．これで \eqref{eq:L-explicit} が得られる．\qed
+
+\begin{lemma}[現れる窓だけを数える]
+\label{lem:occurring}
+上の証明で $K$ が使われるのは，考える語に現れうる de Bruijn グラフの辺の種類数の上界としてだけであり，考える語はどれも $L$ の語の因子である．したがって定理は $K=\Kocc$ で成り立つ．
+\end{lemma}
+
+\begin{proof}
+$K$ は四か所に現れる．(a) 頻度の隙間（補題~\ref{lem:gap}）は根成分の辺の種類を数え，根成分は $L$ の語の因子である．(b) 上界 $R$ と $c_i$ の漸化式は，同じ成分の稀な辺の種類を数える．(c) 印と $N_{\rm sk}$ は根成分の辺の種類を数える．(d) 色（補題~\ref{lem:colours}(iii)）は $W_j\in L$ の成分の不純な窓を数え，巡回の長さ $\lambda$ は根成分に現れる $J$ の辺を数える．語 $t$，$h$ と再配線した歩道は $J$ の辺しか使わない．
 \end{proof}
 
 \begin{corollary}
@@ -262,12 +376,6 @@ $R$ を厳密 $\ell$-局所テスト可能，$g:\Sigma^*\to\mathsf A$ を可換�
 \begin{proof}
 arity $d\le f$ の，型が等しい正の組 $\tuple x,\tuple y$，共有の受理文脈 $E_0$，任意の試験文脈 $E_1$ を取る．最初の二語 $E_0[\tuple x],E_0[\tuple y]$ から，両方の組の内部の窓はすべて許可されている．$E_1[\tuple x]$ と $E_1[\tuple y]$ では，端のデータ，固定片の窓，またぐ窓が一致するので，骨格への所属が一致する．可換群の値は，両方の文脈で成分の差の同じ和だけ変わり，それは $\mathsf H$ に入る．
 \end{proof}
-
-\begin{remark}[現れる窓]
-\label{rem:occurring-windows}
-定数 $K$ が証明に入るのは，$L$ の語に現れうる辺の種類数を通してだけである（頻度の区間，色の中の不純な窓のベクトル，巡回の長さ）．したがって $K$ は，$L$ の語に現れる $\ell$-窓の数に置き換えられる．これは注意~\ref{rem:degree} で，装飾のあとの次数を改善するのに使う．
-% TODO(verification): 証明中の K のすべての出現を確認する（research/README.md，義務2）．
-\end{remark}
 
 %======================================================================
 \section{装飾}
@@ -284,40 +392,55 @@ $\rho:\Sigma^+\to\mathsf M$ を有限半群への全射準同型とし，$d\ge1$
 が $\rho(w)$ を決めるとき，$\mathcal A$ は\emph{幅 $d$ で $\rho$ を復元する}という．
 \end{definition}
 
+\begin{example}[通しの例：装飾]
+\label{ex:running-decoration}
+例~\ref{ex:running} の $E$ について，$\mathcal A$ を $\{0,1\}$ 上の偶奇のオートマトン（$\mathtt a$ は入れ替え，$\mathtt b$ は固定）とする．その遷移半群は位数2の群である．語 $\mathtt{aabaa}$ の $0$ からの足跡は $(0,\mathtt a)(1,\mathtt a)(0,\mathtt b)(0,\mathtt a)(1,\mathtt a)$ である．$\mathcal A$ は幅 1 で $\rho_E$ を復元する．入口 $u$，出口 $u'$，装飾された $\mathtt b$ が読まれる状態の集合 $B_{\mathtt b}$ が与えられたとき，$p=u+u'$ とおく．仮想の入口 $y$ が生き残るのはすべての $t\in B_{\mathtt b}$ について $y+u+t=0$ のときに限り，そのとき出口は $y+p$ である．したがって $B_{\mathtt b}=\emptyset$ なら置換，$|B_{\mathtt b}|=1$ なら一点写像，$|B_{\mathtt b}|=2$ なら空写像が得られる．たとえば $0$ からの $\mathtt{aab}$ では $B_{\mathtt b}=\{0\}$，$u=u'=0$ で，一点写像 $0\mapsto0$，すなわち $\rho_E(\mathtt b)=\rho_E(\mathtt{aab})$ が復元される．
+\end{example}
+
+\setcounter{mainthm}{1}% 定理 B
 \begin{mainthm}[装飾の移送；定理~\ref{thm:transfer}]
 \label{thm:B}
 $\mathcal A$ が幅 $d$ で $\rho$ を復元し，正の語の $L$ への所属が $(\rho(w),N_\ell(w))$ だけで決まり，$s\preceq(c_\Sigma,b_\ell,\rho)$，$L\in\Cmcf{f}{s}$ とする．$\mathcal A$ の遷移半群が局所群なら，$L\cap\Sigma^+$ の任意の reduced good，fan-out $\le f$，rank $\le r$ の表示 $G$ について，$D=f|Q|k^m$，$m=\max(2,d,\ell)$ として $\tau(G,s)=O(v^{2D+3}\bth_G^{D+1})$ が成り立つ．
 \end{mainthm}
 
+$L^\#=D_{q_0}(L\cap\Sigma^+)$，$\Gamma$ 上で $t=(c_\Gamma,b_m)$ とおき，三つの補題を通して定理~\ref{thm:B} を示す．
+
+\begin{lemma}[足跡の言語]
+\label{lem:trace-local}
+$L^\#$ は $m$-局所計数であり，その因子として現れる長さ $m$ の語は $|Q|k^m$ 個以下である．整合的な任意の正の語 $W$ について，$t(W)$ は端の状態，射影の $(c_\Sigma,b_\ell)$-型，$\rho(\pi W)$，したがって射影の $s$-型を決める．
+\end{lemma}
+
+\begin{proof}
+$\Gamma$ 上の語が $q_0$ からのある語の足跡であるのは，最初の文字の状態が $q_0$ で，整合的であるときに限る．データ $(b_m,N_m)$ は，最初と最後の文字と，より短いすべての因子の個数を決める（長い窓の接頭辞を数え，最後の短い窓を一つ足す．短い語はそのまま読む）．これで整合性を判定でき，$c_\Gamma$，$b_d$，両端の状態が得られ，復元によって $\rho$ が得られる．長さ $\ell$ の個数を射影すれば射影の $N_\ell$ が得られる．整合的な $m$-窓は，最初の状態と $m$ 個の文字で決まる．最後の主張は $t$ と端の状態だけを使う．
+\end{proof}
+
+\begin{lemma}[装飾した代入可能性]
+\label{lem:dec-subst}
+$L^\#\in\Cmcf{f}{t}$．
+\end{lemma}
+
+\begin{proof}
+arity $1\le a\le f$，成分ごとに $t$ が等しい $\Gamma$ 上の正の組 $\tuple X,\tuple Y$，共有の受理文脈 $C_0$，任意の試験文脈 $C_1$ を固定する．四つの語は $C_0[\tuple X],C_0[\tuple Y],C_1[\tuple X],C_1[\tuple Y]$ である．最初の二つから，各成分は整合的で端の状態が一致する．補題~\ref{lem:trace-local} から射影した組 $\tuple x=\pi\tuple X$，$\tuple y=\pi\tuple Y$ の $s$-型は等しく，射影した語 $(\pi C_0)[\tuple x],(\pi C_0)[\tuple y],(\pi C_1)[\tuple x],(\pi C_1)[\tuple y]$ には $L$ の代入可能性が使える．$C_1[\tuple X]$ の整合性が固定片の中，先頭，境界で崩れるなら，成分の端の状態が一致するので $\tuple Y$ でも同時に崩れる．そうでなければ，所属は射影の所属である．$L^\#$ は $f$-MCFL の足跡の像なので，補題~\ref{lem:dec-grammar} から $f$-MCFL である．
+\end{proof}
+
+\begin{lemma}[装飾した文法]
+\label{lem:dec-grammar}
+非終端が $1+v|Q|^{2f}$ 個以下の，$L^\#$ の reduced good，fan-out $\le f$，rank $\le r$ の表示 $G^\#$ がある．$G$ の各非終端 $A$ と，$A$ で実現可能な入口・出口の対の各ベクトル $(p_i,q_i)_i$ について，各成分が $p_i$ から $q_i$ へ走る総長 $\beta$ 以下の $A$ の生成組があれば，$\bth_{G^\#}\le(2+v|Q|^{2f})(\theta+r\beta)$ である．$\mathcal A$ の遷移半群が $\LG$ に入るなら $\beta=O(v\theta)$ と取れる．
+\end{lemma}
+
+\begin{proof}
+$G^\#$ の記号は $[A;(p_i,q_i)_i]$ である．元の各規則と入口・出口のベクトルの各選び方について，各出力テンプレートをその入口状態から走査する．装飾した終端記号を出力し，各変数ではその子の宣言した入口を要求して出口から続け，最後に宣言した出口を確かめる．新しい単項の開始記号で $q_0$ を各終状態につなぐ．導出についての帰納法により，装飾した記号は，宣言した端の状態を持つ $A$ の生成組の足跡をちょうど生成する．trim すると，fan-out と rank が同じ reduced good な表示が得られる．装飾した規則が書く終端記号は $\theta$ 個以下である．残った規則を目撃するには，$G^\#$ の依存グラフの単純路でその親まで行き，兄弟と子をすべて長さ $\beta$ 以下の生成組で埋めればよい．遷移半群が $\LG$ に入るなら，実現可能な入口・出口のベクトルは遷移の値を指定した生成組で目撃でき，局所群の短い生成組の定理 \cite[定理 \textit{local-group-polydata}]{KuriyamaCompendium} から長さ $O(v\theta)$ のものが得られる．
+\end{proof}
+
 \begin{theorem}
 \label{thm:transfer}
-定理~\ref{thm:B} の仮定のうち，$T\in\LG$ の代わりに次だけを仮定する：各非終端 $A$ と，$A$ で実現可能な入口・出口の対のベクトル $(p_i,q_i)_i$ について，各成分が $p_i$ から $q_i$ へ走る $A$ の生成組で，総長が $\beta$ 以下のものがある．このとき
-\[
- \tau(G,s)=O\bigl(v^{D'+2}\max(1,\theta,\beta)^{D'+1}\bigr),\qquad
- D'=f(|Q|k)^m,\ \theta=\bth_G .
-\]
-$T\in\LG$ なら $\beta=O(v\theta)$ であり，指数 $D'$ は $D=f|Q|k^m$ に置き換えられる．これが定理~\ref{thm:B} を与える．
+定理~\ref{thm:B} の仮定のもとで定理~\ref{thm:B} が成り立つ．$T\in\LG$ を仮定せず，補題~\ref{lem:dec-grammar} の $\beta$ を使うなら，$D=f|Q|k^m$ として $\tau(G,s)=O(v^{D+2}\max(1,\theta,\beta)^{D+1})$ である．
 \end{theorem}
 
 \begin{proof}
-$L^\#=D_{q_0}(L\cap\Sigma^+)$，$\Gamma$ 上で $t=(c_\Gamma,b_m)$ とおく．
+補題~\ref{lem:trace-local}，\ref{lem:dec-subst}，\ref{lem:dec-grammar} から，定理~\ref{thm:L} と補題~\ref{lem:occurring} が $K_{L^\#}\le|Q|k^m$ で $L^\#$，$t$，$G^\#$ に適用できる．定理~\ref{thm:L} の証明は，厚さを，規則ごとの終端記号の数と記号ごとの生成組一つの長さを抑えるためにしか使わないので，$\max(1,\theta,\beta)$ を代入してよい．
 
-\emph{第1段：$L^\#$ は $m$-局所計数である．}
-$\Gamma$ 上の語が $q_0$ からのある語の足跡であるのは，最初の文字の状態が $q_0$ で，整合的であるときに限る．データ $(b_m,N_m)$ は，最初と最後の文字と，より短いすべての因子の個数を決める（長い窓の接頭辞を数え，最後の短い窓を一つ足す．短い語はそのまま読む）．これで整合性を判定でき，$c_\Gamma$，$b_d$，両端の状態が得られ，復元によって $\rho$ が得られる．長さ $\ell$ の個数を射影すれば，射影の $N_\ell$ が得られる．整合的な成分では，$t$ だけからその端の状態，射影の $(c_\Sigma,b_\ell)$，復元によって $\rho$，したがって射影の $s$-型が得られる．
-
-\emph{第2段：$L^\#\in\Cmcf{f}{t}$．}
-arity $1\le a\le f$，成分ごとに $t$ が等しい $\Gamma$ 上の正の組 $\tuple X,\tuple Y$，共有の受理文脈 $C_0$，任意の試験文脈 $C_1$ を固定する．四つの語は $C_0[\tuple X],C_0[\tuple Y],C_1[\tuple X],C_1[\tuple Y]$ である．最初の二つから，各成分は整合的で端の状態が一致する．射影した組 $\tuple x=\pi\tuple X$，$\tuple y=\pi\tuple Y$ の $s$-型は等しく，射影した語 $(\pi C_0)[\tuple x],(\pi C_0)[\tuple y],(\pi C_1)[\tuple x],(\pi C_1)[\tuple y]$ には $L$ の代入可能性が使える．$C_1[\tuple X]$ の整合性が固定片の中，先頭，境界で崩れるなら，成分の端の状態が一致するので $\tuple Y$ でも同時に崩れる．そうでなければ，所属は射影の所属である．
-
-\emph{第3段：装飾した文法．}
-$G^\#$ の記号を $[A;(p_i,q_i)_i]$ とする．元の各規則と入口・出口のベクトルの各選び方について，各出力テンプレートをその入口状態から走査する．装飾した終端記号を出力し，各変数ではその子の宣言した入口を要求して出口から続け，最後に宣言した出口を確かめる．新しい単項の開始記号で $q_0$ を各終状態につなぐ．導出についての帰納法により，装飾した記号は，宣言した端の状態を持つ $A$ の生成組の足跡をちょうど生成する．trim すると $G^\#$ は reduced good で，fan-out $\le f$，rank $\le r$，記号数 $v'\le1+v|Q|^{2f}$ であり，$L^\#$ を表示する．
-
-\emph{第4段：厚さ．}
-装飾した規則が書く終端記号は $\theta$ 個以下で，残った装飾記号はどれも長さ $\beta$ 以下の生成組を持つ．残った規則を目撃するには，$G^\#$ の依存グラフの単純路でその親まで行き，兄弟と子をすべてそうした組で埋めればよい．したがって $\bth_{G^\#}\le(v'+1)(\theta+r\beta)$ である．定理~\ref{thm:L} の証明は，厚さを，規則ごとの終端記号の数と記号ごとの生成組一つを抑えるためにしか使わないので，$\max(1,\theta,\beta)$ を代入してよい．
-
-\emph{第5段：$L$ へ戻す．}
-$G$ の実現された型付き非終端 $X$ と，成功する導出の中の生成組 $\tuple x$ を取る．文の足跡から，装飾した記号の生成組 $\tuple X$ と装飾した受理文脈 $F$ が得られる．定理~\ref{thm:L} から，$t$ も装飾した分布も同じで，述べた長さの組 $\tuple Y$ が得られる．$F[\tuple Y]$ は受理されるので，$\tuple Y$ は整合的で，$\pi\tuple Y$ は $\tuple x$ の $s$-型を持つ．任意の試験 $E$ について，四つの語 $(\pi F)[\tuple x],(\pi F)[\pi\tuple Y],E[\tuple x],E[\pi\tuple Y]$ から $\pi\tuple Y\equiv_{L,s}\tuple x$ が従う．装飾が $E$ に延びる必要はない．$\pi$ で長さは変わらない．
-
-$T\in\LG$ なら，実現可能な入口・出口のベクトルは遷移の値を指定した生成組で目撃でき，局所群の短い生成組の定理 \cite[定理 \textit{local-group-polydata}]{KuriyamaCompendium} から長さ $O(v\theta)$ のものが得られる．最後に，$L^\#$ の語に現れるのは整合的な装飾窓だけで，それは $|Q|k^m$ 個以下である．注意~\ref{rem:occurring-windows} により指数は $D=f|Q|k^m$ になる．
+\emph{$L$ へ戻す．}$G$ の実現された型付き非終端 $X$ と，成功する導出の中の生成組 $\tuple x$ を取る．文の足跡から，装飾した記号の生成組 $\tuple X$ と装飾した受理文脈 $F$ が得られる．定理~\ref{thm:L} から，$t$ も装飾した分布も同じで，述べた長さの組 $\tuple Y$ が得られる．$F[\tuple Y]$ は受理されるので，$\tuple Y$ は整合的で，補題~\ref{lem:trace-local} から $\pi\tuple Y$ は $\tuple x$ の $s$-型を持つ．任意の試験 $E$ について，四つの語 $(\pi F)[\tuple x],(\pi F)[\pi\tuple Y],E[\tuple x],E[\pi\tuple Y]$ から $\pi\tuple Y\equiv_{L,s}\tuple x$ が従う．装飾が $E$ に延びる必要はない．$\pi$ で長さは変わらない．$\beta=O(v\theta)$ なら $O(v^{2D+3}\theta^{D+1})$ が得られる．
 \end{proof}
 
 \begin{remark}[この段での局所群の必要性]
@@ -329,6 +452,9 @@ $T\in\LG$ なら，実現可能な入口・出口のベクトルは遷移の値�
 \section{復元を許す骨格}
 \label{sec:algebra}
 
+\paragraph{既知のことと新しいこと．}
+補題~\ref{lem:lg-closed} と定理~\ref{thm:SLLG-LECom} の等式は，花輪積と逆半群についての既知の結果 \cite{TherienWeiss1985,Ash1987,McAlister1974,OCarroll1976,Tilson1987} を組み合わせて得られる．依存関係をはっきりさせるため短い証明を付ける．新しいのは定理~\ref{thm:recovery} の復元の構成で，成分の統語値全体を，その足跡の内容と有界な窓だけから，\emph{任意の}入口について読み取る．
+
 \begin{lemma}
 \label{lem:lg-closed}
 $\LG*\LG=\LG$．
@@ -338,6 +464,7 @@ $\LG*\LG=\LG$．
 $U,T\in\LG$ による花輪積 $U\wr_QT$ の冪等元 $E=(F,b)$ と，その局所モノイドの冪等元 $Z=(H,z)$ を取る．$z$ は群 $bTb$ の冪等元なので $z=b$．$ub=u$ となる状態 $u$ では $F(u)$ と $H(u)$ は冪等元で，$EZ=ZE=Z$ から $H(u)$ は群 $F(u)UF(u)$ に入る．よって $H(u)=F(u)$．任意の $u$ では $ub$ が $b$ で固定されるので，$H(u)=F(u)H(ub)=F(u)F(ub)=F(u)$．したがって局所モノイドの冪等元は一つで，群である．
 \end{proof}
 
+\setcounter{mainthm}{2}% 定理 C
 \begin{mainthm}[復元と $\LECom$；定理~\ref{thm:recovery}，\ref{thm:SLLG-LECom}]
 \label{thm:C}
 正則な $R\subseteq\Sigma^+$ の統語射を $\rho_R$，統語半群を $S_R$ とする．次は同値である．
@@ -356,9 +483,15 @@ $U,T\in\LG$ による花輪積 $U\wr_QT$ の冪等元 $E=(F,b)$ と，その局�
 \begin{proof}
 (i)$\Rightarrow$(ii)．初期状態から，足跡の内容は有限の半束で，端の窓は局所自明な半群で累積でき，どちらも装飾した文字を読む．端の状態は下の機械から得られる．したがって $R$ は，$\SL$-over-$\LG$ と $\LI$-over-$\LG$ の連結の直積で認識される．$\LI\subseteq\LG$，補題~\ref{lem:lg-closed}，$\SL*\LG\supseteq\LG$ から $S_R\in\SL*\LG$．
 
-(ii)$\Rightarrow$(i)．$\rho_R$ を文字ごとに，$U\in\SL$，$T\in\LG$ による $U\wr_{T^1}T$ の中の約数表示に持ち上げる．$a$ の持ち上げを $(F_a,t_a)$，$n=|T|$ とする．$T$ の $n$ 個以上の元の積は $p=pt$ となる因子を持つので $T\,E(T)\,T$ に入り，$T$ の冪等元はすべて極小イデアル $K$ に入るので，これは $K$ に含まれる．$p\in K$，$x\in T^1$ なら $xp\le_{\mathcal L}p$ かつ $xp\,\mathcal J\,p$ なので $xp\,\mathcal L\,p$ であり，$hxp=p$ となる $h\in T^1$ がある．
+(ii)$\Rightarrow$(i)．$\rho_R$ を文字ごとに，$U\in\SL$，$T\in\LG$ による $U\wr_{T^1}T$ の中の約数表示に持ち上げる．$a$ の持ち上げを $(F_a,t_a)$，$n=|T|$ とする．
 
-下の状態 $x\mapsto xt_a$ とともに，各事象 $(x,a)$ ごとに，その事象の直後に1増える法 $n+1$ のカウンタを走らせる．遷移半群は $T$ の上の有限可換群の花輪積を割り切り，補題~\ref{lem:lg-closed} から $\LG$ に入る．幅 $n+1$（2以上）を使う．任意の入口から読んだ成分について，最初の $n$ 文字は窓に見える．各事象について，内容の中に現れる増分前の剰余の種類数は，カウンタの初期値によらず $\min(n+1,N_{\rm event})$ である．最初の $n$ 文字の中の出現（$n$ 個以下）を引けば，その事象がそのあとに現れるかが分かる．$x$ を実際の入口，$p$ を最初の $n$ 文字の積，$h$ を $hxp=p$ となるものとする．仮想の入口 $y\in T^1$ については，最初の $n$ 文字を直接模倣する．そのあと，観測された事象 $(z,a)$ での仮想の直前状態は $yhz$ である．間の積 $t$ について $z=xpt$ だからである．$U$ は半束なので，$y$ での上の値は，接頭部の値と，そのあとの相異なる事象についての $F_a(yhz)$ の積である．下の値は $hz_{\rm end}$ である．これで持ち上げのすべての座標，したがって $\rho_R(w)$ が復元される．$n$ より短い語はそのまま読む．
+\emph{極小イデアルに入る．}$T$ の $n$ 個以上の元の積では接頭部のうち二つが等しいので，積は $p=pt$ となる因子 $p$ を持つ．よって $p=pt^\omega\in T\,E(T)\,T$ であり，$T$ の冪等元はすべて極小イデアル $K$ に入るので，この集合は $K$ に含まれる．
+
+\emph{左からの補正．}$p\in K$，$x\in T^1$ なら $xp\le_{\mathcal L}p$ かつ $xp\,\mathcal J\,p$ なので，安定性から $xp\,\mathcal L\,p$ であり，$hxp=p$ となる $h\in T^1$ がある．
+
+\emph{カウンタ．}下の状態 $x\mapsto xt_a$ とともに，各事象 $(x,a)$ ごとに，その事象の直後に1増える法 $n+1$ のカウンタを走らせる．遷移半群は $T$ の上の有限可換群の花輪積を割り切り，補題~\ref{lem:lg-closed} から $\LG$ に入る．幅 $n+1$（2以上）を使う．各事象について，内容の中に現れる増分前の剰余の種類数は，カウンタの初期値によらず $\min(n+1,N_{\rm event})$ である．最初の $n$ 文字（窓に見える）の中の出現（$n$ 個以下）を引けば，その事象がそのあとに現れるかが分かる．
+
+\emph{読み取り．}$x$ を実際の入口，$p$ を最初の $n$ 文字の積，$h$ を $hxp=p$ となるものとする．仮想の入口 $y\in T^1$ については，最初の $n$ 文字を直接模倣する．そのあと，観測された事象 $(z,a)$ での仮想の直前状態は $yhz$ である．間の積 $t$ について $z=xpt$ であり，$yhz=yhxpt=ypt$ だからである．$U$ は半束なので，$y$ での上の値は，接頭部の値と，そのあとの相異なる事象についての $F_a(yhz)$ の積である．下の値は $hz_{\rm end}$ である．これで持ち上げのすべての座標，したがって $\rho_R(w)$ が復元される．$n$ より短い語はそのまま読む．
 \end{proof}
 
 \begin{theorem}
@@ -390,6 +523,11 @@ $\LT=\SL*\Dd$ \cite{BrzozowskiSimon1973,McNaughton1974,Straubing1985} であり�
 包含 $\LTT*\Gp\subsetneq\SL*\LG$ は真である．因子 $\mathtt{ab}$ の個数が偶数の語の言語の統語半群は $\LG$ に入る（直前の文字を右零半群で保ち，$\mathtt{ab}$ で群のビットを反転する）．しかし，非周期的な層を群の上に置くどんな認識でも，$N$ を下の指数の倍数として $(\mathtt a^N\mathtt b^N)^j$ の持ち上げの上の座標はやがて一定になるのに，所属は $j$ とともに交互に変わる．
 \end{remark}
 
+\begin{example}[通しの例：代数]
+\label{ex:running-algebra}
+$I_2$ は逆モノイドなので冪等元は可換で，$I_2\in\ECom\subseteq\LECom$ である．例~\ref{ex:running-decoration} の偶奇のオートマトンは，$\SL*\Gp$ における $I_2$ の表示の下の層である．上の半束は，どの偶奇で $\mathtt b$ が読まれたかを記録する．
+\end{example}
+
 %======================================================================
 \section{主定理と系}
 \label{sec:main}
@@ -420,13 +558,13 @@ $\mathsf G$ の右正則作用は幅 1 で $\varphi$ を復元する．入口 $p
 
 \begin{remark}[次数]
 \label{rem:degree}
-定理~\ref{thm:L} の色に群の値と辺の個数の $|\mathsf G|$ を法とした値を加え，大きな多重集合の積についての Dénes--Hermann 型の補題 \cite{DenesHermann1982} を使う直接の議論は，系~\ref{cor:group} でよりよい指数 $fk^\ell$ を与える（研究記録 R14，\texttt{research/2026-11-23\_R14\_astra\_automata\_skeleton}）．装飾は整合性を確かめるのに幅2以上を要するので，この指数は定理~\ref{thm:B} 経由では回復しない．
+補題~\ref{lem:colours} の色に群の値と辺の個数の $|\mathsf G|$ を法とした値を加え，大きな多重集合の積についての Dénes--Hermann 型の補題 \cite{DenesHermann1982} を使う直接の議論は，系~\ref{cor:group} でよりよい指数 $fk^\ell$ を与える（研究記録 R14，\texttt{research/2026-11-23\_R14\_astra\_automata\_skeleton}）．装飾は整合性を確かめるのに幅2以上を要するので，この指数は定理~\ref{thm:B} 経由では回復しない．
 % TODO(paper): 直接の証明を付録として入れるか決める．
 \end{remark}
 
-\begin{example}[偶数 run]
+\begin{example}[通しの例：結論]
 \label{ex:even-runs}
-$E\subseteq\{\mathtt a,\mathtt b\}^+$ を，極大な $\mathtt a$-run の長さがすべて偶数である語の集合とする．その最小オートマトンは二つの生きた状態（今の run の偶奇）と死状態を持ち，$\mathtt a$ は生きた状態を入れ替え，$\mathtt b$ は $0$ を固定して $1$ を殺す．正の統語半群は，二元集合の部分単射七個からなる対称逆モノイド $I_2$ で，代表元は $\mathtt{aa},\mathtt a,\mathtt b,\mathtt{ba},\mathtt{ab},\mathtt{aba},\mathtt{bab}$ である．$\mathtt bI_2\mathtt b=\{\mathtt b,0\}\cong U_1$ なので $I_2\notin\LG$，$I_2$ は逆モノイドなので $I_2\in\ECom\subseteq\LECom$．偶奇のオートマトン（位数2の群）は幅 1 で $\rho_E$ を復元する．入口と出口の偶奇と，装飾された $\mathtt b$ が読まれる偶奇の集合から，成分の部分写像が得られる．したがって定理~\ref{thm:A} は，たとえば $E\cap g^{-1}(\gamma+\mathsf H)$ が $f$-MCFL ならそれに適用できる．像が $\LG$ に入るどの型付けでも，$E$ は1次元の代入可能性さえ満たさない．$e=s(\mathtt a^{2h})$ が冪等元で，$d$ を群 $e\mathsf Se$ の中の $e\,s(\mathtt b)\,e$ の位数とすると，組 $\mathtt a^{2h}$ と $(\mathtt a^{2h}\mathtt b\mathtt a^{2h})^d$ は型 $e$ を持ち空の文脈を共有するが，$\mathtt a\blank\mathtt a$ は前者だけを受理する．
+例~\ref{ex:running-decoration} と例~\ref{ex:running-algebra} から，定理~\ref{thm:A} は，型付け $s=(c_\Sigma,b_\ell,\rho_E)$ について，$E\cap g^{-1}(\gamma+\mathsf H)$ が $f$-MCFL ならそれに適用できる．像が $\LG$ に入るどの型付けでも，$E$ は1次元の代入可能性さえ満たさない．$e=s(\mathtt a^{2h})$ が冪等元で，$d$ を群 $e\mathsf Se$ の中の $e\,s(\mathtt b)\,e$ の位数とすると，組 $\mathtt a^{2h}$ と $(\mathtt a^{2h}\mathtt b\mathtt a^{2h})^d$ は型 $e$ を持ち空の文脈を共有するが，$\mathtt a\blank\mathtt a$ は前者だけを受理する．したがって型付けの側だけではこの標的に届かない．
 \end{example}
 
 \begin{corollary}[局所計数と路の標的]
@@ -484,6 +622,29 @@ $f\ge2$ について，$\LG$ に含まれないどの擬多様体も，クラス
 % TODO(paper): 雑誌の方針に従い，AI 利用の申告と謝辞を書く．
 
 %======================================================================
+\appendix
+\section{定理~\ref{thm:L} の明示的な定数}
+\label{app:constants}
+
+$q=\ell-1$，$V=k^q$，$T=|b_\ell(\Sigma^+)|$，$K=\Kocc$ として
+\[
+ \lambda=K(2V-1),\qquad B=2q\lambda,\qquad c_1=1,\qquad
+ c_{i+1}=Kc_i+f+B+2\ \ (1\le i\le K+1),\qquad c_*=c_{K+2}
+\]
+とおき，非終端数 $v$，厚さ $\theta$ の表示について
+\[
+ H=v\bigl((2^k-1)T+1\bigr)^f,\qquad N_{\rm sk}=\ell c_*KfH,\qquad
+ C_L=T^f\bigl(1+rH(\theta+f\ell)\bigr)^{Kf}
+\]
+とおく．このとき
+\begin{equation}
+\label{eq:L-explicit}
+ \tau(G,s)\le f\ell+\ell N_{\rm sk}\theta+2\ell frN_{\rm sk}
+ +\ell rN_{\rm sk}C_LH\theta .
+\end{equation}
+定数 $H$ は，出力ラベルを固定した節点数最小の導出の高さを抑える．$(2^k-1)T+1$ は成分の $(c,b)$-型の数を抑える．$c_i$ の漸化式は $c_{g+1}-(R+1+f+B+1)=c_g+K-1\ge1$ を保証し，これが補題~\ref{lem:deletion} で使う余裕である．$N_{\rm sk}=O(v)$，$C_L=O((v\theta)^{Kf})$ なので，右辺は $O(v^{Kf+2}\theta^{Kf+1})$ である．
+
+%======================================================================
 \begin{thebibliography}{99}
 
 \bibitem{Ash1987}
@@ -502,16 +663,45 @@ J.~A.~Brzozowski and I.~Simon.
 \newblock Characterizations of locally testable events.
 \newblock {\em Discrete Mathematics}, 4:243--271, 1973.
 
+\bibitem{ClarkEyraud2007}
+A.~Clark and R.~Eyraud.
+\newblock Polynomial identification in the limit of substitutable context-free
+languages.
+\newblock {\em Journal of Machine Learning Research}, 8:1725--1745, 2007.
+
+\bibitem{ClarkYoshinaka2014}
+A.~Clark and R.~Yoshinaka.
+\newblock Distributional learning of parallel multiple context-free grammars.
+\newblock {\em Machine Learning}, 96(1--2):5--31, 2014.
+
+\bibitem{ClarkYoshinaka2016}
+A.~Clark and R.~Yoshinaka.
+\newblock Distributional learning of context-free and multiple context-free
+grammars.
+\newblock In J.~Heinz and J.~M.~Sempere (eds.), {\em Topics in Grammatical
+Inference}, pp.~143--172. Springer, 2016.
+
 \bibitem{CostaNogueiraTeixeira2021}
 J.~C.~Costa, C.~Nogueira, and M.~L.~Teixeira.
 \newblock The word problem for $\kappa$-terms over the pseudovariety of local
 groups.
 \newblock {\em Semigroup Forum}, 103:439--468, 2021.
 
+\bibitem{deLaHiguera1997}
+C.~de~la~Higuera.
+\newblock Characteristic sets for polynomial grammatical inference.
+\newblock {\em Machine Learning}, 27:125--138, 1997.
+
 \bibitem{DenesHermann1982}
 J.~D\'enes and P.~Hermann.
 \newblock On the product of all elements in a finite group.
 \newblock {\em Annals of Discrete Mathematics}, 15:105--109, 1982.
+
+\bibitem{EyraudHeinzYoshinaka2016}
+R.~Eyraud, J.~Heinz, and R.~Yoshinaka.
+\newblock Efficiency in the identification in the limit learning paradigm.
+\newblock In J.~Heinz and J.~M.~Sempere (eds.), {\em Topics in Grammatical
+Inference}, pp.~25--46. Springer, 2016.
 
 \bibitem{KuriyamaTCS1}
 T.~Kuriyama.
@@ -559,6 +749,11 @@ L.~O'Carroll.
 \newblock Embedding theorems for proper inverse semigroups.
 \newblock {\em Journal of Algebra}, 42:26--40, 1976.
 
+\bibitem{Pin1986}
+J.-E.~Pin.
+\newblock {\em Varieties of Formal Languages}.
+\newblock North Oxford Academic, London, and Plenum, New York, 1986.
+
 \bibitem{SekiEtAl1991}
 H.~Seki, T.~Matsumura, M.~Fujii, and T.~Kasami.
 \newblock On multiple context-free grammars.
@@ -585,6 +780,12 @@ R.~Yoshinaka.
 \newblock Efficient learning of multiple context-free languages with
 multidimensional substitutability from positive data.
 \newblock {\em Theoretical Computer Science}, 412(19):1821--1831, 2011.
+
+\bibitem{Yoshinaka2015General}
+R.~Yoshinaka.
+\newblock General perspective on distributionally learnable classes.
+\newblock In {\em Proceedings of the 14th Meeting on the Mathematics of Language
+(MoL 2015)}, pp.~87--98. Association for Computational Linguistics, 2015.
 
 \end{thebibliography}
 
