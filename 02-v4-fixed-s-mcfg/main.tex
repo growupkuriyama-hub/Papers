@@ -9710,6 +9710,96 @@ profile matching of Result~\ref{rr:R13-nested}(i).  The author of R13 leans slig
 answer for WN presentations, with low confidence, as did rounds R9--R11 of the same model family.
 \end{remark}
 
+\section{Resumption, Round R15: Bounded Dimension (Direction C, 2026-11-23)}
+\label{sec:p4-resume-R15}
+
+\provenance{\path{research/2026-11-23_R15_claude_directionC_strahler/}: the prompt (direction C, by
+the author's instruction; Astra works on direction A in R14), the delivered archive unpacked in
+\path{deliverable/} (report by a separate Claude Opus~5.5 session, \path{run_all.py} with its log and a
+byte-identical rerun log) and a recording note \path{claude_check_R15_2026-11-23.md}, which contains
+mechanical checks by the reporting session only.  Not to be confused with the pre-pause Astra round
+called R15 (the language $L_{N,d}$).  Nothing here has been independently audited.}
+
+The \emph{dimension} $\dim(G)$ of a reduced grammar is the supremum of the Strahler numbers of its
+derivation trees (leaves $0$; an inner node takes the maximum of its children, plus one if the maximum
+is attained at least twice).  For a typing $s$, $\delta_s(b)$ is the infimum of the exponents $d$ such that
+characteristic data are $O((\|G\|\bar\theta_G)^d)$ over the targets in $\Cmcf{f}{s}$ and their reduced good
+rank-$\le r$ presentations with $\dim(G)\le b$, the learner unchanged.
+
+\begin{rresult}[Dimension; Claude R15]
+\label{rr:R15-dimension}
+(i) $\dim(G)<\infty$ iff no rule has two child occurrences in the strongly connected component of its
+left-hand side (nonexpansive); then $\dim(G)\le|V|-1$ and the exact value is computed by a Kleene
+iteration.  (ii) For reduced $G$, $\dim(G)=0$ iff every rule has rank at most one; an ultralinear
+decomposition $\{A_0,\ldots,A_k\}$ \cite[p.~438]{GinsburgSpanier1966} gives $\dim(G)\le k$.
+(iii) Every tree of rank $\le r$ and Strahler number $\le b$ has a derivation of index $\le(r-1)b+1$.
+(iv) $\dim(\widetilde G_0)=\dim(G)$ for the trimmed type refinement.
+\end{rresult}
+\noindent\emph{Status:} valid as self-assessed; (i) also checked against brute force on random acyclic
+grammars.  The language-level collapse of bounded dimension into rank one at fan-out $((r-1)b+1)f$ is
+only sketched (conditional); it does not transfer data bounds, since $\Cmcf{f}{s}$ is not monotone in $f$.
+
+\begin{rresult}[Bounded dimension gives polynomial data under every typing; Claude R15]
+\label{rr:R15-upper}
+Fix $f,r,b$ and any typing $s$.  If $G$ is reduced, good, of fan-out $\le f$, rank $\le r$ and
+$\dim(G)\le b$ (it suffices that every realized label $(B,\widehat s^{(\fan(B))}(\tuple u))$ has a
+derivation of Strahler number $\le b$), then
+\[
+ t_{\mathrm{typ}}(G,s)\le\theta_G\sum_{j=0}^b(r-1)^j\binom{h}{j+1}\le2r^b\bar\theta_G\,(|V||\mathsf S|^f)^{b+1},
+ \qquad h\le|V||\mathsf S|^f,
+\]
+and $L\in\Cmcf{f}{s}$ has characteristic data $O_{f,r,|\mathsf S|,b}(\|G\|^{b+2}\bar\theta_G)$, so
+$\delta_s(b)\le b+2$.  In particular Conjecture~\ref{conj:rare-types} holds on every bounded-dimension
+subclass, and a family with superpolynomial data must have unbounded dimension (exponential data
+need $\dim=\Omega(\|G\|/\log\|G\|)$).
+\end{rresult}
+\noindent\emph{Status:} valid as self-assessed.  The proof is the Strahler argument of
+Result~\ref{rr:RV1-wn}(ii) with labels (nonterminal, type vector): grafting a descendant subtree to an
+ancestor with the same label keeps the root label and does not raise the Strahler number; then
+Theorem~\ref{thm:data-from-typed-thickness}.  The case $b=0$ is Theorem~\ref{thm:rankone-polydata}.
+
+\begin{rresult}[A degree dichotomy at fan-out one; Claude R15]
+\label{rr:R15-fanout-one}
+For $n\ge1$, $b\ge0$, $N=(b+1)n$, $\ell(t)=\lceil t/n\rceil-1$, $a(t)=\ell(t)n$, let $G_{n,b}$ be
+$E_0\to\mathtt a$, $E_t\to\mathtt cE_{t-1}\mathtt c$, $E_t\to\mathtt bE_{t-1}\mathtt b$ if $\ell(t)=0$,
+$E_t\to\mathtt bE_{a(t)}E_{t-1}\mathtt b$ if $\ell(t)\ge1$, start $E_N$.  (i) $\dim(G_{n,b})=b$,
+$\|G_{n,b}\|=(13b+11)n+3$, $\bar\theta_{G_{n,b}}=(4b+2)n+2$ for $b\ge1$.  (ii) $L_{n,b}$ is finite and
+Clark--Eyraud substitutable (the deterministic-parser proof of Proposition~\ref{prop:three-letter-family},
+with frames indexed by the child index), hence in $\Cmcf{1}{s}$ for every $s$.  (iii) Its only word without
+$\mathtt c$ has length $(n+1)^b(2n+3)-2$, so under $s_{U,3}$ every characteristic sample has length at least
+$(\|G\|\bar\theta_G/((13b+14)(4b+4)))^{(b+1)/2}$ and $\delta_{s_{U,3}}(b)\ge(b+1)/2$.  (iv) Hence at fan-out one,
+$\delta_s(b)\le2$ for local-group typings, $(b+1)/2\le\delta_s(b)\le b+2$ for $s_{U,3}$, and
+$\sup_{s\in\mathbf V}\sup_b\delta_s(b)<\infty$ iff $\mathbf V\subseteq\mathbf{LG}$.  At the level of individual
+typings the growth is not forced: $s_{U,2}$ has $\delta_s(b)\le23$ by Corollary~\ref{cor:two-letter-fanout-one}.
+\end{rresult}
+\noindent\emph{Status:} valid as self-assessed; the substitutability of $L_{n,b}$ is also decided exactly
+for ten small $(n,b)$ (up to $5{,}832$ words), and injectivity on reachable stacks is checked for eight.
+The adapted parser lemma (ii) is the first item for an independent audit.
+
+\begin{rresult}[Fan-out two; Claude R15]
+\label{rr:R15-fanout-two}
+(i) For $f\ge2$ and $n\ge2|\mathsf S|+2$, every $L\in\Cmcf{f}{s}$ containing the $\mathtt c$-free word of
+$L_{n,b}$ contains another $\mathtt c$-free word with the same length, Parikh vector and type (power transfer,
+Lemma~\ref{lem:power-transfer}); for $s_{U,3}$ and $n\ge4$ an explicit two-hole violation uses
+$\tuple x=(\mathtt b,\mathtt b^{n-2})$ and $\tuple y=(\mathtt b^2,\mathtt b^{n-3})$.  (ii) Whether some typing outside
+$\mathbf{LG}$ has $\delta_s(b)$ unbounded at fan-out two is open; as in
+Proposition~\ref{prop:sl-reduction} the question reduces to content typings, and needs $|\Sigma|\ge3$ by
+Theorem~\ref{thm:two-letter-content}.
+\end{rresult}
+\noindent\emph{Status:} (i) valid as self-assessed, the four words checked by the parser for $0\le b\le3$,
+$4\le n\le9$; (ii) open.  Bounded-dimension growth comes from reusing one side nonterminal along a spine,
+which creates the powers used in (i); cube-free side patterns avoid them but were not tested.
+
+\begin{remark}[State after Round R15]
+\label{rem:R15-state}
+Open Problem~\ref{op:fanout-two} and Conjecture~\ref{conj:rare-types} remain open.  At fan-out one the
+local-group boundary is now a limit phenomenon in the branching depth: polynomial with uniform degree
+inside $\mathbf{LG}$, degree $\Theta(b)$ outside, superpolynomial only for unbounded dimension.  At fan-out
+two the upper half holds and the lower half is open.  Next steps: an independent audit of the
+substitutability of $L_{n,b}$; a first fan-out-two test with cube-free side patterns; and a check that the
+products and normalization stages of Result~\ref{rr:R4-reduction} preserve dimension.
+\end{remark}
+
 \section{Open Questions at the Pause}
 \label{sec:p4-open}
 
@@ -12526,6 +12616,11 @@ J.~M.~Howie.
 \newblock {\em Fundamentals of Semigroup Theory}, volume~12 of {\em London
 Mathematical Society Monographs, New Series}.
 \newblock Clarendon Press, Oxford, 1995.
+\bibitem{GinsburgSpanier1966}
+S.~Ginsburg and E.~H.~Spanier.
+\newblock Finite-turn pushdown automata.
+\newblock \emph{J. SIAM Control}, 4(3):429--453, 1966.
+
 \end{thebibliography}
 
 \end{document}
