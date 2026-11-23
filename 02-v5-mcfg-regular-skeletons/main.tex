@@ -1,0 +1,1075 @@
+\documentclass[11pt]{article}
+
+% 02-v5-mcfg-regular-skeletons  (#2骨格MCFG, direction A)
+% English source of truth.  Japanese version: japanese/main_JP.tex.
+% Provenance of every result: research/README.md.
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\numberwithin{equation}{section}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\hypersetup{hidelinks}
+\setlength{\emergencystretch}{3em}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{openproblem}[theorem]{Open Problem}
+\theoremstyle{plain}
+\newtheorem{mainthm}{Theorem}
+\renewcommand{\themainthm}{\Alph{mainthm}}
+
+\newcommand{\Cmcf}[2]{\mathcal{C}^{\mathrm{mcf}}_{#1,#2}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\tuple}[1]{\vec{#1}}
+\newcommand{\blank}{\square}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\alphset}{\operatorname{alph}}
+\newcommand{\Imp}{\operatorname{Imp}}
+\newcommand{\fan}{\operatorname{fan}}
+\newcommand{\LG}{\mathbf{LG}}
+\newcommand{\LI}{\mathbf{LI}}
+\newcommand{\SL}{\mathbf{SL}}
+\newcommand{\Gp}{\mathbf{G}}
+\newcommand{\Dd}{\mathbf{D}}
+\newcommand{\ECom}{\mathbf{ECom}}
+\newcommand{\LECom}{\mathbf{L}\mathbf{ECom}}
+\newcommand{\LT}{\mathbf{LT}}
+\newcommand{\LTT}{\mathbf{LTT}}
+\newcommand{\ACom}{\mathbf{ACom}}
+\newcommand{\Com}{\mathbf{Com}}
+\newcommand{\ttyp}{t_{\mathrm{typ}}}
+\newcommand{\bth}{\bar\theta}
+
+\title{Polynomial Characteristic Data for Multiple Context-Free Languages\\
+with Regular Skeletons beyond Local Groups}
+\author{Takayuki Kuriyama}
+\date{Draft, 23 November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+In distributional learning of multiple context-free languages from positive
+data under a fixed finite-semigroup typing $s$, the total length of
+characteristic data is controlled by the \emph{representative length}
+$\tau(G,s)$ of a target presentation $G$: the length of a shortest tuple that
+has the same type and the same distribution as a given typed nonterminal.
+For typings whose image is a local group (pseudovariety $\LG$), $\tau$ is
+polynomial in the size and thickness of $G$ at every fan-out, and at fan-out
+one $\LG$ is exactly the boundary for typings.  Outside $\LG$ almost nothing
+was known beyond fan-out one.
+
+We study the question from the side of the target.  A target is described by
+a regular \emph{skeleton} $R$ together with arbitrary additive counting
+conditions on factors of bounded length.  We prove that if every local monoid
+of the syntactic semigroup of $R$ has commuting idempotents, i.e.\ the
+syntactic semigroup lies in $\LECom$, then for every fixed fan-out and rank
+the representative length is polynomial in the number of nonterminals and the
+thickness of any reduced good presentation, for every typing that refines the
+content, a fixed window and the syntactic morphism of $R$, provided the target
+is substitutable for that typing.  These typings are in general outside $\LG$.
+The proof decorates every letter with the state of a fixed automaton whose
+transition semigroup is a local group, transfers the target to a locally
+counting language over the decorated alphabet, and applies a pigeonhole and
+Euler-rerouting argument for locally counting languages.  The skeletons for
+which such a decoration recovers the full syntactic value from every entry
+are exactly those with syntactic semigroup in $\SL*\LG$, and we show
+$\SL*\LG=\LECom$.  We also show that the method stops exactly there: for
+skeletons outside $\LECom$, no local-group decoration followed by any local
+counting condition determines membership, and three minimal examples are
+given.  The boundary on the side of typings ($\LG$: local monoids are groups)
+and the boundary on the side of skeletons ($\LECom$: local monoids have
+commuting idempotents) are thus both conditions on local monoids.
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\paragraph{Background.}
+Yoshinaka \cite{Yoshinaka2011} showed that multiple context-free languages
+(MCFLs) \cite{SekiEtAl1991} with multidimensional substitutability are
+identifiable in the limit from positive data, with polynomial-time updates and
+characteristic samples of polynomial cardinality.  In the companion work
+\cite{KuriyamaTCS1,KuriyamaMCFGpreprint,KuriyamaCompendium} the learner is
+biased by a fixed finite-semigroup typing $s:\Sigma^+\to\mathsf S$: two tuples
+are compared only if their components have equal $s$-types.  The class
+$\Cmcf{f}{s}$ of $(f,s)$-tuple-substitutable $f$-MCFLs contains every regular
+language recognized by $s$, and grows with $s$.
+
+The cost of this generality is measured by the total length of characteristic
+data.  A reduced good presentation $G$ of the target has a \emph{representative
+length} $\tau(G,s)$: for each realized typed nonterminal $X$, the length of a
+shortest tuple equivalent to the yields of $X$ (same type, same distribution),
+maximized over $X$.  Characteristic data of total length
+$O(N_{\mathrm{typ}}(1+\bth_G+r\tau(G,s)))$ exist
+(Fact~\ref{fact:char-data}), so a polynomial bound on $\tau$ in the size and
+thickness of $G$ gives polynomial characteristic data.
+
+On the side of \emph{typings} the picture is as follows.  If $s(\Sigma^+)$ is a
+local group (every local monoid $e\mathsf Se$ is a group, pseudovariety
+$\LG$), then the typed yields themselves are short at every fan-out
+\cite{KuriyamaCompendium}.  At fan-out one, $\LG$ is exactly the pseudovariety
+boundary: every typing onto a semigroup outside $\LG$ admits targets whose
+characteristic data are exponential \cite{KuriyamaTCS1,KuriyamaTypingClass}.
+At fan-out at least two, whether $\LG$ is still the boundary is open
+(Open Problem~\ref{op:fanout-two}).
+
+\paragraph{This paper: the side of the target.}
+Instead of restricting the typing, we restrict the target.  A target is
+described by a regular \emph{skeleton} $R$, through its syntactic morphism
+$\rho_R$, together with arbitrary additive conditions on the counts $N_\ell(w)$
+of factors of a fixed length $\ell$.  The typing is required to see the
+content, a fixed window and $\rho_R$; it is in general not in $\LG$.
+
+\begin{mainthm}[Main theorem; Theorem~\ref{thm:main}]
+\label{thm:A}
+Let $R\subseteq\Sigma^+$ be regular with syntactic semigroup in $\LECom$, i.e.\
+in every local monoid of $\Sigma^+/{\sim_R}$ any two idempotents commute.  Fix
+$\ell,f,r\ge1$.  Suppose that membership of positive words in $L$ depends only
+on $(\rho_R(w),N_\ell(w))$, that $s\preceq(c_\Sigma,b_\ell,\rho_R)$, and that
+$L\in\Cmcf{f}{s}$.  Then every reduced good fan-out-$\le f$, rank-$\le r$
+presentation $G$ of $L\cap\Sigma^+$ satisfies
+\[
+  \tau(G,s)\le\mathrm{poly}(v,\bth_G),
+\]
+where $v$ is the number of nonterminals and the degree depends only on
+$R,\Sigma,\ell,f$.  Consequently $L$ has characteristic data of polynomial
+total length.
+\end{mainthm}
+
+Here $c_\Sigma$ is the content typing and $b_\ell$ the window typing that
+records the first and last $\ell-1$ letters.  The typings in
+Theorem~\ref{thm:A} are outside $\LG$ as soon as $|\Sigma|\ge2$
+(Lemma~\ref{lem:window-not-lg}).  The hypothesis on $R$ is satisfied, for
+instance, by all locally threshold testable languages, all group languages,
+and the language of words in which every maximal $\mathtt a$-run has even
+length, whose syntactic semigroup is the symmetric inverse monoid $I_2\notin\LG$
+(Example~\ref{ex:even-runs}).
+
+\paragraph{Method.}
+The proof has three layers.
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item \emph{Locally counting targets} (Theorem~\ref{thm:L}).  If membership
+depends only on the window type and the factor counts, a pigeonhole argument on
+frequencies of de Bruijn edges, colours of impure windows along a depth-first
+traversal, and Euler rerouting with frozen blocks yield short equivalent
+representatives.
+\item \emph{Decoration} (Theorem~\ref{thm:B}).  Decorating every letter with the
+state of a fixed automaton turns a skeleton into a locally counting language
+over a larger alphabet.  The decorated presentation is again reduced and good,
+and its thickness stays polynomial provided the transition semigroup of the
+automaton is a local group; the original distribution is recovered by
+projection.
+\item \emph{Algebra of skeletons} (Theorem~\ref{thm:C}).  A skeleton admits a
+local-group decoration from which its full syntactic value can be read off
+from every entry if and only if its syntactic semigroup lies in $\SL*\LG$, and
+$\SL*\LG=\LECom$.
+\end{enumerate}
+
+\begin{mainthm}[Limits of the method; Theorem~\ref{thm:limits}]
+\label{thm:D}
+If the syntactic semigroup of a regular skeleton $R$ has a local monoid with
+two non-commuting idempotents, then for every fixed automaton whose transition
+semigroup is a local group, every width $m$ and every condition on the end
+windows and factor counts of the decorated words, membership in $R$ is not
+determined by these data.  The three smallest examples are: the last
+$\mathtt a$-run has even length; the scattered pattern $\mathtt a\cdots\mathtt b$
+with a neutral letter; and the two-state flip-flop with an identity letter.
+\end{mainthm}
+
+\paragraph{Two boundaries on local monoids.}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+side & boundary & condition on every local monoid $e\mathsf Se$\\
+\midrule
+typing (fan-out one; \cite{KuriyamaTCS1,KuriyamaTypingClass}) & $\LG$ & is a group\\
+skeleton of the target (this paper) & $\LECom$ & has commuting idempotents\\
+\bottomrule
+\end{tabular}
+\end{center}
+Since $\LG\subsetneq\LECom$, the second statement is not a consequence of the
+first.  Neither of them answers Open Problem~\ref{op:fanout-two}, which asks
+about all targets of a typing; we comment on the relation in
+Section~\ref{sec:limits}.
+
+\paragraph{Organization.}
+Section~\ref{sec:prelim} fixes notation.  Section~\ref{sec:L} proves the
+theorem for locally counting targets, Section~\ref{sec:decoration} the
+transfer theorem, Section~\ref{sec:algebra} the algebraic characterization,
+and Section~\ref{sec:main} the main theorem with its corollaries.
+Section~\ref{sec:limits} discusses the limits of the method, and
+Section~\ref{sec:conclusion} concludes.
+
+%======================================================================
+\section{Preliminaries}
+\label{sec:prelim}
+
+\subsection{Words, windows and typings}
+
+$\Sigma$ is a finite alphabet with $k=|\Sigma|$, $\Sigma^+$ the free semigroup of
+positive words.  A \emph{typing} is a morphism $s:\Sigma^+\to\mathsf S$ onto a
+finite semigroup; $s^{(d)}$ applies $s$ componentwise to $d$-tuples.  For
+typings $s,h$ write $s\preceq h$ if $h(x)=h(y)$ implies $s(x)=s(y)$; pairs of
+typings are combined by $(s,h)(x)=(s(x),h(x))$.
+
+The \emph{content} typing is $c_\Sigma(w)=\alphset(w)$.  For $j\ge1$ put $q=j-1$.
+The \emph{window typing} $b_j$ maps $w$ to the word $w$ itself with a short tag
+if $|w|<\max(1,2q)$, and otherwise to the tagged pair of its prefix and suffix
+of length $q$.  The type of a concatenation is determined by the types of its
+pieces, so $b_j$ is a typing (onto a finite semigroup).  $N_j(w)\in\mathbb
+N^{\Sigma^j}$ counts all factors of length $j$ of $w$, with overlaps.
+
+A word of length at least $q$ corresponds to a path in the \emph{de Bruijn
+graph} with vertex set $\Sigma^q$ and edge set $\Sigma^j$, from its prefix to
+its suffix of length $q$; the word is the initial $q$ letters followed by the
+last letters of the edges.  $N_j$ counts edges.
+
+\subsection{Multiple context-free grammars}
+
+We use multiple context-free grammars (MCFGs) \cite{SekiEtAl1991} in the
+notation of \cite{Yoshinaka2011}.  A rule $A\to f[B_1,\ldots,B_n]$ builds each
+output component of $A$ by concatenating terminals and child-component
+variables.  A rule is \emph{good} if its template components are nonempty, each
+variable occurs exactly once, the variables of each child occur in their
+indexed order in the concatenated output, and no output component contains two
+consecutive variables of the same child.  The start symbol has fan-out one.  A
+grammar is \emph{reduced} if every nonterminal is reachable and productive.  We
+write $v=|V|$ for the number of nonterminals, $r$ for a bound on the number of
+children (the rank) and $f$ for a bound on the fan-out.  In a good grammar
+every generated tuple has positive components.
+
+The \emph{thickness} $\bth_G\ge1$ is the maximum of $1$ and, over the rules,
+the minimal length of a successful sentence using the rule.  Each rule writes
+at most $\bth_G$ terminals, and every nonterminal has a generated tuple of
+total length at most $\bth_G$.
+
+\subsection{Contexts, substitutability and the target class}
+
+An \emph{admissible context} of arity $d$ is a word
+$E=v_0\blank v_1\cdots v_{d-1}\blank v_d$ with $v_0,v_d\in\Sigma^*$ and
+$v_1,\ldots,v_{d-1}\in\Sigma^+$; $\E_d$ is their set.  The \emph{distribution}
+of $\tuple x\in(\Sigma^+)^d$ is $\D_L(\tuple x)=\{E\in\E_d:E[\tuple x]\in L\}$.
+
+\begin{definition}
+\label{def:class}
+$L\subseteq\Sigma^*$ is \emph{$(f,s)$-tuple-substitutable} if for all $1\le
+d\le f$ and $\tuple x,\tuple y\in(\Sigma^+)^d$ with $s^{(d)}(\tuple
+x)=s^{(d)}(\tuple y)$ and $\D_L(\tuple x)\cap\D_L(\tuple y)\ne\emptyset$ we have
+$\D_L(\tuple x)=\D_L(\tuple y)$.  $\Cmcf{f}{s}$ is the class of
+$(f,s)$-tuple-substitutable $f$-MCFLs.  Write $\tuple x\equiv_{L,s}\tuple y$ if
+$s^{(d)}(\tuple x)=s^{(d)}(\tuple y)$ and $\D_L(\tuple x)=\D_L(\tuple y)$.
+\end{definition}
+
+If $s\preceq s'$ then $\Cmcf{f}{s}\subseteq\Cmcf{f}{s'}$.  The class is closed
+under intersection with preimages of cosets of abelian groups
+\cite[Prop.~\textit{abelian-coset-filter}]{KuriyamaCompendium}: if $L$ is
+$(f,s)$-tuple-substitutable, $g:\Sigma^*\to\mathsf A$ is a morphism into an
+abelian group, $\mathsf H\le\mathsf A$ and $\gamma\in\mathsf A$, then
+$L\cap g^{-1}(\gamma+\mathsf H)$ is again $(f,s)$-tuple-substitutable.
+
+\paragraph{Typed nonterminals and representative length.}
+A \emph{realized typed nonterminal} $X=(A,\mathbf t)$ consists of a nonterminal
+$A$ and a vector $\mathbf t$ of output types that occurs in a successful
+derivation.  A reachable occurrence of $A$ has a fixed accepting context for
+all its generated tuples (siblings are positive and good rules preserve the
+order and separation of holes), so for $L\in\Cmcf{f}{s}$ all yields of $X$ lie
+in one $\equiv_{L,s}$-class $\operatorname{Cl}(X)$.  Put
+\[
+  \tau_X=\min\{\|\tuple y\|_1:\tuple y\in\operatorname{Cl}(X)\},\qquad
+  \tau(G,s)=\max_X\tau_X .
+\]
+The minimizing tuple need not be generated by $A$.  The \emph{typed thickness}
+$\ttyp(G,s)$ is defined similarly with $\tuple y$ ranging over the yields of
+$X$; thus $\tau\le\ttyp$.
+
+\begin{fact}[{\cite[Thm.~\textit{data-from-typed-thickness} and
+Cor.~\textit{distribution-representatives}]{KuriyamaCompendium}}]
+\label{fact:char-data}
+Let $L\in\Cmcf{f}{s}$ and let $G$ be a reduced good fan-out-$\le f$,
+rank-$\le r$ presentation of $L\cap\Sigma^+$.  Then $L$ has a characteristic
+sample $K$ for the learner of \cite{KuriyamaMCFGpreprint,KuriyamaCompendium}
+with
+$\|K\|_+\le N_{\mathrm{typ}}\bigl(1+2\bth_G+r\,\tau(G,s)\bigr)+\mathbf
+1_{\{\eps\in L\}}$, where $N_{\mathrm{typ}}\le|\mathsf S^\sharp|^{fr}\|G\|$.
+\end{fact}
+
+\subsection{Pseudovarieties}
+
+A \emph{pseudovariety} is a class of finite semigroups (or monoids) closed under
+division and finite direct products.  We use: $\Gp$ (groups), $\SL$
+(semilattices), $\Com$ and $\ACom$ (commutative, commutative aperiodic monoids),
+$\Dd$ (semigroups in which idempotents are right zeros), $\LI$ (locally
+trivial), $\LT$ and $\LTT$ (syntactic semigroups of locally testable and locally
+threshold testable languages), and $\ECom$ (monoids with commuting idempotents).
+For a monoid pseudovariety $\mathbf V$, $\mathbf L\mathbf V$ is the class of
+finite semigroups all of whose local monoids $e\mathsf Se$ ($e=e^2$) belong to
+$\mathbf V$.  Thus $\LG=\mathbf L\Gp$, and $\LECom$ consists of the finite
+semigroups in which every local monoid has commuting idempotents, i.e.\ which
+satisfy the pseudoidentity
+\[
+  (exe)^\omega(eye)^\omega=(eye)^\omega(exe)^\omega\qquad(e=z^\omega).
+\]
+
+For a monoid $U$ and a semigroup $T$ acting on the right on a set $Q$, the
+\emph{wreath product} $U\wr_QT$ consists of pairs $(F,t)$ with $F:Q\to U$,
+$t\in T$, multiplied by $(F,t)(H,t')=(q\mapsto F(q)H(qt),tt')$.  For
+pseudovarieties, $\mathbf V*\mathbf W$ is generated by the semigroups that divide
+such wreath products with $U\in\mathbf V$, $T\in\mathbf W$; the right factor
+reads the input first.  This operation is associative \cite{Tilson1987}.
+A finite semigroup $T$ belongs to $\LG$ if and only if it has no idempotent or
+its minimal ideal is completely simple and contains all idempotents of $T$
+\cite[Prop.~2.1]{CostaNogueiraTeixeira2021}.
+
+\begin{lemma}
+\label{lem:window-not-lg}
+If $k\ge2$ and $\ell\ge1$, the image of $(c_\Sigma,b_\ell)$ is not in $\LG$.
+\end{lemma}
+
+\begin{proof}
+Let $\mathtt a\ne\mathtt b$ be letters and $e$ the type of $\mathtt a^{2\ell}$.
+Then $e$ and $e\,s(\mathtt b)\,e$ are distinct idempotents of the local monoid
+$e\mathsf Se$: they have the same end windows but different contents.  A group
+has only one idempotent.
+\end{proof}
+
+%======================================================================
+\section{Locally counting targets}
+\label{sec:L}
+
+In this section $\ell\ge1$, $q=\ell-1$, $V=k^q$, $K=k^\ell$ and $b=b_\ell$,
+$N=N_\ell$, $c=c_\Sigma$, $T=|b(\Sigma^+)|$.
+
+\begin{definition}
+$L$ is \emph{$\ell$-locally counting} if membership of positive words depends
+only on $(b_\ell(w),N_\ell(w))$.
+\end{definition}
+
+Strictly locally testable, locally testable and locally threshold testable
+languages of order $\ell$, intersected with an arbitrary condition on letter
+counts, are $\ell$-locally counting; letter counts are read off from the
+initial vertex and the last letters of edges.
+
+\begin{theorem}[Locally counting targets]
+\label{thm:L}
+Let $L\in\Cmcf{f}{s}$ be $\ell$-locally counting with $s\preceq(c,b)$.  Put
+\[
+ \lambda=K(2V-1),\quad B=2q\lambda,\quad c_1=1,\quad c_{i+1}=Kc_i+f+B+2
+ \ (1\le i\le K+1),\quad c_*=c_{K+2},
+\]
+and, for a reduced good fan-out-$\le f$, rank-$\le r$ presentation $G$ of
+$L\cap\Sigma^+$ with $v$ nonterminals and $\theta=\bth_G$,
+\[
+ H=v\bigl((2^k-1)T+1\bigr)^f,\quad N_{\rm sk}=\ell c_*KfH,\quad
+ C_L=T^f\bigl(1+rH(\theta+f\ell)\bigr)^{Kf}.
+\]
+Then
+\[
+ \tau(G,s)\le f\ell+\ell N_{\rm sk}\theta+2\ell frN_{\rm sk}
+ +\ell rN_{\rm sk}C_LH\theta
+ =O_{k,\ell,f,r}\bigl(v^{Kf+2}\theta^{Kf+1}\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Context invariant.}
+A window crossing a boundary of a context $E[\tuple x]$ consists of a suffix of
+the first piece it touches, a prefix of the last, and all intervening nonempty
+pieces, which have length at most $q-1$ and are therefore determined by their
+tags.  Thus equal component $(b,c)$-types and equal sums of internal $N$ imply
+equal $(b,N)$ of $E[\tuple x]$ for every admissible $E$, hence equal
+distributions.  The same identity holds for arbitrary fixed pieces.
+
+\emph{Tree and positions.}
+Fix a realized typed nonterminal $X$ and choose a derivation with fewest nodes
+among those with output label $X$; call its tuple $\tuple x$.  An ancestor and a
+proper descendant with equal symbol and equal output $(c,b)$-types could be
+contracted, so the height in nodes is at most $H$.  Positions always refer to
+this original tuple.  Every subtree component has a contiguous image in one
+root component, and incomparable subtrees have disjoint images.
+
+For each root component $x_i$ of length at least $\ell$ select an empty interval
+$[c_g,c_{g+1})$ among the $K+1$ intervals of edge frequencies.  Edges of
+frequency at least $c_{g+1}$ are \emph{frequent}, the others \emph{rare}.  If
+there is a frequent edge there are at most $R=(K-1)(c_g-1)$ rare occurrences.
+Every weak component $J$ of the frequent edges is strongly connected: for an
+edge with no return, the frequent-reachable set from its head excludes its tail,
+and at least $c_{g+1}$ entries into this set would require more than $R$ rare
+exits.  Every maximal interval of frequent edges lies in one $J$, and each $J$
+has at most $R+1$ such intervals.
+
+Mark every letter of the first $\min(c_*,N(x_i)(e))$ occurrences of every edge
+$e$ in $x_i$.  The \emph{skeleton} consists of the nodes writing a marked letter
+and their ancestors, at most $N_{\rm sk}$ nodes.  If it is empty there are no
+windows and $\|\tuple x\|_1\le fq$.  Otherwise there are at most $rN_{\rm sk}$
+maximal off-skeleton subtrees.  No internal window of one of their components
+meets a mark, and all such windows belong to one frequent interval.  A root
+component with a short tag keeps all its windows selected and is left unchanged.
+
+\emph{Cuts and colours.}
+Fix a maximal off-skeleton subtree $\eta$ with components $z_\kappa$ and order
+its leaves by depth-first search.  After the first $j$ leaves let $I_j$ be the
+set of maximal subtrees all of whose leaves are among them; $|I_j|\le rH$, their
+original terminal positions form an increasing sequence $U_j$, and each step
+adds at most $H\theta$ positions.  Replace each member of $I_j$ by a derivation
+of a generated tuple of length at most $\theta$ from its own symbol; write
+$z^j_\kappa$ for the new components and $W_j$ for the resulting sentence, which
+is generated.  Tag every inserted letter and give $j$ the \emph{colour}
+$(b(z^j_\kappa),\Imp_\kappa(j))_\kappa$, where $\Imp_\kappa(j)$ is the vector of
+internal windows of $z^j_\kappa$ touching an inserted letter.  Since all
+replacing pieces are positive, a window without inserted letters lies in one
+surviving stretch and corresponds bijectively, by position, to an original
+internal window avoiding $U_j$.  There are at most $C_L$ colours.  If $j<j'$
+have equal colours, then
+\[
+ Z_\kappa=N(z^j_\kappa)-N(z^{j'}_\kappa)\ge0
+\]
+counts the original internal windows first touched during $(j,j']$; equal end
+tags make $Z_\kappa$ a circulation supported in one $J$, and the context
+invariant gives $b(W_j)=b(W_{j'})$ and $N(W_j)-N(W_{j'})=\sum_\kappa Z_\kappa$.
+From each visited index go to the last index of its colour, delete the
+first-touches in between, keep the single increment to the next index, and
+continue.  The jump windows are disjoint.
+
+\emph{Euler rerouting.}
+In a strongly connected $J$ let $m$ designated paths have endpoints $p_l,q_l$ and
+combined target counts $M$ with $\partial M=\sum_l(\mathbf e_{q_l}-\mathbf
+e_{p_l})$.  To expose a closed walk $g_0$ at a vertex $u$ inside a designated
+main path it suffices that $M(e)\ge m+1+N(g_0)(e)$ on $J$: choose simple paths in
+the non-main slots and from the main start to $u$, subtract them and $g_0$; the
+remainder is positive on every edge and balanced from $u$ to the main end, hence
+has an Euler trail.  Frozen edges between the designated paths remain genuine
+windows because their endpoints are preserved.
+
+\emph{One deletion.}
+Maintain for each root component its original $(b,c)$ and the current vector
+$M_i$ obtained by subtracting earlier jumps, together with the invariant that
+there is a realizing tuple and all realizing tuples are equivalent to $\tuple
+x$.  Group nonzero $Z_\kappa$ by root component and frequent component into
+pools $Z_{i,J}$; there are at most $f$ active pools.  In $W_{j'}$ allow only
+frequent windows internal to $x_i$ outside the intervals of $\eta$ and freeze
+all other edges; the number of flexible runs is at most $R+1+f$, and every
+frequent edge has at least $c_{g+1}$ flexible occurrences (all its selected
+occurrences are marked and hence outside $\eta$).  For each active pool choose as
+anchor the first original frequent interval containing a flexible window.
+
+Fix $u\in J$ and a tour $D$ from $u$ through all edges of $J$ of length at most
+$\lambda$.  If $q>0$ let $D_0=D^q$, $h=D_0D_0$ and
+$t=D_0\operatorname{Euler}_u(N(D_0)+Z_{i,J})$; if $q=0$ let $h$ traverse every
+loop of $J$ once and $t$ traverse $N(h)+Z_{i,J}$.  The emitted words $h,t$ are
+positive, have the same content and the same window type, and $N(t)-N(h)=Z_{i,J}$.
+
+On the representative side, reroute every active pool so as to expose $t$ in its
+anchor, obtaining $\tuple y$; replacing $t$ by $h$ gives $\tuple y'$ whose counts
+are decreased by exactly the jump.  On the sentence side expose $h$ in the flexible
+runs of the anchors, obtaining $F[h]$ with the counts of $W_{j'}$, and $F[t]$
+with those of $W_j$.  The numerical conditions follow edgewise from $m\le
+R+1+f$ and
+\[
+ c_{g+1}-(R+1+f+B+1)=c_g+K-1\qquad(q>0),
+\]
+with $N(h)(e)\le B$; on the representative side $Z_{i,J}(e)$ pays for $t$, and for
+$q=0$ the slack is at least one.  Both $F[h]$ and $F[t]$ belong to $L$.  Holes
+within one root component are separated by a frozen rare edge, and holes in
+different components by a positive context piece, so $F$ and $F_E$ are
+admissible for every admissible $E$.  The comparison tuples are $t$ and $h$, the
+shared context $F$, the test context $F_E$, and the four words are
+$F[t],F[h],F_E[t]=E[\tuple y],F_E[h]=E[\tuple y']$.  Substitutability gives
+$E[\tuple y]\in L\iff E[\tuple y']\in L$ for every $E$, and the context invariant
+extends this to every realization of the new data.
+
+\emph{Length.}
+A surviving window not internal to one free component touches a terminal
+written by the skeleton (at most $\ell N_{\rm sk}\theta$ starts) or crosses an
+end of a free component (at most $2\ell frN_{\rm sk}$).  Every other surviving
+window is assigned to its first-touch increment; at most $C_L$ increments per
+free subtree are kept, each touching at most $\ell H\theta$ windows.  Every
+component has length at most $q$ plus its number of windows.
+\end{proof}
+
+\begin{corollary}
+\label{cor:SL-coset}
+Let $R$ be strictly $\ell$-locally testable, $g:\Sigma^*\to\mathsf A$ a morphism
+into an abelian group, $\mathsf H\le\mathsf A$ and $\gamma\in\mathsf A$.  If
+$L=R\cap g^{-1}(\gamma+\mathsf H)$ is an $f$-MCFL, then $L\in\Cmcf{f}{(c,b_\ell)}$
+and Theorem~\ref{thm:L} applies to it.
+\end{corollary}
+
+\begin{proof}
+Take equally typed positive tuples $\tuple x,\tuple y$ of arity $d\le f$, a
+shared accepting context $E_0$ and any test context $E_1$.  The first two words
+$E_0[\tuple x],E_0[\tuple y]$ show that the internal windows of both tuples are
+allowed.  In $E_1[\tuple x]$ and $E_1[\tuple y]$ the end data, the windows of
+fixed pieces and the crossing windows agree, so skeleton membership agrees.
+The abelian value changes by the same sum of component differences in both
+contexts, which lies in $\mathsf H$.
+\end{proof}
+
+\begin{remark}[Occurring windows]
+\label{rem:occurring-windows}
+The constant $K$ enters the proof only through the number of edge types that can
+occur in words of $L$: the frequency intervals, the impure-window vectors in the
+colours and the tour length.  It can therefore be replaced by the number of
+$\ell$-windows occurring in words of $L$.  This is used in
+Remark~\ref{rem:degree} to improve the degree after decoration.
+% TODO(verification): check every occurrence of K in the proof (research/README.md, obligation 2).
+\end{remark}
+
+%======================================================================
+\section{Decoration}
+\label{sec:decoration}
+
+Let $\mathcal A=(Q,q_0,\delta)$ be a complete deterministic automaton over
+$\Sigma$ with positive transition semigroup $T$; we drop unreachable states.  The
+\emph{trace} $D_p(w)$ of $w$ from $p\in Q$ emits $(q,a)$ when $a$ is read in
+state $q$.  It is a word over $\Gamma=Q\times\Sigma$, and the letterwise
+projection $\pi(q,a)=a$ preserves length.  A word over $\Gamma$ is
+\emph{coherent} if consecutive letters match the transitions.
+
+\begin{definition}[Recovery]
+\label{def:recovery}
+Let $\rho:\Sigma^+\to\mathsf M$ be a morphism onto a finite semigroup and $d\ge1$.
+$\mathcal A$ \emph{recovers $\rho$ at width $d$} if for every reachable state $p$
+and every positive word $w$ the data
+\[
+  \bigl(p,\ p\cdot w,\ c_\Gamma(D_p(w)),\ b_d(D_p(w))\bigr)
+\]
+determine $\rho(w)$.
+\end{definition}
+
+\begin{mainthm}[Decoration transfer; Theorem~\ref{thm:transfer}]
+\label{thm:B}
+Suppose $\mathcal A$ recovers $\rho$ at width $d$, membership of positive words in
+$L$ depends only on $(\rho(w),N_\ell(w))$, $s\preceq(c_\Sigma,b_\ell,\rho)$ and
+$L\in\Cmcf{f}{s}$.  If the transition semigroup of $\mathcal A$ is a local group,
+then every reduced good fan-out-$\le f$, rank-$\le r$ presentation $G$ of
+$L\cap\Sigma^+$ satisfies $\tau(G,s)=O(v^{2D+3}\bth_G^{D+1})$ with
+$D=f|Q|k^m$ and $m=\max(2,d,\ell)$.
+\end{mainthm}
+
+\begin{theorem}
+\label{thm:transfer}
+Assume the hypotheses of Theorem~\ref{thm:B}, except that instead of $T\in\LG$
+assume only that for each nonterminal $A$ and each realizable vector of
+entry/exit pairs $(p_i,q_i)_i$ at $A$ there is a generated tuple of $A$ of total
+length at most $\beta$ whose components run from $p_i$ to $q_i$.  Then
+\[
+ \tau(G,s)=O\bigl(v^{D'+2}\max(1,\theta,\beta)^{D'+1}\bigr),\qquad
+ D'=f(|Q|k)^m,\ \theta=\bth_G .
+\]
+If $T\in\LG$ then $\beta=O(v\theta)$, and the exponent $D'$ may be replaced by
+$D=f|Q|k^m$, which gives Theorem~\ref{thm:B}.
+\end{theorem}
+
+\begin{proof}
+Put $L^\#=D_{q_0}(L\cap\Sigma^+)$ and $t=(c_\Gamma,b_m)$ over $\Gamma$.
+
+\emph{Step 1: $L^\#$ is $m$-locally counting.}
+A word over $\Gamma$ is the trace of a word from $q_0$ iff its first letter has
+state $q_0$ and it is coherent.  The data $(b_m,N_m)$ determine the first and
+last letters and all factor counts of smaller length (count prefixes of longer
+windows and add the last shorter window; short words are read literally).  This
+tests coherence and gives $c_\Gamma$, $b_d$ and both end states, hence $\rho$ by
+recovery; projecting the counts of length $\ell$ gives $N_\ell$ of the projection.
+On every coherent component, $t$ alone gives its end states, its projected
+$(c_\Sigma,b_\ell)$ and, by recovery, its $\rho$, hence its projected $s$-type.
+
+\emph{Step 2: $L^\#\in\Cmcf{f}{t}$.}
+Fix an arity $1\le a\le f$, positive tuples $\tuple X,\tuple Y$ over $\Gamma$ with
+componentwise equal $t$, a shared accepting context $C_0$ and any test context
+$C_1$.  The four words are $C_0[\tuple X],C_0[\tuple Y],C_1[\tuple X],C_1[\tuple
+Y]$.  The first two make every component coherent with matching end states.  The
+projected tuples $\tuple x=\pi\tuple X$, $\tuple y=\pi\tuple Y$ have equal
+$s$-types, and the projected words $(\pi C_0)[\tuple x],(\pi C_0)[\tuple
+y],(\pi C_1)[\tuple x],(\pi C_1)[\tuple y]$ fall under the substitutability of
+$L$.  A failure of coherence of $C_1[\tuple X]$ inside a fixed piece, at the start
+or at a boundary happens simultaneously for $\tuple Y$, because end states of the
+components agree; otherwise membership is membership of the projection.
+
+\emph{Step 3: the decorated grammar.}
+Let $G^\#$ have symbols $[A;(p_i,q_i)_i]$.  For every original rule and every
+choice of entry/exit vectors scan each output template from its entry state:
+emit decorated terminals, require each child's declared entry at its variable and
+continue at its exit, and check the declared exit at the end.  A fresh unary
+start joins $q_0$ to each final state.  By induction on derivations, a decorated
+symbol generates exactly the traces of the generated tuples of $A$ with the
+declared end states.  After trimming, $G^\#$ is reduced and good, has fan-out
+$\le f$, rank $\le r$ and $v'\le1+v|Q|^{2f}$ symbols, and presents $L^\#$.
+
+\emph{Step 4: thickness.}
+A decorated rule writes at most $\theta$ terminals, and every surviving decorated
+symbol has a generated tuple of length at most $\beta$.  To witness a surviving
+rule, follow a simple path in the dependency graph of $G^\#$ to its parent and
+fill all siblings and children by such tuples; hence
+$\bth_{G^\#}\le(v'+1)(\theta+r\beta)$.  The proof of Theorem~\ref{thm:L} uses its
+thickness only to bound terminals per rule and one generated tuple per symbol,
+so $\max(1,\theta,\beta)$ may be substituted for it.
+
+\emph{Step 5: back to $L$.}
+Let $X$ be a realized typed nonterminal of $G$ with a yield $\tuple x$ in a
+successful derivation.  The trace of the sentence gives a generated tuple
+$\tuple X$ of a decorated symbol and an accepting decorated context $F$.
+Theorem~\ref{thm:L} gives a tuple $\tuple Y$ with the same $t$ and the same
+decorated distribution, of the stated length.  Then $F[\tuple Y]$ is accepted,
+so $\tuple Y$ is coherent and $\pi\tuple Y$ has the $s$-types of $\tuple x$.  For
+every test $E$ the four words $(\pi F)[\tuple x],(\pi F)[\pi\tuple Y],E[\tuple
+x],E[\pi\tuple Y]$ show $\pi\tuple Y\equiv_{L,s}\tuple x$; the decoration need not
+extend to $E$.  Length is unchanged by $\pi$.
+
+If $T\in\LG$, a realizable entry/exit vector is witnessed by a generated tuple with
+prescribed transition values, and the local-group short-yield theorem
+\cite[Thm.~\textit{local-group-polydata}]{KuriyamaCompendium} gives such a tuple of
+length $O(v\theta)$.  Finally, only coherent decorated windows occur in words of
+$L^\#$, and there are at most $|Q|k^m$ of them; by
+Remark~\ref{rem:occurring-windows} the exponent becomes $D=f|Q|k^m$.
+\end{proof}
+
+\begin{remark}[Necessity of local groups for this step]
+\label{rem:lg-needed-for-witnesses}
+The hypothesis $T\in\LG$ is needed for a bound on $\beta$ uniform over all
+presentations.  If $T\notin\LG$, choose distinct idempotents $e,z$ of $T$ with
+$ez=ze=z$, positive words $u,v_0$ representing them, a state $j$ with $je=j\ne jz$
+and a word $h$ from $q_0$ to $j$.  The fan-out-one, rank-two grammar
+$A_0\to u\mid v_0$, $A_i\to A_{i-1}A_{i-1}\mid v_0$,
+$S\to SS\mid a\ (a\in\Sigma)\mid hA_i\ (0\le i\le n)$ is reduced and good, has
+size $O(n)$ and bounded thickness, but the only yield of $A_n$ running from $j$ to
+$j$ is $u^{2^n}$.  The target here is $\Sigma^+$, for which $\tau$ is constant:
+the failure concerns the method, not the data.
+\end{remark}
+
+%======================================================================
+\section{Skeletons that admit recovery}
+\label{sec:algebra}
+
+\begin{lemma}
+\label{lem:lg-closed}
+$\LG*\LG=\LG$.
+\end{lemma}
+
+\begin{proof}
+Let $E=(F,b)$ be an idempotent of a wreath product $U\wr_QT$ with $U,T\in\LG$
+and $Z=(H,z)$ an idempotent of its local monoid.  Then $z$ is an idempotent of
+the group $bTb$, so $z=b$.  At a state $u$ with $ub=u$, $F(u)$ and $H(u)$ are
+idempotents and $EZ=ZE=Z$ puts $H(u)$ in the group $F(u)UF(u)$; hence
+$H(u)=F(u)$.  For arbitrary $u$, $ub$ is fixed by $b$, so
+$H(u)=F(u)H(ub)=F(u)F(ub)=F(u)$.  Thus the local monoid has a single
+idempotent and is a group.
+\end{proof}
+
+\begin{mainthm}[Recovery and $\LECom$; Theorems~\ref{thm:recovery}
+and~\ref{thm:SLLG-LECom}]
+\label{thm:C}
+For a regular $R\subseteq\Sigma^+$ with syntactic morphism $\rho_R$ and
+syntactic semigroup $S_R$ the following are equivalent:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item some automaton with transition semigroup in $\LG$ recovers $\rho_R$ at
+some width;
+\item $S_R\in\SL*\LG$;
+\item $S_R\in\LECom$.
+\end{enumerate}
+\end{mainthm}
+
+\begin{theorem}
+\label{thm:recovery}
+Conditions (i) and (ii) of Theorem~\ref{thm:C} are equivalent.
+\end{theorem}
+
+\begin{proof}
+(i)$\Rightarrow$(ii).  From the initial state, the content of the trace is
+accumulated by a finite semilattice and its end windows by a locally trivial
+semigroup, both reading the decorated letters; the end states come from the lower
+machine.  So $R$ is recognized by a direct product of an $\SL$-over-$\LG$ and an
+$\LI$-over-$\LG$ cascade.  Since $\LI\subseteq\LG$, Lemma~\ref{lem:lg-closed} and
+$\SL*\LG\supseteq\LG$ give $S_R\in\SL*\LG$.
+
+(ii)$\Rightarrow$(i).  Lift $\rho_R$ letterwise into a divisor presentation in
+$U\wr_{T^1}T$ with $U\in\SL$ and $T\in\LG$; let $(F_a,t_a)$ be the lift of $a$ and
+$n=|T|$.  Every product of at least $n$ elements of $T$ has a factor $p=pt$, hence
+lies in $T\,E(T)\,T$, which is contained in the minimal ideal $K$ because all
+idempotents of $T$ lie in $K$.  For $p\in K$ and $x\in T^1$, $xp\le_{\mathcal L}p$
+and $xp\,\mathcal J\,p$, so $xp\,\mathcal L\,p$ and there is $h\in T^1$ with
+$hxp=p$.
+
+Run the lower state $x\mapsto xt_a$ together with, for each event $(x,a)$, a
+counter modulo $n+1$ incremented just after that event.  The transition semigroup
+divides a wreath product of a finite abelian group over $T$ and is in $\LG$ by
+Lemma~\ref{lem:lg-closed}.  Use width $n+1$ (at least two).  Given a component
+read from any entry, its first $n$ letters are visible in the window.  For each
+event the number of distinct pre-increment residues occurring in the content is
+$\min(n+1,N_{\rm event})$ irrespective of the initial counter value; subtracting
+the occurrences inside the first $n$ letters (at most $n$) tells whether the event
+occurs after them.  Let $x$ be the actual entry, $p$ the product of the first $n$
+letters, and $h$ with $hxp=p$.  For a virtual entry $y\in T^1$ simulate the first
+$n$ letters directly; afterwards the virtual pre-state at an observed event
+$(z,a)$ is $yhz$, since $z=xpt$ for the intervening product $t$.  As $U$ is a
+semilattice, the upper value at $y$ is the product of the prefix values and of
+$F_a(yhz)$ over the distinct later events.  The lower value is $hz_{\rm end}$.
+This recovers all coordinates of the lift, hence $\rho_R(w)$.  Words shorter than
+$n$ are read directly.
+\end{proof}
+
+\begin{theorem}
+\label{thm:SLLG-LECom}
+$\SL*\LG=\LECom$.
+\end{theorem}
+
+\begin{proof}
+(a) $\LG=\Gp*\Dd$: for every nontrivial pseudovariety $\mathbf H$ of groups,
+$\mathbf H*\Dd=\mathbf L\mathbf H$ \cite[Example~1.3 and
+Theorem~2.8]{TherienWeiss1985}.
+
+(b) $\SL*\Gp=\ECom$.  Every finite monoid with commuting idempotents divides a
+finite inverse monoid \cite{Ash1987}; every finite inverse monoid has a finite
+$E$-unitary cover \cite{McAlister1974}, and every finite $E$-unitary inverse
+monoid embeds in a semidirect product of a finite semilattice by a finite group
+\cite{OCarroll1976}.  Hence $\ECom\subseteq\SL*\Gp$.  Conversely the idempotents
+of a semidirect product of a semilattice by a group have trivial group
+component and commute, and $\ECom$ is a pseudovariety \cite{Ash1987}; see also
+\cite{MargolisPin1987}.
+
+(c) $\ECom*\Dd=\LECom$.  The six-element Brandt monoid $B_2^1$ is inverse, hence
+in $\ECom$.  By \cite[Theorem~1.5]{TherienWeiss1985}, a graph congruence $\beta$
+is an $\ECom$-congruence iff the consolidated monoid $M_\beta=P/\beta\cup\{0,1\}$
+(composable paths multiply, all other products are $0$) belongs to $\ECom$.  The
+idempotents of $M_\beta$ are $0$, $1$ and classes of loops.  Loops at different
+vertices multiply to $0$ in both orders, and loops at the same vertex commute if
+$\beta$ is locally an $\ECom$-congruence.  Hence every locally
+$\ECom$-congruence is an $\ECom$-congruence, and
+\cite[Theorem~2.8]{TherienWeiss1985} gives $\ECom*\Dd=\LECom$.
+
+By (a), associativity \cite{Tilson1987}, (b) and (c),
+$\SL*\LG=\SL*(\Gp*\Dd)=(\SL*\Gp)*\Dd=\ECom*\Dd=\LECom$.
+\end{proof}
+
+\begin{remark}
+The inclusion $\SL*\LG\subseteq\LECom$ also follows directly: in a wreath product
+with upper semilattice, idempotents $Y,Z$ of a local monoid at $E=(F,b)$ have lower
+coordinate $b$, their upper coordinates commute at states fixed by $b$, and
+$EYZ=YZ$, $EZY=ZY$ propagate this to all states.  The local pseudoidentity passes
+to divisors and products.
+\end{remark}
+
+\begin{remark}[Threshold counting]
+\label{rem:LTT}
+$\LT=\SL*\Dd$ \cite{BrzozowskiSimon1973,McNaughton1974,Straubing1985} and the
+syntactic characterization of $\LTT$ combines results of Straubing
+\cite{Straubing1985} and Th\'erien and Weiss \cite{TherienWeiss1985}, see
+\cite{BeauquierPin1991}; in wreath-product form $\LTT=\ACom*\Dd$.  Since
+$\SL\subseteq\LT\subseteq\LTT$ and $\ACom\subseteq\ECom=\SL*\Gp$,
+\[
+  \SL*\LG=\LT*\LG=\LTT*\LG .
+\]
+The inclusion $\LTT*\Gp\subsetneq\SL*\LG$ is strict: the language of words with an
+even number of factors $\mathtt{ab}$ has syntactic semigroup in $\LG$ (keep the
+previous letter in a right-zero semigroup and toggle a group bit on $\mathtt{ab}$),
+but in any aperiodic-over-group recognition a lift of $(\mathtt a^N\mathtt
+b^N)^j$, with $N$ a multiple of the lower exponent, has eventually constant upper
+coordinates while membership alternates with $j$.
+\end{remark}
+
+%======================================================================
+\section{Main theorem and corollaries}
+\label{sec:main}
+
+\begin{theorem}
+\label{thm:main}
+Theorem~\ref{thm:A} holds.  More precisely, if $S_R\in\LECom$, then there are an
+automaton $\mathcal A$ with transition semigroup in $\LG$ and a width $d$ such
+that $\mathcal A$ recovers $\rho_R$ at width $d$, and under the hypotheses of
+Theorem~\ref{thm:A}
+\[
+  \tau(G,s)=O\bigl(v^{2D+3}\bth_G^{D+1}\bigr),\qquad D=f|Q|k^{\max(2,d,\ell)} .
+\]
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:SLLG-LECom}, $S_R\in\SL*\LG$, so Theorem~\ref{thm:recovery}
+supplies $\mathcal A$ and $d$.  Apply Theorem~\ref{thm:B} with $\rho=\rho_R$, and
+Fact~\ref{fact:char-data} for the characteristic data.
+\end{proof}
+
+The degree depends on the recovering automaton, which is constructed from a
+wreath-product decomposition of $S_R$; we make no attempt to minimize it.
+
+\begin{corollary}[Group values]
+\label{cor:group}
+Let $\varphi:\Sigma^+\to\mathsf G$ be a morphism onto a finite group.  If
+membership depends only on $(b_\ell(w),N_\ell(w),\varphi(w))$,
+$s\preceq(c_\Sigma,b_\ell,\varphi)$ and $L\in\Cmcf{f}{s}$, then
+$\tau(G,s)=O(v^{2D+3}\bth_G^{D+1})$ with $D=f|\mathsf G|k^{\max(2,\ell)}$.
+\end{corollary}
+
+\begin{proof}
+The right regular action of $\mathsf G$ recovers $\varphi$ at width one: the
+value of a component read from entry $p$ to exit $q$ is $p^{-1}q$.  Its
+transition semigroup is a group.  Apply Theorem~\ref{thm:B}; window types and
+factor counts of the projection are read from $b_m$ and $N_m$.
+\end{proof}
+
+\begin{remark}[Degree]
+\label{rem:degree}
+A direct argument that adds group values and edge counts modulo $|\mathsf G|$ to the
+colours of Theorem~\ref{thm:L}, together with a Dénes--Hermann type lemma on
+products of large multisets \cite{DenesHermann1982}, gives the better exponent
+$fk^\ell$ in Corollary~\ref{cor:group}
+(research record R14, \texttt{research/2026-11-23\_R14\_astra\_automata\_skeleton}).
+Decoration needs width at least two to test coherence, so this exponent is not
+recovered through Theorem~\ref{thm:B}.
+% TODO(paper): decide whether to include the direct proof as an appendix.
+\end{remark}
+
+\begin{example}[Even runs]
+\label{ex:even-runs}
+Let $E\subseteq\{\mathtt a,\mathtt b\}^+$ consist of the words in which every
+maximal $\mathtt a$-run has even length.  Its minimal automaton has two live
+states (the parity of the current run) and a sink; $\mathtt a$ swaps the live
+states and $\mathtt b$ fixes $0$ and kills $1$.  Its positive syntactic semigroup
+is the symmetric inverse monoid $I_2$ of the seven partial injections of a
+two-element set, with representatives $\mathtt{aa},\mathtt a,\mathtt
+b,\mathtt{ba},\mathtt{ab},\mathtt{aba},\mathtt{bab}$.  Since
+$\mathtt bI_2\mathtt b=\{\mathtt b,0\}\cong U_1$, $I_2\notin\LG$; since $I_2$ is
+inverse, $I_2\in\ECom\subseteq\LECom$.  The parity automaton (a group of order
+two) recovers $\rho_E$ at width one: from the entry and exit parities and the set
+of parities at which a decorated $\mathtt b$ is read one obtains the partial map
+of the component.  Hence Theorem~\ref{thm:A} applies, for instance, to
+$E\cap g^{-1}(\gamma+\mathsf H)$ whenever this is an $f$-MCFL.  No typing with
+image in $\LG$ makes $E$ even one-dimensionally substitutable: if $e=s(\mathtt
+a^{2h})$ is idempotent and $d$ is the order of $e\,s(\mathtt b)\,e$ in the group
+$e\mathsf Se$, the tuples $\mathtt a^{2h}$ and $(\mathtt a^{2h}\mathtt b\mathtt
+a^{2h})^d$ have type $e$ and share the empty context, but $\mathtt a\blank\mathtt
+a$ accepts only the first.
+\end{example}
+
+\begin{corollary}[Locally counting and path targets]
+\label{cor:local}
+Theorem~\ref{thm:L} is the case of a one-state automaton.  In particular, for a
+directed graph and the language of words whose letters, read as edges, form a
+path with fixed end vertices, intersected with an arbitrary condition on letter
+counts, $\tau$ is polynomial at every fan-out (the case $\ell=2$).
+\end{corollary}
+
+%======================================================================
+\section{Limits of the method}
+\label{sec:limits}
+
+\begin{theorem}
+\label{thm:limits}
+Let $S_R\notin\LECom$.  For every automaton $\mathcal A$ with transition semigroup
+in $\LG$, every width $m$ and every set $\mathcal Q$ of values of $(b_m,N_m)$ on
+traces from $q_0$, the set $\{w:(b_m,N_m)(D_{q_0}(w))\in\mathcal Q\}$ differs from
+$R$.
+\end{theorem}
+
+\begin{proof}
+Stack onto $\mathcal A$ a register holding the last $m-1$ decorated letters (or the
+short prefix).  The register has a locally trivial positive image, so the new
+lower machine $\mathcal A'$ still has transition semigroup $T'\in\LG$
+(Lemma~\ref{lem:lg-closed}), and at each step it can emit the newly completed
+decorated window; the final end windows are in the register.
+
+Since $S_R\notin\LECom$, there are words $c_0,u,v$ such that $\rho_R(c_0)$ is
+idempotent, $\rho_R(c_0uc_0)$ and $\rho_R(c_0vc_0)$ are idempotent and do not
+commute; replacing $u$ and $v$ by $c_0uc_0$ and $c_0vc_0$ we may assume
+$\rho_R(uv)\ne\rho_R(vu)$ with $u,v$ idempotent in the local monoid of
+$e=\rho_R(c_0)$, and we choose a context $\alpha\blank\beta$ separating
+$\alpha c_0uvc_0\beta$ from $\alpha c_0vuc_0\beta$.  Let $N$ be such that
+$C=c_0^N$ acts as an idempotent $e'$ of $T'$.  Then $CuC$ and $CvC$ act in the
+group $e'T'e'$, and for a common positive power $j$, $U=(CuC)^j$ and $V=(CvC)^j$
+both act as $e'$.  After reading $\alpha C$, $U$ and $V$ are loops at the same
+state of $\mathcal A'$, so $\alpha CUV\beta$ and $\alpha CVU\beta$ have equal final
+windows and equal counts of completed windows (each loop adds a fixed vector).
+Their syntactic values contain $uv$ and $vu$ respectively in the same context, so
+exactly one of them is in $R$ (as $u,v$ are idempotent in the local monoid, the
+powers do not change the values).
+\end{proof}
+
+\begin{example}[Minimal skeletons outside $\LECom$]
+\label{ex:minimal}
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item The last $\mathtt a$-run has even length: $(\mathtt{aa})^+\cup\Sigma^*\mathtt
+b(\mathtt{aa})^*$ over $\{\mathtt a,\mathtt b\}$.  Its transformation monoid is
+the full transformation monoid $T_2$; in the local monoid at $\mathtt{aa}=1$ the
+idempotents $\mathtt b$ and $\mathtt{ba}$ are distinct constant maps.
+\item The scattered pattern $\mathtt a\cdots\mathtt b$ over $\{\mathtt a,\mathtt
+b,\mathtt c\}$ with $\mathtt c$ neutral: $\mathtt c$ is a syntactic identity,
+$\mathtt a$ and $\mathtt b$ are idempotent, $\mathtt{ab}$ is accepted and
+$\mathtt{ba}$ is not.  (Over $\{\mathtt a,\mathtt b\}$ alone the same pattern is
+locally testable.)
+\item The flip-flop with an identity letter: the monoid $\{1,r_0,r_1\}$ with
+$r_0r_1=r_1\ne r_0=r_1r_0$.  Every semigroup of order at most two lies in $\LG$
+or in $\SL$, so three is the smallest order outside $\LECom$.
+\end{enumerate}
+\end{example}
+
+\begin{remark}[Projections]
+\label{rem:projections}
+Example~\ref{ex:minimal}(b) is handled by a different argument in the companion
+research record \cite{KuriyamaCompendium} (the theorem on non-interleaving
+dependent letters and the theorem on independent letter blocks), which uses
+erasing projections onto sub-alphabets.  Erasing projections are not covered by
+Theorem~\ref{thm:B}, whose projection preserves length.  A combined statement is
+open.
+\end{remark}
+
+\begin{remark}[What the limits do not say]
+Theorem~\ref{thm:limits} and Remark~\ref{rem:lg-needed-for-witnesses} are limits of
+the decoration method, not lower bounds on $\tau$.  For the skeleton $R$ alone with
+the typing $\rho_R$, $\tau$ is constant.  A superpolynomial lower bound would need
+a non-regular counting condition and a family of presentations for which every
+tuple with the right distribution is long.
+\end{remark}
+
+\begin{openproblem}[{\cite[Open Problem \textit{fanout-two}]{KuriyamaCompendium}}]
+\label{op:fanout-two}
+For $f\ge2$, does every pseudovariety not contained in $\LG$ contain a typing
+whose class $\Cmcf{f}{s}$ fails to have characteristic data of polynomial total
+length?
+\end{openproblem}
+
+The results of this paper show that a positive answer must use targets whose
+skeleton is not regular or has syntactic semigroup outside $\LECom$, or whose
+counting conditions are not on factors of bounded length.
+
+%======================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We gave a target-side counterpart of the local-group boundary for typings:
+targets built from a regular skeleton in $\LECom$ and arbitrary counting
+conditions on bounded factors have polynomial representative length at every
+fan-out, for typings outside $\LG$.  The proof transfers the target, by a
+local-group decoration, to a locally counting language, and the decoration exists
+exactly for $\LECom=\SL*\LG$.  Open questions are the optimal degree, the
+integration of erasing projections (Remark~\ref{rem:projections}), skeletons
+outside $\LECom$ with counting conditions, and Open Problem~\ref{op:fanout-two}.
+
+\paragraph{Acknowledgements.}
+% TODO(paper): AI-use declaration and acknowledgements, following the journal policy.
+
+%======================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Ash1987}
+C.~J.~Ash.
+\newblock Finite semigroups with commuting idempotents.
+\newblock {\em Journal of the Australian Mathematical Society (Series A)},
+43:81--90, 1987.
+
+\bibitem{BeauquierPin1991}
+D.~Beauquier and J.-E.~Pin.
+\newblock Languages and scanners.
+\newblock {\em Theoretical Computer Science}, 84(1):3--21, 1991.
+
+\bibitem{BrzozowskiSimon1973}
+J.~A.~Brzozowski and I.~Simon.
+\newblock Characterizations of locally testable events.
+\newblock {\em Discrete Mathematics}, 4:243--271, 1973.
+
+\bibitem{CostaNogueiraTeixeira2021}
+J.~C.~Costa, C.~Nogueira, and M.~L.~Teixeira.
+\newblock The word problem for $\kappa$-terms over the pseudovariety of local
+groups.
+\newblock {\em Semigroup Forum}, 103:439--468, 2021.
+
+\bibitem{DenesHermann1982}
+J.~D\'enes and P.~Hermann.
+\newblock On the product of all elements in a finite group.
+\newblock {\em Annals of Discrete Mathematics}, 15:105--109, 1982.
+
+\bibitem{KuriyamaTCS1}
+T.~Kuriyama.
+\newblock Distributional learning of context-free languages under fixed
+finite-semigroup typing.
+\newblock arXiv:1409.6247v5, 2026.
+
+\bibitem{KuriyamaMCFGpreprint}
+T.~Kuriyama.
+\newblock The value of finite observation in positive-data learning of multiple
+context-free languages.
+\newblock arXiv:2605.11644v3, 2026.
+
+\bibitem{KuriyamaCompendium}
+T.~Kuriyama.
+\newblock Multiple context-free languages under fixed finite-semigroup typing:
+research compendium.
+\newblock \url{https://github.com/growupkuriyama-hub/Papers/tree/main/02-v4-fixed-s-mcfg},
+2026.
+
+\bibitem{KuriyamaTypingClass}
+T.~Kuriyama.
+\newblock Which fixed typings give polynomial characteristic data? A
+classification for substitutable context-free languages.
+\newblock Manuscript, 2026.
+
+\bibitem{MargolisPin1987}
+S.~W.~Margolis and J.-E.~Pin.
+\newblock Inverse semigroups and extensions of groups by semilattices.
+\newblock {\em Journal of Algebra}, 110:277--297, 1987.
+
+\bibitem{McAlister1974}
+D.~B.~McAlister.
+\newblock Groups, semilattices and inverse semigroups.
+\newblock {\em Transactions of the American Mathematical Society}, 192:227--244,
+1974.
+
+\bibitem{McNaughton1974}
+R.~McNaughton.
+\newblock Algebraic decision procedures for local testability.
+\newblock {\em Mathematical Systems Theory}, 8:60--76, 1974.
+
+\bibitem{OCarroll1976}
+L.~O'Carroll.
+\newblock Embedding theorems for proper inverse semigroups.
+\newblock {\em Journal of Algebra}, 42:26--40, 1976.
+
+\bibitem{SekiEtAl1991}
+H.~Seki, T.~Matsumura, M.~Fujii, and T.~Kasami.
+\newblock On multiple context-free grammars.
+\newblock {\em Theoretical Computer Science}, 88(2):191--229, 1991.
+
+\bibitem{Straubing1985}
+H.~Straubing.
+\newblock Finite semigroup varieties of the form $\mathbf V*\mathbf D$.
+\newblock {\em Journal of Pure and Applied Algebra}, 36:53--94, 1985.
+
+\bibitem{TherienWeiss1985}
+D.~Th\'erien and A.~Weiss.
+\newblock Graph congruences and wreath products.
+\newblock {\em Journal of Pure and Applied Algebra}, 36:205--215, 1985.
+
+\bibitem{Tilson1987}
+B.~Tilson.
+\newblock Categories as algebra: an essential ingredient in the theory of
+monoids.
+\newblock {\em Journal of Pure and Applied Algebra}, 48:83--198, 1987.
+
+\bibitem{Yoshinaka2011}
+R.~Yoshinaka.
+\newblock Efficient learning of multiple context-free languages with
+multidimensional substitutability from positive data.
+\newblock {\em Theoretical Computer Science}, 412(19):1821--1831, 2011.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,299 @@
+% Standalone by default. In an article with amsmath and amsthm loaded,
+% define \RDecorationFragment before inputting this file.
+\ifdefined\RDecorationFragment\else
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm}
+\fi
+\newtheorem{rdtheorem}{Theorem}
+\newtheorem{rdlemma}{Lemma}
+\newcommand{\rdSL}{\mathbf{SL}}
+\newcommand{\rdLG}{\mathbf{LG}}
+\newcommand{\rdLI}{\mathbf{LI}}
+\newcommand{\rdtyp}{\mathrm{typ}}
+\newcommand{\rdcnt}{\operatorname{alph}}
+\ifdefined\RDecorationFragment\else
+\begin{document}
+\title{State decoration and short distribution representatives}
+\author{R16 research note}\date{23 November 2026}\maketitle
+\fi
+
+Write $c(w)=\rdcnt(w)$, and $b_j(w)$ for the whole word with a short tag if
+$|w|<\max(1,2(j-1))$, otherwise for its tagged prefix and suffix of length
+$j-1$. Let $N_j$ count all length-$j$ factors with overlaps. A typing is a
+finite positive-word semigroup morphism, and $s\preceq h$ means that equality
+of $h$ implies equality of $s$. An admissible $a$-context has $a$ holes in
+order, each used once, positive internal separators and possibly empty outer
+pieces. Tuples have positive components. Equivalence means equality both
+of component types and of the sets of accepting admissible contexts. A target
+is $(f,s)$-substitutable if, in every arity $1,\ldots,f$, equally typed tuples
+sharing one accepting context are equivalent. A good grammar has positive
+template components, linear nondeleting, nonpermuting, nonmerging rules:
+each child's variables occur once, in order, and consecutive variables of
+that child cannot be adjacent in the same output component. Reduced means
+reachable and productive. Its original thickness $\theta\ge1$ is the maximum
+of one and, over rules, the minimum length of a successful sentence using
+that rule. Write $v$ for the number of nonterminals and $r$ for the rank cap.
+The quantity $\tau(G,s)$ takes the maximum, over realized typed symbols
+other than the fresh start of the refinement,
+of the shortest length in the corresponding equivalence class; the representative
+need not be generated there. All generated tuples of a fixed type at one
+symbol share a derivational context: sibling components are positive and
+good rules preserve the order and separation of holes. Empty target words
+are handled separately.
+
+We use two prior results with the following interfaces.
+The corrected local-counting theorem (R14, Theorem L) says that if positive
+membership depends on $(b_m,N_m)$ and the target is $(f,t)$-substitutable
+with $t\preceq(c,b_m)$, then on a reduced good presentation over alphabet $B$,
+\[
+ \tau=O_{B,m,f,r}(v^{D+2}\theta^{D+1}),\qquad D=f|B|^m .
+\]
+The local-group short-yield theorem (compendium, theorem on local groups and corollary on type-level shortest yields) supplies a \emph{generated} tuple of length
+$C v\theta$ for each realizable vector of values of a fixed morphism into
+a finite local group, at its original nonterminal. A finite local group is
+a semigroup whose $eTe$ is a group for every idempotent $e$.
+The results below use these established statements as inputs.
+
+\begin{rdtheorem}[Transfer]
+Let $s$ be fixed, and let a reduced good fan-out-$\le f$, rank-$\le r$
+grammar present the positive part of an $(f,s)$-substitutable language $L$.
+Let a fixed deterministic complete machine have states $Q$, initial $q_0$
+and positive transition semigroup $T$. Its trace $D_p(w)$ emits $(q,a)$
+on reading $a$ in state $q$, so $\pi(q,a)=a$ preserves length.
+Assume positive membership depends on $(\rho(w),N_\ell(w))$, where
+$\rho$ is a fixed finite semigroup morphism and
+$s\preceq(c,b_\ell,\rho)$. Suppose for some fixed $d$ the input state,
+output state, $c(D_p(w))$ and $b_d(D_p(w))$ determine $\rho(w)$ on
+all realizable positive traces with arbitrary reachable entry $p$.
+More generally one may replace the preceding membership, typing and recovery
+assumptions by these two operational hypotheses at the width $m$ below:
+(i) membership in the initial-state trace language is determined by
+$(b_m,N_m)$; (ii) on coherent components $t=(c,b_m)$ determines the
+actual projected $s$-type. For a one-state machine this version also works
+with $m=1$ (coherence and endpoint matching are then automatic).
+For each realizable componentwise vector of entry/exit pairs at an original
+nonterminal assume a generated witness there of total length at most $\beta$.
+Set $m=\max(2,d,\ell)$, $D=f(|Q||\Sigma|)^m$.
+Then, with constants depending only on fixed parameters,
+\[
+ \tau(G,s)=O\big(v^{D+2}[v(\theta+r\beta)]^{D+1}\big).
+\]
+If $T\in\rdLG$, this is $O(v^{3D+4}\theta^{D+1})$.
+\end{rdtheorem}
+\begin{proof}
+Drop unreachable states. Put $L^\#=D_{q_0}(L\cap\Sigma^+)$ and
+$t=(c,b_m)$ over $\Gamma=Q\times\Sigma$. A word is a legal global trace
+iff its first entry is $q_0$ and all adjacent letters match the transition.
+The data $(b_m,N_m)$ determine the first and last letters and all counts
+down to length one: to go down one order count prefixes of the longer
+windows and add the last shorter window, treating short words literally.
+This tests legality and supplies $c,b_d$ and both endpoints.
+Recovery gives $\rho$ and letterwise projection of the length-$\ell$ counts
+gives the desired input counts. Hence $L^\#$ is locally counting.
+On every coherent component $t$ alone gives the endpoints, its input
+$c,b_\ell$ and, by recovery, $\rho$, hence its actual input $s$-type. These are exactly the two facts supplied
+directly in the operational version. Equal component endpoints follow from
+$b_m$ for $m\ge2$, and are automatic for one state.
+
+Fix any arity $1\le a\le f$, componentwise equal-$t$ positive tuples $X,Y$,
+a shared accepting decorated context $C_0$, and any decorated test $C_1$.
+The four words are $C_0[X],C_0[Y],C_1[X],C_1[Y]$. The first two give
+internal coherence. With $x=\pi X,y=\pi Y$ the four input words are
+\[ (\pi C_0)[x],\quad(\pi C_0)[y],\quad(\pi C_1)[x],\quad(\pi C_1)[y]. \]
+Internal gaps stay positive. The input types match componentwise, hence
+membership of the last two input words agrees. A failure inside a fixed
+piece of $C_1$, at its start, or at a boundary is simultaneous since
+component endpoints match, even with empty outside pieces. Otherwise the
+two outputs are both coherent from $q_0$. Their acceptance then agrees
+by projection. If no $C_0$ exists the premise of substitutability is empty.
+This proves all decorated rectangles.
+
+Build the grammar over $\Gamma$ with symbols $(A;(p_i,q_i)_i)$.
+For every original rule choose entry/exit vectors for its parent and
+children. Scan each output template from its entry: emit tagged terminals,
+require a child's stated entry to equal the current state at its variable,
+then resume at its exit, and check the terminal state of the template.
+Use a unary fresh start joining initial $q_0$ to each possible final state.
+Induction on trees proves equality with all decorated generated tuples
+having the specified endpoints. Conversely erasing states gives an actual
+original derivation. Trim. A productive derivation at a reachable symbol
+can be inserted at that symbol, so trimming loses no needed witness.
+Rank and fan-out caps are preserved, as are goodness and positivity.
+There are $v'\le1+v|Q|^{2f}$ symbols, and the grammar size is
+$O_{Q,f,r}(1+\|G\|)$: each original rule has a bounded number of choices,
+each with the original terminal length. This includes the unary start rule.
+
+A rule writes at most $\theta$ terminals, since a successful original sentence
+using it contains them all. Each surviving decorated symbol has a generated
+tuple of length at most $\beta$ by choosing the short endpoint witness and
+tracing it from its specified entries (allow $\max(1,\beta)$ for notation).
+The fresh start also has such a witness whenever the target is nonempty.
+To witness a particular surviving rule, reach its parent by a simple path
+in the reachable dependency graph, choose the actual rules along it and use
+short generated tuples for all siblings and final children. There are at
+most $v'+1$ rules on this spine. These substitutions use the same decorated
+nonterminals, and do not appeal to language substitutability. Therefore
+$\bar\theta_{G^\#}\le(v'+1)(\theta+r\beta)$ (for an empty grammar the
+claim is vacuous). Theorem L applies with alphabet $\Gamma$ and the above $t$.
+
+Finally take a successful occurrence of any realized original typed symbol,
+with tuple $x$. The sentence trace gives a generated tuple $X$ at an actual
+decorated symbol and a common accepting derivational context $F$ for its
+realized $t$-sort. Theorem L supplies a positive tuple $Y$ of the same
+$t$ and decorated distribution, within its length bound. In particular
+$F[X],F[Y]$ are accepted. Thus $Y$ is coherent, and $x,\pi Y$ have equal
+actual component $s$-types. For each original test $E$, the four input
+words are
+\[ (\pi F)[x],\quad(\pi F)[\pi Y],\quad E[x],\quad E[\pi Y]. \] The shared first
+pair and original substitutability identify membership of the second pair.
+This does not require the same decorations to work in $E$. Length is
+unchanged by $\pi$. Substitution of the numerical bounds proves the first
+claim. A realized endpoint vector has a witnessing tuple of full transition
+values. Preserving these values preserves every specified endpoint, so
+the local-group theorem gives $\beta=O(v\theta)$ when $T\in\rdLG$.
+\end{proof}
+
+\paragraph{A sharper accounting.}
+The proof of Theorem L uses its thickness variable only to bound explicit
+terminals per rule and the length of one untyped generated tuple per symbol.
+Its fixed outer context is used for acceptance, never charged to the final
+length. Indeed height and the number of marked ancestors depend only on
+the number of types and symbols; each DFS increment charges terminals
+written on one ancestor path, and each impure-window colour charges the
+short tuples at the cut. The skeleton charges explicit terminals.
+Thus one may substitute $b=\max(1,\theta,\beta)$ for the thickness variable
+in that proof, while still obtaining the full rule-thickness estimate above
+when it is needed. This gives $O(v^{D+2}b^{D+1})$, hence
+$O(v^{2D+3}\theta^{D+1})$ for a local-group lower machine.
+
+\section*{Which regular skeletons admit recovery?}
+Products below act on the right. Write $U\wr_Q T$ for pairs $(F,t)$,
+$F:Q\to U$, with multiplication
+$(F,t)(H,s)=(q\mapsto F(q)H(qt),ts)$.
+The positive image is used throughout, even when $Q=T^1$ contains a
+formally adjoined initial state. The symbol $*$ denotes the pseudovariety
+generated by these cascades, with the right factor reading input first.
+Finite products of cascades embed in a single cascade using the product
+lower action and tuple of upper functions. Division means a quotient of a
+subsemigroup. Standard wreath-product division or the displayed formula
+allows the regular lower action on $T^1$: for an arbitrary action, replace
+$F_a(t)$ by the vector $(F_a(qt))_{q\in Q}$ and evaluate at $t=1$ to
+recover the original functions. The upper semilattice remains a semilattice.
+
+\begin{rdlemma}
+$\rdLG*\rdLG=\rdLG$. In particular upper group counters or a locally trivial
+boundary register above a local-group machine still give an LG positive image.
+\end{rdlemma}
+\begin{proof}
+Take an idempotent $E=(F,b)$ in a wreath product with both factors in $\rdLG$
+and an idempotent $Z=(H,z)$ in its local monoid. Then $z=b$ since
+$z$ is an idempotent of $bTb$. At every $u$ fixed by $b$, both $F(u)$
+and $H(u)$ are idempotents, and $EZ=ZE=Z$ puts $H(u)$ in
+$F(u)UF(u)$. Hence $H(u)=F(u)$. At arbitrary $u$, $ub$ is fixed, so
+$H(u)=F(u)H(ub)=F(u)F(ub)=F(u)$. A finite monoid with just one idempotent
+is a group (a power of every element is the identity).
+This proves the inclusion; the reverse uses a trivial upper factor.
+\end{proof}
+
+\begin{rdtheorem}[Exact skeleton class for existential full recovery]
+A regular positive-word skeleton $R$ admits an LG lower machine and a
+fixed width giving the component recovery in the transfer theorem for
+its entire syntactic morphism $\rho$, if and only if its syntactic
+semigroup belongs to $\rdSL*\rdLG$.
+\end{rdtheorem}
+\begin{proof}
+For necessity consider the trace from the initial state. Its content
+and its boundary type can be accumulated by a finite semilattice and
+a positive boundary semigroup, respectively. The latter is locally trivial:
+an idempotent has a long tag and sandwiching any positive tag between two
+copies leaves it unchanged. Endpoints are obtained from the lower machine.
+Consequently $R$ is recognized by the product of a semilattice-over-LG
+cascade and a locally-trivial-over-LG cascade. Empty accumulations can be
+handled by an initial state, without changing the positive acting semigroup.
+The lemma and division by the syntactic congruence prove necessity.
+
+Conversely lift the syntactic morphism letter by letter into a divisor
+presentation in the regular wreath product $U\wr_{T^1}T$, with $U$ a
+finite semilattice, $T\in\rdLG$. Thus each letter $a$ has a chosen lift
+$(F_a,t_a)$ in the covering subsemigroup. Put $k=|T|$. We use the
+local-group structure statement that $T^k$ is its completely simple
+minimal ideal $K$. In particular for $p\in K,x\in T^1$ there exists
+$h\in T^1$ with $hxp=p$. Indeed $xp$ and $p$ have the same column in a
+Rees matrix representation of $K$: writing $p=e p$ for a left identity
+$e\in K$ shows $xp=(xe)p$. In a fixed column one can left-multiply from
+any row and group coordinate to any other by the Rees multiplication law.
+
+Run the lower state $x\in T^1$ by $x\mapsto xt_a$ and, for each event
+$(x,a)$, maintain its own counter modulo $k+1$, incremented just after that
+event. This is a finite abelian group above $T$, hence an LG lower machine
+by the lemma. It emits its complete state and the input letter.
+We now decode the \emph{whole wreath element} for a component, from
+\emph{any} entrance into this machine, using content and boundary width
+$k+1$ (enlarge to at least two). For each event its observed pre-increment
+residues visit consecutive residues around its cycle. Their number of
+distinct values gives its total count truncated at $k+1$, irrespective of
+the initial counters. These values are available from the decorated content.
+If the component has fewer than $k$ letters read it directly.
+Otherwise read its first $k$ transitions and let $p$ be their input product
+in $T$. From each truncated count subtract the corresponding prefix count
+and test positivity. This gives exactly the set of events occurring
+\emph{after} the prefix, even when a count saturates, since at most $k$
+occurrences were discarded. No order-sensitive upper products are changed.
+
+Let $x$ now denote the component's actual initial $T^1$ state. Fix
+$h=h(x,p)$ with $hxp=p$. For each possible initial coordinate $y\in T^1$
+in the original wreath representation, simulate the first $k$ letters
+starting at $y$, multiplying their upper values. At each subsequent event
+$(z,a)$ in the observed tail the correct simulated pre-state is $yhz$:
+indeed $z=xpt$ for the product $t$ of the intervening input.
+Multiply in $F_a(yhz)$ once per distinct tail event. This reconstructs the
+upper value at $y$ because the upper semigroup is commutative and idempotent.
+There is always an upper factor for a positive word, so empty subproducts
+cause no difficulty. The lower value of the whole input is $hz_{\rm end}$
+from the observed exit $z_{\rm end}=xpt_{\rm tail}$. All coordinates of
+the lift, hence its syntactic image, are recovered. This is one decoder on
+all entrances with fixed finite memory, independent of the grammar and
+count filter. Sufficiency follows.
+\end{proof}
+
+\paragraph{Regular threshold counting.}
+In positive semigroup notation,
+\[
+ \rdSL*\rdLG=\mathbf{LT}*\rdLG=\mathbf{LTT}*\rdLG .
+\]
+Indeed, Straubing (1985), Theorem 4.3 and Section 7.1, gives
+$\mathbf{LT}=\rdSL*\mathbf D$; taking the upper monoid variety to
+be finite commutative aperiodic monoids in Theorem 4.3 gives
+$\mathbf{LTT}=\mathbf{ACom}*\mathbf D$.
+For the latter specialization each generator's powers stabilize at a
+common threshold; conversely all truncated factor counts are recorded
+by a product of finite truncated-addition monoids. End windows and
+short-word tags are included. The semigroup reducts of
+$\mathbf{ACom}$ belong to $\rdSL*\mathbf G$: on a fixed generating
+alphabet keep each letter count modulo its stabilization threshold
+(or a larger common modulus $n\ge1$). From the content of letters
+decorated by these counters, one obtains $\min(n,|w|_a)$ by counting
+distinct pre-residues for $a$. This recognizes every fibre from the
+identity, and hence the morphism divides such a cascade. As
+$\mathbf D,\mathbf G\subseteq\rdLG$, associativity of transformation
+wreath products and the lemma give the equality, using
+$\rdSL\subseteq\mathbf{LT}\subseteq\mathbf{LTT}$ for the reverse
+inclusions. Exact unbounded factor counts in the target are separate.
+
+The inclusion $\mathbf{LTT}*\mathbf G\subseteq\rdSL*\rdLG$ is strict.
+Take the language with an even number of contiguous factors $ab$.
+Its positive syntactic semigroup is in $\rdLG$: keep the previous letter
+in a right-zero lower semigroup and toggle an upper group bit on $ab$.
+In any purported finite aperiodic-over-group recognition, choose $N$ a
+positive multiple of the lower group exponent. A lift of the block
+$B=a^N b^N$ has the form $(F,1)$, so its powers stabilize by aperiodicity
+at each of the finitely many upper coordinates. Yet membership of $B^j$
+alternates with $j$. This also excludes $\mathbf{LT}*\mathbf G$.
+
+\paragraph{References to the algebraic interfaces.}
+H. Straubing, \emph{Finite semigroup varieties of the form $V*D$},
+J. Pure Appl. Algebra 36 (1985), 53--94, Theorems 3.1 and 4.3 and
+Section 7.1. J.-E. Pin, \emph{Mathematical Foundations of Automata
+Theory}, transformation wreath products and the wreath product principle,
+Theorem 4.6, pp. 291--292 in the consulted version.
+\ifdefined\RDecorationFragment\else\expandafter\enddocument\fi

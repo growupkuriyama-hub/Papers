@@ -1,0 +1,284 @@
+% Standalone with pdflatex. For inclusion in another document take the body.
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm}
+\newtheorem{theorem}{Theorem}
+\newcommand{\wordalph}{\operatorname{alph}}
+\newcommand{\Imp}{\operatorname{Imp}}
+\newcommand{\Dist}{\mathcal D}
+\begin{document}
+\title{Short distribution representatives for locally counting targets}
+\author{R14 research note}\date{23 November 2026}\maketitle
+
+Put $q=\ell-1$, $k=|\Sigma|\ge1$, $V=k^q$, $K=k^\ell$.
+Write $b(w)$ for the word tagged short if $|w|<\max(1,2q)$, otherwise
+the tagged pair (first $q$, last $q$ letters). The type of a concatenation is
+determined by the types of its pieces, including the empty word.
+Let $T=|b(\Sigma^+)|$. Write $N(w)$ for the vector of multiplicities of
+length-$\ell$ factors, counting overlaps, and $c(w)=\wordalph(w)$.
+A typing is a homomorphism on positive words to a finite semigroup.
+The order $s\preceq(c,b)$ means that equality on the right implies equality on the left.
+
+An admissible context of arity $d$ inserts, in order, the $d$ nonempty
+components of a tuple once each. Internal gaps are positive, the two
+outer gaps arbitrary. Write $\Dist(x)$ for the accepting contexts of $x$.
+Equivalence means equality both of component $s$-types and of distributions.
+A target is $(f,s)$-substitutable if for every $1\le d\le f$,
+two equally typed tuples sharing an accepting context are equivalent.
+
+A grammar rule builds its output tuple by concatenating terminals and
+child-component variables. Good rules have nonempty template components,
+use each variable exactly once, use each child's variables in their indexed
+order in the flattened output, and never place two consecutive variables of the
+same child adjacent in one output component. The start symbol has one component.
+Reduced means reachable and productive. Let $v$ count nonterminals, $r$ bound
+the number of children, and $f$ bound the arity. Let $\theta$ be the maximum
+of 1 and, over original rules, the minimum length of a successful sentence
+using the rule. Each rule writes at most $\theta$ terminals, and each
+nonterminal $B$ has a positive generated tuple $u_B$ of length at most
+$\theta$: take a short successful witness for one of its rules.
+A reachable occurrence of $B$ has a fixed accepting context $E_B$ for all
+its generated tuples. Indeed successively filling siblings preserves hole
+order, and a separator is either a terminal, a positive sibling piece, or
+the inherited positive gap between two parent components. Consequently all
+yields of a realized typed nonterminal $X$ (original symbol plus vector of
+output types, in a successful derivation) belong to one equivalence class.
+Let $\tau$ be the maximum, over these $X$, of the minimum total length
+in that class, allowing representatives outside the grammar yield of $X$.
+
+\begin{theorem}
+Let $L$ be an $(f,s)$-substitutable $f$-MCFL. Suppose positive membership
+depends only on $(b(w),N(w))$ and $s\preceq(c,b)$. For every reduced good
+presentation of its positive part, with $f,r,\ell\ge1$, set
+\[
+ \lambda=K(2V-1),\quad B=2q\lambda,\quad c_*=c_{K+2},
+\]
+\[
+ c_1=1,\quad c_{i+1}=Kc_i+f+B+2\quad(1\le i\le K+1).
+\]
+With $H=v((2^k-1)T+1)^f$, set
+\[
+ N_{\rm sk}=\ell c_*KfH,\qquad C_L=T^f(1+rH(\theta+f\ell))^{Kf}.
+\]
+Then
+\[
+ \tau\le f\ell+\ell N_{\rm sk}\theta+2\ell frN_{\rm sk}
+             +\ell rN_{\rm sk} C_L H\theta
+ =O_{k,\ell,f,r}(v^{Kf+2}\theta^{Kf+1}).
+\]
+\end{theorem}
+\begin{proof}
+\emph{Context invariant.}
+A crossing window consists of a suffix of the first piece it touches,
+a prefix of the last, and all intervening nonempty pieces. More precisely,
+enumerate first and last nonempty piece and the two positive lengths taken,
+each at most $q$; all intervening lengths and letters of the required
+short pieces are determined by their tags. This counts occurrences with
+multiplicities, also for a window spanning several boundaries. Thus equal
+component $b,c$ and equal sum of internal $N$ imply equivalence in all
+admissible outer contexts. The same boundary identity works for arbitrary
+fixed pieces.
+
+\emph{Tree and positions.}
+Choose a derivation with fewest nodes for the output label $X$, call its
+tuple $x$. An ancestor and proper descendant with equal original symbol
+and output types could be contracted, preserving $X$ by the morphism property.
+The height in nodes is at most $H$. Positions always refer to this original
+tuple. By linear nondeletion every subtree component has a contiguous image
+in one root component; incomparable subtrees have disjoint images.
+
+A word of length at least $q$ is its initial $q$ letters followed by the
+last-letter labels of a path in the de Bruijn graph with vertices $\Sigma^q$
+and edges $\Sigma^\ell$ from prefix to suffix. Counts are edge counts. For each
+root component select an empty one of the $K+1$ intervals $[c_g,c_{g+1})$
+of frequencies. Call edges of frequency at least $c_{g+1}$ frequent,
+the rest rare. If there is a frequent edge, there are at most
+$R=(K-1)(c_g-1)$ rare occurrences. Every weak component $J$ of the
+frequent edges is strongly connected: for an edge from which there is no
+return, the vertices reachable from its head along frequent edges exclude
+its tail. At least $c_{g+1}$ entries into this set require at least
+$c_{g+1}-1>R$ exits in the full path, all rare. Every maximal interval
+of frequent edges is in a single $J$. There are at most $R+1$ such
+intervals for each $J$. Without frequent edges no pool is needed.
+
+Mark every letter of the first $\min(c_*,N(x_i)(e))$ occurrences of every
+edge $e$ in $x_i$. The skeleton consists of the writing nodes and their
+ancestors, at most $N_{\rm sk}$ nodes. If empty, there are no windows
+and $\|x\|_1\le fq$. Otherwise there are at most $rN_{\rm sk}$ maximal
+off-skeleton subtrees. No internal window of one of their components
+meets a mark and all such windows belong to one frequent interval.
+A short-tag root component has no deletable window: all its windows, if
+any, are selected ($q\ge1$ gives $c_*>2q$). Keep it unchanged on the
+representative side. Components shorter than $\ell$ contribute no counts.
+
+\emph{Cuts and colours.}
+Fix one maximal off-skeleton subtree $\eta$ with components $z_\kappa$.
+Order its leaves by depth first search with any fixed child order.
+After the first $j$ leaves, $I_j$ consists of maximal subtrees all of whose
+leaves are in that prefix (empty initially, $\{\eta\}$ at the end).
+There are at most $rH$ of them: before completion they are completed
+siblings on the next leaf's ancestor path. Their original terminal positions
+form a nested sequence $U_j$. Newly covered positions are written on the
+path of the newly completed leaf and number at most $H\theta$.
+In the original derivation replace each member of $I_j$ by a derivation
+of $u_B$ from its own original symbol. Write $z^j_\kappa$ for the new
+components of $\eta$ and $W_j$ for the resulting sentence in $E_A$,
+where $A$ underlies $X$. Each $W_j$ is generated, without any type
+assumption on the replacements.
+
+Tag every inserted letter. In each $z^j_\kappa$ record $b(z^j_\kappa)$
+and the vector $\Imp_\kappa(j)$ of internal windows touching an inserted
+letter. All pieces replacing original components are positive. Hence a
+window with no inserted letter lies in one contiguous surviving stretch
+and corresponds bijectively, by positions, to an original internal window
+avoiding $U_j$. Conversely every such original window survives. A replacement
+of length $n$ accounts for at most $n+q$ impure windows. Across the at most
+$rH$ nodes the total is at most $rH(\theta+fq)$, so there are at most $C_L$
+colours. If $j<j'$ have equal colours then
+\[
+ Z_\kappa=N(z^j_\kappa)-N(z^{j'}_\kappa)\ge0
+\]
+counts exactly original internal windows first touched during $(j,j']$.
+Equal boundary tags give equal endpoint imbalance, so each $Z_\kappa$
+is a circulation (identical short words give zero). Its nonzero support
+is in the single $J$ just described. Crossing windows in $W_j,W_{j'}$
+agree by the boundary identity. Thus $b(W_j)=b(W_{j'})$ and
+$N(W_j)-N(W_{j'})=\sum_\kappa Z_\kappa$.
+
+From each visited index $j$, go to the last $j'\ge j$ of its colour, delete
+the first-touches in $(j,j']$, then, if present, retain the single increment
+to $j'+1$ and continue there. Starting colours never repeat. The jump
+windows are disjoint across jumps and across maximal free subtrees.
+The prescription concerns original positions, not positions in a subsequently
+rearranged word. A zero jump needs no substitution.
+
+\emph{Numerical rerouting.}
+In a strongly connected $J$ suppose $m$ designated paths have prescribed
+respective endpoints $p_l,q_l$ and combined target counts $M$ with
+$\partial M=\sum_l(\mathbf e_{q_l}-\mathbf e_{p_l})$.
+To expose a closed walk $g_0$ at vertex $u$ inside a designated main path,
+it suffices that $M(e)\ge(m-1)+1+N_{\rm edge}(g_0)(e)+1$ on $J$.
+Choose a simple path in each non-main slot and from the main start to $u$.
+Subtract them and the prescribed closed walk. The remainder has every
+edge positive, and imbalance from $u$ to the main end, so admits an Euler
+trail (add a return edge, splice cycles in the connected balanced graph,
+then remove that edge). Use it after $g_0$. All intervening frozen edges
+remain genuine windows because their entering and leaving vertices were
+preserved. The Euler remainder is nonempty. Empty non-main paths are allowed.
+
+\emph{One deletion.}
+Maintain for each root component its original $b,c$ and current vector $M_i$
+obtained by subtracting earlier jumps. Maintain that there is a realizing
+tuple, and all such tuples are equivalent to $x$. This holds initially by
+the context invariant. Group nonzero $Z_\kappa$ by original component and
+frequent component $(i,J)$ to form $Z_{i,J}$. The number $e_0$ of active
+pools is at most the arity of $\eta$, hence at most $f$.
+
+In $W_{j'}$ permit only original frequent windows internal to $x_i$ with
+all positions outside the component intervals of $\eta$. They survive as
+consecutive original letters. Freeze all other edges, including boundary
+windows in the sentence. Removing the windows meeting one interval of
+letters removes an interval of window starts; this increases the number of
+remaining runs of a given pool by at most one. Thus the number $m$ of
+flexible runs is at most $R+1+f$. Every selected occurrence of a frequent
+edge is wholly outside $\eta$ since every one of its letters is marked.
+Thus at least $c_{g+1}$ occurrences of each such edge are flexible.
+Marking alone does not make a rare edge flexible. For each active pool
+choose the first original frequent interval containing a flexible window
+as anchor; use the first flexible run there on the sentence side and the
+whole corresponding interval on the representative side.
+
+Fix a vertex $u$ of $J$ and a tour $D$ from $u$ covering all its edges of
+length at most $\lambda$ (for each edge go to its tail, cross it, return
+by simple paths). If $q>0$, put $D_0=D^q$, $h=D_0D_0$ and
+$t=D_0\operatorname{Euler}_u(N_{\rm edge}(D_0)+Z_{i,J})$.
+This Euler circuit exists by full support and balance. If $q=0$, use the
+single vertex, take $h$ to traverse every loop of $J$ once and $t$ to
+traverse $N_{\rm edge}(h)+Z_{i,J}$. Write $h,t$ also for the emitted
+last-letter strings. They are positive and have the same content, namely
+the set of emitted labels on $J$. For $q>0$ both are long, share their first
+$q$ letters, and end in $u$. For $q=0$ the window type is trivial.
+Their component $s$-types agree. Their edge-count difference is $Z_{i,J}$;
+when comparing internal word counts the first $q$ emitted letters account
+for identical omitted incoming edges because the initial vertex and those
+letters agree.
+
+On the representative side keep the original prefix vertex and rare edge
+slots of each component. In every frequent pool the current restriction
+has the total imbalance of its original intervals, since earlier deletions
+were circulations. It contains, in addition to the present $Z_{i,J}$,
+at least $c_{g+1}$ copies per edge: selected occurrences and present jump
+occurrences are disjoint and neither has been deleted. Expose $t$ in the
+anchor of every active pool, using numerical rerouting; inactive pools
+use an empty prescribed walk. Call the tuple $y$. Replacing the exposed
+$t$ by $h$ gives $y'$ with counts decreased by exactly the jump.
+Content is preserved by the original prefix and the support of emitted
+edges. End vertices persist, and a modified component remains long since
+a frequent edge retains at least $c_{g+1}$ occurrences ($>2q$ for $q>0$).
+Components with no frequent edges are kept verbatim.
+
+On the sentence side use just the flexible runs in each active pool.
+Their actual edge counts have the required imbalance. Expose $h$ at the
+anchor, freeze the rest of the sentence outside these runs, obtaining
+$F[h]$. In both applications the numerical condition follows, edgewise,
+from $m\le R+1+f$ and
+\[
+ c_{g+1}-(R+1+f+ B+1)=c_g+K-1\quad(q>0).
+\]
+Here $N_{\rm edge}(h)(e)\le B$; on the representative side the additional
+$Z_{i,J}(e)$ pays for $t$. For $q=0$, $B=0$ but the per-edge cost of
+$h$ is one, and the slack $c_g+K-1\ge1$ pays this cost on both sides.
+The same bound covers inactive pools with a zero prescribed walk.
+
+The sentence $F[h]$ has the length, end windows and counts of $W_{j'}$;
+$F[t]$ has those of $W_j$ by the colour identity and endpoint-preserving
+replacement. In a nonzero jump the anchors ensure long sentences;
+for $q=0$ positive suffices. Both sentences therefore belong to $L$.
+The holes on both sides are in the order of root components and their
+original anchor intervals. Within one root component different anchors
+of different pools have a frozen rare edge between them (its emitted
+letter survives). Between root components the outer context has a positive
+separator. On the sentence side such a separating rare edge is intact
+since all its original positions were marked. Alternatively every main
+path has a nonempty remainder after its hole. Thus both $F$ and the
+context $F_E$ obtained by cutting $t$ out of $E[y]$ are admissible for
+every admissible $E$; outside gaps may be empty.
+The comparison tuples are the ordered lists $t,h$ just constructed. The
+shared context is $F$, the test context $F_E$; the four words are
+$F[t],F[h],F_E[t]=E[y],F_E[h]=E[y']$. Substitutability gives equality
+of the last two membership indicators for every $E$. Their root component
+types agree; the context invariant extends the conclusion from $y'$ to
+every realization of its new data. This proves the induction.
+
+\emph{Length.}
+Count surviving original occurrences numerically. A window not internal
+to one free component either touches a skeleton-written terminal
+(at most $\ell N_{\rm sk}\theta$ starts) or crosses an endpoint of a free
+component (at most $2\ell frN_{\rm sk}$ starts). Each other surviving
+window is assigned to its unique first-touch increment. At most $C_L$
+increments per maximal free subtree were retained, each touching at most
+$\ell H\theta$ windows. Every component has length at most $q$ plus its
+window count (including the short case). The asserted bound follows.
+Only the original grammar supplied the short substitutions.
+\end{proof}
+
+\paragraph{Two corollaries.}
+For a strictly $\ell$-local skeleton $R$, prescribe allowed internal windows,
+end conditions and the short-word cases. Let $g$ be a morphism to an abelian
+group, $H_a$ a subgroup, and take $L=R\cap g^{-1}(\gamma+H_a)$.
+If $L$ is an $f$-MCFL it satisfies the theorem for $s=(c,b)$.
+Indeed take any arity up to $f$, equally typed positive tuples $x,y$,
+a shared accepting context $E_0$, and any test context $E_1$. In the
+four words $E_0[x],E_0[y],E_1[x],E_1[y]$ the internal windows of either
+tuple are allowed by the first two words. For the last two, end data,
+short-word cases, fixed-piece windows and crossing windows agree, so
+skeleton membership agrees. The abelian value change is the same sum
+of component differences in both contexts, hence lies in $H_a$.
+The required local-count description follows since letter counts are read
+from the initial vertex and emitted edge labels (or directly from short
+words). For finite abelian groups the intersection is regular.
+
+If $k\ge2$, choose different letters $a,b_0$. In the positive image of
+$s=(c,b)$, $e=s(a^{2\ell})$ and $e s(b_0)e$ are distinct idempotents of
+$e\,s(\Sigma^+)\,e$, as is seen from their contents and boundaries.
+This local monoid is not a group.
+\end{document}

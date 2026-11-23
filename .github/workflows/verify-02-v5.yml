@@ -1,0 +1,52 @@
+name: Verify 02-v5 MCFG regular skeletons (EN + JA)
+
+on:
+  push:
+    paths:
+      - "02-v5-mcfg-regular-skeletons/**"
+      - ".github/workflows/verify-02-v5.yml"
+  pull_request:
+    paths:
+      - "02-v5-mcfg-regular-skeletons/**"
+      - ".github/workflows/verify-02-v5.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: "02-v5: label sync, pdfLaTeX (EN), LuaLaTeX (JA)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check EN/JA label and citation sync
+        working-directory: 02-v5-mcfg-regular-skeletons
+        run: python3 -I tools/check_labels.py
+
+      - name: Compile English version (pdfLaTeX)
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: 02-v5-mcfg-regular-skeletons
+          texlive_version: 2026
+
+      - name: Compile Japanese version (LuaLaTeX)
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main_JP.tex
+          working_directory: 02-v5-mcfg-regular-skeletons/japanese
+          texlive_version: 2026
+          latexmk_use_lualatex: true
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v7
+        with:
+          name: 02-v5-mcfg-regular-skeletons-pdfs
+          path: |
+            02-v5-mcfg-regular-skeletons/main.pdf
+            02-v5-mcfg-regular-skeletons/japanese/main_JP.pdf
+          if-no-files-found: error
+          retention-days: 30
