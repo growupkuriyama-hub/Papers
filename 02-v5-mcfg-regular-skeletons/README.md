@@ -1,6 +1,6 @@
 # 02-v5-mcfg-regular-skeletons — #2骨格MCFG（方向A）
 
-*Polynomial Characteristic Data for Multiple Context-Free Languages with Regular Skeletons beyond Local Groups*
+*Which Regular Skeletons Give Polynomial Characteristic Data for Multiple Context-Free Languages?*
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、草稿 13 頁、2026-11-23）
 - 日本語版：[`japanese/main_JP.tex`](japanese/main_JP.tex)（LuaLaTeX。ラベルは英語版と同一）
