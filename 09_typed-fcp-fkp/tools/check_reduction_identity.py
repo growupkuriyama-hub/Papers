@@ -11,6 +11,9 @@ Typings tested: content, first letter, |w|_a mod 2, U1 indicator of 'c', trivial
 Kernels are restricted to sets with a nonempty common context, so that all closures
 are finite subsets of Sub(L).  This is CHECKED-FINITE evidence; the identity is
 proved in general in the manuscript (Lemma lem:star).
+Each trial picks ONE typing at random; kernels are nonempty, contain no
+empty word and have a nonempty common context.  All random choices are made
+from sorted sequences, so the output is reproducible for a given seed.
 Usage: python3 -I check_reduction_identity.py [trials] [seed]
 """
 import random
@@ -19,7 +22,7 @@ from itertools import product
 
 SIGMA = 'abc'
 TYPINGS = {
-    'content': lambda w: frozenset(w),
+    'content': lambda w: ''.join(sorted(set(w))),
     'first': lambda w: w[0],
     'amod2': lambda w: w.count('a') % 2,
     'U1c': lambda w: 'c' in w,
@@ -71,14 +74,14 @@ def concat(parts):
 def trial(rng, L, tname):
     SUB = subs(L)
     DC = {x: dist(L, x) for x in SUB}
-    pos = [x for x in SUB if x and DC[x]]
+    pos = sorted(x for x in SUB if x and DC[x])
     by_type = {}
     for x in pos:
         by_type.setdefault(T(tname, x), []).append(x)
     nnt = rng.choice([1, 2])
     Ks, ts = [], []
     for _ in range(nnt):
-        t = rng.choice(list(by_type))
+        t = rng.choice(sorted(by_type, key=repr))
         cands = by_type[t]
         for _ in range(20):
             K = set(rng.sample(cands, min(len(cands), rng.choice([1, 2]))))
@@ -98,7 +101,7 @@ def trial(rng, L, tname):
     d0, d1, d2 = D(S0), D(S1), D(S2)
     ident = (d0 == d1 == d2)
     # rule-level equivalence for a random homogeneous K0 of the rule's type
-    rtype = T(tname, next(iter(S0)))
+    rtype = T(tname, min(S0))
     if any(T(tname, x) != rtype for x in S0):
         return ident, None
     cands = by_type.get(rtype)
@@ -121,7 +124,8 @@ def main():
     stats = {'ident_ok': 0, 'ident_bad': 0, 'rule_ok': 0, 'rule_bad': 0, 'skipped': 0}
     for _ in range(trials):
         L = {''.join(rng.choice(SIGMA) for _ in range(rng.randint(1, 6))) for _ in range(rng.randint(3, 9))}
-        tname = rng.choice(list(TYPINGS))
+        L = sorted(L)
+        tname = rng.choice(sorted(TYPINGS))
         res = trial(rng, L, tname)
         if res is None:
             stats['skipped'] += 1; continue
