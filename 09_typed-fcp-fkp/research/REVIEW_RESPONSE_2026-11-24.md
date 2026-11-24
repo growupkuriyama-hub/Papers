@@ -42,4 +42,4 @@ KY2017 Thm 14 の言語 $L'$ に、$L_1$ の中心記号 $\$$ を新文字 $@$ �
 
 ## 構成についての判断
 
-査読の勧めどおり、一語削除の下界（Theorem B、旧 C）を主結果とし、双対性（Theorem A）は比較原理と厳密性の証人として、一つの学習器の主張は系として置いた。題名「Finite Observation Helps Contexts but Not Kernels」は双対性を前面に出しているので、投稿前に下界を前面に出す題名へ変えるかを検討する（未決）。
+査読の勧めどおり、一語削除の下界（Theorem B、旧 C）を主結果とし、双対性（Theorem A）は比較原理と厳密性の証人として、一つの学習器の主張は系として置いた。題名は 2026-11-24 に「Deleting One Word Forces Exponential Kernels: Finite Observation and the Finite Context and Kernel Properties」へ変更した（旧題「Finite Observation Helps Contexts but Not Kernels」）。

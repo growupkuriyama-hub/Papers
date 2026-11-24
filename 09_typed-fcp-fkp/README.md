@@ -1,6 +1,6 @@
 # 09_typed-fcp-fkp — 有限観測と有限文脈・有限核性質
 
-*Finite Observation Helps Contexts but Not Kernels in Distributional Learning of Context-Free Languages*（仮題）
+*Deleting One Word Forces Exponential Kernels: Finite Observation and the Finite Context and Kernel Properties*（仮題）
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 2、15 頁、2026-11-24）
 - 研究報告（日本語、依頼の成果物 1–6）：[`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md)
