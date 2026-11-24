@@ -2,7 +2,7 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories under Finite Observation*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 3（JoLLI 向けに再構成）、18 頁、2026-11-25）
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 3（JoLLI 向けに再構成）、17 頁、2026-11-25）
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
