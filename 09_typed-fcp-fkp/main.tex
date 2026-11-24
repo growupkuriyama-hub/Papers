@@ -90,8 +90,12 @@ Second, and as our main new result, deleting one word from a
 substitutable finite language of grammar size $O(n)$ forces every grammar
 with the very weak finite kernel property, under every typing, to satisfy
 $\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$ (right-hand side length times
-number of nonterminals times maximal kernel length), so the primal learner
-needs $2^{\Omega(n)}$ data at convergence; the two-element semilattice
+number of nonterminals times maximal kernel length).  The bound is a
+statement about grammars and uses no membership queries.  It gives
+characteristic data at least $(3\cdot2^{n-1}-1)^{1/3}$ for the author's
+positive-data reconstruction under the semilattice typing, and
+$2^{\Omega(n)}$ data at convergence for the primal learner with
+membership queries.  The two-element semilattice
 observer gives a typed strong finite-context presentation of size $O(n)$
 with contexts of length $O(n)$, yet the dual learners also need a datum of
 length $3\cdot2^{n-1}-2$, because refuting one candidate production
@@ -194,10 +198,15 @@ two-element semilattice typing; but every CFG $G$ for $M_n$ with the very
 weak FKP (any $k$, any typing) satisfies
 $\rho_G\,|N_G|\,\max(\kappa_G,1)\ge 3\cdot2^{n-1}-1$, where $\rho_G$ is the
 maximal number of symbols on a right-hand side, $N_G$ the set of
-nonterminals and $\kappa_G$ the maximal length of a kernel word.  The
-primal learner of~\cite{ky2017} (typed or not, fixed $r,k$) therefore sees
-$2^{\Omega(n)}$ data before it converges on $M_n$, and the dual learners
-(typed or not, $r\ge2$) see a datum of length at least $3\cdot2^{n-1}-2$.
+nonterminals and $\kappa_G$ the maximal length of a kernel word.  This
+bound concerns grammars only and uses no membership queries.  Consequently
+(a) every finite $K\subseteq M_n$ from which the positive-data
+reconstruction $\mathsf{Rec}_{s}$ of~\cite{kuriyama-tcs1} returns a grammar
+for $M_n$ satisfies $\|K\|^3\ge3\cdot2^{n-1}-1$, for every typing $s$ with
+$M_n\in\Ccf s$ (Corollary~\ref{cor:rec-data}); (b) the primal learner
+of~\cite{ky2017} (typed or not, fixed $r,k$) sees $2^{\Omega(n)}$ data
+before it converges on $M_n$; and (c) the dual learners (typed or not,
+$r\ge2$) see a datum of length at least $3\cdot2^{n-1}-2$.
 \end{mainthm}
 
 \paragraph{Relation to the fixed-typing theory.}
@@ -209,7 +218,12 @@ primal learner, and a finer observer can only shrink it; these are
 statements about qualitative identifiability, not about data or time.
 Theorem~B shows that the exponential typed-thickness phenomenon
 of~\cite{kuriyama-tcs1} has an observer-independent kernel counterpart
-that membership queries do not remove.
+that membership queries do not remove.  It also adds to the positive-data
+theory itself: \cite[Prop.~6.4]{kuriyama-tcs1} forces exponential
+characteristic data for $L_n$ under the semilattice typing, using $M_n$
+only as the second member of a distinguishing pair; Corollary~\ref{cor:rec-data}
+shows that the deleted-word target $M_n$ itself needs exponential
+characteristic data, for every typing under which it is learnable.
 On the context side observation genuinely helps, in line with~\cite{ky2023}.
 
 %======================================================================
@@ -980,6 +994,76 @@ depth $n$ and so is not in $\{c\}\Lc$.  The test can only fail with
 $x_1\in E_i\cap\{c\}\Lc\cap F_1=E_i\cap\{w^*_{n-1}\}$.
 \end{proof}
 
+\subsection*{A positive-data consequence}
+
+Theorem~\ref{thm:deletion} concerns grammars, not learners, so it also
+applies to positive-data learning.  Recall from~\cite[Sec.~4.1]{kuriyama-tcs1}
+that $\mathsf{Rec}_s(K)$ has a nonterminal $[\![x]\!]$ for every nonempty
+factor $x$ of a word of the finite sample $K$, a start symbol $\widehat S$,
+and productions
+(B) $[\![xy]\!]\to[\![x]\!][\![y]\!]$,
+(U) $[\![x]\!]\to[\![y]\!]$ for $x\approx_{K,s}y$ (that is, $s(x)=s(y)$ and
+$\D_K(x)\cap\D_K(y)\ne\emptyset$, where $\D_K$ is $\D$ relative to $K$),
+(L) $[\![a]\!]\to a$, and
+(S) $\widehat S\to[\![w]\!]$ for $w\in K\cap\Sigma^+$, plus
+$\widehat S\to\eps$ if $\eps\in K$.
+
+\begin{lemma}[reconstructed grammars carry kernel SPPs]\label{lem:rec-kernel}
+Let $s$ be a typing, $L\in\Ccf s$ with $\eps\notin L$, and $K\subseteq L$
+finite with $L(\mathsf{Rec}_s(K))=L$.  Let $G_K$ be obtained from
+$\mathsf{Rec}_s(K)$ by deleting $\widehat S$ and its productions and
+declaring every $[\![w]\!]$ with $w\in K$ initial.  Then $L(G_K)=L$, and
+$(\{x\}\RL)_{[\![x]\!]}$, relative to $L$, is an SPP of $G_K$.  Hence $G_K$
+has the very weak $1$-FKP with $\rho_{G_K}\le2$,
+$|N_{G_K}|\le\|K\|^2/2$ and $\kappa_{G_K}\le\max_{w\in K}|w|$.
+\end{lemma}
+\begin{proof}
+$\widehat S$ occurs on no right-hand side and $\eps\notin K$, so
+$L(G_K)=L(\mathsf{Rec}_s(K))=L$.  Pre-fixed point: for (B),
+$\{xy\}\RL\supseteq\{x\}\RL\{y\}\RL$ by Lemma~\ref{lem:clark}; for (L),
+$a\in\{a\}\RL$; for (U), $K\subseteq L$ gives $\D_K(x)\subseteq\D_L(x)$, so
+$x$ and $y$ have equal types and a common context in $L$, and
+$\sim_s$-substitutability gives $\D_L(x)=\D_L(y)$, i.e.\
+$\{x\}\RL=\{y\}\RL$.  Soundness: for $w\in K\subseteq L$,
+$(\eps,\eps)\in\D_L(w)$, so $\{w\}\RL\subseteq L$, while the union over the
+initial nonterminals contains $L(G_K)=L$.  The bounds: every right-hand
+side has at most two symbols; a word $w$ has at most $|w|(|w|+1)/2$
+nonempty factors; kernels are single observed factors.
+\end{proof}
+
+\begin{corollary}[characteristic data for the deleted-word target]
+\label{cor:rec-data}
+Let $n\ge2$ and let $s$ be any typing with $M_n\in\Ccf s$, for instance
+$s_U$~\cite[Prop.~6.4(iv)]{kuriyama-tcs1} or any refinement $h$ of $s_U$
+(equal $h$-types imply equal $s_U$-types, so
+$\sim_{s_U}$-substitutability implies $\sim_h$-substitutability).  If
+$K\subseteq M_n$ is finite and $L(\mathsf{Rec}_s(K))=M_n$, then
+\[
+\|K\|^3\ \ge\ 3\cdot2^{n-1}-1 .
+\]
+In particular every characteristic sample $\mathcal F$ of $M_n$ for
+$\mathsf{Rec}_s$, in the sense of~\cite[Sec.~2]{kuriyama-tcs1}, satisfies
+$\|\mathcal F\|\ge(3\cdot2^{n-1}-1)^{1/3}$.
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:deletion} to $G_K$ of Lemma~\ref{lem:rec-kernel}:
+$3\cdot2^{n-1}-1\le\rho|N|\max(\kappa,1)\le2\cdot(\|K\|^2/2)\cdot\|K\|$.
+A characteristic sample $\mathcal F$ satisfies
+$L(\mathsf{Rec}_s(\mathcal F))=M_n$ (take $K=\mathcal F$).
+\end{proof}
+
+\begin{remark}[relation to the fixed-typing paper]\label{rem:rec-data}
+\cite[Prop.~6.4]{kuriyama-tcs1} proves that every characteristic sample
+of $L_n$ for $\mathsf{Rec}_{s_U}$ contains $w^*_n$; there, $M_n$ appears only
+as the second member of a distinguishing pair, and no lower bound for $M_n$
+itself is stated in~\cite{kuriyama-tcs1}.  Corollary~\ref{cor:rec-data}
+supplies one, for every typing under which $M_n$ is learnable (by
+$M_n\notin\Ccf{s_0}$ the trivial typing is not available).  The exponent
+$1/3$ comes from the crude counting in Theorem~\ref{thm:deletion} and is
+not claimed to be optimal; we do not know whether every characteristic
+sample of $M_n$ must contain a factor $w^*_{n-1}$.
+\end{remark}
+
 \begin{remark}[reading the deletion family]\label{rem:deletion-table}
 \begin{center}
 \begin{tabular}{@{}lll@{}}
@@ -987,7 +1071,7 @@ $x_1\in E_i\cap\{c\}\Lc\cap F_1=E_i\cap\{w^*_{n-1}\}$.
  & $L_n$ & $M_n=L_n\setminus\{w^*_n\}$\\
 \midrule
 positive-only, trivial typing & poly data~\cite{kuriyama-tcs1} & not in $\Ccf{s_0}$\\
-positive-only, $s_U$ & exponential~\cite{kuriyama-tcs1} & in $\Ccf{s_U}$\\
+positive-only, $s_U$ & exponential~\cite{kuriyama-tcs1} & $\|\mathcal F\|^3\ge3\cdot2^{n-1}-1$ (Cor.~\ref{cor:rec-data})\\
 kernel side (any $k$, any typing) & $O(n)$ (Prop.~\ref{prop:deletion-upper}) & $2^{\Omega(n)}$ (Thm.~\ref{thm:deletion})\\
 typed context side, $s_U$ & $O(n)$ & $O(n)$ (Prop.~\ref{prop:deletion-upper})\\
 untyped context side & $O(n)$ & open (Open Problem~\ref{op:Mn-context})\\
@@ -1080,7 +1164,10 @@ evidence, not proofs.
 Proposition~\ref{prop:deletion-upper}, the kernel-capture equivalence of
 Lemma~\ref{lem:capture} for every occurrence inside $R$ and every completing
 word, and the fibre identity used in Proposition~\ref{prop:dual-refutation}
-($1204$ capture pairs for $n=4$).  All pass.
+($1204$ capture pairs for $n=4$), and, for $n=2,3$, the hypotheses of
+Lemma~\ref{lem:rec-kernel} with $K=M_n$: $\mathsf{Rec}_{s_U}(M_n)$ generates
+exactly $M_n$, and every pair joined by Rule~(U) has equal distributions in
+$M_n$ ($1732$ pairs for $n=3$).  All pass.
 \item \texttt{check\_reduction\_identity.py}: $4000$ random finite languages
 over $\{a,b,c\}$, choosing one of five typings in each trial (content,
 first letter, $|w|_a$ mod $2$, indicator of $c$, trivial).  Kernels are

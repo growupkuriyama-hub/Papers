@@ -28,6 +28,8 @@
 | `thm:deletion` | **$M_n$ の核下界**：VW-FKP を持つ任意の文法で $\rho\,\lvert N\rvert\max(\kappa,1)\ge3\cdot2^{n-1}-1$、どの型付けでも | PROVED（外部査読 CORRECT） | 新（外部査読も「照合範囲で同じ主張なし、最も独立性が高い」）。**本稿の主結果** |
 | `cor:primal-data` | primal 学習器の収束時データ $\ge 2^{\Omega(n/k)}$ | PROVED | 新 |
 | `prop:dual-refutation` | dual 学習器（型付き $s_U$・型なし、$r\ge2$）は収束時に $w^*_{n-1}$ を見ている必要 | PROVED（外部査読 CORRECT） | 新（「反駁のコスト」）。KY2017 Algorithm 1 そのもの（候補を刈り込まない実装）についての下界 |
+| `lem:rec-kernel`（2026-11-25 追加） | #1 の $\mathsf{Rec}_s(K)$ が正しく再構成するとき、開始記号を外した文法は核の大きさ 1 の SPP（$\{x\}^{\rhd\lhd}$）を持つ | PROVED + CHECKED-FINITE（$K=M_n$、n=2,3） | 新（#1 と KY2017 をつなぐ補題） |
+| `cor:rec-data`（2026-11-25 追加） | **正例のみの下界**：$M_n\in\mathcal C^{\rm cf}_s$ となるどの型付け $s$ でも、$\mathsf{Rec}_s$ が $M_n$ を返す標本は $\|K\|^3\ge3\cdot2^{n-1}-1$ | PROVED | 新。#1 Prop 6.4 は $L_n$ の下界で、$M_n$ 自身の下界は #1 に無い（main.tex・日本語版・R1 原稿・revision メモを全文検索して確認） |
 | `prop:weak-not-preserved`（rev2 で追加） | 型なし weak 2-FCP を持つが $@$ の指示型付けでは型付き weak FCP を持たない言語 $L^+=L'\cup L_1^@$ | **PROVED-CONDITIONAL**（KY2017 Lemmas 8, 12 の特徴づけを前提） | 新。外部査読（ChatGPT）が発見、こちらで原典と照合して採用 |
 | `prop:Mn-constituent`（rev2 で追加） | ζ 節点を一つだけ持つ語で、その ζ 節点を丸ごと含む構成素の長さ $\ge|w^*_n|-\ell-|w^*_{j-1}|$ | PROVED | 新（`op:Mn-context` の部分結果。外部査読が定式化を補完） |
 
@@ -35,7 +37,7 @@
 
 | スクリプト | 内容 | 結果 |
 |---|---|---|
-| `check_deletion_family.py 4` | `prop:deletion-upper`、`lem:capture`、反駁補題のファイバー等式を n=2,3,4 で全数 | すべて通過（n=4 で 1204 組、2.7 秒） |
+| `check_deletion_family.py 4` | `prop:deletion-upper`、`lem:capture`、反駁補題のファイバー等式を n=2,3,4 で全数。`lem:rec-kernel` の前提（$\mathsf{Rec}_{s_U}(M_n)=M_n$、(U) の組の分布一致）を n=2,3 で | すべて通過（n=4 で捕獲 1204 組、n=3 で (U) 1732 組、3.4 秒） |
 | `check_reduction_identity.py 4000` | `lem:star` と `lem:reduction` の規則ごとの同値を、$\{a,b,c\}$ 上の乱数有限言語 4000 個（試行ごとに 5 種の型付けから一つ） | 反例なし（規則同値 2230 件、rev2 で再現性を修正） |
 | 外部査読のスクリプト（`external_review_2026-11-24/scripts/`） | 有限還元の全数検査、$L_K$ の閉包、空の収量を含む捕獲補題、$L^+$ の文脈述語 | こちらでも再実行して全通過 |
 
