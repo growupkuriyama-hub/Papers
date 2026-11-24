@@ -32,7 +32,7 @@
 | `prop:dual-refutation` | dual 学習器（型付き $s_U$・型なし、$r\ge2$）は収束時に $w^*_{n-1}$ を見ている必要 | PROVED（外部査読 CORRECT） | 新（「反駁のコスト」）。KY2017 Algorithm 1 そのもの（候補を刈り込まない実装）についての下界 |
 | `lem:rec-kernel`（2026-11-25 追加） | #1 の $\mathsf{Rec}_s(K)$ が正しく再構成するとき、開始記号を外した文法は核の大きさ 1 の SPP（$\{x\}^{\rhd\lhd}$）を持つ | PROVED + CHECKED-FINITE（$K=M_n$、n=2,3） | 新（#1 と KY2017 をつなぐ補題） |
 | `cor:rec-data`（2026-11-25 追加） | **正例のみの下界**：$M_n\in\mathcal C^{\rm cf}_s$ となるどの型付け $s$ でも、$\mathsf{Rec}_s$ が $M_n$ を返す標本は $\|K\|^3\ge3\cdot2^{n-1}-1$ | PROVED | 新。#1 Prop 6.4 は $L_n$ の下界で、$M_n$ 自身の下界は #1 に無い（main.tex・日本語版・R1 原稿・revision メモを全文検索して確認） |
-| `prop:weak-not-preserved`（rev2 で追加） | 型なし weak 2-FCP を持つが $@$ の指示型付けでは型付き weak FCP を持たない言語 $L^+=L'\cup L_1^@$ | **PROVED-CONDITIONAL**（KY2017 Lemmas 8, 12 の特徴づけを前提） | 新。外部査読（ChatGPT）が発見、こちらで原典と照合して採用 |
+| `prop:weak-not-preserved`（rev2 で追加） | 型なし weak 2-FCP を持つが $@$ の指示型付けでは型付き weak FCP を持たない言語 $L^+=L'\cup L_1^@$ | **PROVED（KY2017 を引用）**：2026-11-25 に KY2017 著者版の原文と全面照合済み。用いるのは、Lemma 8 の証明の文脈表、Lemma 12 の証明の記述（$S_1$ 以外の旧非終端記号は同じ文脈で弱く特徴づけられる、$T,U,S_{4,5}$ の文脈、$X_{S_1}=\{(a\#,a),(b\#,b)\}^{\lhd}$）、Lemma 13 の証明（$L'$ の任意の CFG に適用でき、反例語は $c^id^ie^i$）。照合で 2 点を原文どおりに修正（反例語、$S_1$ の閉包の出典）。KY2017 の Lemma 12 の「同じ文脈で特徴づけられたまま」は原論文でも詳細な証明なしに述べられている主張で、本稿はそれを引用として使う | 新。外部査読（ChatGPT）が発見 |
 | `prop:Mn-constituent`（rev2 で追加） | ζ 節点を一つだけ持つ語で、その ζ 節点を丸ごと含む構成素の長さ $\ge|w^*_n|-\ell-|w^*_{j-1}|$ | PROVED | 新（`op:Mn-context` の部分結果。外部査読が定式化を補完） |
 
 ## 有限計算（`tools/`）
