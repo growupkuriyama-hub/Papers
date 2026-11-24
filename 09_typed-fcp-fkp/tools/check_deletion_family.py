@@ -16,6 +16,9 @@ Checks (all exact, the languages are finite):
       p k q' in M_n  <=>  k != x,   where q' = q with u_{n-1} replaced by w*_{n-1}.
   (D) Refutation lemma: for the level-(n-1) context c taken from a datum, the typed set
       c^{<|} ∩ F_1 is the singleton {w*_{n-1}}.
+  (E) Lemma lem:rec-kernel for K = M_n (n <= 3): Rec_{s_U}(M_n) without the start
+      symbol generates exactly M_n, and every (U) pair x ~ y has D(x) = D(y) in M_n,
+      so ({x}^{|><|}) is an SPP (rules (B),(L) are valid by Clark's inclusion).
 Usage: python3 -I check_deletion_family.py [nmax]
 """
 import sys
@@ -120,6 +123,52 @@ def check(n):
         one = {x for x in cl if typ(x) == '1'}
         if one != {wstar(n - 1)}:
             print(f'  (D) FAIL n={n} c={c}'); ok = False
+    # (E)
+    if n <= 3:
+        facs = sorted({m[i:j] for m in Mn for i in range(len(m)) for j in range(i + 1, len(m) + 1)})
+        ctx = {}
+        for m in Mn:
+            for i in range(len(m)):
+                for j in range(i + 1, len(m) + 1):
+                    ctx.setdefault(m[i:j], set()).add((m[:i], m[j:]))
+        groups = {}
+        for x in facs:
+            for c in ctx[x]:
+                groups.setdefault((typ(x), c), []).append(x)
+        upairs = 0
+        for (_, _), xs in groups.items():
+            for y in xs[1:]:
+                upairs += 1
+                if ctx[y] != ctx[xs[0]]:
+                    print(f'  (E) U-pair FAIL n={n}: {xs[0]} {y}'); ok = False
+        # language of G_K by fixpoint, lengths capped at max word length
+        cap = max(len(m) for m in Mn)
+        fs = set(facs)
+        Y = {x: set() for x in facs}
+        for x in facs:
+            if len(x) == 1:
+                Y[x] = {x}
+        same = {}
+        for (_, _), xs in groups.items():
+            for x in xs:
+                same.setdefault(x, set()).update(xs)
+        changed = True
+        while changed:
+            changed = False
+            for x in facs:
+                new = set(Y[x])
+                for y in same.get(x, ()):
+                    new |= Y[y]
+                for k in range(1, len(x)):
+                    l, r = x[:k], x[k:]
+                    if l in fs and r in fs:
+                        new |= {p + q for p in Y[l] for q in Y[r] if len(p) + len(q) <= cap}
+                if len(new) != len(Y[x]):
+                    Y[x] = new; changed = True
+        gen = set().union(*(Y[w] for w in Mn))
+        if gen != Mn:
+            print(f'  (E) Rec FAIL n={n}: generated {len(gen)} vs {len(Mn)}'); ok = False
+        print(f'  (E) n={n}: factors={len(facs)}, U-pairs checked={upairs}, Rec(M_n) generates M_n: {gen == Mn}')
     print(f'n={n}: |L_n|={len(Ln)}, |w*|={len(ws)}, capture pairs tested={tested}, '
           f'{"all checks passed" if ok else "FAILURES"}')
     return ok
