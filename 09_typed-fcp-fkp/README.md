@@ -3,16 +3,21 @@
 *Deleting One Word Forces Exponential Kernels: Finite Observation and the Finite Context and Kernel Properties*（仮題）
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 2、16 頁、2026-11-25 更新）
-- 研究報告（日本語、依頼の成果物 1–6）：[`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md)
+- 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
 - 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`
 
 ## 何の論文か
 
-金澤・吉仲（LATA 2017）の strong／weak／very weak の有限文脈性（FCP）・有限核性（FKP）に、#1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$ を組み合わせる。学習モデルは**正例＋所属質問**（#1 の正例のみとは別）。
+#1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$（有限観測）のもとで、二つの量を調べる。
 
-- **Theorem A（双対性）**：型付けを細かくすると、文脈で定まるクラスは広がり、核で定まるクラスは狭まる。型付きの核は、型で均質な通常の核にすぎない（核の縮約補題）。どちらも 2 元半束 $U_1$ で、どの $k\ge1$ でも厳密。型付き VW-FKP = W-FKP。型なし weak FCP は観測を足すと保存されない（KY2017 Lemmas 8, 12 を前提）。
+- **表現の複雑さ**：文脈自由言語を、金澤・吉仲（LATA 2017）の健全な前不動点（SPP）で、有限個の核（語）や文脈によって表すときの大きさ（非終端記号の数、右辺の長さ、核や文脈の長さ）。
+- **データの複雑さ**：#1 と同じ正例のみの再構成 $\mathsf{Rec}_s$ の特性データの大きさ。
+
+金澤・吉仲の所属質問付きの dual／primal 学習器への帰結は、応用として扱う。
+
+- **Theorem A（双対性、構造の結果）**：型付けを細かくすると、文脈で定まるクラスは広がり、核で定まるクラスは狭まる。型付きの核は、型で均質な通常の核にすぎない（核の縮約補題）。どちらも 2 元半束 $U_1$ で、どの $k\ge1$ でも厳密。型付き VW-FKP = W-FKP。型なし weak FCP は観測を足すと保存されない（KY2017 Lemmas 8, 12 を前提）。
 - **Theorem B（一語削除の代償、主結果）**：$M_n=L_n\setminus\{w^*_n\}$ は、VW-FKP を持つどの文法でも（どの型付けでも）$\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$。これは文法についての主張で、所属質問を使わない。帰結として、#1 の正例のみの再構成 $\mathsf{Rec}_s$ は $M_n$ に $\|K\|^3\ge3\cdot2^{n-1}-1$ の特性データを要し（#1 に無い下界）、primal 学習器は収束までに $2^{\Omega(n)}$、dual 学習器も長さ $3\cdot2^{n-1}-2$ 以上のデータを要する。$U_1$ 型付きの文脈表示は $O(n)$。
 - **系（既知の帰結）**：どの $s$ でも $\mathcal C^{\rm cf}_s$ は型なし weak 1-FKP（階数 2）で、型なし primal 学習器一つが $\bigcup_s\mathcal C^{\rm cf}_s$ を同定する。#1 Prop 9.7 から直ちに従う。
 
