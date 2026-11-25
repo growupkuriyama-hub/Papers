@@ -3,7 +3,7 @@
 % 09_typed-fcp-fkp 日本語版（査読用の全訳）
 % 正本は英語版 ../main.tex（コミット 7dfb8e9 の版を訳した）。
 % 定理・補題・命題などの番号、ラベル、数式は英語版と一対一に対応させてある。
-% 翻訳で内容を省略・追加したところはない（冒頭の「訳語について」だけが訳者の追加）。
+% 翻訳で内容を省略・追加したところはない。序論の冒頭と例 1.1 は著者による日本語版の改稿を英語版に反映したもの。
 
 \usepackage{lmodern}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
@@ -55,9 +55,7 @@
 \newcommand{\Rce}{\rceil}
 \newcommand{\ta}{\mathtt a}
 
-\title{枠と見本：有限観測のもとでの統語カテゴリーの指数的な隔たり\\[0.5ex]
-\normalsize（英語版 \emph{Frames versus Exemplars: An Exponential Gap for
-Syntactic Categories under Finite Observation} の日本語訳）}
+\title{枠 vs. 見本：有限観測のもとでの統語カテゴリーの指数的な隔たり}
 \author{Takayuki Kuriyama\\
 独立研究者（東京，日本）\\
 \texttt{growup.kuriyama@gmail.com}}
@@ -70,8 +68,8 @@ Syntactic Categories under Finite Observation} の日本語訳）}
 \begin{abstract}
 統語論への分布的なアプローチでは，カテゴリーを有限の方法で名指す仕方が二つある．
 そのメンバーが現れる少数の文の枠によって名指すか，少数の見本によって名指すかである．
-後者では，カテゴリーは，見本がすべて現れるところならどこにでも現れるもの全体になる．
-\citet{ky2017} は，対応する分布学習器が成功するための有限文脈性と有限核性を特定した．
+後者では，すべての見本に共通する文脈を考え，それらすべての文脈に出現可能な表現の集合をカテゴリーとする．
+Kanazawa and Yoshinaka (2017) は，対応する分布学習器が成功するための有限文脈性と有限核性を特定した．
 本稿では，固定された有限の観測器を加えたときに，この二つの仕方を比較する．
 観測器の例は，表現が標識を持つかどうかを記録する形態的な素性である．
 二項の結合と一項の標識付けで作られ，$n$ 段に入れ子になった構造について，
@@ -88,46 +86,78 @@ Syntactic Categories under Finite Observation} の日本語訳）}
 \noindent\textbf{キーワード：} 分布学習；統語概念束；有限文脈性；有限核性；
 有限半群；特性標本．
 
-\paragraph{訳語について（訳者注）.}
-context／frame を「文脈」／「枠」，kernel／exemplar を「核」／「見本」，
-finite context property (FCP)／finite kernel property (FKP) を「有限文脈性」／「有限核性」と訳す．
-strong／weak／very weak は「強」／「弱」／「極弱」，sound pre-fixed point (SPP) は「健全な前不動点」，
-typing は「型付け」，observer は「観測器」，fibre は「ファイバー」，refinement は「細分化」，
-yield は「収量」，licensing condition は「認可条件」，characteristic sample は「特性標本」，
-membership query は「所属質問」と訳す．定理などの番号と数式は英語版と同一である．
-
-%======================================================================
 \section{序論}\label{sec:intro}
-
 \paragraph{分布からのカテゴリー.}
-\citet{harris1954} の分布主義の伝統では，統語カテゴリーとは，文の枠の中で互いに置き換えることのできる表現の集合である．
-\citet{clark2010icgi,clark2013} の統語概念束はこれを精密にする．言語 $L$ を固定する．
-\emph{枠}または\emph{文脈}とは文字列の対 $(u,v)$ のことである．
-枠の集合 $C$ は，$C$ のすべての枠にあてはまる表現の集合 $C\Lc$ を選び出し，
-表現の集合 $K$ は，そのすべてがあてはまる枠の集合 $K\R$ を選び出す．
-$K\RL$ の形の集合が\emph{統語概念}である．
-したがって，カテゴリーを有限の方法で名指す仕方は二つある．
-有限個の\emph{診断用の枠}によるか，有限個の\emph{見本}によって，見本がすべて現れるところならどこにでも現れるもの全体をとるかである．
-文法が\emph{有限文脈性}（FCP）を持つとは，各非終端記号が第一の仕方で名指されることをいい，
-\emph{有限核性}（FKP）を持つとは，各非終端記号が第二の仕方で名指されることをいう
+
+\citet{harris1954} の分布主義の伝統では，統語カテゴリーとは，
+共通の文脈に出現できる表現の集合である．
+\citet{clark2010icgi,clark2013} の統語概念束は，
+この考え方を数学的に定式化したものである．
+
+言語 $L$ を固定する．
+\emph{枠}または\emph{文脈}とは文字列の対 $(u,v)$ であり，
+表現 $x$ がこの枠に入るとは $uxv\in L$ が成り立つことをいう．
+枠の集合 $C$ に対し，$C\Lc$ はすべての枠に入る表現の集合を表す．
+逆に，表現の集合 $K$ に対し，$K\R$ はすべての表現に共通する枠の集合を表す．
+$K\RL$ の形の集合を\emph{統語概念}という．
+
+したがって，カテゴリーを有限の情報によって指定する方法は二つある．
+第一は，有限個の\emph{枠}を与え，それらすべてに入る表現を集める方法である．
+第二は，有限個の\emph{見本}を与え，見本に共通する枠をすべて求め，
+それらすべてに入る表現を集める方法である．
+
+文法 $G$ が\emph{有限文脈性}（FCP）を持つとは，
+各非終端記号 $A$ に対して有限な枠の集合 $C_A$ が存在し，
+$L(G,A)=C_A\Lc$ が成り立つことをいう．
+一方，\emph{有限核性}（FKP）を持つとは，
+各非終端記号 $A$ に対して有限な見本の集合 $K_A$ が存在し，
+$L(G,A)=K_A\RL$ が成り立つことをいう
 \citep{clark2010icgi,yoshinaka2011dlt,clark-yoshinaka2016}．
-\citet{ky2017} は，所属質問を用いる双対（枠に基づく）と主（見本に基づく）の分布学習器が成功するための正確な版，
-すなわち\emph{極弱}の FCP と FKP を見いだした．
+これらは強い版であり，弱い版では左辺を閉包 $L(G,A)\RL$ に替える（第~\ref{sec:prelim} 節）．
+\citet{ky2017} は，所属質問を用いる枠に基づく（双対）学習器と
+見本に基づく（主）学習器の成功を特徴づける性質として，
+それぞれ\emph{極弱}の FCP と FKP を特定した．
 
 \begin{example}[数の一致を持つ小さな断片]\label{ex:toy}
-アルファベットを単語 \emph{the, dog, dogs, John, barks, bark, saw} とし，$L_{\mathrm{ag}}$ を次で生成する．
+
+アルファベットを単語 \emph{the, dog, dogs, John, barks, bark, saw}
+とし，$L_{\mathrm{ag}}$ を次の文法で生成される言語とする．
 \begin{gather*}
-S\to NP_{\mathrm{sg}}\ \textit{barks}\mid NP_{\mathrm{pl}}\ \textit{bark}\mid
-NP\ \textit{saw}\ NP,\qquad NP\to NP_{\mathrm{sg}}\mid NP_{\mathrm{pl}},\\
+S\to NP_{\mathrm{sg}}\ \textit{barks}\mid
+NP_{\mathrm{pl}}\ \textit{bark}\mid NP\ \textit{saw}\ NP,\\
+NP\to NP_{\mathrm{sg}}\mid NP_{\mathrm{pl}},\\
 NP_{\mathrm{sg}}\to\textit{the dog}\mid\textit{John},\qquad
 NP_{\mathrm{pl}}\to\textit{the dogs}.
 \end{gather*}
-$L_{\mathrm{ag}}$ に相対的に，ただ一つの枠 $(\eps,\textit{barks})$ は
-$NP_{\mathrm{sg}}=\{\textit{the dog},\textit{John}\}$ を選び出し，ただ一つの見本 \emph{John} も同じものを選び出す：
-$\{\textit{John}\}\RL=NP_{\mathrm{sg}}$．
-カテゴリー $NP$ は一つの枠 $(\textit{John saw},\eps)$ で選び出されるが，見本は一つでは足りず，二つなら足りる：
-$\{\textit{the dog},\textit{the dogs}\}\RL=NP$．
-（これらの等式は，$L_{\mathrm{ag}}$ の 12 個の文の上で直接計算して確かめてある．）
+
+ここで $NP_{\mathrm{sg}}$ は単数名詞句，
+$NP_{\mathrm{pl}}$ は複数名詞句，$NP$ は名詞句全体を表す．
+
+枠 ``$\underline{\qquad}$ barks'' に入るのは単数名詞句だけである．
+したがって，$NP_{\mathrm{sg}}$ は一つの枠で指定できる．
+また，\emph{John} と \emph{the dog} は全く同じ文脈に
+出現するため，一つの見本でも指定できる：
+\[
+\{(\eps,\textit{barks})\}\Lc
+=\{\textit{John}\}\RL
+=\{\textit{the dog},\textit{John}\}.
+\]
+
+一方，枠 ``John saw $\underline{\qquad}$'' には
+単数・複数のいずれの名詞句も入るため，
+$NP$ も一つの枠で指定できる．
+しかし，見本が一つだけでは数の一致による制約が残る．
+単数と複数の見本を一つずつ与えることで，
+この制約が取り除かれ，名詞句全体が得られる：
+\[
+\{(\textit{John saw},\eps)\}\Lc
+=\{\textit{the dog},\textit{the dogs}\}\RL
+=\{\textit{the dog},\textit{John},\textit{the dogs}\}.
+\]
+
+このように，同じカテゴリーを指定する場合でも，
+必要な枠の個数と見本の個数は必ずしも一致しない．
+
 \end{example}
 
 \paragraph{有限観測.}
