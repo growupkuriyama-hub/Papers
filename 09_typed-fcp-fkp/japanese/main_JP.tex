@@ -1,0 +1,1237 @@
+\documentclass[11pt,a4paper]{ltjsarticle}
+
+% 09_typed-fcp-fkp 日本語版（査読用の全訳）
+% 正本は英語版 ../main.tex（コミット 7dfb8e9 の版を訳した）。
+% 定理・補題・命題などの番号、ラベル、数式は英語版と一対一に対応させてある。
+% 翻訳で内容を省略・追加したところはない（冒頭の「訳語について」だけが訳者の追加）。
+
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\numberwithin{equation}{section}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage[switch]{lineno}
+\setlength{\emergencystretch}{3em}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{corollary}[theorem]{系}
+\newtheorem{fact}[theorem]{事実}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定義}
+\newtheorem{example}[theorem]{例}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注意}
+\newtheorem{openproblem}[theorem]{未解決問題}
+\theoremstyle{plain}
+\newtheorem{mainthm}{定理}
+\renewcommand{\themainthm}{\Alph{mainthm}}
+\renewcommand{\proofname}{証明}
+
+\newcommand{\eps}{\lambda}
+\newcommand{\R}{^{\rhd}}
+\newcommand{\Lc}{^{\lhd}}
+\newcommand{\RL}{^{\rhd\lhd}}
+\newcommand{\cl}{\operatorname{cl}}
+\newcommand{\D}{\mathcal D}
+\newcommand{\Sub}{\operatorname{Sub}}
+\newcommand{\Con}{\operatorname{Con}}
+\newcommand{\Ccf}[1]{\mathcal C^{\mathrm{cf}}_{#1}}
+\newcommand{\one}{\mathbf 1_\sharp}
+\newcommand{\Fib}[2][]{F^{#1}_{#2}}
+\newcommand{\FCP}[2]{\mathrm{FCP}^{#1}_{\mathrm{#2}}}
+\newcommand{\FKP}[2]{\mathrm{FKP}^{#1}_{\mathrm{#2}}}
+\newcommand{\tFCP}[3]{\mathrm{FCP}^{#1}_{\mathrm{#2}}[#3]}
+\newcommand{\tFKP}[3]{\mathrm{FKP}^{#1}_{\mathrm{#2}}[#3]}
+\newcommand{\Lfl}{\lfloor}
+\newcommand{\Rfl}{\rfloor}
+\newcommand{\Lce}{\lceil}
+\newcommand{\Rce}{\rceil}
+\newcommand{\ta}{\mathtt a}
+
+\title{枠と見本：有限観測のもとでの統語カテゴリーの指数的な隔たり\\[0.5ex]
+\normalsize（英語版 \emph{Frames versus Exemplars: An Exponential Gap for
+Syntactic Categories under Finite Observation} の日本語訳）}
+\author{Takayuki Kuriyama\\
+独立研究者（東京，日本）\\
+\texttt{growup.kuriyama@gmail.com}}
+\date{}
+
+\begin{document}
+\linenumbers
+\maketitle
+
+\begin{abstract}
+統語論への分布的なアプローチでは，カテゴリーを有限の方法で名指す仕方が二つある．
+そのメンバーが現れる少数の文の枠によって名指すか，少数の見本によって名指すかである．
+後者では，カテゴリーは，見本がすべて現れるところならどこにでも現れるもの全体になる．
+\citet{ky2017} は，対応する分布学習器が成功するための有限文脈性と有限核性を特定した．
+本稿では，固定された有限の観測器を加えたときに，この二つの仕方を比較する．
+観測器の例は，表現が標識を持つかどうかを記録する形態的な素性である．
+二項の結合と一項の標識付けで作られ，$n$ 段に入れ子になった構造について，
+どこかに少なくとも一つ標識があるという認可条件を考える．
+標識の観測器のもとでは，長さ $2n$ 以下の枠が文法の $2n$ 個のカテゴリーをすべて名指す．
+これに対し見本は，どの観測器のもとでも，$n$ について指数的な大きさか長さを必要とする．
+この隔たりは学習ではなく文法についての性質であり，
+著者の正例学習器と，所属質問を用いる学習器に，指数的な下界を与える．
+最後に，観測器を細分化すると，強い有限文脈性と極弱の有限文脈性，および極弱の有限核性について，
+枠には有利にしか働かず，見本には不利にしか働かない．
+弱い有限文脈性は単調ではない．
+\end{abstract}
+
+\noindent\textbf{キーワード：} 分布学習；統語概念束；有限文脈性；有限核性；
+有限半群；特性標本．
+
+\paragraph{訳語について（訳者注）.}
+context／frame を「文脈」／「枠」，kernel／exemplar を「核」／「見本」，
+finite context property (FCP)／finite kernel property (FKP) を「有限文脈性」／「有限核性」と訳す．
+strong／weak／very weak は「強」／「弱」／「極弱」，sound pre-fixed point (SPP) は「健全な前不動点」，
+typing は「型付け」，observer は「観測器」，fibre は「ファイバー」，refinement は「細分化」，
+yield は「収量」，licensing condition は「認可条件」，characteristic sample は「特性標本」，
+membership query は「所属質問」と訳す．定理などの番号と数式は英語版と同一である．
+
+%======================================================================
+\section{序論}\label{sec:intro}
+
+\paragraph{分布からのカテゴリー.}
+\citet{harris1954} の分布主義の伝統では，統語カテゴリーとは，文の枠の中で互いに置き換えることのできる表現の集合である．
+\citet{clark2010icgi,clark2013} の統語概念束はこれを精密にする．言語 $L$ を固定する．
+\emph{枠}または\emph{文脈}とは文字列の対 $(u,v)$ のことである．
+枠の集合 $C$ は，$C$ のすべての枠にあてはまる表現の集合 $C\Lc$ を選び出し，
+表現の集合 $K$ は，そのすべてがあてはまる枠の集合 $K\R$ を選び出す．
+$K\RL$ の形の集合が\emph{統語概念}である．
+したがって，カテゴリーを有限の方法で名指す仕方は二つある．
+有限個の\emph{診断用の枠}によるか，有限個の\emph{見本}によって，見本がすべて現れるところならどこにでも現れるもの全体をとるかである．
+文法が\emph{有限文脈性}（FCP）を持つとは，各非終端記号が第一の仕方で名指されることをいい，
+\emph{有限核性}（FKP）を持つとは，各非終端記号が第二の仕方で名指されることをいう
+\citep{clark2010icgi,yoshinaka2011dlt,clark-yoshinaka2016}．
+\citet{ky2017} は，所属質問を用いる双対（枠に基づく）と主（見本に基づく）の分布学習器が成功するための正確な版，
+すなわち\emph{極弱}の FCP と FKP を見いだした．
+
+\begin{example}[数の一致を持つ小さな断片]\label{ex:toy}
+アルファベットを単語 \emph{the, dog, dogs, John, barks, bark, saw} とし，$L_{\mathrm{ag}}$ を次で生成する．
+\begin{gather*}
+S\to NP_{\mathrm{sg}}\ \textit{barks}\mid NP_{\mathrm{pl}}\ \textit{bark}\mid
+NP\ \textit{saw}\ NP,\qquad NP\to NP_{\mathrm{sg}}\mid NP_{\mathrm{pl}},\\
+NP_{\mathrm{sg}}\to\textit{the dog}\mid\textit{John},\qquad
+NP_{\mathrm{pl}}\to\textit{the dogs}.
+\end{gather*}
+$L_{\mathrm{ag}}$ に相対的に，ただ一つの枠 $(\eps,\textit{barks})$ は
+$NP_{\mathrm{sg}}=\{\textit{the dog},\textit{John}\}$ を選び出し，ただ一つの見本 \emph{John} も同じものを選び出す：
+$\{\textit{John}\}\RL=NP_{\mathrm{sg}}$．
+カテゴリー $NP$ は一つの枠 $(\textit{John saw},\eps)$ で選び出されるが，見本は一つでは足りず，二つなら足りる：
+$\{\textit{the dog},\textit{the dogs}\}\RL=NP$．
+（これらの等式は，$L_{\mathrm{ag}}$ の 12 個の文の上で直接計算して確かめてある．）
+\end{example}
+
+\paragraph{有限観測.}
+学習器は，表現の有限の分類を利用できることもある．たとえば，表現が数の標示を持つかどうかである．
+これを\emph{型付け}，すなわち有限半群への全射な射 $s:\Sigma^+\to\mathsf S$ によってモデル化する．
+こうすると，複合表現の型はその部分の型から決まる．
+著者の正例の理論 \citep{kuriyama-tcs1}\footnote{\citet{kuriyama-tcs1} の結果の番号は，
+その arXiv 第 5 版（arXiv:1409.6247v5）による．}
+では，表現は同じ型を持つときにだけ比較される．
+例~\ref{ex:toy} で，型付けが，表現が複数形（\emph{dogs} または \emph{bark}）を含むかどうかを記録するとしよう．
+すると，目的語の枠だけで，標示のない型に制限すれば，すでに $NP_{\mathrm{sg}}$ を選び出す．
+観測が一致の枠 $(\eps,\textit{barks})$ に取って代わるのである．
+見本については効果が逆になる．型付きのカテゴリーは型について均質でなければならないので，
+$NP$ はもはや型の混じった見本の対では名指せず，分割しなければならない．
+
+\paragraph{問い.}
+固定された観測器のもとで，文脈自由言語の有限の提示は，カテゴリーを枠で名指すときと見本で名指すときとで，それぞれどれだけ大きくなければならないか．
+提示の大きさは，非終端記号の数 $|N|$，右辺の最大長 $\rho$，および見本（核の語）の最大長 $\kappa$ または枠 $(u,v)$ の最大長 $|u|+|v|$ で測る．
+$\kappa$ は文法だけでなく，選んだ見本にもよる．
+
+\paragraph{答え：指数的な隔たり.}
+二項の結合 $\Lfl xy\Rfl$ と一項の標識付け $\Lce x\Rce$ で作られ，ちょうど $n$ 段に入れ子になった表現を考え，
+そのうち\emph{少なくとも一つの標識}を含む構造からなる集合を $M_n$ とする．
+これは大域的な認可条件である．標識付きの構成素が一つあれば認可には十分だが，
+標識のない構成素は，認可される構造にも，ただ一つ除外される構造にも現れうる．
+表現が標識を含むかどうかを記録する 2 元の観測器は，$M_n$ のすべてのカテゴリーを長さ $2n$ 以下の一つの枠で名指し，
+非終端記号は $2n$ 個で済む．見本は観測器を利用できない．
+本稿では，見本に基づくどの提示も，どの観測器のもとでも，指数的に大きいことを示す．
+
+\begin{mainthm}[核と文脈の隔たり；定理~\ref{thm:gap}]
+すべての $n\ge2$ について次が成り立つ．
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $M_n$ は，2 元の標識の観測器について強 $1$-FCP を持つ型付きの提示を持ち，
+非終端記号は $2n$ 個，$\rho\le4$，枠の長さは $2n$ 以下である．
+\item 極弱 FKP を持つ $M_n$ のどの CFG $G$ も（各カテゴリーの見本の数は有限なら任意，型付けは任意またはなし），
+$\rho_G\,|N_G|\,\max(\kappa_G,1)\ge3\cdot2^{n-1}-1$ を満たす．
+\end{enumerate}
+削除がなく観測器もなければ隔たりは消える．そのような構造すべてからなる言語 $L_n$ は，
+大きさ $O(n)$，証人の長さ $O(n)$ の，型なしの枠の提示と見本の提示を持つ．
+削除があるからこそ，見本の下界は観測器なしで成り立ち，したがってどの観測器のもとでも成り立つ．
+標識の観測器そのもののもとでは，$L_n$ の見本の提示はすでに長さ $3\cdot2^n-2$ の見本 $w^*_n$ を必要とする
+（命題~\ref{prop:Ln-sU}）．
+\end{mainthm}
+
+理由は\emph{捕獲}という現象である（補題~\ref{lem:capture}）．
+標識のないただ一つの構造を除外するためには，標識付きの構造の大きな標識のない部分を覆う，見本で名指されたカテゴリーは，
+まさにその部分を見本の中に含まなければならない．
+枠は，観測器が標識を報告してくれれば，費用なしにそれを除外できる．
+
+\paragraph{学習への応用.}
+定理~A は文法についての主張であり，どの学習モデルにもよらない．
+これはアルゴリズムに対する下界を与える（第~\ref{sec:applications} 節）．
+\begin{itemize}[leftmargin=1.5em,nosep]
+\item 正例からは，著者の集合駆動の再構成 $\mathsf{Rec}_s$ \citep{kuriyama-tcs1} は，
+$M_n$ が学習可能になるどの型付けについても，$M_n$ 上で大きさ $(3\cdot2^{n-1}-1)^{1/3}$ 以上の特性データを必要とする
+（系~\ref{cor:rec-data}）．
+\item 所属質問を用いると，$r,k$ を固定した \citet{ky2017} の主学習器 $\mathrm{Primal}_{r,k}$ は，
+$M_n$ 上で収束するまでに $2^{\Omega(n)}$ のデータを必要とし（系~\ref{cor:primal-data}），
+\citet{ky2017} の双対学習器（$r\ge2$，$k\ge1$）は，一つの候補規則を反駁するのに長さ $3\cdot2^{n-1}-2$ のデータを必要とする
+（命題~\ref{prop:dual-refutation}）．
+\end{itemize}
+
+\paragraph{観測器の細分化.}
+小さな例は一般的な型を示している．これを明示する．
+
+\begin{mainthm}[文脈と核の双対性；定理~\ref{thm:duality}，
+命題~\ref{prop:strict-context}--\ref{prop:weak-not-preserved}]
+$s\preceq h$（$h$ は $s$ を細分化する）かつ $k\ge1$ とする．このとき
+\[
+\tFKP{k}{vw}{h}\subseteq\tFKP{k}{vw}{s}\subseteq\FKP{k}{vw},\qquad
+\FCP{k}{vw}\subseteq\tFCP{k}{vw}{s}\subseteq\tFCP{k}{vw}{h}
+\]
+であり，強 FCP についても同じ包含が成り立ち，型付きの極弱 FKP と弱 FKP は一致する．
+すべての $k\ge1$ について，自明な型付けと 2 元の指示型付けのあいだの型付きの包含は，両側とも真である．
+弱 FCP は単調でない．ある言語は，型なしでも自明な型付けについても弱 $2$-FCP を持つが，
+2 元の指示型付けについては型付き弱 FCP を持たない．
+\end{mainthm}
+
+\paragraph{既知のことと新しいこと.}
+\begin{itemize}[leftmargin=1.5em]
+\item 双対学習器と主学習器の型付き版は，型ファイバーをソートとする \citet{yoshinaka2015} のソート付き枠組みの例である．
+その収束定理（\citet[Theorems~3--6]{ky2017} の型付きの類似）は実質的に既知である（命題~\ref{prop:learners}）．
+\item 型付きの文脈集合 $C\Lc\cap F_t$ は \citet{ky2023} の拡張正則閉包に入る（注意~\ref{rem:exreg}）．
+したがって枠の側では，型付きの理論は彼らの理論の特殊な場合である．
+\item \citet[Sec.~8]{yoshinaka2015} は，異なるシグネチャについて学習可能なクラスをすでに比較している．
+定理~B の包含は閉包の計算の短い帰結である（補題~\ref{lem:star} と~\ref{lem:reduction}）．
+本稿が加えるのは，枠と見本の逆向きの振る舞いの明示，すべての $k$ についての真包含の証人，
+および弱 FCP の単調性の破れである．強 FKP は扱わない．
+\item 系~\ref{thm:uniform}（固定されたすべての観測器に対して一つの主学習器）は，
+\citet[Prop.~9.7]{kuriyama-tcs1}，合同的文法から $1$-FKP が従うという古典的な含意 \citep[Sec.~6.3]{yoshinaka2015}，
+および \citet[Thm.~6]{ky2017} から従う．
+\item 族 $L_n$，その文法，短い見本 $u_i$ は \citet[Sec.~6]{kuriyama-tcs1} のものである．
+核と文脈の隔たり（定理~A），捕獲補題，そこから得られるアルゴリズムの下界は，調べた限りでは新しい．
+\citet{ky2023} は枠の側だけを扱っており，見本に基づく提示についての同等の下界は見つからなかった．
+\item 指数的な特性データそれ自体は新しくない．
+\citet[Example~2]{clark-eyraud2007} は，線形の大きさの文法が指数長のただ一つの文字列を生成でき，
+そのときどの特性集合もその文字列を含まなければならないことを指摘している．
+また \citet{coste-nicolas2019} は，適切に厚いデータを仮定して，あるサブクラスについて多項式のデータを得ている．
+本稿の標的 $M_n$ は長さ $2n+1$ の語を含む．下界は語の長さからではなく，カテゴリーの名指し方から来る．
+\end{itemize}
+
+\paragraph{固定型付けの理論との関係.}
+\citet[Prop.~6.4]{kuriyama-tcs1} は，標識の観測器のもとで $L_n$ に指数的な特性データを強いるが，
+そこで $M_n$ は区別のための対の第二の成員として使われるにすぎない．
+系~\ref{cor:rec-data} は，同じ学習モデルで，$M_n$ 自身が指数的な特性データを必要とすることを示す．
+正例のみの学習では観測器は不可欠であり，細分化は助けになる．
+所属質問が使えるようになると，定理~B と系~\ref{thm:uniform} により，
+観測器は主学習器が同定する言語のクラスに何も付け加えない．
+
+\paragraph{範囲.}
+言語学的な例は数学的な概念を例示するためのものであり，自然言語について経験的な主張はしない．
+結果はすべて文脈自由文法についてのものであり，不連続な構成素（多重文脈自由文法）は未解決として残す．
+
+\paragraph{構成.}
+第~\ref{sec:prelim} 節で健全な前不動点と型付けを復習する．
+第~\ref{sec:typed} 節で型付き閉包を導入し，核の縮約補題を証明する．
+第~\ref{sec:deletion} 節で核と文脈の隔たりを証明する．
+第~\ref{sec:applications} 節でアルゴリズムの下界を導く．
+第~\ref{sec:duality} 節で観測器の細分化を扱う．
+第~\ref{sec:discussion} 節で言語学的な読みを論じ，
+第~\ref{sec:open} 節で未解決問題を挙げ，第~\ref{sec:conclusion} 節で結ぶ．
+
+%======================================================================
+\section{準備}\label{sec:prelim}
+
+\subsection{文脈，閉包，健全な前不動点}
+$\Sigma$ を有限アルファベット，$\eps$ を空語とし，$\Sigma^+=\Sigma^*\setminus\{\eps\}$ とする．$L\subseteq\Sigma^*$ を固定する．
+$C\subseteq\Sigma^*\times\Sigma^*$ と $K\subseteq\Sigma^*$ に対して
+\[
+C\Lc=\{x\in\Sigma^*: uxv\in L\ \forall(u,v)\in C\},\qquad
+K\R=\{(u,v): uKv\subseteq L\}
+\]
+とおく．したがって $\emptyset\Lc=\Sigma^*$，$\emptyset\R=\Sigma^*\times\Sigma^*$ である．
+$\D_L(x)=\{x\}\R$ と書く．対 $(\cdot\R,\cdot\Lc)$ はガロア接続である：$K\subseteq C\Lc\iff C\subseteq K\R$．
+よって $K\mapsto K\RL$ は閉包作用素であり，$K\R=K\RL{}\R$，かつ $Y\subseteq K\RL\iff K\R\subseteq Y\R$ である．
+これらの作用素は $L$ に依存する．複数の言語が現れるときは「$L$ に相対的に」という．
+
+\begin{lemma}[Clark の包含]\label{lem:clark}
+すべての $X,Y\subseteq\Sigma^*$ について $X\RL Y\RL\subseteq(XY)\RL$．
+したがって，終端語 $w_0,\dots,w_n$ と集合 $X_1,\dots,X_n$ について
+$w_0X_1\RL w_1\cdots X_n\RL w_n\subseteq(w_0X_1w_1\cdots X_nw_n)\RL$．
+\end{lemma}
+\begin{proof}
+$x\in X\RL$，$y\in Y\RL$，$(u,v)\in(XY)\R$ とする．すべての $x'\in X$ について $ux'Yv\subseteq L$，
+すなわち $(ux',v)\in Y\R$ なので，$ux'yv\in L$．よって $(u,yv)\in X\R$ であり，$uxyv\in L$．
+第二の主張は，終端語について $\{w\}\subseteq\{w\}\RL$ を用いて $n$ についての帰納法で従う．
+\end{proof}
+
+\emph{文脈自由文法}（CFG）とは，初期非終端記号の集合 $I\subseteq N$ を持つ $G=(N,\Sigma,P,I)$ のことである \citep{ky2017}．
+$A$ の終端収量を $L(G,A)$，$L(G)=\bigcup_{S\in I}L(G,S)$，
+$\mathcal C(G,A)=\{(u,v): \text{ある } S\in I \text{ について } S\Rightarrow^*_G uAv\}$ と書く．
+族 $(X_A)_{A\in N}$ が $G$ の\emph{前不動点}であるとは，すべての生成規則 $A\to w_0A_1w_1\cdots A_nw_n$ について
+$X_A\supseteq w_0X_{A_1}w_1\cdots X_{A_n}w_n$ が成り立つことをいう．
+さらに $\bigcup_{S\in I}X_S=L(G)$ が成り立つとき\emph{健全}（SPP）であるという．
+族 $(L(G,A))_A$ は最小の前不動点なので，どの前不動点についても $L(G,A)\subseteq X_A$ である．
+
+\begin{lemma}[到達文脈]\label{lem:reach}
+$(X_A)_A$ が $G$ の SPP で $(u,v)\in\mathcal C(G,A)$ ならば，$uX_Av\subseteq L(G)$．
+\end{lemma}
+\begin{proof}
+文形式 $\alpha=w_0B_1w_1\cdots B_mw_m$ に対して $X(\alpha)=w_0X_{B_1}w_1\cdots X_{B_m}w_m$ とおく．
+$\alpha\Rightarrow_G\beta$ が生成規則 $B_i\to\gamma$ によるなら，$X_{B_i}\supseteq X(\gamma)$ なので $X(\alpha)\supseteq X(\beta)$．
+よって $S\Rightarrow^*uAv$ から $X_S\supseteq uX_Av$ が得られ，健全性により $X_S\subseteq L(G)$．
+\end{proof}
+
+\citet[Sec.~3]{ky2017} にならい，$L=L(G)$ に相対的に，集合 $X$ が\emph{$k$-文脈生成}であるとは $|C|\le k$ なる $C$ で $X=C\Lc$ となることをいい，
+\emph{$k$-核生成}であるとは $|K|\le k$ なる $K$ で $X=K\RL$ となることをいう．
+文法 $G$ が\emph{強}（\emph{弱}）$k$-FCP を持つとは，$(L(G,A))_A$（それぞれ $(L(G,A)\RL)_A$）が $k$-文脈生成であることをいい，
+\emph{極弱} $k$-FCP を持つとは，$G$ が $k$-文脈生成の SPP を持つことをいう．
+FKP についても「文脈」を「核」に替えて同様に定める．
+対応する性質を持つ CFG がある言語のクラスを $\FCP{k}{vw}$，$\FCP{k}{w}$，$\FCP{k}{s}$（および $\FKP{k}{\cdot}$）と書く．
+$k$ を省いたときは，すべての $k\ge1$ にわたる和を表す．
+
+\begin{fact}[\citealp{ky2017}]\label{fact:ky}
+(a)（Prop.~10）$\FKP{k}{vw}=\FKP{k}{w}$．より正確には，$(K_A\RL)_A$ が $G$ の SPP ならば，
+生成規則 $A\to w$ $(w\in K_A)$ を加えると，$L(G')=L(G)$ かつ $L(G',A)\RL=K_A\RL$ となる $G'$ が得られる．
+(b)（Theorems~3--6）パラメータ $r,k$ の双対（主）学習器は，$L_*$ の正の提示と所属オラクルを与えられたとき，
+$L_*$ が右辺あたり高々 $r$ 個の非終端記号を持ち極弱 $k$-FCP（$k$-FKP）を持つ CFG を持つならば，$L_*$ の文法に収束する．
+また，収束先のどの文法も極弱 $k$-FCP（$k$-FKP）を持ち，その SPP は自身の非終端記号で添字づけられた $(C\Lc)_C$
+（それぞれ $(K\RL)_K$）である．
+(c)（Prop.~2，Thm.~14）$\FKP1{s}\setminus\FCP{}{vw}$，$\FCP1{s}\setminus\FKP{}{vw}$，$\FCP2{vw}\setminus\FCP{}{w}$
+のそれぞれに言語が存在する．
+\end{fact}
+
+\subsection{固定された有限半群の型付け}
+\emph{型付け}とは，有限半群への全射な半群の射 $s:\Sigma^+\to\mathsf S$ のことである．
+新しい単位元を加えた $\mathsf S^\sharp=\mathsf S\cup\{\one\}$ と，そのモノイドとしての拡張 $\widehat s:\Sigma^*\to\mathsf S^\sharp$，
+$\widehat s(\eps)=\one$ を考える \citep[Lemma~2.2]{kuriyama-tcs1}．
+$\mu\in\mathsf S^\sharp$ について\emph{ファイバー}を $F_\mu=\widehat s^{-1}(\mu)$ とする．
+したがって $F_{\one}=\{\eps\}$ であり，$\{F_\mu\}$ は $\Sigma^*$ を正則集合に分割する．
+自明な型付けを $s_0:\Sigma^+\to\{0\}$ とする．
+
+$x,y\in\Sigma^+$ について $h(x)=h(y)$ ならば $s(x)=s(y)$ となるとき，$h$ は $s$ を\emph{細分化する}といい，$s\preceq h$ と書く．
+このとき $\widehat s=\pi\circ\widehat h$ となるモノイドの射 $\pi:\mathsf H^\sharp\to\mathsf S^\sharp$ がただ一つ存在し
+（$\pi(h(w))=s(w)$，$\pi(\one)=\one$），$F^h_\nu\subseteq F^s_{\pi(\nu)}$ である．
+文字の集合 $Z\subseteq\Sigma$，$\emptyset\ne Z\ne\Sigma$ について，\emph{$Z$-指示型付け} $h_Z:\Sigma^+\to U_1=\{1,\zeta\}$
+（$\zeta$ は吸収元）は，$w$ が $Z$ の文字を含むとき，かつそのときに限り $w$ を $\zeta$ に送る．これは $s_0$ を細分化する．
+
+\begin{definition}[型付き文法]\label{def:typed}
+\emph{$s$-型付き CFG} とは，CFG と $\tau:N\to\mathsf S^\sharp$ の組であって，
+すべての生成規則 $A\to w_0A_1w_1\cdots A_nw_n$ が
+$\tau(A)=\widehat s(w_0)\tau(A_1)\widehat s(w_1)\cdots\tau(A_n)\widehat s(w_n)$ を満たすものをいう．
+\end{definition}
+導出についての帰納法により，すべての $A$ について $L(G,A)\subseteq F_{\tau(A)}$ である．
+$s\preceq h$ で $(G,\tau)$ が $h$-型付きならば，$(G,\pi\circ\tau)$ は $s$-型付きである．
+
+\begin{lemma}[文法の型付き細分化]\label{lem:product}
+$G=(N,\Sigma,P,I)$ を CFG，$h$ を型付けとし，$\sigma:N\to\mathsf S^\sharp$ は未定義（型なしの場合）か，
+$s\preceq h$ なる $s$ についての $G$ の $s$-型付けとする．
+$G^h$ を次で定める．非終端記号は $\nu\in\mathsf H^\sharp$ についての $(A,\nu)$（型付きの場合は $\pi(\nu)=\sigma(A)$ のもの），
+生成規則は $A\to w_0A_1w_1\cdots A_nw_n\in P$ と
+$\nu=\widehat h(w_0)\nu_1\widehat h(w_1)\cdots\nu_n\widehat h(w_n)$ についての
+$(A,\nu)\to w_0(A_1,\nu_1)w_1\cdots(A_n,\nu_n)w_n$，
+初期非終端記号は $S\in I$ についての $(S,\nu)$，そして $\tau(A,\nu)=\nu$．
+このとき $G^h$ は $h$-型付きであり，$L(G^h,(A,\nu))=L(G,A)\cap F^h_\nu$．特に $L(G^h)=L(G)$．
+\end{lemma}
+\begin{proof}
+型の整合性は構成から成り立つ（型付きの場合は $\pi(\nu)=\widehat s(w_0)\sigma(A_1)\cdots=\sigma(A)$ なので，制約は保たれる）．
+包含 $\subseteq$ は $G^h$ での導出についての帰納法による．
+$\supseteq$ については，最初の生成規則が $A\to w_0A_1\cdots A_nw_n$ で $x=w_0x_1\cdots x_nw_n$，$A_i\Rightarrow^* x_i$ である
+導出 $A\Rightarrow^+_G x$ についての帰納法による．$\nu_i=\widehat h(x_i)$ とおく（型付きの場合は $\pi(\nu_i)=\widehat s(x_i)=\sigma(A_i)$）．
+帰納法の仮定により $(A_i,\nu_i)\Rightarrow^*x_i$ であり，$\nu=\widehat h(x)$ の生成規則が存在する．
+\end{proof}
+
+\citet[Def.~2.1]{kuriyama-tcs1} にならい，$x,y\in\Sigma^+$ について $s(x)=s(y)$ かつ $\D_L(x)\cap\D_L(y)\ne\emptyset$ ならば
+$\D_L(x)=\D_L(y)$ となるとき，$L$ は \emph{$\sim_s$-代入可能}であるという．
+$\Ccf s$ は文脈自由で $\sim_s$-代入可能な言語のクラスである．
+$s=s_0$ のとき，これは \citet{clark-eyraud2007} の代入可能性の，非空の断片についての変種であり，\citet{kuriyama-tcs1} で用いられるものである．
+
+%======================================================================
+\section{型付き閉包と型付きの有限文脈性・有限核性}
+\label{sec:typed}
+
+$L$ と型付け $s$ を固定する．$\mu\in\mathsf S^\sharp$ と $K\subseteq F_\mu$ について，\emph{型付き閉包}を
+\[
+\cl_\mu(K)=K\RL\cap F_\mu
+\]
+で定める．
+
+\begin{lemma}[型付きガロア接続]\label{lem:typed-galois}
+$K\subseteq F_\mu$ と任意の $C$ について，$K\subseteq C\Lc\cap F_\mu\iff C\subseteq K\R$．
+よって $\cl_\mu$ は $F_\mu$ の部分集合の上の閉包作用素であり，その閉集合はちょうど $C\Lc\cap F_\mu$ の形の集合であり，
+$Y\subseteq F_\mu$ について $Y\subseteq\cl_\mu(K)\iff K\R\subseteq Y\R$ である．
+\end{lemma}
+\begin{proof}
+最初の同値は，型なしの同値を $K\subseteq F_\mu$ に制限したものである．
+$\cl_\mu$ の拡大性と単調性は $\cdot\RL$ から受け継がれる．
+冪等性については，$\cl_\mu(K)\R\supseteq K\RL{}\R=K\R$ かつ（$K\subseteq\cl_\mu(K)$ なので）$\cl_\mu(K)\R\subseteq K\R$ であるから，
+$\cl_\mu(\cl_\mu(K))=\cl_\mu(K)$．
+集合 $C\Lc\cap F_\mu$ は，$\cl_\mu(C\Lc\cap F_\mu)\subseteq C\Lc{}\RL\cap F_\mu=C\Lc\cap F_\mu$ なので閉じており，
+また $\cl_\mu(K)=(K\R)\Lc\cap F_\mu$ である．
+最後の主張：$Y\subseteq K\RL\iff K\R\subseteq Y\R$．
+\end{proof}
+
+次の等式は，\citet[Sec.~3, Eq.~(1)]{ky2017} の閉包と積の等式の直接の帰結を記録するものである．
+
+\begin{lemma}[文脈集合は閉包に鈍感]\label{lem:star}
+$w_0,\dots,w_n$ を終端語とし，$1\le i\le n$ について $X_i\subseteq Y_i\subseteq X_i\RL$ とする．このとき
+\[
+(w_0Y_1w_1\cdots Y_nw_n)\R=(w_0X_1w_1\cdots X_nw_n)\R .
+\]
+特に，$X_i\subseteq F_{\mu_i}$ のときの $Y_i=\cl_{\mu_i}(X_i)$ について，また $Y_i=X_i\RL$ について，これが成り立つ．
+\end{lemma}
+\begin{proof}
+$P_X=w_0X_1\cdots X_nw_n$，$P_Y=w_0Y_1\cdots Y_nw_n$ とおく．$P_X\subseteq P_Y$ から $P_Y\R\subseteq P_X\R$．
+補題~\ref{lem:clark} により $P_Y\subseteq w_0X_1\RL\cdots X_n\RL w_n\subseteq P_X\RL$ なので，
+$P_Y\R\supseteq P_X\RL{}\R=P_X\R$．
+\end{proof}
+
+\begin{proposition}[{\citealt[Prop.~1]{ky2017} の型付き版}]\label{prop:typed-prop1}
+$(G,\tau)$ を $s$-型付き，$L=L(G)$ とし，$(X_A)_A$ を $X_A\subseteq F_{\tau(A)}$ なる SPP とする．
+このとき $(\cl_{\tau(A)}(X_A))_A$ は SPP である．
+\end{proposition}
+\begin{proof}
+生成規則 $A\to w_0A_1\cdots A_nw_n$ について，集合 $P=w_0\cl(X_{A_1})\cdots\cl(X_{A_n})w_n$ は型の整合性により $F_{\tau(A)}$ に含まれ，
+補題~\ref{lem:star} と前不動点の性質により $P\R=(w_0X_{A_1}\cdots X_{A_n}w_n)\R\supseteq X_A\R$．
+補題~\ref{lem:typed-galois} により $P\subseteq\cl_{\tau(A)}(X_A)$．
+健全性：$S\in I$ について，$X_S\subseteq L$ から $(\eps,\eps)\in X_S\R$ が得られるので，$\cl(X_S)\subseteq X_S\RL\subseteq L$．
+逆向きの包含 $L=L(G)\subseteq\bigcup_I\cl(X_S)$ はどの前不動点についても成り立つ．
+\end{proof}
+
+\begin{definition}[型付き FCP と FKP]\label{def:typed-props}
+$(G,\tau)$ を $s$-型付きとし，$L(G)$ に相対的に考える．
+$X_A\subseteq F_{\tau(A)}$ なる族 $(X_A)_A$ が\emph{型付き $k$-文脈生成}であるとは，$|C_A|\le k$ なる $C_A$ で $X_A=C_A\Lc\cap F_{\tau(A)}$ となることをいい，
+\emph{型付き $k$-核生成}であるとは，$K_A\subseteq F_{\tau(A)}$，$|K_A|\le k$ なる $K_A$ で $X_A=\cl_{\tau(A)}(K_A)$ となることをいう
+（核は\emph{型について均質}である）．
+$(G,\tau)$ が型付きの強／弱／極弱 $k$-FCP（それぞれ $k$-FKP）を持つとは，
+$(L(G,A))_A$／$(\cl_{\tau(A)}(L(G,A)))_A$／ある SPP が型付き $k$-文脈生成（それぞれ $k$-核生成）であることをいう．
+対応する言語のクラス「$L$ はその性質を持つ $s$-型付き CFG を持つ」を
+$\tFCP{k}{s}{s}$，$\tFCP{k}{w}{s}$，$\tFCP{k}{vw}{s}$，および $\tFKP{k}{\cdot}{s}$ で表す．
+\end{definition}
+定義について二つ注意する．第一に，SPP をファイバーに制限しても SPP のままである（前不動点の各不等式の両辺をファイバーと交わればよい）．
+したがって型付きの SPP で失うものはない．
+第二に，$s_0$-型付きは型なしと完全に同じではない．$s_0$-型付き文法は $\eps$ を非空の収量から分ける．
+以下で型なしのクラスと比べるときは，そのことをすべて明示する．
+
+\begin{proposition}[型付き学習器；既知の例]\label{prop:learners}
+\emph{型付き双対学習器} $\mathrm{Dual}^s_{r,k}$ を，\citet{ky2017} の Algorithm~1 で次のようにしたものと定める．
+非終端記号は $(C,\mu)$，$C\subseteq J_i$，$1\le|C|\le k$，$\mu\in\mathsf S^\sharp$ で，表示は $C\Lc\cap F_\mu$，
+生成規則は型の整合するものだけ，妥当性の検査は
+$C_0\Lc\cap F_{\mu_0}\supseteq w_0(E_i\cap C_1\Lc\cap F_{\mu_1})w_1\cdots$，
+初期非終端記号は $E_i\cap C\Lc\cap F_\mu\subseteq L_*$ となる $(C,\mu)$ とする．
+\emph{型付き主学習器} $\mathrm{Primal}^s_{r,k}$ を，Algorithm~2 で，非終端記号を $(K,\mu)$，$K\subseteq E_i\cap F_\mu$，$1\le|K|\le k$，
+生成規則を型の整合するもの，検査を \citet{ky2017} のものとしたものと定める．
+このとき，型付きの極弱性質について \citet[Theorems~3--6]{ky2017} の類似が成り立つ．
+\end{proposition}
+\begin{proof}
+双対学習器については，\citet[Thms.~3,5]{ky2017} の証明が $C\Lc$ を $C\Lc\cap F_\mu$ に替えて通る．
+$F_\mu$ への所属は決定可能であり，$L_*$ のどの部分文字列もいずれ $E_i$ に入り，型の整合性は候補の生成規則に対する構文的なフィルタだからである．
+主学習器については，検査 $J_i\cap K_0\R\subseteq(w_0K_1w_1\cdots K_nw_n)\R$ はちょうど型なしの検査であり，
+補題~\ref{lem:star} と補題~\ref{lem:typed-galois} により，極限での条件 $K_0\R\subseteq(w_0K_1\cdots K_nw_n)\R$ は
+型付きの妥当性 $\cl_{\mu_0}(K_0)\supseteq w_0\cl_{\mu_1}(K_1)\cdots$ と同値である（補題~\ref{lem:reduction}）．
+すると \citet[Thms.~4,6]{ky2017} の証明が，次の境界の細部を加えて適用できる．
+まず標的の文法を刈り込む．空の核は，閉包を変えずに一元の収量で置き換えられる．
+空の文脈集合が $F_\mu$ を表すなら，終端の到達文脈 $c$ は補題~\ref{lem:reach} により $\{c\}\Lc\cap F_\mu=F_\mu$ を与える．
+したがって，$k\ge1$ を増やさずにすべての証人を非空にとれる．
+双対学習器については，空でない文脈集合を持つどの表示も $\Sub(L_*)$ に含まれるので，妥当でないどの規則や初期記号も，いずれ $E_i$ に現れる有限の反駁を持つ．
+主学習器については，空でない核の反駁文脈は $\Con(L_*)$ に属し，いずれ $J_i$ に現れる．
+有限の正の標本が標的のすべての証人と終端の組を含むようにとれる．この標本を含むリセットの後では，標的の文法の妥当な像が残り続ける．
+それ以上リセットがなければ，取り除かれうる規則と初期記号は有限個しかないので，安定する．
+これらの構成は \citet[Secs.~6,8]{yoshinaka2015} のソート付き枠組みと関係している．
+文字どおりのソートによる符号化では，出力のソートと，ファイバーからの恒等的な埋め込みも加える．
+極弱 SPP による特徴づけには，\citet{yoshinaka2015} の弱 FCP の定理だけでなく，上の \citet[Theorems~3--6]{ky2017} の適合を用いる．
+\end{proof}
+
+\begin{remark}[拡張正則閉包との関係]\label{rem:exreg}
+$R_\mu$ を $F_\mu$ の正則表現とし，その大きさを \citet[Sec.~3.1]{ky2023} の意味で $b_\mu$ とする．
+$1\le m\le k$ なる $C=\{(u_j,v_j):1\le j\le m\}$ について，表現
+$((u_1,v_1)^\lhd\cap\cdots\cap(u_m,v_m)^\lhd)\cap R_\mu$
+はガードされており，大きさは $2m+b_\mu$ である．
+空の文脈集合は，上と同様に刈り込みの後で到達文脈に置き換えられる．
+複数の初期記号は，それらへの一項の生成規則を持つ新しい開始記号で置き換え，新しい開始記号を $(\eps,\eps)^\lhd$ で解釈する．
+したがって，階数 $r$ の型付き極弱 $k$-FCP の提示は，\citet[Sec.~3.2, Lemmas~2,4, Theorem~6]{ky2023} の
+$\mathrm{EXREG}_{\max(r,1)}(\max(1,2k+\max_\mu b_\mu))$ への所属を与える．
+これは固定された $s$ についての定性的な包含である．ファイバーのオートマトンを正則表現に変換すると，大きさが多項式になるとは限らない．
+\end{remark}
+
+次の補題は，型付きの核の提示は，核が型について均質な型なしの核の提示にほかならないことを述べる．
+これは隔たり（第~\ref{sec:deletion} 節）と双対性（第~\ref{sec:duality} 節）の両方に用いる．
+
+\begin{lemma}[核の縮約補題]\label{lem:reduction}
+$(G,\tau)$ を $s$-型付き，$L=L(G)$ とし，各 $A\in N$ について $K_A\subseteq F_{\tau(A)}$ とする．
+このとき，$(\cl_{\tau(A)}(K_A))_A$ が $G$ の SPP であるのは，$(K_A\RL)_A$ が $G$ の SPP であるとき，かつそのときに限る．
+\end{lemma}
+\begin{proof}
+生成規則 $A\to w_0A_1w_1\cdots A_nw_n$ を固定し，$K_i=K_{A_i}$，
+$P_0=w_0K_1w_1\cdots K_nw_n$，$P_1=w_0\cl(K_1)w_1\cdots\cl(K_n)w_n$，$P_2=w_0K_1\RL w_1\cdots K_n\RL w_n$ と書く．
+補題~\ref{lem:star} により $P_0\R=P_1\R=P_2\R$．
+$P_1\subseteq F_{\tau(A)}$（型の整合性）なので，補題~\ref{lem:typed-galois} により
+$\cl_{\tau(A)}(K_A)\supseteq P_1\iff K_A\R\subseteq P_1\R$ であり，型なしのガロア接続により $K_A\RL\supseteq P_2\iff K_A\R\subseteq P_2\R$．
+よって二つの前不動点の条件は，生成規則ごとに一致する．
+
+健全性について．どちらの族も（一方がそうなら）前不動点であり，したがって $(L(G,A))_A$ を含むので，どちらの場合も $\bigcup_I X_S\supseteq L$．
+$S\in I$ について，$K_S\subseteq L$ ならば $(\eps,\eps)\in K_S\R$ であり $\cl(K_S)\subseteq K_S\RL\subseteq L$．
+逆に $K_S\subseteq\cl(K_S)$ かつ $K_S\subseteq K_S\RL$．
+よってどちらの健全性の条件も，すべての $S\in I$ について $K_S\subseteq L$ となることと同値である．
+\end{proof}
+
+このように，型付きの核の提示は，核が型について均質で文法が型について整合的な，型なしの核の提示にほかならない．
+型付けは制限以上の情報を何ももたらさない．
+
+%======================================================================
+\section{核と文脈の隔たり}\label{sec:deletion}
+
+この節で定理~A を証明する．言語は有限なので，どの主張も生成能力ではなく提示の大きさについてのものである．
+
+\citet[Sec.~6]{kuriyama-tcs1} の括弧付き倍化族を用いる．
+$\Gamma=\{\ta,\Lfl,\Rfl,\Lce,\Rce\}$ とし，$G_n$ を
+$S_0\to E_n$，$E_0\to\ta$，$E_i\to\Lfl E_{i-1}E_{i-1}\Rfl\mid\Lce E_{i-1}\Rce$ $(1\le i\le n)$ とし，$L_n=L(G_n)$ とする．
+$w^*_0=\ta$，$w^*_i=\Lfl w^*_{i-1}w^*_{i-1}\Rfl$（したがって $|w^*_i|=3\cdot2^i-2$），$u_i=\Lce^i\ta\Rce^i$，
+\[
+M_n=L_n\setminus\{w^*_n\}
+\]
+とおく．$s_U:\Gamma^+\to U_1$ を $\{\Lce,\Rce\}$ の指示型付けとする．
+このとき $w^*_i$ は $L(G_n,E_i)$ の型 $1$ のただ一つの語であり，$n\ge2$ について $M_n\in\Ccf{s_U}\setminus\Ccf{s_0}$ である
+\citep[Prop.~6.4]{kuriyama-tcs1}．
+
+\begin{lemma}[節点の構造]\label{lem:nodes}
+$m\in L_n$ とし，$y\in L(G_n,E_j)$ が $m$ に現れるとする．
+このとき，その出現は $m$ の（ただ一つの）導出木の $E_j$-節点の収量であり，
+それを任意の $y'\in L(G_n,E_j)$ で置き換えると $L_n$ の語が得られる．
+\end{lemma}
+\begin{proof}
+$L_n$ の語は 2 種類の括弧について正しく括弧付けされており，対応する括弧の対はどれも $E_i$-節点の対であり，導出木は括弧付けから決まる．
+$E_i$-節点の根から葉へのどの道もちょうど $i$ 個の括弧の対を含むので，$E_i$-節点の収量の入れ子の深さは $i$ である．
+$j=0$ なら $y=\ta$ は葉である．
+$j\ge1$ なら $y$ は釣り合っており，その最初の括弧は $y$ の中で最後の括弧と対応する（$y$ の真の非空接頭辞はどれも正の深さを持つ）．
+したがって $m$ の中でも対応し，その出現は入れ子の深さ $j$ の節点，すなわち $E_j$-節点の収量である．
+部分木を置き換えると $G_n$ の導出木が得られる．
+\end{proof}
+
+\begin{proposition}[上界]\label{prop:deletion-upper}
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $L_n$ に相対的に，$L(G_n,E_i)=\{u_i\}\RL=\{(\Lce^{n-i},\Rce^{n-i})\}\Lc$．
+よって $G_n$ は，長さ $\le2n+1$ の核と文脈で，強 $1$-FKP と強 $1$-FCP を持つ．
+\item $M_n$ に相対的に，次の $s_U$-型付き文法 $H_n$ は $M_n$ を生成し，
+文脈 $(\Lce^{n-i},\Rce^{n-i})$ $(i<n)$ と $(\eps,\eps)$ で型付き強 $1$-FCP を持つ．
+非終端記号は $(E_i,1)$ $(0\le i\le n-1)$ と $(E_i,\zeta)$ $(1\le i\le n)$，
+生成規則は $(E_0,1)\to\ta$，$(E_i,1)\to\Lfl(E_{i-1},1)(E_{i-1},1)\Rfl$ $(1\le i<n)$，
+$(\alpha,\beta)\ne(1,1)$ についての $(E_i,\zeta)\to\Lfl(E_{i-1},\alpha)(E_{i-1},\beta)\Rfl$，および $(E_i,\zeta)\to\Lce(E_{i-1},\alpha)\Rce$，
+初期非終端記号は $(E_n,\zeta)$ である．ここで $\zeta$ の規則は $1\le i\le n$ についてのもので，
+子が上に示した非終端記号の集合に属する例だけを含める．大きさは $O(n)$ である．
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a) $\Lce^{n-i}x\Rce^{n-i}\in L_n$ となるのは $x\in L(G_n,E_i)$ のとき，かつそのときに限る：
+先頭の $\Lce$ が $E_n\to\Lce E_{n-1}\Rce$ を強い，以下同様である．
+核について：$(u,v)\in\D(u_i)$ ならば，補題~\ref{lem:nodes} によりすべての $y\in L(G_n,E_i)$ について $uyv\in L_n$ なので，
+$\D(y)\supseteq\D(u_i)$ であり，
+$L(G_n,E_i)\subseteq\{u_i\}\RL\subseteq\{(\Lce^{n-i},\Rce^{n-i})\}\Lc=L(G_n,E_i)$．
+
+(b) 帰納法により $L(H_n,(E_i,1))=\{w^*_i\}$ かつ $L(H_n,(E_i,\zeta))=L(G_n,E_i)\setminus\{w^*_i\}$ なので，$L(H_n)=M_n$．
+$i<n$ については $\Lce^{n-i}x\Rce^{n-i}$ は $\Lce$ を含むので，それが $M_n$ に属するのは $L_n$ に属するとき，
+すなわち $x\in L(G_n,E_i)$ のとき，かつそのときに限る．$F_1$ と $F_\zeta$ と交わると二つの成分が得られる．
+$i=n$ については $\{(\eps,\eps)\}\Lc\cap F_\zeta=M_n$．
+\end{proof}
+
+\begin{lemma}[核の捕獲]\label{lem:capture}
+$n\ge2$，$z=\Lfl w^*_{n-1}u_{n-1}\Rfl\in M_n$，$r=1+|w^*_{n-1}|$ とし，したがって接頭辞は $R=z[1..r]=\Lfl w^*_{n-1}$ である．
+$G$ を $L(G)=M_n$ で，$M_n$ に相対的な SPP $(K_A\RL)_A$ を持つ CFG とする．
+$z$ のある導出木で，ラベル $B$ の節点が $R$ の中にある収量の出現 $x$ を持つならば，$x\in K_B$ である．
+\end{lemma}
+\begin{proof}
+$z=pxq$ と書く．このとき $(p,q)\in\mathcal C(G,B)$ であり，補題~\ref{lem:reach} により
+$pK_Bq\subseteq pK_B\RL q\subseteq M_n$．
+$x$ は $R$ の中にあるので，ある $q_0$ について $q=q_0u_{n-1}\Rfl$ である．$q'=q_0w^*_{n-1}\Rfl$ とおくと $pxq'=w^*_n\notin M_n$．
+$k\in K_B$ とする．$pkq\in M_n\subseteq L_n$ において，$u_{n-1}\in L(G_n,E_{n-1})$ の接尾辞の出現は $w^*_{n-1}$ で置き換えられる
+（補題~\ref{lem:nodes}）ので，$pkq'\in L_n$．そして $pkq'\notin M_n$ となるのは $pkq'=w^*_n$ のとき，すなわち $k=x$ のとき，かつそのときに限る．
+さて $x\in L(G,B)\subseteq K_B\RL$ なので，$K_B\R\subseteq\D(x)\not\ni(p,q')$．
+よって $(p,q')\notin K_B\R$：ある $k\in K_B$ について $pkq'\notin M_n$，すなわち $k=x$．
+\end{proof}
+
+\begin{theorem}[$M_n$ の核の下界]\label{thm:deletion}
+$n\ge2$ とし，$G=(N,\Gamma,P,I)$ を，$L(G)=M_n$ で，有限の核（濃度は任意）の SPP $(K_A\RL)_A$ を持つ任意の CFG とする．
+$\rho$ を右辺の記号の最大数とし，$\kappa=\max\{|k|:k\in\bigcup_AK_A\}$ とする．このとき
+\[
+\rho\,|N|\,\max(\kappa,1)\ \ge\ 3\cdot2^{n-1}-1 .
+\]
+同じ下界は，すべての型付け $s$ について，型付き極弱 FKP を持つ $M_n$ のすべての $s$-型付き CFG について成り立つ．
+\end{theorem}
+\begin{proof}
+（補題~\ref{lem:capture} の）$z$ の導出木 $T$ を，節点の数が最小のものにとる．
+$T$ の道の上で非終端記号は繰り返さない．
+$A$ がある節点とその真の子孫のラベルで，収量がそれぞれ $\alpha y\beta$ と $y$ ならば，
+$\alpha\beta\ne\eps$ からは無限個の語 $u\alpha^ty\beta^tv\in L(G)$ が得られて $M_n$ の有限性に反し，
+$\alpha\beta=\eps$ ならより小さな木がとれるからである．
+収量が $z$ の位置 $r$ と $r+1$ の両方を含む節点を\emph{鎖節点}と呼ぶ．鎖節点は根からの道をなすので，高々 $|N|$ 個である．
+各位置 $q\le r$ について，$q$ を含む最も深い鎖節点は，$q$ を右辺の終端記号として持つか，$q$ を含む鎖節点でない子を持つ．
+そのような子は $R$ の中にある．
+よって $R$ は高々 $\rho|N|$ 個の断片で覆われ，各断片は一つの終端記号か $R$ の中にある節点の収量である．
+補題~\ref{lem:capture} により，そのような収量は核に属するので，長さは $\kappa$ 以下である．
+したがって $r\le\rho|N|\max(\kappa,1)$ であり，$r=3\cdot2^{n-1}-1$．
+型付きの文法については補題~\ref{lem:reduction} を用いる．これは同じ文法の同じ核による型なしの SPP を与える．
+\end{proof}
+
+\begin{theorem}[核と文脈の隔たり]\label{thm:gap}
+$n\ge2$ とする．
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $M_n$ は，型付き強 $1$-FCP を持ち，非終端記号が $2n$ 個，生成規則が $6n-4$ 個，$\rho\le4$，文脈の長さが $2n$ 以下の
+$s_U$-型付き CFG を持つ．
+\item SPP $(K_A\RL)_A$（$K_A$ は有限）を持つ $M_n$ のすべての CFG，および任意の型付け $s$ について型付き極弱 FKP を持つ $M_n$ のすべての $s$-型付き CFG は，
+$\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$ を満たす．
+\item $L_n$ は，強 $1$-FKP と強 $1$-FCP を持ち，核と文脈の長さが $2n+1$ 以下の，大きさ $O(n)$ の型なし CFG を持つ．
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(i) は命題~\ref{prop:deletion-upper}(b) である．文法 $H_n$ は，$n$ 個の非終端記号 $(E_i,1)$，$0\le i<n$ と，
+$n$ 個の非終端記号 $(E_i,\zeta)$，$1\le i\le n$ を持つ．左辺が型 $1$ の生成規則は $n$ 個である．
+$i\ge2$ の各 $(E_i,\zeta)$ は二項の生成規則を 3 個，一項の生成規則を 2 個持つ．
+一方 $(E_1,\zeta)$ は $\Lce(E_0,1)\Rce$ だけを持つ．$(E_0,\zeta)$ は存在せず，二項の対 $(1,1)$ は除かれるからである．
+よって生成規則は $n+5(n-1)+1=6n-4$ 個であり，$\Lfl XY\Rfl$ について $\rho\le4$．
+(ii) は定理~\ref{thm:deletion} である．(iii) は命題~\ref{prop:deletion-upper}(a) である．
+\end{proof}
+
+\begin{proposition}[天井のまわりの構成素]\label{prop:Mn-constituent}
+$1\le j<n$ とし，$z\in M_n$ を，$w^*_n$ の $E_j$-節点 $w^*_j$ の一つの出現を $v=\Lce w^*_{j-1}\Rce$ で置き換えて得られる語とする．
+したがって $z$ はちょうど一つの天井括弧の対を含む．
+$G$ を，文脈の長さ（語 $uv$ として）が $\ell$ 以下の SPP $(C_A\Lc)_A$ を持つ $M_n$ の CFG とする．
+このとき，$z$ のどの導出木のどの節点も，その収量 $x$ が $v$ のこの出現を含むならば，$|x|\ge|w^*_n|-\ell-|w^*_{j-1}|$ を満たす．
+\end{proposition}
+\begin{proof}
+節点のラベルを $A$，終端の文脈を $(p,q)$ とし，$x'$ を $x$ の中の $v$ の出現を $w^*_j$ で置き換えたものとする．このとき $px'q=w^*_n$．
+もし $x'\in C_A\Lc$ なら，補題~\ref{lem:reach} から $w^*_n\in M_n$ が得られてしまう．
+よってある $c\in C_A$ は $x$ を受け入れる（$x\in L(G,A)\subseteq C_A\Lc$ なので）が $x'$ を拒否する．
+さて $c[x]\in M_n\subseteq L_n$ であり，$c[x]$ における $v$ の出現は $E_j$-節点である（補題~\ref{lem:nodes}）ので，
+$c[x']\in L_n\setminus M_n$，すなわち $c[x']=w^*_n$．
+$|x'|=|x|+|w^*_j|-|v|=|x|+|w^*_{j-1}|$ なので，
+$|x|=|w^*_n|-|c|-|w^*_{j-1}|\ge|w^*_n|-\ell-|w^*_{j-1}|$ が得られる．
+\end{proof}
+
+定理~\ref{thm:gap} の削除が必要なのは，観測器なしの下界のためだけである．
+標識の観測器そのもののもとでは，$L_n$ の見本の側はすでに長い．これは定理~B に沿っている：観測器は見本の提示を難しくすることしかできない．
+
+\begin{proposition}[標識の観測器は $L_n$ の見本を長くする]
+\label{prop:Ln-sU}
+$n\ge1$ とする．型付き SPP $(\cl_{\tau(A)}(K_A))_A$（$K_A$ は有限）を持つ $L_n$ のどの $s_U$-型付き CFG $(G,\tau)$ も，
+$K_S=\{w^*_n\}$ となる初期非終端記号 $S$ を持つ．
+よって，見本の数にどんな上限 $k$ を課しても $\kappa\ge3\cdot2^n-2$ である．
+一方，$L_n$ は，型付き強 $1$-FCP を持ち文脈の長さが $2n$ 以下の，大きさ $O(n)$ の $s_U$-型付き CFG を持つ．
+\end{proposition}
+\begin{proof}
+$S$ を $w^*_n\in L(G,S)$ となる初期非終端記号とする．$w^*_n$ は標識を持たないので $\tau(S)=1$．
+収量は最小不動点をなすので $L(G,S)\subseteq X_S=\cl_1(K_S)$ であり，健全性から $X_S\subseteq L_n$．
+$w^*_n$ は $L_n$ の標識のないただ一つの語なので，$w^*_n\in X_S\subseteq L_n\cap F_1=\{w^*_n\}$ であり，
+$K_S\subseteq K_S\RL\cap F_1=X_S$．
+集合 $K_S$ は空でない．$L_n$ は有限なので，$u$ が $L_n$ のどの語よりも長い文脈 $(u,\eps)$ はどの語も受け入れず，
+したがって $\emptyset\RL=\emptyset$ かつ $\cl_1(\emptyset)=\emptyset$ だからである．
+よって $K_S=\{w^*_n\}$ であり，$\kappa\ge|w^*_n|=3\cdot2^n-2$．
+上界については，命題~\ref{prop:deletion-upper}(a) の文法 $G_n$ を補題~\ref{lem:product} で細分化する．
+定理~\ref{thm:duality}(c) の強い場合により，細分化した文法は同じ文脈で型付き強 $1$-FCP を持ち，
+非終端記号の数は高々 3 倍である．
+\end{proof}
+
+%======================================================================
+\section{学習アルゴリズムへの帰結}\label{sec:applications}
+
+定理~\ref{thm:gap} は文法についてのものである．この節では，これを三つの学習アルゴリズムに対する下界に変える．
+著者の正例からの再構成と，\citet{ky2017} の所属質問を用いる主学習器と双対学習器である．
+学習器は \citet{ky2017} の Algorithms~1 と~2 そのものである．Clark のもとの規則の検査とその修正については \citet{leiss2014} を参照．
+最後に，既知の定性的な帰結を述べる．
+
+\subsection{正例からの学習}
+
+定理~\ref{thm:deletion} は学習器ではなく文法についてのものなので，正例からの学習にも適用できる．
+\citet[Sec.~4.1]{kuriyama-tcs1} を思い出すと，$\mathsf{Rec}_s(K)$ は，有限の標本 $K$ の語のすべての非空因子 $x$ についての非終端記号 $[\![x]\!]$，
+開始記号 $\widehat S$，および次の生成規則を持つ：
+(B) $[\![xy]\!]\to[\![x]\!][\![y]\!]$，
+(U) $x\approx_{K,s}y$（すなわち $s(x)=s(y)$ かつ $\D_K(x)\cap\D_K(y)\ne\emptyset$．ここで $\D_K$ は $K$ に相対的な $\D$）なる $[\![x]\!]\to[\![y]\!]$，
+(L) $[\![a]\!]\to a$，
+(S) $w\in K\cap\Sigma^+$ についての $\widehat S\to[\![w]\!]$，および $\eps\in K$ なら $\widehat S\to\eps$．
+
+\begin{lemma}[再構成された文法は核の SPP を持つ]\label{lem:rec-kernel}
+$s$ を型付け，$L\in\Ccf s$ を $\eps\notin L$ なる空でない言語とし，$K\subseteq L$ を $L(\mathsf{Rec}_s(K))=L$ となる有限集合とする．
+$\|K\|=\sum_{w\in K}(|w|+1)$ と書く．
+$G_K$ を，$\mathsf{Rec}_s(K)$ から $\widehat S$ とその生成規則を除き，$w\in K$ なるすべての $[\![w]\!]$ を初期記号と宣言して得られる文法とする．
+このとき $L(G_K)=L$ であり，$L$ に相対的に，$(\{x\}\RL)_{[\![x]\!]}$ は $G_K$ の SPP である．
+よって $G_K$ は，$\rho_{G_K}\le2$，$|N_{G_K}|\le\|K\|^2/2$，$\kappa_{G_K}\le\max_{w\in K}|w|$ で極弱 $1$-FKP を持つ．
+\end{lemma}
+\begin{proof}
+$\widehat S$ はどの右辺にも現れず，$\eps\notin K$ なので，$L(G_K)=L(\mathsf{Rec}_s(K))=L$．
+前不動点であること：(B) については補題~\ref{lem:clark} により $\{xy\}\RL\supseteq\{x\}\RL\{y\}\RL$．
+(L) については $a\in\{a\}\RL$．
+(U) については，$K\subseteq L$ から $\D_K(x)\subseteq\D_L(x)$ が得られるので，$x$ と $y$ は等しい型と $L$ での共通の文脈を持ち，
+$\sim_s$-代入可能性から $\D_L(x)=\D_L(y)$，すなわち $\{x\}\RL=\{y\}\RL$．
+健全性：$w\in K\subseteq L$ について $(\eps,\eps)\in\D_L(w)$ なので $\{w\}\RL\subseteq L$．
+一方，初期非終端記号にわたる和は $L(G_K)=L$ を含む．
+大きさの評価：どの右辺も高々 2 個の記号を持つ．語 $w$ は高々 $|w|(|w|+1)/2$ 個の非空因子を持つ．核は観測された一つの因子である．
+\end{proof}
+
+\begin{corollary}[一語を削除した標的の特性データ]
+\label{cor:rec-data}
+$n\ge2$ とし，$s$ を $M_n\in\Ccf s$ となる任意の型付けとする．
+たとえば $s_U$ \citep[Prop.~6.4(iv)]{kuriyama-tcs1}，または $s_U$ の任意の細分化 $h$ である
+（$h$-型が等しければ $s_U$-型も等しいので，$\sim_{s_U}$-代入可能性から $\sim_h$-代入可能性が従う）．
+$K\subseteq M_n$ が有限で $L(\mathsf{Rec}_s(K))=M_n$ ならば
+\[
+\|K\|^3\ \ge\ 3\cdot2^{n-1}-1 .
+\]
+特に，\citet[Sec.~2]{kuriyama-tcs1} の意味での $\mathsf{Rec}_s$ に対する $M_n$ のどの特性標本 $\mathcal F$ も
+$\|\mathcal F\|\ge(3\cdot2^{n-1}-1)^{1/3}$ を満たす．
+\end{corollary}
+\begin{proof}
+補題~\ref{lem:rec-kernel} の $G_K$ に定理~\ref{thm:deletion} を適用する：
+$3\cdot2^{n-1}-1\le\rho|N|\max(\kappa,1)\le2\cdot(\|K\|^2/2)\cdot\|K\|$．
+特性標本 $\mathcal F$ は $L(\mathsf{Rec}_s(\mathcal F))=M_n$ を満たす（$K=\mathcal F$ とおく）．
+\end{proof}
+
+\begin{remark}[固定型付けの論文との関係]\label{rem:rec-data}
+\citet[Prop.~6.4]{kuriyama-tcs1} は，$\mathsf{Rec}_{s_U}$ に対する $L_n$ のどの特性標本も $w^*_n$ を含むことを証明している．
+そこでは $M_n$ は区別のための対の第二の成員として現れるだけであり，$M_n$ 自身の下界は \citet{kuriyama-tcs1} には述べられていない．
+系~\ref{cor:rec-data} は，$M_n$ が学習可能になるすべての型付けについて，それを与える
+（$M_n\notin\Ccf{s_0}$ なので自明な型付けは使えない）．
+指数 $1/3$ は定理~\ref{thm:deletion} の粗い数え上げから来るもので，最適であるとは主張しない．
+$M_n$ のどの特性標本も因子 $w^*_{n-1}$ を含まなければならないかどうかは分からない．
+\end{remark}
+
+
+\subsection{所属質問を用いる学習器}
+
+\begin{corollary}[主学習器の収束時のデータ]\label{cor:primal-data}
+$\mathrm{Primal}_{r,k}$（任意の $s$ について型付き，または型なし）が $M_n$ の正の提示の上で段階 $i$ で収束するならば，
+それまでに見たデータ $D_i$ は
+\[
+\|D_i\|\ \ge\ \Bigl(\frac{3\cdot2^{n-1}-1}{2r+1}\Bigr)^{1/(2k+2)},
+\qquad \|D\|=\textstyle\sum_{d\in D}(|d|+1)
+\]
+を満たす．$r,k$ を固定すればこれは $2^{\Omega(n)}$ である．$k$ が $n$ とともに増える場合は，示した下界だけを主張する．
+\end{corollary}
+\begin{proof}
+極限の文法 $G=G_i$ は，その非終端記号で添字づけられた SPP $(K\RL)_K$ を持つ（事実~\ref{fact:ky}(b)，命題~\ref{prop:learners}）．
+その核は $D_i$ の高々 $k$ 個の部分文字列の集合なので，$\kappa\le\|D_i\|$ かつ $|N|\le|\Sub(D_i)|^k\le\|D_i\|^{2k}$．
+その右辺は高々 $r$ 個の非終端記号とデータの語の $r+1$ 個の因子からなるので，$\rho\le(r+1)\|D_i\|+r\le(2r+1)\|D_i\|$．
+定理~\ref{thm:deletion} を適用する．
+\end{proof}
+
+\begin{proposition}[双対学習器の反駁の下界]
+\label{prop:dual-refutation}
+$n\ge2$，$r\ge2$，$k\ge1$ とする．型なしの双対学習器 $\mathrm{Dual}_{r,k}$，または型付きの双対学習器 $\mathrm{Dual}^{s_U}_{r,k}$ が，
+$M_n$ の正の提示の上で段階 $i$ で収束するならば，$w^*_{n-1}$ は $D_i$ のある語の因子である．
+特に，あるデータは長さ $3\cdot2^{n-1}-2$ 以上を持つ．
+\end{proposition}
+\begin{proof}
+$t\le i$ を $J$ と $H$ が最後にリセットされた段階とする．したがって極限の文法は
+$J_t=\Con(D_t)$，$H_t=\Sub^{\le r+1}(D_t)$ から作られ，$E_i=\Sub(D_i)$ の上で検査される．
+\citet[Thm.~3]{ky2017} の証明（および命題~\ref{prop:learners}）により，極限の文法のどの生成規則も妥当なので，
+妥当でない候補の生成規則はどれも $E_i$ の上の検査で落ちなければならない．
+
+$M_n$ のどの語も $\Lce y\Rce$ か，$y,y'$ の少なくとも一方が型 $\zeta$ である $\Lfl yy'\Rfl$ である．
+$D_t$ のあるデータについて，$c=(\Lce,\Rce)$，$y'$ が型 $\zeta$ の $c=(\Lfl,y'\Rfl)$，または $y$ が型 $\zeta$ の $c=(\Lfl y,\Rfl)$ をとる．
+どの場合も $c\in J_t$ であり，$M_n$ に相対的に $\{c\}\Lc=L(G_n,E_{n-1})$．
+極限の文法は $\Lfl$ を含む語を生成するので，$D_t$ のあるデータは $\Lfl$ を含み，したがってそれより後の $\Rfl$ も含むので，
+$(\Lfl,\eps,\Rfl)\in H_t$．
+
+型なしの場合：候補 $\{(\eps,\eps)\}\to\Lfl\{c\}\{c\}\Rfl$ は，$w^*_n=\Lfl w^*_{n-1}w^*_{n-1}\Rfl\notin M_n=\{(\eps,\eps)\}\Lc$ なので妥当でない．
+これが $E_i$ の上の検査で落ちるのは，$\Lfl x_1x_2\Rfl\notin M_n$ となる $x_1,x_2\in E_i\cap\{c\}\Lc$，すなわち $x_1=x_2=w^*_{n-1}$ があるときに限る．
+
+型付きの場合：型の整合する候補 $(\{c\},\zeta)\to\Lfl(\{c\},1)(\{c\},\zeta)\Rfl$ は妥当でない．
+$\Lfl w^*_{n-1}y\Rfl$（$y\in L(G_n,E_{n-1})$ は型 $\zeta$）は入れ子の深さが $n$ なので $\{c\}\Lc$ に属さないからである．
+検査が落ちうるのは $x_1\in E_i\cap\{c\}\Lc\cap F_1=E_i\cap\{w^*_{n-1}\}$ のときだけである．
+\end{proof}
+
+\begin{remark}[削除族の読み方]\label{rem:deletion-table}
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & $L_n$ & $M_n=L_n\setminus\{w^*_n\}$\\
+\midrule
+正例のみ，自明な型付け & 多項式のデータ \citep{kuriyama-tcs1} & $\Ccf{s_0}$ に属さない\\
+正例のみ，$s_U$ & 指数的 \citep{kuriyama-tcs1} & $\|\mathcal F\|^3\ge3\cdot2^{n-1}-1$（系~\ref{cor:rec-data}）\\
+核の側，型なしまたは $s_0$（任意の $k$） & $O(n)$（命題~\ref{prop:deletion-upper}） & $2^{\Omega(n)}$（定理~\ref{thm:deletion}）\\
+核の側，$s_U$（任意の $k$） & $\kappa\ge3\cdot2^n-2$（命題~\ref{prop:Ln-sU}） & $2^{\Omega(n)}$（定理~\ref{thm:deletion}）\\
+型付きの文脈の側，$s_U$ & $O(n)$ & $O(n)$（命題~\ref{prop:deletion-upper}）\\
+型なしの文脈の側 & $O(n)$ & 未解決（未解決問題~\ref{op:Mn-context}）\\
+双対学習器，収束時のデータ & --- & $\ge3\cdot2^{n-1}-2$（命題~\ref{prop:dual-refutation}）\\
+\bottomrule
+\end{tabular}
+\end{center}
+提示の行の $O(n)$ は，文法の大きさと証人の最大長をそれぞれ別に評価したものである．文脈の証人をすべて明示的に列挙すると $O(n^2)$ 文字を使う．
+$M_n$ の核の下界は文法の大きさだけについてではなく $\rho|N|\max(\kappa,1)$ についてのものであり，すべての型付けについて成り立つ．
+一方 $L_n$ については，線形の核の提示は自明な型付け（または型付けなし）についてしか存在しない．
+最後の行は \citet{ky2017} の Algorithm~1 の，追加の刈り込みをしない候補文法全体についてのものであり，
+多項式の型付き文脈の提示が双対学習器に多項式のデータを与えるわけではないことを示す．
+障害は候補の生成規則を\emph{反駁する}費用であり，型付きのファイバー $\{c\}\Lc\cap F_1=\{w^*_{n-1}\}$ がそれを指数的にする．
+\end{remark}
+
+\subsection{固定されたすべての観測器に対する一つの主学習器}\label{sec:uniform}
+
+次の主張は \citet[Prop.~9.7]{kuriyama-tcs1} の帰結である（注意~\ref{rem:uniform-known}）．
+型付きの文脈と核の SPP を明示するので，直接の証明を含めておく．
+
+\begin{corollary}[一様な質問学習可能性；実質的に既知]\label{thm:uniform}
+$s$ を任意の型付けとし，$L\in\Ccf s$ とする．このとき次が成り立つ．
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $L$ は，右辺あたり高々 2 個の非終端記号を持ち，型付き極弱 $1$-FKP と型付き極弱 $1$-FCP を持つ $s$-型付き CFG を持つ．
+\item $L$ は，右辺あたり高々 2 個の非終端記号を持ち，弱 $1$-FKP を持つ（型なしの）CFG を持つ．
+\item \citet{ky2017} の型なしの主学習器 $\mathrm{Primal}_{2,1}$ は，所属オラクルのもとで，$L$ のすべての正の提示の上で $L$ の文法に収束する．
+\end{enumerate}
+特に，一つの学習器が $\bigcup_s\Ccf s$ のすべての言語を同定する．
+\end{corollary}
+\begin{proof}
+(i) 右辺が高々 2 個の非終端記号を含む $L$ の任意の CFG をとり（二分化する），補題~\ref{lem:product} の $s$-型付き細分化 $G^s$ を作り，
+無用な非終端記号を除く．これは言語と階数を保つ．
+残ったどの $X=(A,\mu)$ も収量 $w_X$ と終端の到達文脈 $c_X$ を持つ．
+$(\cl_\mu(\{w_X\}))_X$ が SPP であり，$\cl_\mu(\{w_X\})=\{c_X\}\Lc\cap F_\mu$ であることを示す．
+
+まず，$c_X\in\D(x)$ なる $x\in F_\mu$ について $\D(x)=\D(w_X)$ である．
+$\mu=\one$ なら $x=w_X=\eps$ であり，そうでなければ $s(x)=s(w_X)=\mu$ なので $\sim_s$-代入可能性が適用できるからである．
+よって $\{c_X\}\Lc\cap F_\mu=\{x\in F_\mu:\D(x)=\D(w_X)\}=\cl_\mu(\{w_X\})$
+（中央の集合は，$\D(x)\supseteq\D(w_X)\ni c_X$ なので右の集合を含み，左の集合に含まれることは自明である）．
+次に，生成規則 $X\to w_0X_1w_1\cdots X_nw_n$ について，語 $w'=w_0w_{X_1}w_1\cdots w_{X_n}w_n$ は $X$ の収量なので，
+$w_X$ と $c_X$ を共有し，$\D(w')=\D(w_X)$．
+補題~\ref{lem:star} により $(w_0\cl(\{w_{X_1}\})\cdots w_n)\R=\D(w')=\{w_X\}\R$ であり，
+補題~\ref{lem:typed-galois} が前不動点の不等式を与える．
+最後に，初期記号の $X$ について $w_X\in L$ なので $(\eps,\eps)\in\D(w_X)$ であり，$\cl(\{w_X\})\subseteq L$．
+
+(ii) 補題~\ref{lem:reduction} により，$(\{w_X\}\RL)_X$ は同じ文法の型なしの SPP である．
+事実~\ref{fact:ky}(a) は終端の生成規則 $X\to w_X$ を加えるが，これは階数を増やさず，弱 $1$-FKP を与える．
+
+(iii) $r=2$，$k=1$ での事実~\ref{fact:ky}(b) である．
+\end{proof}
+
+\begin{remark}[既知のことと新しいこと]\label{rem:uniform-known}
+$s=s_0$ については，代入可能な CFL が $1$-FKP を持つことは古典的である
+（代入可能な言語は合同的文法を持ち，合同的文法は $1$-FKP を持つ．
+\citealp[Sec.~6.3]{yoshinaka2015} と \citealp[Sec.~6.5.3]{clark-yoshinaka2016} を参照）．
+固定された\emph{すべての}観測器についての同じ結論は，すでに \citet[Prop.~9.7]{kuriyama-tcs1} から従う：
+その証明を二分化された文法から始め，合同的な細分化を得て，古典的な $1$-FKP の含意を用い，\citet[Theorem~6]{ky2017} を適用すればよい．
+上の証明は，対応する型付きの文脈と核の SPP を明示的に与える．
+和 $\bigcup_s\Ccf s$ はすべての正則言語を含む \citep[Prop.~3.1]{kuriyama-tcs1} ので，Gold の定理により正例だけからは同定できない．
+所属質問があれば観測器は不要になる．
+$\bigcup_s\Ccf s$ の $\FKP1{w}$ への包含は真である．
+命題~\ref{prop:strict-context} の言語は強 $1$-FKP を持つ \citep[Prop.~2(i)]{ky2017} が，どの $\Ccf s$ にも属さない．
+どの $s$ についても $s(a^i)=s(a^j)$ となる $1\le i<j$ があり，
+語 $a^i,a^j$ はすべての $\ell\ge j$ について文脈 $(a^\ell,db^\ell)$ を共有する（$\ell+i$ と $\ell+j$ はともに $[\ell,2\ell]$ に入る）が，
+$(\eps,cb^{2i})$ を許すのは $a^i$ だけだからである．
+ここではデータの量については何も述べない．\citet{kuriyama-tcs1} の正例の特性データの評価は別の学習器についてのものである．
+\end{remark}
+
+%======================================================================
+\section{観測器の細分化}
+\label{sec:duality}
+
+次の観察は，\citet[Sec.~4]{ky2017} の型なしの規則の妥当性の同値と，制限したガロア接続から従う．
+\begin{theorem}[文脈と核の双対性]\label{thm:duality}
+$s\preceq h$ を $\Sigma^+$ の型付けとし，$k\ge1$ とする．
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $\tFKP{k}{vw}{s}=\tFKP{k}{w}{s}$．
+\item $\tFKP{k}{vw}{h}\subseteq\tFKP{k}{vw}{s}\subseteq\FKP{k}{vw}=\FKP{k}{w}$．
+\item $\FCP{k}{vw}\subseteq\tFCP{k}{vw}{s}\subseteq\tFCP{k}{vw}{h}$ かつ
+$\FCP{k}{s}\subseteq\tFCP{k}{s}{s}\subseteq\tFCP{k}{s}{h}$．
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(a) 包含 $\supseteq$ は自明である：命題~\ref{prop:typed-prop1} により $\cl_\mu(L(G,A))$ は SPP をなす．
+$\subseteq$ について，$(G,\tau)$ が型付き SPP $(\cl_{\tau(A)}(K_A))_A$ を持つとする．
+補題~\ref{lem:reduction} により $(K_A\RL)_A$ は型なしの SPP である．
+$w\in K_A$ について $A\to w$ を加えて得られる事実~\ref{fact:ky}(a) の文法 $G'$ は，
+$K_A\subseteq F_{\tau(A)}$ なので依然として $s$-型付きであり，$L(G')=L$ かつ $L(G',A)\RL=K_A\RL$ を満たす．
+$F_{\tau(A)}$ と交わると $\cl_{\tau(A)}(L(G',A))=\cl_{\tau(A)}(K_A)$ が得られる．
+
+(b) $(G,\tau)$ を型付き SPP $(\cl^h_{\tau(A)}(K_A))_A$ を持つ $h$-型付き文法とする．
+（$h$ についての）補題~\ref{lem:reduction} により $(K_A\RL)_A$ は型なしの SPP である．これは $\FKP{k}{vw}$ への所属を示す．
+さらに $(G,\pi\circ\tau)$ は $s$-型付きで，$K_A\subseteq F^h_{\tau(A)}\subseteq F^s_{\pi\tau(A)}$ なので，
+（$s$ についての）補題~\ref{lem:reduction} は同じ型なしの SPP を型付き SPP $(\cl^s_{\pi\tau(A)}(K_A))_A$ に変える．
+等号は事実~\ref{fact:ky}(a) である．
+
+(c) $G$ を，SPP $(X_A)_A$，$X_A=C_A\Lc$ または $X_A=C_A\Lc\cap F^s_{\sigma(A)}$ を持つ型なしまたは $s$-型付きの文法とする．
+補題~\ref{lem:product} のように $G^h$ を作り，$X_{(A,\nu)}=X_A\cap F^h_\nu=C_A\Lc\cap F^h_\nu$ とおく
+（型付きの場合は $F^h_\nu\subseteq F^s_{\sigma(A)}$）．
+$G^h$ の生成規則について，右辺 $w_0X_{(A_1,\nu_1)}\cdots w_n$ は $X_A$ に含まれ（$G$ の前不動点），$F^h_\nu$ にも含まれる（型は掛け合わされる）ので，
+この族は前不動点である．$\bigcup_\nu X_S\cap F^h_\nu=X_S$ なので健全である．
+$X_A=L(G,A)$ として同じ計算を行い補題~\ref{lem:product} を用いると，強い場合が得られる．
+\end{proof}
+
+\begin{corollary}[観測器は主学習器のクラスを決して広げない]\label{cor:primal-dominated}
+型付きの主学習器 $\mathrm{Primal}^s_{r,k}$ が $L_*$ 上で正しい文法に収束するならば，型なしの学習器 $\mathrm{Primal}_{r,k}$ もそうである．
+$\mathrm{Primal}^h_{r,k}$ が $L_*$ 上で収束し $s\preceq h$ ならば，$\mathrm{Primal}^s_{r,k}$ もそうである．
+\end{corollary}
+\begin{proof}
+命題~\ref{prop:learners} により，$\mathrm{Primal}^h_{r,k}$ の収束から，右辺あたり高々 $r$ 個の非終端記号を持ち型付き極弱 $k$-FKP を持つ $h$-型付き文法が得られる．
+定理~\ref{thm:duality}(b) の証明は文法を変えないので階数の上限は保たれ，事実~\ref{fact:ky}(b) または命題~\ref{prop:learners} が適用できる．
+\end{proof}
+この系は同定される言語のクラスを比べるものであり，学習器がどれだけ速く収束するか，どれだけのデータを使うかについては何も言わない．
+
+\subsection{2 元の半束での真包含}\label{sec:strict}
+
+定理~\ref{thm:duality} の型付きの包含は，すべての $k\ge1$ について，すでに $s_0$ と $U_1$ への指示型付けのあいだで真である．
+以下の証人は，一方の側で強 $1$-性質を持ち，他方の側でどの $k$ についても極弱の性質を持たない．
+型なしのクラスと $s_0$-型付きのクラスのあいだの端点の包含については，真であるとは主張しない．
+
+\begin{proposition}[観測は文脈を助ける]\label{prop:strict-context}
+$\Sigma=\{a,b,c,d\}$ とし，
+$L=\{a^mcb^{2m}:m\ge0\}\cup\{a^mdb^n:n\le m\le2n\}$
+（\citealp[Prop.~2(i)]{ky2017}）とする．このとき $L\in\tFCP1{s}{h_{\{c\}}}$ だが，
+$L\notin\FCP{}{vw}$ かつ $L\notin\tFCP{}{vw}{s_0}$．
+\end{proposition}
+\begin{proof}
+$h=h_{\{c\}}$ とする．非終端記号 $S_1$（型 $\zeta$）と $S_2$（型 $1$）をともに初期記号とし，
+生成規則 $S_1\to aS_1bb\mid c$，$S_2\to aS_2b\mid aaS_2b\mid d$ を持つ文法は $h$-型付きであり，
+$L(G,S_1)=L\cap F_\zeta$，$L(G,S_2)=L\cap F_1$．$\{(\eps,\eps)\}\Lc=L$ なので，
+どちらの成分も $\{(\eps,\eps)\}\Lc\cap F_\mu$ であり，$G$ は型付き強 $1$-FCP を持つ．
+
+$L\notin\FCP{}{vw}$ は \citet[Prop.~2(i)]{ky2017} である．$s_0$-型付きの文法も除外されることを見るため，その議論を振り返る．
+$G'$ を $L$ の任意の CFG（型付きでもそうでなくても）とする．
+$p$ を大きくとり $a^pcb^{2p}$ にポンプの補題を適用すると，初期記号 $S$，非終端記号 $E$，
+$S\Rightarrow^*a^{i_1}Eb^{j_1}$，$i+j>0$ なる $E\Rightarrow^+a^iEb^{j}$，および $E\Rightarrow^*a^{i_2}cb^{j_2}$ が得られる
+（ポンプされる因子は $c$ を含むことができず，両方が $c$ の同じ側にあることもできない）．
+すべての $t$ について $a^{i_1+ti+i_2}cb^{j_1+tj+j_2}\in L$ なので $j=2i$，したがって $i>0$．
+ある SPP の $E$-成分が，$C_E$ は有限，$F\in\{\Sigma^*,\Sigma^+\}$ として $X_E=C_E\Lc\cap F$ であるとする．
+$a^{i_2}cb^{j_2}\in X_E$ なので，どの $(u,v)\in C_E$ も，$n\ge i_2$，$2n\ge j_2$ なる $(a^{n-i_2},b^{2n-j_2})$ である．
+そのようなすべての $n$ について $m\ge2n$ となる $m$ を選ぶと，空でない語 $a^{3m}db^{2m}$ は $C_E$ のすべての文脈を満たす
+（$a$ の個数 $3m+n-i_2$ と $b$ の個数 $2m+2n-j_2$ は $b\le a\le2b$ を満たす）ので，$X_E$ に属する．
+到達文脈 $(a^{i_1+ti},b^{j_1+2ti})$ に補題~\ref{lem:reach} を適用すると，すべての $t$ について $a^{i_1+ti+3m}db^{j_1+2ti+2m}\in L$ となり，
+すべての $t$ について $j_1+2ti+2m\le i_1+ti+3m$ が強いられるが，これは $i>0$ に反する．
+\end{proof}
+
+\begin{proposition}[観測は核に不利に働く]\label{prop:strict-kernel}
+$\Sigma=\{a,b,y,z\}$，$P=\{a^mb^n:m\ne n\}$ とし，
+\[
+L_K=P\cup\{a^mzb^n:n\le m\}\cup\{a^myb^n:m\le n\}
+\]
+とする．このとき $L_K\in\tFKP1{s}{s_0}\subseteq\FKP1{vw}$ だが，すべての $k$ について $L_K\notin\tFKP{k}{vw}{h_{\{y,z\}}}$．
+\end{proposition}
+\begin{proof}
+\emph{上界.}  $s_0$-型がともに $0$ の二つの初期非終端記号 $S_+,S_-$ と，生成規則
+\[
+S_+\to a\mid z\mid aS_+\mid aS_+b,\qquad
+S_-\to b\mid y\mid S_-b\mid aS_-b
+\]
+を用いる．それぞれの言語は
+\[
+Z=\{a^mb^n:m>n\}\cup\{a^mzb^n:m\ge n\},\qquad
+Y=\{a^mb^n:m<n\}\cup\{a^myb^n:m\le n\}
+\]
+であり，その和は $L_K$ である．$L_K$ に相対的に，
+$\D(z)=\{(a^p,b^q):p\ge q\}$，$\D(y)=\{(a^p,b^q):p\le q\}$．
+これらから $Z=\{z\}\RL$ と $Y=\{y\}\RL$ が得られる．
+空の文脈がまず閉包を $L_K$ に制限する．すべての非負の差 $p-q$ が，標識のない正の差と $z$ で標識された非負の差をちょうど保つ．
+負の差を持つ標識のない語は相殺でき，$y$ で標識されたどの語も十分大きな $p-q$ で除外される．
+$Y$ についての議論は対称である．よって生成される二つの成分はどちらも一元の核の閉包である．
+どちらも $\eps$ を含まないので，この文法は $s_0$-型付き強 $1$-FKP を持つ．
+
+\emph{下界.}  $h=h_{\{y,z\}}$ とし，$L_K$ の $h$-型付き $(G,\tau)$ が型付き SPP $(\cl_{\tau(A)}(K_A))_A$ を持つと仮定する．
+$P$ のどの語も型 $1$ を持つので，$P\subseteq\bigcup\{\cl_1(K_S):S\in I,\ \tau(S)=1\}$．
+そのような $S$ について，健全性により $K_S\subseteq F_1\cap\cl_1(K_S)\subseteq F_1\cap L_K=P$．
+$p$ を，有限個のそのような $K_S$ に属するすべての $a^mb^n$ にわたる $|m-n|$ の上界とする
+（それらがすべて空なら $p=0$．ここでは空の核の閉包は空である．$(ba,\eps)$ はどの語の文脈でもないからである）．
+$|i-j|>p$ ならば $(a^i,b^j)\in K_S\R$ である．$|m-n|\le p$ について $a^{i+m}b^{n+j}\in P$ だからである．
+$|m-n|>p$ なる語 $a^mb^n$ は $i-j=n-m$ なる文脈 $(a^i,b^j)$ を満たさないので，$K_S\RL$ に属さない．
+よって和は $P$ の語 $a^{p+1}$ を取りこぼし，矛盾である．
+この相殺の議論は \citet[Prop.~2(ii)]{ky2017} のものである．
+\end{proof}
+
+\begin{corollary}[核の失敗は観測器によらない]\label{cor:invariant}
+強 $1$-FCP を持つが極弱 FKP を持つ CFG を持たない言語 $\{a^mb^n:m\ne n\}$ \citep[Prop.~2(ii)]{ky2017} は，
+すべての型付け $s$ について，型付き極弱 FKP を持つ $s$-型付き CFG を持たない．
+\end{corollary}
+\begin{proof}
+定理~\ref{thm:duality}(b)．
+\end{proof}
+弱 FCP は，定理~\ref{thm:duality}(c) の強 FCP とも極弱 FCP とも異なる振る舞いをする：細分化について単調でない．
+\citet[Secs.~5--6]{ky2017} の言語を用いる．$\Sigma_0=\{a,b,c,d,e,f,\#,\$,\%\}$ の上で，$P=\{a,b,\#\}^*$，$Z=\{a,b\}^*$ として
+\begin{align*}
+L_1&=\{v\$z: v\in P,\ z=(\mathrm{erase}_\#(v))^R\},\\
+L_2&=\{wyc^id^ie^jz: w,z\in Z,\ y\in(\#Z)^*,\ i,j\ge0,\ |w|_a\ge|w|_b\},\\
+L_3&=\{wyc^id^je^jz: w,z\in Z,\ y\in(\#Z)^*,\ i,j\ge0,\ |w|_a\le|w|_b\},\\
+L_4&=\{v\$zc^k\%f^l: v\in P,\ z\in Z,\ k,l\ge0\},\\
+L_5&=\{vc^id^ie^jzc^k\%f^l: v\in P,\ z\in Z,\ i,j,k,l\ge0,\ j\ne k\}
+\end{align*}
+とし，$L=L_1\cup L_2\cup L_3$，$L'=L\cup L_4\cup L_5$ とする．
+また $J_0=\{vc^id^ie^iz: v\in P,\ z\in Z,\ i\ge0\}$ とおく．
+$P\subseteq L_2\cup L_3$ かつ $J_0\subseteq L_2\cup L_3$ に注意する．
+
+\begin{proposition}[弱 FCP は単調でない]\label{prop:weak-not-preserved}
+$L_1^@$ を，$L_1$ の $\$$ を新しい文字 $@$ に置き換えたものとし，
+$\Sigma=\Sigma_0\cup\{@\}$，$L^+=L'\cup L_1^@$，$h=h_{\{@\}}$ とおく．したがって $s_0\preceq h$ である．このとき：
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $L^+\in\FCP2{w}$ かつ $L^+\in\tFCP2{w}{s_0}$；
+\item すべての $k$ について $L^+\notin\tFCP{k}{w}{h}$．
+\end{enumerate}
+よって，すべての $k\ge2$ について $\tFCP{k}{w}{s_0}\not\subseteq\tFCP{k}{w}{h}$．
+\end{proposition}
+\begin{proof}
+$G^+$ を，\citet[Lemma~12]{ky2017} の文法 $G'$ に生成規則 $S_1\to@$ を加えたものとする．
+$S_1$ は自身の右辺以外のどの右辺にも現れないので，$L(G^+,S_1)=L_1\cup L_1^@$ であり，他の非終端記号はどれも言語を保ち，$L(G^+)=L^+$．
+特に断らない限り，閉包はすべて $L^+$ に相対的である．
+$L^+$ の語についての次の三つの事実を用いる：$c$，$d$ または $e$ を含む語は $L_1\cup L_1^@$ に属さない．
+$a$，$b$，$d$ または $e$ で終わる語は $L_4\cup L_5$ に属さない．$d$ を含む語は $L_1\cup L_1^@\cup L_4$ に属さない．
+
+\emph{主張.}  $Y\in\{L_2,L_3\}$ について，$u(Y\setminus\{\eps\})v\subseteq L^+$ となるどの文脈 $(u,v)$ も
+$u\in P$，$v\in Z$，$uv\in L^+$ を満たす．
+特に $(Y\setminus\{\eps\})\R=Y\R$ であり，すべての $(u,v)\in Y\R$ について $uJ_0v\subseteq J_0$．
+
+$Y=L_2$ については語 $x_t=\#cde^ta\in L_2$（$t\ge0$）を用いる．
+各 $ux_tv$ は $d$ を含むので $L_2\cup L_3\cup L_5$ に属する．
+もし $v$ が $\%$ を含むなら，すべての $ux_tv$ は $L_5$ に属する．そこでは $x_t$ の $\#$ は $P$ に属する接頭辞の部分にあるので，
+$cd$ は $i=1$ のブロック $c^id^i$，$e^t$ は $j=t$ のブロック $e^j$ であり，$v=z'c^k\%f^l$ で $k$ は $v$ によって決まる．
+$t=k$ とすると $j\ne k$ に反する．
+$u$ に $\%$ があることは不可能である．$\%$ の後には $f$ しか来ないからである．
+よって $ux_tv\in L_2\cup L_3\subseteq P\,c^*d^*e^*Z$ であり，$x_t$ は $\#$ で始まり $a$ で終わるので，$u\in P$ かつ $v\in Z$．
+$Y=L_3$ については $x=\#cd^2e^2a\in L_3$ を用いる：
+$L_5$ では $\#$ の後の $c$ と二つの $d$ がブロック $c^id^i$ をなさなければならないが，それは不可能なので，同じ結論が従う．
+すると $uv\in P\subseteq L_2\cup L_3$ なので，$(u,v)$ は $\eps$ も受け入れる．反単調性からもう一方の包含が得られる．
+最後に $u(v'c^id^ie^iz')v=(uv')c^id^ie^i(z'v)\in J_0$．
+
+\emph{強く特徴づけられる非終端記号.}  $A\in\{Q,F,H,E,C,J\}$（それぞれ $A\in\{T,U,S_{4,5}\}$）について，
+\citet[proofs of Lemmas~8 and~12]{ky2017} は，$L$（それぞれ $L'$）に相対的に $|C_A|\le2$ なる $C_A$ で $L(G^+,A)=C_A\Lc$ を与える．
+$Q,F,H,E,C,J$ について挙げられた各文脈は $c$，$d$ または $e$ を含み，右成分が $d$ または $e$ で終わるので，その $L^+$ での完成は $L$ に属する．
+$T$，$U$，$S_{4,5}$ について挙げられた各文脈は $\%$ を含むか $f$ で終わるので，その $L^+$ での完成は $L_4\cup L_5$ に属する．
+よって $L^+$ に相対的に $L(G^+,A)=C_A\Lc$ である：これらの非終端記号は強く特徴づけられる．
+
+\emph{$S_2$ と $S_3$.}  $C_2=\{(\eps,\eps),(a\#,b)\}$ とおく．
+完成 $a\#xb\in L^+$ は $b$ で終わり最初のブロックが $a$ なので，$L_4\cup L_5$ にも $L_1\cup L_1^@$ にも属さない．
+よって $a\#xb\in L_2\cup L_3$ であり，$x$ は $\$,\%,f,@$ のどれも含まず，$x\in L^+$ から $x\in L$ が得られる．
+したがって $L^+$ に相対的な $C_2\Lc$ は $L$ に相対的な $C_2\Lc$ に等しく，それは $L_2\cup J_0$ である \citep[proof of Lemma~8]{ky2017}．
+$L_2\subseteq C_2\Lc$ なので $L_2\RL\subseteq C_2\Lc$．逆に $L_2\subseteq L_2\RL$ であり，主張により $J_0\subseteq L_2\RL$．
+よって $L(G^+,S_2)\RL=C_2\Lc$ であり，対称的に $L(G^+,S_3)\RL=\{(\eps,\eps),(b\#,a)\}\Lc=L_3\cup J_0$．
+
+\emph{$S_1$.}  $M$ を鏡映の文脈 $(w_1\#\cdots\#w_n,w_n^R\cdots w_1^R)$，$n\ge1$，$w_i\in Z$ の集合とする．
+$@$ を含む $L^+$ の語はちょうど $L_1^@$ の語なので，$L^+$ に相対的な $L_1^@$ の文脈は，$L_1^@$ に相対的な $L_1^@$ の文脈である．
+$@$ を $\$$ に名前を替え，$L$ に相対的に $L(G,S_1)\R=M$ であること \citep[proof of Lemma~8]{ky2017} を用いると，この集合は $M$ である．
+$L'$ に相対的には，$L_1$ の文脈は $M$ と文脈 $(v,zc^k\%f^l)$ からなり \citep[proof of Lemma~12]{ky2017}，
+後者は $L_1^@$ の文脈ではない．よって $L^+$ に相対的に $L(G^+,S_1)\R=M$．
+$@$ を含まない語については，$L^+$ に相対的な閉包 $M\Lc$ は $L'$ に相対的なものと一致し，
+それは $L_1\cup J_0=\{(a\#,a),(b\#,b)\}\Lc$ である \citep[proof of Lemma~12]{ky2017}．
+関わる文脈が $@$ を含まないからである．
+$@$ を含む語 $x$ が $M\Lc$ に属するのは $x\in L_1^@$ のとき，かつそのときに限り，
+$\{(a\#,a),(b\#,b)\}\Lc$ に属するのは $a\#xa,b\#xb\in L_1^@$ のとき，すなわちやはり $x\in L_1^@$ のとき，かつそのときに限る．
+よって $L(G^+,S_1)\RL=L_1\cup L_1^@\cup J_0=\{(a\#,a),(b\#,b)\}\Lc$．これで $L^+\in\FCP2{w}$ が示された．
+
+\emph{$s_0$-型付き文法.}  $G^+$ を $s_0$ について補題~\ref{lem:product} で細分化し，有用な非終端記号を残す．
+非終端記号 $(A,\one)$ は $\{\eps\}=\emptyset\Lc\cap F_{\one}$ を生成する．
+非終端記号 $(A,0)$ は $Y_A\setminus\{\eps\}$，$Y_A=L(G^+,A)$ を生成する．
+$A$ が強く特徴づけられるなら，$C_A\subseteq Y_A\R\subseteq(Y_A\setminus\{\eps\})\R$ と $Y_A\setminus\{\eps\}=C_A\Lc\cap\Sigma^+$ から
+$\cl_0(Y_A\setminus\{\eps\})=C_A\Lc\cap\Sigma^+$ が得られる．
+非終端記号 $S_1$ は空語を生成しないので，$\cl_0(Y_{S_1})=L(G^+,S_1)\RL\cap\Sigma^+$．
+$S_2,S_3$ については，主張から $(Y_A\setminus\{\eps\})\RL=Y_A\RL=C_A\Lc$ が得られるので，$\cl_0(Y_A\setminus\{\eps\})=C_A\Lc\cap\Sigma^+$．
+よって細分化した文法のどの非終端記号も高々 2 個の文脈で特徴づけられ，$L^+\in\tFCP2{w}{s_0}$．
+
+(b) $h$-型付きの $(G,\tau)$ が $L^+$ を生成し，型付き弱 FCP を持つと仮定する．
+$\zeta$ は吸収元なので，左辺の型が $1$ または $\one$ の生成規則は型 $\zeta$ の子を持たない．
+型 $\zeta$ の非終端記号と，その中の初期記号を除くと，$L(G_0)=L^+\cap\Sigma_0^*=L'$ となる CFG $G_0$ が残り，
+残ったどの非終端記号も言語を保つ．
+\citet[Lemma~13]{ky2017} の証明は $L'$ の任意の CFG に適用でき，Ogden の補題 \citep{ogden1968} を用いる．
+これを $G_0$ に適用すると，収量 $a^{m}\$a^{l}$ を持つ（型 $1$ の）非終端記号 $B$ と数 $k_1$ が得られ，
+$i>k_1$ について $L(G_0,B)\RL$ は $Pc^id^ie^iZ$ の語を含まない．
+一方，有限のどの $W\subseteq L(G_0,B)\R$ についても，$i>k_2$ なるすべての $i$ について $c^id^ie^i\in W\Lc$ となる $k_2$ がある
+（いずれも $L'$ に相対的）．
+よって有限のどの $W\subseteq L(G_0,B)\R$ も $L(G_0,B)\RL\cap\Sigma_0^+=W\Lc\cap\Sigma_0^+$ を満たさない．
+$L^+$ に相対的に，$L(G,B)$ のどの文脈も $\$$ を含む語を受け入れるので，$@$ を含まない．
+$@$ を含まない語の上では二つの言語は一致する．
+よって $L^+$ に相対的な $\cl_1(L(G,B))$ は，$L'$ に相対的な $L(G_0,B)\RL\cap\Sigma_0^+$ であり，
+$C$ が有限の型付き弱特徴づけ $C\Lc\cap F_1$ があれば，そのような $W=C$ が得られて矛盾する．
+
+最後の主張は，(a)，(b) と，$k\ge2$ について $\tFCP2{w}{s_0}\subseteq\tFCP{k}{w}{s_0}$ であることから従う．
+\end{proof}
+
+このように，強 FCP や極弱 FCP と違って，型付き弱 FCP は細分化について単調でなく，それはすでに $s_0$ と 2 元の指示型付けのあいだで起こる．
+$k=1$ の場合は未解決として残る（未解決問題~\ref{op:weak-fcp}）．
+
+これに対し，命題~\ref{prop:strict-context} の文脈の側の失敗は，1 ビットの観測で修復される．
+
+%======================================================================
+\section{考察：枠，見本，観測}\label{sec:discussion}
+
+\paragraph{見本が失敗する理由.}
+見本で名指されたカテゴリー $K\RL$ は，見本が共有するすべての枠に現れるもの全体を含む．
+したがってそれは分布について上に閉じている：表現に枠を加えても，その表現はカテゴリーにとどまるだけである．
+$M_n$ の認可条件は，部分がすべてほかの場所に現れるただ一つの構造 $w^*_n$ を取り除く．
+標識付きの構造の大きな標識のない部分 $x$ を含むカテゴリーは，$x$ を $w^*_n$ へ完成するものを除外しなければならず，
+補題~\ref{lem:capture} は，そうする唯一の方法が $x$ 自身を見本の中に挙げることであると示す．
+標識の観測器のもとで枠によって名指されたカテゴリーには，そのような列挙は要らない：
+$x$ の型が，$x$ に標識がないことをすでに記録しており，カテゴリーごとに長さ $2n$ 以下の一つの枠で足りる
+（命題~\ref{prop:deletion-upper}(b)）．型なしの枠で同じことができるかどうかは未解決である（未解決問題~\ref{op:Mn-context}）．
+
+\paragraph{形態論としての観測.}
+型付けは，形態的な標示や一致の素性が与えるような，表現の有限で合成的な分類である．
+例~\ref{ex:toy} では複数の観測器が一致の枠に取って代わり，$M_n$ では標識の観測器が，さもなければ構造全体を調べなければならない枠に取って代わる．
+定理~B はこの非対称性を精密にする．
+観測器を細分化すると，強い有限文脈性と極弱の有限文脈性で与えられるクラスは広がることしかできず，
+極弱（同値に，弱）の有限核性で与えられるクラスは狭まることしかできない．
+型付きの見本の提示は，均質な見本を持つ型なしの提示だからである（補題~\ref{lem:reduction}）．
+観測器は見本の提示を長くすることさえある：標識の観測器のもとでは，$L_n$ のどの見本の提示も $w^*_n$ を含む（命題~\ref{prop:Ln-sU}）．
+弱い有限文脈性はこの型に従わない：自明な型付けから 2 元の指示型付けへの細分化ですでに成り立たなくなりうる
+（命題~\ref{prop:weak-not-preserved}）．
+
+\paragraph{学習.}
+学習器にとって，枠と見本は双対のアプローチと主のアプローチに対応する．
+この隔たりは，観測された因子でカテゴリーを名指す主学習器と著者の正例からの再構成が，$M_n$ 上で指数的なデータを必要とする理由を説明する．
+双対学習器に多項式のデータを与えるわけではない：命題~\ref{prop:dual-refutation} は，候補の生成規則を反駁するのにも長い標識のない構造が必要になりうることを示す．
+
+\paragraph{限界.}
+族 $M_n$ は有限で人工的である．一つの認可条件を切り出したものであり，特定の構文のモデルではない．
+$M_n$ について型なしの枠も指数的な大きさを必要とするかどうかは未解決である（未解決問題~\ref{op:Mn-context}）．
+不連続な構成素，交差依存，\citet{kanazawa1998} の範疇文法は，本稿の文脈自由の設定の範囲外である．
+
+%======================================================================
+\section{未解決問題}\label{sec:open}
+
+\begin{openproblem}[弱 $1$-FCP の単調性]\label{op:weak-fcp}
+$s\preceq h$ について $\tFCP1{w}{s}\subseteq\tFCP1{w}{h}$ か．
+命題~\ref{prop:weak-not-preserved} は，$S_1$，$S_2$，$S_3$ に二つの文脈を用いて，すべての $k\ge2$ についてこの問いに否定的に答える．
+定理~\ref{thm:duality}(c) の証明が一般に通らないのは，$(L(G,A)\cap F^h_\nu)\RL\cap F^h_\nu$ が $L(G,A)\RL\cap F^h_\nu$ より小さくなりうるからである．
+有限言語は反例を与えない．どの有限言語も，すべての $s$ について，その語を列挙する型付き強 $1$-FCP の文法を持つからである．
+\end{openproblem}
+
+\begin{openproblem}[頑健な分離]\label{op:robust}
+大きさ 2 以上のアルファベット上のすべての型付け $s$ について $\tFCP{}{vw}{s}\ne\tFCP{}{w}{s}$ か．
+\citet[Thm.~14]{ky2017} の証人 $L'$ については，$\$$ の指示型付けが収量 $a^{m_6}\$a^{l_6}$ を，\citet[Lemma~13]{ky2017} の証明で用いられる語 $c^id^ie^i$ から分けるので，
+その証明はもはや適用できない．そのとき $L'$ が型付き弱 FCP を持つかどうかは分からない．
+頑健な証人は，たとえば冪等冪によって，すべての有限の型付けについて決定的な語を共通のファイバーに置かなければならない．
+\end{openproblem}
+
+\begin{openproblem}[$M_n$ の型なしの文脈]\label{op:Mn-context}
+極弱 FCP を持つ $M_n$ のどの型なし CFG も，大きさか文脈の長さが $2^{\Omega(n)}$ か．
+命題~\ref{prop:Mn-constituent} が我々の持つ唯一の部分的な結果である．それは構成素を制約するが，まだ提示の評価にはなっていない．
+\end{openproblem}
+
+\begin{openproblem}[濾過された核]
+任意の $K$ と表示 $K\RL\cap F_\mu$ を持つ非終端記号 $(K,\mu)$ を許し，型なしの検査で妥当性を確かめる．
+このクラスは $\FKP{k}{vw}$（核を変えずに補題~\ref{lem:product} の細分化をとる）と，$h_{\{y,z\}}$ についての命題~\ref{prop:strict-kernel} の $L_K$ を含む．
+包含は真か．
+\end{openproblem}
+
+\begin{openproblem}
+$\bigcup_s\Ccf s\subseteq\FCP{}{vw}$ か．型付き強 FKP は細分化について反単調か．
+固定型付けの理論のファンアウト 2 の境界が未解決のまま残る MCFG に，どの結果が拡張されるか．
+\end{openproblem}
+
+%======================================================================
+\section{結論}\label{sec:conclusion}
+固定された有限の観測器のもとで，カテゴリーを見本で名指すことは観測から利益を得られないが，枠で名指すことは利益を得られる．
+観測器を細分化しても，極弱の有限核性のクラスは決して広がらず，強い有限文脈性と極弱の有限文脈性のクラスは決して狭まらない．
+弱い有限文脈性は，すでに自明な型付けと 2 元の指示型付けのあいだで例外であり，強い有限核性は扱っていない．
+大域的な認可条件はこの違いを指数的にする．標識の観測器のもとでの線形の大きさの枠の提示に対し，どの観測器のもとでも見本の提示は指数的である．
+この表示の隔たりはどの学習モデルにもよらず，正例からの再構成と，所属質問を用いる分布学習器のデータを下から抑える．
+隔たりの型なしの枠の側，弱い有限文脈性の文脈一つの場合，不連続な構成素は未解決として残る．
+
+\section*{競合する利益の申告}
+著者に申告すべき競合する利益はない．
+
+\section*{データの利用可能性}
+証明は経験的なデータセットを用いない．有限言語は定義から生成される．有限の検査を再現するスクリプトは
+\url{https://github.com/growupkuriyama-hub/Papers/tree/main/09_typed-fcp-fkp/tools}
+で入手できる．
+
+\section*{研究と原稿作成の過程における生成AIおよびAI支援技術の利用の申告}
+この研究では生成AIツールを実質的に用いた．著者が研究上の問いを立て，方向を選んだ．
+Anthropic の Claude を，結果の探索，証明・例・原稿本文の下書き，および有限の場合の網羅的な検査に用いるプログラムの作成に用いた．
+OpenAI の ChatGPT を，原稿の 2 回の独立した査読に用いた．これらの査読は，修正，命題~\ref{prop:weak-not-preserved} とその型付き版，
+および命題~\ref{prop:Ln-sU} につながった．
+著者は AI が生成した証明，計算，本文を検討し，原稿を編集し，その内容に全責任を負う．AI ツールを著者として挙げてはいない．
+
+\section*{謝辞}
+指導，励まし，関連文献についての助力に対し，金澤誠氏と吉仲亮氏に感謝する．
+
+\begin{thebibliography}{99}
+
+\bibitem[Clark(2010)]{clark2010icgi}
+A.~Clark.
+Learning context free grammars with the syntactic concept lattice.
+In \textit{ICGI 2010}, LNAI 6339, pp.~38--51, Springer, 2010.
+
+\bibitem[Clark(2015)]{clark2013}
+A.~Clark.
+The syntactic concept lattice: another algebraic theory of the
+context-free languages?
+\textit{Journal of Logic and Computation} 25(5):1203--1229, 2015
+(online 2013).
+
+\bibitem[Clark and Eyraud(2007)]{clark-eyraud2007}
+A.~Clark and R.~Eyraud.
+Polynomial identification in the limit of substitutable context-free
+languages.
+\textit{Journal of Machine Learning Research} 8:1725--1745, 2007.
+
+\bibitem[Clark and Yoshinaka(2016)]{clark-yoshinaka2016}
+A.~Clark and R.~Yoshinaka.
+Distributional learning of context-free and multiple context-free
+grammars.
+In J.~Heinz and J.\,M.~Sempere (eds.), \textit{Topics in Grammatical
+Inference}, pp.~143--172, Springer, 2016.
+\url{https://doi.org/10.1007/978-3-662-48395-4_6}.
+
+\bibitem[Coste and Nicolas(2019)]{coste-nicolas2019}
+F.~Coste and J.~Nicolas.
+Learning local substitutable context-free languages from positive examples
+in polynomial time and data by reduction.
+In \textit{Proceedings of the 14th International Conference on Grammatical
+Inference}, PMLR 93, pp.~155--168, 2019.
+
+\bibitem[Harris(1954)]{harris1954}
+Z.~S.~Harris.
+Distributional structure.
+\textit{Word} 10(2--3):146--162, 1954.
+
+\bibitem[Kanazawa(1998)]{kanazawa1998}
+M.~Kanazawa.
+\textit{Learnable Classes of Categorial Grammars}.
+CSLI Publications, Stanford, 1998.
+
+\bibitem[Kanazawa and Yoshinaka(2017)]{ky2017}
+M.~Kanazawa and R.~Yoshinaka.
+The strong, weak, and very weak finite context and kernel properties.
+In \textit{Language and Automata Theory and Applications (LATA 2017)},
+Lecture Notes in Computer Science 10168, pp.~77--88, Springer, 2017.
+\url{https://doi.org/10.1007/978-3-319-53733-7_5}.
+
+\bibitem[Kanazawa and Yoshinaka(2023)]{ky2023}
+M.~Kanazawa and R.~Yoshinaka.
+Extending distributional learning from positive data and membership
+queries.
+In \textit{Proceedings of the 16th International Conference on
+Grammatical Inference}, PMLR 217, pp.~8--22, 2023.
+
+\bibitem[Kuriyama(2026)]{kuriyama-tcs1}
+T.~Kuriyama.
+Distributional learning of context-free languages under fixed
+finite-semigroup typing.
+Manuscript under review for \textit{Theoretical Computer Science}, 2026;
+arXiv:1409.6247v5.
+
+\bibitem[Lei{\ss}(2014)]{leiss2014}
+H.~Lei{\ss}.
+Learning context free grammars with the finite context property: a
+correction of A.~Clark's algorithm.
+In \textit{Formal Grammar 2014}, Lecture Notes in Computer Science 8612,
+pp.~121--137, Springer, 2014.  \url{https://doi.org/10.1007/978-3-662-44121-3_8}.
+
+\bibitem[Ogden(1968)]{ogden1968}
+W.~Ogden.
+A helpful result for proving inherent ambiguity.
+\textit{Mathematical Systems Theory} 2(3):191--194, 1968.
+
+\bibitem[Yoshinaka(2011)]{yoshinaka2011dlt}
+R.~Yoshinaka.
+Towards dual approaches for learning context-free grammars based on
+syntactic concept lattices.
+In \textit{DLT 2011}, LNCS 6795, pp.~429--440, Springer, 2011.
+
+\bibitem[Yoshinaka(2015)]{yoshinaka2015}
+R.~Yoshinaka.
+General perspective on distributionally learnable classes.
+In \textit{Proceedings of MoL 14}, pp.~87--98, ACL, 2015.
+
+\end{thebibliography}
+\end{document}
