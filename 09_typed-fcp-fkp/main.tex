@@ -82,13 +82,15 @@ global licensing condition that at least one mark occurs somewhere.  The
 two-element mark observer gives a frame presentation with $2n$ categories
 and frames of length at most $2n$, whereas every exemplar presentation,
 under every observer, has size or exemplar length exponential in $n$;
-without the licensing condition both presentations are linear.  The gap
+without the licensing condition and without an observer both presentations
+are linear.  The gap
 concerns grammars only.  It yields exponential lower bounds for the
 author's positive-data reconstruction and for the distributional learners
 with membership queries.  Finally, refining the observer can only enlarge
 the classes given by the strong and the very weak finite context
 properties and only shrink the class given by the very weak finite kernel
-property, whereas the weak finite context property is not preserved.
+property, whereas the weak finite context property can fail already under
+refinement from the trivial typing to a two-element indicator.
 \end{abstract}
 
 \noindent\textbf{Keywords:} distributional learning; syntactic concept
@@ -157,15 +159,17 @@ How large must a finite presentation of a context-free language be, under a
 fixed observer, when categories are named by frames and when they are named
 by exemplars?  We measure a presentation by the number $|N|$ of
 nonterminals, the maximal length $\rho$ of a right-hand side, and the
-maximal length $\kappa$ of an exemplar (kernel word) or the length of a
-frame.
+maximal length $\kappa$ of an exemplar (kernel word) or the maximal length
+$|u|+|v|$ of a frame $(u,v)$; $\kappa$ depends on the chosen exemplars, not
+only on the grammar.
 
 \paragraph{The answer: an exponential gap.}
 Consider expressions built by a binary combination $\Lfl xy\Rfl$ and a unary
 marking $\Lce x\Rce$, nested exactly $n$ levels deep, and let $M_n$ consist of
 those structures that contain \emph{at least one mark}.  This is a global
-licensing condition: no single constituent decides whether a structure is
-admitted.  The two-element observer that records whether an expression
+licensing condition: a marked constituent suffices for admission, but an
+unmarked constituent can occur both in admitted structures and in the one
+excluded structure.  The two-element observer that records whether an expression
 contains a mark names every category of $M_n$ by one frame of length at
 most $2n$, with $2n$ nonterminals.  Exemplars cannot use the observer, and we
 show that every exemplar-based presentation, under every observer, is
@@ -177,13 +181,17 @@ For every $n\ge2$:
 \item $M_n$ has a typed presentation with the strong $1$-FCP for the
 two-element mark observer, with $2n$ nonterminals, $\rho\le4$ and frames of
 length at most $2n$;
-\item every CFG $G$ for $M_n$ with the very weak FKP (any number of
-exemplars per category, any typing or none) satisfies
+\item every CFG $G$ for $M_n$ with the very weak FKP (any finite number
+of exemplars per category, any typing or none) satisfies
 $\rho_G\,|N_G|\,\max(\kappa_G,1)\ge3\cdot2^{n-1}-1$.
 \end{enumerate}
-Without the deletion the gap disappears: the language $L_n$ of all such
-structures has frame and exemplar presentations of size $O(n)$ with
-witnesses of length $O(n)$.
+Without the deletion and without an observer the gap disappears: the
+language $L_n$ of all such structures has untyped frame and exemplar
+presentations of size $O(n)$ with witnesses of length $O(n)$.  The deletion
+is what makes the exemplar lower bound hold with no observer, and hence
+under every observer; under the mark observer itself, exemplar
+presentations of $L_n$ already need the exemplar $w^*_n$ of length
+$3\cdot2^n-2$ (Proposition~\ref{prop:Ln-sU}).
 \end{mainthm}
 
 The reason is a \emph{capture} phenomenon (Lemma~\ref{lem:capture}): to
@@ -201,9 +209,11 @@ model.  It yields lower bounds for algorithms
 $\mathsf{Rec}_s$ \citep{kuriyama-tcs1} needs characteristic data of size at
 least $(3\cdot2^{n-1}-1)^{1/3}$ on $M_n$, for every typing under which $M_n$
 is learnable (Corollary~\ref{cor:rec-data});
-\item with membership queries, the primal learner of \citet{ky2017} needs
+\item with membership queries, the primal learner $\mathrm{Primal}_{r,k}$
+of \citet{ky2017} with fixed $r,k$ needs
 $2^{\Omega(n)}$ data before it converges on $M_n$
-(Corollary~\ref{cor:primal-data}), and the dual learners need a datum of
+(Corollary~\ref{cor:primal-data}), and the dual learners of \citet{ky2017}
+($r\ge2$, $k\ge1$) need a datum of
 length $3\cdot2^{n-1}-2$ to refute one candidate production
 (Proposition~\ref{prop:dual-refutation}).
 \end{itemize}
@@ -218,10 +228,12 @@ Let $s\preceq h$ ($h$ refines $s$) and $k\ge1$.  Then
 \tFKP{k}{vw}{h}\subseteq\tFKP{k}{vw}{s}\subseteq\FKP{k}{vw},\qquad
 \FCP{k}{vw}\subseteq\tFCP{k}{vw}{s}\subseteq\tFCP{k}{vw}{h},
 \]
-and the typed very weak and weak FKP coincide.  For every $k\ge1$ the typed
+the same inclusions hold for the strong FCP, and the typed very weak and
+weak FKP coincide.  For every $k\ge1$ the typed
 inclusions between the trivial typing and a two-element indicator typing
-are strict on both sides.  The untyped weak FCP is not preserved when a
-two-element observer is added.
+are strict on both sides.  The weak FCP is not monotone: some language has
+the weak $2$-FCP untyped and for the trivial typing, but no typed weak FCP
+for a two-element indicator typing.
 \end{mainthm}
 
 \paragraph{What is known and what is new.}
@@ -240,15 +252,23 @@ classes for different signatures.  The inclusions of Theorem~B are short
 consequences of the closure calculus (Lemmas~\ref{lem:star}
 and~\ref{lem:reduction}); what we add is the explicit opposite behaviour of
 frames and exemplars, strictness witnesses for every $k$, and the failure of
-preservation for the weak FCP.
+monotonicity for the weak FCP.  The strong FKP is not covered.
 \item Corollary~\ref{thm:uniform} (one primal learner for all fixed
 observers) follows from \citet[Prop.~9.7]{kuriyama-tcs1}, the classical
 implication from congruential grammars to the
 $1$-FKP \citep[Sec.~6.3]{yoshinaka2015} and \citet[Thm.~6]{ky2017}.
-\item The kernel--context gap (Theorem~A), the capture lemma and the
-resulting algorithmic lower bounds are new as far as we could check;
-\citet{ky2023} treat only the frame side, and we
-found no comparable lower bound on exemplar-based presentations.
+\item The family $L_n$, its grammar and the short exemplars $u_i$ are
+those of \citet[Sec.~6]{kuriyama-tcs1}.  The kernel--context gap
+(Theorem~A), the capture lemma and the resulting algorithmic lower bounds
+are new as far as we could check; \citet{ky2023} treat only the frame side,
+and we found no comparable lower bound on exemplar-based presentations.
+\item Exponential characteristic data are not new in themselves:
+\citet[Example~2]{clark-eyraud2007} note that a grammar of linear size can
+generate a single string of exponential length, which every characteristic
+set must then contain, and \citet{coste-nicolas2019} obtain polynomial data
+for a subclass by assuming suitably thick data.  Here the target $M_n$
+contains words of length $2n+1$; the lower bound comes from the way
+categories are named, not from the length of the words.
 \end{itemize}
 
 \paragraph{Relation to the fixed-typing theory.}
@@ -337,7 +357,8 @@ the \emph{strong} (\emph{weak}) $k$-FCP if $(L(G,A))_A$
 $k$-FCP if $G$ has a $k$-context-generated SPP; likewise for the FKP with
 ``kernel'' in place of ``context''.  We write $\FCP{k}{vw}$, $\FCP{k}{w}$,
 $\FCP{k}{s}$ (and $\FKP{k}{\cdot}$) for the classes of languages having
-some CFG with the corresponding property.
+some CFG with the corresponding property; omitting $k$ means the union over
+all $k\ge1$.
 
 \begin{fact}[\citealp{ky2017}]\label{fact:ky}
 (a) (Prop.~10) $\FKP{k}{vw}=\FKP{k}{w}$; more precisely, if $(K_A\RL)_A$ is
@@ -407,7 +428,8 @@ Following \citet[Def.~2.1]{kuriyama-tcs1}, $L$ is
 \emph{$\sim_s$-substitutable} if for $x,y\in\Sigma^+$, $s(x)=s(y)$ and
 $\D_L(x)\cap\D_L(y)\ne\emptyset$ imply $\D_L(x)=\D_L(y)$; $\Ccf s$ is the
 class of context-free $\sim_s$-substitutable languages.  For $s=s_0$ this
-is the substitutability of \citet{clark-eyraud2007}.
+is the variant, for nonempty fragments, of the substitutability of
+\citet{clark-eyraud2007} used in \citet{kuriyama-tcs1}.
 
 %======================================================================
 \section{Typed closures and typed finite context/kernel properties}
@@ -705,11 +727,12 @@ Let $n\ge2$.
 \item $M_n$ has an $s_U$-typed CFG with the typed strong $1$-FCP, $2n$
 nonterminals, $6n-4$ productions, $\rho\le4$ and contexts of length at most
 $2n$.
-\item Every CFG for $M_n$ with an SPP $(K_A\RL)_A$, and every $s$-typed CFG
-for $M_n$ with the typed very weak FKP for any typing $s$, satisfies
+\item Every CFG for $M_n$ with an SPP $(K_A\RL)_A$, $K_A$ finite, and every
+$s$-typed CFG for $M_n$ with the typed very weak FKP for any typing $s$,
+satisfies
 $\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$.
-\item $L_n$ has a CFG of size $O(n)$ with the strong $1$-FKP and the strong
-$1$-FCP, with kernels and contexts of length at most $2n+1$.
+\item $L_n$ has an untyped CFG of size $O(n)$ with the strong $1$-FKP and the
+strong $1$-FCP, with kernels and contexts of length at most $2n+1$.
 \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -742,13 +765,45 @@ $c[x']=w^*_n$.  Since $|x'|=|x|+|w^*_j|-|v|=|x|+|w^*_{j-1}|$, we get
 $|x|=|w^*_n|-|c|-|w^*_{j-1}|\ge|w^*_n|-\ell-|w^*_{j-1}|$.
 \end{proof}
 
+The deletion in Theorem~\ref{thm:gap} is needed only for the observer-free
+lower bound.  Under the mark observer itself the exemplar side of $L_n$ is
+already long, in line with Theorem~B: an observer can only make exemplar
+presentations harder.
+
+\begin{proposition}[the mark observer lengthens the exemplars of $L_n$]
+\label{prop:Ln-sU}
+Let $n\ge1$.  Every $s_U$-typed CFG $(G,\tau)$ for $L_n$ with a typed SPP
+$(\cl_{\tau(A)}(K_A))_A$, $K_A$ finite, has an initial nonterminal $S$ with
+$K_S=\{w^*_n\}$; hence $\kappa\ge3\cdot2^n-2$, whatever bound $k$ is put on
+the number of exemplars.  On the other hand, $L_n$ has an $s_U$-typed CFG
+of size $O(n)$ with the typed strong $1$-FCP and contexts of length at most
+$2n$.
+\end{proposition}
+\begin{proof}
+Let $S$ be an initial nonterminal with $w^*_n\in L(G,S)$.  As $w^*_n$ is
+unmarked, $\tau(S)=1$.  The yields form the least fixed point, so
+$L(G,S)\subseteq X_S=\cl_1(K_S)$, and soundness gives $X_S\subseteq L_n$.
+Since $w^*_n$ is the only unmarked word of $L_n$,
+$w^*_n\in X_S\subseteq L_n\cap F_1=\{w^*_n\}$, and
+$K_S\subseteq K_S\RL\cap F_1=X_S$.  The set $K_S$ is not empty: $L_n$ is
+finite, so a context $(u,\eps)$ with $u$ longer than every word of $L_n$
+accepts no word, whence $\emptyset\RL=\emptyset$ and $\cl_1(\emptyset)=\emptyset$.
+So $K_S=\{w^*_n\}$ and $\kappa\ge|w^*_n|=3\cdot2^n-2$.  For the upper bound,
+refine the grammar $G_n$ of Proposition~\ref{prop:deletion-upper}(a) by
+Lemma~\ref{lem:product}; by the strong case of
+Theorem~\ref{thm:duality}(c) the refinement has the typed strong $1$-FCP with
+the same contexts, and it has at most three times as many nonterminals.
+\end{proof}
+
 %======================================================================
 \section{Consequences for learning algorithms}\label{sec:applications}
 
 Theorem~\ref{thm:gap} concerns grammars.  This section turns it into lower
 bounds for three learning algorithms: the author's positive-data
 reconstruction, and the primal and dual learners with membership queries
-of \citet{ky2017}.  We end with a known qualitative consequence.
+of \citet{ky2017}.  The learners are Algorithms~1 and~2 of \citet{ky2017}
+as stated there; for Clark's original rule test and its correction see
+\citet{leiss2014}.  We end with a known qualitative consequence.
 
 \subsection{Learning from positive data}
 
@@ -765,8 +820,9 @@ $\D_K(x)\cap\D_K(y)\ne\emptyset$, where $\D_K$ is $\D$ relative to $K$),
 $\widehat S\to\eps$ if $\eps\in K$.
 
 \begin{lemma}[reconstructed grammars carry kernel SPPs]\label{lem:rec-kernel}
-Let $s$ be a typing, $L\in\Ccf s$ with $\eps\notin L$, and $K\subseteq L$
-finite with $L(\mathsf{Rec}_s(K))=L$.  Let $G_K$ be obtained from
+Let $s$ be a typing, $L\in\Ccf s$ nonempty with $\eps\notin L$, and
+$K\subseteq L$ finite with $L(\mathsf{Rec}_s(K))=L$; write
+$\|K\|=\sum_{w\in K}(|w|+1)$.  Let $G_K$ be obtained from
 $\mathsf{Rec}_s(K)$ by deleting $\widehat S$ and its productions and
 declaring every $[\![w]\!]$ with $w\in K$ initial.  Then $L(G_K)=L$, and
 $(\{x\}\RL)_{[\![x]\!]}$, relative to $L$, is an SPP of $G_K$.  Hence $G_K$
@@ -886,7 +942,8 @@ $x_1\in E_i\cap\{c\}\Lc\cap F_1=E_i\cap\{w^*_{n-1}\}$.
 \midrule
 positive-only, trivial typing & poly data \citep{kuriyama-tcs1} & not in $\Ccf{s_0}$\\
 positive-only, $s_U$ & exponential \citep{kuriyama-tcs1} & $\|\mathcal F\|^3\ge3\cdot2^{n-1}-1$ (Cor.~\ref{cor:rec-data})\\
-kernel side (any $k$, any typing) & $O(n)$ (Prop.~\ref{prop:deletion-upper}) & $2^{\Omega(n)}$ (Thm.~\ref{thm:deletion})\\
+kernel side, untyped or $s_0$ (any $k$) & $O(n)$ (Prop.~\ref{prop:deletion-upper}) & $2^{\Omega(n)}$ (Thm.~\ref{thm:deletion})\\
+kernel side, $s_U$ (any $k$) & $\kappa\ge3\cdot2^n-2$ (Prop.~\ref{prop:Ln-sU}) & $2^{\Omega(n)}$ (Thm.~\ref{thm:deletion})\\
 typed context side, $s_U$ & $O(n)$ & $O(n)$ (Prop.~\ref{prop:deletion-upper})\\
 untyped context side & $O(n)$ & open (Open Problem~\ref{op:Mn-context})\\
 dual learners, data at convergence & --- & $\ge3\cdot2^{n-1}-2$ (Prop.~\ref{prop:dual-refutation})\\
@@ -895,8 +952,10 @@ dual learners, data at convergence & --- & $\ge3\cdot2^{n-1}-2$ (Prop.~\ref{prop
 \end{center}
 In the presentation rows, $O(n)$ refers separately to grammar size and
 maximum witness length; explicitly listing all context witnesses uses
-$O(n^2)$ characters.  The kernel lower bound is on
-$\rho|N|\max(\kappa,1)$, not on grammar size alone.
+$O(n^2)$ characters.  The kernel lower bound for $M_n$ is on
+$\rho|N|\max(\kappa,1)$, not on grammar size alone, and it holds for every
+typing, whereas for $L_n$ the linear kernel presentation exists only for the
+trivial typing (or none).
 The last line concerns the full candidate grammar of Algorithm~1 of
 \citet{ky2017}, without additional pruning, and shows that a polynomial typed context presentation does not
 give polynomial data for the dual learner: the obstacle is the cost of
@@ -956,7 +1015,7 @@ which do not increase the rank, and gives the weak $1$-FKP.
 For $s=s_0$, the fact that substitutable CFLs have the $1$-FKP is
 classical (substitutable languages admit congruential grammars, and
 congruential grammars have the $1$-FKP; see
-\citealp[Sec.~6.3]{yoshinaka2015} and \citealp[Sec.~5.3]{clark-yoshinaka2016}).  The same conclusion for \emph{all} fixed observers already follows from
+\citealp[Sec.~6.3]{yoshinaka2015} and \citealp[Sec.~6.5.3]{clark-yoshinaka2016}).  The same conclusion for \emph{all} fixed observers already follows from
 \citet[Prop.~9.7]{kuriyama-tcs1}: start its proof with a binary grammar,
 obtain a congruential refinement, use the classical $1$-FKP implication,
 and apply \citet[Theorem~6]{ky2017}.  The proof above gives the associated
@@ -968,7 +1027,7 @@ $\FKP1{w}$ is strict: the language of Proposition~\ref{prop:strict-context}
 has the strong $1$-FKP \citep[Prop.~2(i)]{ky2017} but lies in no
 $\Ccf s$, since for any $s$ there are $1\le i<j$ with $s(a^i)=s(a^j)$, the
 words $a^i,a^j$ share the context $(a^\ell,db^\ell)$ for every
-$\ell\ge j$, and only $a^i$ admits $(\eps,cb^{2i})$.
+$\ell\ge j$ (both $\ell+i$ and $\ell+j$ lie in $[\ell,2\ell]$), and only $a^i$ admits $(\eps,cb^{2i})$.
 No statement about the amount of data is made here; the positive-data
 characteristic-data bounds of \citet{kuriyama-tcs1} concern a different
 learner.
@@ -1115,7 +1174,8 @@ since $(ba,\eps)$ is a context of no word).  If
 $|i-j|>p$ then $(a^i,b^j)\in K_S\R$, because $a^{i+m}b^{n+j}\in P$ for
 $|m-n|\le p$.  A word $a^mb^n$ with $|m-n|>p$ fails the context
 $(a^i,b^j)$ with $i-j=n-m$, so it is not in $K_S\RL$.  Hence the union
-misses $a^{p+1}$, a word of $P$, a contradiction.
+misses $a^{p+1}$, a word of $P$, a contradiction.  This cancellation
+argument is that of \citet[Prop.~2(ii)]{ky2017}.
 \end{proof}
 
 \begin{corollary}[kernel failures are observer-invariant]\label{cor:invariant}
@@ -1127,61 +1187,108 @@ the typed very weak FKP, for every typing $s$.
 Theorem~\ref{thm:duality}(b).
 \end{proof}
 The weak FCP behaves differently from both the strong and the very weak
-FCP of Theorem~\ref{thm:duality}(c): it is not preserved when an observer
-is added.
+FCP of Theorem~\ref{thm:duality}(c): it is not monotone under refinement.
+We use the languages of \citet[Secs.~5--6]{ky2017}: over
+$\Sigma_0=\{a,b,c,d,e,f,\#,\$,\%\}$, with $P=\{a,b,\#\}^*$ and $Z=\{a,b\}^*$,
+\begin{align*}
+L_1&=\{v\$z: v\in P,\ z=(\mathrm{erase}_\#(v))^R\},\\
+L_2&=\{wyc^id^ie^jz: w,z\in Z,\ y\in(\#Z)^*,\ i,j\ge0,\ |w|_a\ge|w|_b\},\\
+L_3&=\{wyc^id^je^jz: w,z\in Z,\ y\in(\#Z)^*,\ i,j\ge0,\ |w|_a\le|w|_b\},\\
+L_4&=\{v\$zc^k\%f^l: v\in P,\ z\in Z,\ k,l\ge0\},\\
+L_5&=\{vc^id^ie^jzc^k\%f^l: v\in P,\ z\in Z,\ i,j,k,l\ge0,\ j\ne k\},
+\end{align*}
+$L=L_1\cup L_2\cup L_3$ and $L'=L\cup L_4\cup L_5$; we also put
+$J_0=\{vc^id^ie^iz: v\in P,\ z\in Z,\ i\ge0\}$.  Note $P\subseteq L_2\cup L_3$
+and $J_0\subseteq L_2\cup L_3$.
 
-\begin{proposition}[the weak FCP is not preserved]\label{prop:weak-not-preserved}
-Let $\Sigma_0=\{a,b,c,d,e,f,\#,\$,\%\}$, let $L'=L_1\cup\dots\cup L_5$ be the
-language of \citet[Thm.~14]{ky2017}, with
-$L_1=\{v\$z: v\in\{a,b,\#\}^*,\ z=(\mathrm{erase}_\#(v))^R\}$, and let
-$L_1^@$ be $L_1$ with $\$$ replaced by a fresh letter $@$.  Put
-$\Sigma=\Sigma_0\cup\{@\}$, $L^+=L'\cup L_1^@$ and $h=h_{\{@\}}$.  Then, using
-the characterisations listed in the proofs of \citet[Lemmas~8 and~12]{ky2017}:
+\begin{proposition}[the weak FCP is not monotone]\label{prop:weak-not-preserved}
+Let $L_1^@$ be $L_1$ with $\$$ replaced by a fresh letter $@$, put
+$\Sigma=\Sigma_0\cup\{@\}$, $L^+=L'\cup L_1^@$ and $h=h_{\{@\}}$, so that
+$s_0\preceq h$.  Then:
 \begin{enumerate}[label=\textup{(\alph*)},nosep]
-\item $L^+\in\FCP2{w}$;
+\item $L^+\in\FCP2{w}$ and $L^+\in\tFCP2{w}{s_0}$;
 \item $L^+\notin\tFCP{k}{w}{h}$ for every $k$.
 \end{enumerate}
+Hence $\tFCP{k}{w}{s_0}\not\subseteq\tFCP{k}{w}{h}$ for every $k\ge2$.
 \end{proposition}
 \begin{proof}
-(a) Let $G^+$ be the grammar $G'$ of \citet[Lemma~12]{ky2017} with the extra
+Let $G^+$ be the grammar $G'$ of \citet[Lemma~12]{ky2017} with the extra
 production $S_1\to@$.  Since $S_1$ occurs on no right-hand side other than
 its own, $L(G^+,S_1)=L_1\cup L_1^@$, every other nonterminal keeps its
-language, and $L(G^+)=L^+$.
+language, and $L(G^+)=L^+$.  All closures are relative to $L^+$ unless said
+otherwise.  We use three facts about words of $L^+$: a word containing $c$,
+$d$ or $e$ is not in $L_1\cup L_1^@$; a word ending in $a$, $b$, $d$ or $e$
+is not in $L_4\cup L_5$; and a word containing $d$ is not in
+$L_1\cup L_1^@\cup L_4$.
 
-\emph{Other nonterminals.}  For $A\ne S_1$, a context $(u,v)$ with
-$uL(G^+,A)v\subseteq L^+$ either contains no $@$, and then
-$uL(G^+,A)v\subseteq L'$, or contains $@$, and then sends every yield of $A$
-into $L_1^@$.  The latter is impossible: the yields of $H,E,C,J,S_2,S_3,U$
-and $S_{4,5}$ include words with a letter in $\{c,d,e,\%\}$, which never
-occurs in $L_1^@$; and $Q$, $F$, $T$ have pairs of yields
-($\eps,ab$; $\#,ab\#$; $\eps,a$) differing by a factor inserted at one place,
-which changes the $\#$-erased length of only one side of $@$, so both
-completions cannot be mirror words.  Hence the distribution of $L(G^+,A)$
-relative to $L^+$ equals the one relative to $L'$.  Each finite context set
-listed in \citet[Lemmas~8,~12]{ky2017} rejects every word containing $@$:
-the contexts $(a\#,b)$ for $S_2$ and $(b\#,a)$ for $S_3$ have mismatched end
-letters, and every other listed set has a context containing $c$, $d$, $e$,
-$\$$, $\%$ or $f$.  So the closure of $L(G^+,A)$ relative to $L^+$ equals the
-one relative to $L'$ and is still generated by the listed contexts.
+\emph{Claim.} For $Y\in\{L_2,L_3\}$, every context $(u,v)$ with
+$u(Y\setminus\{\eps\})v\subseteq L^+$ satisfies $u\in P$, $v\in Z$ and
+$uv\in L^+$.  In particular $(Y\setminus\{\eps\})\R=Y\R$, and
+$uJ_0v\subseteq J_0$ for every $(u,v)\in Y\R$.
+
+For $Y=L_2$ use the words $x_t=\#cde^ta\in L_2$ ($t\ge0$).  Each $ux_tv$
+contains $d$, so it lies in $L_2\cup L_3\cup L_5$.  If $v$ contained $\%$,
+every $ux_tv$ would lie in $L_5$; there the $\#$ of $x_t$ belongs to the
+prefix in $P$, so $cd$ is the block $c^id^i$ with $i=1$, $e^t$ is the block
+$e^j$ with $j=t$, and $v=z'c^k\%f^l$ with $k$ fixed by $v$; $t=k$ violates
+$j\ne k$.  A $\%$ in $u$ is impossible, since only $f$ may follow $\%$.  So
+$ux_tv\in L_2\cup L_3\subseteq P\,c^*d^*e^*Z$, and as $x_t$ begins with $\#$
+and ends with $a$, $u\in P$ and $v\in Z$.  For $Y=L_3$ use
+$x=\#cd^2e^2a\in L_3$: in $L_5$ the $c$ after $\#$ and the two $d$s would
+have to form a block $c^id^i$, which is impossible, so the same conclusion
+follows.  Then $uv\in P\subseteq L_2\cup L_3$, so $(u,v)$ also accepts $\eps$;
+antitonicity gives the other inclusion.  Finally
+$u(v'c^id^ie^iz')v=(uv')c^id^ie^i(z'v)\in J_0$.
+
+\emph{Strong nonterminals.}  For $A\in\{Q,F,H,E,C,J\}$ (resp.\
+$A\in\{T,U,S_{4,5}\}$), \citet[proofs of Lemmas~8 and~12]{ky2017} give
+$L(G^+,A)=C_A\Lc$ relative to $L$ (resp.\ $L'$) with $|C_A|\le2$.  Each
+context listed for $Q,F,H,E,C,J$ contains $c$, $d$ or $e$ and has right
+component ending in $d$ or $e$, so its completions in $L^+$ lie in $L$; each
+context listed for $T$, $U$, $S_{4,5}$ contains $\%$ or ends in $f$, so its
+completions in $L^+$ lie in $L_4\cup L_5$.  Hence $L(G^+,A)=C_A\Lc$ relative
+to $L^+$: these nonterminals are strongly characterised.
+
+\emph{$S_2$ and $S_3$.}  Let $C_2=\{(\eps,\eps),(a\#,b)\}$.  A completion
+$a\#xb\in L^+$ ends in $b$ and has first block $a$, so it lies neither in
+$L_4\cup L_5$ nor in $L_1\cup L_1^@$; hence $a\#xb\in L_2\cup L_3$, $x$
+contains none of $\$,\%,f,@$, and $x\in L^+$ gives $x\in L$.  So $C_2\Lc$
+relative to $L^+$ equals $C_2\Lc$ relative to $L$, which is $L_2\cup J_0$
+\citep[proof of Lemma~8]{ky2017}.  Since $L_2\subseteq C_2\Lc$, we get
+$L_2\RL\subseteq C_2\Lc$; conversely $L_2\subseteq L_2\RL$, and
+$J_0\subseteq L_2\RL$ by the Claim.  So $L(G^+,S_2)\RL=C_2\Lc$, and
+symmetrically $L(G^+,S_3)\RL=\{(\eps,\eps),(b\#,a)\}\Lc=L_3\cup J_0$.
 
 \emph{$S_1$.}  Let $M$ be the set of mirror contexts
-$(w_1\#\cdots\#w_n,w_n^R\cdots w_1^R)$, $n\ge1$, $w_i\in\{a,b\}^*$.  The words
+$(w_1\#\cdots\#w_n,w_n^R\cdots w_1^R)$, $n\ge1$, $w_i\in Z$.  The words
 of $L^+$ containing $@$ are exactly those of $L_1^@$, so a context of $L_1^@$
 relative to $L^+$ is a context of $L_1^@$ relative to $L_1^@$; renaming $@$ to
-$\$$ and using $L(G,S_1)\R=M$ relative to $L_1\cup L_2\cup L_3$
+$\$$ and using $L(G,S_1)\R=M$ relative to $L$
 \citep[proof of Lemma~8]{ky2017}, this set is $M$.  Relative to $L'$ the
 contexts of $L_1$ are $M$ together with the contexts $(v,zc^k\%f^l)$
 \citep[proof of Lemma~12]{ky2017}, and the latter are not contexts of
 $L_1^@$.  Hence $L(G^+,S_1)\R=M$ relative to $L^+$.  For words without $@$,
 the closure $M\Lc$ relative to $L^+$ agrees with the one relative to $L'$,
-which is $L_1\cup\{vc^id^ie^iz: v\in\{a,b,\#\}^*,z\in\{a,b\}^*,i\ge0\}
-=\{(a\#,a),(b\#,b)\}\Lc$ \citep[proof of Lemma~12]{ky2017}, because the
+which is $L_1\cup J_0=\{(a\#,a),(b\#,b)\}\Lc$
+\citep[proof of Lemma~12]{ky2017}, because the
 contexts involved contain no $@$.  A word $x$ containing $@$ lies in $M\Lc$
 iff $x\in L_1^@$, and it lies in $\{(a\#,a),(b\#,b)\}\Lc$ iff
 $a\#xa,b\#xb\in L_1^@$, i.e.\ again iff $x\in L_1^@$.  So
-$L(G^+,S_1)\RL=L_1\cup L_1^@\cup\{vc^id^ie^iz\}=\{(a\#,a),(b\#,b)\}\Lc$
-relative to $L^+$, and every nonterminal of $G^+$ is characterised by at most
-two contexts.
+$L(G^+,S_1)\RL=L_1\cup L_1^@\cup J_0=\{(a\#,a),(b\#,b)\}\Lc$.  This proves
+$L^+\in\FCP2{w}$.
+
+\emph{The $s_0$-typed grammar.}  Refine $G^+$ by Lemma~\ref{lem:product}
+for $s_0$ and keep the useful nonterminals.  A nonterminal $(A,\one)$
+generates $\{\eps\}=\emptyset\Lc\cap F_{\one}$.  A nonterminal $(A,0)$ generates
+$Y_A\setminus\{\eps\}$, $Y_A=L(G^+,A)$.  If $A$ is strongly characterised,
+$C_A\subseteq Y_A\R\subseteq(Y_A\setminus\{\eps\})\R$ and
+$Y_A\setminus\{\eps\}=C_A\Lc\cap\Sigma^+$ give
+$\cl_0(Y_A\setminus\{\eps\})=C_A\Lc\cap\Sigma^+$.  The nonterminal $S_1$ is not
+nullable, so $\cl_0(Y_{S_1})=L(G^+,S_1)\RL\cap\Sigma^+$.  For $S_2,S_3$ the
+Claim gives $(Y_A\setminus\{\eps\})\RL=Y_A\RL=C_A\Lc$, so
+$\cl_0(Y_A\setminus\{\eps\})=C_A\Lc\cap\Sigma^+$.  So every nonterminal of the
+refinement is characterised by at most two contexts, and
+$L^+\in\tFCP2{w}{s_0}$.
 
 (b) Suppose an $h$-typed $(G,\tau)$ generates $L^+$ and has the typed weak
 FCP.  Since $\zeta$ is absorbing, a production with left-hand side of type
@@ -1191,7 +1298,7 @@ $L(G_0)=L^+\cap\Sigma_0^*=L'$, in which every remaining nonterminal keeps its
 language.  The proof of \citet[Lemma~13]{ky2017}, which applies to any CFG
 for $L'$ and uses Ogden's lemma \citep{ogden1968}, yields for $G_0$ a
 nonterminal $B$ (of type $1$) with a yield $a^{m}\$a^{l}$ and a number $k_1$
-such that $L(G_0,B)\RL$ contains no word of $\{a,b,\#\}^*c^id^ie^i\{a,b\}^*$
+such that $L(G_0,B)\RL$ contains no word of $Pc^id^ie^iZ$
 for $i>k_1$, whereas for every finite $W\subseteq L(G_0,B)\R$ there is $k_2$
 with $c^id^ie^i\in W\Lc$ for all $i>k_2$ (all relative to $L'$).  So no finite
 $W\subseteq L(G_0,B)\R$ satisfies
@@ -1201,13 +1308,14 @@ contains no $@$; on words without $@$ the two languages agree.  So
 $\cl_1(L(G,B))$ relative to $L^+$ is $L(G_0,B)\RL\cap\Sigma_0^+$ relative to
 $L'$, and a typed weak characterisation $C\Lc\cap F_1$ with $C$ finite would
 give such a $W=C$, a contradiction.
+
+The last assertion follows from (a), (b) and
+$\tFCP2{w}{s_0}\subseteq\tFCP{k}{w}{s_0}$ for $k\ge2$.
 \end{proof}
 
-Proposition~\ref{prop:weak-not-preserved} shows that untyped weak FCP does
-not imply typed weak FCP.  Whether the $s_0$-typed weak FCP implies the
-$h$-typed one remains open (Open Problem~\ref{op:weak-fcp}): the grammar
-$G^+$ has nullable nonterminals, and splitting them into empty and nonempty
-parts may shrink the closures of the nonempty parts.
+So, unlike the strong and the very weak FCP, the typed weak FCP is not
+monotone under refinement, already between $s_0$ and a two-element
+indicator.  The case $k=1$ remains open (Open Problem~\ref{op:weak-fcp}).
 
 In contrast, the context-side failure of
 Proposition~\ref{prop:strict-context} is repaired by one bit of
@@ -1224,9 +1332,11 @@ category.  The licensing condition of $M_n$ removes a single structure,
 $w^*_n$, whose parts all occur elsewhere.  A category containing a large
 unmarked part $x$ of a marked structure must exclude the completion of $x$
 to $w^*_n$, and Lemma~\ref{lem:capture} shows that the only way to do so is to
-list $x$ itself among the exemplars.  Frames meet the same requirement by
-one negative test, and with the mark observer even that test is replaced by
-the type.
+list $x$ itself among the exemplars.  A frame-named category under the mark
+observer needs no such list: the type of $x$ already records that $x$ is
+unmarked, and one frame of length at most $2n$ per category suffices
+(Proposition~\ref{prop:deletion-upper}(b)).  Whether untyped frames can do
+the same is open (Open Problem~\ref{op:Mn-context}).
 
 \paragraph{Observation as morphology.}
 A typing is a finite, compositional classification of expressions, of the
@@ -1238,8 +1348,11 @@ Refining the observer can only enlarge the classes given by the strong and
 the very weak finite context properties, and can only shrink the class
 given by the very weak (equivalently, weak) finite kernel property, because
 a typed exemplar presentation is an untyped one with homogeneous exemplars
-(Lemma~\ref{lem:reduction}).  The weak finite context property does not
-follow this pattern: it is not preserved when an observer is added
+(Lemma~\ref{lem:reduction}).  An observer can even lengthen exemplar
+presentations: under the mark observer every exemplar presentation of $L_n$
+contains $w^*_n$ (Proposition~\ref{prop:Ln-sU}).  The weak finite context
+property does not follow the pattern: it can fail already under refinement
+from the trivial typing to a two-element indicator
 (Proposition~\ref{prop:weak-not-preserved}).
 
 \paragraph{Learning.}
@@ -1261,25 +1374,25 @@ the context-free setting of this paper.
 %======================================================================
 \section{Open problems}\label{sec:open}
 
-\begin{openproblem}[monotonicity of the weak FCP]\label{op:weak-fcp}
-Is $\tFCP{k}{w}{s}\subseteq\tFCP{k}{w}{h}$ for $s\preceq h$?  The proof of
-Theorem~\ref{thm:duality}(c) fails because
+\begin{openproblem}[monotonicity of the weak $1$-FCP]\label{op:weak-fcp}
+Is $\tFCP1{w}{s}\subseteq\tFCP1{w}{h}$ for $s\preceq h$?
+Proposition~\ref{prop:weak-not-preserved} answers the question negatively
+for every $k\ge2$, with two contexts for $S_1$, $S_2$ and $S_3$.  The proof of
+Theorem~\ref{thm:duality}(c) fails in general because
 $(L(G,A)\cap F^h_\nu)\RL\cap F^h_\nu$ can be smaller than
-$L(G,A)\RL\cap F^h_\nu$.  Proposition~\ref{prop:weak-not-preserved} settles
-the untyped-to-typed version negatively.  For the typed-to-typed version
-the language $L^+$ is the natural candidate; what is missing is an
-$s_0$-typed (nullable-free) grammar for $L^+$ with the weak FCP.  Finite
-languages cannot give a counterexample, since every finite language has,
-for every $s$, a typed strong $1$-FCP grammar listing its words.
+$L(G,A)\RL\cap F^h_\nu$.  Finite languages cannot give a counterexample,
+since every finite language has, for every $s$, a typed strong $1$-FCP
+grammar listing its words.
 \end{openproblem}
 
 \begin{openproblem}[robust separation]\label{op:robust}
 Is $\tFCP{}{vw}{s}\ne\tFCP{}{w}{s}$ for every typing $s$ over an alphabet of
-size at least two?  The witness of \citet[Thm.~14]{ky2017} is destroyed by
-the indicator of $\$$, whose fibre separates $a^{m_6}\$a^{l_6}$ from the words
-$a^{m_6}c^id^ie^ia^{l_6}$ used in \citet[Lemma~13]{ky2017}.  A robust witness
-would have to place the critical words in a common fibre for every finite
-typing, for instance by idempotent powers.
+size at least two?  For the witness $L'$ of \citet[Thm.~14]{ky2017}, the
+indicator of $\$$ separates the yield $a^{m_6}\$a^{l_6}$ from the words
+$c^id^ie^i$ used in the proof of \citet[Lemma~13]{ky2017}, so that proof no
+longer applies; we do not know whether $L'$ then has the typed weak FCP.  A
+robust witness would have to place the critical words in a common fibre for
+every finite typing, for instance by idempotent powers.
 \end{openproblem}
 
 \begin{openproblem}[untyped contexts for $M_n$]\label{op:Mn-context}
@@ -1308,30 +1421,35 @@ where the fan-out-two boundary of the fixed-typing theory remains open?
 Under a fixed finite observer, naming categories by exemplars cannot profit
 from observation, while naming them by frames can: refining the observer
 never enlarges the very weak finite kernel class and never shrinks the
-strong or very weak finite context classes, the weak finite context
-property being an exception.  A global licensing condition makes the
-difference exponential, with
-linear-size frame presentations against exponential exemplar presentations
-under every observer.  This representation gap depends on no learning model
+strong or very weak finite context classes; the weak finite context
+property is an exception already between the trivial typing and a
+two-element indicator, and the strong finite kernel property is not
+covered.  A global licensing condition makes the difference exponential,
+with linear-size frame presentations under the mark observer against
+exponential exemplar presentations under every observer.  This representation gap depends on no learning model
 and bounds the data of positive-data reconstruction and of distributional
 learners with membership queries.  The untyped frame side of the gap, the
-monotonicity of the weak finite context property, and discontinuous
+one-context case of the weak finite context property, and discontinuous
 constituents remain open.
 
 \section*{Declaration of competing interest}
 The author declares no competing interests.
 
 \section*{Data availability}
-No data were used.
+The proofs use no empirical dataset.  The finite languages are generated
+from their definitions; the scripts that reproduce the finite checks are
+available at
+\url{https://github.com/growupkuriyama-hub/Papers/tree/main/09_typed-fcp-fkp/tools}.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the research and manuscript preparation process}
 Generative AI tools were used substantially in this research.  The author
 posed the research questions and chose the directions.  Anthropic's Claude
 was used to search for results, to draft proofs, examples and the text of
 the manuscript, and to write the programs used for exhaustive checks on
-finite cases.  OpenAI's ChatGPT was used for an independent review of the
-manuscript; this review led to corrections and to
-Proposition~\ref{prop:weak-not-preserved}.  The author reviewed the
+finite cases.  OpenAI's ChatGPT was used for two independent reviews of the
+manuscript; these reviews led to corrections, to
+Proposition~\ref{prop:weak-not-preserved} and its typed form, and to
+Proposition~\ref{prop:Ln-sU}.  The author reviewed the
 AI-generated proofs, computations and text, edited the manuscript, and
 takes full responsibility for its content.  No AI tool is listed as an
 author.
@@ -1366,6 +1484,14 @@ Distributional learning of context-free and multiple context-free
 grammars.
 In J.~Heinz and J.\,M.~Sempere (eds.), \textit{Topics in Grammatical
 Inference}, pp.~143--172, Springer, 2016.
+\url{https://doi.org/10.1007/978-3-662-48395-4_6}.
+
+\bibitem[Coste and Nicolas(2019)]{coste-nicolas2019}
+F.~Coste and J.~Nicolas.
+Learning local substitutable context-free languages from positive examples
+in polynomial time and data by reduction.
+In \textit{Proceedings of the 14th International Conference on Grammatical
+Inference}, PMLR 93, pp.~155--168, 2019.
 
 \bibitem[Harris(1954)]{harris1954}
 Z.~S.~Harris.
@@ -1381,13 +1507,15 @@ CSLI Publications, Stanford, 1998.
 M.~Kanazawa and R.~Yoshinaka.
 The strong, weak, and very weak finite context and kernel properties.
 In \textit{Language and Automata Theory and Applications (LATA 2017)},
-Lecture Notes in Computer Science, Springer, 2017.
+Lecture Notes in Computer Science 10168, pp.~77--88, Springer, 2017.
+\url{https://doi.org/10.1007/978-3-319-53733-7_5}.
 
 \bibitem[Kanazawa and Yoshinaka(2023)]{ky2023}
 M.~Kanazawa and R.~Yoshinaka.
 Extending distributional learning from positive data and membership
 queries.
-In \textit{ICGI 2023}, PMLR 217, 2023.
+In \textit{Proceedings of the 16th International Conference on
+Grammatical Inference}, PMLR 217, pp.~8--22, 2023.
 
 \bibitem[Kuriyama(2026)]{kuriyama-tcs1}
 T.~Kuriyama.
@@ -1395,6 +1523,13 @@ Distributional learning of context-free languages under fixed
 finite-semigroup typing.
 Manuscript under review for \textit{Theoretical Computer Science}, 2026;
 arXiv:1409.6247v5.
+
+\bibitem[Lei{\ss}(2014)]{leiss2014}
+H.~Lei{\ss}.
+Learning context free grammars with the finite context property: a
+correction of A.~Clark's algorithm.
+In \textit{Formal Grammar 2014}, Lecture Notes in Computer Science 8612,
+pp.~121--137, Springer, 2014.  \url{https://doi.org/10.1007/978-3-662-44121-3_8}.
 
 \bibitem[Ogden(1968)]{ogden1968}
 W.~Ogden.
