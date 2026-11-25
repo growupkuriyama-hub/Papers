@@ -10,6 +10,8 @@
 - 2 回目の外部査読（ChatGPT／Astra、2026-11-25、major revision 相当・主定理の撤回なし）と対応：[`research/REVIEW_RESPONSE_2026-11-25.md`](research/REVIEW_RESPONSE_2026-11-25.md)、原本は [`research/external_review_2026-11-25_astra/`](research/external_review_2026-11-25_astra/)
 - 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`
 
+**2026-11-25 追記：** 英日TeXの考察に Python のジェネレータと標準中国語の疑問詞原位置の類例を追加し、結論を短縮した。定理・証明に変更なし。上記PDFとページ数は再ビルド・公開確認前の情報であり、最新版はTeXを参照。
+
 ## 何の論文か
 
 #1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$（有限観測）のもとで、二つの量を調べる。
