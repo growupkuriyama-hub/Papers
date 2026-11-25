@@ -46,7 +46,7 @@ def u(i):
 def typ(w):
     if w == '':
         return 'e'
-    return 'Z' if '{' in w else '1'
+    return 'Z' if ('{' in w or '}' in w) else '1'
 
 
 def ctx_closure(L, contexts):

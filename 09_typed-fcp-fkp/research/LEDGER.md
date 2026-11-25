@@ -1,7 +1,7 @@
 # 研究台帳 — 09_typed-fcp-fkp
 
 状態の記号：**PROVED**（完全な証明あり）／**PROVED-CONDITIONAL**／**CHECKED-FINITE**（有限計算のみ）／**CONJECTURED**／**OPEN**／**REFUTED**／**KNOWN**（既存結果かその直接の帰結）。
-証明はすべて Claude（2026-11-24）による。**2026-11-24 に ChatGPT による外部査読を受けた**（29 判定：CORRECT 11、CORRECT-WITH-FIX 8、GAP 0、FALSE 0、KNOWN 10。対応は [`REVIEW_RESPONSE_2026-11-24.md`](REVIEW_RESPONSE_2026-11-24.md)）。人間による監査はまだない。
+証明はすべて Claude（2026-11-24）による。**2026-11-24 に ChatGPT による外部査読を受けた**（29 判定：CORRECT 11、CORRECT-WITH-FIX 8、GAP 0、FALSE 0、KNOWN 10。対応は [`REVIEW_RESPONSE_2026-11-24.md`](REVIEW_RESPONSE_2026-11-24.md)）。**2026-11-25 に ChatGPT（Astra、記憶をリセットした別会話）による 2 回目の外部査読を受けた**（Major revision 相当。主定理の撤回は不要。重大な指摘 2 件はどちらも正しく、対応は [`REVIEW_RESPONSE_2026-11-25.md`](REVIEW_RESPONSE_2026-11-25.md)）。人間による監査はまだない。
 
 ## 確立した結果（`main.tex`）
 
@@ -32,22 +32,24 @@
 | `prop:dual-refutation` | dual 学習器（型付き $s_U$・型なし、$r\ge2$）は収束時に $w^*_{n-1}$ を見ている必要 | PROVED（外部査読 CORRECT） | 新（「反駁のコスト」）。KY2017 Algorithm 1 そのもの（候補を刈り込まない実装）についての下界 |
 | `lem:rec-kernel`（2026-11-25 追加） | #1 の $\mathsf{Rec}_s(K)$ が正しく再構成するとき、開始記号を外した文法は核の大きさ 1 の SPP（$\{x\}^{\rhd\lhd}$）を持つ | PROVED + CHECKED-FINITE（$K=M_n$、n=2,3） | 新（#1 と KY2017 をつなぐ補題） |
 | `cor:rec-data`（2026-11-25 追加） | **正例のみの下界**：$M_n\in\mathcal C^{\rm cf}_s$ となるどの型付け $s$ でも、$\mathsf{Rec}_s$ が $M_n$ を返す標本は $\|K\|^3\ge3\cdot2^{n-1}-1$ | PROVED | 新。#1 Prop 6.4 は $L_n$ の下界で、$M_n$ 自身の下界は #1 に無い（main.tex・日本語版・R1 原稿・revision メモを全文検索して確認） |
-| `prop:weak-not-preserved`（rev2 で追加） | 型なし weak 2-FCP を持つが $@$ の指示型付けでは型付き weak FCP を持たない言語 $L^+=L'\cup L_1^@$ | **PROVED（KY2017 を引用）**：2026-11-25 に KY2017 著者版の原文と全面照合済み。用いるのは、Lemma 8 の証明の文脈表、Lemma 12 の証明の記述（$S_1$ 以外の旧非終端記号は同じ文脈で弱く特徴づけられる、$T,U,S_{4,5}$ の文脈、$X_{S_1}=\{(a\#,a),(b\#,b)\}^{\lhd}$）、Lemma 13 の証明（$L'$ の任意の CFG に適用でき、反例語は $c^id^ie^i$）。照合で 2 点を原文どおりに修正（反例語、$S_1$ の閉包の出典）。KY2017 の Lemma 12 の「同じ文脈で特徴づけられたまま」は原論文でも詳細な証明なしに述べられている主張で、本稿はそれを引用として使う | 新。外部査読（ChatGPT）が発見 |
+| `prop:weak-not-preserved`（rev2 で追加、2026-11-25 に強化） | $L^+=L'\cup L_1^@$ は型なし weak 2-FCP と **$s_0$ 型付き weak 2-FCP** を持つが、$@$ の指示型付け $h$（$s_0\preceq h$）では型付き weak FCP を持たない。よって **型付き weak FCP は細分化で単調でない**（$k\ge2$） | **PROVED**。$s_0$ 版は 2 回目の外部査読（Astra）の構成を本文に入れたもの。鍵は「$L_2,L_3$ の非空語を全部受ける文脈は $u\in\{a,b,\#\}^*$、$v\in\{a,b\}^*$ で空語も受ける」という主張で、Claude が証明を確認し、独立のコード（`tools/check_weak_fcp_s0.py`）でも確認。同時に、$S_2,S_3$ の閉包を KY2017 Lemma 12 の証明なしの主張（「同じ文脈で特徴づけられたまま」）に頼らず直接示すようにした。KY2017 から使うのは、Lemma 8・12 の証明に書かれた等式（$L$ または $L'$ 相対）と Lemma 13 の証明だけ | 新。外部査読（ChatGPT、2 回）が発見 |
+| `prop:Ln-sU`（2026-11-25 追加） | **観測が核を長くする**：$s_U$ 型付きで型付き very weak FKP を持つ $L_n$ の文法は、どの $k$ でも初期記号の核が $\{w^*_n\}$（$\kappa\ge3\cdot2^n-2$）。文脈側は $s_U$ 型付き強 1-FCP で $O(n)$ | PROVED | 新。2 回目の外部査読が指摘（旧比較表の「核側：どの型付けでも $L_n$ は $O(n)$」は誤りだった） |
 | `prop:Mn-constituent`（rev2 で追加） | ζ 節点を一つだけ持つ語で、その ζ 節点を丸ごと含む構成素の長さ $\ge|w^*_n|-\ell-|w^*_{j-1}|$ | PROVED | 新（`op:Mn-context` の部分結果。外部査読が定式化を補完） |
 
 ## 有限計算（`tools/`）
 
 | スクリプト | 内容 | 結果 |
 |---|---|---|
-| `check_deletion_family.py 4` | `prop:deletion-upper`、`lem:capture`、反駁補題のファイバー等式を n=2,3,4 で全数。`lem:rec-kernel` の前提（$\mathsf{Rec}_{s_U}(M_n)=M_n$、(U) の組の分布一致）を n=2,3 で | すべて通過（n=4 で捕獲 1204 組、n=3 で (U) 1732 組、3.4 秒） |
+| `check_deletion_family.py 4` | `prop:deletion-upper`、`lem:capture`、反駁補題のファイバー等式を n=2,3,4 で全数。`lem:rec-kernel` の前提（$\mathsf{Rec}_{s_U}(M_n)=M_n$、(U) の組の分布一致）を n=2,3 で | すべて通過（n=4 で捕獲 1204 組、n=3 で (U) 1967 組）。2026-11-25 に型の判定のバグ（閉じ括弧 ⌉ だけを含む因子を標識なしとしていた）を修正。修正前の (U) の数は 15／1732 |
 | `check_reduction_identity.py 4000` | `lem:star` と `lem:reduction` の規則ごとの同値を、$\{a,b,c\}$ 上の乱数有限言語 4000 個（試行ごとに 5 種の型付けから一つ） | 反例なし（規則同値 2230 件、rev2 で再現性を修正） |
+| `check_weak_fcp_s0.py`（2026-11-25 追加） | 命題 6.6 の主張：長さ 2 以下の全文脈（24,642 個）で、$L_2,L_3$ の非空語の標本を全部受けるものは $u\in\{a,b,\#\}^*$、$v\in\{a,b\}^*$ で空語も受ける。長さ 5 以下の全語（111,111 個）で $S_2,S_3$ の文脈集合の閉包が $L_2\cup J_0$、$L_3\cup J_0$ に一致 | 反例なし |
 | 外部査読のスクリプト（`external_review_2026-11-24/scripts/`） | 有限還元の全数検査、$L_K$ の閉包、空の収量を含む捕獲補題、$L^+$ の文脈述語 | こちらでも再実行して全通過 |
 
 ## 予想・未解決
 
 | 番号 | 内容 | 状態 | メモ |
 |---|---|---|---|
-| `op:weak-fcp` | weak FCP は細分化で単調か | 型なし→型付きは **否定的に解決**（`prop:weak-not-preserved`）。型付き→型付きは OPEN | 候補 $L^+$ に、空語を生まない（$s_0$ 型付きの）weak FCP 文法があるかが残り |
+| `op:weak-fcp` | weak 1-FCP は細分化で単調か | $k\ge2$ は **否定的に解決**（`prop:weak-not-preserved`、$s_0\preceq h_{\{@\}}$）。$k=1$ だけ OPEN | |
 | `op:robust` | 任意の $s$ で $\mathrm{FCP_{vw}}[s]\ne\mathrm{FCP_w}[s]$ か | OPEN | KY Thm 14 の証拠は $\$$ の指示型付けで壊れる（Lemma 13 の証明が通らない）。冪等冪による頑健化が方針 |
 | `op:Mn-context` | 型なし VW-FCP 文法での $M_n$ の文脈長・大きさの指数下界 | OPEN（部分結果 PROVED：ζ 節点を丸ごと含む構成素は巨大） | |
 | 濾過核 | 混合核＋型の濾過の primal 変種は $\mathrm{FKP_{vw}}$ を真に拡張するか | OPEN | $\mathrm{FKP_{vw}}$ と $L_K$ は含む |
@@ -66,6 +68,6 @@
 1. ~~別系列モデルによる独立監査~~（2026-11-24 実施、反例なし）。次は人間（金澤先生・吉仲先生）に見せる前の整理。
 2. ~~KY2023 の EXREG パラメータとの照合~~（rev2 で `rem:exreg` を具体化）。
 3. KY2017 の LATA 最終版（Springer）で定理番号と $L_2$ の不等式の向きを照合（本稿は著者版 PDF の抽出テキストによる）。
-4. `op:weak-fcp` の残り：$L^+$ に $s_0$ 型付きの weak FCP 文法を作る。
+4. ~~`op:weak-fcp` の残り：$L^+$ に $s_0$ 型付きの weak FCP 文法を作る~~（2026-11-25、Astra の査読で解決）。残りは $k=1$。
 6. ~~題名の変更~~（2026-11-24 実施）。
 5. 量的な上界：$\mathrm{Primal}_{2,1}$ の特徴データを型付き厚さで抑えられるか。
