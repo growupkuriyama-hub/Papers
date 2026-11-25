@@ -77,7 +77,7 @@ Kanazawa and Yoshinaka (2017) は，対応する分布学習器が成功する�
 標識の観測器のもとでは，長さ $2n$ 以下の枠が文法の $2n$ 個のカテゴリーをすべて名指す．
 これに対し見本は，どの観測器のもとでも，$n$ について指数的な大きさか長さを必要とする．
 この隔たりは学習ではなく文法についての性質であり，
-著者の正例学習器と，所属質問を用いる学習器に，指数的な下界を与える．
+著者の正例からの集合駆動の再構成と，所属質問を用いる学習器に，指数的な下界を与える．
 最後に，観測器を細分化すると，強い有限文脈性と極弱の有限文脈性，および極弱の有限核性について，
 枠には有利にしか働かず，見本には不利にしか働かない．
 弱い有限文脈性は単調ではない．
@@ -356,7 +356,7 @@ $\alpha\Rightarrow_G\beta$ が生成規則 $B_i\to\gamma$ によるなら，$X_{
 文法 $G$ が\emph{強}（\emph{弱}）$k$-FCP を持つとは，$(L(G,A))_A$（それぞれ $(L(G,A)\RL)_A$）が $k$-文脈生成であることをいい，
 \emph{極弱} $k$-FCP を持つとは，$G$ が $k$-文脈生成の SPP を持つことをいう．
 FKP についても「文脈」を「核」に替えて同様に定める．
-対応する性質を持つ CFG がある言語のクラスを $\FCP{k}{vw}$，$\FCP{k}{w}$，$\FCP{k}{s}$（および $\FKP{k}{\cdot}$）と書く．
+対応する性質を持つ CFG がある言語のクラスを $\FCP{k}{vw}$，$\FCP{k}{w}$，$\FCP{k}{st}$（および $\FKP{k}{\cdot}$）と書く．
 $k$ を省いたときは，すべての $k\ge1$ にわたる和を表す．
 
 \begin{fact}[\citealp{ky2017}]\label{fact:ky}
@@ -366,9 +366,28 @@ $k$ を省いたときは，すべての $k\ge1$ にわたる和を表す．
 $L_*$ が右辺あたり高々 $r$ 個の非終端記号を持ち極弱 $k$-FCP（$k$-FKP）を持つ CFG を持つならば，$L_*$ の文法に収束する．
 また，収束先のどの文法も極弱 $k$-FCP（$k$-FKP）を持ち，その SPP は自身の非終端記号で添字づけられた $(C\Lc)_C$
 （それぞれ $(K\RL)_K$）である．
-(c)（Prop.~2，Thm.~14）$\FKP1{s}\setminus\FCP{}{vw}$，$\FCP1{s}\setminus\FKP{}{vw}$，$\FCP2{vw}\setminus\FCP{}{w}$
+(c)（Prop.~2，Thm.~14）$\FKP1{st}\setminus\FCP{}{vw}$，$\FCP1{st}\setminus\FKP{}{vw}$，$\FCP2{vw}\setminus\FCP{}{w}$
 のそれぞれに言語が存在する．
 \end{fact}
+
+\paragraph{学習器.}
+\citet{ky2017} の Algorithms~1 と~2，すなわち\emph{双対学習器} $\mathrm{Dual}_{r,k}$ と\emph{主学習器} $\mathrm{Primal}_{r,k}$（$r,k\ge1$）を思い出す．
+どちらも標的 $L_*$ の正の提示 $t_1,t_2,\dots$ を読み，所属質問を行い，各段階 $i$ で文法 $G_i$ を出力する．
+$\Lc$ と $\R$ は $L_*$ に相対的である．
+$D_i=\{t_1,\dots,t_i\}$ とし，$\Sub(D)$ を $D$ の語の部分文字列の集合，
+$\Con(D)=\{(u,v):\text{ある }w\text{ について }uwv\in D\}$ とし，
+$\Sub^{\le m}(D)$ を，ある $u_0,\dots,u_l$ について $u_0w_1u_1\cdots w_lu_l\in D$ となる組 $(w_1,\dots,w_l)$，$1\le l\le m$ の集合とする．
+$D_i\not\subseteq L(G_{i-1})$ のとき，段階 $i$ を\emph{リセット}と呼ぶ．
+双対学習器は，毎段階 $\mathcal E_i=\Sub(D_i)$ とし，リセットのときに $J_i=\Con(D_i)$，$H_i=\Sub^{\le r+1}(D_i)$ とする（それ以外では $J_i=J_{i-1}$，$H_i=H_{i-1}$）．
+その非終端記号は $1\le|C|\le k$ なる集合 $C\subseteq J_i$ であり，
+生成規則は，$(w_0,\dots,w_n)\in H_i$ で \emph{$\mathcal E_i$ 上で妥当な}，すなわち
+$C_0\Lc\supseteq w_0(\mathcal E_i\cap C_1\Lc)w_1\cdots(\mathcal E_i\cap C_n\Lc)w_n$ を満たす $C_0\to w_0C_1w_1\cdots C_nw_n$ であり，
+初期非終端記号は $\mathcal E_i\cap C\Lc\subseteq L_*$ となる $C$ である．
+主学習器は，毎段階 $J_i=\Con(D_i)$ とし，リセットのときに $\mathcal E_i=\Sub(D_i)$，$H_i=\Sub^{\le r+1}(D_i)$ とする．
+その非終端記号は $1\le|K|\le k$ なる集合 $K\subseteq\mathcal E_i$，生成規則は $(w_0,\dots,w_n)\in H_i$ かつ
+$J_i\cap K_0\R\subseteq(w_0K_1w_1\cdots K_nw_n)\R$ を満たすもの，初期非終端記号は $K\subseteq L_*$ である．
+すべての $j\ge i$ について $G_j=G_i$ となるとき，学習器は\emph{段階 $i$ で収束する}という．
+（\citet{ky2017} が $E_i$ と呼ぶ集合を $\mathcal E_i$ と書くのは，$E_i$ を第~\ref{sec:deletion} 節の非終端記号に使うためである．）
 
 \subsection{固定された有限半群の型付け}
 \emph{型付け}とは，有限半群への全射な半群の射 $s:\Sigma^+\to\mathsf S$ のことである．
@@ -475,7 +494,7 @@ $X_A\subseteq F_{\tau(A)}$ なる族 $(X_A)_A$ が\emph{型付き $k$-文脈生�
 $(G,\tau)$ が型付きの強／弱／極弱 $k$-FCP（それぞれ $k$-FKP）を持つとは，
 $(L(G,A))_A$／$(\cl_{\tau(A)}(L(G,A)))_A$／ある SPP が型付き $k$-文脈生成（それぞれ $k$-核生成）であることをいう．
 対応する言語のクラス「$L$ はその性質を持つ $s$-型付き CFG を持つ」を
-$\tFCP{k}{s}{s}$，$\tFCP{k}{w}{s}$，$\tFCP{k}{vw}{s}$，および $\tFKP{k}{\cdot}{s}$ で表す．
+$\tFCP{k}{st}{s}$，$\tFCP{k}{w}{s}$，$\tFCP{k}{vw}{s}$，および $\tFKP{k}{\cdot}{s}$ で表す．
 \end{definition}
 定義について二つ注意する．第一に，SPP をファイバーに制限しても SPP のままである（前不動点の各不等式の両辺をファイバーと交わればよい）．
 したがって型付きの SPP で失うものはない．
@@ -483,18 +502,18 @@ $\tFCP{k}{s}{s}$，$\tFCP{k}{w}{s}$，$\tFCP{k}{vw}{s}$，および $\tFKP{k}{\c
 以下で型なしのクラスと比べるときは，そのことをすべて明示する．
 
 \begin{proposition}[型付き学習器；既知の例]\label{prop:learners}
-\emph{型付き双対学習器} $\mathrm{Dual}^s_{r,k}$ を，\citet{ky2017} の Algorithm~1 で次のようにしたものと定める．
+\emph{型付き双対学習器} $\mathrm{Dual}^s_{r,k}$ を，第~\ref{sec:prelim} 節の双対学習器で次のようにしたものと定める．
 非終端記号は $(C,\mu)$，$C\subseteq J_i$，$1\le|C|\le k$，$\mu\in\mathsf S^\sharp$ で，表示は $C\Lc\cap F_\mu$，
 生成規則は型の整合するものだけ，妥当性の検査は
-$C_0\Lc\cap F_{\mu_0}\supseteq w_0(E_i\cap C_1\Lc\cap F_{\mu_1})w_1\cdots$，
-初期非終端記号は $E_i\cap C\Lc\cap F_\mu\subseteq L_*$ となる $(C,\mu)$ とする．
-\emph{型付き主学習器} $\mathrm{Primal}^s_{r,k}$ を，Algorithm~2 で，非終端記号を $(K,\mu)$，$K\subseteq E_i\cap F_\mu$，$1\le|K|\le k$，
+$C_0\Lc\cap F_{\mu_0}\supseteq w_0(\mathcal E_i\cap C_1\Lc\cap F_{\mu_1})w_1\cdots$，
+初期非終端記号は $\mathcal E_i\cap C\Lc\cap F_\mu\subseteq L_*$ となる $(C,\mu)$ とする．
+\emph{型付き主学習器} $\mathrm{Primal}^s_{r,k}$ を，主学習器で，非終端記号を $(K,\mu)$，$K\subseteq \mathcal E_i\cap F_\mu$，$1\le|K|\le k$，
 生成規則を型の整合するもの，検査を \citet{ky2017} のものとしたものと定める．
 このとき，型付きの極弱性質について \citet[Theorems~3--6]{ky2017} の類似が成り立つ．
 \end{proposition}
 \begin{proof}
 双対学習器については，\citet[Thms.~3,5]{ky2017} の証明が $C\Lc$ を $C\Lc\cap F_\mu$ に替えて通る．
-$F_\mu$ への所属は決定可能であり，$L_*$ のどの部分文字列もいずれ $E_i$ に入り，型の整合性は候補の生成規則に対する構文的なフィルタだからである．
+$F_\mu$ への所属は決定可能であり，$L_*$ のどの部分文字列もいずれ $\mathcal E_i$ に入り，型の整合性は候補の生成規則に対する構文的なフィルタだからである．
 主学習器については，検査 $J_i\cap K_0\R\subseteq(w_0K_1w_1\cdots K_nw_n)\R$ はちょうど型なしの検査であり，
 補題~\ref{lem:star} と補題~\ref{lem:typed-galois} により，極限での条件 $K_0\R\subseteq(w_0K_1\cdots K_nw_n)\R$ は
 型付きの妥当性 $\cl_{\mu_0}(K_0)\supseteq w_0\cl_{\mu_1}(K_1)\cdots$ と同値である（補題~\ref{lem:reduction}）．
@@ -502,7 +521,7 @@ $F_\mu$ への所属は決定可能であり，$L_*$ のどの部分文字列も
 まず標的の文法を刈り込む．空の核は，閉包を変えずに一元の収量で置き換えられる．
 空の文脈集合が $F_\mu$ を表すなら，終端の到達文脈 $c$ は補題~\ref{lem:reach} により $\{c\}\Lc\cap F_\mu=F_\mu$ を与える．
 したがって，$k\ge1$ を増やさずにすべての証人を非空にとれる．
-双対学習器については，空でない文脈集合を持つどの表示も $\Sub(L_*)$ に含まれるので，妥当でないどの規則や初期記号も，いずれ $E_i$ に現れる有限の反駁を持つ．
+双対学習器については，空でない文脈集合を持つどの表示も $\Sub(L_*)$ に含まれるので，妥当でないどの規則や初期記号も，いずれ $\mathcal E_i$ に現れる有限の反駁を持つ．
 主学習器については，空でない核の反駁文脈は $\Con(L_*)$ に属し，いずれ $J_i$ に現れる．
 有限の正の標本が標的のすべての証人と終端の組を含むようにとれる．この標本を含むリセットの後では，標的の文法の妥当な像が残り続ける．
 それ以上リセットがなければ，取り除かれうる規則と初期記号は有限個しかないので，安定する．
@@ -604,7 +623,7 @@ $i=n$ については $\{(\eps,\eps)\}\Lc\cap F_\zeta=M_n$．
 \end{proof}
 
 \begin{lemma}[核の捕獲]\label{lem:capture}
-$n\ge2$，$z=\Lfl w^*_{n-1}u_{n-1}\Rfl\in M_n$，$r=1+|w^*_{n-1}|$ とし，したがって接頭辞は $R=z[1..r]=\Lfl w^*_{n-1}$ である．
+$n\ge2$，$z=\Lfl w^*_{n-1}u_{n-1}\Rfl\in M_n$，$m=1+|w^*_{n-1}|$ とし，したがって接頭辞は $R=z[1..m]=\Lfl w^*_{n-1}$ である．
 $G$ を $L(G)=M_n$ で，$M_n$ に相対的な SPP $(K_A\RL)_A$ を持つ CFG とする．
 $z$ のある導出木で，ラベル $B$ の節点が $R$ の中にある収量の出現 $x$ を持つならば，$x\in K_B$ である．
 \end{lemma}
@@ -612,15 +631,15 @@ $z$ のある導出木で，ラベル $B$ の節点が $R$ の中にある収量
 $z=pxq$ と書く．このとき $(p,q)\in\mathcal C(G,B)$ であり，補題~\ref{lem:reach} により
 $pK_Bq\subseteq pK_B\RL q\subseteq M_n$．
 $x$ は $R$ の中にあるので，ある $q_0$ について $q=q_0u_{n-1}\Rfl$ である．$q'=q_0w^*_{n-1}\Rfl$ とおくと $pxq'=w^*_n\notin M_n$．
-$k\in K_B$ とする．$pkq\in M_n\subseteq L_n$ において，$u_{n-1}\in L(G_n,E_{n-1})$ の接尾辞の出現は $w^*_{n-1}$ で置き換えられる
-（補題~\ref{lem:nodes}）ので，$pkq'\in L_n$．そして $pkq'\notin M_n$ となるのは $pkq'=w^*_n$ のとき，すなわち $k=x$ のとき，かつそのときに限る．
+$e\in K_B$ とする．$peq\in M_n\subseteq L_n$ において，$u_{n-1}\in L(G_n,E_{n-1})$ の接尾辞の出現は $w^*_{n-1}$ で置き換えられる
+（補題~\ref{lem:nodes}）ので，$peq'\in L_n$．そして $peq'\notin M_n$ となるのは $peq'=w^*_n$ のとき，すなわち $e=x$ のとき，かつそのときに限る．
 さて $x\in L(G,B)\subseteq K_B\RL$ なので，$K_B\R\subseteq\D(x)\not\ni(p,q')$．
-よって $(p,q')\notin K_B\R$：ある $k\in K_B$ について $pkq'\notin M_n$，すなわち $k=x$．
+よって $(p,q')\notin K_B\R$：ある $e\in K_B$ について $peq'\notin M_n$，すなわち $e=x$．
 \end{proof}
 
 \begin{theorem}[$M_n$ の核の下界]\label{thm:deletion}
 $n\ge2$ とし，$G=(N,\Gamma,P,I)$ を，$L(G)=M_n$ で，有限の核（濃度は任意）の SPP $(K_A\RL)_A$ を持つ任意の CFG とする．
-$\rho$ を右辺の記号の最大数とし，$\kappa=\max\{|k|:k\in\bigcup_AK_A\}$ とする．このとき
+$\rho$ を右辺の記号の最大数とし，$\kappa=\max\{|e|:e\in\bigcup_AK_A\}$ とする．このとき
 \[
 \rho\,|N|\,\max(\kappa,1)\ \ge\ 3\cdot2^{n-1}-1 .
 \]
@@ -632,12 +651,12 @@ $T$ の道の上で非終端記号は繰り返さない．
 $A$ がある節点とその真の子孫のラベルで，収量がそれぞれ $\alpha y\beta$ と $y$ ならば，
 $\alpha\beta\ne\eps$ からは無限個の語 $u\alpha^ty\beta^tv\in L(G)$ が得られて $M_n$ の有限性に反し，
 $\alpha\beta=\eps$ ならより小さな木がとれるからである．
-収量が $z$ の位置 $r$ と $r+1$ の両方を含む節点を\emph{鎖節点}と呼ぶ．鎖節点は根からの道をなすので，高々 $|N|$ 個である．
-各位置 $q\le r$ について，$q$ を含む最も深い鎖節点は，$q$ を右辺の終端記号として持つか，$q$ を含む鎖節点でない子を持つ．
+収量が $z$ の位置 $m$ と $m+1$ の両方を含む節点を\emph{鎖節点}と呼ぶ．鎖節点は根からの道をなすので，高々 $|N|$ 個である．
+各位置 $j\le m$ について，$j$ を含む最も深い鎖節点は，$j$ を右辺の終端記号として持つか，$j$ を含む鎖節点でない子を持つ．
 そのような子は $R$ の中にある．
 よって $R$ は高々 $\rho|N|$ 個の断片で覆われ，各断片は一つの終端記号か $R$ の中にある節点の収量である．
 補題~\ref{lem:capture} により，そのような収量は核に属するので，長さは $\kappa$ 以下である．
-したがって $r\le\rho|N|\max(\kappa,1)$ であり，$r=3\cdot2^{n-1}-1$．
+したがって $m\le\rho|N|\max(\kappa,1)$ であり，$m=3\cdot2^{n-1}-1$．
 型付きの文法については補題~\ref{lem:reduction} を用いる．これは同じ文法の同じ核による型なしの SPP を与える．
 \end{proof}
 
@@ -790,9 +809,9 @@ $M_n$ の正の提示の上で段階 $i$ で収束するならば，$w^*_{n-1}$ 
 \end{proposition}
 \begin{proof}
 $t\le i$ を $J$ と $H$ が最後にリセットされた段階とする．したがって極限の文法は
-$J_t=\Con(D_t)$，$H_t=\Sub^{\le r+1}(D_t)$ から作られ，$E_i=\Sub(D_i)$ の上で検査される．
+$J_t=\Con(D_t)$，$H_t=\Sub^{\le r+1}(D_t)$ から作られ，$\mathcal E_i=\Sub(D_i)$ の上で検査される．
 \citet[Thm.~3]{ky2017} の証明（および命題~\ref{prop:learners}）により，極限の文法のどの生成規則も妥当なので，
-妥当でない候補の生成規則はどれも $E_i$ の上の検査で落ちなければならない．
+妥当でない候補の生成規則はどれも $\mathcal E_i$ の上の検査で落ちなければならない．
 
 $M_n$ のどの語も $\Lce y\Rce$ か，$y,y'$ の少なくとも一方が型 $\zeta$ である $\Lfl yy'\Rfl$ である．
 $D_t$ のあるデータについて，$c=(\Lce,\Rce)$，$y'$ が型 $\zeta$ の $c=(\Lfl,y'\Rfl)$，または $y$ が型 $\zeta$ の $c=(\Lfl y,\Rfl)$ をとる．
@@ -801,11 +820,11 @@ $D_t$ のあるデータについて，$c=(\Lce,\Rce)$，$y'$ が型 $\zeta$ の
 $(\Lfl,\eps,\Rfl)\in H_t$．
 
 型なしの場合：候補 $\{(\eps,\eps)\}\to\Lfl\{c\}\{c\}\Rfl$ は，$w^*_n=\Lfl w^*_{n-1}w^*_{n-1}\Rfl\notin M_n=\{(\eps,\eps)\}\Lc$ なので妥当でない．
-これが $E_i$ の上の検査で落ちるのは，$\Lfl x_1x_2\Rfl\notin M_n$ となる $x_1,x_2\in E_i\cap\{c\}\Lc$，すなわち $x_1=x_2=w^*_{n-1}$ があるときに限る．
+これが $\mathcal E_i$ の上の検査で落ちるのは，$\Lfl x_1x_2\Rfl\notin M_n$ となる $x_1,x_2\in \mathcal E_i\cap\{c\}\Lc$，すなわち $x_1=x_2=w^*_{n-1}$ があるときに限る．
 
 型付きの場合：型の整合する候補 $(\{c\},\zeta)\to\Lfl(\{c\},1)(\{c\},\zeta)\Rfl$ は妥当でない．
 $\Lfl w^*_{n-1}y\Rfl$（$y\in L(G_n,E_{n-1})$ は型 $\zeta$）は入れ子の深さが $n$ なので $\{c\}\Lc$ に属さないからである．
-検査が落ちうるのは $x_1\in E_i\cap\{c\}\Lc\cap F_1=E_i\cap\{w^*_{n-1}\}$ のときだけである．
+検査が落ちうるのは $x_1\in \mathcal E_i\cap\{c\}\Lc\cap F_1=\mathcal E_i\cap\{w^*_{n-1}\}$ のときだけである．
 \end{proof}
 
 \begin{remark}[削除族の読み方]\label{rem:deletion-table}
@@ -896,7 +915,7 @@ $s\preceq h$ を $\Sigma^+$ の型付けとし，$k\ge1$ とする．
 \item $\tFKP{k}{vw}{s}=\tFKP{k}{w}{s}$．
 \item $\tFKP{k}{vw}{h}\subseteq\tFKP{k}{vw}{s}\subseteq\FKP{k}{vw}=\FKP{k}{w}$．
 \item $\FCP{k}{vw}\subseteq\tFCP{k}{vw}{s}\subseteq\tFCP{k}{vw}{h}$ かつ
-$\FCP{k}{s}\subseteq\tFCP{k}{s}{s}\subseteq\tFCP{k}{s}{h}$．
+$\FCP{k}{st}\subseteq\tFCP{k}{st}{s}\subseteq\tFCP{k}{st}{h}$．
 \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -940,7 +959,7 @@ $\mathrm{Primal}^h_{r,k}$ が $L_*$ 上で収束し $s\preceq h$ ならば，$\m
 \begin{proposition}[観測は文脈を助ける]\label{prop:strict-context}
 $\Sigma=\{a,b,c,d\}$ とし，
 $L=\{a^mcb^{2m}:m\ge0\}\cup\{a^mdb^n:n\le m\le2n\}$
-（\citealp[Prop.~2(i)]{ky2017}）とする．このとき $L\in\tFCP1{s}{h_{\{c\}}}$ だが，
+（\citealp[Prop.~2(i)]{ky2017}）とする．このとき $L\in\tFCP1{st}{h_{\{c\}}}$ だが，
 $L\notin\FCP{}{vw}$ かつ $L\notin\tFCP{}{vw}{s_0}$．
 \end{proposition}
 \begin{proof}
@@ -968,7 +987,7 @@ $\Sigma=\{a,b,y,z\}$，$P=\{a^mb^n:m\ne n\}$ とし，
 \[
 L_K=P\cup\{a^mzb^n:n\le m\}\cup\{a^myb^n:m\le n\}
 \]
-とする．このとき $L_K\in\tFKP1{s}{s_0}\subseteq\FKP1{vw}$ だが，すべての $k$ について $L_K\notin\tFKP{k}{vw}{h_{\{y,z\}}}$．
+とする．このとき $L_K\in\tFKP1{st}{s_0}\subseteq\FKP1{vw}$ だが，すべての $k$ について $L_K\notin\tFKP{k}{vw}{h_{\{y,z\}}}$．
 \end{proposition}
 \begin{proof}
 \emph{上界.}  $s_0$-型がともに $0$ の二つの初期非終端記号 $S_+,S_-$ と，生成規則
@@ -978,15 +997,15 @@ S_-\to b\mid y\mid S_-b\mid aS_-b
 \]
 を用いる．それぞれの言語は
 \[
-Z=\{a^mb^n:m>n\}\cup\{a^mzb^n:m\ge n\},\qquad
-Y=\{a^mb^n:m<n\}\cup\{a^myb^n:m\le n\}
+L_+=\{a^mb^n:m>n\}\cup\{a^mzb^n:m\ge n\},\qquad
+L_-=\{a^mb^n:m<n\}\cup\{a^myb^n:m\le n\}
 \]
 であり，その和は $L_K$ である．$L_K$ に相対的に，
 $\D(z)=\{(a^p,b^q):p\ge q\}$，$\D(y)=\{(a^p,b^q):p\le q\}$．
-これらから $Z=\{z\}\RL$ と $Y=\{y\}\RL$ が得られる．
+これらから $L_+=\{z\}\RL$ と $L_-=\{y\}\RL$ が得られる．
 空の文脈がまず閉包を $L_K$ に制限する．すべての非負の差 $p-q$ が，標識のない正の差と $z$ で標識された非負の差をちょうど保つ．
 負の差を持つ標識のない語は相殺でき，$y$ で標識されたどの語も十分大きな $p-q$ で除外される．
-$Y$ についての議論は対称である．よって生成される二つの成分はどちらも一元の核の閉包である．
+$L_-$ についての議論は対称である．よって生成される二つの成分はどちらも一元の核の閉包である．
 どちらも $\eps$ を含まないので，この文法は $s_0$-型付き強 $1$-FKP を持つ．
 
 \emph{下界.}  $h=h_{\{y,z\}}$ とし，$L_K$ の $h$-型付き $(G,\tau)$ が型付き SPP $(\cl_{\tau(A)}(K_A))_A$ を持つと仮定する．
@@ -1008,17 +1027,17 @@ $|m-n|>p$ なる語 $a^mb^n$ は $i-j=n-m$ なる文脈 $(a^i,b^j)$ を満たさ
 定理~\ref{thm:duality}(b)．
 \end{proof}
 弱 FCP は，定理~\ref{thm:duality}(c) の強 FCP とも極弱 FCP とも異なる振る舞いをする：細分化について単調でない．
-\citet[Secs.~5--6]{ky2017} の言語を用いる．$\Sigma_0=\{a,b,c,d,e,f,\#,\$,\%\}$ の上で，$P=\{a,b,\#\}^*$，$Z=\{a,b\}^*$ として
+\citet[Secs.~5--6]{ky2017} の言語を用いる．$\Sigma_0=\{a,b,c,d,e,f,\#,\$,\%\}$ の上で，$V=\{a,b,\#\}^*$，$V_0=\{a,b\}^*$ として
 \begin{align*}
-L_1&=\{v\$z: v\in P,\ z=(\mathrm{erase}_\#(v))^R\},\\
-L_2&=\{wyc^id^ie^jz: w,z\in Z,\ y\in(\#Z)^*,\ i,j\ge0,\ |w|_a\ge|w|_b\},\\
-L_3&=\{wyc^id^je^jz: w,z\in Z,\ y\in(\#Z)^*,\ i,j\ge0,\ |w|_a\le|w|_b\},\\
-L_4&=\{v\$zc^k\%f^l: v\in P,\ z\in Z,\ k,l\ge0\},\\
-L_5&=\{vc^id^ie^jzc^k\%f^l: v\in P,\ z\in Z,\ i,j,k,l\ge0,\ j\ne k\}
+L_1&=\{v\$z: v\in V,\ z=(\mathrm{erase}_\#(v))^R\},\\
+L_2&=\{wyc^id^ie^jz: w,z\in V_0,\ y\in(\#V_0)^*,\ i,j\ge0,\ |w|_a\ge|w|_b\},\\
+L_3&=\{wyc^id^je^jz: w,z\in V_0,\ y\in(\#V_0)^*,\ i,j\ge0,\ |w|_a\le|w|_b\},\\
+L_4&=\{v\$zc^k\%f^l: v\in V,\ z\in V_0,\ k,l\ge0\},\\
+L_5&=\{vc^id^ie^jzc^k\%f^l: v\in V,\ z\in V_0,\ i,j,k,l\ge0,\ j\ne k\}
 \end{align*}
-とし，$L=L_1\cup L_2\cup L_3$，$L'=L\cup L_4\cup L_5$ とする．
-また $J_0=\{vc^id^ie^iz: v\in P,\ z\in Z,\ i\ge0\}$ とおく．
-$P\subseteq L_2\cup L_3$ かつ $J_0\subseteq L_2\cup L_3$ に注意する．
+とし，$L_{123}=L_1\cup L_2\cup L_3$，$L'=L_{123}\cup L_4\cup L_5$ とする．
+また $J_0=\{vc^id^ie^iz: v\in V,\ z\in V_0,\ i\ge0\}$ とおく．
+$V\subseteq L_2\cup L_3$ かつ $J_0\subseteq L_2\cup L_3$ に注意する．
 
 \begin{proposition}[弱 FCP は単調でない]\label{prop:weak-not-preserved}
 $L_1^@$ を，$L_1$ の $\$$ を新しい文字 $@$ に置き換えたものとし，
@@ -1037,37 +1056,37 @@ $L^+$ の語についての次の三つの事実を用いる：$c$，$d$ また�
 $a$，$b$，$d$ または $e$ で終わる語は $L_4\cup L_5$ に属さない．$d$ を含む語は $L_1\cup L_1^@\cup L_4$ に属さない．
 
 \emph{主張.}  $Y\in\{L_2,L_3\}$ について，$u(Y\setminus\{\eps\})v\subseteq L^+$ となるどの文脈 $(u,v)$ も
-$u\in P$，$v\in Z$，$uv\in L^+$ を満たす．
+$u\in V$，$v\in V_0$，$uv\in L^+$ を満たす．
 特に $(Y\setminus\{\eps\})\R=Y\R$ であり，すべての $(u,v)\in Y\R$ について $uJ_0v\subseteq J_0$．
 
 $Y=L_2$ については語 $x_t=\#cde^ta\in L_2$（$t\ge0$）を用いる．
 各 $ux_tv$ は $d$ を含むので $L_2\cup L_3\cup L_5$ に属する．
-もし $v$ が $\%$ を含むなら，すべての $ux_tv$ は $L_5$ に属する．そこでは $x_t$ の $\#$ は $P$ に属する接頭辞の部分にあるので，
+もし $v$ が $\%$ を含むなら，すべての $ux_tv$ は $L_5$ に属する．そこでは $x_t$ の $\#$ は $V$ に属する接頭辞の部分にあるので，
 $cd$ は $i=1$ のブロック $c^id^i$，$e^t$ は $j=t$ のブロック $e^j$ であり，$v=z'c^k\%f^l$ で $k$ は $v$ によって決まる．
 $t=k$ とすると $j\ne k$ に反する．
 $u$ に $\%$ があることは不可能である．$\%$ の後には $f$ しか来ないからである．
-よって $ux_tv\in L_2\cup L_3\subseteq P\,c^*d^*e^*Z$ であり，$x_t$ は $\#$ で始まり $a$ で終わるので，$u\in P$ かつ $v\in Z$．
+よって $ux_tv\in L_2\cup L_3\subseteq V\,c^*d^*e^*V_0$ であり，$x_t$ は $\#$ で始まり $a$ で終わるので，$u\in V$ かつ $v\in V_0$．
 $Y=L_3$ については $x=\#cd^2e^2a\in L_3$ を用いる：
 $L_5$ では $\#$ の後の $c$ と二つの $d$ がブロック $c^id^i$ をなさなければならないが，それは不可能なので，同じ結論が従う．
-すると $uv\in P\subseteq L_2\cup L_3$ なので，$(u,v)$ は $\eps$ も受け入れる．反単調性からもう一方の包含が得られる．
+すると $uv\in V\subseteq L_2\cup L_3$ なので，$(u,v)$ は $\eps$ も受け入れる．反単調性からもう一方の包含が得られる．
 最後に $u(v'c^id^ie^iz')v=(uv')c^id^ie^i(z'v)\in J_0$．
 
 \emph{強く特徴づけられる非終端記号.}  $A\in\{Q,F,H,E,C,J\}$（それぞれ $A\in\{T,U,S_{4,5}\}$）について，
-\citet[proofs of Lemmas~8 and~12]{ky2017} は，$L$（それぞれ $L'$）に相対的に $|C_A|\le2$ なる $C_A$ で $L(G^+,A)=C_A\Lc$ を与える．
-$Q,F,H,E,C,J$ について挙げられた各文脈は $c$，$d$ または $e$ を含み，右成分が $d$ または $e$ で終わるので，その $L^+$ での完成は $L$ に属する．
+\citet[proofs of Lemmas~8 and~12]{ky2017} は，$L_{123}$（それぞれ $L'$）に相対的に $|C_A|\le2$ なる $C_A$ で $L(G^+,A)=C_A\Lc$ を与える．
+$Q,F,H,E,C,J$ について挙げられた各文脈は $c$，$d$ または $e$ を含み，右成分が $d$ または $e$ で終わるので，その $L^+$ での完成は $L_{123}$ に属する．
 $T$，$U$，$S_{4,5}$ について挙げられた各文脈は $\%$ を含むか $f$ で終わるので，その $L^+$ での完成は $L_4\cup L_5$ に属する．
 よって $L^+$ に相対的に $L(G^+,A)=C_A\Lc$ である：これらの非終端記号は強く特徴づけられる．
 
 \emph{$S_2$ と $S_3$.}  $C_2=\{(\eps,\eps),(a\#,b)\}$ とおく．
 完成 $a\#xb\in L^+$ は $b$ で終わり最初のブロックが $a$ なので，$L_4\cup L_5$ にも $L_1\cup L_1^@$ にも属さない．
-よって $a\#xb\in L_2\cup L_3$ であり，$x$ は $\$,\%,f,@$ のどれも含まず，$x\in L^+$ から $x\in L$ が得られる．
-したがって $L^+$ に相対的な $C_2\Lc$ は $L$ に相対的な $C_2\Lc$ に等しく，それは $L_2\cup J_0$ である \citep[proof of Lemma~8]{ky2017}．
+よって $a\#xb\in L_2\cup L_3$ であり，$x$ は $\$,\%,f,@$ のどれも含まず，$x\in L^+$ から $x\in L_{123}$ が得られる．
+したがって $L^+$ に相対的な $C_2\Lc$ は $L_{123}$ に相対的な $C_2\Lc$ に等しく，それは $L_2\cup J_0$ である \citep[proof of Lemma~8]{ky2017}．
 $L_2\subseteq C_2\Lc$ なので $L_2\RL\subseteq C_2\Lc$．逆に $L_2\subseteq L_2\RL$ であり，主張により $J_0\subseteq L_2\RL$．
 よって $L(G^+,S_2)\RL=C_2\Lc$ であり，対称的に $L(G^+,S_3)\RL=\{(\eps,\eps),(b\#,a)\}\Lc=L_3\cup J_0$．
 
-\emph{$S_1$.}  $M$ を鏡映の文脈 $(w_1\#\cdots\#w_n,w_n^R\cdots w_1^R)$，$n\ge1$，$w_i\in Z$ の集合とする．
+\emph{$S_1$.}  $M$ を鏡映の文脈 $(w_1\#\cdots\#w_n,w_n^R\cdots w_1^R)$，$n\ge1$，$w_i\in V_0$ の集合とする．
 $@$ を含む $L^+$ の語はちょうど $L_1^@$ の語なので，$L^+$ に相対的な $L_1^@$ の文脈は，$L_1^@$ に相対的な $L_1^@$ の文脈である．
-$@$ を $\$$ に名前を替え，$L$ に相対的に $L(G,S_1)\R=M$ であること \citep[proof of Lemma~8]{ky2017} を用いると，この集合は $M$ である．
+$@$ を $\$$ に名前を替え，$L_{123}$ に相対的に $L(G,S_1)\R=M$ であること \citep[proof of Lemma~8]{ky2017} を用いると，この集合は $M$ である．
 $L'$ に相対的には，$L_1$ の文脈は $M$ と文脈 $(v,zc^k\%f^l)$ からなり \citep[proof of Lemma~12]{ky2017}，
 後者は $L_1^@$ の文脈ではない．よって $L^+$ に相対的に $L(G^+,S_1)\R=M$．
 $@$ を含まない語については，$L^+$ に相対的な閉包 $M\Lc$ は $L'$ に相対的なものと一致し，
@@ -1092,7 +1111,7 @@ $\zeta$ は吸収元なので，左辺の型が $1$ または $\one$ の生成�
 残ったどの非終端記号も言語を保つ．
 \citet[Lemma~13]{ky2017} の証明は $L'$ の任意の CFG に適用でき，Ogden の補題 \citep{ogden1968} を用いる．
 これを $G_0$ に適用すると，収量 $a^{m}\$a^{l}$ を持つ（型 $1$ の）非終端記号 $B$ と数 $k_1$ が得られ，
-$i>k_1$ について $L(G_0,B)\RL$ は $Pc^id^ie^iZ$ の語を含まない．
+$i>k_1$ について $L(G_0,B)\RL$ は $Vc^id^ie^iV_0$ の語を含まない．
 一方，有限のどの $W\subseteq L(G_0,B)\R$ についても，$i>k_2$ なるすべての $i$ について $c^id^ie^i\in W\Lc$ となる $k_2$ がある
 （いずれも $L'$ に相対的）．
 よって有限のどの $W\subseteq L(G_0,B)\R$ も $L(G_0,B)\RL\cap\Sigma_0^+=W\Lc\cap\Sigma_0^+$ を満たさない．
