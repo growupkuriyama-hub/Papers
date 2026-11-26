@@ -2,7 +2,7 @@ reviewer: ChatGPT
 target_commit: d7804c4
 date: 2026-11-27
 status: in_progress
-progress: findings.csv
+progress: checks independent Python and output
 verdict_editor: Major
 verdict_R1: Major
 verdict_R2: Major
@@ -178,3 +178,13 @@ KY2017の最終刊行PDFは取得できず、Project 情報源04の著者稿を�
 編集者として、P0を直し、P1を合理的に処理した後は JoLLI への投稿を支持する。OP8.3 の解決や自然言語実験を必須とはしない。今回の主結果は、それなしでも自己完結した最悪例分離となる。
 
 指摘一覧は findings.csv に記録した。status は、旧レビューで同型の指摘があったものを persisting、修正済みだった型判定の不備の再出現を regression、その他を new とした。
+
+## 検証実行の記録
+
+著者の7スクリプトはすべて対象コミットから取得し、Git blob SHA-1 を照合したコピーを python3 -I で実行。終了コード0を確認した。check_untyped_frames.py は n=5 の言語が3,263,442語になるため引数4、reduction は4000試行、その他は既定引数。全通過の表示はコードの正しさを意味しない（R1-M5参照）。
+
+独立コード checks/independent.py は命題4.3、H_n の規則数と枠全長、命題8.4の左端の標識置換の有限検証（n≤4）、全長下界の断片予算（2≤n≤8、各最大断片長）、偶奇型の短い代表語、注意5.8の分布と枠の同一性・H_n の型付き閉包（n≤3）を調べた。断片予算の計算は任意CFG全数検証ではなく、一般証明とは別の有限検査。checks/rec_independent.py は union-find と二項規則飽和を独立実装し、n=3の別の11語標本を見つけた。著者の標本も正しい型判定・長さ打ち切りなしで厳密に再現し、n=2,3 の最長語閾値9,16と列挙文法を確認した。
+
+全長の厳密集計（n≥2）：H_n の規則部分 28n−22、枠部分 2n²+2n、従って T=2n²+30n−22。著者ツールの枠部分は1小さい。F_n の枠提示は T=(3n−2)2^n+n²+11n−4。H_n の見本提示は T=3·2^n+n²+30n−25。いずれも規則と証人の明示的記号数、Def 3.4 の尺度。詳細は output.txt。
+
+作業手順の限界：ローカル git clone/ls-remote はネットワーク接続不可であったため、GitHub APIで完全なSHAのコミット・blob・枝を固定し、枝参照を親SHAで保護して更新した。git rev-parse HEAD の実行結果は得られていない。独立コードの作成・実行が既存ツール全実行より先になり、一部追加検査は過去記録参照後に実施した。初期の数学的判断および11語標本の独立探索は旧査読を読む前に行った。初回のWIPは数学査読後であり、開始直後は枝作成のみ。§0–1は同一コミット、以降は区切ってコミット。既存原稿、PDF、tools、mainは一切編集していない。
