@@ -2,15 +2,15 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories under Finite Observation*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 3（JoLLI 向けに再構成）、20 頁、2026-11-25）
-- 日本語版（査読用の全訳、英語版と同じ版、23 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 3（JoLLI 向けに再構成）、21 頁、2026-11-26）
+- 日本語版（査読用の全訳、英語版と同じ版、24 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
 - 2 回目の外部査読（ChatGPT／Astra、2026-11-25、major revision 相当・主定理の撤回なし）と対応：[`research/REVIEW_RESPONSE_2026-11-25.md`](research/REVIEW_RESPONSE_2026-11-25.md)、原本は [`research/external_review_2026-11-25_astra/`](research/external_review_2026-11-25_astra/)
 - 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`
 
-**2026-11-25 追記：** 英日TeXの考察に Python のジェネレータと標準中国語の疑問詞原位置の類例を追加し、結論を短縮した。定理・証明に変更なし。上記PDFとページ数は再ビルド・公開確認前の情報であり、最新版はTeXを参照。
+**2026-11-25 追記：** 英日TeXの考察に Python のジェネレータと標準中国語の疑問詞原位置の類例を追加し、結論を短縮した。定理・証明に変更なし。2026-11-26 に PDF を再ビルドして反映済み。
 
 ## 何の論文か
 
