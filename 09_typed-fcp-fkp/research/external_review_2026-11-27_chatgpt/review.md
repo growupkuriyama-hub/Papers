@@ -2,7 +2,7 @@ reviewer: ChatGPT
 target_commit: d7804c4
 date: 2026-11-27
 status: in_progress
-progress: §8 priorities
+progress: findings.csv
 verdict_editor: Major
 verdict_R1: Major
 verdict_R2: Major
@@ -176,3 +176,5 @@ KY2017の最終刊行PDFは取得できず、Project 情報源04の著者稿を�
 | P2 | R1-m4/m5/m6/R2-m1/m2 | 文章圧縮、再現性、記号・説明・比較表、コミット固定URL。 |
 
 編集者として、P0を直し、P1を合理的に処理した後は JoLLI への投稿を支持する。OP8.3 の解決や自然言語実験を必須とはしない。今回の主結果は、それなしでも自己完結した最悪例分離となる。
+
+指摘一覧は findings.csv に記録した。status は、旧レビューで同型の指摘があったものを persisting、修正済みだった型判定の不備の再出現を regression、その他を new とした。
