@@ -2,7 +2,7 @@ reviewer: ChatGPT
 target_commit: cd2dbde
 date: 2026-11-27
 status: in_progress
-progress: §0–5 完了、検査・CSV記録整理中
+progress: §0–6 完了、検査・CSV記録整理中
 verdict_editor: Major
 verdict_R1: Minor
 verdict_R2: Major
@@ -140,6 +140,19 @@ PDFの25頁は著者申告。今回の確認対象は固定版の TeX であり�
 
 
 ## §6 英語・記号
+
+- 71–102: "the gap concerns grammars, not learning; it yields ..." → "This is a representation-size separation, from which algorithm-specific data lower bounds follow."
+- 88–93: "it brings our frame grammar down" → "it permits a different grammar with O(n) productions." 同一 H_n 上の比較と区別。
+- 1404,1500: "the same ρ" → "right-hand sides of length at most ρ"。
+- 1466–1477: R は語とその長さの両方を指す。r_n=3·2^n−n−5 と分離する。
+- 1574–1598: "a lowest node" は "the lowest nonterminal node whose yield contains the entire designated occurrence" とする。ℓ の実際の最大値と任意上界を区別。
+- 1601–1610: mark-blind は型等式で定義。偶奇の場合 n≥3。near-optimal は "among presentations with frame lengths at most 2n"。
+- 173–200,905–932: 序論定理A(ii)/(iii)と本文4.8の上下界の順をそろえるか対応を明記。
+- 1716–1718: monotonicity の対象を列挙し、general forms を仮定付きとする。strong FKP まで含めない。
+- 1730–1738: Data availability に対象コミットで固定したURL、検査コマンド・範囲を明記する。AI宣言は存在する。
+
+既存 tools は全11本を python3 -I で実行（check_untyped_frames.py のみ全探索の計算量を抑えるため引数4、他は default）。全て終了0。ただし check_exemplar_upper.py は旧下界 3·2^{n−1}−1 を検査している（4.7に合わせ修正）。check_deletion_family.py は旧 capture の短い R を検査する旧テストとしては有効。Rec の length cap だけでは過生成なしを証明しないが check_rec_samples.py の uncapped 検査で改善済み。check_toy_example.py は印字のみで不一致でも exit 0、assert を入れる。check_reduction_identity.py は3000件の乱択・1672件の規則比較で非空核・共通枠を仮定、check_weak_fcp_s0.py は長さ≤5の有限検査であり、一般定理の証明ではない。KYの既知定理自体の全証明の再査読は対象外。実行ログを checks/ に残す。
+
 
 ## §7 採点
 
