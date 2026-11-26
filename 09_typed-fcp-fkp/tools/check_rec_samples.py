@@ -3,13 +3,14 @@
 and the listing presentation of M_n (paragraph after Theorem thm:deletion).
 
 Encoding: a -> 'a',  ⌊ -> '[',  ⌋ -> ']',  ⌈ -> '{',  ⌉ -> '}'.
-s_U(w) = 'Z' iff w contains '{', else '1'.
+s_U(w) = 'Z' iff w contains '{' or '}', else '1'.
 
 Rec_s(K) (#1, Sec. 4.1; Section 5 of this paper): a nonterminal [[x]] for every nonempty
 factor x of K, and productions
   (B) [[xy]] -> [[x]][[y]],   (U) [[x]] -> [[y]] for s(x)=s(y) and D_K(x) ∩ D_K(y) ≠ ∅,
   (L) [[a]] -> a,             (S) start -> [[w]] for w in K.
-The language is computed exactly as a least fixpoint (all languages are finite).
+The language is computed exactly as a least fixpoint, without a length cap
+(the fixpoint is finite because M_n is in C^cf_{s_U} and Rec is sound).
 
 Checks:
   (1) n=3: the 11-word sample K3 below satisfies L(Rec(K3)) = M_3 (no missing and no
@@ -23,6 +24,7 @@ Checks:
 Usage: python3 -I check_rec_samples.py
 """
 import itertools
+import sys
 
 
 def levels(n):
@@ -45,7 +47,8 @@ def u(i):
 
 
 def sU(w):
-    return 'Z' if '{' in w else '1'
+    # s_U is the indicator of the mark brackets: either bracket counts.
+    return 'Z' if ('{' in w or '}' in w) else '1'
 
 
 def contexts(K):
@@ -57,7 +60,7 @@ def contexts(K):
     return ctx
 
 
-def rec_language(K, maxlen):
+def rec_language(K, maxlen=None):
     ctx = contexts(K)
     F = list(ctx)
     unit = {x: [y for y in F if y != x and sU(y) == sU(x) and ctx[x] & ctx[y]] for x in F}
@@ -71,8 +74,7 @@ def rec_language(K, maxlen):
             for p, q in split[x]:
                 for a in Y[p]:
                     for b in Y[q]:
-                        if len(a) + len(b) <= maxlen:
-                            new.add(a + b)
+                        new.add(a + b)
             for y in unit[x]:
                 new |= Y[y]
             if new != Y[x]:
@@ -126,6 +128,7 @@ def main():
         ok &= strong and rho == 3 * 2 ** n - 3
 
     print('ALL OK' if ok else 'SOME CHECK FAILED')
+    sys.exit(0 if ok else 1)
 
 
 if __name__ == '__main__':

@@ -72,17 +72,22 @@ def main():
         good = LS == M and frames and nprod == 2 ** n + 2 * n - 2 and rho == 3 * n
         print(f'n={n}: L(F_n)=M_n: {LS == M}, strong 1-FCP: {frames}, |N|={n + 1}, '
               f'productions={nprod} (2^n+2n-2={2 ** n + 2 * n - 2}), rho={rho}, |M_n|={len(M)}')
-        ok &= good
         # (4) total lengths
         pE = 2 + sum(5 + 4 for _ in range(1, n))
         tot_F = sum(len(T) + 1 for T in rhs) + pE + sum(2 * (n - k) + 1 for k in range(n)) + 1
         pH = 2 + 5 * (n - 1) + 4 + (5 * 3 + 4 * 2) * (n - 1)
         tot_H_ex = pH + sum(len(wstar(i)) + 1 for i in range(n)) + sum(2 * i + 2 for i in range(1, n + 1))
-        tot_H_fr = pH + 2 * sum(2 * (n - i) + 1 for i in range(1, n)) + 1 + 1 + 2 * n - 1
+        # contexts: (E_0,1) has length 2n; (E_i,1),(E_i,zeta) for 1<=i<n have 2(n-i);
+        # the root (E_n,zeta) has (lambda,lambda); each context costs length+1
+        tot_H_fr = pH + (2 * n + 1) + 2 * sum(2 * (n - i) + 1 for i in range(1, n)) + 1
+        if n >= 2:
+            good &= tot_H_fr == 2 * n * n + 30 * n - 22
         print(f'      total length: F_n frames {tot_F} (/n2^n={tot_F / (n * 2 ** n):.2f}), '
               f'H_n exemplars {tot_H_ex} (/2^n={tot_H_ex / 2 ** n:.2f}), '
               f'typed H_n frames {tot_H_fr} (/n^2={tot_H_fr / n ** 2:.2f})')
+        ok &= good
     print('ALL OK' if ok else 'SOME CHECK FAILED')
+    sys.exit(0 if ok else 1)
 
 
 if __name__ == '__main__':
