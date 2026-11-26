@@ -174,6 +174,10 @@ $s$ を\emph{型付け}または\emph{観測器}，$s(w)$ を表現 $w$ の\emph
 \footnote{\citet{kuriyama-tcs1} の結果の番号は，
 その arXiv 第 5 版（arXiv:1409.6247v5）による．}
 では，同じ型を持つ表現の間でのみ代入可能性を比較する．
+\citet[Def.~2.1]{kuriyama-tcs1} にならい，$x,y\in\Sigma^+$ について $s(x)=s(y)$ かつ $\{x\}\R\cap\{y\}\R\ne\emptyset$ ならば
+$\{x\}\R=\{y\}\R$ となるとき，$L$ は \emph{$\sim_s$-代入可能}であるという．
+$\Ccf s$ は文脈自由で $\sim_s$-代入可能な言語のクラスである．
+空でない語すべてに同じ型を与える自明な型付け $s_0$ のとき，これは \citet{clark-eyraud2007} の代入可能性の，非空の断片についての変種であり，\citet{kuriyama-tcs1} で用いられるものである．
 
 例~\ref{ex:toy} において，$\mathsf S=U_1=\{1,\zeta\}$（$1$ は単位元，$\zeta$ は吸収元）とし，
 表現 $w$ が \emph{dogs} または \emph{bark} を含むとき
@@ -260,25 +264,26 @@ $3\cdot2^{n-1}-1$ と $8n\max(3\cdot2^{n-1}-2,2n+1)$ のあいだにある．
 下界はどの型付けについても成り立つので，そのために観測器について何かを学習する必要はない．観測器を固定するのは上界のためだけである．
 
 \paragraph{学習への応用.}
-定理~A は文法についての主張であり，どの学習モデルにもよらない．
-これはアルゴリズムに対する下界を与える（第~\ref{sec:applications} 節）．
-\begin{itemize}[leftmargin=1.5em,nosep]
-\item 正例からは，著者の再構成 $\mathsf{Rec}_s$ \citep{kuriyama-tcs1} は，
-$M_n\in\Ccf s$ となるどの型付け $s$ についても，$M_n$ 上で大きさ $(3\cdot2^{n-1}-1)^{1/3}$ 以上の特性データを必要とする
-（系~\ref{cor:rec-data}）．
-\item 所属質問を用いると，$r,k$ を固定した \citet{ky2017} の主学習器 $\mathrm{Primal}_{r,k}$ は，
-$M_n$ 上で収束するまでに $2^{\Omega(n)}$ のデータを必要とする（系~\ref{cor:primal-data}）．
-\end{itemize}
-枠に基づく \citet{ky2017} の双対学習器（$r\ge2$，$k\ge1$）は，枠が短いので隔たりの対象にならない．
-別の反駁の論法により，これも長さ $3\cdot2^{n-1}-2$ のデータを必要とすることが示される
-（命題~\ref{prop:dual-refutation}）．
+定理~A は学習ではなく文法についての主張だが，見本でカテゴリーを名指す学習器を下から抑える（第~\ref{sec:applications} 節）．
+正例からは，著者の再構成 $\mathsf{Rec}_s$ \citep{kuriyama-tcs1} は，$M_n\in\Ccf s$ となるどの型付け $s$ についても，
+$M_n$ 上で大きさ $(3\cdot2^{n-1}-1)^{1/3}$ 以上の特性データを必要とする．
+所属質問を用いると，パラメータを固定した \citet{ky2017} の主学習器は $2^{\Omega(n)}$ のデータを必要とする．
+枠に基づく双対学習器は隔たりの対象にならないが，別の論法により，これも長さ $3\cdot2^{n-1}-2$ のデータを必要とすることが示される
+（系~\ref{cor:rec-data}，~\ref{cor:primal-data}，命題~\ref{prop:dual-refutation}）．
 
 \paragraph{観測器の細分化.}
+$h(x)=h(y)$ ならば $s(x)=s(y)$ となるとき，型付け $h$ は $s$ を\emph{細分化する}といい，$s\preceq h$ と書く：
+$h$ は $s$ と同じかそれ以上を観測する．最も粗い型付けは自明な型付け $s_0$ である．
+\emph{2 元の指示型付け}は，例~\ref{ex:toy} の複数形の観測器のように，表現が与えられた集合の文字を含むかどうかだけを記録する．
+$\FCP{k}{vw}$，$\FKP{k}{vw}$ は，極弱 $k$-FCP，$k$-FKP を持つ CFG を持つ言語のクラス，
+すなわちカテゴリーあたり高々 $k$ 個の枠または見本による提示を持つ言語のクラスを表す．
+$\tFCP{k}{vw}{s}$，$\tFKP{k}{vw}{s}$ は $s$ のもとでの型付き版で，そこでは各カテゴリーが型を持ち，その型の表現に制限される．
+添字 $\mathrm{st}$ と $\mathrm{w}$ は強い版と弱い版を表す（第~\ref{sec:typed} 節）．
 小さな例は一般的な型を示している．これを明示する．
 
 \begin{mainthm}[文脈と核の双対性；命題~\ref{prop:duality}
 と~\ref{prop:strict-context}--\ref{prop:weak-not-preserved}]
-$s\preceq h$（$h$ は $s$ を細分化する）かつ $k\ge1$ とする．このとき
+$s\preceq h$ かつ $k\ge1$ とする．このとき
 \[
 \tFKP{k}{vw}{h}\subseteq\tFKP{k}{vw}{s}\subseteq\FKP{k}{vw},\qquad
 \FCP{k}{vw}\subseteq\tFCP{k}{vw}{s}\subseteq\tFCP{k}{vw}{h}
@@ -323,10 +328,6 @@ $s\preceq h$（$h$ は $s$ を細分化する）かつ $k\ge1$ とする．こ�
 観測器を細分化してもクラス $\Ccf s$ は広がることしかない．
 所属質問が使えるようになると，定理~B と注意~\ref{rem:uniform-known} により，
 観測器は主学習器が同定する言語のクラスに何も付け加えない．
-
-\paragraph{範囲.}
-言語学的な例は数学的な概念を例示するためのものであり，自然言語について経験的な主張はしない．
-結果はすべて文脈自由文法についてのものであり，不連続な構成素（多重文脈自由文法）は未解決として残す．
 
 \paragraph{構成.}
 第~\ref{sec:prelim} 節で健全な前不動点と型付けを復習する．
@@ -469,11 +470,6 @@ $\supseteq$ については，最初の生成規則が $A\to w_0A_1\cdots A_nw_n
 導出 $A\Rightarrow^+_G x$ についての帰納法による．$\nu_i=\widehat h(x_i)$ とおく（型付きの場合は $\pi(\nu_i)=\widehat s(x_i)=\sigma(A_i)$）．
 帰納法の仮定により $(A_i,\nu_i)\Rightarrow^*x_i$ であり，$\nu=\widehat h(x)$ の生成規則が存在する．
 \end{proof}
-
-\citet[Def.~2.1]{kuriyama-tcs1} にならい，$x,y\in\Sigma^+$ について $s(x)=s(y)$ かつ $\D_L(x)\cap\D_L(y)\ne\emptyset$ ならば
-$\D_L(x)=\D_L(y)$ となるとき，$L$ は \emph{$\sim_s$-代入可能}であるという．
-$\Ccf s$ は文脈自由で $\sim_s$-代入可能な言語のクラスである．
-$s=s_0$ のとき，これは \citet{clark-eyraud2007} の代入可能性の，非空の断片についての変種であり，\citet{kuriyama-tcs1} で用いられるものである．
 
 %======================================================================
 \section{型付き閉包と型付きの有限文脈性・有限核性}
@@ -1122,9 +1118,10 @@ def f():
 また，Python 自体についての核の下界やコンパイラの実行時間の下界は主張しない．
 
 \paragraph{限界.}
+言語学的な例は数学的な概念を例示するためのものであり，自然言語について経験的な主張はしない．
 族 $M_n$ は有限で人工的である．一つの認可条件を切り出したものであり，特定の構文のモデルではない．
 $M_n$ について型なしの枠も指数的な大きさを必要とするかどうかは未解決である（未解決問題~\ref{op:Mn-context}）．
-不連続な構成素，交差依存，\citet{kanazawa1998} の範疇文法は，本稿の文脈自由の設定の範囲外である．
+不連続な構成素（多重文脈自由文法），交差依存，\citet{kanazawa1998} の範疇文法は，本稿の文脈自由の設定の範囲外である．
 
 %======================================================================
 \section{未解決問題}\label{sec:open}
