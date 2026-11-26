@@ -88,7 +88,8 @@ positive data and for the exemplar-based learner with membership queries.
 A fixed finite observer, such as a morphological feature recording whether
 an expression is marked, does not remove the gap: it never helps exemplars,
 and it brings our frame grammar down from about $2^n$ to $O(n)$
-productions.  In general, refining the observer can only help frames and
+productions, so that the gap then holds for the total length of the
+presentations as well.  In general, refining the observer can only help frames and
 only hurt exemplars, for the strong and very weak finite context properties
 and the very weak finite kernel property; the weak finite context property
 is not monotone.
@@ -175,8 +176,8 @@ measure a presentation by the number $|N|$ of nonterminals, the maximal
 length $\rho$ of a right-hand side, and the maximal length $\kappa$ of an
 exemplar (kernel word) or the maximal length $\ell=|u|+|v|$ of a frame
 $(u,v)$; $\kappa$ and $\ell$ depend on the chosen witnesses, not only on the
-grammar (Definition~\ref{def:presentation}).  The number of productions is
-recorded separately.
+grammar (Definition~\ref{def:presentation}).  The number of productions and
+the total length of a presentation are recorded separately.
 
 \paragraph{The answer: an exponential gap.}
 We call a condition that admits a structure as soon as one constituent
@@ -222,7 +223,10 @@ give at most $6n^2(n+1)$, while the least value for exemplars lies between
 $3\cdot2^{n-1}-1$ and $8n\max(3\cdot2^{n-1}-2,2n+1)$.  The frame grammar $F_n$
 pays with $2^n+2n-2$ productions, one root production for each position of
 a highest mark; the bound (ii) holds however many productions a grammar
-has.  Without the deletion the gap disappears: the language $L_n$ of all
+has.  In total length the two sides are therefore not separated without an
+observer: $F_n$ has total length $\Theta(n2^n)$ and the exemplar presentation
+of $H_n$ total length $\Theta(2^n)$.  The observer separates them there
+(Theorem~C).  Without the deletion the gap disappears: the language $L_n$ of all
 such structures has frame and exemplar presentations of size $O(n)$ with
 witnesses of length $O(n)$ (Theorem~\ref{thm:gap}(iv)).
 
@@ -347,13 +351,20 @@ against $2^n+2n-2$ for $F_n$.
 satisfies the bound of Theorem~A(ii).  Under $s_U$, every typed exemplar
 presentation of $L_n$ contains an exemplar of length $3\cdot2^n-2$, whereas
 without an observer exemplars of length $2n+1$ suffice.
+\item In total length, the frame presentation of (i) has $O(n^2)$, while
+every exemplar presentation of $M_n$, typed under any observer or untyped,
+has at least $(3\cdot2^{n-1}-1)^{1/3}$.
 \end{enumerate}
 \end{mainthm}
 
 So the observer helps frames, never helps exemplars and can hurt them, a
-quantitative instance of Theorem~B.  Whether untyped frame presentations of
-$M_n$ with short right-hand sides and short frames need exponentially many
-productions is open (Open Problem~\ref{op:Mn-context}).  For learning, the
+quantitative instance of Theorem~B.  The two theorems measure different
+things: Theorem~A compares the parameters $\rho$, $|N|$ and the witness
+length and needs no observer; Theorem~C(iii) compares total length, and
+there the observer makes the gap appear.  Whether an observer is needed for
+a gap in total length, i.e.\ whether every untyped frame presentation of
+$M_n$ has total length $2^{\Omega(n)}$, is open (Open
+Problem~\ref{op:Mn-context}).  For learning, the
 observer does not enlarge the class identified by the primal learner
 (Corollary~\ref{cor:primal-dominated}, Remark~\ref{rem:uniform-known}) or give
 the dual learner polynomial data (Proposition~\ref{prop:dual-refutation});
@@ -669,7 +680,9 @@ $(\cl_{\tau(A)}(K_A))_A$ with $K_A\subseteq F_{\tau(A)}$.  A presentation is
 \emph{strong} if the SPP is $(L(G,A))_A$.  Its size is measured by the number
 $|N|$ of nonterminals, the maximal number $\rho$ of symbols on a right-hand
 side, the maximal length $\kappa$ of a kernel word, and the maximal length
-$|u|+|v|$ of a context $(u,v)$ in some $C_A$.
+$|u|+|v|$ of a context $(u,v)$ in some $C_A$.  Its \emph{total length} is
+$\sum_{A\to\alpha}(|\alpha|+1)$ over all productions plus $\sum(|e|+1)$ over
+all kernel words $e$, resp.\ $\sum(|u|+|v|+1)$ over all contexts $(u,v)$.
 \end{definition}
 Thus $L$ has an ($s$-typed) $k$-context presentation iff
 $L\in\FCP{k}{vw}$ (resp.\ $\tFCP{k}{vw}{s}$), and likewise for kernels.
@@ -1479,19 +1492,33 @@ weak FKP satisfies $\rho|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$.
 \item Every $s_U$-typed CFG for $L_n$ with the typed very weak FKP has the
 kernel word $w^*_n$, of length $3\cdot2^n-2$, whereas $G_n$ has the untyped
 strong $1$-FKP with kernel words of length at most $2n+1$.
+\item The typed frame presentation of (a) has total length $O(n^2)$.  Every
+exemplar presentation of $M_n$, untyped or $s$-typed for any $s$, has total
+length at least $(3\cdot2^{n-1}-1)^{1/3}$.
 \end{enumerate}
 \end{theorem}
 \begin{proof}
 (a) is Proposition~\ref{prop:deletion-upper}(b); the productions are counted
 in the proof of Theorem~\ref{thm:gap}(ii).  (b) is the typed part of
 Theorem~\ref{thm:deletion}.  (c) is Remark~\ref{rem:Ln-sU} and
-Proposition~\ref{prop:deletion-upper}(a).
+Proposition~\ref{prop:deletion-upper}(a).  (d) The presentation of (a) has
+$6n-4$ productions with right-hand sides of length at most $4$ and $2n$
+contexts of length at most $2n$.  For the second claim, delete from an
+exemplar presentation every nonterminal that derives no terminal word or is
+not reachable; the restricted family is still an SPP, so
+Theorem~\ref{thm:deletion} applies to the remaining grammar, in which every
+nonterminal has a production.  Its total length $T$ is at least the number
+of productions, hence at least $|N|$, and at least $\rho$ and
+$\max(\kappa,1)$; so $T^3\ge\rho|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$.
 \end{proof}
 
 Comparing (a) with Theorem~\ref{thm:gap}(i), the mark observer reduces the
 frame presentation of $M_n$ from $2^n+2n-2$ to $6n-4$ productions, with frames
 of length at most $2n$ in both.  By (b) and (c) it never helps exemplars and
-can hurt them.  Whether the reduction needs the observer is Open
+can hurt them.  By (d), under $s_U$ the gap holds also in total length,
+$O(n^2)$ against $2^{\Omega(n)}$; without an observer $F_n$ has total length
+$\Theta(n2^n)$, comparable to the $\Theta(2^n)$ of the exemplar presentation of
+$H_n$.  Whether the observer is needed for this is Open
 Problem~\ref{op:Mn-context}.
 
 %======================================================================
@@ -1578,13 +1605,14 @@ robust witness would have to place the critical words in a common fibre for
 every finite typing, for instance by idempotent powers.
 \end{openproblem}
 
-\begin{openproblem}[productions of untyped frame presentations of $M_n$]\label{op:Mn-context}
-The grammar $F_n$ of Proposition~\ref{prop:untyped-frames} has $\rho|N|$ and
-frame length polynomial in $n$ but $2^n+2n-2$ productions, and under the
-mark observer $6n-4$ productions suffice (Theorem~\ref{thm:observer}(a)).
-Does every untyped CFG for $M_n$ with the very weak FCP, with $\rho|N|$ and
-frame length bounded by a polynomial in $n$, have $2^{\Omega(n)}$
-productions?  Proposition~\ref{prop:Mn-constituent} below is a partial
+\begin{openproblem}[total length of untyped frame presentations of $M_n$]\label{op:Mn-context}
+Does every untyped frame presentation of $M_n$ have total length
+$2^{\Omega(n)}$?  Total length bounds the number of productions, $\rho$ and
+the frame length, so a polynomial presentation would need polynomially many
+productions.  The grammar $F_n$ of Proposition~\ref{prop:untyped-frames} has
+$\rho|N|$ and frame length polynomial in $n$ but $2^n+2n-2$ productions, and
+under the mark observer total length $O(n^2)$ suffices
+(Theorem~\ref{thm:observer}(d)).  Proposition~\ref{prop:Mn-constituent} below is a partial
 result: if frames have length at most $\ell$, every node whose yield
 contains the only mark of $z$ spans all but at most $\ell$ symbols of $z$
 (as $|z|=|w^*_n|-|w^*_{j-1}|$), so the mark is placed by a production applied
@@ -1631,11 +1659,12 @@ exponential length suffice.  The gap depends on no learning model; it
 bounds the data of the author's positive-data reconstruction and of the
 exemplar-based learner with membership queries, and a separate argument
 bounds the frame-based learner.  A fixed observer never helps exemplars:
-the mark observer reduces the frame grammar to $O(n)$ productions, and
+the mark observer reduces the frame grammar to $O(n)$ productions, so that
+the gap holds for total length as well, and
 refining the observer enlarges the classes given by the strong and very
 weak FCP and shrinks the class given by the very weak FKP; the weak FCP is
-not monotone.  Whether untyped frames need exponentially many productions
-remains open, and the programming-language example suggests studying the
+not monotone.  Whether untyped frames need exponential total length remains
+open, and the programming-language example suggests studying the
 gap in independently specified fragments.
 
 \section*{Statements and Declarations}

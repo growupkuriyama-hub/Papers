@@ -10,6 +10,9 @@ Checks, for n = 1..N (exact, all languages finite):
   (2) relative to M_n: {(⌈^{n-k}, ⌉^{n-k})}^{<|} = L(G_n, E_k) for k < n, and
       {(λ,λ)}^{<|} = M_n  (strong 1-FCP with contexts of length <= 2n);
   (3) |N| = n+1, number of productions = 2^n + 2n - 2, rho = 3n.
+  (4) total lengths (Definition def:presentation, Theorem thm:observer(d)):
+      F_n with its frames, H_n with its exemplars {w*_i},{u_i}, and the s_U-typed
+      H_n with its frames; printed with the ratios to n*2^n, 2^n and n^2.
 Usage: python3 -I check_untyped_frames.py [N]   (default N = 5)
 """
 import itertools
@@ -70,6 +73,15 @@ def main():
         print(f'n={n}: L(F_n)=M_n: {LS == M}, strong 1-FCP: {frames}, |N|={n + 1}, '
               f'productions={nprod} (2^n+2n-2={2 ** n + 2 * n - 2}), rho={rho}, |M_n|={len(M)}')
         ok &= good
+        # (4) total lengths
+        pE = 2 + sum(5 + 4 for _ in range(1, n))
+        tot_F = sum(len(T) + 1 for T in rhs) + pE + sum(2 * (n - k) + 1 for k in range(n)) + 1
+        pH = 2 + 5 * (n - 1) + 4 + (5 * 3 + 4 * 2) * (n - 1)
+        tot_H_ex = pH + sum(len(wstar(i)) + 1 for i in range(n)) + sum(2 * i + 2 for i in range(1, n + 1))
+        tot_H_fr = pH + 2 * sum(2 * (n - i) + 1 for i in range(1, n)) + 1 + 1 + 2 * n - 1
+        print(f'      total length: F_n frames {tot_F} (/n2^n={tot_F / (n * 2 ** n):.2f}), '
+              f'H_n exemplars {tot_H_ex} (/2^n={tot_H_ex / 2 ** n:.2f}), '
+              f'typed H_n frames {tot_H_fr} (/n^2={tot_H_fr / n ** 2:.2f})')
     print('ALL OK' if ok else 'SOME CHECK FAILED')
 
 
