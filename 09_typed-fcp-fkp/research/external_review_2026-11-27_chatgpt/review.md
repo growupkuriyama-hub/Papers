@@ -2,7 +2,7 @@ reviewer: ChatGPT
 target_commit: d7804c4
 date: 2026-11-27
 status: in_progress
-progress: §5 claim scope
+progress: §6 bilingual and bibliography
 verdict_editor: Major
 verdict_R1: Major
 verdict_R2: Major
@@ -108,3 +108,31 @@ toy の一致・Python の分類例は数学の動機付けとして有用。実
 推奨する一文：For the same fixed mark observer, the same grammar has a polynomial-length strong frame presentation and an exponential-length strong exemplar presentation; moreover, every exemplar presentation of the language, even with a different grammar or observer, has exponential total length. The optimal total length of untyped frame presentations remains open.
 
 この一文が本論文の最も強い主張である。
+
+# 6. 英日の食い違いと書誌
+
+英語1947行、日本語版の定理環境（種類・順序）と label の並びは133項目で一致。数式の抽出比較も行った（英1958、日本1975の数式断片。インライン/ディスプレイの分割、翻訳した text、句読点の差があるため文字列比較だけでは一致しない）。重点7箇所について定理の量化、上下界、添字、式、参照先を目視照合した。定理を変える翻訳差は確認できなかった。1227–1228行および1615–1619行の誤った記述は日本語にも同様に残るので両方修正する。完全な訳文一語ずつの校正や LaTeX のビルドは行っていない。
+
+書誌の照合（1833–1945行）：
+| 文献 | 結果 |
+|---|---|
+| Clark 2010 | 6339, 38–51 一致。著者所属機関書誌 https://pure.royalholloway.ac.uk/en/publications/learning-context-free-grammars-with-the-syntactic-concept-lattice/ |
+| Clark 2011 | FG2009, LNAI5591, 183–198。一致。https://doi.org/10.1007/978-3-642-20169-1_12 |
+| Clark 2015 | JLC 25(5),1203–1229、online 2013 一致。https://doi.org/10.1093/logcom/ext037 |
+| Clark–Eyraud 2007 | JMLR 8,1725–1745。プロジェクト情報源02 pp.2–22 と一致。 |
+| Clark–Yoshinaka 2016 | Springer 書誌 pp.143–172、章 DOI 一致。https://doi.org/10.1007/978-3-662-48395-4_6 |
+| Coste–Nicolas 2019 | PMLR 93:155–168。2018開催の会議、2019刊行。本文の年で可。 |
+| Gold 1967 | 10(5),447–474 DOI一致。https://doi.org/10.1016/S0019-9958(67)91165-5 |
+| Harris 1954 | Word 10(2–3):146–162。https://doi.org/10.1080/00437956.1954.11659520 |
+| Kanazawa 1998 | CSLI 出版者書誌一致。https://web.stanford.edu/group/cslipublications/cslipublications/site/1575860961.shtml |
+| KY2017 | Springer 目次で LNCS10168,77–88、章リンク末尾 _5 一致。https://link.springer.com/book/10.1007/978-3-319-53733-7 |
+| KY2023 | PMLR217:8–22、一致。 |
+| Kuriyama 2026 | Project の TCS R1 表紙および固定 GitHub #1 のタイトル一致。arXiv v5 の参照先は投稿時再確認。査読中を刊行済みとは扱わない。 |
+| Leiß 2014 | LNCS8612,121–137、章書誌一致。 |
+| Marcus 1993 | Cognition46(1):53–85。https://pubmed.ncbi.nlm.nih.gov/8432090/ |
+| Ogden 1968 | Math. Systems Theory2(3):191–194。DBLPと一致。 |
+| Python 3.12 | §6.2.9 yield expressions。https://docs.python.org/3.12/reference/expressions.html#yield-expressions |
+| Yoshinaka 2011 | DLT 6795:429–440。Springer目次・書誌一致。 |
+| Yoshinaka 2015 | MoL14:87–98、正式題名は単数 General perspective。https://doi.org/10.3115/v1/W15-2308 |
+
+KY2017の最終刊行PDFは取得できず、Project 情報源04の著者稿を参照。特に合本127頁 Lemma13に、非終端記号 D の収量に a^m$a^l が入り、その閉包から大きな c^id^ie^i が除かれる一方、有限文脈集合の閉包には残る論証を確認。付録Aで使う外部結果と整合する。書誌確認は定理の世界初性の保証ではない。
