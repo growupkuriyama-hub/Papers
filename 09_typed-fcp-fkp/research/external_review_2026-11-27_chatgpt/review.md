@@ -1,8 +1,8 @@
 reviewer: ChatGPT
 target_commit: d7804c4
 date: 2026-11-27
-status: in_progress
-progress: checks independent Python and output
+status: complete
+progress: §0–8, appendix A, CSV, independent checks and logs complete
 verdict_editor: Major
 verdict_R1: Major
 verdict_R2: Major
@@ -188,3 +188,43 @@ KY2017の最終刊行PDFは取得できず、Project 情報源04の著者稿を�
 全長の厳密集計（n≥2）：H_n の規則部分 28n−22、枠部分 2n²+2n、従って T=2n²+30n−22。著者ツールの枠部分は1小さい。F_n の枠提示は T=(3n−2)2^n+n²+11n−4。H_n の見本提示は T=3·2^n+n²+30n−25。いずれも規則と証人の明示的記号数、Def 3.4 の尺度。詳細は output.txt。
 
 作業手順の限界：ローカル git clone/ls-remote はネットワーク接続不可であったため、GitHub APIで完全なSHAのコミット・blob・枝を固定し、枝参照を親SHAで保護して更新した。git rev-parse HEAD の実行結果は得られていない。独立コードの作成・実行が既存ツール全実行より先になり、一部追加検査は過去記録参照後に実施した。初期の数学的判断および11語標本の独立探索は旧査読を読む前に行った。初回のWIPは数学査読後であり、開始直後は枝作成のみ。§0–1は同一コミット、以降は区切ってコミット。既存原稿、PDF、tools、mainは一切編集していない。
+
+# 付録 A：英語版の査読報告
+
+## Report of Reviewer 1
+
+**Recommendation: Major revision.**
+
+The paper studies finite context and kernel presentations of context-free languages, with particular attention to the effect of finite-semigroup typing. The central deletion-family lower bound is convincing. The new untyped frame grammar (Proposition 4.3), Theorem 4.6, and the explicit total-length separation (Theorem 6.6(d)) are mathematically sound in my reading. I have not found a counterexample to any of these main results. However, several surrounding statements exceed what has been proved.
+
+1. Lines 1227–1228 assert that a linear kernel presentation of L_n is available only with trivial typing or no typing. This is false. Consider the length-parity morphism into the group of order two. The words of each level have the same distribution in L_n; the odd fibre has a representative u_i of length 2i+1, and the nonempty even fibre has a representative obtained by combining two u_(i−1)'s, of length 4i. The standard typed refinement therefore yields a strong singleton-kernel presentation with O(n) productions and O(n) maximum kernel length. The assertion should be limited to the mark observer s_U.
+
+2. Lines 978–980 confuse the product lower bound with separate lower bounds. The displayed grammar H_n and the subsequent listing grammar demonstrate that none of the individual parameters is necessarily exponential in all presentations. State the actual unresolved trade-off instead.
+
+3. Lines 226–229 infer an absence of a total-length gap without typing from the sizes of two particular presentations. The minimum total length of untyped frame presentations is unknown. This inference should be removed, and the introduction should agree with Open Problem 8.3.
+
+4. Proposition 8.4 bounds the span of a constituent containing the entire occurrence of v. It says nothing about the depth of that constituent in an arbitrary derivation tree, nor about the rules introducing its individual brackets. The interpretation in lines 1615–1619 should be restricted to the precise statement.
+
+5. The program checking the characteristic sample implements the mark observer by testing only the opening mark. A closing mark alone must also have the marked type. The current saturation is length-capped; absence of longer words requires an independent soundness argument. I reproduced the published eleven-word sample and the minimum longest-word lengths 9 and 16 using an uncapped independent union-find implementation with the correct observer. In the other new script, the H_n frame-length sum is one unit too small. These defects do not invalidate the stated asymptotic results, but the reproducibility record needs correction.
+
+The total-length estimate can also be improved. Let R=3·2^(n−1)−1. In the minimum derivation tree used in the proof of Theorem 4.5, the chain productions are distinct. If q is the sum of their right-hand-side lengths, then R≤q max(kappa,1), while total length T≥q+max(kappa,1). Consequently T≥2 sqrt(R). This is an optional strengthening, not a necessary correction of the existing cube-root bound.
+
+I encourage the author to define the accounting convention for total length explicitly, to handle the empty and epsilon-only languages separately in the remarks on uniform learning and substitutability, and to shorten repeated background results. The central theorem warrants publication after these corrections.
+
+## Report of Reviewer 2
+
+**Recommendation: Major revision.**
+
+The comparison of distributional frames and exemplars is an attractive question for this journal. The paper now makes a substantially clearer contribution than a parameter-only separation. In particular, under the same fixed two-element mark observer, the same grammar H_n has a polynomial-total-length strong frame presentation and an exponential-total-length strong exemplar presentation, whereas every alternative exemplar presentation of the language has exponential total length. The lower bound is not a lower bound on ordinary CFG description length. Its force lies in the additional requirement that categories admit the specified sound closed-set interpretation.
+
+The distinction between Theorems A and C is essential. The first ignores the number of productions, and the exhibited untyped frame grammar pays an exponential cost in this parameter. The second counts all productions and witnesses, and establishes a genuine separation of explicit descriptions in the typed setting. I recommend giving the second result priority in the abstract and discussion. It remains open whether the same total-length separation holds without the observer. The construction is not a proof that the observer is necessary.
+
+The claims about the observer's effects should be stated with their quantifiers. Refinement preserves the strong and very weak context properties, while homogeneous kernels give the stated reverse inclusions for weak and very weak kernel properties. The argument does not apply to strong kernel properties in general, or to the running times of arbitrary learners. The length-parity example in the other report illustrates why the choice of observer matters rather than merely its nontriviality.
+
+The family is finite and deliberately constructed. This is acceptable for a worst-case succinctness theorem, provided that the linguistic motivation is not treated as empirical validation. It would be valuable to understand a wider sufficient condition for capture or for the mark observer's benefit, but I do not require resolution of the open problem as a precondition for publication. The observation that both specified learning algorithms can require large data despite a short frame presentation is a particularly useful qualification. The paper must distinguish it from an information-theoretic lower bound for arbitrary learners.
+
+The discussion of the classical Galois connection and the toy agreement example can assist the journal's readers. Several known consequences and repeated descriptions can be compressed. I found no analogue of the wholly unused outer-context typing criticized in the earlier fixed-typing paper: the mark bit really is used in H_n. The scope of the claim about categories should nevertheless be clarified when different grammars are compared.
+
+## Editorial recommendation
+
+Major revision, not rejection. The main results support a publishable theoretical contribution if the author corrects the false generalization and the overstatements, repairs the validation scripts, and foregrounds the genuine total-length separation. The open questions themselves need not be resolved for acceptance.
