@@ -3,7 +3,7 @@
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、23 頁、2026-11-26）
-- 日本語版（査読用の全訳、英語版と同じ版、28 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 日本語版（査読用の全訳、英語版と同じ版、25 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
@@ -26,6 +26,8 @@
 **2026-11-27 追記（3）：全長の比較。** 定義 3.4 に提示の全長（生成規則と証人の長さの総和）を追加。定理 6.6(d)（序論の定理 C(iii)）：$s_U$ のもとで枠の提示の全長は $O(n^2)$、$M_n$ のどの見本の提示も（どの型付けでも型なしでも）全長 $(3\cdot2^{n-1}-1)^{1/3}$ 以上。観測器なしでは $F_n$ の全長 $\Theta(n2^n)$ と $H_n$ の見本の提示の $\Theta(2^n)$ は同程度であり、定理 A はパラメータの隔たり、定理 C(iii) は全長の隔たりと明記。未解決問題 8.3 を「型なしの枠の提示は全長 $2^{\Omega(n)}$ を要するか」に。`tools/check_untyped_frames.py` に全長の計算を追加。
 
 **2026-11-27 追記（4）：** ChatGPT の独立査読（`research/external_review_2026-11-27_chatgpt/`、Major、主定理は正しい）に対応。表の注記の偽の一般化を修正し、長さの偶奇の例を注意 4.7 に追加。定理 6.6(d) の全長の下界を $2\sqrt{3\cdot2^{n-1}-1}$ に強化。全長での比較の過剰な推論、未解決問題 8.3 の解釈、「各パラメータが別々に指数的か」の誤記を修正。検証コードの型判定・全長の集計・終了コードを修正し、`tools/check_parity_typing.py` を追加。対応の記録は `research/REVIEW_RESPONSE_2026-11-27.md`。英語版 25 頁、日本語版 28 頁。
+
+**2026-11-27 追記（5）：短縮。** 序論を約 5 頁から 3 頁に（三つの主定理の文はそのまま、周りの説明の重複を整理し、「固定型付けの理論との関係」を「既知のことと新しいこと」に統合）。§2・§3 の既知の補題の証明と例、使わない逆向きの段落、注意 3.6 を圧縮。§5 の導入と注意、考察、未解決問題の説明、結論、AI 利用の申告を圧縮。定理・証明の内容は変更なし。英語版 22 頁、日本語版 25 頁。
 
 ## 何の論文か
 
