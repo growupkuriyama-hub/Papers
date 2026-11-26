@@ -90,7 +90,9 @@ an expression is marked, does not remove the gap: it cannot shorten the exemplar
 this language, and it brings our frame grammar down from about $2^n$ to
 $O(n)$ productions.  Under this observer the same grammar has a frame
 presentation of total length $O(n^2)$, while every exemplar presentation
-has exponential total length.  In general, refining the observer can only help frames and
+has exponential total length.  Both bounds are instances of general
+statements, about observers given by ideals of types and about one-word
+deletions.  In general, refining the observer can only help frames and
 only hurt exemplars, for the strong and very weak finite context properties
 and the very weak finite kernel property; the weak finite context property
 is not monotone.
@@ -172,7 +174,7 @@ Let $n\ge2$.
 right-hand sides of length at most $3n$ in which every category is named by
 one frame of length at most $2n$.
 \item Every CFG $G$ for $M_n$ with the very weak FKP satisfies
-$\rho_G\,|N_G|\,\max(\kappa_G,1)\ge3\cdot2^{n-1}-1$.
+$\rho_G\,|N_G|\,\max(\kappa_G,1)\ge3\cdot2^n-n-5$.
 \item There is a grammar $H_n$ for $M_n$ with $2n$ nonterminals and
 right-hand sides of length at most $4$ that has the very weak FKP with one
 exemplar per nonterminal, of length at most $\max(3\cdot2^{n-1}-2,\,2n+1)$.
@@ -181,7 +183,7 @@ exemplar per nonterminal, of length at most $\max(3\cdot2^{n-1}-2,\,2n+1)$.
 
 In the measure $\rho|N|$ times the witness length, frames give at most
 $6n^2(n+1)$, while the least value for exemplars lies between
-$3\cdot2^{n-1}-1$ and $8n\max(3\cdot2^{n-1}-2,2n+1)$.  The bound (ii) holds
+$3\cdot2^n-n-5$ and $8n\max(3\cdot2^{n-1}-2,2n+1)$.  The bound (ii) holds
 however many productions a grammar has, whereas $F_n$ pays with $2^n+2n-2$
 productions; whether some untyped frame presentation of $M_n$ has
 polynomial total length is open.  Without the deletion there is no gap:
@@ -229,7 +231,7 @@ identifies the whole union (Remark~\ref{rem:uniform-known}).
 Theorem~A bounds learners that name categories by exemplars
 (Section~\ref{sec:applications}).  From positive data, the author's
 reconstruction $\mathsf{Rec}_s$ \citep{kuriyama-tcs1} needs characteristic
-data of size at least $(3\cdot2^{n-1}-1)^{1/3}$ on $M_n$ for every typing $s$
+data of size at least $(3\cdot2^n-n-5)^{1/3}$ on $M_n$ for every typing $s$
 with $M_n\in\Ccf s$; with membership queries, the primal learner of
 \citet{ky2017} with fixed parameters needs $2^{\Omega(n)}$ data.  A separate
 argument shows that the dual learner, too, needs a datum of length
@@ -279,7 +281,7 @@ presentation of $L_n$ contains an exemplar of length $3\cdot2^n-2$, whereas
 without an observer exemplars of length $2n+1$ suffice.
 \item In total length, the frame presentation of (i) has $O(n^2)$, while
 every exemplar presentation of $M_n$, typed under any observer or untyped,
-has at least $2\sqrt{3\cdot2^{n-1}-1}$.
+has at least $2\sqrt{3\cdot2^n-n-5}$.
 \end{enumerate}
 \end{mainthm}
 
@@ -292,6 +294,15 @@ needs no observer; Theorem~C(iii) compares total length, where we can prove
 the gap only with the observer (Open Problem~\ref{op:Mn-context}).  The
 choice of observer matters: the length-parity observer does not hurt the
 exemplars of $L_n$ (Remark~\ref{rem:Ln-sU}).
+
+Both halves are instances of general statements.  Frames carry over to the
+intersection with an ideal of types whenever the frames of all non-initial
+categories force the ideal (Proposition~\ref{prop:ideal}); this answers which
+observers help frames.  Every exemplar presentation of a finite one-word
+deletion is at least as large as a prefix of the deleted word that has a
+second completion inheriting all its left contexts
+(Lemma~\ref{lem:one-word}, Theorem~\ref{thm:general-lower}).
+Theorem~\ref{thm:general-gap} combines the two, and $M_n$ is one instance.
 
 \paragraph{What is known and what is new.}
 The typed learners are instances of the sorted framework of
@@ -660,7 +671,8 @@ $K_S\subseteq L$ for all $S\in I$.
 %======================================================================
 \section{The kernel--context gap}\label{sec:deletion}
 
-This section proves Theorem~A.  The languages are finite, so every
+This section proves Theorem~A; the lower bound is proved for finite
+one-word deletions in general (Theorem~\ref{thm:general-lower}).  The languages are finite, so every
 statement is about the size of presentations, not about generative
 capacity.
 
@@ -792,52 +804,79 @@ $|T_\pi|=3d+3\le3n$.
 \end{proof}
 
 \begin{lemma}[kernel capture]\label{lem:capture}
-Let $n\ge2$, $z=\Lfl w^*_{n-1}u_{n-1}\Rfl\in M_n$, and let $R=\Lfl w^*_{n-1}$ be
-the prefix of $z$ of length $|R|=3\cdot2^{n-1}-1$.  Let $G$ be a CFG with $L(G)=M_n$ and
-an SPP $(K_A\RL)_A$ relative to $M_n$.  If, in some derivation tree of $z$, a
-node labelled $B$ has a yield occurrence $x$ lying inside $R$, then
-$x\in K_B$.
+Let $L'$ be a language, $z=RT\in L'$, and $T^\circ$ a word such that
+\begin{equation}\label{eq:capture}
+\{R':\ R'T\in L'\ \text{and}\ R'T^\circ\notin L'\}=\{R\}.
+\end{equation}
+Let $G$ be a CFG with $L(G)=L'$ and an SPP $(K_A\RL)_A$ relative to $L'$.  If,
+in some derivation tree of $z$, a node labelled $B$ has a yield occurrence
+$x$ lying inside $R$, then $x\in K_B$.
 \end{lemma}
 \begin{proof}
 Write $z=pxq$; then $(p,q)\in\mathcal C(G,B)$ and, by Lemma~\ref{lem:reach},
-$pK_Bq\subseteq pK_B\RL q\subseteq M_n$.  Since $x$ lies in $R$, $q=q_0u_{n-1}\Rfl$
-for some $q_0$; put $q'=q_0w^*_{n-1}\Rfl$, so that $pxq'=w^*_n\notin M_n$.
-Let $e\in K_B$.  In $peq\in M_n\subseteq L_n$ the suffix occurrence of
-$u_{n-1}\in L(G_n,E_{n-1})$ can be replaced by $w^*_{n-1}$
-(Lemma~\ref{lem:nodes}), so $peq'\in L_n$; and $peq'\notin M_n$ iff
-$peq'=w^*_n$ iff $e=x$.  Now $x\in L(G,B)\subseteq K_B\RL$, so
-$K_B\R\subseteq\D(x)\not\ni(p,q')$.  Hence $(p,q')\notin K_B\R$: some $e\in K_B$
-has $peq'\notin M_n$, i.e.\ $e=x$.
+$pK_Bq\subseteq pK_B\RL q\subseteq L'$.  Since $x$ lies in $R$, $q=q_0T$ for
+some $q_0$; put $q'=q_0T^\circ$, so that $pxq'=RT^\circ\notin L'$
+by~\eqref{eq:capture}.  Now $x\in L(G,B)\subseteq K_B\RL$, so
+$K_B\R\subseteq\D(x)\not\ni(p,q')$, and some $e\in K_B$ has $peq'\notin L'$.  As
+$peq=(peq_0)T\in L'$, \eqref{eq:capture} gives $peq_0=R$, i.e.\ $e=x$.
+\end{proof}
+
+\begin{lemma}[one-word deletions]\label{lem:one-word}
+Let $L$ be a language, $w=RT^\circ\in L$, and $T\ne T^\circ$ a word with
+$RT\in L$ such that $yT\in L$ implies $yT^\circ\in L$ for every word $y$.
+Then $z=RT$ and $T^\circ$ satisfy~\eqref{eq:capture} for $L'=L\setminus\{w\}$.
+For $n\ge2$ this applies to $L=L_n$, $w=w^*_n$,
+$T^\circ=\Lfl\ta\ta\Rfl\Rfl^{n-1}$ and $T=\Lce\ta\Rce\Rfl^{n-1}$, with
+$|R|=|w^*_n|-(n+3)=3\cdot2^n-n-5$.
+\end{lemma}
+\begin{proof}
+$z\ne w$ since $T\ne T^\circ$, so $z\in L'$.  If $R'T\in L'$, then
+$R'T^\circ\in L$, and $R'T^\circ\notin L'$ iff $R'T^\circ=w$ iff $R'=R$.  For
+$L_n$: the last $E_1$-node of $w^*_n$ is $\Lfl\ta\ta\Rfl$, followed by the
+closing brackets of its $n-1$ ancestors, so $w^*_n$ ends with $T^\circ$, and
+$RT\in L_n$ replaces this node by the $E_1$-word $\Lce\ta\Rce$.  If
+$yT\in L_n$, the occurrence of $\Lce\ta\Rce$ in $yT$ is an $E_1$-node
+(Lemma~\ref{lem:nodes}), and replacing it by $\Lfl\ta\ta\Rfl$ gives
+$yT^\circ\in L_n$.
+\end{proof}
+
+\begin{theorem}[kernel lower bound]\label{thm:general-lower}
+Let $L'$ be a finite language, and let $z=RT\in L'$ and $T^\circ$
+satisfy~\eqref{eq:capture}.  Let $G=(N,\Sigma,P,I)$ be any CFG with $L(G)=L'$
+that has an SPP $(K_A\RL)_A$ with finite kernels, $\rho$ the maximal number
+of symbols on a right-hand side and $\kappa=\max\{|e|:e\in\bigcup_AK_A\}$.
+Then $\rho\,|N|\,\max(\kappa,1)\ge|R|$.  The same bound holds for every
+$s$-typed CFG for $L'$ with the typed very weak FKP, for every typing $s$.
+\end{theorem}
+\begin{proof}
+Choose a derivation tree $\mathcal T$ of $z$ with the least number of nodes.
+No nonterminal repeats on a path of $\mathcal T$: if $A$ labels a node and a proper
+descendant, with yields $\alpha y\beta$ and $y$, then $\alpha\beta\ne\eps$
+would give infinitely many words $u\alpha^ty\beta^tv\in L(G)$, contradicting
+finiteness of $L'$, and $\alpha\beta=\eps$ would allow a smaller tree.  Call a
+node a \emph{chain node} if its yield contains both positions $|R|$ and
+$|R|+1$ of $z$; chain nodes form a path from the root, so there are at most
+$|N|$ of them.  For every position $j\le|R|$, the deepest chain node
+containing $j$ either has $j$ as a terminal of its right-hand side or has a
+child containing $j$ that is not a chain node; such a child lies inside
+$R$.  Hence $R$ is covered by at most $\rho|N|$ pieces, each a single terminal
+or the yield of a node lying inside $R$, and by Lemma~\ref{lem:capture} such
+a yield belongs to a kernel, so has length at most $\kappa$.  Therefore
+$|R|\le\rho|N|\max(\kappa,1)$.  For typed grammars use
+Lemma~\ref{lem:reduction}, which produces an untyped SPP of the same grammar
+with the same kernels.
 \end{proof}
 
 \begin{theorem}[kernel lower bound for $M_n$]\label{thm:deletion}
-Let $n\ge2$ and let $G=(N,\Gamma,P,I)$ be any CFG with $L(G)=M_n$ that has an
-SPP $(K_A\RL)_A$ with finite kernels.  Let $\rho$ be the
-maximal number of symbols on a right-hand side and
-$\kappa=\max\{|e|:e\in\bigcup_AK_A\}$.  Then
+Let $n\ge2$.  Every CFG for $M_n$ with an SPP $(K_A\RL)_A$ with finite
+kernels, and every $s$-typed CFG for $M_n$ with the typed very weak FKP, for
+every typing $s$, satisfies
 \[
-\rho\,|N|\,\max(\kappa,1)\ \ge\ 3\cdot2^{n-1}-1 .
+\rho\,|N|\,\max(\kappa,1)\ \ge\ 3\cdot2^n-n-5 .
 \]
-The same bound holds for every $s$-typed CFG for $M_n$ with the typed very
-weak FKP, for every typing $s$.
 \end{theorem}
 \begin{proof}
-Choose a derivation tree $T$ of $z$ (from Lemma~\ref{lem:capture}) with the
-least number of nodes.  No nonterminal repeats on a path of $T$: if $A$
-labels a node and a proper descendant, with yields $\alpha y\beta$ and $y$,
-then $\alpha\beta\ne\eps$ would give infinitely many words
-$u\alpha^ty\beta^tv\in L(G)$, contradicting finiteness of $M_n$, and
-$\alpha\beta=\eps$ would allow a smaller tree.  Call a node a \emph{chain
-node} if its yield contains both positions $|R|$ and $|R|+1$ of $z$; chain
-nodes form a path from the root, so there are at most $|N|$ of them.  For every
-position $j\le|R|$, the deepest chain node containing $j$ either has $j$ as a
-terminal of its right-hand side or has a child containing $j$ that is not a
-chain node; such a child lies inside $R$.  Hence $R$ is covered by at most
-$\rho|N|$ pieces, each a single terminal or the yield of a node lying inside
-$R$, and by Lemma~\ref{lem:capture} such a yield belongs to a kernel, so has
-length at most $\kappa$.  Therefore $3\cdot2^{n-1}-1=|R|\le\rho|N|\max(\kappa,1)$.
-For typed grammars use Lemma~\ref{lem:reduction}, which
-produces an untyped SPP of the same grammar with the same kernels.
+Lemma~\ref{lem:one-word} and Theorem~\ref{thm:general-lower}.
 \end{proof}
 
 The bound is a trade-off between the parameters, and it is tight up to a
@@ -850,7 +889,7 @@ $(\eps,\eps)$, so $\{u_n\}\RL=M_n$), small $|N|$ and $\kappa$, and
 $\rho|N|\kappa=(3\cdot2^n-3)(2n+1)$, but doubly exponentially many productions.
 So no single parameter is exponential in every presentation; what the
 theorem excludes is a presentation small in every parameter: if
-$\rho|N|\le p(n)$, then $\kappa\ge(3\cdot2^{n-1}-1)/p(n)$.  On the frame side,
+$\rho|N|\le p(n)$, then $\kappa\ge(3\cdot2^n-n-5)/p(n)$.  On the frame side,
 $F_n$ (Proposition~\ref{prop:untyped-frames}) has $\rho|N|\le3n(n+1)$ and
 frames of length at most $2n$ with no observer, though $2^n+2n-2$
 productions.
@@ -867,7 +906,7 @@ $\max(3\cdot2^{n-1}-2,2n+1)$.
 \item Every CFG for $M_n$ with an SPP $(K_A\RL)_A$, $K_A$ finite, and every
 $s$-typed CFG for $M_n$ with the typed very weak FKP for any typing $s$,
 satisfies
-$\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$.
+$\rho\,|N|\max(\kappa,1)\ge3\cdot2^n-n-5$.
 \item $L_n$ has an untyped CFG of size $O(n)$ with the strong $1$-FKP and the
 strong $1$-FCP, with kernels and contexts of length at most $2n+1$.
 \end{enumerate}
@@ -967,15 +1006,15 @@ Let $n\ge2$ and let $s$ be any typing with $M_n\in\Ccf s$, for instance
 $s_U$ \citep[Prop.~6.4(iv)]{kuriyama-tcs1} or any refinement of $s_U$.  If
 $K\subseteq M_n$ is finite and $L(\mathsf{Rec}_s(K))=M_n$, then
 \[
-\|K\|^3\ \ge\ 3\cdot2^{n-1}-1 .
+\|K\|^3\ \ge\ 3\cdot2^n-n-5 .
 \]
 In particular every characteristic sample $\mathcal F$ of $M_n$ for
 $\mathsf{Rec}_s$, in the sense of \citet[Sec.~2]{kuriyama-tcs1}, satisfies
-$\|\mathcal F\|\ge(3\cdot2^{n-1}-1)^{1/3}$.
+$\|\mathcal F\|\ge(3\cdot2^n-n-5)^{1/3}$.
 \end{corollary}
 \begin{proof}
 Apply Theorem~\ref{thm:deletion} to $G_K$ of Lemma~\ref{lem:rec-kernel}:
-$3\cdot2^{n-1}-1\le\rho|N|\max(\kappa,1)\le2\cdot(\|K\|^2/2)\cdot\|K\|$.
+$3\cdot2^n-n-5\le\rho|N|\max(\kappa,1)\le2\cdot(\|K\|^2/2)\cdot\|K\|$.
 A characteristic sample $\mathcal F$ satisfies
 $L(\mathsf{Rec}_s(\mathcal F))=M_n$ (take $K=\mathcal F$).  For a refinement
 $h$ of $s_U$, equal $h$-types imply equal $s_U$-types, so
@@ -1013,7 +1052,7 @@ If $\mathrm{Primal}_{r,k}$ (typed for any $s$, or untyped) converges on a
 positive presentation of $M_n$ at stage $i$, then the data $D_i$ seen so far
 satisfy
 \[
-\|D_i\|\ \ge\ \Bigl(\frac{3\cdot2^{n-1}-1}{2r+1}\Bigr)^{1/(2k+2)},
+\|D_i\|\ \ge\ \Bigl(\frac{3\cdot2^n-n-5}{2r+1}\Bigr)^{1/(2k+2)},
 \qquad \|D\|=\textstyle\sum_{d\in D}(|d|+1).
 \]
 \end{corollary}
@@ -1070,7 +1109,7 @@ $x_1\in \mathcal E_i\cap\{c\}\Lc\cap F_1=\mathcal E_i\cap\{w^*_{n-1}\}$.
  & $L_n$ & $M_n=L_n\setminus\{w^*_n\}$\\
 \midrule
 positive-only, trivial typing & polynomial data \citep{kuriyama-tcs1} & not in $\Ccf{s_0}$\\
-positive-only, $s_U$ & exponential \citep{kuriyama-tcs1} & $\|\mathcal F\|^3\ge3\cdot2^{n-1}-1$ (Cor.~\ref{cor:rec-data})\\
+positive-only, $s_U$ & exponential \citep{kuriyama-tcs1} & $\|\mathcal F\|^3\ge3\cdot2^n-n-5$ (Cor.~\ref{cor:rec-data})\\
 kernel side, untyped or $s_0$ (any $k$) & $O(n)$ (Prop.~\ref{prop:deletion-upper}) & $\tilde\Theta(2^n)$ (Thm.~\ref{thm:gap})\\
 kernel side, $s_U$ (any $k$) & $\kappa\ge3\cdot2^n-2$ (Rem.~\ref{rem:Ln-sU}) & $\tilde\Theta(2^n)$ (Thm.~\ref{thm:gap})\\
 typed context side, $s_U$ & $O(n)$ & $O(n)$ (Prop.~\ref{prop:deletion-upper})\\
@@ -1336,6 +1375,57 @@ In contrast, the context-side failure of
 Proposition~\ref{prop:strict-context} is repaired by one bit of
 observation.
 
+\subsection*{Observers that help frames}
+
+A \emph{two-sided ideal} of $\mathsf S^\sharp$ is a set $\mathsf I$ with
+$\mathsf S^\sharp\mathsf I\mathsf S^\sharp\subseteq\mathsf I$.  A context $(u,v)$
+\emph{forces} $\mathsf I$ if $\widehat s(u)\,\mathsf S^\sharp\,\widehat s(v)
+\subseteq\mathsf I$: whatever fills it, the result has a type in $\mathsf I$.
+
+\begin{proposition}[ideal restriction]\label{prop:ideal}
+Let $s$ be a typing, $\mathsf I$ a two-sided ideal of $\mathsf S^\sharp$, and
+$(G,(C_A)_A)$ an untyped $k$-context presentation of $L$ in which no initial
+nonterminal occurs on a right-hand side and every context of every
+non-initial nonterminal forces $\mathsf I$.  Let $G'$ be the refinement $G^s$
+of Lemma~\ref{lem:product} with the initial nonterminals $(S,\mu)$, $S$ initial
+in $G$ and $\mu\in\mathsf I$.  Then $L(G')=L'=L\cap\widehat s^{-1}(\mathsf I)$,
+and relative to $L'$ the family $(C_A\Lc\cap F_\mu)_{(A,\mu)}$ is an SPP of
+$G'$; if the given presentation is strong, so is this one.  Thus $L'$ has an
+$s$-typed $k$-context presentation with the same contexts, at most
+$|N||\mathsf S^\sharp|$ nonterminals and the same $\rho$.
+\end{proposition}
+\begin{proof}
+Write $C\Lc$ and $C^{\lhd'}$ for the operators relative to $L$ and $L'$;
+$L(G')=L'$ by Lemma~\ref{lem:product}.  (i) If $(u,v)$ forces $\mathsf I$,
+then $uxv\in L$ implies $uxv\in L'$; so $C_B^{\lhd'}=C_B\Lc$ for every
+non-initial $B$.  (ii) If $\mu\in\mathsf I$ and $x\in F_\mu$, then
+$\widehat s(uxv)\in\mathsf S^\sharp\mu\mathsf S^\sharp\subseteq\mathsf I$ for every
+$(u,v)$; so $C_S^{\lhd'}\cap F_\mu=C_S\Lc\cap F_\mu$ for initial $S$.  For a
+production $(A,\mu)\to w_0(A_1,\mu_1)w_1\cdots(A_m,\mu_m)w_m$ of $G'$, the
+product of the right-hand components lies in
+$w_0C_{A_1}\Lc w_1\cdots C_{A_m}\Lc w_m\cap F_\mu\subseteq C_A\Lc\cap F_\mu$ by
+(i), the given pre-fixed point and type consistency, and
+$C_A\Lc\cap F_\mu=C_A^{\lhd'}\cap F_\mu$ by (i) or (ii).  The initial
+components $C_S\Lc\cap F_\mu$, $\mu\in\mathsf I$, lie in
+$L\cap\widehat s^{-1}(\mathsf I)=L'$ by soundness of the given presentation, so
+the family is an SPP.  In the strong case (i) and (ii) give
+$C_A^{\lhd'}\cap F_\mu=L(G,A)\cap F_\mu=L(G',(A,\mu))$.
+\end{proof}
+
+\begin{remark}[two instances]\label{rem:ideal-examples}
+Proposition~\ref{prop:deletion-upper}(b) is the case $L=L_n$, $G=G_n$ with
+initial nonterminal $E_n$, $s=s_U$ and $\mathsf I=\{\zeta\}$: the context
+$(\Lce^{n-i},\Rce^{n-i})$ of each $E_i$, $i<n$, contains a mark and so forces
+$\{\zeta\}$.  For a second observer, let $t(w)=\min(\#_{\Lce}(w),2)$ in
+$\{0,1,2\}$ with saturating addition and $\mathsf I=\{2\}$.  With the
+contexts $(\Lce^{n-i},\Rce^{n-i})$ for $i\le n-2$ and $(\Lfl,u_{n-1}\Rfl)$ for
+$E_{n-1}$ ($n\ge3$), which contain at least two marks and give the strong
+$1$-FCP of $G_n$, the structures with at least two marks receive a
+$t$-typed strong $1$-FCP presentation with contexts of length at most
+$2n+1$.  This language is not a one-word deletion of $L_n$, and we have no
+lower bound for its exemplars.
+\end{remark}
+
 \subsection*{The mark observer on the deletion family}
 
 \begin{theorem}[the mark observer]\label{thm:observer}
@@ -1345,13 +1435,13 @@ Let $n\ge2$.
 productions, $\rho\le4$, and the typed strong $1$-FCP with contexts of length
 at most $2n$.
 \item For every typing $s$, every $s$-typed CFG for $M_n$ with the typed very
-weak FKP satisfies $\rho|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$.
+weak FKP satisfies $\rho|N|\max(\kappa,1)\ge3\cdot2^n-n-5$.
 \item Every $s_U$-typed CFG for $L_n$ with the typed very weak FKP has the
 kernel word $w^*_n$, of length $3\cdot2^n-2$, whereas $G_n$ has the untyped
 strong $1$-FKP with kernel words of length at most $2n+1$.
 \item The typed frame presentation of (a) has total length $O(n^2)$.  Every
 exemplar presentation of $M_n$, untyped or $s$-typed for any $s$, has total
-length at least $2\sqrt{3\cdot2^{n-1}-1}$.
+length at least $2\sqrt{3\cdot2^n-n-5}$.
 \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -1361,27 +1451,51 @@ Theorem~\ref{thm:deletion}.  (c) is Remark~\ref{rem:Ln-sU} and
 Proposition~\ref{prop:deletion-upper}(a).  (d) The presentation of (a) has
 $6n-4$ productions with right-hand sides of length at most $4$ and $2n$
 contexts of length at most $2n$.  For the second claim let
-$R=3\cdot2^{n-1}-1$; for a typed presentation pass first to the untyped SPP
+$R=3\cdot2^n-n-5$; for a typed presentation pass first to the untyped SPP
 of the same grammar with the same kernels (Lemma~\ref{lem:reduction}).  In
-the derivation tree of $z$ used in the proof of Theorem~\ref{thm:deletion},
+the derivation tree of $z$ used in the proof of Theorem~\ref{thm:general-lower}
+(with $R$, $T$, $T^\circ$ of Lemma~\ref{lem:one-word}),
 the chain nodes carry distinct nonterminals and hence use distinct
 productions; let $q$ be the sum of the lengths of their right-hand sides.
 The covering argument of that proof charges each piece of $R$ to a symbol of
 one of these right-hand sides, so $R\le q\max(\kappa,1)$.  The total length
-$T$ counts these productions, at least $q$, and separately a kernel word of
+$\Lambda$ counts these productions, at least $q$, and separately a kernel word of
 maximal length, at least $\max(\kappa,1)$; some kernel is nonempty, since
 $\emptyset\RL=\emptyset$ for the finite language $M_n$.  Hence
-$T\ge q+\max(\kappa,1)\ge2\sqrt{q\max(\kappa,1)}\ge2\sqrt R$.
+$\Lambda\ge q+\max(\kappa,1)\ge2\sqrt{q\max(\kappa,1)}\ge2\sqrt R$.
 \end{proof}
 
 Comparing (a) with Theorem~\ref{thm:gap}(i), the mark observer reduces the
 frame presentation of $M_n$ from $2^n+2n-2$ to $6n-4$ productions, with frames
 of length at most $2n$ in both.  By (b) and (c) it never helps exemplars and
-can hurt them.  By (d), under $s_U$ the gap holds also in total length,
+can hurt them, and (a) is an instance of Proposition~\ref{prop:ideal}.  By
+(d), under $s_U$ the gap holds also in total length,
 $O(n^2)$ against $2^{\Omega(n)}$.  Without an observer we know only the
 upper bounds $\Theta(n2^n)$ for $F_n$ and $\Theta(2^n)$ for the exemplars of
 $H_n$; whether untyped frame presentations of $M_n$ can have polynomial
 total length is Open Problem~\ref{op:Mn-context}.
+
+The two halves of Theorems~A and~C hold in general.
+
+\begin{theorem}[a general gap]\label{thm:general-gap}
+Let $L$ be a finite language, $s$ a typing and $\mathsf I$ a two-sided ideal
+of $\mathsf S^\sharp$.  Suppose that $L$ has an untyped $k$-context
+presentation as in Proposition~\ref{prop:ideal}, with contexts of length at
+most $\ell$; that $L\setminus\widehat s^{-1}(\mathsf I)=\{w\}$; and that $w$, $R$,
+$T$, $T^\circ$ are as in Lemma~\ref{lem:one-word}.  Then $L\setminus\{w\}$ has an
+$s$-typed $k$-context presentation with contexts of length at most $\ell$,
+the same $\rho$ and at most $|N||\mathsf S^\sharp|$ nonterminals, whereas every
+exemplar presentation of $L\setminus\{w\}$, untyped or typed under any
+observer, satisfies $\rho|N|\max(\kappa,1)\ge|R|$ and has total length at
+least $2\sqrt{|R|}$.
+\end{theorem}
+\begin{proof}
+$L\cap\widehat s^{-1}(\mathsf I)=L\setminus\{w\}$, so the first claim is
+Proposition~\ref{prop:ideal}.  The second is Lemma~\ref{lem:one-word} with
+Theorem~\ref{thm:general-lower}, and the argument for (d) above.
+\end{proof}
+Theorems~A(ii) and~C are the case $L=L_n$, $s=s_U$, $\mathsf I=\{\zeta\}$,
+$w=w^*_n$, $\ell=2n$ and $|R|=3\cdot2^n-n-5$.
 
 %======================================================================
 \section{Discussion: frames, exemplars and observation}\label{sec:discussion}
@@ -1426,8 +1540,10 @@ function; the idealised fragment of the introduction has none.
 
 \paragraph{Limits.}
 The linguistic examples illustrate the mathematical notions; we make no
-empirical claim about natural languages.  The family $M_n$ is finite and
-artificial, and the results are worst-case separations: the two ways of
+empirical claim about natural languages.  The general forms require a finite language and a single deleted word; for
+several deleted words, such as the structures with at least two marks, the
+frame side carries over (Remark~\ref{rem:ideal-examples}), but we have no
+exemplar lower bound.  The results are worst-case separations: the two ways of
 naming can differ exponentially, not that they do so for natural languages
 or for every learner.  Discontinuous constituents (multiple context-free
 grammars), cross-serial dependencies and the categorial grammars of
@@ -1507,7 +1623,9 @@ the gap also holds for total length, on one and the same grammar.  The gap
 bounds the data of the author's positive-data reconstruction and of the
 primal learner, and a separate argument bounds the dual learner.  Refining
 the observer helps frames and hurts exemplars, except for the weak FCP.
-Whether untyped frames need exponential total length remains open.
+Both sides hold for observers given by ideals of types and for finite
+one-word deletions in general.  Whether untyped frames need exponential
+total length remains open.
 
 \section*{Statements and Declarations}
 
@@ -1528,9 +1646,12 @@ Generative AI tools were used substantially in this research.  The author
 posed the research questions and chose the directions.  Anthropic's Claude
 was used to search for results, to draft proofs, examples and the text, and
 to write the programs for the finite checks; it also found the frame grammar
-of Proposition~\ref{prop:untyped-frames} and, in reviews in the role of
-referees, the exemplar upper bound of Proposition~\ref{prop:deletion-upper}(c)
-and several corrections.
+of Proposition~\ref{prop:untyped-frames}, worked out the general forms in
+Proposition~\ref{prop:ideal}, Lemma~\ref{lem:one-word} and
+Theorems~\ref{thm:general-lower} and~\ref{thm:general-gap} (the first after a
+reviewer's suggestion), and, in reviews in the role of referees, found the
+exemplar upper bound of Proposition~\ref{prop:deletion-upper}(c) and several
+corrections.
 OpenAI's ChatGPT was used for three independent reviews, which led to
 corrections, to Proposition~\ref{prop:weak-not-preserved} and its typed
 form, to Remark~\ref{rem:Ln-sU} with its length-parity example and to the
