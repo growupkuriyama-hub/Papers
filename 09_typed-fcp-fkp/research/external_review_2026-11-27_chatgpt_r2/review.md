@@ -2,7 +2,7 @@ reviewer: ChatGPT
 target_commit: cd2dbde
 date: 2026-11-27
 status: in_progress
-progress: §0–8 完了、指摘18件・採点記録済み、検査ファイル登録中
+progress: §0–8 完了、指摘18件・採点・独立検査登録済み、既存検査ログ登録中
 verdict_editor: Major
 verdict_R1: Minor
 verdict_R2: Major
