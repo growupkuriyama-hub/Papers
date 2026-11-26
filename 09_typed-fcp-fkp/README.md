@@ -2,13 +2,14 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories under Finite Observation*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 3（JoLLI 向けに再構成）、21 頁、2026-11-26）
-- 日本語版（査読用の全訳、英語版と同じ版、24 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、22 頁、2026-11-26）
+- 日本語版（査読用の全訳、英語版と同じ版、25 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
 - 2 回目の外部査読（ChatGPT／Astra、2026-11-25、major revision 相当・主定理の撤回なし）と対応：[`research/REVIEW_RESPONSE_2026-11-25.md`](research/REVIEW_RESPONSE_2026-11-25.md)、原本は [`research/external_review_2026-11-25_astra/`](research/external_review_2026-11-25_astra/)
-- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`
+- 3 回目の査読（Claude、#1 の Reviewer 1・2 の観点、2026-11-26、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-26.md`](research/REVIEW_RESPONSE_2026-11-26.md)、原本は [`research/external_review_2026-11-26_tcs1_lens/`](research/external_review_2026-11-26_tcs1_lens/)
+- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`
 
 **2026-11-26 追記：** Python のジェネレータ関数の例を序論「答え：指数的な隔たり」の冒頭に移して定理 A の動機づけにし、考察では文字どおりの移植についての留保だけを残した。中国語の疑問詞原位置の類例は削除。定理・証明に変更なし。
 
@@ -21,7 +22,7 @@
 
 金澤・吉仲の所属質問付きの dual／primal 学習器への帰結は、応用として扱う。
 
-- **Theorem A（核と文脈の指数的な隔たり、主結果）**：構造を二項の結合 $\lfloor xy\rfloor$ と一項の標識 $\lceil x\rceil$ で $n$ 段に組み、「少なくとも一つの標識を含む」という大域的な認可条件を課した言語 $M_n$（＝ $L_n$ から標識のない一語 $w^*_n$ を除いたもの）を考える。標識の有無を見る 2 元の観測のもとでは、文脈による表示は $2n$ 個のカテゴリーと長さ $2n$ 以下の文脈で済む。一方、核（例）による表示は、どの観測のもとでも $\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$。認可条件がなければ（$L_n$）どちらも $O(n)$。
+- **Theorem A（核と文脈の指数的な隔たり、主結果）**：構造を二項の結合 $\lfloor xy\rfloor$ と一項の標識 $\lceil x\rceil$ で $n$ 段に組み、「少なくとも一つの標識を含む」という大域的な認可条件を課した言語 $M_n$（＝ $L_n$ から標識のない一語 $w^*_n$ を除いたもの）を考える。標識の有無を見る 2 元の観測のもとでは、文脈による表示は $2n$ 個のカテゴリーと長さ $2n$ 以下の文脈で済む。同じ文法は長さ $\max(3\cdot2^{n-1}-2,2n+1)$ 以下の核（例）でも表示できる（命題 4.2(c)、2026-11-26 追加）。一方、核による表示は、どの観測のもとでも $\rho\,|N|\max(\kappa,1)\ge3\cdot2^{n-1}-1$ で、上界と $O(n)$ 倍の範囲で一致する。隔たりは証人の長さにある。認可条件がなければ（$L_n$）どちらも $O(n)$。
 - **応用（§5）**：この下界は文法についての主張で、学習モデルによらない。帰結として、#1 の正例のみの再構成 $\mathsf{Rec}_s$ は $M_n$ に $\|K\|^3\ge3\cdot2^{n-1}-1$ の特性データを要する（#1 に無い下界）。所属質問付きの primal 学習器は収束までに $2^{\Omega(n)}$、dual 学習器も長さ $3\cdot2^{n-1}-2$ 以上のデータを要する。
 - **Theorem B（観測の細分化、§6）**：型付けを細かくすると、strong と very weak の FCP で定まるクラスは広がり、very weak（＝weak）FKP で定まるクラスは狭まる（型付きの核は型で均質な通常の核にすぎない）。weak FCP はこの型に従わず、細分化で単調でない（$s_0$ から 2 元の指示型付けへ）。どちらも 2 元半束 $U_1$ で、どの $k\ge1$ でも厳密。型付き VW-FKP = W-FKP。型なし weak FCP は観測を足すと保存されない（KY2017 Lemmas 8, 12, 13 を引用、原文と照合済み）。
 - **系（既知の帰結、§5.3）**：どの $s$ でも $\mathcal C^{\rm cf}_s$ は型なし weak 1-FKP（階数 2）で、型なし primal 学習器一つが $\bigcup_s\mathcal C^{\rm cf}_s$ を同定する。#1 Prop 9.7 から直ちに従う。
