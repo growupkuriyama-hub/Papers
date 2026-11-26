@@ -1,15 +1,15 @@
 # 09_typed-fcp-fkp — 有限観測と有限文脈・有限核性質
 
-*Frames versus Exemplars: An Exponential Gap for Syntactic Categories under Finite Observation*（仮題）
+*Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、23 頁、2026-11-26）
-- 日本語版（査読用の全訳、英語版と同じ版、26 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 日本語版（査読用の全訳、英語版と同じ版、27 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
 - 2 回目の外部査読（ChatGPT／Astra、2026-11-25、major revision 相当・主定理の撤回なし）と対応：[`research/REVIEW_RESPONSE_2026-11-25.md`](research/REVIEW_RESPONSE_2026-11-25.md)、原本は [`research/external_review_2026-11-25_astra/`](research/external_review_2026-11-25_astra/)
 - 3 回目の査読（Claude、#1 の Reviewer 1・2 の観点、2026-11-26、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-26.md`](research/REVIEW_RESPONSE_2026-11-26.md)、原本は [`research/external_review_2026-11-26_tcs1_lens/`](research/external_review_2026-11-26_tcs1_lens/)
-- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`
+- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`、`python3 -I tools/check_untyped_frames.py 5`
 
 **2026-11-26 追記：** Python のジェネレータ関数の例を序論「答え：指数的な隔たり」の冒頭に移して定理 A の動機づけにし、考察では文字どおりの移植についての留保だけを残した。中国語の疑問詞原位置の類例は削除。定理・証明に変更なし。
 
@@ -20,6 +20,8 @@
 **2026-11-26 追記（4）：** 2 回目の独立査読（Claude、#1 の Reviewer 1・2 の観点、第 2 版）を反映。注意 5.3 の問い（特性標本は因子 $w^*_{n-1}$ を含むか）は $n=3$ で否（11 語の反例、`tools/check_rec_samples.py`）と書き換え、問いを「長さ $2^{\Omega(n)}$ の語が要るか」に。定理 4.4 の後に、自明な列挙の提示も積は $O(n)$ 倍以内であること（尺度は規則数を数えない）と、下界の内容（$\rho|N|$ が多項式なら $\kappa$ は指数的）を追加。注意 5.7 を補題 5.1 と #1 の特性標本から導く形に。小節を番号なしに（補題・系・命題の番号との衝突解消）。付録の集合 $B$ を $\mathcal B$ に。系 6.2 の量化を明確化。Clark (FG 2009) を引用。英語版 23 頁、日本語版 26 頁。
 
 **2026-11-27 追記：** 謝辞（金澤誠氏・吉仲亮氏）を英日とも削除した（著者の判断）。
+
+**2026-11-27 追記（2）：構成の変更。** 題を「Frames versus Exemplars: An Exponential Gap for Syntactic Categories」に変更。定理 A を観測器なしの形に：型なしの枠の文法 $F_n$（新しい命題 4.3、非終端記号 $n+1$、$\rho=3n$、文脈長 $\le2n$、強 1-FCP、規則 $2^n+2n-2$）と見本の下界（どの観測器でも）と $H_n$ の見本の上界。観測器の結果は新しい定理 C（定理 6.6：標識の観測器は枠の文法の規則数を $6n-4$ に減らし、見本は助けない）と定理 B にまとめ、第 6 節の題を「The role of the observer」に。未解決問題 8.3 を「型なしの枠は指数個の規則を要するか」に書き換え。序論・Abstract・考察・結論を対応して改稿。検証：`python3 -I tools/check_untyped_frames.py 5`。英語版 24 頁、日本語版 27 頁。
 
 ## 何の論文か
 
