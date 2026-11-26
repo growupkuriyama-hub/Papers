@@ -2,7 +2,7 @@ reviewer: ChatGPT
 target_commit: d7804c4
 date: 2026-11-27
 status: in_progress
-progress: §4 scores.csv
+progress: §5 claim scope
 verdict_editor: Major
 verdict_R1: Major
 verdict_R2: Major
@@ -94,3 +94,17 @@ toy の一致・Python の分類例は数学の動機付けとして有用。実
 | 全体 | 8 | Major revision。主要定理の撤回や追加大定理は不要 |
 
 以前の Major 判定は維持するが、今回は定理Aの上界・観測器なし枠・明示的全長の区別により意義が改善。点数は今回の版についての独立評価であり、異なる査読者の旧スコアと直接比較しない。
+
+# 5. 主張の範囲
+
+| 箇所 | 評価・推奨 |
+|---|---|
+| 題・Abstract（71–96） | 題は最悪例の存在として許容。全長の指数分離は固定観測器つき枠とすべての核提示の比較であると明記。 |
+| 定理A（207–231） | 正しい。尺度は rho|N|×最大証人長。規則数を除外する。226–229行は「These particular presentations have comparable exponential total lengths; the optimum untyped frame length is open.」へ。 |
+| 定理B（323–336） | 強FCP・極弱FCP の単調性、極弱/弱FKPの反単調性、弱FCP非単調性を区別する。strong FKP は未解決。 |
+| 定理C（344–357） | 正しい。平方根強化は任意。固定 s_U のもとで同じ H_n を使えると明示。 |
+| 結論（1651–1668） | 最小全長の型なし比較、学習モデルの一般化、同一統語カテゴリーの意味を限定。 |
+
+推奨する一文：For the same fixed mark observer, the same grammar has a polynomial-length strong frame presentation and an exponential-length strong exemplar presentation; moreover, every exemplar presentation of the language, even with a different grammar or observer, has exponential total length. The optimal total length of untyped frame presentations remains open.
+
+この一文が本論文の最も強い主張である。
