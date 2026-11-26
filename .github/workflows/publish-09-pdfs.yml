@@ -1,0 +1,71 @@
+name: Publish 09 typed FCP/FKP PDFs
+
+# Rebuild the English and Japanese PDFs of 09_typed-fcp-fkp on GitHub
+# whenever its LaTeX sources change on main, and commit the PDFs back to
+# main, so that main.pdf and japanese/main_JP.pdf always match the sources.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "09_typed-fcp-fkp/**/*.tex"
+      - ".github/workflows/publish-09-pdfs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-09-pdfs
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Compile English PDF (pdfLaTeX)
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: 09_typed-fcp-fkp
+          root_file: main.tex
+
+      - name: Compile Japanese PDF (LuaLaTeX)
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: 09_typed-fcp-fkp/japanese
+          root_file: main_JP.tex
+          latexmk_use_lualatex: true
+
+      - name: Check the PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for pdf in 09_typed-fcp-fkp/main.pdf 09_typed-fcp-fkp/japanese/main_JP.pdf; do
+            test -s "$pdf"
+            test "$(head -c 4 "$pdf")" = "%PDF"
+            echo "Verified $pdf ($(wc -c < "$pdf") bytes)"
+          done
+
+      - name: Commit the PDFs to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- \
+            09_typed-fcp-fkp/main.pdf \
+            09_typed-fcp-fkp/japanese/main_JP.pdf
+          if git diff --cached --quiet; then
+            echo "The committed PDFs already match the sources."
+            exit 0
+          fi
+          git commit -m "09_typed-fcp-fkp: rebuild PDFs from sources [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
