@@ -2,7 +2,7 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories under Finite Observation*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、22 頁、2026-11-26）
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、23 頁、2026-11-26）
 - 日本語版（査読用の全訳、英語版と同じ版、25 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
@@ -12,6 +12,8 @@
 - 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`
 
 **2026-11-26 追記：** Python のジェネレータ関数の例を序論「答え：指数的な隔たり」の冒頭に移して定理 A の動機づけにし、考察では文字どおりの移植についての留保だけを残した。中国語の疑問詞原位置の類例は削除。定理・証明に変更なし。
+
+**2026-11-26 追記（2）：** 序論に段落「Positive data and membership queries」を追加した。#1 の学習モデルが正例のみであること、所属質問は文法性判断の要求にあたり、子どもの言語獲得では明示的な否定証拠が乏しいとされること（Marcus 1993、動機づけのみで獲得についての主張はしない）、観測器は正例だけの設定で働き、所属質問があれば $\mathcal C^{\rm cf}_s$ について不要になること（Gold 1967、注意 5.7）を一か所にまとめた。「固定型付けの理論との関係」の重複する一文は削除。参考文献に Gold (1967)、Marcus (1993) を追加。英語版 23 頁、日本語版 25 頁。定理・証明に変更なし。
 
 ## 何の論文か
 
