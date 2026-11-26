@@ -3,13 +3,13 @@
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、23 頁、2026-11-26）
-- 日本語版（査読用の全訳、英語版と同じ版、27 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 日本語版（査読用の全訳、英語版と同じ版、28 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
 - 2 回目の外部査読（ChatGPT／Astra、2026-11-25、major revision 相当・主定理の撤回なし）と対応：[`research/REVIEW_RESPONSE_2026-11-25.md`](research/REVIEW_RESPONSE_2026-11-25.md)、原本は [`research/external_review_2026-11-25_astra/`](research/external_review_2026-11-25_astra/)
 - 3 回目の査読（Claude、#1 の Reviewer 1・2 の観点、2026-11-26、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-26.md`](research/REVIEW_RESPONSE_2026-11-26.md)、原本は [`research/external_review_2026-11-26_tcs1_lens/`](research/external_review_2026-11-26_tcs1_lens/)
-- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`、`python3 -I tools/check_untyped_frames.py 5`、`python3 -I tools/check_parity_typing.py 4`、`python3 -I tools/check_general_capture.py 4`、`python3 -I tools/check_ideal_restriction.py`
+- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`、`python3 -I tools/check_untyped_frames.py 5`、`python3 -I tools/check_parity_typing.py 4`、`python3 -I tools/check_general_capture.py 4`、`python3 -I tools/check_ideal_restriction.py`、`python3 -I tools/check_frame_total_length.py 7`
 
 **2026-11-26 追記：** Python のジェネレータ関数の例を序論「答え：指数的な隔たり」の冒頭に移して定理 A の動機づけにし、考察では文字どおりの移植についての留保だけを残した。中国語の疑問詞原位置の類例は削除。定理・証明に変更なし。
 
@@ -30,6 +30,8 @@
 **2026-11-27 追記（5）：短縮。** 序論を約 5 頁から 3 頁に（三つの主定理の文はそのまま、周りの説明の重複を整理し、「固定型付けの理論との関係」を「既知のことと新しいこと」に統合）。§2・§3 の既知の補題の証明と例、使わない逆向きの段落、注意 3.6 を圧縮。§5 の導入と注意、考察、未解決問題の説明、結論、AI 利用の申告を圧縮。定理・証明の内容は変更なし。英語版 22 頁、日本語版 25 頁。
 
 **2026-11-27 追記（6）：一般形。** 捕獲補題を一般形に（補題 4.4、条件 (4.1)）し、一語削除の補題 4.5、一般の核の下界（定理 4.6）を追加。$M_n$ では入れ替える接尾辞を最後の $E_1$-節点に選び直し、下界を $3\cdot2^n-n-5$ に改良（定理 4.7、旧 $3\cdot2^{n-1}-1$）、全長の下界も $2\sqrt{3\cdot2^n-n-5}$。§6 にイデアルによる制限（命題 6.6）とその二つの例（注意 6.7：$H_n$、標識が二つ以上）、一般の隔たり（定理 6.9）を追加。探索の記録は Project の `claude/claude_typed_fcp_fkp_explore_AB_2026-11-27.md`。検証：`check_general_capture.py 4`、`check_ideal_restriction.py`。英語版 24 頁、日本語版 27 頁。
+
+**2026-11-27 追記（7）：観測器なしの枠の全長（旧未解決問題 8.3 の解決）。** 観測器なし、または $\lceil a\rceil$ と $\lfloor aa\rfloor$ に同じ型を与える観測器のもとでは、$M_n$ のどの枠の提示も $(\ell+1)\sum|\alpha|\ge2^{n-2}$ を満たし、全長 $2^{n/2}$ 以上（定理 6.12）。一般の $j$ では $(3\cdot2^{j-1}-1)(\ell+1)\sum|\alpha|\ge2^{n-j}$（長さの偶奇の観測器でも $2^{n/2}/\sqrt5$ 以上）。旧命題 8.4 を型付きに拡張して補題 6.10 に移し、混合の補題 6.11 を追加。定理 C に (iv)、定理 6.8 に (e) を追加し、全長での比較は「観測器がなければ枠も見本も指数、標識の観測器で枠だけ $O(n^2)$」に。未解決問題 8.3 は指数の値と一般形を問うものに置き換え。探索の記録は Project の `claude/claude_typed_fcp_fkp_explore_C_2026-11-27.md`。検証：`check_frame_total_length.py 7`。英語版 25 頁、日本語版 28 頁。
 
 ## 何の論文か
 
