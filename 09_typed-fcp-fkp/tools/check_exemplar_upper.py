@@ -7,8 +7,8 @@ For n = 2..N (default 4) it checks, relative to M_n = L_n minus {w*_n}:
   * {u_i}^{RL}  = L(G_n, E_i) minus {w*_i}           (1 <= i <= n)
   * hence the typed closures equal the yields of H_n (typed strong 1-FKP),
   * the untyped family is a pre-fixed point of H_n and sound,
-  * kappa = max(3*2^(n-1)-2, 2n+1), |N| = 2n, rho = 4, and the lower bound
-    3*2^(n-1)-1 <= rho*|N|*kappa <= 8n*kappa.
+  * kappa = max(3*2^(n-1)-2, 2n+1), |N| = 2n, rho = 4, and, with the lower bound of
+    Theorem thm:deletion, 3*2^n-n-5 <= rho*|N|*kappa <= 8n*kappa.
 Usage: python3 -I tools/check_exemplar_upper.py [N]
 """
 import sys
@@ -100,7 +100,7 @@ def check(n):
     rho = max(len(r) for _, r in prods)
     N = len(yields)
     ok &= N == 2 * n and rho == 4 and len(prods) == 6 * n - 4
-    low = 3 * 2 ** (n - 1) - 1
+    low = 3 * 2 ** n - n - 5          # Theorem thm:deletion
     ok &= low <= rho * N * kappa <= 8 * n * kappa
     print(f"n={n}: |N|={N} productions={len(prods)} rho={rho} kappa={kappa} "
           f"rho*|N|*kappa={rho * N * kappa} lower bound={low}: "

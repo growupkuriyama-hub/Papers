@@ -28,3 +28,20 @@ pl=lambda x: any(w in ('dogs','bark') for w in x)
 print('typed: (John saw,_) cap sg-fibre:', sorted(x for x in ctxcl({(('John','saw'),())}) if not pl(x)))
 print('kernel {John} closure contains a plural word?', any(pl(x) for x in kercl([('John',)])))
 print('any single NP word with closure = NP?', [k for k in NP if kercl([k])==set(NP)])
+
+# assertions (exit code 1 on any mismatch)
+import sys
+sg = {('the', 'dog'), ('John',)}
+npall = sg | {('the', 'dogs')}
+checks = [
+    ctxcl({((), ('barks',))}) == sg,
+    kercl([('John',)]) == sg,
+    ctxcl({(('John', 'saw'), ())}) == npall,
+    kercl([('the', 'dog'), ('the', 'dogs')]) == npall,
+    kercl([('the', 'dogs')]) == {('the', 'dogs')} == ctxcl({((), ('bark',))}),
+    kercl([('John', 'barks')]) == set(L) == ctxcl({((), ())}),
+    not any(pl(x) for x in kercl([('John',)])),
+    [k for k in NP if kercl([k]) == set(NP)] == [],
+]
+print('ALL OK' if all(checks) else 'SOME CHECK FAILED')
+sys.exit(0 if all(checks) else 1)
