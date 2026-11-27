@@ -25,7 +25,7 @@
 | `lem:nodes` | 括弧倍化族の節点構造 | PROVED | 補助 |
 | `prop:deletion-upper` | $L_n$：強 1-FKP・1-FCP（多項式）、$M_n$：$s_U$ 型付き強 1-FCP（多項式） | PROVED + CHECKED-FINITE（n≤4） | 新 |
 | `lem:capture` | **核の捕獲補題** | PROVED + CHECKED-FINITE（n≤4、1204 組） | 新 |
-| `thm:gap`（rev3 で追加、主定理） | 核と文脈の隔たりのまとめ：$M_n$ は $U_1$ 型付きで大きさ $O(n)$（$2n$ 非終端記号、$6n-4$ 規則）の強 1-FCP、核の表示はどの型付けでも指数的、$L_n$ は両側 $O(n)$ | PROVED（既存の命題・定理のまとめ） | 新 |
+| `thm:gap`（rev3 で追加、主定理） | 核と文脈の隔たりのまとめ：$M_n$ は $U_1$ 型付きで大きさ $O(n)$（$2n$ 非終端記号、$6n-4$ 規則）の強 1-FCP、核の表示はどの型付けでも指数的、$L_n$ は両側 $O(n)$ | PROVED（既存の命題・定理のまとめ） | 新 （2026-11-27 に本文から削除：定理 A の再掲。内容は命題 4.2・4.3、定理 4.7 にある） |
 | `ex:toy`（rev3 で追加） | 序論の例（数の一致を持つ英語断片）の文脈・例の閉包 | CHECKED-FINITE（`tools/check_toy_example.py`、有限言語なので全数で厳密） | 説明用 |
 | `thm:deletion` | **$M_n$ の核下界**：VW-FKP を持つ任意の文法で $\rho\,\lvert N\rvert\max(\kappa,1)\ge3\cdot2^{n-1}-1$、どの型付けでも | PROVED（外部査読 CORRECT） | 新（外部査読も「照合範囲で同じ主張なし、最も独立性が高い」）。**本稿の主結果** |
 | `cor:primal-data` | primal 学習器の収束時データ $\ge 2^{\Omega(n/k)}$ | PROVED | 新 |
