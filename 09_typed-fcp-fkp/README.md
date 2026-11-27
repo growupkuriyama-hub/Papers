@@ -3,7 +3,7 @@
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
 - 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、23 頁、2026-11-26）
-- 日本語版（査読用の全訳、英語版と同じ版、28 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 日本語版（査読用の全訳、英語版と同じ版、27 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
@@ -36,6 +36,8 @@
 **2026-11-27 追記（8）：AI 利用の申告を最小限に。** TCS #1（TCS-D-26-00494 R1）と同じ文面（言語の編集・原稿の構成・数学的議論の検討の補助として ChatGPT と Claude を使用、著者が検討・編集し結果と証明に全責任を負う）に置き換え。詳細は査読で問われたときに答える方針。 Data availability も TCS #1 と同じ一文（No empirical data were used…）にし、本文の `tools/check_rec_samples.py` の名指しを「計算機で発見した」に。`tools/` は引き続きこのリポジトリにあり、求められたら示す。
 
 **2026-11-27 追記（9）：ChatGPT の独立査読・第2回への対応。** 査読は `research/external_review_2026-11-27_chatgpt_r2/`（Editor Major / R1 Minor / R2 Major、総合 8.0）、対応は `research/REVIEW_RESPONSE_2026-11-27_r2.md`。命題 6.6 の誤り（イデアル外の旧初期記号のコピーが残る）を修正し、定理 4.6・6.9 の空の場合、注意 6.7、定理 6.12 の細部を補った。Abstract を 243 語に短縮し、一般性・単調性・最適性の主張を限定。木構造を持たない平らな族を例 6.13 として追加。検証：`check_flat_example.py 3`（新規）、`check_ideal_restriction.py`（回帰検査を追加）、`check_exemplar_upper.py`・`check_toy_example.py` を修正。英語版 26 頁、日本語版 28 頁。
+
+**2026-11-27 追記（10）：24 頁に短縮、平らな族の文献調査。** 重複を削った（序論の「正例と所属質問」と「学習への応用」を統合、「構成」の段落を削除、定理 A・C の後の比較、§6 の比較の段落、§7 の考察、結論、注意 3.6・5.3・5.6・5.7・5.8・6.7、系 6.2 の後の一文、Python の例のコード片など）。証明は削っていない。付録の表を一段小さい字に。英語版 24 頁、日本語版 27 頁。平らな族とその大きさの比較は、見つかった文献にはなかった（部品の倍化文法は標準）：`research/LITERATURE_flat_family_2026-11-27.md`。
 
 ## 何の論文か
 
