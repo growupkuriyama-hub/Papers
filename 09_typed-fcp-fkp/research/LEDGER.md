@@ -14,10 +14,10 @@
 | `lem:star` | 文脈集合は閉包の取り替えに鈍感 | PROVED | **KNOWN**（KY2017 式(1)・Clark Props 3.26, 3.28 の直接の帰結。外部査読の判定） |
 | `prop:typed-prop1` | KY2017 Prop 1 の型付き版 | PROVED | KNOWN 相当 |
 | `prop:learners` | 型付き dual/primal 学習器 ⇔ 型付き very weak 性質 | PROVED（KY の証明の移植） | **KNOWN**：Yoshinaka 2015 の sorted 枠組みの特殊例 |
-| `rem:exreg` | 型付き文脈集合は KY2023 の拡張正則閉包に入る | KNOWN（帰結） | パラメータ対応は未照合 |
+| `rem:exreg` | 型付き文脈集合は KY2023 の拡張正則閉包に入る | KNOWN（帰結） | パラメータ対応は未照合（2026-11-27 に注意を本文から削除、序論の一文のみ） |
 | `lem:reduction` | **核の縮約補題**：型付き核の SPP ⇔ 均質な通常核の SPP | PROVED | 直接の帰結（KY2017 §4 p.6 の規則妥当性の同値＋制限したガロア接続）。外部査読は KNOWN と判定。明示化としては残す |
 | `thm:duality` | **文脈–核の双対性**：核側は細分化で単調減少、文脈側は単調増加。型付き VW-FKP = W-FKP | PROVED（外部査読 CORRECT） | 包含自体は短い帰結。Yoshinaka 2015 §8 も signature の比較を扱う。逆向きの振る舞いの明示と厳密性の証人が追加分 |
-| `cor:primal-dominated` | 型付き primal 学習器は型なしに支配される | PROVED | 新 |
+| `cor:primal-dominated` | 型付き primal 学習器は型なしに支配される | PROVED | 新（2026-11-27 に系から命題 6.1 の後の一文へ） |
 | `prop:strict-context` | 文脈側の厳密性（KY2017 Prop 2(i) の言語、$c$ の指示型付け） | PROVED | 例は KY2017。$s_0$ 型付きへの拡張と $U_1$ での救済が新 |
 | `prop:strict-kernel` | 核側の厳密性：$L_K$ は $s_0$ で **strong 1-FKP**（rev2 で強化、初期記号 $S_+,S_-$）、$h_{\{y,z\}}$ ではどの $k$ でも VW-FKP 不可 | PROVED（外部査読 CORRECT＋強化案） | 新（照合範囲で同じ構成なし） |
 | `cor:invariant` | KY2017 Prop 2(ii) の核の失敗はどの観測でも直らない | PROVED | 新（双対性の系） |
