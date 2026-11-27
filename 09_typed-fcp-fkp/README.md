@@ -2,13 +2,15 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、研究草稿 revision 4（JoLLI 向け、3 回目の査読を反映）、23 頁、2026-11-26）
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、JoLLI 向けの凍結版（`2cd1ece`）に凍結版査読の局所修正を反映、24 頁、2026-11-27）
 - 日本語版（査読用の全訳、英語版と同じ版、27 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
 - 2 回目の外部査読（ChatGPT／Astra、2026-11-25、major revision 相当・主定理の撤回なし）と対応：[`research/REVIEW_RESPONSE_2026-11-25.md`](research/REVIEW_RESPONSE_2026-11-25.md)、原本は [`research/external_review_2026-11-25_astra/`](research/external_review_2026-11-25_astra/)
 - 3 回目の査読（Claude、#1 の Reviewer 1・2 の観点、2026-11-26、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-26.md`](research/REVIEW_RESPONSE_2026-11-26.md)、原本は [`research/external_review_2026-11-26_tcs1_lens/`](research/external_review_2026-11-26_tcs1_lens/)
+- 2026-11-27 の査読：ChatGPT の独立査読 2 回（`research/external_review_2026-11-27_chatgpt/`、`research/external_review_2026-11-27_chatgpt_r2/`）と対応 [`research/REVIEW_RESPONSE_2026-11-27.md`](research/REVIEW_RESPONSE_2026-11-27.md)、[`research/REVIEW_RESPONSE_2026-11-27_r2.md`](research/REVIEW_RESPONSE_2026-11-27_r2.md)
+- 凍結版（`2cd1ece`）の独立検証査読（ChatGPT、2026-11-27、**局所修正のみで投稿可**・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-28_frozen.md`](research/REVIEW_RESPONSE_2026-11-28_frozen.md)、原本と依頼文は [`research/external_review_2026-11-28_chatgpt_frozen/`](research/external_review_2026-11-28_chatgpt_frozen/)
 - 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`、`python3 -I tools/check_untyped_frames.py 5`、`python3 -I tools/check_parity_typing.py 4`、`python3 -I tools/check_general_capture.py 4`、`python3 -I tools/check_ideal_restriction.py`、`python3 -I tools/check_frame_total_length.py 7`、`python3 -I tools/check_flat_example.py 3`
 
 **2026-11-26 追記：** Python のジェネレータ関数の例を序論「答え：指数的な隔たり」の冒頭に移して定理 A の動機づけにし、考察では文字どおりの移植についての留保だけを残した。中国語の疑問詞原位置の類例は削除。定理・証明に変更なし。
@@ -41,6 +43,8 @@
 
 **2026-11-27 追記（11）：先行研究 4 本を本文で確認、引用を追加。** Kanazawa–Yoshinaka 2021、Yoshinaka 2011・2012、Baumann ほか 2022 を読んだ（記録は `research/LITERATURE_flat_family_2026-11-27.md`）。どれも枠と見本の提示の大きさを比べておらず、新規性は保たれる。「What is known」に比較は定性的であるという一文、定理 6.12 の後に KY2021 の負の文脈の成分への拡張、例 6.13 にタグが KY2021 の $\#d^i$ にならうことを追加し、ky2021・yoshinaka2012lata を引用。頁数を保つため参考文献の DOI の URL を外し、付録 A の表をフロート（表 1）にした。英語版 24 頁、日本語版 27 頁。
 
+**2026-11-27 追記（12）：凍結版の独立検証査読への対応。** `2cd1ece` を凍結し、ChatGPT に新しい会話で今日追加した部分（命題 4.3〜定理 4.8、命題 6.6〜例 6.13、Abstract・結論）を、過去の査読を見ずに検証させた。判定は「局所修正のみで投稿可」。主定理 A・C と新しい補題・定理に反例も閉じていない証明の穴もなく、R2-01〜R2-18 は見送り分を除き修正済みと確認された。指摘 F01〜F05（文面または局所的な理由づけ）を英日とも修正した：定理 6.9 から直接出る部分の限定（F01）、尺度と観測器の条件の明記（F02、Abstract の「標識を見る観測器」を「$\lceil a\rceil$ と $\lfloor aa\rfloor$ を分ける観測器」に）、Limits の仮定を捕獲の条件 (4.1) に（F03）、結論で双対学習器の下界を別の論法と明記（F04）、注意 5.7 の「閉包は変わらない」を「文脈集合は変わらない」に（F05）。頁数を保つため、定理 6.8 の後の全長の比較の繰り返しを削った。定理・証明・数値の変更なし。英語版 24 頁、日本語版 27 頁。記録：`research/REVIEW_RESPONSE_2026-11-28_frozen.md`。
+
 ## 何の論文か
 
 #1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$（有限観測）のもとで、二つの量を調べる。
@@ -64,4 +68,4 @@
 
 ## 状態
 
-証明はすべて Claude（2026-11-24）。外部査読（ChatGPT、2 回）で主定理への反例なし。2 回目の査読で、$s_U$ のもとでの $L_n$ の核の下界（命題 4.7）と、weak FCP の非単調性（命題 6.5）が加わった。人間による監査は未。未解決：weak 1-FCP の単調性、任意の型付けでの VW/W-FCP の分離、$M_n$ の型なし文脈下界。
+証明はすべて Claude（2026-11-24〜27）。模擬査読は 7 回（ChatGPT 4 回、Astra 1 回、Claude 2 回）で、主定理への反例なし。最後の凍結版の検証査読（2026-11-27）の判定は「局所修正のみで投稿可」で、その修正は反映済み。人間による監査は未。未解決：weak 1-FCP の単調性、任意の型付けでの VW/W-FCP の分離、観測器なしの枠の全長の指数（未解決問題 8.3）。
