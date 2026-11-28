@@ -87,8 +87,8 @@ bounds for two specific learners.  A fixed observer recording whether an
 expression is marked permits a frame presentation of total length $O(n^2)$,
 while every exemplar presentation, under any observer, has exponential total
 length; without an observer separating $\Lce\ta\Rce$ from $\Lfl\ta\ta\Rfl$,
-frame presentations need exponential total length too.  The frame upper bound and the exemplar lower
-bound hold under general conditions.  Refining the observer can only help
+frame presentations need exponential total length too.  Both bounds extend
+to general one-word deletions, the lower one in terms of a prefix length.  Refining the observer can only help
 frames and only hurt exemplars for some, but not all, of the finite context
 and kernel properties.
 \end{abstract}
@@ -161,9 +161,10 @@ mark}.  Conditions of this existential form are familiar.  In word prosody,
 syllable with primary stress and is definitional of stress-accent systems
 \citep{hyman2006}, and the strict layer hypothesis builds each prosodic
 level from constituents of the next level down
-\citep{selkirk1984,nespor-vogel1986}, so that all branches have the same
-depth.  In Standard Japanese a clause is generally required to contain at
-least one nominative argument \citep{kishimoto2010}, and multiple
+\citep{selkirk1984,nespor-vogel1986}, so that all paths between two fixed
+levels cross the same number of layers.  In Standard Japanese a clause is generally required to contain at
+least one nominative argument, with exceptions such as oblique-subject
+constructions \citep{kishimoto2010}, and multiple
 nominatives are allowed \citep{kuno1973}.
 Over a single leaf symbol and with uniform depth exactly one structure lacks
 a mark, so $M_n$ is the language $L_n$ of all such structures with one word
@@ -174,7 +175,9 @@ case.  A marked constituent suffices for membership, but an unmarked one
 occurs both in admitted structures and in the single excluded one.  Frames
 handle this easily: a grammar can place the mark in its root productions,
 one for each position of a highest mark, and leave every other category
-unrestricted.  Exemplars cannot.
+unrestricted.  Exemplars can name the same categories, but only with words
+as long as $w^*_{n-1}$: no exemplar presentation keeps all three size
+parameters polynomial.
 
 \begin{mainthm}[frames versus exemplars; Propositions~\ref{prop:deletion-upper}, \ref{prop:untyped-frames} and Theorem~\ref{thm:deletion}]
 Let $n\ge2$.
@@ -194,9 +197,10 @@ Without the deletion there is no gap: $L_n$, the language of all such
 structures, has frame and exemplar presentations with $O(n)$ nonterminals,
 right-hand sides of length at most $4$ and witnesses of length $O(n)$
 (Proposition~\ref{prop:deletion-upper}(a)).  The
-reason is \emph{capture} (Lemma~\ref{lem:capture}): an exemplar-named
-category that covers a large unmarked part of a marked structure must list
-that part among its exemplars, whereas a frame can itself contain the mark.
+reason is \emph{capture} (Lemma~\ref{lem:capture}): in the marked word $RT$
+of Lemma~\ref{lem:one-word}, where $R$ is an unmarked prefix of $w^*_n$, the
+yield of every node lying inside $R$ must itself be an exemplar of the node's
+category, whereas a frame can itself contain the mark.
 
 \paragraph{Finite observation.}
 We also use finite information about an expression itself, modelled by a
@@ -232,8 +236,9 @@ categories by exemplars (Section~\ref{sec:applications}): on $M_n$ the
 reconstruction $\mathsf{Rec}_s$ of \citet{kuriyama-tcs1} needs characteristic
 data of size at least $(3\cdot2^n-n-5)^{1/3}$ for every typing $s$ with
 $M_n\in\Ccf s$, the primal learner of \citet{ky2017} with fixed parameters
-needs $2^{\Omega(n)}$, and, by a separate argument, the dual learner needs a
-datum of length at least $3\cdot2^{n-1}-2$ (Corollaries~\ref{cor:rec-data}
+needs $2^{\Omega(n)}$, and, by a separate argument, the dual learners
+(untyped or under $s_U$, rank $r\ge2$) need at convergence a datum of length
+at least $3\cdot2^{n-1}-2$ (Corollaries~\ref{cor:rec-data}
 and~\ref{cor:primal-data}, Proposition~\ref{prop:dual-refutation}).
 
 \paragraph{Refining the observer.}
@@ -312,8 +317,9 @@ dual learners ($r\ge2$; untyped or $s_U$), at convergence & --- & a datum of len
 \end{table}
 
 The frame upper bound and the exemplar lower bound hold in general.  Frames
-carry over to the intersection with an ideal of types when the frames of all
-non-initial categories force the ideal (Proposition~\ref{prop:ideal}), and
+carry over to the intersection with an ideal of types when no initial
+nonterminal occurs on a right-hand side and the frames of all non-initial
+categories force the ideal (Proposition~\ref{prop:ideal}), and
 for a finite language $L$ and $w=RT^\circ\in L$, every exemplar
 presentation of $L\setminus\{w\}$ has $\rho|N|\max(\kappa,1)\ge|R|$ if
 $RT\in L$ for some $T\ne T^\circ$ such that $yT\in L$ implies $yT^\circ\in L$
@@ -341,7 +347,8 @@ under the mark observer (Remark~\ref{rem:Ln-sU}) is that of
 yields to kernels.  The gap, the grammar $F_n$, the capture and mixing lemmas and the
 resulting lower bounds are new as far as we could check; \citet{ky2023}
 treat only the frame side.  Earlier comparisons of the two ways of naming
-are qualitative \citep{yoshinaka2011dlt,yoshinaka2012lata,ky2021}; none
+are qualitative \citep{yoshinaka2011dlt,yoshinaka2012lata,ky2021} or count
+how often each property holds in random grammars \citep{clark2016icgi}; none
 compares the sizes of two presentations of one language.  Exponential characteristic data are not new in
 themselves \citep[Example~2]{clark-eyraud2007}; see also
 \citet{coste-nicolas2019}.  Here, however, long words alone do not force
@@ -1460,6 +1467,14 @@ frames of length at most $2n$, $\sum|\alpha|\ge2^{n-2}/(2n+1)$, so in this
 class $F_n$
 ($\sum|\alpha|=\Theta(n2^n)$) is optimal up to a factor $O(n^2)$.
 
+The factor $\ell+1$ cannot be dropped: with $c_i$, $(p_i,q_i)$ as in the
+proof of Proposition~\ref{prop:deletion-upper}(c), the untyped $H_n$ with
+contexts $\{c_i\}$ for $(E_i,1)$, $\{c_i,(p_i,q_i)\}$ for $(E_i,\zeta)$
+$(i<n)$ and $\{(\eps,\eps)\}$ for $(E_n,\zeta)$ is a $2$-context presentation
+of $M_n$ (by Lemma~\ref{lem:nodes}, $p_ixq_i\in M_n$ iff $x$ is marked, and a
+$\zeta$-production adds a mark or has a $\zeta$-child), with
+$\ell=3\cdot2^n-6$ but $\sum|\alpha|\le4(6n-4)<2^{n-2}$ for $n\ge10$.
+
 \begin{example}[a flat instance]\label{ex:flat}
 Neither the general statements nor the method of
 Theorem~\ref{thm:frame-total} need trees.  Let $\Sigma=\{a,b,\#\}$,
@@ -1515,8 +1530,7 @@ Let $f(n)$ be the least total length of an untyped frame presentation of
 $M_n$.  By Theorem~\ref{thm:frame-total} and
 Proposition~\ref{prop:untyped-frames}, $2^{n/2}\le f(n)=O(n2^n)$.  Does
 $\lim_n\log_2f(n)/n$ exist, and what are $\liminf_n\log_2f(n)/n$ and
-$\limsup_n\log_2f(n)/n$?  In particular, can the factor $\ell+1$ be removed from
-Theorem~\ref{thm:frame-total}, and do untyped frame and exemplar
+$\limsup_n\log_2f(n)/n$?  In particular, do untyped frame and exemplar
 presentations of $M_n$ differ in total length by more than a polynomial
 factor?  A form for general one-word deletions would need a substitute for
 Lemma~\ref{lem:mixing} (Example~\ref{ex:flat}(iii) uses lengths instead).
@@ -1550,12 +1564,12 @@ the language with exactly one mark is not treated here.  The general lower bound
 requires a finite language and the capture condition~(\ref{eq:capture}),
 which Lemma~\ref{lem:one-word} gives for a deleted word $RT^\circ$ when some
 $RT\in L$, $T\ne T^\circ$, has $yT\in L\Rightarrow yT^\circ\in L$ for all $y$; for
-several deleted words, such as the structures with at least two marks, the
+several deleted words, such as all structures with fewer than two marks, the
 frame side carries over (Remark~\ref{rem:ideal-examples}), but we have no
 exemplar lower bound.  Discontinuous constituents (multiple context-free
 grammars) and cross-serial dependencies are beyond the context-free setting
-of this paper.  Categorial grammars \citep{kanazawa1998} are weakly
-context-free but name categories by types; we do not treat them.
+of this paper.  The classical categorial grammars of \citet{kanazawa1998}
+are weakly context-free but name categories by types; we do not treat them.
 
 \section*{Statements and Declarations}
 
@@ -1740,6 +1754,12 @@ The syntactic concept lattice: another algebraic theory of the
 context-free languages?
 \textit{Journal of Logic and Computation} 25(5):1203--1229, 2015
 (online 2013).
+
+\bibitem[Clark(2016)]{clark2016icgi}
+A.~Clark.
+Testing distributional properties of context-free grammars.
+In \textit{Proceedings of the 13th International Conference on Grammatical
+Inference}, PMLR 57, pp.~42--53, 2016.
 
 \bibitem[Clark and Eyraud(2007)]{clark-eyraud2007}
 A.~Clark and R.~Eyraud.

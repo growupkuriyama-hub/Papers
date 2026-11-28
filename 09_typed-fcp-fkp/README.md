@@ -2,8 +2,8 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、JoLLI 向けの凍結版（`2cd1ece`）に凍結版査読の局所修正を反映、24 頁、2026-11-27）
-- 日本語版（査読用の全訳、英語版と同じ版、27 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、JoLLI 向け、Astra の重点査読（2026-11-28）の修正を反映、23 頁、2026-11-28）
+- 日本語版（査読用の全訳、英語版と同じ版、26 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
 - 外部査読（ChatGPT、2026-11-24、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-24.md`](research/REVIEW_RESPONSE_2026-11-24.md)、原本は [`research/external_review_2026-11-24/`](research/external_review_2026-11-24/)
@@ -11,7 +11,8 @@
 - 3 回目の査読（Claude、#1 の Reviewer 1・2 の観点、2026-11-26、major revision・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-26.md`](research/REVIEW_RESPONSE_2026-11-26.md)、原本は [`research/external_review_2026-11-26_tcs1_lens/`](research/external_review_2026-11-26_tcs1_lens/)
 - 2026-11-27 の査読：ChatGPT の独立査読 2 回（`research/external_review_2026-11-27_chatgpt/`、`research/external_review_2026-11-27_chatgpt_r2/`）と対応 [`research/REVIEW_RESPONSE_2026-11-27.md`](research/REVIEW_RESPONSE_2026-11-27.md)、[`research/REVIEW_RESPONSE_2026-11-27_r2.md`](research/REVIEW_RESPONSE_2026-11-27_r2.md)
 - 凍結版（`2cd1ece`）の独立検証査読（ChatGPT、2026-11-27、**局所修正のみで投稿可**・反例なし）と対応：[`research/REVIEW_RESPONSE_2026-11-28_frozen.md`](research/REVIEW_RESPONSE_2026-11-28_frozen.md)、原本と依頼文は [`research/external_review_2026-11-28_chatgpt_frozen/`](research/external_review_2026-11-28_chatgpt_frozen/)
-- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`、`python3 -I tools/check_untyped_frames.py 5`、`python3 -I tools/check_parity_typing.py 4`、`python3 -I tools/check_general_capture.py 4`、`python3 -I tools/check_ideal_restriction.py`、`python3 -I tools/check_frame_total_length.py 7`、`python3 -I tools/check_flat_example.py 3`
+- Astra の重点査読（2026-11-28、`61f8a16`、Minor Revision・主定理への反例なし、#1 の番号照合は一致）と対応：[`research/REVIEW_RESPONSE_2026-11-28_astra_focus.md`](research/REVIEW_RESPONSE_2026-11-28_astra_focus.md)、原本と依頼文は [`research/external_review_2026-11-28_astra_focus/`](research/external_review_2026-11-28_astra_focus/)
+- 有限計算：`python3 -I tools/check_deletion_family.py 4`、`python3 -I tools/check_reduction_identity.py 4000`、`python3 -I tools/check_toy_example.py`、`python3 -I tools/check_exemplar_upper.py 4`、`python3 -I tools/check_rec_samples.py`、`python3 -I tools/check_untyped_frames.py 5`、`python3 -I tools/check_parity_typing.py 4`、`python3 -I tools/check_general_capture.py 4`、`python3 -I tools/check_ideal_restriction.py`、`python3 -I tools/check_frame_total_length.py 7`、`python3 -I tools/check_flat_example.py 3`、`python3 -I tools/check_untyped_two_frames.py 4`
 
 **2026-11-26 追記：** Python のジェネレータ関数の例を序論「答え：指数的な隔たり」の冒頭に移して定理 A の動機づけにし、考察では文字どおりの移植についての留保だけを残した。中国語の疑問詞原位置の類例は削除。定理・証明に変更なし。
 
@@ -57,6 +58,8 @@
 
 **2026-11-27 追記（18）：言語学的な意義付け。** 「$M_n$ が人工的に見える」という弱点に対し、序論に二つの段落を加えた。(1) 枠と見本を、構造主義の試験枠（Fries 1952）と事例基盤・用例基盤モデル（Bod 2006、Bybee 2006）の二つの伝統に対応させた。(2) $M_n$ を「少なくとも一つ」の条件として位置づけた：音韻論の義務性（Hyman 2006）と厳格層仮説（Selkirk 1984、Nespor & Vogel 1986）、標準日本語の主格要件（Kishimoto 2010、多重主格は Kuno 1973）。葉の記号が一種類で深さが一様なら標識のない構造はちょうど一つなので、一語の削除は認可条件そのものである。結論に、類比は例示であること、頂点性と組にした「ちょうど一つ」は扱わないことを加えた。定理・証明の変更なし。英語版 23 頁、日本語版 25 頁。記録：`research/LINGUISTIC_MOTIVATION_2026-11-27.md`。
 
+**2026-11-28 追記：Astra の重点査読への対応。** Claude が依頼文を書き、Astra が `61f8a16` の気になる箇所（前回の指摘への修正、言語学の段落と典拠、Abstract・序論・結論の主張、§6 後半の証明、新規性、#1 の番号照合、模擬査読）を S0〜S8 で確認した（`research/external_review_2026-11-28_astra_focus/`）。判定は Minor Revision、主定理への反例なし、#1 の番号は arXiv v5 と 13 か所すべて一致。指摘 12 件のうち 11 件を英日とも反映した：定理 6.11 の因子 $\ell+1$ は除けないこと（型なしの $H_n$ に枠を二つずつ与えると $\sum|\alpha|=O(n)$）を定理の後に示して未解決問題 7.3 の副問を削除（B10、`tools/check_untyped_two_frames.py 4`）、序論の「Exemplars cannot」の誤り（B05）、イデアル制限と捕獲の説明の仮定（B01・B06）、Clark (ICGI 2016) の引用（B08）、ほか minor。B09（Kanazawa, WoLLIC 2023 の引用）は本文未読のため見送り。定理・証明の変更なし。英語版 23 頁、日本語版 26 頁。記録：`research/REVIEW_RESPONSE_2026-11-28_astra_focus.md`。
+
 ## 何の論文か
 
 #1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$（有限観測）のもとで、二つの量を調べる。
@@ -80,4 +83,4 @@
 
 ## 状態
 
-証明はすべて Claude（2026-11-24〜27）。模擬査読は 8 回（ChatGPT 4 回、Astra 2 回、Claude 2 回）で、主定理への反例なし。最後の Astra の徹底査読（2026-11-27、`bfee14b`）の判定は Minor Revision（8/10）で、その修正は反映済み。人間による監査は未。未解決：weak 1-FCP の単調性、任意の型付けでの VW/W-FCP の分離、観測器なしの枠の全長の指数（未解決問題 8.3）。
+証明はすべて Claude（2026-11-24〜27）。模擬査読は 9 回（ChatGPT 4 回、Astra 3 回、Claude 2 回）で、主定理への反例なし。最後の Astra の重点査読（2026-11-28、`61f8a16`）の判定は Minor Revision で、その修正は反映済み（B09 のみ見送り）。#1 の arXiv 版の番号照合は済み。人間による監査は未。未解決：weak 1-FCP の単調性、任意の型付けでの VW/W-FCP の分離、観測器なしの枠の全長の指数（未解決問題 7.3）。
