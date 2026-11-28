@@ -59,3 +59,28 @@ $\Gamma$ を Kanazawa の (iii)（ブール演算、$\emptyset,\varepsilon,a$、
 ## 原稿への反映（英日とも、2026-11-28）
 
 命題 5.5 の直後の文を、ChatGPT の文案をもとに K01・K04・K05 を反映して書き換えた：$\mathrm{Dual}^{s_U}_{r,k}$ は $H_n$ の全長が $O(n^2)$ でも長いデータを要する。同じ論法は Algorithm 3（演算に共通部分を含み、$r\ge2$、$s\ge1$）に通る。拡張正則の演算のもとで $H_n$ は $\{c_i\}^\lhd$ と $\{c_i\}^\lhd\cap\Gamma^*\lceil\Gamma^*$ による SPP を持ち、Kanazawa の正規化のあとでも原子は長さ $(n+1)^2$ 以下の一語に現れる。よって (d†′) は追加の例の個数を抑えるが、その長さまで目標の文法の大きさの多項式で抑えることはできない。英語版 23 頁、日本語版 26 頁。
+
+## 追記：ブール演算だけの場合の主張の検証（Claude、2026-11-28）
+
+**主張（ChatGPT の T4）。** $M_n$ の CFG $G$ が、各成分が質問原子 $(u,v)/$（$M_n$ に相対的な商 $u\backslash M_n/v=\{(u,v)\}^\lhd$）のブール結合で表される SPP を持ち、現れる原子の長さ $|u|+|v|$ が $\ell$ 以下なら、$2(\ell+1)\sum_{A\to\alpha}|\alpha|\ge2^{n-1}$。
+
+**判定：正しい。** 定理 6.11（`thm:frame-total`）の $j=1$ の場合の不等式 $(\ell+1)\sum|\alpha|\ge2^{n-2}$ と同じもので、証明もほとんどそのまま通る。より一般に、どの $1\le j<n$ についても $(3\cdot2^{j-1}-1)(\ell+1)\sum|\alpha|\ge2^{n-j}$。
+
+**理由。** 定理 6.11 の証明で枠を使うのは補題 6.9（`lem:marked-node`）の一か所だけで、そこでは「$x$ は $A$ の成分に入り、$x'$（$x$ の中の $v_j$ を $w^*_j$ に置き換えた語）は入らないので、ある $c\in C_A$ が $x$ を受理し $x'$ を拒否する」を使う。ブール結合の場合はこう置き換わる。
+
+1. $x\in L(G,A)\subseteq X_A$。$x'\in X_A$ なら、前不動点の性質（補題 2.2 `lem:reach`）で $w^*_n=px'q\in X_S\subseteq M_n$ となり矛盾。よって $x'\notin X_A$。ここまでは成分の形によらない。
+2. $X_A$ は原子への所属の真理値のブール関数なので、$x$ と $x'$ の所属が違う原子 $c$ が少なくとも一つある。
+3. 向きは一つに決まる：$c[x']\in M_n$ なら、$x'$ の中の $w^*_j$ の出現は $E_j$-節点で（補題 4.1）、これを $v_j$ に戻した $c[x]$ も $L_n$ に入り標識を持つので $M_n$ に入る。よって $c$ は $x$ を受理し $x'$ を拒否する。
+4. 以下は補題 6.9 の証明と同じ：$c[x']\in L_n\setminus M_n$ なので $c[x']=w^*_n$、よって $|p|+|q|=|c|\le\ell$。定理 6.11 の数え上げ（補題 6.10 の混合）は文法と補題 6.9 の結論しか使わないので、そのまま通る。
+
+**拡張正則の演算では通らない理由。** 手順 2 は、成分への所属が $x$ 自身の商への所属だけで決まることを使う。連接やスターを含む式（例 $\Gamma^*\lceil\Gamma^*$）では所属が $x$ の部分語についての質問で決まる（Kanazawa の性質 (∗)）ので、$x$ と $x'$ を区別する原子が短くてよい。実際、主張 2 の文法では原子の長さは $O(n^2)$ 以下。
+
+**整理。** $M_n$ について、
+- 共通部分だけ（$\Gamma=\{\cap\}$、very weak FCP）：$F_n$（原子は短いが規則は指数個）、または二つの枠の $H_n$（規則は $O(n)$ だが文脈の長さ $3\cdot2^n-6$）。どれも $(\ell+1)\sum|\alpha|\ge2^{n-2}$。
+- ブール演算：同じ下界が成り立つ。$H_n$ の規則のままなら、$(E_1,\zeta)$ の成分が $\lceil a\rceil$ を含み $\lfloor aa\rfloor$ を含まないので、二つを区別する原子の長さは $|w^*_n|-4=3\cdot2^n-6$ 以上要る。
+- 拡張正則の演算：規則 $O(n)$、原子は正規化後も長さ $(n+1)^2$ 以下の一語の文脈に入る。
+- それでも Algorithm 3 は、どの $\Gamma\ni\cap$ でも、収束までに長さ $3\cdot2^{n-1}-2$ 以上のデータを要する（主張 1）。
+
+短い原子と小さな文法を両立させているのは正則演算（連接）であり、データの長さの下界は演算の選び方によらない。
+
+**原稿への反映の候補**（未反映、著者の判断待ち）：定理 6.11 の後の段落に一文、"Only Lemma 6.9 uses the frames, through a context that separates $x$ from $x'$; so Theorem 6.11 holds verbatim when the components are Boolean combinations of sets $\{c\}^\lhd$ with $|c|\le\ell$, but not for the extended regular operations, under which $H_n$ needs only short atoms (Section 5)."
