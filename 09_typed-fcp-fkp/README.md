@@ -60,6 +60,8 @@
 
 **2026-11-28 追記：Astra の重点査読への対応。** Claude が依頼文を書き、Astra が `61f8a16` の気になる箇所（前回の指摘への修正、言語学の段落と典拠、Abstract・序論・結論の主張、§6 後半の証明、新規性、#1 の番号照合、模擬査読）を S0〜S8 で確認した（`research/external_review_2026-11-28_astra_focus/`）。判定は Minor Revision、主定理への反例なし、#1 の番号は arXiv v5 と 13 か所すべて一致。指摘 12 件を英日とも反映した：定理 6.11 の因子 $\ell+1$ は除けないこと（型なしの $H_n$ に枠を二つずつ与えると $\sum|\alpha|=O(n)$）を定理の後に示して未解決問題 7.3 の副問を削除（B10、`tools/check_untyped_two_frames.py 4`）、序論の「Exemplars cannot」の誤り（B05）、イデアル制限と捕獲の説明の仮定（B01・B06）、Clark (ICGI 2016) の引用（B08）、ほか minor。B09 は著者稿を読んでから反映し、命題 5.5 の後に Kanazawa (WoLLIC 2023) との関係を一文で追加した（`research/LITERATURE_kanazawa2023_wollic_2026-11-28.md`）。定理・証明の変更なし。英語版 23 頁、日本語版 26 頁。記録：`research/REVIEW_RESPONSE_2026-11-28_astra_focus.md`。
 
+**2026-11-28 追記（2）：Kanazawa (WoLLIC 2023) の Algorithm 3。** 著者稿の全文を読み、命題 5.5 の論法が Algorithm 3 にそのまま通ること（$M_n$ に収束するまでに $w^*_{n-1}$ を含むデータが必ず要る）、拡張正則の演算のもとでは $M_n$ が短い原子だけの小さな文法を持つことを確かめた（`research/KANAZAWA2023_ALG3_ON_Mn_2026-11-28.md`）。ChatGPT の独立検証（`research/external_review_2026-11-28_chatgpt_alg3/`）は「局所的な修正で正しい」：原子の正規化（K01）、長い例の場所（K04）、尺度（K05）を直して、命題 5.5 の直後の文を書き換えた（英日とも）。結論：Kanazawa の性質 (d†′) は追加の例の個数を抑えるが、その長さまで目標の文法の大きさの多項式で抑えることはできない。英語版 23 頁、日本語版 26 頁。
+
 ## 何の論文か
 
 #1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$（有限観測）のもとで、二つの量を調べる。
