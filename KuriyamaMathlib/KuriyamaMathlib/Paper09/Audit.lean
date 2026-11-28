@@ -1,3 +1,4 @@
+import KuriyamaMathlib.Families.BracketedDoubling
 import KuriyamaMathlib.CFG.TypedRules
 import KuriyamaMathlib.Distribution.DeletionCapture
 import KuriyamaMathlib.Paper09
@@ -20,3 +21,8 @@ Only the following components are represented, not the entire paper. -/
 #print axioms KuriyamaMathlib.typed_kernel_reduction_semigroup
 #print axioms KuriyamaMathlib.one_word_deletion_capture
 #print axioms KuriyamaMathlib.kernel_capture
+
+#check KuriyamaMathlib.BracketedDoubling.cleanWord_length
+#check KuriyamaMathlib.BracketedDoubling.unaryWord_length
+#check KuriyamaMathlib.BracketedDoubling.deleted_iff_marked
+#print axioms KuriyamaMathlib.BracketedDoubling.deleted_iff_marked
