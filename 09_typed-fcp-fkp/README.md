@@ -2,7 +2,7 @@
 
 *Frames versus Exemplars: An Exponential Gap for Syntactic Categories*（仮題）
 
-- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、JoLLI 向け、Astra の重点査読（2026-11-28）の修正を反映、23 頁、2026-11-28）
+- 英語正本：[`main.tex`](main.tex)（[PDF](main.pdf)、JoLLI 向け、2026-11-28 の差分の ChatGPT 査読の修正まで反映、24 頁、2026-11-28）
 - 日本語版（査読用の全訳、英語版と同じ版、26 頁）：[`japanese/main_JP.tex`](japanese/main_JP.tex)（[PDF](japanese/main_JP.pdf)）。定理番号・ラベル・数式は英語版と一対一
 - 研究報告（日本語、現行）：[`research/REPORT_2026-11-25.md`](research/REPORT_2026-11-25.md)。12 頁初稿時点の報告 [`research/REPORT_2026-11-24.md`](research/REPORT_2026-11-24.md) は履歴として残す
 - 研究台帳（状態の分類・否定された案）：[`research/LEDGER.md`](research/LEDGER.md)
@@ -67,6 +67,8 @@
 **2026-11-28 追記（4）：尺度の整理。** 仕上げ前の洗い出し（`research/FINAL_AUDIT_2026-11-28.md`）の A4・B1・B3 を英日とも反映した。Abstract と序論で、定理 A は非終端記号の数・右辺と証人の長さの積の隔たり（$F_n$ の生成規則は指数個と明記）、尺度によらない全長での隔たりは標識の観測器のもとの定理 C、と書き分けた。Algorithm 3 の文に $k\ge8$ を追加。英語版 23 頁、日本語版 26 頁。
 
 **2026-11-28 追記（5）：言語学の典拠の原著照合。** Fries (pp.74–75)、Selkirk (p.26)、Nespor & Vogel (p.7、第 2 版)、Kuno (第 3 章) は本文の主張どおり。Bod は「カテゴリーを事例で表す」とは言っていないので、「事例基盤のモデルは蓄えた事例で働き (Bod)、用例基盤のモデルはそこからカテゴリーが生じるとする (Bybee)」に直し、頁を明記した（英日とも）。記録：`research/LINGUISTIC_SOURCES_CHECK_2026-11-28.md`。英語版 23 頁、日本語版 26 頁。
+
+**2026-11-28 追記（6）：今日の差分の独立な査読。** ChatGPT に `61f8a16..5cdba4f` の英語版の差分だけを読ませた（`research/external_review_2026-11-28_chatgpt_diff/`）。判定は「局所的な修正で投稿してよい」。指摘 16 件のうち、C04（定理 A は生成規則を数えないという文と定理 A(i) の矛盾）、C06（観測器の必要性の言い過ぎ）、C09（(d†′) についての結論の範囲）、C11（注意 5.6 の圧縮で落とした根拠）、C13（ICGI 2018 を 2019 と誤記）は今日の編集で入った誤り。C16 以外を英日とも反映した。記録：`research/REVIEW_RESPONSE_2026-11-28_chatgpt_diff.md`。英語版 24 頁、日本語版 26 頁、Abstract 246 語。
 
 ## 何の論文か
 

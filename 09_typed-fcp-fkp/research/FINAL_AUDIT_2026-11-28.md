@@ -57,3 +57,4 @@
 - 英語版 23 頁、日本語版 26 頁。既存の定理・証明の変更なし。
 
 - **A5**（2026-11-28）：Fries・Bod・Selkirk・Nespor & Vogel・Kuno を原著で照合し反映（`LINGUISTIC_SOURCES_CHECK_2026-11-28.md`）。Bod についての言い過ぎを修正、頁を明記。
+- **A3**（2026-11-28）：今日の差分を ChatGPT が独立に査読（`REVIEW_RESPONSE_2026-11-28_chatgpt_diff.md`）。今日の編集で入った誤り 5 件を含む 15 件を修正。
