@@ -1,0 +1,38 @@
+name: KuriyamaMathlib
+on:
+  pull_request:
+    paths:
+      - 'KuriyamaMathlib/**'
+      - '.github/workflows/kuriyama-mathlib.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'KuriyamaMathlib/**'
+      - '.github/workflows/kuriyama-mathlib.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: KuriyamaMathlib
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl --fail --silent --show-error --location https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve dependencies and fetch Mathlib cache
+        run: |
+          lake update
+          lake exe cache get
+      - name: Build library
+        run: lake build
+      - name: Reject placeholder tactics and project axioms (textual guard)
+        run: |
+          if grep -nRE '^[[:space:]]*(sorry|admit|axiom)[[:space:]]|:=[[:space:]]*(sorry|admit)([[:space:]]|$)' --include='*.lean' KuriyamaMathlib KuriyamaMathlib.lean; then
+            exit 1
+          fi
