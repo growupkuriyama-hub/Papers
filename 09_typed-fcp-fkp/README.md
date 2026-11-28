@@ -72,6 +72,8 @@
 
 **2026-11-28 追記（7）：Abstract を JoLLI の読者向けに推敲。** 問い（一つの言語の二種類の提示の大きさ）を先に出し、$M_n$ を「抽象的な認可の条件」として一文で導入、二つの尺度（非終端記号の数・右辺と証人の長さ／全長）を「Measured by …」「In total length …」で書き分け、記号 $\lceil a\rceil$・$\lfloor aa\rfloor$ を「標識を持つ葉と標識のない葉の対」と言葉に置き換えた。主張の範囲は ChatGPT の C01・C02 の修正どおり（下界は $O(n)$ 倍で最良、一般化は適当な一語の削除）。248 語（数式を除くと 245）。英日とも。
 
+**2026-11-28 追記（8）：最終修正の査読。** ChatGPT に `5cdba4f..0f10a5e`（前回の指摘への修正と書き直した Abstract）を読ませた（`research/external_review_2026-11-28_chatgpt_final/`）。判定は「局所的な修正で投稿してよい」、FALSE・OVERCLAIM なし。前回の指摘は大半が closed。新しい指摘 F01〜F12（Abstract の範囲の明示、「Hence」の因果、§5 の Algorithm 3 の段階の明示、記法など）を英日とも反映した。ChatGPT の Abstract の全面差し替え案は読みやすさのため採らず、指摘だけを取り込んだ。Abstract 246 語（ハイフン区切りで 249）。記録：`research/REVIEW_RESPONSE_2026-11-28_chatgpt_final.md`。
+
 ## 何の論文か
 
 #1 の固定有限半群型付け $s:\Sigma^+\to\mathsf S$（有限観測）のもとで、二つの量を調べる。
