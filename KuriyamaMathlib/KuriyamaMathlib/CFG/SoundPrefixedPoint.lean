@@ -19,7 +19,13 @@ theorem rhsSet_cons (X : N → Set (Word α)) (s : MixedSymbol N α)
     (rhs : List (MixedSymbol N α)) :
     rhsSet X (s :: rhs) = wordProduct (symbolSet X s) (rhsSet X rhs) := by
   cases s with
-  | inl A => rfl
+  | inl A =>
+    ext w
+    constructor
+    · rintro ⟨x, y, h, hx, hy⟩
+      exact ⟨x, hx, y, hy, h⟩
+    · rintro ⟨x, hx, y, hy, h⟩
+      exact ⟨x, y, h, hx, hy⟩
   | inr a =>
     ext w
     constructor
