@@ -1,4 +1,7 @@
 import KuriyamaMathlib.Core.Observation
 import KuriyamaMathlib.Distribution.Closure
+import KuriyamaMathlib.Algebra.SemigroupTyping
 import KuriyamaMathlib.Paper01
-import KuriyamaMathlib.MCFG.Basic
+import KuriyamaMathlib.Paper02CFG
+import KuriyamaMathlib.Paper02MCFG
+import KuriyamaMathlib.Paper09
