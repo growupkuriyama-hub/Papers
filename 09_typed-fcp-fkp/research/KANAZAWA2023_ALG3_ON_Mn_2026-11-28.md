@@ -83,4 +83,6 @@ $\Gamma$ を Kanazawa の (iii)（ブール演算、$\emptyset,\varepsilon,a$、
 
 短い原子と小さな文法を両立させているのは正則演算（連接）であり、データの長さの下界は演算の選び方によらない。
 
-**原稿への反映の候補**（未反映、著者の判断待ち）：定理 6.11 の後の段落に一文、"Only Lemma 6.9 uses the frames, through a context that separates $x$ from $x'$; so Theorem 6.11 holds verbatim when the components are Boolean combinations of sets $\{c\}^\lhd$ with $|c|\le\ell$, but not for the extended regular operations, under which $H_n$ needs only short atoms (Section 5)."
+**原稿への反映**（2026-11-28、著者の指示で反映、英日とも）：定理 6.11 の後の「因子 $\ell+1$ は除けない」段落の末尾に、次の趣旨の一文を加えた（最初の案）。"Only Lemma 6.9 uses the frames, through a context that separates $x$ from $x'$; so Theorem 6.11 holds verbatim when the components are Boolean combinations of sets $\{c\}^\lhd$ with $|c|\le\ell$, but not for the extended regular operations, under which $H_n$ needs only short atoms (Section 5)."
+
+反映した英文："The proof of Lemma 6.9 uses the frames only through a context separating $x$ from $x'$, so Theorem 6.11 holds verbatim when the components are Boolean combinations of sets $\{c\}^\lhd$ with $|c|\le\ell$ (by Lemma 4.1 a separating $c$ accepts $x$), but not for the extended regular operations, under which $H_n$ needs only short atoms (Section 5)." 23 頁を保つため、参考文献の KY2017・Leiß・Clark–Yoshinaka・Selkirk の書誌を略記した（LNCS、編者名の省略、出版地の省略）。英語版 23 頁、日本語版 26 頁。

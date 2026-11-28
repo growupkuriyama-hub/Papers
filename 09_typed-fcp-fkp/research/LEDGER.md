@@ -53,7 +53,7 @@
 | `op:robust` | 任意の $s$ で $\mathrm{FCP_{vw}}[s]\ne\mathrm{FCP_w}[s]$ か | OPEN | KY Thm 14 の証拠は $\$$ の指示型付けで壊れる（Lemma 13 の証明が通らない）。冪等冪による頑健化が方針 |
 | `op:Mn-context` | 型なし VW-FCP 文法での $M_n$ の文脈長・大きさの指数下界 | OPEN（部分結果 PROVED：ζ 節点を丸ごと含む構成素は巨大） | |
 | `op:frame-exponent` | 観測器なしの枠の最小全長 $f(n)$ の指数（$2^{n/2}\le f(n)=O(n2^n)$）、枠と見本の全長の比 | OPEN。副問「定理 6.11 から因子 $\ell+1$ を除けるか」は**否定的に解決**（2026-11-28、Astra B10：型なしの $H_n$ に枠を二つずつ与えると $\sum\lvert\alpha\rvert=22n-18$、$\ell=3\cdot2^n-6$） | 定理 6.11 の後の段落、`tools/check_untyped_two_frames.py 4` |
-| ブール閉包 | 定理 6.11 は成分が商のブール結合の SPP でも成り立つか | **PROVED**（2026-11-28、ChatGPT の主張を Claude が確認：補題 6.9 の区別する文脈が原子に置き換わるだけ）。拡張正則の演算では成り立たない（短い原子の $H_n$） | `KANAZAWA2023_ALG3_ON_Mn_2026-11-28.md`、本文未反映 |
+| ブール閉包 | 定理 6.11 は成分が商のブール結合の SPP でも成り立つか | **PROVED**（2026-11-28、ChatGPT の主張を Claude が確認：補題 6.9 の区別する文脈が原子に置き換わるだけ）。拡張正則の演算では成り立たない（短い原子の $H_n$） | `KANAZAWA2023_ALG3_ON_Mn_2026-11-28.md`、定理 6.11 の後の段落に反映 |
 | 濾過核 | 混合核＋型の濾過の primal 変種は $\mathrm{FKP_{vw}}$ を真に拡張するか | OPEN | $\mathrm{FKP_{vw}}$ と $L_K$ は含む |
 | その他 | $\bigcup_s\mathcal C^{\rm cf}_s\subseteq\mathrm{FCP_{vw}}$ か／型付き strong FKP の反単調性／MCFG への拡張 | OPEN | |
 
