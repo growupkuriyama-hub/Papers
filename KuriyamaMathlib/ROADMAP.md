@@ -28,3 +28,27 @@ Status meanings: ARCHIVED = historical upstream verification record; BOOTSTRAP =
 6. Add executable examples and finite counterexample search, documented inputs, regression tests and a declaration index for future AI-assisted research.
 
 For every port record: exact manuscript commit, label, declaration name, hypotheses, dependency list, proof/build status. Distinguish mathematical open questions from missing formalization.
+
+## 09 phase 1 (2026-11-29)
+
+Manuscript: Papers main commit fd3fe3ec18dfddd3478d13ea50b00caaee70fb07,
+09 TeX blob c6ef28a9a53a3459e14da2648ae860383e4936bf (24 pages).
+Baseline bootstrap CI run 46157134952 succeeded; new code needs its own build.
+
+| Label | Shared declaration / remaining bridge |
+|---|---|
+| lem:clark | closure_product_subset, rhsSet_closure_subset (arbitrary mixed RHS) |
+| lem:typed-galois | typed_polar_galois, typedClosure_extensive/mono/idempotent, typed_closed_iff_frames, typed_subset_closure_iff |
+| lem:star | rhs_frames_insensitive |
+| def:typed | freshMul, eval_append, rhsType, semigroup_ruleFiberConsistent |
+| def:typed-props | individual category generation only; grammar-level hierarchy pending |
+| lem:reduction | typed_kernel_reduction_semigroup (least-closed semantics); exact derivation bridge still to audit |
+| lem:one-word | one_word_deletion_capture (general statement); concrete five-letter family pending |
+| lem:capture | kernel_capture (local algebra); reaching-context/parse-tree occurrence bridge pending |
+| thm:general-lower, thm:deletion, thm:frame-total | NOT formalized; need actual trees, minimality, splicing, coverage, counting |
+| prop:duality and strictness, prop:learners, prop:ideal, cor:rec-data, cor:primal-data, prop:dual-refutation, total-length results | NOT formalized |
+
+Important: the upstream v83 LevelTree family uses six letters and a different
+shortcut constructor; it is not definitionally the five-letter family of 09.
+Do not identify them. The common RHS and closure calculus is directly reusable.
+No manuscript edits in this PR.
